@@ -38,3 +38,36 @@ npm install
 
 # Start the development server
 npm run dev
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](../LICENSE) file for complete details.
+
+## 👥 Team
+
+| Role | Team |
+|------|------|
+| **Frontend Development** | The Wisdom Church Development Team |
+| **UI/UX Design** | The Wisdom Church Design Team |
+| **Project Management** | The Wisdom Church Leadership Team |
+
+## 🆘 Support
+
+We're here to help! Reach out to us through any of these channels:
+
+- 📧 **Email:** [development@wisdomchurch.org](mailto:development@wisdomchurch.org)
+- 🐛 **Bug Reports:** [GitHub Issue Tracker](https://github.com/TheWisdomChurch/Frontend-dev/issues)
+- 💬 **Questions & Discussions:** [GitHub Discussions](https://github.com/TheWisdomChurch/Frontend-dev/discussions)
+- 🔄 **Feature Requests:** Create an issue with the `enhancement` label
+
+---
+
+**Built with ❤️ for The Wisdom Church community**
+
+<div align="center">
+
+### ⭐ Star us on GitHub if you find this project helpful!
+
+[![Star on GitHub](https://img.shields.io/github/stars/TheWisdomChurch/Frontend-dev.svg?style=social)](https://github.com/TheWisdomChurch/Frontend-dev/stargazers)
+
+</div>
