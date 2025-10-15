@@ -15,6 +15,17 @@ A modern, responsive web application built with **Next.js 15**, featuring TypeSc
 - **npm**, **yarn**, or **pnpm**
 - **Git**
 
+- 🛠 Technology Stack
+Category	Technology
+Framework	Next.js 15 (App Router)
+Language	TypeScript
+Styling	Tailwind CSS
+UI Components	Custom component library
+Icons	Lucide React
+Fonts	Bricolage Grotesque (Custom)
+Code Quality	ESLint
+Package Manager	npm
+
 ### Installation & Development
 
 ```bash
