@@ -3,7 +3,7 @@
 'use client';
 
 import { H1, H2, H3, P, BoldText } from '../../components/text';
-import { Button } from '../../components/ui'; // ✅ import your reusable Button
+import { Button } from '../../components/ui';
 import { useTheme } from '../../contexts/ThemeContext';
 
 export default function Home() {
@@ -30,8 +30,9 @@ export default function Home() {
           curvature="xl"
           elevated
         >
-          Switch to {isDark ? 'Light' : 'Dark'} Mode and this is added
+          Switch to {isDark ? 'Light' : 'Dark'} Mode test
         </Button>
+        <p> this is a button</p>
       </div>
 
       {/* Color Palette Display */}
@@ -396,7 +397,7 @@ export default function Home() {
             curvature="xl"
             style={{ color: colorScheme.white, borderColor: colorScheme.white }}
           >
-            View Courses
+            View Courses to check
           </Button>
         </div>
       </div>
