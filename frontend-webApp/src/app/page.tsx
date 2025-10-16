@@ -397,7 +397,7 @@ export default function Home() {
             curvature="xl"
             style={{ color: colorScheme.white, borderColor: colorScheme.white }}
           >
-            View Courses to check
+            View Courses
           </Button>
         </div>
       </div>
