@@ -2,18 +2,18 @@
 import js from '@eslint/js';
 import next from 'eslint-config-next';
 
+/** @type {import('eslint').Linter.Config[]} */
 export default [
   js.configs.recommended,
   ...next({
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    files: ['**/*.ts', '**/*.tsx'],
   }),
   {
+    files: ['**/*.ts', '**/*.tsx'],
     rules: {
-      'prefer-const': 'error',
-      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
-      'react/react-in-jsx-scope': 'off',
+      'prefer-const': 'error',
     },
   },
   {
