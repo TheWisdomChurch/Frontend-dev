@@ -30,7 +30,7 @@ export default function Home() {
           curvature="xl"
           elevated
         >
-          Switch to {isDark ? 'Light' : 'Dark'} Mode
+          Switch to {isDark ? 'Light' : 'Dark'} Mode and this is added
         </Button>
       </div>
 
