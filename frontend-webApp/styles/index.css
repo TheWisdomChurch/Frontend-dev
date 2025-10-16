@@ -1,55 +1,62 @@
 /* Bricolage Grotesque Font Faces */
 @font-face {
-  font-family: "BricolageGrotesque";
-  src: url("../public/fonts/BricolageGrotesque/BricolageGrotesque-ExtraLight.ttf") format("truetype");
+  font-family: 'BricolageGrotesque';
+  src: url('../public/fonts/BricolageGrotesque/BricolageGrotesque-ExtraLight.ttf')
+    format('truetype');
   font-weight: 200;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "BricolageGrotesque";
-  src: url("../public/fonts/BricolageGrotesque/BricolageGrotesque-Light.ttf") format("truetype");
+  font-family: 'BricolageGrotesque';
+  src: url('../public/fonts/BricolageGrotesque/BricolageGrotesque-Light.ttf')
+    format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "BricolageGrotesque";
-  src: url("../public/fonts/BricolageGrotesque/BricolageGrotesque-Regular.ttf") format("truetype");
+  font-family: 'BricolageGrotesque';
+  src: url('../public/fonts/BricolageGrotesque/BricolageGrotesque-Regular.ttf')
+    format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "BricolageGrotesque";
-  src: url("../public/fonts/BricolageGrotesque/BricolageGrotesque-Medium.ttf") format("truetype");
+  font-family: 'BricolageGrotesque';
+  src: url('../public/fonts/BricolageGrotesque/BricolageGrotesque-Medium.ttf')
+    format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "BricolageGrotesque";
-  src: url("../public/fonts/BricolageGrotesque/BricolageGrotesque-SemiBold.ttf") format("truetype");
+  font-family: 'BricolageGrotesque';
+  src: url('../public/fonts/BricolageGrotesque/BricolageGrotesque-SemiBold.ttf')
+    format('truetype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "BricolageGrotesque";
-  src: url("../public/fonts/BricolageGrotesque/BricolageGrotesque-Bold.ttf") format("truetype");
+  font-family: 'BricolageGrotesque';
+  src: url('../public/fonts/BricolageGrotesque/BricolageGrotesque-Bold.ttf')
+    format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "BricolageGrotesque";
-  src: url("../public/fonts/BricolageGrotesque/BricolageGrotesque-ExtraBold.ttf") format("truetype");
+  font-family: 'BricolageGrotesque';
+  src: url('../public/fonts/BricolageGrotesque/BricolageGrotesque-ExtraBold.ttf')
+    format('truetype');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -114,17 +121,17 @@ body {
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
+
   a,
   a:visited {
     text-decoration: underline;
   }
-  
+
   a[href]::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
   }
-  
+
   abbr[title]::after {
-    content: " (" attr(title) ")";
+    content: ' (' attr(title) ')';
   }
 }

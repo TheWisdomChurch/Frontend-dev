@@ -4,7 +4,6 @@
 import React from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 
-
 type FontWeight =
   | 'extralight'
   | 'light'
@@ -120,7 +119,8 @@ export const BaseText: React.FC<BaseTextProps> = ({
   const { colorScheme } = useTheme();
 
   const variantSettings = variant ? variantMap[variant] : null;
-  const finalWeight = weight || fontWeight || variantSettings?.weight || 'regular';
+  const finalWeight =
+    weight || fontWeight || variantSettings?.weight || 'regular';
   const finalFontSize = fontSize || variantSettings?.fontSize || 'md';
 
   const textColor = useThemeColor && !color ? colorScheme.text : color;

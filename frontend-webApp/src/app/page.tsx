@@ -2,16 +2,9 @@
 
 'use client';
 
-import {
-  H1,
-  H2,
-  H3,
-  P,
-  BoldText,
- 
-} from '../../components/text';
+import { H1, H2, H3, P, BoldText } from '../../components/text';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Button } from '../../components/ui';// ✅ import your reusable Button
+import { Button } from '../../components/ui'; // ✅ import your reusable Button
 
 export default function Home() {
   const { colorScheme, isDark, toggleTheme } = useTheme();
@@ -52,7 +45,10 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
           <div
             className="p-4 rounded-2xl text-center"
-            style={{ backgroundColor: colorScheme.black, color: colorScheme.white }}
+            style={{
+              backgroundColor: colorScheme.black,
+              color: colorScheme.white,
+            }}
           >
             <span className="font-bold">Black</span>
             <br />
@@ -60,7 +56,10 @@ export default function Home() {
           </div>
           <div
             className="p-4 rounded-2xl text-center border"
-            style={{ backgroundColor: colorScheme.white, color: colorScheme.black }}
+            style={{
+              backgroundColor: colorScheme.white,
+              color: colorScheme.black,
+            }}
           >
             <span className="font-bold">White</span>
             <br />
@@ -68,7 +67,10 @@ export default function Home() {
           </div>
           <div
             className="p-4 rounded-2xl text-center"
-            style={{ backgroundColor: colorScheme.primary, color: colorScheme.white }}
+            style={{
+              backgroundColor: colorScheme.primary,
+              color: colorScheme.white,
+            }}
           >
             <span className="font-bold">Primary</span>
             <br />
@@ -94,7 +96,10 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div
             className="p-4 rounded-2xl text-center"
-            style={{ backgroundColor: colorScheme.yellow, color: colorScheme.black }}
+            style={{
+              backgroundColor: colorScheme.yellow,
+              color: colorScheme.black,
+            }}
           >
             <span className="font-bold">Yellow</span>
             <br />
@@ -131,7 +136,10 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div
             className="p-4 rounded-2xl text-center"
-            style={{ backgroundColor: colorScheme.orange, color: colorScheme.black }}
+            style={{
+              backgroundColor: colorScheme.orange,
+              color: colorScheme.black,
+            }}
           >
             <span className="font-bold">Orange</span>
             <br />
@@ -168,8 +176,9 @@ export default function Home() {
       <H2 useThemeColor>Your Learning Journey Starts Here</H2>
 
       <P useThemeColor>
-        This is a regular paragraph with <BoldText useThemeColor>bold text</BoldText> inside it.
-        The color scheme uses yellow, black, light grays, and orange throughout.
+        This is a regular paragraph with{' '}
+        <BoldText useThemeColor>bold text</BoldText> inside it. The color scheme
+        uses yellow, black, light grays, and orange throughout.
       </P>
 
       {/* ✅ Enhanced Button Showcase */}
@@ -178,10 +187,12 @@ export default function Home() {
         style={{ backgroundColor: colorScheme.surface }}
       >
         <H3 useThemeColor>Interactive Elements</H3>
-        
+
         {/* Primary Buttons */}
         <div className="mb-6">
-          <H3 useThemeColor className="text-sm font-semibold mb-4">Primary Buttons</H3>
+          <H3 useThemeColor className="text-sm font-semibold mb-4">
+            Primary Buttons
+          </H3>
           <div className="flex gap-4 flex-wrap">
             <Button variant="primary" size="lg" curvature="xl" elevated>
               Get Started
@@ -197,7 +208,9 @@ export default function Home() {
 
         {/* Accent Buttons */}
         <div className="mb-6">
-          <H3 useThemeColor className="text-sm font-semibold mb-4">Accent Buttons</H3>
+          <H3 useThemeColor className="text-sm font-semibold mb-4">
+            Accent Buttons
+          </H3>
           <div className="flex gap-4 flex-wrap">
             <Button variant="accent-yellow" size="lg" curvature="xl" elevated>
               Premium Feature
@@ -213,7 +226,9 @@ export default function Home() {
 
         {/* Outline & Ghost Buttons */}
         <div className="mb-6">
-          <H3 useThemeColor className="text-sm font-semibold mb-4">Secondary Buttons</H3>
+          <H3 useThemeColor className="text-sm font-semibold mb-4">
+            Secondary Buttons
+          </H3>
           <div className="flex gap-4 flex-wrap">
             <Button variant="outline" size="md" curvature="lg">
               Outline Button
@@ -229,7 +244,9 @@ export default function Home() {
 
         {/* Special Effects */}
         <div className="mb-6">
-          <H3 useThemeColor className="text-sm font-semibold mb-4">Special Styles</H3>
+          <H3 useThemeColor className="text-sm font-semibold mb-4">
+            Special Styles
+          </H3>
           <div className="flex gap-4 flex-wrap">
             <Button variant="accent-yellow" curvature="full" size="lg">
               Rounded
@@ -245,38 +262,55 @@ export default function Home() {
 
         {/* With Icons */}
         <div>
-          <H3 useThemeColor className="text-sm font-semibold mb-4">With Icons</H3>
+          <H3 useThemeColor className="text-sm font-semibold mb-4">
+            With Icons
+          </H3>
           <div className="flex gap-4 flex-wrap">
-            <Button 
-              variant="primary" 
-              size="lg" 
+            <Button
+              variant="primary"
+              size="lg"
               curvature="xl"
               leftIcon={
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
                 </svg>
               }
             >
               Add New
             </Button>
-            <Button 
-              variant="accent-yellow" 
-              size="md" 
+            <Button
+              variant="accent-yellow"
+              size="md"
               curvature="lg"
               rightIcon={
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               }
             >
               Continue
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              curvature="md"
-              loading={true}
-            >
+            <Button variant="outline" size="sm" curvature="md" loading={true}>
               Loading...
             </Button>
           </div>
@@ -303,7 +337,10 @@ export default function Home() {
 
         <div
           className="p-6 rounded-2xl"
-          style={{ backgroundColor: colorScheme.yellow, color: colorScheme.black }}
+          style={{
+            backgroundColor: colorScheme.yellow,
+            color: colorScheme.black,
+          }}
         >
           <H3>Yellow Card</H3>
           <P>This card uses the yellow accent color.</P>
@@ -316,14 +353,17 @@ export default function Home() {
       </div>
 
       {/* Text Variations */}
-      <div className="my-6 p-6 rounded-2xl" style={{ backgroundColor: colorScheme.gray100 }}>
+      <div
+        className="my-6 p-6 rounded-2xl"
+        style={{ backgroundColor: colorScheme.gray100 }}
+      >
         <H3 useThemeColor>Text Color Variations</H3>
         <P useThemeColor>Primary text color</P>
         <P style={{ color: colorScheme.textSecondary }}>Secondary text color</P>
         <P style={{ color: colorScheme.textMuted }}>Muted text color</P>
         <P style={{ color: colorScheme.yellow }}>Yellow text color</P>
         <P style={{ color: colorScheme.orange }}>Orange text color</P>
-        
+
         <div className="mt-4">
           <Button variant="outline" size="sm" curvature="md">
             Learn More
@@ -339,15 +379,21 @@ export default function Home() {
           color: colorScheme.white,
         }}
       >
-        <H2 style={{ color: colorScheme.white }}>Ready to Begin Your Journey?</H2>
+        <H2 style={{ color: colorScheme.white }}>
+          Ready to Begin Your Journey?
+        </H2>
         <P style={{ color: colorScheme.white }} className="mb-6">
-          Join thousands of learners who have transformed their skills with Wisdom House.
+          Join thousands of learners who have transformed their skills with
+          Wisdom House.
         </P>
         <div className="flex gap-4 justify-center flex-wrap">
           <Button variant="accent-yellow" size="xl" curvature="xl" elevated>
             Start Learning Free
           </Button>
-          <Button variant="outline" size="lg" curvature="xl" 
+          <Button
+            variant="outline"
+            size="lg"
+            curvature="xl"
             style={{ color: colorScheme.white, borderColor: colorScheme.white }}
           >
             View Courses

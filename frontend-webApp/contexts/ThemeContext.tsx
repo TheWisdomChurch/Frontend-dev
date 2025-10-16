@@ -8,7 +8,7 @@ interface ColorScheme {
   primary: string;
   primaryLight: string;
   primaryDark: string;
-  
+
   // Neutral colors
   black: string;
   white: string;
@@ -18,7 +18,7 @@ interface ColorScheme {
   gray300: string;
   gray400: string;
   gray500: string;
-  
+
   // Accent colors
   yellow: string;
   yellowLight: string;
@@ -26,7 +26,7 @@ interface ColorScheme {
   orange: string;
   orangeLight: string;
   orangeDark: string;
-  
+
   // Semantic colors
   text: string;
   textSecondary: string;
@@ -35,7 +35,7 @@ interface ColorScheme {
   surface: string;
   border: string;
   divider: string;
-  
+
   // State colors
   success: string;
   warning: string;
@@ -55,7 +55,7 @@ const lightColors: ColorScheme = {
   primary: '#000000',
   primaryLight: '#333333',
   primaryDark: '#000000',
-  
+
   // Neutral colors
   black: '#000000',
   white: '#FFFFFF',
@@ -65,7 +65,7 @@ const lightColors: ColorScheme = {
   gray300: '#d4d4d4',
   gray400: '#a3a3a3',
   gray500: '#737373',
-  
+
   // Accent colors
   yellow: '#fbbf24',
   yellowLight: '#fcd34d',
@@ -73,7 +73,7 @@ const lightColors: ColorScheme = {
   orange: '#fb923c',
   orangeLight: '#fdba74',
   orangeDark: '#f97316',
-  
+
   // Semantic colors
   text: '#000000',
   textSecondary: '#404040',
@@ -82,7 +82,7 @@ const lightColors: ColorScheme = {
   surface: '#fafafa',
   border: '#e5e5e5',
   divider: '#f5f5f5',
-  
+
   // State colors
   success: '#16a34a',
   warning: '#d97706',
@@ -96,7 +96,7 @@ const darkColors: ColorScheme = {
   primary: '#FFFFFF',
   primaryLight: '#f5f5f5',
   primaryDark: '#e5e5e5',
-  
+
   // Neutral colors
   black: '#000000',
   white: '#FFFFFF',
@@ -106,7 +106,7 @@ const darkColors: ColorScheme = {
   gray300: '#52525b',
   gray400: '#71717a',
   gray500: '#a1a1aa',
-  
+
   // Accent colors
   yellow: '#fbbf24',
   yellowLight: '#fcd34d',
@@ -114,7 +114,7 @@ const darkColors: ColorScheme = {
   orange: '#fb923c',
   orangeLight: '#fdba74',
   orangeDark: '#f97316',
-  
+
   // Semantic colors
   text: '#FFFFFF',
   textSecondary: '#e5e5e5',
@@ -123,7 +123,7 @@ const darkColors: ColorScheme = {
   surface: '#18181b',
   border: '#3f3f46',
   divider: '#27272a',
-  
+
   // State colors
   success: '#22c55e',
   warning: '#eab308',
@@ -141,8 +141,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
     const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+    const systemPrefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+
     if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
       setIsDark(true);
       document.documentElement.classList.add('dark');
@@ -153,30 +155,36 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const toggleTheme = () => {
     if (!mounted) return;
-    
+
     const newTheme = !isDark;
     setIsDark(newTheme);
-    
+
     if (newTheme) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-    
+
     localStorage.setItem('theme', newTheme ? 'dark' : 'light');
   };
 
   // Use light theme as default during SSR to avoid hydration mismatch
-  const colorScheme = !mounted ? lightColors : (isDark ? darkColors : lightColors);
+  const colorScheme = !mounted
+    ? lightColors
+    : isDark
+      ? darkColors
+      : lightColors;
 
   // Prevent flash of unstyled content
   if (!mounted) {
     return (
-      <ThemeContext.Provider value={{ 
-        colorScheme: lightColors, 
-        isDark: false, 
-        toggleTheme: () => {} 
-      }}>
+      <ThemeContext.Provider
+        value={{
+          colorScheme: lightColors,
+          isDark: false,
+          toggleTheme: () => {},
+        }}
+      >
         {children}
       </ThemeContext.Provider>
     );
