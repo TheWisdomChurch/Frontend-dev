@@ -1,0 +1,263 @@
+/* app/globals.css */
+/* @import "../styles/index.css"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties */
+:root {
+  /* Color System */
+  --color-dark-green: #001910;
+  --color-lime-green: #8bea19;
+  --color-deep-green: #003322;
+  --color-white: #ffffff;
+  --color-gray: #888888;
+  --color-charcoal: #1e1e1e;
+  --color-dark-gray: #333333;
+  --color-medium-gray: #808080;
+  --color-light-gray: #9e9e9e;
+  --color-forest-green: #274128;
+  --color-soft-orange: #ff9580;
+  --color-text-gray: #667085;
+  --color-red: #dc2626;
+  --color-light-green: #25cd2566;
+  --color-lighter-green: #2e6b31;
+  --color-army-green: #005538;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Typography */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-bricolage), system-ui, sans-serif;
+  line-height: 1.6;
+  color: var(--color-charcoal);
+  background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark Mode */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  color: var(--color-white);
+  background-color: var(--color-charcoal);
+}
+
+/* Typography Utilities */
+.font-bricolage {
+  font-family: var(--font-bricolage), sans-serif;
+}
+
+/* Component Base Styles */
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s ease-in-out;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-lime-green);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Input Styles */
+.select-input {
+  flex: 1;
+  padding: var(--space-sm);
+  color: var(--color-text-gray);
+  border: 1px solid #d0d5dd;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  transition: border-color 0.2s ease;
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: var(--color-lime-green);
+  box-shadow: 0 0 0 3px rgb(139 234 25 / 0.1);
+}
+
+/* Utility Classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Animation Utilities */
+@layer utilities {
+  .skeleton {
+    background: linear-gradient(90deg, #e5e7eb 0%, #f3f4f6 50%, #e5e7eb 100%);
+    background-size: 400% 400%;
+    border-radius: var(--radius-md);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+}
+
+/* Focus Management */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-lime-green: #000000;
+    --color-soft-orange: #000000;
+  }
+}
+
+/* ===== COMPLETE NEXT.JS DEV INDICATOR REMOVAL ===== */
+/* This will 100% remove the Next.js development indicator */
+
+/* Main toast container - covers most versions */
+.nextjs-toast,
+[data-nextjs-toast],
+.nextjs-build-toast,
+.nextjs-toast-errors,
+[data-nextjs-dialog],
+[data-nextjs-dialog-overlay],
+nextjs-portal {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Build watcher element */
+#__next-build-watcher {
+  display: none !important;
+}
+
+/* Any fixed position elements in bottom corners */
+div[style*='position: fixed'][style*='bottom:'] {
+  display: none !important;
+}
+
+/* Dialog backdrop and overlay */
+[data-nextjs-dialog-backdrop],
+[data-nextjs-dialog-overlay] {
+  display: none !important;
+}
+
+/* Specific dialog content */
+[data-nextjs-dialog] > div,
+[data-nextjs-dialog] > div > div {
+  display: none !important;
+}
+
+/* Toast-like elements with common class patterns */
+[class*='toast'],
+[class*='Toast'],
+[class*='build'],
+[class*='Build'] {
+  display: none !important;
+}
+
+/* Nuclear option - hide any portal or overlay */
+.nextjs-portal,
+[data-nextjs-portal] {
+  display: none !important;
+}
+
+/* Ensure no residual elements show up */
+body > div[style*='position: fixed']:last-child {
+  display: none !important;
+}
