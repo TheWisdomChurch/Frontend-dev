@@ -3,8 +3,8 @@
 'use client';
 
 import { H1, H2, H3, P, BoldText } from '../../components/text';
-import { useTheme } from '../../contexts/ThemeContext';
 import { Button } from '../../components/ui'; // ✅ import your reusable Button
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function Home() {
   const { colorScheme, isDark, toggleTheme } = useTheme();

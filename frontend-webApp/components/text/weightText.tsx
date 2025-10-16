@@ -2,6 +2,7 @@
 'use client';
 
 import React from 'react';
+
 import { BaseText, BaseTextProps } from './baseText'; // Fixed import
 
 export const ExtraLightText: React.FC<BaseTextProps> = props => (

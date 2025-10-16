@@ -1,5 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
+
 import { ThemeProvider } from '../../contexts/ThemeContext';
 import { bricolageGrotesque } from '../../lib/fonts/fonts';
 
