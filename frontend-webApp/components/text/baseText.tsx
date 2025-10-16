@@ -2,6 +2,7 @@
 'use client';
 
 import React from 'react';
+
 import { useTheme } from '../../contexts/ThemeContext';
 
 type FontWeight =
