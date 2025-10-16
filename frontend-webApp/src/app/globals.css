@@ -142,12 +142,7 @@ button:disabled {
 /* Animation Utilities */
 @layer utilities {
   .skeleton {
-    background: linear-gradient(
-      90deg,
-      #e5e7eb 0%,
-      #f3f4f6 50%,
-      #e5e7eb 100%
-    );
+    background: linear-gradient(90deg, #e5e7eb 0%, #f3f4f6 50%, #e5e7eb 100%);
     background-size: 400% 400%;
     border-radius: var(--radius-md);
     animation: shimmer 1.5s ease-in-out infinite;
@@ -232,7 +227,7 @@ nextjs-portal {
 }
 
 /* Any fixed position elements in bottom corners */
-div[style*="position: fixed"][style*="bottom:"] {
+div[style*='position: fixed'][style*='bottom:'] {
   display: none !important;
 }
 
@@ -249,10 +244,10 @@ div[style*="position: fixed"][style*="bottom:"] {
 }
 
 /* Toast-like elements with common class patterns */
-[class*="toast"],
-[class*="Toast"],
-[class*="build"],
-[class*="Build"] {
+[class*='toast'],
+[class*='Toast'],
+[class*='build'],
+[class*='Build'] {
   display: none !important;
 }
 
@@ -263,6 +258,6 @@ div[style*="position: fixed"][style*="bottom:"] {
 }
 
 /* Ensure no residual elements show up */
-body > div[style*="position: fixed"]:last-child {
+body > div[style*='position: fixed']:last-child {
   display: none !important;
 }

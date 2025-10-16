@@ -115,7 +115,8 @@ const Button: React.FC<ButtonProps> = ({
         hover: `hover:bg-[${colorScheme.gray100}] hover:border-[${colorScheme.primary}] hover:shadow-md hover:scale-[1.02]`,
         active: 'active:scale-[0.98]',
         focus: `focus:ring-[${colorScheme.primary}] focus:ring-opacity-50`,
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none border-gray-300',
+        disabled:
+          'opacity-60 cursor-not-allowed transform-none shadow-none border-gray-300',
       },
       ghost: {
         backgroundColor: 'transparent',
@@ -182,7 +183,7 @@ const Button: React.FC<ButtonProps> = ({
         ${!(disabled || loading) ? variantStyles.hover : ''}
         ${!(disabled || loading) ? variantStyles.active : ''}
         ${variantStyles.focus}
-        ${(disabled || loading) ? variantStyles.disabled : ''}
+        ${disabled || loading ? variantStyles.disabled : ''}
         ${className}
         transform transition-all duration-300 ease-out
         font-medium tracking-wide
@@ -194,9 +195,11 @@ const Button: React.FC<ButtonProps> = ({
       {loading && (
         <div className="absolute inset-0 bg-current opacity-20 rounded-inherit" />
       )}
-      
+
       {/* Content container */}
-      <div className={`flex items-center justify-center gap-2 ${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}>
+      <div
+        className={`flex items-center justify-center gap-2 ${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}
+      >
         {/* Loading spinner */}
         {loading && (
           <svg

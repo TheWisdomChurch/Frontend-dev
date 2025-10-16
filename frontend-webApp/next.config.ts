@@ -5,10 +5,10 @@ const nextConfig = {
   },
   poweredByHeader: false,
   compress: true,
-  
+
   // 👇 ADD THIS LINE
   devIndicators: false,
-  
+
   images: {
     formats: ['image/webp', 'image/avif'],
     domains: [],
@@ -32,8 +32,8 @@ const nextConfig = {
           },
         ],
       },
-    ]
+    ];
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

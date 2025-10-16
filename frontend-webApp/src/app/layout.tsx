@@ -1,13 +1,13 @@
 // app/layout.tsx
-import type { Metadata } from "next";
-import { ThemeProvider } from "../../contexts/ThemeContext";
-import { bricolageGrotesque } from "../../lib/fonts/fonts";
+import type { Metadata } from 'next';
+import { ThemeProvider } from '../../contexts/ThemeContext';
+import { bricolageGrotesque } from '../../lib/fonts/fonts';
 
-import "./globals.css";
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Wisdom House",
-  description: "Wisdom House frontend web app",
+  title: 'Wisdom House',
+  description: 'Wisdom House frontend web app',
 };
 
 export default function RootLayout({
@@ -18,9 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${bricolageGrotesque.variable} antialiased`}>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

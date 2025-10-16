@@ -25,7 +25,9 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
   const directionStyle = direction === 'horizontal' ? 'flex-row' : 'flex-col';
 
   return (
-    <div className={`flex ${directionStyle} ${spacingStyles[spacing]} ${className}`}>
+    <div
+      className={`flex ${directionStyle} ${spacingStyles[spacing]} ${className}`}
+    >
       {children}
     </div>
   );
