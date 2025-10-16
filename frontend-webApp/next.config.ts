@@ -1,18 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   poweredByHeader: false,
   compress: true,
+  
+  // 👇 ADD THIS LINE
+  devIndicators: false,
+  
   images: {
     formats: ['image/webp', 'image/avif'],
-    domains: [], // Add your image domains here
+    domains: [],
   },
-  // Security headers
   async headers() {
     return [
       {

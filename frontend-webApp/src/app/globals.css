@@ -1,8 +1,8 @@
-@import "../styles/index.css";
+/* app/globals.css */
+/* @import "../styles/index.css"; */
 
-/* Tailwind CSS Directives */
-/* @tailwind base;
-@tailwind components; */
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 /* CSS Custom Properties */
@@ -66,7 +66,7 @@ html {
 }
 
 body {
-  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-family: var(--font-bricolage), system-ui, sans-serif;
   line-height: 1.6;
   color: var(--color-charcoal);
   background-color: var(--color-white);
@@ -86,7 +86,7 @@ body {
 
 /* Typography Utilities */
 .font-bricolage {
-  font-family: "Bricolage Grotesque", sans-serif;
+  font-family: var(--font-bricolage), sans-serif;
 }
 
 /* Component Base Styles */
@@ -207,4 +207,62 @@ button:disabled {
     --color-lime-green: #000000;
     --color-soft-orange: #000000;
   }
+}
+
+/* ===== COMPLETE NEXT.JS DEV INDICATOR REMOVAL ===== */
+/* This will 100% remove the Next.js development indicator */
+
+/* Main toast container - covers most versions */
+.nextjs-toast,
+[data-nextjs-toast],
+.nextjs-build-toast,
+.nextjs-toast-errors,
+[data-nextjs-dialog],
+[data-nextjs-dialog-overlay],
+nextjs-portal {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Build watcher element */
+#__next-build-watcher {
+  display: none !important;
+}
+
+/* Any fixed position elements in bottom corners */
+div[style*="position: fixed"][style*="bottom:"] {
+  display: none !important;
+}
+
+/* Dialog backdrop and overlay */
+[data-nextjs-dialog-backdrop],
+[data-nextjs-dialog-overlay] {
+  display: none !important;
+}
+
+/* Specific dialog content */
+[data-nextjs-dialog] > div,
+[data-nextjs-dialog] > div > div {
+  display: none !important;
+}
+
+/* Toast-like elements with common class patterns */
+[class*="toast"],
+[class*="Toast"],
+[class*="build"],
+[class*="Build"] {
+  display: none !important;
+}
+
+/* Nuclear option - hide any portal or overlay */
+.nextjs-portal,
+[data-nextjs-portal] {
+  display: none !important;
+}
+
+/* Ensure no residual elements show up */
+body > div[style*="position: fixed"]:last-child {
+  display: none !important;
 }
