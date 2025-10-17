@@ -13,7 +13,12 @@
     "prettier:fix": "prettier --write .",
     "validate": "npm run type-check && npm run lint && npm run prettier",
     "pre-push-check": "npm run type-check && npm run lint && npm run prettier && npm run build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docker:build": "docker build -t wisdom-house .",
+    "docker:run": "docker run -p 3000:3000 wisdom-house",
+    "docker:dev": "docker-compose up app-dev",
+    "docker:prod": "docker-compose up app",
+    "docker:down": "docker-compose down"
   },
   "dependencies": {
     "clsx": "^2.1.1",
