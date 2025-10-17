@@ -1,9 +1,4 @@
 {
-  "*.{js,jsx,ts,tsx}": [
-    "prettier --write",
-    "next lint --fix --file"
-  ],
-  "*.{json,md,mdx,css,html,yml,yaml}": [
-    "prettier --write"
-  ]
+  "*.{js,jsx,ts,tsx}": ["prettier --write"],
+  "*.{json,md,mdx,css,html,yml,yaml}": ["prettier --write"]
 }
