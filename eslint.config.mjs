@@ -57,7 +57,7 @@ export default [
       'commitlint.config.js',
       'postcss.config.mjs',
       'tailwind.config.js',
-      'eslint.config.mjs'
+      'eslint.config.mjs',
     ],
   },
 ];

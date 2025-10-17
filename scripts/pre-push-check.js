@@ -6,7 +6,7 @@ const checks = [
   { name: 'Type checking', command: 'npm run type-check' },
   { name: 'Linting', command: 'npm run lint' },
   { name: 'Formatting', command: 'npm run prettier' },
-  { name: 'Building', command: 'npm run build' }
+  { name: 'Building', command: 'npm run build' },
 ];
 
 for (const check of checks) {
