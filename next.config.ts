@@ -1,39 +1,20 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
-  poweredByHeader: false,
-  compress: true,
+// next.config.ts
+import type { NextConfig } from 'next';
 
-  // 👇 ADD THIS LINE
-  devIndicators: false,
-
-  images: {
-    formats: ['image/webp', 'image/avif'],
-    domains: [],
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-        ],
+const nextConfig: NextConfig = {
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
       },
-    ];
+    },
+  },
+  images: {
+    domains: ['images.unsplash.com'],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

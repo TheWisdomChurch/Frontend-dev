@@ -138,18 +138,22 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   // Initialize theme only on client side
+  // In your ThemeContext.tsx, replace the useEffect with:
   useEffect(() => {
-    setMounted(true);
+    // Use requestAnimationFrame to avoid synchronous state updates in effects
+    requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia(
       '(prefers-color-scheme: dark)'
     ).matches;
 
-    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
+    if (savedTheme) {
+      setIsDark(savedTheme === 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      setIsDark(systemPrefersDark);
     }
   }, []);
 
