@@ -1,4 +1,4 @@
-# Use official Node.js runtime
+# Dockerfile.dev - for development with hot reload
 FROM node:18-alpine
 
 # Set working directory
@@ -13,11 +13,8 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
-
 # Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+# Start development server with hot reload
+CMD ["npm", "run", "dev"]
