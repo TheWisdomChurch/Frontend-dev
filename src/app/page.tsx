@@ -33,6 +33,7 @@ export default function Home() {
           Switch to {isDark ? 'Light' : 'Dark'} Mode test
         </Button>
         <p> this is a button</p>
+        <p> This is additional test</p>
       </div>
 
       {/* Color Palette Display */}
