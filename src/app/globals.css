@@ -1,6 +1,4 @@
 /* app/globals.css */
-/* @import "../styles/index.css"; */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -52,6 +50,9 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+  /* Font Family - ADD THIS */
+  --font-bricolage-grotesque: 'Bricolage Grotesque', system-ui, sans-serif;
 }
 
 /* Base Styles */
@@ -63,15 +64,32 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
-  font-family: var(--font-bricolage), system-ui, sans-serif;
+  font-family: var(--font-bricolage-grotesque), system-ui, sans-serif;
   line-height: 1.6;
   color: var(--color-charcoal);
   background-color: var(--color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Ensure hero section containers work properly */
+.hero-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Dark Mode */
@@ -85,8 +103,8 @@ body {
 }
 
 /* Typography Utilities */
-.font-bricolage {
-  font-family: var(--font-bricolage), sans-serif;
+.font-bricolage-grotesque {
+  font-family: var(--font-bricolage-grotesque), sans-serif;
 }
 
 /* Component Base Styles */
@@ -205,9 +223,6 @@ button:disabled {
 }
 
 /* ===== COMPLETE NEXT.JS DEV INDICATOR REMOVAL ===== */
-/* This will 100% remove the Next.js development indicator */
-
-/* Main toast container - covers most versions */
 .nextjs-toast,
 [data-nextjs-toast],
 .nextjs-build-toast,
@@ -221,29 +236,24 @@ nextjs-portal {
   pointer-events: none !important;
 }
 
-/* Build watcher element */
 #__next-build-watcher {
   display: none !important;
 }
 
-/* Any fixed position elements in bottom corners */
 div[style*='position: fixed'][style*='bottom:'] {
   display: none !important;
 }
 
-/* Dialog backdrop and overlay */
 [data-nextjs-dialog-backdrop],
 [data-nextjs-dialog-overlay] {
   display: none !important;
 }
 
-/* Specific dialog content */
 [data-nextjs-dialog] > div,
 [data-nextjs-dialog] > div > div {
   display: none !important;
 }
 
-/* Toast-like elements with common class patterns */
 [class*='toast'],
 [class*='Toast'],
 [class*='build'],
@@ -251,13 +261,11 @@ div[style*='position: fixed'][style*='bottom:'] {
   display: none !important;
 }
 
-/* Nuclear option - hide any portal or overlay */
 .nextjs-portal,
 [data-nextjs-portal] {
   display: none !important;
 }
 
-/* Ensure no residual elements show up */
 body > div[style*='position: fixed']:last-child {
   display: none !important;
 }
