@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import { H1 } from '../../text';
 import { Banner_1, Banner_2, Banner_3 } from '../../assets';
 import { ChevronDown } from 'lucide-react';
@@ -70,7 +70,7 @@ const HeroSection = () => {
     }, 500);
   };
 
-  const goToSlide = (index: number) => {
+  const goToSlide = (index: SetStateAction<number>) => {
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentSlide(index);
@@ -88,7 +88,7 @@ const HeroSection = () => {
             : 'bg-transparent'
         }`}
       >
-        <Header variant={isScrolled ? 'solid' : 'transparent'} />
+        <Header />
       </div>
 
       {/* Background Slides */}
