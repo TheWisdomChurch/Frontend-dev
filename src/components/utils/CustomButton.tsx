@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 export type ButtonVariant =
   | 'primary'
@@ -16,7 +16,7 @@ export type ButtonVariant =
   | 'danger'
   | 'success';
 
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
 export interface ButtonProps {
   children: React.ReactNode;
@@ -61,6 +61,7 @@ const Button: React.FC<ButtonProps> = ({
     md: 'px-6 py-3 text-base min-h-[44px]',
     lg: 'px-8 py-4 text-lg min-h-[52px]',
     xl: 'px-10 py-5 text-xl min-h-[60px]',
+    icon: 'p-2 min-h-[auto]', // Added icon size
   };
 
   // Curvature styles
