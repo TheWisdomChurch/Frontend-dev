@@ -34,6 +34,13 @@ export interface ButtonProps {
   elevated?: boolean;
   /** New: Controls border radius - more curvy */
   curvature?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  /** Add these missing event handlers */
+  onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onMouseDown?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onMouseUp?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -51,6 +58,12 @@ const Button: React.FC<ButtonProps> = ({
   style,
   elevated = false,
   curvature = 'lg',
+  onMouseEnter,
+  onMouseLeave,
+  onMouseDown,
+  onMouseUp,
+  onFocus,
+  onBlur,
 }) => {
   const { colorScheme } = useTheme();
 
@@ -175,8 +188,14 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       disabled={disabled || loading}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onFocus={onFocus}
+      onBlur={onBlur}
       className={`
-        ${variantStyles.base}
+         ${variantStyles.base}
         ${sizeStyle}
         ${widthStyle}
         ${elevationStyle}

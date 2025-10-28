@@ -1,7 +1,7 @@
 // components/text/baseText.tsx
 'use client';
 
-import React from 'react';
+import React, { forwardRef } from 'react'; // Import forwardRef
 import { useTheme } from '../contexts/ThemeContext';
 import { bricolageGrotesque, worksans, playfair } from '../fonts/fonts';
 
@@ -96,58 +96,66 @@ const variantMap: Record<
   'elegant-sm': { fontSize: 'sm', weight: 'regular', fontFamily: 'playfair' },
 };
 
-export const BaseText: React.FC<BaseTextProps> = ({
-  children,
-  color,
-  margin,
-  lineHeight,
-  textDecoration = 'none',
-  fontSize = 'md',
-  className = '',
-  fontFamily,
-  as: Component = 'p',
-  useThemeColor = false,
-  style,
-  variant,
-  weight,
-  fontWeight,
-  ...props
-}) => {
-  const { colorScheme } = useTheme();
+export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
+  (
+    {
+      children,
+      color,
+      margin,
+      lineHeight,
+      textDecoration = 'none',
+      fontSize = 'md',
+      className = '',
+      fontFamily,
+      as: Component = 'p',
+      useThemeColor = false,
+      style,
+      variant,
+      weight,
+      fontWeight,
+      ...props
+    },
+    ref
+  ) => {
+    const { colorScheme } = useTheme();
 
-  const variantSettings = variant ? variantMap[variant] : null;
+    const variantSettings = variant ? variantMap[variant] : null;
 
-  // Priority: variant > explicit props > defaults
-  const finalFontSize = variantSettings?.fontSize || fontSize || 'md';
-  const finalFontFamily =
-    variantSettings?.fontFamily || fontFamily || 'worksans';
-  const finalWeight =
-    weight || fontWeight || variantSettings?.weight || 'regular';
+    // Priority: variant > explicit props > defaults
+    const finalFontSize = variantSettings?.fontSize || fontSize || 'md';
+    const finalFontFamily =
+      variantSettings?.fontFamily || fontFamily || 'worksans';
+    const finalWeight =
+      weight || fontWeight || variantSettings?.weight || 'regular';
 
-  // Get text color - use theme color if useThemeColor is true and no explicit color is provided
-  const textColor = useThemeColor && !color ? colorScheme.text : color;
+    // Get text color - use theme color if useThemeColor is true and no explicit color is provided
+    const textColor = useThemeColor && !color ? colorScheme.text : color;
 
-  const resolvedFontSize = fontSizeMap[finalFontSize] || finalFontSize;
-  const resolvedFontFamily =
-    fontFamilyMap[finalFontFamily] || worksans.className;
-  const resolvedWeightClass = weightClassMap[finalWeight];
+    const resolvedFontSize = fontSizeMap[finalFontSize] || finalFontSize;
+    const resolvedFontFamily =
+      fontFamilyMap[finalFontFamily] || worksans.className;
+    const resolvedWeightClass = weightClassMap[finalWeight];
 
-  const styles: React.CSSProperties = {
-    margin,
-    lineHeight,
-    textDecoration,
-    fontSize: resolvedFontSize,
-    ...(textColor && { color: textColor }),
-    ...style,
-  };
+    const styles: React.CSSProperties = {
+      margin,
+      lineHeight,
+      textDecoration,
+      fontSize: resolvedFontSize,
+      ...(textColor && { color: textColor }),
+      ...style,
+    };
 
-  return (
-    <Component
-      style={styles}
-      className={`${resolvedFontFamily} ${resolvedWeightClass} ${className}`}
-      {...props}
-    >
-      {children}
-    </Component>
-  );
-};
+    return (
+      <Component
+        ref={ref} // Add ref here
+        style={styles}
+        className={`${resolvedFontFamily} ${resolvedWeightClass} ${className}`}
+        {...props}
+      >
+        {children}
+      </Component>
+    );
+  }
+);
+
+BaseText.displayName = 'BaseText'; // Add display name for better debugging

@@ -8,7 +8,7 @@ import Header from '@/components/layout/header';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { Button } from '../../utils/CustomButton';
+import Button from '../../utils/CustomButton';
 
 // Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
