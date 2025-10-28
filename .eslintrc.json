@@ -1,0 +1,15 @@
+// .eslintrc.json or .eslintrc.js
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "@typescript-eslint/triple-slash-reference": "off"
+  },
+  "overrides": [
+    {
+      "files": ["next-env.d.ts"],
+      "rules": {
+        "@typescript-eslint/triple-slash-reference": "off"
+      }
+    }
+  ]
+}
