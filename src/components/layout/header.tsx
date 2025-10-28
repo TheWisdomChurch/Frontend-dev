@@ -22,7 +22,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
 import { useState, useEffect, useRef } from 'react';
 import { bricolageGrotesque, worksans } from '../fonts/fonts';
-import { useTheme } from '../contexts/ThemeContext'; // Import useTheme
+import { useTheme } from '../contexts/ThemeContext';
 
 // Icon mapping
 const iconMap = {
@@ -35,7 +35,7 @@ const iconMap = {
 
 export default function Header() {
   const pathname = usePathname();
-  const { colorScheme } = useTheme(); // Get color scheme from theme
+  const { colorScheme } = useTheme();
   const [isSheetOpen, setSheetOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -81,17 +81,16 @@ export default function Header() {
     setActiveDropdown(null);
   };
 
+  const handleDropdownItemClick = () => {
+    setActiveDropdown(null);
+    setMobileOpenDropdown(null);
+    setSheetOpen(false);
+  };
+
   const toggleMobileDropdown = (label: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setMobileOpenDropdown(mobileOpenDropdown === label ? null : label);
-  };
-
-  const handleMobileLinkClick = (href: string, hasDropdown: boolean) => {
-    if (!hasDropdown) {
-      setSheetOpen(false);
-      setMobileOpenDropdown(null);
-    }
   };
 
   return (
@@ -104,7 +103,7 @@ export default function Header() {
       )}
       style={{
         backgroundColor: isScrolled ? colorScheme.background : 'transparent',
-        borderColor: colorScheme.primary, // Use primary yellow for borders
+        borderColor: colorScheme.primary,
       }}
     >
       <div
@@ -134,7 +133,6 @@ export default function Header() {
               />
             </div>
 
-            {/* Divider line - show only when not scrolled */}
             {!isScrolled && (
               <div
                 className="h-6 w-px mx-1"
@@ -142,7 +140,6 @@ export default function Header() {
               />
             )}
 
-            {/* Updated text */}
             <span
               className={cn(
                 `${worksans.className} font-medium transition-all duration-500 hidden sm:flex flex-col leading-tight`,
@@ -185,8 +182,8 @@ export default function Header() {
                           `${worksans.className} flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative group`,
                           isActive
                             ? isHome
-                              ? 'text-gray-900 shadow-md' // Home uses yellow background
-                              : 'text-gray-900 shadow-md' // Other active links use green
+                              ? 'text-gray-900 shadow-md'
+                              : 'text-gray-900 shadow-md'
                             : isScrolled
                               ? 'hover:bg-yellow-400/20'
                               : 'hover:bg-white/20'
@@ -194,15 +191,15 @@ export default function Header() {
                         style={{
                           backgroundColor: isActive
                             ? isHome
-                              ? colorScheme.primary // Yellow for home
-                              : '#8bea19' // Keep existing green for others
+                              ? colorScheme.primary
+                              : '#8bea19'
                             : 'transparent',
                           color: isActive
-                            ? colorScheme.textInverted // Black text on yellow/green
+                            ? colorScheme.textInverted
                             : isScrolled
                               ? colorScheme.text
                               : colorScheme.white,
-                          borderRadius: colorScheme.borderRadius.medium, // Use theme borderRadius
+                          borderRadius: colorScheme.borderRadius.medium,
                         }}
                       >
                         <IconComponent className="h-4 w-4" />
@@ -217,7 +214,6 @@ export default function Header() {
                         )}
                       </Link>
 
-                      {/* Active indicator for non-home links */}
                       {isActive && !isHome && (
                         <div
                           className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-0.5 rounded-full"
@@ -226,7 +222,7 @@ export default function Header() {
                       )}
                     </div>
 
-                    {/* Dropdown Menu */}
+                    {/* Dropdown Menu - UPDATED */}
                     {hasDropdown &&
                       activeDropdown === link.label &&
                       link.dropdown && (
@@ -243,11 +239,11 @@ export default function Header() {
                             <Link
                               key={dropdownItem.label}
                               href={dropdownItem.href}
-                              className={`${worksans.className} flex items-center px-4 py-3 text-sm transition-all duration-300 group rounded-lg mx-2`}
+                              className={`${worksans.className} flex items-center px-4 py-3 text-sm transition-all duration-300 group rounded-lg mx-2 hover:bg-opacity-10`}
                               style={{
                                 color: colorScheme.text,
                               }}
-                              onClick={() => setActiveDropdown(null)}
+                              onClick={handleDropdownItemClick}
                             >
                               <div
                                 className="w-1 h-1 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -379,7 +375,7 @@ export default function Header() {
                                   if (hasDropdown) {
                                     toggleMobileDropdown(link.label, e);
                                   } else {
-                                    handleMobileLinkClick(link.href, false);
+                                    handleDropdownItemClick();
                                   }
                                 }}
                                 className={cn(
@@ -402,7 +398,6 @@ export default function Header() {
                                 <span>{link.label}</span>
                               </Link>
 
-                              {/* Mobile Dropdown Toggle */}
                               {hasDropdown && (
                                 <button
                                   type="button"
@@ -426,7 +421,7 @@ export default function Header() {
                               )}
                             </div>
 
-                            {/* Mobile Dropdown Items */}
+                            {/* Mobile Dropdown Items - UPDATED */}
                             {hasDropdown &&
                               isMobileDropdownOpen &&
                               link.dropdown && (
@@ -443,11 +438,8 @@ export default function Header() {
                                     <Link
                                       key={dropdownItem.label}
                                       href={dropdownItem.href}
-                                      onClick={() => {
-                                        setSheetOpen(false);
-                                        setMobileOpenDropdown(null);
-                                      }}
-                                      className={`${worksans.className} flex items-center px-3 py-2 text-sm rounded-lg transition-all duration-200 group`}
+                                      onClick={handleDropdownItemClick}
+                                      className={`${worksans.className} flex items-center px-3 py-2 text-sm rounded-lg transition-all duration-200 group hover:bg-opacity-10`}
                                       style={{
                                         color: colorScheme.text,
                                         borderRadius:

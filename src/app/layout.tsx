@@ -6,10 +6,12 @@ import {
   playfair,
 } from '@/components/fonts/fonts';
 import './globals.css';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 export const metadata: Metadata = {
-  title: 'The Lighthouse Church',
-  description: 'Lighthouse Church of God - We Are Transformed',
+  title: 'The Wisdomhouse Church',
+  description: 'Wisdom HouseHq - We Are Transformed',
 };
 
 export default function RootLayout({
@@ -23,8 +25,19 @@ export default function RootLayout({
       className={`${bricolageGrotesque.variable} ${worksans.variable} ${playfair.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className={bricolageGrotesque.className}>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body
+        className={`${bricolageGrotesque.className} flex flex-col min-h-screen`}
+      >
+        <ThemeProvider>
+          {/* Header at the top */}
+          <Header />
+
+          {/* Main content grows to fill space */}
+          <main className="flex-1">{children}</main>
+
+          {/* Footer at the bottom */}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
