@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NavLink, Leader, Sermon, Ministry, ExtendedNavLink } from './types';
 
 import { hero_bg_1, hero_bg_2, hero_bg_3 } from '@/components/assets';
