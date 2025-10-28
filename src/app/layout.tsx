@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/contexts/ThemeContext';
-import { bricolageGrotesque } from '@/components/fonts/fonts';
-// import { bricolageGrotesque } from './lib/fonts/fonts';
-
+import {
+  bricolageGrotesque,
+  worksans,
+  playfair,
+} from '@/components/fonts/fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -16,8 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${bricolageGrotesque.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${bricolageGrotesque.variable} ${worksans.variable} ${playfair.variable} antialiased`}
+      suppressHydrationWarning
+    >
+      <body className={bricolageGrotesque.className}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

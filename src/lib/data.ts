@@ -1,5 +1,31 @@
 import { NavLink, Leader, Sermon, Ministry, ExtendedNavLink } from './types';
 
+import { hero_bg_1, hero_bg_2, hero_bg_3 } from '@/components/assets';
+
+export const slides = [
+  {
+    image: hero_bg_1,
+    title: 'We Are Transformed',
+    subtitle: "Experience God's Transforming Power",
+    description:
+      'Welcome to The Wisdom House Church where lives are transformed through faith, community, and divine guidance.',
+  },
+  {
+    image: hero_bg_2,
+    title: 'Growing In Faith',
+    subtitle: 'Deepen Your Spiritual Journey',
+    description:
+      'Join our vibrant community as we grow together in faith, love, and service to others.',
+  },
+  {
+    image: hero_bg_3,
+    title: 'Building Community',
+    subtitle: 'Connect With Believers',
+    description:
+      'Experience the warmth of genuine fellowship and build lasting relationships in Christ.',
+  },
+];
+
 // Extended navigation links with icons and dropdowns
 export const extendedNavLinks: ExtendedNavLink[] = [
   {

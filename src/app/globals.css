@@ -102,9 +102,21 @@ body {
   background-color: var(--color-charcoal);
 }
 
-/* Typography Utilities */
+/* Typography Utilities
 .font-bricolage-grotesque {
   font-family: var(--font-bricolage-grotesque), sans-serif;
+} */
+/* In your global CSS */
+.font-bricolage {
+  font-family: var(--font-bricolage);
+}
+
+.font-worksans {
+  font-family: var(--font-worksans);
+}
+
+.font-playfair {
+  font-family: var(--font-playfair);
 }
 
 /* Component Base Styles */

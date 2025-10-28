@@ -1,40 +1,37 @@
 'use client';
 
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect, SetStateAction, useRef } from 'react';
 import { H1 } from '../../text';
-import { Banner_1, Banner_2, Banner_3 } from '../../assets';
+import { slides } from '@/lib/data';
 import { ChevronDown } from 'lucide-react';
-
 import Header from '@/components/layout/header';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { Button } from '../../utils/CustomButton';
 
-const slides = [
-  {
-    image: Banner_1,
-    title: 'We Are Transformed',
-    subtitle: "Experience God's Transforming Power",
-    description:
-      'Welcome to The Wisdom House Church where lives are transformed through faith, community, and divine guidance.',
-  },
-  {
-    image: Banner_2,
-    title: 'Growing In Faith',
-    subtitle: 'Deepen Your Spiritual Journey',
-    description:
-      'Join our vibrant community as we grow together in faith, love, and service to others.',
-  },
-  {
-    image: Banner_3,
-    title: 'Building Community',
-    subtitle: 'Connect With Believers',
-    description:
-      'Experience the warmth of genuine fellowship and build lasting relationships in Christ.',
-  },
-];
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const heroRef = useRef<HTMLElement>(null);
+  const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
+  const indicatorsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+
+  // Use your theme context
+  const { colorScheme } = useTheme();
 
   // Handle scroll effect for header
   useEffect(() => {
@@ -46,41 +43,242 @@ const HeroSection = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Initial animations on component mount
   useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Initial hero section entrance animation
+      gsap.fromTo(
+        heroRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1.5,
+          ease: 'power2.out',
+        }
+      );
+
+      // Animate first slide content
+      animateContentEntrance();
+
+      // Animate scroll indicator with continuous bounce
+      if (scrollIndicatorRef.current) {
+        gsap.fromTo(
+          scrollIndicatorRef.current,
+          { y: -10, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            delay: 2,
+            ease: 'power2.out',
+          }
+        );
+
+        const bounceAnimation = gsap.to(scrollIndicatorRef.current, {
+          y: 15,
+          duration: 1.5,
+          ease: 'power1.inOut',
+          repeat: -1,
+          yoyo: true,
+        });
+
+        return () => bounceAnimation.kill();
+      }
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  // Auto-slide effect
+  useEffect(() => {
+    if (isTransitioning) return;
+
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [currentSlide]);
+  }, [currentSlide, isTransitioning]);
 
-  const nextSlide = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentSlide(prev => (prev + 1) % slides.length);
-      setIsTransitioning(false);
-    }, 500);
+  const animateContentEntrance = () => {
+    const tl = gsap.timeline();
+
+    if (titleRef.current) {
+      tl.fromTo(
+        titleRef.current,
+        { y: 100, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }
+      );
+    }
+
+    const dividerLine = document.querySelector('.divider-line');
+    if (dividerLine) {
+      tl.fromTo(
+        dividerLine,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.8, ease: 'power2.out' },
+        '-=0.5'
+      );
+    }
+
+    if (subtitleRef.current) {
+      tl.fromTo(
+        subtitleRef.current,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
+        '-=0.3'
+      );
+    }
+
+    if (descriptionRef.current) {
+      tl.fromTo(
+        descriptionRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
+        '-=0.3'
+      );
+    }
+
+    if (buttonsRef.current && buttonsRef.current.children) {
+      tl.fromTo(
+        buttonsRef.current.children,
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.15,
+          ease: 'back.out(1.7)',
+        },
+        '-=0.2'
+      );
+    }
+
+    return tl;
   };
 
-  const prevSlide = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
-      setIsTransitioning(false);
-    }, 500);
+  const animateContentExit = () => {
+    const tl = gsap.timeline();
+
+    const targets = [];
+    if (titleRef.current) targets.push(titleRef.current);
+    if (subtitleRef.current) targets.push(subtitleRef.current);
+    if (descriptionRef.current) targets.push(descriptionRef.current);
+    if (buttonsRef.current && buttonsRef.current.children) {
+      targets.push(...Array.from(buttonsRef.current.children));
+    }
+
+    if (targets.length > 0) {
+      tl.to(targets, {
+        y: -30,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power2.in',
+      });
+    }
+
+    return tl;
   };
 
-  const goToSlide = (index: SetStateAction<number>) => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentSlide(index);
-      setIsTransitioning(false);
-    }, 500);
+  const animateSlideTransition = (nextIndex: number) => {
+    return new Promise<void>(resolve => {
+      const ctx = gsap.context(() => {
+        const currentSlideEl = slidesRef.current[currentSlide];
+        const nextSlideEl = slidesRef.current[nextIndex];
+
+        if (!currentSlideEl || !nextSlideEl) {
+          resolve();
+          return;
+        }
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            setIsTransitioning(false);
+            resolve();
+          },
+        });
+
+        tl.call(() => setIsTransitioning(true))
+          .add(animateContentExit())
+          .to(
+            currentSlideEl,
+            {
+              scale: 1.1,
+              opacity: 0,
+              duration: 1.2,
+              ease: 'power2.inOut',
+            },
+            0
+          )
+          .fromTo(
+            nextSlideEl,
+            { scale: 1.1, opacity: 0 },
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 1.2,
+              ease: 'power2.inOut',
+            },
+            0
+          )
+          .call(
+            () => {
+              setCurrentSlide(nextIndex);
+            },
+            undefined,
+            0.6
+          )
+          .add(animateContentEntrance(), 0.8);
+      });
+
+      return () => ctx.revert();
+    });
+  };
+
+  const nextSlide = async () => {
+    if (isTransitioning) return;
+
+    const nextIndex = (currentSlide + 1) % slides.length;
+    await animateSlideTransition(nextIndex);
+  };
+
+  const goToSlide = async (index: SetStateAction<number>) => {
+    if (isTransitioning || index === currentSlide) return;
+
+    const clickedIndicator = indicatorsRef.current[index as number];
+    if (clickedIndicator) {
+      gsap.fromTo(
+        clickedIndicator,
+        { scale: 1 },
+        {
+          scale: 1.3,
+          duration: 0.3,
+          yoyo: true,
+          repeat: 1,
+          ease: 'power2.inOut',
+        }
+      );
+    }
+
+    await animateSlideTransition(index as number);
+  };
+
+  const addToSlidesRef = (el: HTMLDivElement | null, index: number) => {
+    if (el) {
+      slidesRef.current[index] = el;
+    }
+  };
+
+  const addToIndicatorsRef = (el: HTMLButtonElement | null, index: number) => {
+    if (el) {
+      indicatorsRef.current[index] = el;
+    }
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
-      {/* Header integrated inside HeroSection */}
+    <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
+      {/* Header */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
@@ -95,152 +293,181 @@ const HeroSection = () => {
       {slides.map((slide, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-500 ${
+          ref={el => addToSlidesRef(el, index)}
+          className={`absolute inset-0 ${
             index === currentSlide
               ? 'opacity-100'
               : 'opacity-0 pointer-events-none'
           }`}
         >
-          {/* Optimized Image */}
-          <img
-            src={slide.image.src}
-            alt={slide.title}
-            className="w-full h-full object-cover object-center"
-            style={{
-              objectPosition: 'center center',
-              width: '100%',
-              height: '100%',
-            }}
-          />
-          {/* Enhanced Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" />
-          {/* Additional color overlay for better text contrast */}
-          <div className="absolute inset-0 bg-[#001910]/40 mix-blend-overlay" />
+          <div className="relative w-full h-full">
+            <img
+              src={slide.image.src}
+              alt={slide.title}
+              className="
+                w-full h-full 
+                object-cover 
+                object-center 
+                lg:object-[center_top] 
+                xl:object-[center_center] 
+                scale-105 lg:scale-100
+              "
+              style={{
+                maxHeight: '100vh',
+              }}
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-black/90" />
+            <div className="absolute inset-0 bg-[#001910]/40 mix-blend-overlay" />
+          </div>
         </div>
       ))}
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 hover:scale-110"
-        aria-label="Previous slide"
+      {/* Content - Centered in the container */}
+      <div
+        ref={contentRef}
+        className="relative z-10 h-full flex items-center justify-center px-4"
       >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
-
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 hover:scale-110"
-        aria-label="Next slide"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </button>
-
-      {/* Content - Added padding top to account for header */}
-      <div className="relative z-10 h-full flex items-center justify-center px-4 pt-16">
         <div className="w-full max-w-7xl mx-auto">
-          <div
-            className={`text-center text-white transition-all duration-500 transform ${
-              isTransitioning
-                ? 'translate-y-4 opacity-0'
-                : 'translate-y-0 opacity-100'
-            }`}
-          >
-            {/* Main Title */}
-            <H1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight tracking-tight">
+          <div className="text-center" style={{ color: colorScheme.text }}>
+            <H1
+              ref={titleRef}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight tracking-tight"
+            >
               {slides[currentSlide].title}
             </H1>
 
-            {/* Accent Line */}
-            <div className="h-1 w-20 bg-[#8bea19] mx-auto mb-6 rounded-full"></div>
+            {/* Primary Color Divider Line */}
+            <div
+              className="divider-line h-1 w-20 mx-auto mb-6 rounded-full transform origin-center"
+              style={{ backgroundColor: colorScheme.primary }}
+            ></div>
 
-            {/* Subtitle */}
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-6 text-[#8bea19] leading-tight">
+            {/* Primary Color Subtitle */}
+            <h2
+              ref={subtitleRef}
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-6 leading-tight"
+              style={{ color: colorScheme.primary }}
+            >
               {slides[currentSlide].subtitle}
             </h2>
 
-            {/* Description */}
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto mb-8 leading-relaxed sm:leading-loose">
+            <p
+              ref={descriptionRef}
+              className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto mb-8 leading-relaxed sm:leading-loose"
+            >
               {slides[currentSlide].description}
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-              <button className="bg-[#8bea19] text-[#001910] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-[#7ad017] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl w-full sm:w-auto">
+            <div
+              ref={buttonsRef}
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+            >
+              {/* Primary Button - Uses primary variant with yellow background */}
+              <Button
+                variant="primary"
+                size="lg"
+                elevated={true}
+                curvature="lg"
+                className="w-full sm:w-auto"
+              >
                 Join Us This Sunday
-              </button>
-              <button className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-white hover:text-[#001910] transition-all duration-300 w-full sm:w-auto">
+              </Button>
+
+              {/* Secondary Button - Uses outline variant with primary border */}
+              <Button
+                variant="outline"
+                size="lg"
+                curvature="lg"
+                className="w-full sm:w-auto"
+                style={{
+                  borderColor: colorScheme.primary,
+                  color: colorScheme.white,
+                }}
+                onMouseEnter={(e: {
+                  currentTarget: {
+                    style: { backgroundColor: string; color: string };
+                  };
+                }) => {
+                  e.currentTarget.style.backgroundColor = colorScheme.white;
+                  e.currentTarget.style.color = colorScheme.black;
+                }}
+                onMouseLeave={(e: {
+                  currentTarget: {
+                    style: { backgroundColor: string; color: string };
+                  };
+                }) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = colorScheme.white;
+                }}
+              >
                 Watch Live Stream
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
-        {/* Slide Dots */}
-        <div className="flex space-x-3 order-2 sm:order-1">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center space-y-2">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            ref={el => addToIndicatorsRef(el, index)}
+            onClick={() => goToSlide(index)}
+            className={`relative w-1 h-1 rounded-full overflow-hidden transition-all duration-500 ease-out hover:scale-110 ${
+              index === currentSlide ? 'scale-125' : ''
+            }`}
+            style={{
+              backgroundColor:
                 index === currentSlide
-                  ? 'bg-[#8bea19] scale-125 shadow-lg'
-                  : 'bg-white/60 hover:bg-white/80 hover:scale-110'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Slide Counter */}
-        <div className="text-white text-sm font-medium order-1 sm:order-2 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
-          <span className="text-[#8bea19] font-bold">{currentSlide + 1}</span>
-          <span className="mx-1">/</span>
-          <span>{slides.length}</span>
-        </div>
+                  ? colorScheme.primary
+                  : `${colorScheme.white}40`,
+              boxShadow:
+                index === currentSlide
+                  ? `0 0 10px ${colorScheme.primary}70`
+                  : 'none',
+            }}
+            aria-label={`Go to slide ${index + 1}`}
+          >
+            {index === currentSlide && (
+              <span
+                className="absolute inset-0 rounded-full"
+                style={{ backgroundColor: `${colorScheme.primary}30` }}
+              />
+            )}
+          </button>
+        ))}
       </div>
 
-      {/* Bouncing Chevron Down Indicator */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block">
-        <div className="animate-bounce flex flex-col items-center">
-          <span className="text-white text-sm mb-2 font-medium">
-            Scroll Down
-          </span>
-          <ChevronDown className="w-6 h-6 text-white animate-pulse" />
+      {/* Scroll Indicator */}
+      <div
+        ref={scrollIndicatorRef}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block"
+      >
+        <div className="flex flex-col items-center">
+          <ChevronDown
+            className="w-6 h-6 animate-pulse"
+            style={{ color: colorScheme.primary }}
+          />
+          <ChevronDown
+            className="w-6 h-6 animate-pulse -mt-[6px]"
+            style={{ color: colorScheme.primary }}
+          />
         </div>
       </div>
 
       {/* Mobile Scroll Indicator */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 sm:hidden">
         <div className="animate-bounce flex flex-col items-center">
-          <ChevronDown className="w-5 h-5 text-white" />
+          <ChevronDown
+            className="w-5 h-5"
+            style={{ color: colorScheme.primary }}
+          />
+          <ChevronDown
+            className="w-5 h-5 -mt-[5px]"
+            style={{ color: colorScheme.primary }}
+          />
         </div>
       </div>
     </section>
