@@ -13,22 +13,7 @@ export {
   Strong,
   Em,
 } from './Semantictext';
-export {
-  ExtraLightText,
-  LightText,
-  RegularText,
-  MediumText,
-  SemiBoldText,
-  BoldText,
-  ExtraBoldText,
-  ExtraRegularText,
-} from './weightText';
-export {
-  LukiestGuyText,
-  UltraText,
-  AbrilFatFaceText,
-  BricolageText,
-  ShadowsText,
-} from './FontText';
+export { LightText, RegularText, MediumText, SemiBoldText } from './weightText';
+export { BricolageText } from './FontText';
 
 export type { BaseTextProps } from './baseText';
