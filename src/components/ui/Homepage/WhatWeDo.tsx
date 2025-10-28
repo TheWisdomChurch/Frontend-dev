@@ -128,7 +128,9 @@ export default function WhatWeDo() {
     return (
       <div
         key={box.id}
-        ref={el => (boxesRef.current[index] = el)}
+        ref={el => {
+          boxesRef.current[index] = el;
+        }}
         className={`${boxHeight} transform will-change-transform`}
       >
         <div
