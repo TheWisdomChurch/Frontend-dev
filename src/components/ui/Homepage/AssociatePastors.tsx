@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Associate_1, Associate_2 } from '@/components/assets';
+import Image from 'next/image';
 
 export default function AssociatePastors() {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,22 +31,19 @@ export default function AssociatePastors() {
 
   const pastors = [
     {
-      name: 'Rev. Willie Oliver',
+      name: 'Rev. Victor Jimba',
+      role: 'Resident Pastor',
+      image: Associate_2,
+    },
+    {
+      name: 'Deacon Adeyemi ',
       role: 'Associate Pastor',
-      image:
-        'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      image: Associate_1,
     },
     {
-      name: 'Pastor Evenson',
-      role: 'Youth Pastor',
-      image:
-        'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400',
-    },
-    {
-      name: 'Solomon Adjogbe',
-      role: 'Worship Pastor',
-      image:
-        'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
+      name: 'Deacon Bamidele',
+      role: 'Associate Pastor',
+      image: Associate_1,
     },
   ];
 
@@ -74,7 +73,7 @@ export default function AssociatePastors() {
             >
               <div className="relative inline-block mb-6">
                 <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-xl mx-auto">
-                  <img
+                  <Image
                     src={pastor.image}
                     alt={pastor.name}
                     className="w-full h-full object-cover"

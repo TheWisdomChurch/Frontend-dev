@@ -1,6 +1,12 @@
 import { NavLink, Leader, Sermon, Ministry, ExtendedNavLink } from './types';
 
 import { hero_bg_1, hero_bg_2, hero_bg_3 } from '@/components/assets';
+import {
+  WhatWeDo_3,
+  Whatwedo_1,
+  Whatwedo_2,
+  Whatwedo_4,
+} from '@/components/assets';
 
 export const slides = [
   {
@@ -50,7 +56,7 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     href: '/ministries',
     icon: 'Users',
     dropdown: [
-      { label: 'Children Ministry', href: '/ministries/children' },
+      { label: 'Children Ministry', href: '/ministries/children' }, // ✅ FIXED
       { label: 'Youth Ministry', href: '/ministries/youth' },
       { label: 'Women Ministry', href: '/ministries/women' },
       { label: 'Men Ministry', href: '/ministries/men' },
@@ -151,3 +157,57 @@ export const youtubeLivestreams: { current: string; previous: string[] } = {
   current: 'jfKfPfyJRdk',
   previous: ['3tmd-ClafbY', '6-x1g_c1g4o', 'dQw4w9WgXcQ'],
 };
+
+// What we do
+// data.ts
+export interface ServiceBox {
+  id: number;
+  title: string;
+  description: string;
+  image: any;
+  imageAlt: string;
+  gradient?: string;
+  imageOpacity?: number;
+}
+
+export const whatWeDoData: ServiceBox[] = [
+  {
+    id: 1,
+    title: 'we put the word to work',
+    description:
+      "We actively apply God's Word in our daily lives, transforming biblical teachings into practical actions that impact our community and deepen our faith journey.",
+    image: Whatwedo_4,
+    imageAlt: 'Worship service',
+  },
+  {
+    id: 2,
+    title: 'We Believe in the power of prayer',
+    description:
+      "Through fervent prayer, we connect with God's divine power, witnessing miraculous transformations and spiritual breakthroughs in our lives and community.",
+    image: Whatwedo_2,
+    imageAlt: 'Prayer gathering',
+    gradient: 'from-purple-900 to-purple-700',
+    imageOpacity: 60,
+  },
+  {
+    id: 3,
+    title: 'We Worship',
+    description:
+      'In heartfelt worship, we glorify God through song, praise, and devotion, creating an atmosphere where His presence transforms hearts and renews spirits.',
+    image: Whatwedo_1,
+    imageAlt: 'Community service',
+  },
+  {
+    id: 4,
+    title: 'We Hear the Word',
+    description:
+      "We diligently study and receive God's Word, allowing scripture to guide our decisions, shape our character, and illuminate our path forward.",
+    image: WhatWeDo_3,
+    imageAlt: 'Youth gathering',
+    gradient: 'from-blue-900 to-blue-700',
+    imageOpacity: 60,
+  },
+];
+
+export const missionStatement =
+  'At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit. Our mission is to create a community where faith thrives and transformation is possible.';

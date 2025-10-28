@@ -277,7 +277,11 @@ const HeroSection = () => {
   };
 
   return (
-    <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
+    <section
+      ref={heroRef}
+      className="relative w-full overflow-hidden"
+      style={{ height: '120vh' }}
+    >
       {/* Header */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -313,7 +317,7 @@ const HeroSection = () => {
                 scale-105 lg:scale-100
               "
               style={{
-                maxHeight: '100vh',
+                maxHeight: '120vh',
               }}
             />
             {/* Gradient Overlay */}

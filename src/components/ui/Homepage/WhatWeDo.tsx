@@ -1,99 +1,205 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { whatWeDoData, missionStatement, ServiceBox } from '@/lib/data';
+import Image from 'next/image';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { LightText } from '@/components/text';
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function WhatWeDo() {
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const boxesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
+    const ctx = gsap.context(() => {
+      // Animate main heading
+      gsap.fromTo(
+        headingRef.current,
+        {
+          y: 100,
+          opacity: 0,
+          scale: 0.8,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+          },
         }
-      },
-      { threshold: 0.1 }
-    );
+      );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+      // Animate boxes with staggered effect
+      boxesRef.current.forEach((box, index) => {
+        if (box) {
+          gsap.fromTo(
+            box,
+            {
+              y: 100,
+              opacity: 0,
+              rotationY: 15,
+              scale: 0.9,
+            },
+            {
+              y: 0,
+              opacity: 1,
+              rotationY: 0,
+              scale: 1,
+              duration: 1.2,
+              delay: index * 0.15,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: box,
+                start: 'top 75%',
+                end: 'bottom 25%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          );
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
+          // Hover animation for boxes
+          box.addEventListener('mouseenter', () => {
+            gsap.to(box, {
+              scale: 1.02,
+              y: -8,
+              duration: 0.6,
+              ease: 'power2.out',
+            });
+          });
+
+          box.addEventListener('mouseleave', () => {
+            gsap.to(box, {
+              scale: 1,
+              y: 0,
+              duration: 0.6,
+              ease: 'power2.out',
+            });
+          });
+        }
+      });
+
+      // Animate mission statement text
+      gsap.fromTo(
+        textRef.current,
+        {
+          y: 50,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          delay: 0.5,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: textRef.current,
+            start: 'top 85%',
+            end: 'bottom 15%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
-  return (
-    <section id="what-we-do" ref={sectionRef} className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-16">
-          What we do
-        </h2>
+  const renderBox = (box: ServiceBox, index: number) => {
+    // Responsive heights - first two boxes are taller
+    const boxHeight =
+      index < 2
+        ? 'h-80 md:h-[500px] lg:h-[550px]'
+        : 'h-72 md:h-96 lg:h-[400px]';
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div
-            className={`transition-all duration-700 ${
-              isVisible
-                ? 'opacity-100 translate-x-0'
-                : 'opacity-0 -translate-x-10'
-            }`}
-          >
-            <div className="relative overflow-hidden rounded-lg shadow-2xl h-96">
-              <img
-                src="https://images.pexels.com/photos/8468005/pexels-photo-8468005.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Worship service"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                <h3 className="text-2xl font-bold text-white">
-                  We Have the Word
-                </h3>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={`transition-all duration-700 delay-200 ${
-              isVisible
-                ? 'opacity-100 translate-x-0'
-                : 'opacity-0 translate-x-10'
-            }`}
-          >
-            <div className="relative overflow-hidden rounded-lg shadow-2xl h-96 bg-gradient-to-br from-purple-900 to-purple-700">
-              <img
-                src="https://images.pexels.com/photos/8468118/pexels-photo-8468118.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Prayer gathering"
-                className="w-full h-full object-cover opacity-60"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center px-6">
-                  <h3 className="text-3xl font-bold text-white mb-4">
-                    Holy Spirit
-                  </h3>
-                  <p className="text-white text-lg">
-                    We believe in the power of the Holy Spirit to transform
-                    lives and bring about lasting change in our community.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+    return (
+      <div
+        key={box.id}
+        ref={el => (boxesRef.current[index] = el)}
+        className={`${boxHeight} transform will-change-transform`}
+      >
         <div
-          className={`mt-12 text-center transition-all duration-700 delay-400 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          className={`relative overflow-hidden rounded-3xl border border-gray-200/50 shadow-2xl h-full backdrop-blur-sm ${
+            box.gradient ? `bg-gradient-to-br ${box.gradient}` : 'bg-white/5'
           }`}
         >
-          <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            At The Lighthouse Church, we are committed to spreading the Gospel
-            and empowering believers through the Word of God and the Holy
-            Spirit. Our mission is to create a community where faith thrives and
-            transformation is possible.
+          {/* Background Image */}
+          <div className="relative w-full h-full">
+            <Image
+              src={box.image}
+              alt={box.imageAlt}
+              fill
+              style={
+                box.imageOpacity ? { opacity: box.imageOpacity / 100 } : {}
+              }
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 z-0"></div>
+
+          {/* Content Overlay */}
+          <div className="absolute inset-0 flex items-center justify-center z-10 p-8">
+            <div className="text-center">
+              {/* Title with yellow gradient */}
+              <h3 className="text-3xl md:text-4xl font-bold font-work-sans mb-4 md:mb-6 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent drop-shadow-2xl">
+                {box.title}
+              </h3>
+
+              {/* Description */}
+              <LightText className="text-white/90 text-lg md:text-xl leading-relaxed font-work-sans font-light drop-shadow-lg max-w-md">
+                {box.description}
+              </LightText>
+            </div>
+          </div>
+
+          {/* Shine effect on hover */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-[-100%] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:translate-x-[100%]"></div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <section
+      id="what-we-do"
+      ref={sectionRef}
+      className="py-20 bg-white relative overflow-hidden"
+    >
+      {/* Background decorative elements */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <h2
+          ref={headingRef}
+          className="text-4xl md:text-6xl font-bold text-center font-work-sans mb-16 bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-sm"
+        >
+          What We Do
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          {whatWeDoData.map((box, index) => renderBox(box, index))}
+        </div>
+
+        <div ref={textRef} className="mt-16 md:mt-20 text-center">
+          <p className="text-gray-700 max-w-4xl mx-auto leading-relaxed font-work-sans text-lg md:text-xl font-light">
+            {missionStatement}
           </p>
         </div>
       </div>
