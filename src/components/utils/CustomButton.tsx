@@ -3,7 +3,6 @@
 'use client';
 
 import React from 'react';
-
 import { useTheme } from '../contexts/ThemeContext';
 
 export type ButtonVariant =
@@ -61,7 +60,7 @@ const Button: React.FC<ButtonProps> = ({
     md: 'px-6 py-3 text-base min-h-[44px]',
     lg: 'px-8 py-4 text-lg min-h-[52px]',
     xl: 'px-10 py-5 text-xl min-h-[60px]',
-    icon: 'p-2 min-h-[auto]', // Added icon size
+    icon: 'p-2 min-h-[auto]',
   };
 
   // Curvature styles
@@ -80,52 +79,51 @@ const Button: React.FC<ButtonProps> = ({
     const variants = {
       primary: {
         backgroundColor: colorScheme.primary,
-        color: colorScheme.white,
+        color: colorScheme.textInverted,
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
-        focus: `focus:ring-[${colorScheme.primary}] focus:ring-opacity-50`,
+        focus: 'focus:ring-primary/50',
         disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
       secondary: {
-        backgroundColor: colorScheme.gray100,
-        color: colorScheme.gray100,
-        hover: 'hover:bg-gray-200 hover:shadow-md hover:scale-[1.02]',
+        backgroundColor: colorScheme.surface,
+        color: colorScheme.text,
+        hover: 'hover:bg-surfaceVariant hover:shadow-md hover:scale-[1.02]',
         active: 'active:scale-[0.98]',
-        focus: `focus:ring-[${colorScheme.gray300}] focus:ring-opacity-50`,
+        focus: 'focus:ring-gray-300/50',
         disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
       'accent-yellow': {
-        backgroundColor: colorScheme.yellow,
-        color: colorScheme.black,
+        backgroundColor: colorScheme.primary,
+        color: colorScheme.textInverted,
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
-        focus: `focus:ring-[${colorScheme.yellow}] focus:ring-opacity-50`,
+        focus: 'focus:ring-yellow-500/50',
         disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
       'accent-orange': {
-        backgroundColor: colorScheme.orange,
+        backgroundColor: colorScheme.secondary,
         color: colorScheme.white,
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
-        focus: `focus:ring-[${colorScheme.orange}] focus:ring-opacity-50`,
+        focus: 'focus:ring-orange-500/50',
         disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
       outline: {
         backgroundColor: 'transparent',
         color: colorScheme.text,
         border: `2px solid ${colorScheme.border}`,
-        hover: `hover:bg-[${colorScheme.gray100}] hover:border-[${colorScheme.primary}] hover:shadow-md hover:scale-[1.02]`,
+        hover: `hover:bg-${colorScheme.surfaceVariant} hover:border-primary hover:shadow-md hover:scale-[1.02]`,
         active: 'active:scale-[0.98]',
-        focus: `focus:ring-[${colorScheme.primary}] focus:ring-opacity-50`,
-        disabled:
-          'opacity-60 cursor-not-allowed transform-none shadow-none border-gray-300',
+        focus: 'focus:ring-primary/50',
+        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
       ghost: {
         backgroundColor: 'transparent',
         color: colorScheme.text,
-        hover: `hover:bg-[${colorScheme.gray100}] hover:shadow-sm hover:scale-[1.02]`,
+        hover: `hover:bg-${colorScheme.surfaceVariant} hover:shadow-sm hover:scale-[1.02]`,
         active: 'active:scale-[0.98]',
-        focus: `focus:ring-[${colorScheme.primary}] focus:ring-opacity-50`,
+        focus: 'focus:ring-primary/50',
         disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
       danger: {
@@ -133,15 +131,15 @@ const Button: React.FC<ButtonProps> = ({
         color: colorScheme.white,
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
-        focus: `focus:ring-[${colorScheme.error}] focus:ring-opacity-50`,
+        focus: 'focus:ring-error/50',
         disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
       success: {
-        backgroundColor: '#10b981',
+        backgroundColor: colorScheme.success,
         color: colorScheme.white,
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
-        focus: 'focus:ring-[#10b981] focus:ring-opacity-50',
+        focus: 'focus:ring-success/50',
         disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
       },
     };
@@ -190,12 +188,18 @@ const Button: React.FC<ButtonProps> = ({
         transform transition-all duration-300 ease-out
         font-medium tracking-wide
         overflow-hidden relative
+        disabled:cursor-not-allowed
+        disabled:transform-none
+        disabled:shadow-none
       `}
       style={buttonStyles}
     >
       {/* Loading overlay */}
       {loading && (
-        <div className="absolute inset-0 bg-current opacity-20 rounded-inherit" />
+        <div
+          className="absolute inset-0 rounded-inherit"
+          style={{ backgroundColor: 'currentColor', opacity: 0.2 }}
+        />
       )}
 
       {/* Content container */}

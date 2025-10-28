@@ -2,10 +2,9 @@
 'use client';
 
 import React from 'react';
+import { BaseText, BaseTextProps } from './baseText';
 
-import { BaseText, BaseTextProps } from './baseText'; // Fixed import
-
-// Heading Components
+// Heading Components - Using Bricolage Grotesque
 export const H1: React.FC<BaseTextProps> = props => (
   <BaseText as="h1" variant="heading-xl" {...props} />
 );
@@ -22,7 +21,7 @@ export const H4: React.FC<BaseTextProps> = props => (
   <BaseText as="h4" variant="heading-sm" {...props} />
 );
 
-// Body Text Components
+// Body Text Components - Using Work Sans
 export const P: React.FC<BaseTextProps> = props => (
   <BaseText as="p" variant="body-md" {...props} />
 );
@@ -39,15 +38,33 @@ export const Caption: React.FC<BaseTextProps> = props => (
   <BaseText as="span" variant="caption" {...props} />
 );
 
+// Elegant Text Components - Using Playfair Display
+export const ElegantLarge: React.FC<BaseTextProps> = props => (
+  <BaseText as="p" variant="elegant-lg" {...props} />
+);
+
+export const ElegantMedium: React.FC<BaseTextProps> = props => (
+  <BaseText as="p" variant="elegant-md" {...props} />
+);
+
+export const ElegantSmall: React.FC<BaseTextProps> = props => (
+  <BaseText as="p" variant="elegant-sm" {...props} />
+);
+
 // Inline Text Components
 export const Span: React.FC<BaseTextProps> = props => (
-  <BaseText as="span" {...props} />
+  <BaseText as="span" fontFamily="worksans" {...props} />
 );
 
 export const Strong: React.FC<BaseTextProps> = props => (
-  <BaseText as="strong" weight="bold" {...props} />
+  <BaseText as="strong" weight="bold" fontFamily="worksans" {...props} />
 );
 
 export const Em: React.FC<BaseTextProps> = props => (
-  <BaseText as="em" style={{ fontStyle: 'italic' }} {...props} />
+  <BaseText
+    as="em"
+    style={{ fontStyle: 'italic' }}
+    fontFamily="worksans"
+    {...props}
+  />
 );
