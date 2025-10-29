@@ -22,6 +22,13 @@ import WisdomeHouseLogo from './OIP.webp';
 import Associate_1 from './Asso (1).jpg';
 import Associate_2 from './Asso (2).jpg';
 
+// JoinUs
+import Workforce_bg from './workForce.jpg';
+import Dept_1 from './JoinUs (1).jpg';
+import Dept_2 from './JoinUs (2).jpg';
+import Dept_3 from './JoinUs (3).jpg';
+import Dept_4 from './JoinUs (4).jpg';
+
 export {
   Banner_1,
   Banner_2,
@@ -38,4 +45,9 @@ export {
   Whatwedo_1,
   Whatwedo_2,
   Whatwedo_4,
+  Workforce_bg,
+  Dept_1,
+  Dept_2,
+  Dept_3,
+  Dept_4,
 };
