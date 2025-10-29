@@ -118,7 +118,7 @@ export default function Header() {
             isScrolled ? 'h-16 px-6' : 'h-14 px-4 sm:px-6 lg:px-8'
           )}
         >
-          {/* Logo - Left */}
+          {/* Logo - Left - FIXED: Changed from flex-col to flex-row */}
           <div className="relative flex items-center space-x-3">
             <div className="relative">
               <Image
@@ -142,16 +142,16 @@ export default function Header() {
 
             <span
               className={cn(
-                `${worksans.className} font-medium transition-all duration-500 hidden sm:flex flex-col leading-tight`,
+                `${worksans.className} font-medium transition-all duration-500 hidden sm:flex items-center gap-1 leading-none`, // Changed to items-center and gap-1
                 isScrolled ? 'text-xs' : 'text-[8px]'
               )}
               style={{
                 color: isScrolled ? colorScheme.text : colorScheme.white,
               }}
             >
-              <span>The</span>
-              <span>Wisdom</span>
-              <span style={{ color: colorScheme.primary }}>HouseHq</span>
+              The
+              <span style={{ color: colorScheme.primary }}>Wisdom </span>
+              <span style={{ color: colorScheme.primary }}>Church</span>
             </span>
           </div>
 
@@ -262,12 +262,12 @@ export default function Header() {
             </div>
           </nav>
 
-          {/* CTA Button - Right */}
+          {/* CTA Button - Right - FIXED: Ensure icon and text are inline */}
           <div className="flex items-center justify-end flex-shrink-0">
             <Button
               asChild
               className={cn(
-                `${worksans.className} hidden lg:flex transition-all duration-500`,
+                `${worksans.className} hidden lg:flex items-center transition-all duration-500`, // Added items-center
                 isScrolled
                   ? 'hover:scale-105 h-10 px-6 text-sm border-2'
                   : 'backdrop-blur-sm hover:bg-white hover:text-gray-900 border h-8 px-3 text-xs'
@@ -285,7 +285,9 @@ export default function Header() {
                 borderRadius: colorScheme.borderRadius.medium,
               }}
             >
-              <Link href="#community">
+              <Link href="#community" className="flex items-center">
+                {' '}
+                {/* Added flex items-center */}
                 <Church className="mr-2 h-4 w-4" />
                 Join Us
               </Link>
@@ -321,7 +323,7 @@ export default function Header() {
                 }}
               >
                 <div className="flex flex-col h-full">
-                  {/* Mobile Logo */}
+                  {/* Mobile Logo - FIXED: Made text inline */}
                   <div
                     className="p-4 border-b"
                     style={{ borderColor: colorScheme.border }}
@@ -342,7 +344,10 @@ export default function Header() {
                         className={`${bricolageGrotesque.className} font-bold text-lg`}
                         style={{ color: colorScheme.text }}
                       >
-                        Wisdom House
+                        The Wisdom{' '}
+                        <span style={{ color: colorScheme.primary }}>
+                          HouseHq
+                        </span>
                       </span>
                     </Link>
                   </div>
@@ -465,14 +470,14 @@ export default function Header() {
                     </div>
                   </nav>
 
-                  {/* Mobile CTA Button */}
+                  {/* Mobile CTA Button - FIXED: Ensure icon and text are inline */}
                   <div
                     className="p-3 border-t"
                     style={{ borderColor: colorScheme.border }}
                   >
                     <Button
                       asChild
-                      className={`${worksans.className} w-full h-12 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300`}
+                      className={`${worksans.className} w-full h-12 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center`} // Added flex items-center justify-center
                       style={{
                         backgroundColor: colorScheme.primary,
                         color: colorScheme.textInverted,
@@ -482,6 +487,7 @@ export default function Header() {
                       <Link
                         href="#community"
                         onClick={() => setSheetOpen(false)}
+                        className="flex items-center" // Added flex items-center
                       >
                         <Church className="mr-2 h-5 w-5" />
                         Join Our Community

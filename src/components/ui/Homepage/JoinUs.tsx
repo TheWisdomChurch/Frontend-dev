@@ -4,15 +4,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import {
-  Workforce_bg,
-  Dept_1,
-  Dept_2,
-  Dept_3,
-  Dept_4,
-  Whatwedo_2,
-} from '@/components/assets';
+import { Workforce_bg } from '@/components/assets';
 import { BaseText, LightText } from '@/components/text';
+import { photos } from '@/lib/data';
 import Button from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
@@ -41,34 +35,6 @@ export default function JoinWisdomHouse() {
       }
     };
   }, []);
-
-  const photos = [
-    {
-      title: 'Media Department',
-      image: Dept_3,
-      link: '#',
-    },
-    {
-      title: 'ServicePreparatory Unit',
-      image: Dept_2,
-      link: '#',
-    },
-    {
-      title: 'Music(WaveCityMusic)',
-      image: Dept_1,
-      link: '#',
-    },
-    {
-      title: 'Prayer/Intercessory Unit',
-      image: Whatwedo_2,
-      link: '#',
-    },
-    {
-      title: 'Protocol/Ushering Department',
-      image: Dept_4,
-      link: '#',
-    },
-  ];
 
   return (
     <section

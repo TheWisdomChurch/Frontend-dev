@@ -1,11 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { BookOpen, DollarSign, Heart, Users } from 'lucide-react';
 import { NavLink, Leader, Sermon, Ministry, ExtendedNavLink } from './types';
 
-import { hero_bg_1, hero_bg_2, hero_bg_3 } from '@/components/assets';
 import {
   WhatWeDo_3,
+  hero_bg_1,
+  hero_bg_2,
+  hero_bg_3,
   Whatwedo_1,
+  Associate_1,
+  Associate_2,
   Whatwedo_2,
+  Dept_1,
+  Dept_2,
+  Dept_3,
+  Dept_4,
   Whatwedo_4,
 } from '@/components/assets';
 
@@ -212,3 +221,76 @@ export const whatWeDoData: ServiceBox[] = [
 
 export const missionStatement =
   'At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit. Our mission is to create a community where faith thrives and transformation is possible.';
+
+export const pastors = [
+  {
+    name: 'Rev. Victor Jimba',
+    role: 'Resident Pastor',
+    image: Associate_2,
+  },
+  {
+    name: 'Deacon Adeyemi ',
+    role: 'Associate Pastor',
+    image: Associate_1,
+  },
+  {
+    name: 'Deacon Bamidele',
+    role: 'Associate Pastor',
+    image: Associate_1,
+  },
+];
+export const photos = [
+  {
+    title: 'Media Department',
+    image: Dept_3,
+    link: '#',
+  },
+  {
+    title: 'ServicePreparatory Unit',
+    image: Dept_2,
+    link: '#',
+  },
+  {
+    title: 'Music(WaveCityMusic)',
+    image: Dept_1,
+    link: '#',
+  },
+  {
+    title: 'Prayer/Intercessory Unit',
+    image: Whatwedo_2,
+    link: '#',
+  },
+  {
+    title: 'Protocol/Ushering Department',
+    image: Dept_4,
+    link: '#',
+  },
+];
+
+export const givingOptions = [
+  {
+    title: 'Tithes & Offerings',
+    description:
+      'Support the ongoing ministry and mission of The Lighthouse Church',
+    icon: DollarSign,
+    color: 'from-green-600 to-green-700',
+  },
+  {
+    title: 'Building Fund',
+    description: 'Help us expand our facilities to reach more people',
+    icon: Heart,
+    color: 'from-blue-600 to-blue-700',
+  },
+  {
+    title: 'Missions & Outreach',
+    description: 'Support our global mission efforts and community programs',
+    icon: Users,
+    color: 'from-purple-600 to-purple-700',
+  },
+  {
+    title: 'Youth & Education',
+    description: 'Invest in the next generation through our youth programs',
+    icon: BookOpen,
+    color: 'from-orange-600 to-orange-700',
+  },
+];
