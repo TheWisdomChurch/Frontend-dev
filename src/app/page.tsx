@@ -4,6 +4,8 @@ import HeroSection from '@/components/ui/Homepage/Herosection';
 import WhatWeDo from '@/components/ui/Homepage/WhatWeDo';
 import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
 import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';
+import JoinLighthouse from '@/components/ui/Homepage/JoinUs';
+import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
         <WhatWeDo />
         <SeniorPastor />
         <AssociatePastors />
+        <JoinLighthouse />
+        <OnlineGiving />
       </main>
     </div>
   );

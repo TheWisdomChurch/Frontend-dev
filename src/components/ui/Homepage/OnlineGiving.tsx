@@ -116,7 +116,7 @@ export default function OnlineGiving() {
             <p className="text-gray-600 mb-6">
               You can also give by mail, in person during our services, or set
               up recurring donations. For more information about giving options,
-              please contact our office.
+              please contact our Admin.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105">

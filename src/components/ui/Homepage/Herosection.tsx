@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, SetStateAction, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { H1 } from '../../text';
 import { slides } from '@/lib/data';
 import { ChevronDown } from 'lucide-react';
@@ -17,8 +17,8 @@ if (typeof window !== 'undefined') {
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hasScrolledOut, setHasScrolledOut] = useState(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -42,6 +42,41 @@ const HeroSection = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Detect when hero section enters/exits view and trigger slide changes
+  useEffect(() => {
+    if (!heroRef.current) return;
+
+    let hasTriggeredThisEntry = false;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // User scrolled back into view
+          if (hasScrolledOut && !hasTriggeredThisEntry) {
+            // Trigger slide change only if user had scrolled out previously
+            hasTriggeredThisEntry = true;
+            nextSlide();
+          }
+          setHasScrolledOut(false);
+        } else {
+          // User scrolled out of view
+          setHasScrolledOut(true);
+          hasTriggeredThisEntry = false; // Reset for next entry
+        }
+      },
+      {
+        threshold: 0.3, // Trigger when 30% of hero section is visible
+        rootMargin: '-100px 0px 0px 0px', // Offset to trigger slightly earlier
+      }
+    );
+
+    observer.observe(heroRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [currentSlide, hasScrolledOut]);
 
   // Initial animations on component mount
   useEffect(() => {
@@ -88,17 +123,6 @@ const HeroSection = () => {
 
     return () => ctx.revert();
   }, []);
-
-  // Auto-slide effect
-  useEffect(() => {
-    if (isTransitioning) return;
-
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [currentSlide, isTransitioning]);
 
   const animateContentEntrance = () => {
     const tl = gsap.timeline();
@@ -181,72 +205,57 @@ const HeroSection = () => {
     return tl;
   };
 
-  const animateSlideTransition = (nextIndex: number) => {
-    return new Promise<void>(resolve => {
-      const ctx = gsap.context(() => {
-        const currentSlideEl = slidesRef.current[currentSlide];
-        const nextSlideEl = slidesRef.current[nextIndex];
+  const animateSlideTransition = async (nextIndex: number) => {
+    const currentSlideEl = slidesRef.current[currentSlide];
+    const nextSlideEl = slidesRef.current[nextIndex];
 
-        if (!currentSlideEl || !nextSlideEl) {
-          resolve();
-          return;
-        }
+    if (!currentSlideEl || !nextSlideEl) return;
 
-        const tl = gsap.timeline({
-          onComplete: () => {
-            setIsTransitioning(false);
-            resolve();
-          },
-        });
+    const tl = gsap.timeline();
 
-        tl.call(() => setIsTransitioning(true))
-          .add(animateContentExit())
-          .to(
-            currentSlideEl,
-            {
-              scale: 1.1,
-              opacity: 0,
-              duration: 1.2,
-              ease: 'power2.inOut',
-            },
-            0
-          )
-          .fromTo(
-            nextSlideEl,
-            { scale: 1.1, opacity: 0 },
-            {
-              scale: 1,
-              opacity: 1,
-              duration: 1.2,
-              ease: 'power2.inOut',
-            },
-            0
-          )
-          .call(
-            () => {
-              setCurrentSlide(nextIndex);
-            },
-            undefined,
-            0.6
-          )
-          .add(animateContentEntrance(), 0.8);
-      });
+    tl.add(animateContentExit())
+      .to(
+        currentSlideEl,
+        {
+          scale: 1.1,
+          opacity: 0,
+          duration: 1.2,
+          ease: 'power2.inOut',
+        },
+        0
+      )
+      .fromTo(
+        nextSlideEl,
+        { scale: 1.1, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1.2,
+          ease: 'power2.inOut',
+        },
+        0
+      )
+      .call(
+        () => {
+          setCurrentSlide(nextIndex);
+        },
+        undefined,
+        0.6
+      )
+      .add(animateContentEntrance(), 0.8);
 
-      return () => ctx.revert();
-    });
+    return tl;
   };
 
   const nextSlide = async () => {
-    if (isTransitioning) return;
-
     const nextIndex = (currentSlide + 1) % slides.length;
     await animateSlideTransition(nextIndex);
   };
 
-  const goToSlide = async (index: SetStateAction<number>) => {
-    if (isTransitioning || index === currentSlide) return;
+  const goToSlide = async (index: number) => {
+    if (index === currentSlide) return;
 
-    const clickedIndicator = indicatorsRef.current[index as number];
+    const clickedIndicator = indicatorsRef.current[index];
     if (clickedIndicator) {
       gsap.fromTo(
         clickedIndicator,
@@ -261,7 +270,7 @@ const HeroSection = () => {
       );
     }
 
-    await animateSlideTransition(index as number);
+    await animateSlideTransition(index);
   };
 
   const addToSlidesRef = (el: HTMLDivElement | null, index: number) => {
