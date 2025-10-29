@@ -110,10 +110,18 @@ export const navLinks: NavLink[] = [
 ];
 
 export const leaders: Leader[] = [
-  { name: 'Pastor John Doe', role: 'Lead Pastor', imageId: 'leader-1' },
-  { name: 'Jane Smith', role: 'Youth Pastor', imageId: 'leader-2' },
-  { name: 'Emily White', role: 'Worship Leader', imageId: 'leader-3' },
-  { name: 'Michael Brown', role: 'Outreach Director', imageId: 'leader-4' },
+  { name: 'Rev. Victor Jimba', role: 'Resident Pastor', imageId: 'leader-1' },
+  {
+    name: 'Pastor Kenny Ayilara',
+    role: 'Assistant Pastor',
+    imageId: 'leader-2',
+  },
+  {
+    name: 'Deacon Adeyemi ',
+    role: 'Head Service Preparatory Unit',
+    imageId: 'leader-3',
+  },
+  { name: 'Deacon Bamidele ', role: 'Head Technical', imageId: 'leader-4' },
 ];
 
 export const sermons: Sermon[] = [
