@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Associate_1, Associate_2 } from '@/components/assets';
 import Image from 'next/image';
+import { pastors } from '@/lib/data';
 
 export default function AssociatePastors() {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,24 +28,6 @@ export default function AssociatePastors() {
       }
     };
   }, []);
-
-  const pastors = [
-    {
-      name: 'Rev. Victor Jimba',
-      role: 'Resident Pastor',
-      image: Associate_2,
-    },
-    {
-      name: 'Deacon Adeyemi ',
-      role: 'Associate Pastor',
-      image: Associate_1,
-    },
-    {
-      name: 'Deacon Bamidele',
-      role: 'Associate Pastor',
-      image: Associate_1,
-    },
-  ];
 
   return (
     <section ref={sectionRef} className="py-20 bg-gray-50">

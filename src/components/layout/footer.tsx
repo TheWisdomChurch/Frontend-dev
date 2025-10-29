@@ -24,11 +24,11 @@ export default function Footer() {
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6">
               <div className="flex items-center space-x-2 text-gray-300">
                 <MapPin className="h-4 w-4" />
-                <span>123 Church Street, City, State</span>
+                <span>Church Address will be here</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>Contact Number will be here </span>
               </div>
             </div>
           </div>
@@ -66,8 +66,8 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-300">
               {[
                 { service: 'Sunday Worship', time: '9:00 AM & 11:00 AM' },
-                { service: 'Bible Study', time: 'Wednesday 7:00 PM' },
-                { service: 'Youth Service', time: 'Friday 7:00 PM' },
+                { service: 'Midweek Service', time: 'Thursday 6:00 PM' },
+                { service: 'Supernatural Service', time: 'Every Last Sunday' },
               ].map((item, index) => (
                 <li key={index} className="flex justify-between">
                   <span>{item.service}</span>
