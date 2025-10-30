@@ -1,18 +1,19 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { H1 } from '../../text';
 import { slides } from '@/lib/data';
 import { ChevronDown } from 'lucide-react';
 import Header from '@/components/layout/header';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import Button from '../../utils/CustomButton';
 
 // Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
 
 const HeroSection = () => {
@@ -32,6 +33,39 @@ const HeroSection = () => {
 
   // Use your theme context
   const { colorScheme } = useTheme();
+
+  // Fixed scroll function
+  const scrollToNextSection = useCallback(() => {
+    const nextSection = heroRef.current?.nextElementSibling;
+
+    if (nextSection) {
+      // Use native smooth scroll (more reliable)
+      nextSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, []);
+
+  const handleHoverEnter = useCallback(() => {
+    if (scrollIndicatorRef.current) {
+      gsap.to(scrollIndicatorRef.current, {
+        y: 5,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+    }
+  }, []);
+
+  const handleHoverLeave = useCallback(() => {
+    if (scrollIndicatorRef.current) {
+      gsap.to(scrollIndicatorRef.current, {
+        y: 0,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+    }
+  }, []);
 
   // Handle scroll effect for header
   useEffect(() => {
@@ -456,23 +490,29 @@ const HeroSection = () => {
       {/* Scroll Indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block cursor-pointer group"
+        onClick={scrollToNextSection}
+        onMouseEnter={handleHoverEnter}
+        onMouseLeave={handleHoverLeave}
       >
         <div className="flex flex-col items-center">
           <ChevronDown
-            className="w-6 h-6 animate-pulse"
+            className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1"
             style={{ color: colorScheme.primary }}
           />
           <ChevronDown
-            className="w-6 h-6 animate-pulse -mt-[6px]"
+            className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1 -mt-[6px] delay-75"
             style={{ color: colorScheme.primary }}
           />
         </div>
       </div>
 
-      {/* Mobile Scroll Indicator */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 sm:hidden">
-        <div className="animate-bounce flex flex-col items-center">
+      {/* Mobile Scroll Indicator - ONLY ONE */}
+      <div
+        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 sm:hidden cursor-pointer"
+        onClick={scrollToNextSection}
+      >
+        <div className="flex flex-col items-center animate-bounce">
           <ChevronDown
             className="w-5 h-5"
             style={{ color: colorScheme.primary }}
