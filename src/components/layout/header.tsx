@@ -20,9 +20,10 @@ import { WisdomeHouseLogo } from '@/components/assets';
 
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { bricolageGrotesque, worksans } from '../fonts/fonts';
 import { useTheme } from '../contexts/ThemeContext';
+import { useHeaderContext } from '../providers/NavProviders';
 
 // Icon mapping
 const iconMap = {
@@ -36,23 +37,29 @@ const iconMap = {
 export default function Header() {
   const pathname = usePathname();
   const { colorScheme } = useTheme();
-  const [isSheetOpen, setSheetOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileOpenDropdown, setMobileOpenDropdown] = useState<string | null>(
-    null
-  );
+  const {
+    isHeaderScrolled,
+    setIsHeaderScrolled,
+    activeDropdown,
+    setActiveDropdown,
+    mobileOpenDropdown,
+    setMobileOpenDropdown,
+    isSheetOpen,
+    setSheetOpen,
+    closeAllDropdowns,
+  } = useHeaderContext();
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll effect
+  // Handle scroll effect - now using context
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsHeaderScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [setIsHeaderScrolled]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -67,7 +74,7 @@ export default function Header() {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [setActiveDropdown]);
 
   const handleLinkClick = (
     href: string,
@@ -78,13 +85,11 @@ export default function Header() {
       e.preventDefault();
       return;
     }
-    setActiveDropdown(null);
+    closeAllDropdowns();
   };
 
   const handleDropdownItemClick = () => {
-    setActiveDropdown(null);
-    setMobileOpenDropdown(null);
-    setSheetOpen(false);
+    closeAllDropdowns();
   };
 
   const toggleMobileDropdown = (label: string, e: React.MouseEvent) => {
@@ -97,28 +102,30 @@ export default function Header() {
     <header
       className={cn(
         'fixed z-50 transition-all duration-500 ease-out',
-        isScrolled
+        isHeaderScrolled
           ? 'top-0 left-0 right-0 bg-transparent border-b-4 border-yellow-400 shadow-lg py-0'
           : 'top-8 left-4 right-4 mx-auto max-w-7xl bg-transparent border border-yellow-400 rounded-2xl py-0'
       )}
       style={{
-        backgroundColor: isScrolled ? colorScheme.background : 'transparent',
+        backgroundColor: isHeaderScrolled
+          ? colorScheme.background
+          : 'transparent',
         borderColor: colorScheme.primary,
       }}
     >
       <div
         className={cn(
           'mx-auto transition-all duration-500',
-          isScrolled ? 'max-w-full' : 'max-w-screen-2xl'
+          isHeaderScrolled ? 'max-w-full' : 'max-w-screen-2xl'
         )}
       >
         <div
           className={cn(
             'flex items-center justify-between mx-auto transition-all duration-500',
-            isScrolled ? 'h-16 px-6' : 'h-14 px-4 sm:px-6 lg:px-8'
+            isHeaderScrolled ? 'h-16 px-6' : 'h-14 px-4 sm:px-6 lg:px-8'
           )}
         >
-          {/* Logo - Left - FIXED: Changed from flex-col to flex-row */}
+          {/* Logo - Left */}
           <div className="relative flex items-center space-x-3">
             <div className="relative">
               <Image
@@ -126,14 +133,14 @@ export default function Header() {
                 alt="WisdomHouse"
                 className={cn(
                   'rounded-full transition-all duration-500',
-                  isScrolled ? 'h-10 w-10' : 'h-8 w-8'
+                  isHeaderScrolled ? 'h-10 w-10' : 'h-8 w-8'
                 )}
-                width={isScrolled ? 40 : 32}
-                height={isScrolled ? 40 : 32}
+                width={isHeaderScrolled ? 40 : 32}
+                height={isHeaderScrolled ? 40 : 32}
               />
             </div>
 
-            {!isScrolled && (
+            {!isHeaderScrolled && (
               <div
                 className="h-6 w-px mx-1"
                 style={{ backgroundColor: colorScheme.border }}
@@ -142,11 +149,11 @@ export default function Header() {
 
             <span
               className={cn(
-                `${worksans.className} font-medium transition-all duration-500 hidden sm:flex items-center gap-1 leading-none`, // Changed to items-center and gap-1
-                isScrolled ? 'text-xs' : 'text-[8px]'
+                `${worksans.className} font-medium transition-all duration-500 hidden sm:flex items-center gap-1 leading-none`,
+                isHeaderScrolled ? 'text-xs' : 'text-[8px]'
               )}
               style={{
-                color: isScrolled ? colorScheme.text : colorScheme.white,
+                color: isHeaderScrolled ? colorScheme.text : colorScheme.white,
               }}
             >
               The
@@ -184,7 +191,7 @@ export default function Header() {
                             ? isHome
                               ? 'text-gray-900 shadow-md'
                               : 'text-gray-900 shadow-md'
-                            : isScrolled
+                            : isHeaderScrolled
                               ? 'hover:bg-yellow-400/20'
                               : 'hover:bg-white/20'
                         )}
@@ -196,7 +203,7 @@ export default function Header() {
                             : 'transparent',
                           color: isActive
                             ? colorScheme.textInverted
-                            : isScrolled
+                            : isHeaderScrolled
                               ? colorScheme.text
                               : colorScheme.white,
                           borderRadius: colorScheme.borderRadius.medium,
@@ -222,7 +229,7 @@ export default function Header() {
                       )}
                     </div>
 
-                    {/* Dropdown Menu - UPDATED */}
+                    {/* Dropdown Menu */}
                     {hasDropdown &&
                       activeDropdown === link.label &&
                       link.dropdown && (
@@ -262,32 +269,30 @@ export default function Header() {
             </div>
           </nav>
 
-          {/* CTA Button - Right - FIXED: Ensure icon and text are inline */}
+          {/* CTA Button - Right */}
           <div className="flex items-center justify-end flex-shrink-0">
             <Button
               asChild
               className={cn(
-                `${worksans.className} hidden lg:flex items-center transition-all duration-500`, // Added items-center
-                isScrolled
+                `${worksans.className} hidden lg:flex items-center transition-all duration-500`,
+                isHeaderScrolled
                   ? 'hover:scale-105 h-10 px-6 text-sm border-2'
                   : 'backdrop-blur-sm hover:bg-white hover:text-gray-900 border h-8 px-3 text-xs'
               )}
               style={{
-                backgroundColor: isScrolled
+                backgroundColor: isHeaderScrolled
                   ? colorScheme.primary
                   : colorScheme.white + '20',
-                color: isScrolled
+                color: isHeaderScrolled
                   ? colorScheme.textInverted
                   : colorScheme.white,
-                borderColor: isScrolled
+                borderColor: isHeaderScrolled
                   ? colorScheme.primary
                   : colorScheme.white + '30',
                 borderRadius: colorScheme.borderRadius.medium,
               }}
             >
               <Link href="#community" className="flex items-center">
-                {' '}
-                {/* Added flex items-center */}
                 <Church className="mr-2 h-4 w-4" />
                 Join Us
               </Link>
@@ -301,12 +306,14 @@ export default function Header() {
                   size="icon"
                   className={cn(
                     'lg:hidden transition-colors ml-2',
-                    isScrolled
+                    isHeaderScrolled
                       ? 'hover:bg-yellow-400/20 h-10 w-10'
                       : 'hover:bg-white/20 h-8 w-8'
                   )}
                   style={{
-                    color: isScrolled ? colorScheme.text : colorScheme.white,
+                    color: isHeaderScrolled
+                      ? colorScheme.text
+                      : colorScheme.white,
                     borderRadius: colorScheme.borderRadius.medium,
                   }}
                 >
@@ -323,7 +330,7 @@ export default function Header() {
                 }}
               >
                 <div className="flex flex-col h-full">
-                  {/* Mobile Logo - FIXED: Made text inline */}
+                  {/* Mobile Logo */}
                   <div
                     className="p-4 border-b"
                     style={{ borderColor: colorScheme.border }}
@@ -426,7 +433,7 @@ export default function Header() {
                               )}
                             </div>
 
-                            {/* Mobile Dropdown Items - UPDATED */}
+                            {/* Mobile Dropdown Items */}
                             {hasDropdown &&
                               isMobileDropdownOpen &&
                               link.dropdown && (
@@ -470,14 +477,14 @@ export default function Header() {
                     </div>
                   </nav>
 
-                  {/* Mobile CTA Button - FIXED: Ensure icon and text are inline */}
+                  {/* Mobile CTA Button */}
                   <div
                     className="p-3 border-t"
                     style={{ borderColor: colorScheme.border }}
                   >
                     <Button
                       asChild
-                      className={`${worksans.className} w-full h-12 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center`} // Added flex items-center justify-center
+                      className={`${worksans.className} w-full h-12 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center`}
                       style={{
                         backgroundColor: colorScheme.primary,
                         color: colorScheme.textInverted,
@@ -487,7 +494,7 @@ export default function Header() {
                       <Link
                         href="#community"
                         onClick={() => setSheetOpen(false)}
-                        className="flex items-center" // Added flex items-center
+                        className="flex items-center"
                       >
                         <Church className="mr-2 h-5 w-5" />
                         Join Our Community

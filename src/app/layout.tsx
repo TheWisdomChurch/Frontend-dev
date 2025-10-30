@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/contexts/ThemeContext';
+import { HeaderProvider } from '@/components/providers/NavProviders';
 import {
   bricolageGrotesque,
   worksans,
@@ -29,14 +30,17 @@ export default function RootLayout({
         className={`${bricolageGrotesque.className} flex flex-col min-h-screen`}
       >
         <ThemeProvider>
-          {/* Header at the top */}
-          <Header />
+          {/* Wrap with HeaderProvider */}
+          <HeaderProvider>
+            {/* Header at the top */}
+            <Header />
 
-          {/* Main content grows to fill space */}
-          <main className="flex-1">{children}</main>
+            {/* Main content grows to fill space */}
+            <main className="flex-1">{children}</main>
 
-          {/* Footer at the bottom */}
-          <Footer />
+            {/* Footer at the bottom */}
+            <Footer />
+          </HeaderProvider>
         </ThemeProvider>
       </body>
     </html>
