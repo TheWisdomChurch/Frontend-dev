@@ -381,5 +381,3 @@ export const givingOptions: GivingOption[] = [
     color: 'from-orange-600 to-orange-700',
   },
 ];
-
-export { ServiceBox };

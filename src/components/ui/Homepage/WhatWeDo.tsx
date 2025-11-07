@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { whatWeDoData, missionStatement, ServiceBox } from '@/lib/data';
+import { whatWeDoData, missionStatement } from '@/lib/data';
+import { ServiceBox } from '@/lib/types';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
