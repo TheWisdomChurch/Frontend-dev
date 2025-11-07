@@ -1,4 +1,3 @@
- 
 import { BookOpen, DollarSign, Heart, Users } from 'lucide-react';
 import {
   NavLink,
@@ -382,3 +381,5 @@ export const givingOptions: GivingOption[] = [
     color: 'from-orange-600 to-orange-700',
   },
 ];
+
+export { ServiceBox };
