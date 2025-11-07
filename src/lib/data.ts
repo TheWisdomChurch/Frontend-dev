@@ -1,6 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { BookOpen, DollarSign, Heart, Users } from 'lucide-react';
-import { NavLink, Leader, Sermon, Ministry, ExtendedNavLink } from './types';
+import {
+  NavLink,
+  ExtendedNavLink,
+  Leader,
+  MinistryLeader,
+  Sermon,
+  Ministry,
+  ServiceBox,
+  GivingOption,
+  Photo,
+  Slide,
+} from './types';
 
 import {
   WhatWeDo_3,
@@ -18,7 +29,7 @@ import {
   Whatwedo_4,
 } from '@/components/assets';
 
-export const slides = [
+export const slides: Slide[] = [
   {
     image: hero_bg_1,
     title: 'We Are Transformed',
@@ -66,7 +77,7 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     href: '/ministries',
     icon: 'Users',
     dropdown: [
-      { label: 'Children Ministry', href: '/ministries/children' }, // ✅ FIXED
+      { label: 'Children Ministry', href: '/ministries/children' },
       { label: 'Youth Ministry', href: '/ministries/youth' },
       { label: 'Women Ministry', href: '/ministries/women' },
       { label: 'Men Ministry', href: '/ministries/men' },
@@ -110,18 +121,35 @@ export const navLinks: NavLink[] = [
 ];
 
 export const leaders: Leader[] = [
-  { name: 'Rev. Victor Jimba', role: 'Resident Pastor', imageId: 'leader-1' },
   {
+    id: 1,
+    name: 'Rev. Victor Jimba',
+    role: 'Resident Pastor',
+    image: Associate_2,
+    description:
+      'Provides overall spiritual leadership and vision for the church.',
+  },
+  {
+    id: 2,
     name: 'Pastor Kenny Ayilara',
     role: 'Assistant Pastor',
-    imageId: 'leader-2',
+    image: Associate_1,
+    description: 'Supports the senior pastor in ministry and pastoral care.',
   },
   {
-    name: 'Deacon Adeyemi ',
+    id: 3,
+    name: 'Deacon Adeyemi',
     role: 'Head Service Preparatory Unit',
-    imageId: 'leader-3',
+    image: Associate_1,
+    description: 'Oversees service preparation and logistics.',
   },
-  { name: 'Deacon Bamidele ', role: 'Head Technical', imageId: 'leader-4' },
+  {
+    id: 4,
+    name: 'Deacon Bamidele',
+    role: 'Head Technical',
+    image: Associate_1,
+    description: 'Manages technical operations and equipment.',
+  },
 ];
 
 export const sermons: Sermon[] = [
@@ -171,23 +199,12 @@ export const ministries: Ministry[] = [
   },
 ];
 
-export const youtubeLivestreams: { current: string; previous: string[] } = {
+export const youtubeLivestreams = {
   current: 'jfKfPfyJRdk',
   previous: ['3tmd-ClafbY', '6-x1g_c1g4o', 'dQw4w9WgXcQ'],
 };
 
 // What we do
-// data.ts
-export interface ServiceBox {
-  id: number;
-  title: string;
-  description: string;
-  image: any;
-  imageAlt: string;
-  gradient?: string;
-  imageOpacity?: number;
-}
-
 export const whatWeDoData: ServiceBox[] = [
   {
     id: 1,
@@ -230,24 +247,87 @@ export const whatWeDoData: ServiceBox[] = [
 export const missionStatement =
   'At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit. Our mission is to create a community where faith thrives and transformation is possible.';
 
-export const pastors = [
+export const pastorsData: Leader[] = [
   {
+    id: 1,
     name: 'Rev. Victor Jimba',
     role: 'Resident Pastor',
     image: Associate_2,
+    description:
+      'Provides overall spiritual leadership and vision for the church.',
   },
   {
-    name: 'Deacon Adeyemi ',
-    role: 'Associate Pastor',
+    id: 2,
+    name: 'Deacon Adeyemi',
+    role: 'Head Technical & Sound',
     image: Associate_1,
+    description: 'Oversees technical operations and sound systems.',
   },
   {
+    id: 3,
     name: 'Deacon Bamidele',
-    role: 'Associate Pastor',
+    role: 'Head Service Preparatory Team',
     image: Associate_1,
+    description: 'Manages service preparation and logistics.',
   },
 ];
-export const photos = [
+
+export const ministryLeadersData: MinistryLeader[] = [
+  {
+    id: 1,
+    name: 'Sister Grace Thompson',
+    role: 'Worship Director',
+    department: 'Worship & Arts',
+    image: Associate_1,
+    description:
+      'Leads our worship team in creating meaningful worship experiences.',
+  },
+  {
+    id: 2,
+    name: 'Brother Michael Chen',
+    role: 'Youth Ministry Leader',
+    department: 'Youth & Young Adults',
+    image: Associate_1,
+    description:
+      'Passionate about guiding the next generation in their faith journey.',
+  },
+  {
+    id: 3,
+    name: 'Sister Sarah Johnson',
+    role: "Children's Ministry Director",
+    department: "Children's Ministry",
+    image: Associate_1,
+    description:
+      'Creates engaging and safe environments for children to learn about God.',
+  },
+  {
+    id: 4,
+    name: 'Brother David Wilson',
+    role: 'Outreach Coordinator',
+    department: 'Outreach & Missions',
+    image: Associate_1,
+    description: 'Coordinates community outreach and mission initiatives.',
+  },
+  {
+    id: 5,
+    name: 'Sister Maria Garcia',
+    role: "Women's Ministry Leader",
+    department: "Women's Ministry",
+    image: Associate_1,
+    description: 'Empowers women through Bible study and fellowship.',
+  },
+  {
+    id: 6,
+    name: 'Brother James Brown',
+    role: "Men's Ministry Leader",
+    department: "Men's Ministry",
+    image: Associate_1,
+    description:
+      'Builds strong Christian men through discipleship and accountability.',
+  },
+];
+
+export const photos: Photo[] = [
   {
     title: 'Media Department',
     image: Dept_3,
@@ -275,7 +355,7 @@ export const photos = [
   },
 ];
 
-export const givingOptions = [
+export const givingOptions: GivingOption[] = [
   {
     title: 'Tithes & Offerings',
     description:

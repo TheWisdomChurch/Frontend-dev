@@ -1,3 +1,6 @@
+import { StaticImageData } from 'next/image';
+import { LucideIcon } from 'lucide-react';
+
 export interface NavLink {
   href: string;
   label: string;
@@ -17,9 +20,15 @@ export interface DropdownItem {
 }
 
 export interface Leader {
+  id: number;
   name: string;
   role: string;
-  imageId: string;
+  image: StaticImageData;
+  description: string;
+}
+
+export interface MinistryLeader extends Leader {
+  department: string;
 }
 
 export interface Sermon {
@@ -34,4 +43,39 @@ export interface Ministry {
   name: string;
   description: string;
   imageId: string;
+}
+
+export interface ServiceBox {
+  id: number;
+  title: string;
+  description: string;
+  image: StaticImageData;
+  imageAlt: string;
+  gradient?: string;
+  imageOpacity?: number;
+}
+
+export interface GivingOption {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  color: string;
+}
+
+export interface Photo {
+  title: string;
+  image: StaticImageData;
+  link: string;
+}
+
+export interface Slide {
+  image: StaticImageData;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+export interface YoutubeLivestreams {
+  current: string;
+  previous: string[];
 }

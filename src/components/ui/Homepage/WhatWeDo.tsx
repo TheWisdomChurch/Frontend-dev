@@ -192,7 +192,7 @@ export default function WhatWeDo() {
           ref={headingRef}
           className="text-4xl md:text-6xl font-bold text-center font-work-sans mb-16 bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-sm"
         >
-          What We Do
+          What To Expect
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">

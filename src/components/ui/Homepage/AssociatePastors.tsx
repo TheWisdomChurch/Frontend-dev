@@ -1,75 +1,234 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { pastors } from '@/lib/data';
+import { useRouter } from 'next/navigation';
+import { pastorsData, ministryLeadersData } from '@/lib/data';
+import { H1, H2, H3, P } from '@/components/text';
+import CustomButton from '@/components/utils/CustomButton';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function AssociatePastors() {
-  const [isVisible, setIsVisible] = useState(false);
+  const router = useRouter();
   const sectionRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
+
+  const handleSeeMore = () => {
+    router.push('/ministry-leaders');
+  };
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
+    const ctx = gsap.context(() => {
+      // Animate main heading
+      gsap.fromTo(
+        headingRef.current,
+        {
+          y: 50,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+          },
         }
-      },
-      { threshold: 0.1 }
-    );
+      );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+      // Animate cards with stagger effect
+      gsap.fromTo(
+        cardsRef.current,
+        {
+          y: 60,
+          opacity: 0,
+          scale: 0.9,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'back.out(1.2)',
+          scrollTrigger: {
+            trigger: contentRef.current,
+            start: 'top 70%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
+      // Subtle hover animations for cards
+      cardsRef.current.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          gsap.to(card, {
+            y: -8,
+            scale: 1.02,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        });
+
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, {
+            y: 0,
+            scale: 1,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
+  // Add card to ref array
+  const addToRefs = (el: HTMLDivElement | null) => {
+    if (el && !cardsRef.current.includes(el)) {
+      cardsRef.current.push(el);
+    }
+  };
+
   return (
-    <section ref={sectionRef} className="py-20 bg-gray-50">
+    <section
+      ref={sectionRef}
+      className="py-24 bg-gradient-to-b from-gray-50 to-white"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Meet our Associate Pastor
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Our dedicated team of pastors work together to serve, guide, and
-            inspire our church family in their spiritual journey.
-          </p>
+        {/* Main Section Header */}
+        <div className="text-center mb-20">
+          <H2
+            ref={headingRef}
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
+          >
+            Meet Our Departmental Heads & Ministry Leaders
+          </H2>
+          <P className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Our devoted leaders faithfully oversee various departments, guiding
+            the church family with wisdom, compassion, and a shared commitment
+            to spiritual growth and service.
+          </P>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-12">
-          {pastors.map((pastor, index) => (
-            <div
-              key={pastor.name}
-              className={`text-center transition-all duration-700 ${
-                isVisible
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: `${index * 150}ms` }}
-            >
-              <div className="relative inline-block mb-6">
-                <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-xl mx-auto">
-                  <Image
-                    src={pastor.image}
-                    alt={pastor.name}
-                    className="w-full h-full object-cover"
-                  />
+        <div ref={contentRef} className="flex flex-col items-center">
+          {/* First Leaders Section */}
+          <div className="w-full mb-16">
+            <H1 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-12">
+              Pastoral Leadership
+            </H1>
+            <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+              {pastorsData.slice(0, 3).map((pastor, index) => (
+                <div
+                  key={`pastoral-${pastor.name}`}
+                  ref={addToRefs}
+                  className="flex flex-col items-center group"
+                >
+                  <div className="relative inline-block mb-8">
+                    <div className="w-52 h-52 rounded-full overflow-hidden border-4 border-white shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500">
+                      <Image
+                        src={pastor.image}
+                        alt={pastor.name}
+                        width={208}
+                        height={208}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-5 py-2 rounded-full text-sm font-semibold shadow-lg">
+                      {pastor.role}
+                    </div>
+                  </div>
+
+                  <H3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-yellow-600 transition-colors duration-300">
+                    {pastor.name}
+                  </H3>
+                  {pastor.description && (
+                    <P className="text-gray-600 text-center text-sm leading-relaxed px-2">
+                      {pastor.description}
+                    </P>
+                  )}
                 </div>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                  {pastor.role}
-                </div>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                {pastor.name}
-              </h3>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Second Leaders Section */}
+          <div className="w-full mb-16">
+            <H1 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-12">
+              Ministry Department Heads
+            </H1>
+            <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+              {ministryLeadersData.slice(3, 6).map((pastor, index) => (
+                <div
+                  key={`ministry-${pastor.name}`}
+                  ref={addToRefs}
+                  className="flex flex-col items-center group"
+                >
+                  <div className="relative inline-block mb-8">
+                    <div className="w-52 h-52 rounded-full overflow-hidden border-4 border-white shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500">
+                      <Image
+                        src={pastor.image}
+                        alt={pastor.name}
+                        width={208}
+                        height={208}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-5 py-2 rounded-full text-sm font-semibold shadow-lg">
+                      {pastor.role}
+                    </div>
+                  </div>
+
+                  <H3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-yellow-600 transition-colors duration-300">
+                    {pastor.name}
+                  </H3>
+                  {pastor.description && (
+                    <P className="text-gray-600 text-center text-sm leading-relaxed px-2">
+                      {pastor.description}
+                    </P>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* See More Button */}
+          <div className="text-center mt-8">
+            <CustomButton
+              onClick={handleSeeMore}
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-3"
+            >
+              See More
+              <svg
+                className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </CustomButton>
+          </div>
         </div>
       </div>
     </section>
