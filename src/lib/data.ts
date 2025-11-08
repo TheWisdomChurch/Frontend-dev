@@ -137,7 +137,7 @@ export const leaders: Leader[] = [
   },
   {
     id: 3,
-    name: 'Deacon Adeyemi',
+    name: 'Deacon Adeyemi ',
     role: 'Head Service Preparatory Unit',
     image: Associate_1,
     description: 'Oversees service preparation and logistics.',
@@ -257,14 +257,14 @@ export const pastorsData: Leader[] = [
   },
   {
     id: 2,
-    name: 'Deacon Adeyemi',
+    name: 'Deacon Bamidele',
     role: 'Head Technical & Sound',
     image: Associate_1,
     description: 'Oversees technical operations and sound systems.',
   },
   {
     id: 3,
-    name: 'Deacon Bamidele',
+    name: 'Deacon Adeyemi',
     role: 'Head Service Preparatory Team',
     image: Associate_1,
     description: 'Manages service preparation and logistics.',
