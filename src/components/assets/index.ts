@@ -29,6 +29,10 @@ import Dept_2 from './JoinUs (2).jpg';
 import Dept_3 from './JoinUs (3).jpg';
 import Dept_4 from './JoinUs (4).jpg';
 
+// Bank_logo
+import KeystoneBank from './Keystone.webp';
+import ProvidusBank from './Providus.jpg';
+
 export {
   Banner_1,
   Banner_2,
@@ -50,4 +54,6 @@ export {
   Dept_2,
   Dept_3,
   Dept_4,
+  ProvidusBank,
+  KeystoneBank,
 };

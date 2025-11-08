@@ -1,4 +1,4 @@
-import { BookOpen, DollarSign, Heart, Users } from 'lucide-react';
+import { BookOpen, Church, DollarSign, Heart, Users } from 'lucide-react';
 import {
   NavLink,
   ExtendedNavLink,
@@ -21,6 +21,8 @@ import {
   Associate_1,
   Associate_2,
   Whatwedo_2,
+  ProvidusBank,
+  KeystoneBank,
   Dept_1,
   Dept_2,
   Dept_3,
@@ -66,8 +68,8 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     href: '/about',
     icon: 'Users',
     dropdown: [
-      { label: 'Our Story', href: '/about/story' },
-      { label: 'Our Beliefs', href: '/about/beliefs' },
+      // { label: 'Our Story', href: '/about/story' },
+      // { label: 'Our Beliefs', href: '/about/beliefs' },
       { label: 'Leadership', href: '/about/leadership' },
       { label: 'Mission & Vision', href: '/about/mission' },
     ],
@@ -452,4 +454,53 @@ export const communityLinks = [
     bgColor: 'from-red-500 to-red-600',
     hoverColor: 'hover:from-red-600 hover:to-red-700',
   },
+];
+// Add this to your givingOptions data structure
+export const OnlinegivingOptions = [
+  {
+    title: 'Tithes & Offerring & Seeds',
+    description: 'Give your tithes as an act of worship and obedience to God.',
+    icon: Church, // Your existing icon
+    accounts: [
+      {
+        bank: 'Keystone Bank',
+        accountNumber: '1012525608',
+        accountName: 'The Wisdom Church',
+        image: KeystoneBank, // Optional
+      },
+      // {
+      //   bank: "Providus Bank",
+      //   accountNumber: "9876 5432 1098",
+      //   accountName: "Wisdom House Church",
+      //   image:ProvidusBank// Optional
+      // },
+    ],
+  },
+  {
+    title: 'Building Projects & Outreach & Partnership',
+    description: 'Support us in building a church for all ',
+    icon: Church, // Your existing icon
+    accounts: [
+      {
+        bank: 'Keystone',
+        accountNumber: '1012879868',
+        accountName: 'The Wisdom Church',
+        image: KeystoneBank, // Optional
+      },
+    ],
+  },
+  {
+    title: 'Offerring & Seeds & Tithe - Disaspora',
+    description: 'May God Continually Replenish your Pocket.',
+    icon: Church, // Your existing icon
+    accounts: [
+      {
+        bank: 'Providus Bank',
+        accountNumber: '5403892948',
+        accountName: 'The Wisdom Church',
+        image: ProvidusBank, // Optional
+      },
+    ],
+  },
+  // Add similar structure for other giving options...
 ];
