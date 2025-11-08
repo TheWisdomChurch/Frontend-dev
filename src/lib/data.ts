@@ -27,6 +27,7 @@ import {
   Dept_4,
   Whatwedo_4,
 } from '@/components/assets';
+import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 
 export const slides: Slide[] = [
   {
@@ -424,3 +425,31 @@ export const confessionContent = `
 
     I HAVE SPOKEN YOUR WORDS OVER MY LIFE THIS WEEK LET IT BE ESTABLISHED AS A LAW.
   `;
+
+// JoinCommunity
+export const communityLinks = [
+  {
+    icon: MessageCircle,
+    title: 'Join Our WhatsApp Community',
+    description: 'Connect with fellow believers in our active WhatsApp group',
+    url: 'https://wa.me/2347069995333',
+    bgColor: 'from-green-500 to-green-600',
+    hoverColor: 'hover:from-green-600 hover:to-green-700',
+  },
+  {
+    icon: Instagram,
+    title: 'Follow Us on Instagram',
+    description: 'Stay updated with our latest posts and stories',
+    url: 'https://www.instagram.com/wisdomchurchhq',
+    bgColor: 'from-pink-500 to-pink-600',
+    hoverColor: 'hover:from-pink-600 hover:to-pink-700',
+  },
+  {
+    icon: Youtube,
+    title: 'Subscribe to Our YouTube',
+    description: 'Watch our sermons and inspirational content',
+    url: 'https://www.youtube.com/channel/UCJuXOj075x81CYK-cCuXwdg',
+    bgColor: 'from-red-500 to-red-600',
+    hoverColor: 'hover:from-red-600 hover:to-red-700',
+  },
+];
