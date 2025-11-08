@@ -9,6 +9,8 @@ import { H1, H2, H3, P } from '@/components/text';
 import CustomButton from '@/components/utils/CustomButton';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -23,7 +25,7 @@ export default function AssociatePastors() {
   const cardsRef = useRef<HTMLDivElement[]>([]);
 
   const handleSeeMore = () => {
-    router.push('/ministry-leaders');
+    router.push('/about/leadership');
   };
 
   useEffect(() => {
@@ -211,22 +213,14 @@ export default function AssociatePastors() {
           <div className="text-center mt-8">
             <CustomButton
               onClick={handleSeeMore}
-              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-3"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-6 group"
             >
               See More
-              <svg
-                className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className="w-4 h-4 transition-transform duration-300 
+      group-hover:translate-x-1 ml-20"
+              />
             </CustomButton>
           </div>
         </div>

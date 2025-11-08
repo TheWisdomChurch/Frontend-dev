@@ -24,11 +24,14 @@ export default function Footer() {
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6">
               <div className="flex items-center space-x-2 text-gray-300">
                 <MapPin className="h-4 w-4" />
-                <span>Church Address will be here</span>
+                <span>
+                  Honor Gardens, opposite Dominion City Church, Alasia,
+                  Lekki-Epe, Lagos
+                </span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Phone className="h-4 w-4" />
-                <span>Contact Number will be here </span>
+                <span>07069995333</span>
               </div>
             </div>
           </div>
@@ -65,8 +68,12 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-gray-300">
               {[
-                { service: 'Sunday Worship', time: '9:00 AM & 11:00 AM' },
+                { service: 'Sunday Worship', time: '9:00 AM ' },
                 { service: 'Midweek Service', time: 'Thursday 6:00 PM' },
+                {
+                  service: 'Celebration & Communion Service',
+                  time: 'Every First Sunday',
+                },
                 { service: 'Supernatural Service', time: 'Every Last Sunday' },
               ].map((item, index) => (
                 <li key={index} className="flex justify-between">

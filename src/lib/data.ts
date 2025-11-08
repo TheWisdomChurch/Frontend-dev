@@ -207,7 +207,7 @@ export const youtubeLivestreams = {
 export const whatWeDoData: ServiceBox[] = [
   {
     id: 1,
-    title: 'we put the word to work',
+    title: ' Expect the word to work  ',
     description:
       "We actively apply God's Word in our daily lives, transforming biblical teachings into practical actions that impact our community and deepen our faith journey.",
     image: Whatwedo_4,
@@ -215,7 +215,7 @@ export const whatWeDoData: ServiceBox[] = [
   },
   {
     id: 2,
-    title: 'We Believe in the power of prayer',
+    title: 'Expect the power of prayer',
     description:
       "Through fervent prayer, we connect with God's divine power, witnessing miraculous transformations and spiritual breakthroughs in our lives and community.",
     image: Whatwedo_2,
@@ -225,7 +225,7 @@ export const whatWeDoData: ServiceBox[] = [
   },
   {
     id: 3,
-    title: 'We Worship',
+    title: 'Expect Powerful Worship',
     description:
       'In heartfelt worship, we glorify God through song, praise, and devotion, creating an atmosphere where His presence transforms hearts and renews spirits.',
     image: Whatwedo_1,
@@ -233,7 +233,7 @@ export const whatWeDoData: ServiceBox[] = [
   },
   {
     id: 4,
-    title: 'We Hear the Word',
+    title: 'Expect Transformative Messages',
     description:
       "We diligently study and receive God's Word, allowing scripture to guide our decisions, shape our character, and illuminate our path forward.",
     image: WhatWeDo_3,
@@ -274,25 +274,25 @@ export const pastorsData: Leader[] = [
 export const ministryLeadersData: MinistryLeader[] = [
   {
     id: 1,
-    name: 'Sister Grace Thompson',
-    role: 'Worship Director',
-    department: 'Worship & Arts',
+    name: 'Mrs. Blessing Afolayan',
+    role: 'Head Ushering and Protocol',
+    department: 'Ushering & protocol',
     image: Associate_1,
-    description:
-      'Leads our worship team in creating meaningful worship experiences.',
+    description: `Oversees the ushering and protocol team, ensuring seamless event coordination, guest hospitality, and orderly services to create a welcoming 
+      environment for all attendees.`,
   },
   {
     id: 2,
-    name: 'Brother Michael Chen',
-    role: 'Youth Ministry Leader',
-    department: 'Youth & Young Adults',
+    name: 'Deacon. Adeyemi',
+    role: 'Head Service Preparatory Unit',
+    department: 'Logistics & Security & Safety',
     image: Associate_1,
-    description:
-      'Passionate about guiding the next generation in their faith journey.',
+    description: `Oversees the Service Preparatory Unit, managing logistics, security, and safety protocols to ensure efficient setup, risk mitigation, 
+     and a secure environment for all church events and gatherings.`,
   },
   {
     id: 3,
-    name: 'Sister Sarah Johnson',
+    name: 'Mrs Mojisola ',
     role: "Children's Ministry Director",
     department: "Children's Ministry",
     image: Associate_1,
@@ -301,7 +301,7 @@ export const ministryLeadersData: MinistryLeader[] = [
   },
   {
     id: 4,
-    name: 'Brother David Wilson',
+    name: 'Rev. Victor Jimba ',
     role: 'Outreach Coordinator',
     department: 'Outreach & Missions',
     image: Associate_1,
@@ -309,7 +309,16 @@ export const ministryLeadersData: MinistryLeader[] = [
   },
   {
     id: 5,
-    name: 'Sister Maria Garcia',
+    name: 'Mr. Aduragbemi Adekoya ',
+    role: 'Music Department',
+    department: 'Music & Instrumentation Mgt.',
+    image: Associate_1,
+    description: `Leads the music department, managing instrumentation, rehearsals, and performances to inspire and elevate worship experiences 
+    through harmonious and skillful musical contributions.`,
+  },
+  {
+    id: 5,
+    name: 'Pst. Mrs Kehinde Ayilara',
     role: "Women's Ministry Leader",
     department: "Women's Ministry",
     image: Associate_1,
@@ -317,7 +326,7 @@ export const ministryLeadersData: MinistryLeader[] = [
   },
   {
     id: 6,
-    name: 'Brother James Brown',
+    name: 'Mr. Tosin',
     role: "Men's Ministry Leader",
     department: "Men's Ministry",
     image: Associate_1,
@@ -352,6 +361,11 @@ export const photos: Photo[] = [
     image: Dept_4,
     link: '#',
   },
+  {
+    title: 'Children Department',
+    image: Dept_2,
+    link: '#',
+  },
 ];
 
 export const givingOptions: GivingOption[] = [
@@ -381,3 +395,32 @@ export const givingOptions: GivingOption[] = [
     color: 'from-orange-600 to-orange-700',
   },
 ];
+// popup content
+export const confessionContent = `
+    I AM BLESSED, PROSPEROUS, REDEEMED, FORGIVEN, HEALTHY, WHOLE, TALENTED, CREATIVE, CONFIDENT, SECURE, DISCIPLINED, FOCUSED,
+    PREPARED, QUALIFIED, MOTIVATED, VALUABLE, FREE, DETERMINED, EQUIPPED, EMPOWERED, ANOINTED, ACCEPTED, AND APPROVED
+
+    AM NOT AVERAGE, NOT MEDIOCRE, I AM A CHILD OF GOD, I WILL BECOME ALL I WAS CREATED TO BECOME 
+    IN JESUS NAME.
+
+    THANK YOU JESUS FOR HOLDING MY HANDS AND GUIDING ME THROUGH THIS WEEK, I'M CONFIDENT THAT YOU HAVE
+    WALKED THROUGH THIS WEEK AND YOUR EYES WILL WATCH OVER ME IN IT, THIS WEEK IS A WALK OVER FOR ME.
+
+    I ACHIEVE GREATNESS WITH EASE, BECAUSE YOUR OIL OF FAVOUR IS UPON MY LIFE, MY LIFE BECOMES A WONDER.
+    I HAVE SOUND MIND AND I'M FILLED WITH WISDOM, I GET IT FASTER IN THE NAME OF JESUS.
+
+    THIS WEEK MY WORK PROSPERS, MY FAMILY PROSPERS, MY HEALTH PROSPERS, MY LIFE MOVES FORWARD.
+    I ATTRACT THE RIGHT CLIENTELE, THE RIGHT CUSTOMERS, THE RIGHT RELATIONSHIPS, I'M AT RIGHT PLACE AT THE RIGHT TIME,
+    SUPERNATURAL COINCIDENCE FOR LIFTINGS HAPPENS FOR ME.
+
+    THE LORD TEACHES ME TO PROFIT AND LEADS ME BY THE WAY I SHOULD GO. ( ISAIAH 48 VS 17).
+
+    OH LORD, YOU ARE THE PORTION OF MY INHERITANCE AND MY CUP, YOU MAINTAIN MY LOT, THE LINES HAVE FALLEN 
+    TO ME IN PLEASANT PLACES; YES, I HAVE A GOOD INHERITANCE (PSALMS 16 VS 5 - 6).
+
+    YOU UPHOLD MY STEPS IN YOUR PATHS, THAT MY FOOTSTEPS MAY NOT SLIP. (PSALM 17 VS 5)
+
+    THE DEVIL HOLDS NO POWER OVER ME BECAUSE I BELONG TO GOD AND I AM A MEMBER OF THE WISDOM CHURCH (HOUSE)
+
+    I HAVE SPOKEN YOUR WORDS OVER MY LIFE THIS WEEK LET IT BE ESTABLISHED AS A LAW.
+  `;

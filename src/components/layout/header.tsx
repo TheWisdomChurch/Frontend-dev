@@ -20,10 +20,9 @@ import { WisdomeHouseLogo } from '@/components/assets';
 
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react'; // Added useState
 import { bricolageGrotesque, worksans } from '../fonts/fonts';
 import { useTheme } from '../contexts/ThemeContext';
-import { useHeaderContext } from '../providers/NavProviders';
 
 // Icon mapping
 const iconMap = {
@@ -37,21 +36,18 @@ const iconMap = {
 export default function Header() {
   const pathname = usePathname();
   const { colorScheme } = useTheme();
-  const {
-    isHeaderScrolled,
-    setIsHeaderScrolled,
-    activeDropdown,
-    setActiveDropdown,
-    mobileOpenDropdown,
-    setMobileOpenDropdown,
-    isSheetOpen,
-    setSheetOpen,
-    closeAllDropdowns,
-  } = useHeaderContext();
+
+  // Use local state instead of context to avoid provider issues
+  const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileOpenDropdown, setMobileOpenDropdown] = useState<string | null>(
+    null
+  );
+  const [isSheetOpen, setSheetOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll effect - now using context
+  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsHeaderScrolled(window.scrollY > 50);
@@ -59,7 +55,7 @@ export default function Header() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [setIsHeaderScrolled]);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -74,18 +70,31 @@ export default function Header() {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [setActiveDropdown]);
+  }, []);
 
+  // Fixed link click handler
   const handleLinkClick = (
     href: string,
     hasDropdown: boolean,
     e: React.MouseEvent
   ) => {
-    if (hasDropdown) {
+    // Only prevent default if it's a dropdown AND user is trying to open dropdown
+    // Allow normal navigation to the main page
+    if (hasDropdown && e.currentTarget === e.target) {
       e.preventDefault();
+      // Toggle dropdown instead of preventing navigation
+      setActiveDropdown(activeDropdown === href ? null : href);
       return;
     }
+
+    // For non-dropdown links or when clicking the main link to navigate
     closeAllDropdowns();
+  };
+
+  const closeAllDropdowns = () => {
+    setActiveDropdown(null);
+    setMobileOpenDropdown(null);
+    setSheetOpen(false);
   };
 
   const handleDropdownItemClick = () => {
@@ -96,6 +105,11 @@ export default function Header() {
     e.preventDefault();
     e.stopPropagation();
     setMobileOpenDropdown(mobileOpenDropdown === label ? null : label);
+  };
+
+  // Check if link is active
+  const isLinkActive = (href: string) => {
+    return pathname === href || pathname.startsWith(href + '/');
   };
 
   return (
@@ -127,18 +141,20 @@ export default function Header() {
         >
           {/* Logo - Left */}
           <div className="relative flex items-center space-x-3">
-            <div className="relative">
-              <Image
-                src={WisdomeHouseLogo}
-                alt="WisdomHouse"
-                className={cn(
-                  'rounded-full transition-all duration-500',
-                  isHeaderScrolled ? 'h-10 w-10' : 'h-8 w-8'
-                )}
-                width={isHeaderScrolled ? 40 : 32}
-                height={isHeaderScrolled ? 40 : 32}
-              />
-            </div>
+            <Link href="/" onClick={closeAllDropdowns}>
+              <div className="relative">
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt="WisdomHouse"
+                  className={cn(
+                    'rounded-full transition-all duration-500',
+                    isHeaderScrolled ? 'h-10 w-10' : 'h-8 w-8'
+                  )}
+                  width={isHeaderScrolled ? 40 : 32}
+                  height={isHeaderScrolled ? 40 : 32}
+                />
+              </div>
+            </Link>
 
             {!isHeaderScrolled && (
               <div
@@ -157,7 +173,7 @@ export default function Header() {
               }}
             >
               The
-              <span style={{ color: colorScheme.primary }}>Wisdom </span>
+              <span style={{ color: colorScheme.primary }}> Wisdom </span>
               <span style={{ color: colorScheme.primary }}>Church</span>
             </span>
           </div>
@@ -166,9 +182,7 @@ export default function Header() {
           <nav className="hidden lg:flex items-center justify-center flex-1 max-w-2xl">
             <div className="flex items-center space-x-1" ref={dropdownRef}>
               {extendedNavLinks.map(link => {
-                const isActive =
-                  pathname === link.href ||
-                  pathname.startsWith(link.href + '/');
+                const isActive = isLinkActive(link.href);
                 const hasDropdown = !!link.dropdown;
                 const IconComponent =
                   iconMap[link.icon as keyof typeof iconMap];
@@ -292,7 +306,7 @@ export default function Header() {
                 borderRadius: colorScheme.borderRadius.medium,
               }}
             >
-              <Link href="#community" className="flex items-center">
+              <Link href="/community" className="flex items-center">
                 <Church className="mr-2 h-4 w-4" />
                 Join Us
               </Link>
@@ -363,7 +377,7 @@ export default function Header() {
                   <nav className="flex-1 p-3 overflow-y-auto">
                     <div className="space-y-2">
                       {extendedNavLinks.map(link => {
-                        const isActive = pathname === link.href;
+                        const isActive = isLinkActive(link.href);
                         const hasDropdown = !!link.dropdown;
                         const IconComponent =
                           iconMap[link.icon as keyof typeof iconMap];
@@ -387,7 +401,8 @@ export default function Header() {
                                   if (hasDropdown) {
                                     toggleMobileDropdown(link.label, e);
                                   } else {
-                                    handleDropdownItemClick();
+                                    setSheetOpen(false);
+                                    closeAllDropdowns();
                                   }
                                 }}
                                 className={cn(
@@ -450,7 +465,10 @@ export default function Header() {
                                     <Link
                                       key={dropdownItem.label}
                                       href={dropdownItem.href}
-                                      onClick={handleDropdownItemClick}
+                                      onClick={() => {
+                                        setSheetOpen(false);
+                                        closeAllDropdowns();
+                                      }}
                                       className={`${worksans.className} flex items-center px-3 py-2 text-sm rounded-lg transition-all duration-200 group hover:bg-opacity-10`}
                                       style={{
                                         color: colorScheme.text,
@@ -492,7 +510,7 @@ export default function Header() {
                       }}
                     >
                       <Link
-                        href="#community"
+                        href="/community"
                         onClick={() => setSheetOpen(false)}
                         className="flex items-center"
                       >
