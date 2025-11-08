@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronDown, X } from 'lucide-react';
 import Button from '../utils/CustomButton';
 import { bricolageGrotesque } from '../fonts/fonts';
