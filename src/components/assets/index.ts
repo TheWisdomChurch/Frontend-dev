@@ -21,6 +21,8 @@ import WisdomeHouseLogo from './OIP.webp';
 // Associate Pastors
 import Associate_1 from './Asso (1).jpg';
 import Associate_2 from './Asso (2).jpg';
+import PstKenny from './pstKenny1.jpeg';
+import PstKenny_1 from './PstKenny2.jpeg';
 
 // JoinUs
 import Workforce_bg from './workForce.jpg';
@@ -38,6 +40,8 @@ export {
   Banner_2,
   Banner_3,
   WisdomeHouseLogo,
+  PstKenny,
+  PstKenny_1,
   hero_bg_1,
   hero_bg_2,
   hero_bg_3,

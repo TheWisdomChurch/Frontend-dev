@@ -102,8 +102,9 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     icon: 'BookOpen',
     dropdown: [
       { label: 'Sermons', href: '/resources/sermons' },
-      { label: 'Blog', href: '/resources/blog' },
+      // { label: 'Blog', href: '/resources/blogs' },
       { label: 'Publications', href: '/resources/publications' },
+      { label: 'Store', href: '/resources/store' },
     ],
   },
   {
