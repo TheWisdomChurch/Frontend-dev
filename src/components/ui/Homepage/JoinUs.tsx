@@ -313,10 +313,6 @@ export default function JoinWisdomHouse() {
                       }}
                     >
                       <span className="font-medium">Learn More</span>
-                      <FontAwesomeIcon
-                        icon={faArrowRight}
-                        className="w-4 h-4"
-                      />
                     </Button>
                   </div>
                 </div>
