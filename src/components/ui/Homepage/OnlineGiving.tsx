@@ -1,4 +1,3 @@
- 
 'use client';
 
 import { OnlinegivingOptions } from '@/lib/data';
