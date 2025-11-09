@@ -26,8 +26,12 @@ import {
   Dept_1,
   Dept_2,
   Dept_3,
-  Dept_4,
+  // Dept_4,
   Whatwedo_4,
+  Img_1,
+  Children_head,
+  PstKenny,
+  Min_Adura,
 } from '@/components/assets';
 import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 
@@ -136,7 +140,7 @@ export const leaders: Leader[] = [
     id: 2,
     name: 'Pastor Kenny Ayilara',
     role: 'Assistant Pastor',
-    image: Associate_1,
+    image: PstKenny,
     description: 'Supports the senior pastor in ministry and pastoral care.',
   },
   {
@@ -183,7 +187,7 @@ export const ministries: Ministry[] = [
   {
     name: 'Kids Ministry',
     description: 'Fun and faith for the next generation.',
-    imageId: 'ministry-1',
+    imageId: Children_head,
   },
   {
     name: 'Youth Group',
@@ -193,12 +197,12 @@ export const ministries: Ministry[] = [
   {
     name: 'Worship Team',
     description: 'Leading the congregation in praise.',
-    imageId: 'ministry-3',
+    imageId: Min_Adura,
   },
   {
     name: 'Community Outreach',
     description: 'Serving our city with love and action.',
-    imageId: 'ministry-4',
+    imageId: Associate_2,
   },
 ];
 
@@ -281,7 +285,7 @@ export const ministryLeadersData: MinistryLeader[] = [
     name: 'Mrs. Blessing Afolayan',
     role: 'Head Ushering and Protocol',
     department: 'Ushering & protocol',
-    image: Associate_1,
+    image: Img_1,
     description: `Oversees the ushering and protocol team, ensuring seamless event coordination, guest hospitality, and orderly services to create a welcoming 
       environment for all attendees.`,
   },
@@ -299,7 +303,7 @@ export const ministryLeadersData: MinistryLeader[] = [
     name: 'Mrs Mojisola ',
     role: "Children's Ministry Director",
     department: "Children's Ministry",
-    image: Associate_1,
+    image: Children_head,
     description:
       'Creates engaging and safe environments for children to learn about God.',
   },
@@ -308,7 +312,7 @@ export const ministryLeadersData: MinistryLeader[] = [
     name: 'Rev. Victor Jimba ',
     role: 'Outreach Coordinator',
     department: 'Outreach & Missions',
-    image: Associate_1,
+    image: Associate_2,
     description: 'Coordinates community outreach and mission initiatives.',
   },
   {
@@ -316,7 +320,7 @@ export const ministryLeadersData: MinistryLeader[] = [
     name: 'Mr. Aduragbemi Adekoya ',
     role: 'Music Department',
     department: 'Music & Instrumentation Mgt.',
-    image: Associate_1,
+    image: Min_Adura,
     description: `Leads the music department, managing instrumentation, rehearsals, and performances to inspire and elevate worship experiences 
     through harmonious and skillful musical contributions.`,
   },
@@ -325,7 +329,7 @@ export const ministryLeadersData: MinistryLeader[] = [
     name: 'Pst. Mrs Kehinde Ayilara',
     role: "Women's Ministry Leader",
     department: "Women's Ministry",
-    image: Associate_1,
+    image: PstKenny,
     description: 'Empowers women through Bible study and fellowship.',
   },
   {
@@ -346,7 +350,7 @@ export const photos: Photo[] = [
     link: '#',
   },
   {
-    title: 'ServicePreparatory Unit',
+    title: 'Service Preparatory Unit',
     image: Dept_2,
     link: '#',
   },
@@ -362,12 +366,12 @@ export const photos: Photo[] = [
   },
   {
     title: 'Protocol/Ushering Department',
-    image: Dept_4,
+    image: Img_1,
     link: '#',
   },
   {
     title: 'Children Department',
-    image: Dept_2,
+    image: Children_head,
     link: '#',
   },
 ];

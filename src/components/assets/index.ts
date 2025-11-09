@@ -35,8 +35,32 @@ import Dept_4 from './JoinUs (4).jpg';
 import KeystoneBank from './Keystone.webp';
 import ProvidusBank from './Providus.jpg';
 
+// store
+import wisdomShirt_1 from './WisdomShirt (1).jpeg';
+import WisdomShirt_2 from './WisdomShirt (2).jpeg';
+import Cap_1 from './cap.webp';
+import Cap_2 from './cap1.webp';
+
+// images
+import Img_1 from './img (2).jpg';
+import Img_2 from './img (3).jpg';
+import Img_3 from './img (4).jpg';
+import Img_4 from './img (5).jpg';
+import Children_head from './Moji.jpeg';
+import Min_Adura from './Aduragbemi.jpg';
+
 export {
   Banner_1,
+  WisdomShirt_2,
+  wisdomShirt_1,
+  Cap_1,
+  Cap_2,
+  Img_1,
+  Img_2,
+  Img_3,
+  Img_4,
+  Children_head,
+  Min_Adura,
   Banner_2,
   Banner_3,
   WisdomeHouseLogo,

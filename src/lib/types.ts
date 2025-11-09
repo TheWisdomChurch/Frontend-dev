@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StaticImageData } from 'next/image';
 import { LucideIcon } from 'lucide-react';
 
@@ -42,7 +43,7 @@ export interface Sermon {
 export interface Ministry {
   name: string;
   description: string;
-  imageId: string;
+  imageId: any;
 }
 
 export interface ServiceBox {
