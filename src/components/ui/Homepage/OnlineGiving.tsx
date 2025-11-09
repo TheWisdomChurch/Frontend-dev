@@ -5,12 +5,18 @@ import { useEffect, useRef, useState } from 'react';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import GivingModal from '@/components/modal/GivingModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function OnlineGiving() {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedGivingOption, setSelectedGivingOption] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { colorScheme } = useTheme();
 
   useEffect(() => {
@@ -44,6 +50,23 @@ export default function OnlineGiving() {
     setSelectedGivingOption(null);
   };
 
+  // Scroll functions for mobile and tablet
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const scrollAmount = container.clientWidth * 0.8;
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const scrollAmount = container.clientWidth * 0.8;
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <section
@@ -71,13 +94,14 @@ export default function OnlineGiving() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Desktop Layout - Grid */}
+          <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6 justify-items-center">
             {OnlinegivingOptions.map((option, index) => {
               const Icon = option.icon;
               return (
                 <div
                   key={option.title}
-                  className={`transition-all duration-700 ${
+                  className={`transition-all duration-700 w-full max-w-sm ${
                     isVisible
                       ? 'opacity-100 translate-y-0'
                       : 'opacity-0 translate-y-10'
@@ -85,7 +109,7 @@ export default function OnlineGiving() {
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <div
-                    className="rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full"
+                    className="rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col"
                     style={{
                       backgroundColor: colorScheme.body,
                       boxShadow: colorScheme.shadowMd,
@@ -101,16 +125,16 @@ export default function OnlineGiving() {
                       <Icon size={40} className="mb-4" />
                       <h3 className="text-xl font-bold mb-2">{option.title}</h3>
                     </div>
-                    <div className="p-6">
+                    <div className="p-6 flex-1 flex flex-col">
                       <p
-                        className="mb-6"
+                        className="mb-6 flex-1"
                         style={{ color: colorScheme.textSecondary }}
                       >
                         {option.description}
                       </p>
                       <button
                         onClick={() => handleGiveNow(option)}
-                        className="w-full font-semibold py-3 px-6 rounded-lg transition-all duration-300 border"
+                        className="w-full font-semibold py-3 px-6 rounded-lg transition-all duration-300 border mt-auto"
                         style={{
                           backgroundColor: colorScheme.black,
                           color: colorScheme.white,
@@ -140,6 +164,126 @@ export default function OnlineGiving() {
                 </div>
               );
             })}
+          </div>
+
+          {/* Mobile & Tablet Layout - Horizontal Scroll */}
+          <div className="lg:hidden relative">
+            {/* Scroll Navigation Buttons */}
+            <div className="flex justify-between items-center mb-6">
+              <button
+                onClick={scrollLeft}
+                className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
+                style={{
+                  backgroundColor: colorScheme.primary + '30',
+                  borderColor: colorScheme.primary,
+                  color: colorScheme.textInverted,
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
+              </button>
+
+              <span
+                className="text-sm font-medium px-4"
+                style={{ color: colorScheme.textInverted }}
+              >
+                Scroll to explore giving options
+              </span>
+
+              <button
+                onClick={scrollRight}
+                className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
+                style={{
+                  backgroundColor: colorScheme.primary + '30',
+                  borderColor: colorScheme.primary,
+                  color: colorScheme.textInverted,
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Horizontal Scroll Container */}
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide px-2"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              {OnlinegivingOptions.map((option, index) => {
+                const Icon = option.icon;
+                return (
+                  <div
+                    key={option.title}
+                    className={`flex-shrink-0 w-80 transition-all duration-700 ${
+                      isVisible
+                        ? 'opacity-100 translate-y-0'
+                        : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{
+                      transitionDelay: `${index * 100}ms`,
+                    }}
+                  >
+                    <div
+                      className="rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full flex flex-col"
+                      style={{
+                        backgroundColor: colorScheme.body,
+                        boxShadow: colorScheme.shadowMd,
+                      }}
+                    >
+                      <div
+                        className="p-6"
+                        style={{
+                          backgroundColor: colorScheme.primary,
+                          color: colorScheme.black,
+                        }}
+                      >
+                        <Icon size={40} className="mb-4" />
+                        <h3 className="text-xl font-bold mb-2">
+                          {option.title}
+                        </h3>
+                      </div>
+                      <div className="p-6 flex-1 flex flex-col">
+                        <p
+                          className="mb-6 flex-1"
+                          style={{ color: colorScheme.textSecondary }}
+                        >
+                          {option.description}
+                        </p>
+                        <button
+                          onClick={() => handleGiveNow(option)}
+                          className="w-full font-semibold py-3 px-6 rounded-lg transition-all duration-300 border mt-auto"
+                          style={{
+                            backgroundColor: colorScheme.black,
+                            color: colorScheme.white,
+                            borderColor: colorScheme.primary,
+                            borderWidth: '2px',
+                            borderRadius: colorScheme.borderRadius.medium,
+                          }}
+                        >
+                          Give Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Add some extra space at the end for better scrolling */}
+              <div className="flex-shrink-0 w-4" />
+            </div>
+
+            {/* Scroll Indicator */}
+            <div className="flex justify-center mt-4 space-x-2">
+              {OnlinegivingOptions.map((_, index) => (
+                <div
+                  key={index}
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{ backgroundColor: colorScheme.primary + '50' }}
+                />
+              ))}
+            </div>
           </div>
 
           <div
@@ -218,6 +362,16 @@ export default function OnlineGiving() {
           givingOption={selectedGivingOption}
         />
       )}
+
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </>
   );
 }
