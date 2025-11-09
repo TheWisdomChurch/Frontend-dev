@@ -8,6 +8,7 @@ import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';
 import JoinLighthouse from '@/components/ui/Homepage/JoinUs';
 import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
+import { slides } from '@/lib/data';
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -55,7 +56,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <main className="flex-1">
-        <HeroSection />
+        <HeroSection
+          slides={slides}
+          showButtons={true}
+          showScrollIndicator={true}
+          showSlideIndicators={true}
+        />
         <WhatWeDo />
         <SeniorPastor />
         <AssociatePastors />

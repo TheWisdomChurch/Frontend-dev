@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import HeroSection from '@/components/ui/HerosectionPage';
+import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, H3, P } from '@/components/text';
 import { hero_bg_2 } from '@/components/assets';
 import { leaders, ministryLeadersData } from '@/lib/data';

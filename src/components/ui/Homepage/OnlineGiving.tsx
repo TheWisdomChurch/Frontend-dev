@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import GivingModal from '@/components/modal/GivingModal';
@@ -9,63 +8,32 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronLeft,
   faChevronRight,
+  faPhone,
 } from '@fortawesome/free-solid-svg-icons';
+import { useOnlineGiving } from '@/components/utils/hooks/Onlinegiving';
+import {
+  handleContactCall,
+  useIntersectionObserver,
+} from '@/components/utils/functionUtils/contactUtils';
 
 export default function OnlineGiving() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedGivingOption, setSelectedGivingOption] = useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { colorScheme } = useTheme();
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
+  const {
+    isVisible,
+    setIsVisible,
+    selectedGivingOption,
+    isModalOpen,
+    sectionRef,
+    scrollContainerRef,
+    handleGiveNow,
+    closeModal,
+    scrollLeft,
+    scrollRight,
+  } = useOnlineGiving();
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
-  const handleGiveNow = (option: any) => {
-    setSelectedGivingOption(option);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedGivingOption(null);
-  };
-
-  // Scroll functions for mobile and tablet
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const scrollAmount = container.clientWidth * 0.8;
-      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const scrollAmount = container.clientWidth * 0.8;
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
+  // Use the intersection observer utility
+  useIntersectionObserver(setIsVisible, sectionRef);
 
   return (
     <>
@@ -314,7 +282,8 @@ export default function OnlineGiving() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <button
-                  className="font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
+                  onClick={handleContactCall}
+                  className="font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: colorScheme.black,
@@ -328,6 +297,7 @@ export default function OnlineGiving() {
                     e.currentTarget.style.backgroundColor = colorScheme.primary;
                   }}
                 >
+                  <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
                   Contact Us
                 </button>
                 <button

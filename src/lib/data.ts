@@ -300,7 +300,7 @@ export const ministryLeadersData: MinistryLeader[] = [
   },
   {
     id: 3,
-    name: 'Mrs Mojisola ',
+    name: 'Mrs Mojisola Oladejo',
     role: "Children's Ministry Director",
     department: "Children's Ministry",
     image: Children_head,

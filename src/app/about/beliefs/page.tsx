@@ -6,15 +6,23 @@ const BeliefsPage = () => {
   return (
     <div>
       {/* Hero Section with custom props */}
+      {/* <HeroSection
+       
+        backgroundImage={hero_bg_1.src}
+        showButtons={true}
+        primaryButtonText="Learn More About Us"
+        secondaryButtonText="Visit Our Church"
+        showScrollIndicator={true}
+      /> */}
       <HeroSection
         title="Our Beliefs"
         subtitle="Foundational Truths We Stand On"
         description="Discover the core biblical principles that guide our faith, shape our community, and direct our mission at The Wisdom House Church."
         backgroundImage={hero_bg_1.src}
         showButtons={true}
+        showScrollIndicator={true}
         primaryButtonText="Learn More About Us"
         secondaryButtonText="Visit Our Church"
-        showScrollIndicator={true}
       />
 
       {/* Page Content */}

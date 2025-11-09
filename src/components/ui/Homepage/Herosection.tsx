@@ -1,356 +1,145 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { H1 } from '../../text';
-import { slides } from '@/lib/data';
+import { H1 } from '@/components/text';
+import { Button } from '@/components/utils';
 import { ChevronDown } from 'lucide-react';
-import Header from '@/components/layout/header';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import Button from '../../utils/CustomButton';
+import { useHeroSection } from '@/components/utils/hooks/useHeroSection';
 
-// Register ScrollTrigger plugin
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+interface Slide {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  image: {
+    src: string;
+    alt?: string;
+  };
 }
 
-const HeroSection = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [hasScrolledOut, setHasScrolledOut] = useState(false);
+interface HeroSectionProps {
+  // Single slide mode
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  backgroundImage?: string;
 
-  const heroRef = useRef<HTMLElement>(null);
-  const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLHeadingElement>(null);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const buttonsRef = useRef<HTMLDivElement>(null);
-  const indicatorsRef = useRef<(HTMLButtonElement | null)[]>([]);
-  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  // Multi-slide mode
+  slides?: Slide[];
 
-  // Use your theme context
-  const { colorScheme } = useTheme();
+  // Common props
+  showButtons?: boolean;
+  primaryButtonText?: string;
+  secondaryButtonText?: string;
+  onPrimaryButtonClick?: () => void;
+  onSecondaryButtonClick?: () => void;
+  showScrollIndicator?: boolean;
+  showSlideIndicators?: boolean;
+}
 
-  // Fixed scroll function
-  const scrollToNextSection = useCallback(() => {
-    const nextSection = heroRef.current?.nextElementSibling;
+const HeroSection = ({
+  // Single slide props
+  title,
+  subtitle,
+  description,
+  backgroundImage,
 
-    if (nextSection) {
-      // Use native smooth scroll (more reliable)
-      nextSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  }, []);
+  // Multi-slide props
+  slides,
 
-  const handleHoverEnter = useCallback(() => {
-    if (scrollIndicatorRef.current) {
-      gsap.to(scrollIndicatorRef.current, {
-        y: 5,
-        duration: 0.3,
-        ease: 'power2.out',
-      });
-    }
-  }, []);
+  // Common props
+  showButtons = true,
+  primaryButtonText = 'Join Us This Sunday',
+  secondaryButtonText = 'Watch Live Stream',
+  onPrimaryButtonClick,
+  onSecondaryButtonClick,
+  showScrollIndicator = true,
+  showSlideIndicators = true,
+}: HeroSectionProps) => {
+  // Use the hook for multi-slide functionality
+  const {
+    currentSlide,
+    isScrolled,
+    heroRef,
+    contentRef,
+    titleRef,
+    subtitleRef,
+    descriptionRef,
+    buttonsRef,
+    indicatorsRef,
+    scrollIndicatorRef,
+    colorScheme,
+    scrollToNextSection,
+    handleHoverEnter,
+    handleHoverLeave,
+    goToSlide,
+    addToSlidesRef,
+    addToIndicatorsRef,
+  } = useHeroSection();
 
-  const handleHoverLeave = useCallback(() => {
-    if (scrollIndicatorRef.current) {
-      gsap.to(scrollIndicatorRef.current, {
-        y: 0,
-        duration: 0.3,
-        ease: 'power2.out',
-      });
-    }
-  }, []);
+  // Determine if we're in multi-slide mode
+  const isMultiSlide = Boolean(slides && slides.length > 0);
 
-  // Handle scroll effect for header
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Detect when hero section enters/exits view and trigger slide changes
-  useEffect(() => {
-    if (!heroRef.current) return;
-
-    let hasTriggeredThisEntry = false;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          // User scrolled back into view
-          if (hasScrolledOut && !hasTriggeredThisEntry) {
-            // Trigger slide change only if user had scrolled out previously
-            hasTriggeredThisEntry = true;
-            nextSlide();
-          }
-          setHasScrolledOut(false);
-        } else {
-          // User scrolled out of view
-          setHasScrolledOut(true);
-          hasTriggeredThisEntry = false; // Reset for next entry
-        }
-      },
-      {
-        threshold: 0.3, // Trigger when 30% of hero section is visible
-        rootMargin: '-100px 0px 0px 0px', // Offset to trigger slightly earlier
-      }
-    );
-
-    observer.observe(heroRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [currentSlide, hasScrolledOut]);
-
-  // Initial animations on component mount
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Initial hero section entrance animation
-      gsap.fromTo(
-        heroRef.current,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1.5,
-          ease: 'power2.out',
-        }
-      );
-
-      // Animate first slide content
-      animateContentEntrance();
-
-      // Animate scroll indicator with continuous bounce
-      if (scrollIndicatorRef.current) {
-        gsap.fromTo(
-          scrollIndicatorRef.current,
-          { y: -10, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            delay: 2,
-            ease: 'power2.out',
-          }
-        );
-
-        const bounceAnimation = gsap.to(scrollIndicatorRef.current, {
-          y: 15,
-          duration: 1.5,
-          ease: 'power1.inOut',
-          repeat: -1,
-          yoyo: true,
-        });
-
-        return () => bounceAnimation.kill();
-      }
-    });
-
-    return () => ctx.revert();
-  }, []);
-
-  const animateContentEntrance = () => {
-    const tl = gsap.timeline();
-
-    if (titleRef.current) {
-      tl.fromTo(
-        titleRef.current,
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }
-      );
-    }
-
-    const dividerLine = document.querySelector('.divider-line');
-    if (dividerLine) {
-      tl.fromTo(
-        dividerLine,
-        { scaleX: 0 },
-        { scaleX: 1, duration: 0.8, ease: 'power2.out' },
-        '-=0.5'
-      );
-    }
-
-    if (subtitleRef.current) {
-      tl.fromTo(
-        subtitleRef.current,
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
-        '-=0.3'
-      );
-    }
-
-    if (descriptionRef.current) {
-      tl.fromTo(
-        descriptionRef.current,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
-        '-=0.3'
-      );
-    }
-
-    if (buttonsRef.current && buttonsRef.current.children) {
-      tl.fromTo(
-        buttonsRef.current.children,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: 'back.out(1.7)',
+  // Get current slide data based on mode
+  const currentSlideData = isMultiSlide
+    ? slides![currentSlide]
+    : {
+        title: title!,
+        subtitle,
+        description,
+        image: {
+          src: backgroundImage!,
+          alt: title,
         },
-        '-=0.2'
-      );
-    }
-
-    return tl;
-  };
-
-  const animateContentExit = () => {
-    const tl = gsap.timeline();
-
-    const targets = [];
-    if (titleRef.current) targets.push(titleRef.current);
-    if (subtitleRef.current) targets.push(subtitleRef.current);
-    if (descriptionRef.current) targets.push(descriptionRef.current);
-    if (buttonsRef.current && buttonsRef.current.children) {
-      targets.push(...Array.from(buttonsRef.current.children));
-    }
-
-    if (targets.length > 0) {
-      tl.to(targets, {
-        y: -30,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: 'power2.in',
-      });
-    }
-
-    return tl;
-  };
-
-  const animateSlideTransition = async (nextIndex: number) => {
-    const currentSlideEl = slidesRef.current[currentSlide];
-    const nextSlideEl = slidesRef.current[nextIndex];
-
-    if (!currentSlideEl || !nextSlideEl) return;
-
-    const tl = gsap.timeline();
-
-    tl.add(animateContentExit())
-      .to(
-        currentSlideEl,
-        {
-          scale: 1.1,
-          opacity: 0,
-          duration: 1.2,
-          ease: 'power2.inOut',
-        },
-        0
-      )
-      .fromTo(
-        nextSlideEl,
-        { scale: 1.1, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 1.2,
-          ease: 'power2.inOut',
-        },
-        0
-      )
-      .call(
-        () => {
-          setCurrentSlide(nextIndex);
-        },
-        undefined,
-        0.6
-      )
-      .add(animateContentEntrance(), 0.8);
-
-    return tl;
-  };
-
-  const nextSlide = async () => {
-    const nextIndex = (currentSlide + 1) % slides.length;
-    await animateSlideTransition(nextIndex);
-  };
-
-  const goToSlide = async (index: number) => {
-    if (index === currentSlide) return;
-
-    const clickedIndicator = indicatorsRef.current[index];
-    if (clickedIndicator) {
-      gsap.fromTo(
-        clickedIndicator,
-        { scale: 1 },
-        {
-          scale: 1.3,
-          duration: 0.3,
-          yoyo: true,
-          repeat: 1,
-          ease: 'power2.inOut',
-        }
-      );
-    }
-
-    await animateSlideTransition(index);
-  };
-
-  const addToSlidesRef = (el: HTMLDivElement | null, index: number) => {
-    if (el) {
-      slidesRef.current[index] = el;
-    }
-  };
-
-  const addToIndicatorsRef = (el: HTMLButtonElement | null, index: number) => {
-    if (el) {
-      indicatorsRef.current[index] = el;
-    }
-  };
+      };
 
   return (
     <section
       ref={heroRef}
       className="relative w-full overflow-hidden"
-      style={{ height: '120vh' }}
+      style={{ height: isMultiSlide ? '120vh' : '100vh' }}
     >
-      {/* Header */}
-      <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-lg'
-            : 'bg-transparent'
-        }`}
-      >
-        <Header />
-      </div>
-
-      {/* Background Slides */}
-      {slides.map((slide, index) => (
-        <div
-          key={index}
-          ref={el => addToSlidesRef(el, index)}
-          className={`absolute inset-0 ${
-            index === currentSlide
-              ? 'opacity-100'
-              : 'opacity-0 pointer-events-none'
-          }`}
-        >
+      {/* Background Images */}
+      {isMultiSlide ? (
+        // Multi-slide mode - uses hook's slide management
+        slides!.map((slide, index) => (
+          <div
+            key={index}
+            ref={el => addToSlidesRef(el, index)}
+            className={`absolute inset-0 ${
+              index === currentSlide
+                ? 'opacity-100'
+                : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            <div className="relative w-full h-full">
+              <img
+                src={slide.image.src}
+                alt={slide.image.alt || slide.title}
+                className="
+                  w-full h-full 
+                  object-cover 
+                  object-center 
+                  lg:object-[center_top] 
+                  xl:object-[center_center] 
+                  scale-105 lg:scale-100
+                "
+                style={{
+                  maxHeight: '120vh',
+                }}
+              />
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/50 to-black/70" />
+              <div className="absolute inset-0 bg-[#001910]/40 mix-blend-overlay" />
+            </div>
+          </div>
+        ))
+      ) : (
+        // Single slide mode
+        <div className="absolute inset-0">
           <div className="relative w-full h-full">
             <img
-              src={slide.image.src}
-              alt={slide.title}
+              src={backgroundImage}
+              alt={title}
               className="
                 w-full h-full 
                 object-cover 
@@ -360,15 +149,15 @@ const HeroSection = () => {
                 scale-105 lg:scale-100
               "
               style={{
-                maxHeight: '120vh',
+                maxHeight: '100vh',
               }}
             />
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/50 to-black/70" />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-black/90" />
             <div className="absolute inset-0 bg-[#001910]/40 mix-blend-overlay" />
           </div>
         </div>
-      ))}
+      )}
 
       {/* Content - Centered in the container */}
       <div
@@ -381,148 +170,167 @@ const HeroSection = () => {
               ref={titleRef}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight tracking-tight"
             >
-              {slides[currentSlide].title}
+              {currentSlideData.title}
             </H1>
 
-            {/* Primary Color Divider Line */}
-            <div
-              className="divider-line h-1 w-20 mx-auto mb-6 rounded-full transform origin-center"
-              style={{ backgroundColor: colorScheme.primary }}
-            ></div>
+            {/* Primary Color Divider Line - Only show if subtitle exists */}
+            {currentSlideData.subtitle && (
+              <div
+                className="divider-line h-1 w-20 mx-auto mb-6 rounded-full transform origin-center"
+                style={{ backgroundColor: colorScheme.primary }}
+              ></div>
+            )}
 
-            {/* Primary Color Subtitle */}
-            <h2
-              ref={subtitleRef}
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-6 leading-tight"
-              style={{ color: colorScheme.primary }}
-            >
-              {slides[currentSlide].subtitle}
-            </h2>
-
-            <p
-              ref={descriptionRef}
-              className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto mb-8 leading-relaxed sm:leading-loose"
-            >
-              {slides[currentSlide].description}
-            </p>
-
-            <div
-              ref={buttonsRef}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
-            >
-              {/* Primary Button - Uses primary variant with yellow background */}
-              <Button
-                variant="primary"
-                size="lg"
-                elevated={true}
-                curvature="lg"
-                className="w-full sm:w-auto"
+            {/* Primary Color Subtitle - Only show if subtitle exists */}
+            {currentSlideData.subtitle && (
+              <h2
+                ref={subtitleRef}
+                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-6 leading-tight"
+                style={{ color: colorScheme.primary }}
               >
-                Join Us This Sunday
-              </Button>
+                {currentSlideData.subtitle}
+              </h2>
+            )}
 
-              {/* Secondary Button - Uses outline variant with primary border */}
-              <Button
-                variant="outline"
-                size="lg"
-                curvature="lg"
-                className="w-full sm:w-auto"
-                style={{
-                  borderColor: colorScheme.primary,
-                  color: colorScheme.white,
-                }}
-                onMouseEnter={(e: {
-                  currentTarget: {
-                    style: { backgroundColor: string; color: string };
-                  };
-                }) => {
-                  e.currentTarget.style.backgroundColor = colorScheme.white;
-                  e.currentTarget.style.color = colorScheme.black;
-                }}
-                onMouseLeave={(e: {
-                  currentTarget: {
-                    style: { backgroundColor: string; color: string };
-                  };
-                }) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = colorScheme.white;
-                }}
+            {/* Description - Only show if description exists */}
+            {currentSlideData.description && (
+              <p
+                ref={descriptionRef}
+                className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto mb-8 leading-relaxed sm:leading-loose"
               >
-                Watch Live Stream
-              </Button>
-            </div>
+                {currentSlideData.description}
+              </p>
+            )}
+
+            {/* Buttons - Only show if showButtons is true */}
+            {showButtons && (
+              <div
+                ref={buttonsRef}
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+              >
+                {/* Primary Button */}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  elevated={true}
+                  curvature="lg"
+                  className="w-full sm:w-auto"
+                  onClick={onPrimaryButtonClick}
+                >
+                  {primaryButtonText}
+                </Button>
+
+                {/* Secondary Button */}
+                <Button
+                  variant="outline"
+                  size="lg"
+                  curvature="lg"
+                  className="w-full sm:w-auto"
+                  style={{
+                    borderColor: colorScheme.primary,
+                    color: colorScheme.white,
+                  }}
+                  onMouseEnter={(e: {
+                    currentTarget: {
+                      style: { backgroundColor: string; color: string };
+                    };
+                  }) => {
+                    e.currentTarget.style.backgroundColor = colorScheme.white;
+                    e.currentTarget.style.color = colorScheme.black;
+                  }}
+                  onMouseLeave={(e: {
+                    currentTarget: {
+                      style: { backgroundColor: string; color: string };
+                    };
+                  }) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = colorScheme.white;
+                  }}
+                  onClick={onSecondaryButtonClick}
+                >
+                  {secondaryButtonText}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Slide Indicators */}
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center space-y-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            ref={el => addToIndicatorsRef(el, index)}
-            onClick={() => goToSlide(index)}
-            className={`relative w-1 h-1 rounded-full overflow-hidden transition-all duration-500 ease-out hover:scale-110 ${
-              index === currentSlide ? 'scale-125' : ''
-            }`}
-            style={{
-              backgroundColor:
-                index === currentSlide
-                  ? colorScheme.primary
-                  : `${colorScheme.white}40`,
-              boxShadow:
-                index === currentSlide
-                  ? `0 0 10px ${colorScheme.primary}70`
-                  : 'none',
-            }}
-            aria-label={`Go to slide ${index + 1}`}
+      {/* Slide Indicators - Only show for multi-slide mode */}
+      {isMultiSlide && showSlideIndicators && (
+        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center space-y-2">
+          {slides!.map((_, index) => (
+            <button
+              key={index}
+              ref={el => addToIndicatorsRef(el, index)}
+              onClick={() => goToSlide(index)}
+              className={`relative w-1 h-1 rounded-full overflow-hidden transition-all duration-500 ease-out hover:scale-110 ${
+                index === currentSlide ? 'scale-125' : ''
+              }`}
+              style={{
+                backgroundColor:
+                  index === currentSlide
+                    ? colorScheme.primary
+                    : `${colorScheme.white}40`,
+                boxShadow:
+                  index === currentSlide
+                    ? `0 0 10px ${colorScheme.primary}70`
+                    : 'none',
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            >
+              {index === currentSlide && (
+                <span
+                  className="absolute inset-0 rounded-full"
+                  style={{ backgroundColor: `${colorScheme.primary}30` }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Scroll Indicator - Only show if showScrollIndicator is true */}
+      {showScrollIndicator && (
+        <>
+          {/* Desktop Scroll Indicator */}
+          <div
+            ref={scrollIndicatorRef}
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block cursor-pointer group"
+            onClick={scrollToNextSection}
+            onMouseEnter={handleHoverEnter}
+            onMouseLeave={handleHoverLeave}
           >
-            {index === currentSlide && (
-              <span
-                className="absolute inset-0 rounded-full"
-                style={{ backgroundColor: `${colorScheme.primary}30` }}
+            <div className="flex flex-col items-center">
+              <ChevronDown
+                className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1"
+                style={{ color: colorScheme.primary }}
               />
-            )}
-          </button>
-        ))}
-      </div>
+              <ChevronDown
+                className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1 -mt-[6px] delay-75"
+                style={{ color: colorScheme.primary }}
+              />
+            </div>
+          </div>
 
-      {/* Scroll Indicator */}
-      <div
-        ref={scrollIndicatorRef}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block cursor-pointer group"
-        onClick={scrollToNextSection}
-        onMouseEnter={handleHoverEnter}
-        onMouseLeave={handleHoverLeave}
-      >
-        <div className="flex flex-col items-center">
-          <ChevronDown
-            className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1"
-            style={{ color: colorScheme.primary }}
-          />
-          <ChevronDown
-            className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1 -mt-[6px] delay-75"
-            style={{ color: colorScheme.primary }}
-          />
-        </div>
-      </div>
-
-      {/* Mobile Scroll Indicator - ONLY ONE */}
-      <div
-        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 sm:hidden cursor-pointer"
-        onClick={scrollToNextSection}
-      >
-        <div className="flex flex-col items-center animate-bounce">
-          <ChevronDown
-            className="w-5 h-5"
-            style={{ color: colorScheme.primary }}
-          />
-          <ChevronDown
-            className="w-5 h-5 -mt-[5px]"
-            style={{ color: colorScheme.primary }}
-          />
-        </div>
-      </div>
+          {/* Mobile Scroll Indicator */}
+          <div
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 sm:hidden cursor-pointer"
+            onClick={scrollToNextSection}
+          >
+            <div className="flex flex-col items-center animate-bounce">
+              <ChevronDown
+                className="w-5 h-5"
+                style={{ color: colorScheme.primary }}
+              />
+              <ChevronDown
+                className="w-5 h-5 -mt-[5px]"
+                style={{ color: colorScheme.primary }}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 };

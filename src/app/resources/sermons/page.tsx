@@ -1,4 +1,4 @@
-import HeroSection from '@/components/ui/HerosectionPage';
+import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2 } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 import { sermons } from '@/lib/data';
