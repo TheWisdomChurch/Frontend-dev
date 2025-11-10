@@ -76,7 +76,33 @@ export interface Slide {
   description: string;
 }
 
-export interface YoutubeLivestreams {
-  current: string;
-  previous: string[];
+export interface YouTubeVideo {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  publishedAt: string;
+  duration: string;
+  viewCount: string;
+  likeCount?: string;
+  commentCount?: string;
+  tags?: string[];
+  url: string;
+  embedUrl: string;
+}
+
+export interface YouTubeChannel {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  subscriberCount?: string;
+  videoCount?: string;
+  viewCount?: string;
+}
+
+export interface VideoFilters {
+  searchTerm: string;
+  sortBy: 'newest' | 'oldest' | 'popular';
+  category?: string;
 }
