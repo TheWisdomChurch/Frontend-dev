@@ -49,10 +49,14 @@ import Img_4 from './img (5).jpg';
 import Children_head from './Moji.jpeg';
 import Min_Adura from './Aduragbemi.jpg';
 
+// upcomingEvent
+import NL from './7NL_img.jpeg';
+
 export {
   Banner_1,
   WisdomShirt_2,
   wisdomShirt_1,
+  NL,
   Cap_1,
   Cap_2,
   Img_1,

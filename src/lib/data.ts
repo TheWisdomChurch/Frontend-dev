@@ -96,7 +96,7 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     icon: 'Calendar',
     dropdown: [
       { label: 'Upcoming Events', href: '/events/upcoming' },
-      { label: 'Weekly Services', href: '/events/services' },
+      { label: 'Weekly Services', href: '/events/weekly' },
       { label: 'Special Events', href: '/events/special' },
     ],
   },
@@ -508,4 +508,104 @@ export const OnlinegivingOptions = [
     ],
   },
   // Add similar structure for other giving options...
+];
+
+// Sermons
+export const seriesGroups = [
+  {
+    name: 'Monday Morning Prayers',
+    searchTerms: ['MONDAY MORNING PRAYER MOMENT WITH BISHOP'],
+    description: 'Start your week with powerful prayer sessions',
+    color: 'from-blue-400 to-blue-600',
+  },
+  {
+    name: 'The Incense',
+    searchTerms: ['INCENSE', 'INCENSE (SOUNDS OF VICTORY)'],
+    description: 'Prayer and worship moments',
+    color: 'from-orange-400 to-orange-600',
+  },
+  {
+    name: 'Wisdom Power Conference',
+    searchTerms: ['WISDOM POWER CONFERENCE'],
+    description: 'Annual wisdom and power conference',
+    color: 'from-purple-400 to-purple-600',
+  },
+  {
+    name: 'Celebration & Communion',
+    searchTerms: [
+      'CELEBRATION & COMMUNION SERVICE',
+      'THANKSGIVING & COMMUNION SERVICE',
+      'END OF THE YEAR THANKSGIVING',
+      'NOVEMBER SUPERNATURAL SERVICE',
+      'CELEBRATION SERVICE',
+    ],
+    description: 'Special services of celebration and communion',
+    color: 'from-green-400 to-green-600',
+  },
+  {
+    name: 'Supernatural Services',
+    searchTerms: [
+      'SUPERNATURAL SERVICE',
+      'OCTOBER SUPERNATURAL SERVICE',
+      'SEPTEMBER SUPERNATURAL SERVICE',
+      'AUGUST SUPERNATURAL SERVICE',
+      'JULY SUPERNATURAL SERVICE',
+      'FEBRUARY SUPERNATURAL SERVICE',
+    ],
+    description: 'Monthly supernatural services',
+    color: 'from-red-400 to-red-600',
+  },
+  {
+    name: 'Sunday Services',
+    searchTerms: [
+      'SUNDAY SERVICE',
+      'GAINING WISDOM SERVICE',
+      'SECOND SERVICE',
+      'SUNDAY WORSHIP SERVICE',
+    ],
+    description: 'Regular Sunday worship and teaching',
+    color: 'from-yellow-400 to-yellow-600',
+  },
+  {
+    name: 'Fasting & Prayer',
+    searchTerms: [
+      'FASTING AND PRAYERS',
+      '40 DAYS FASTING AND PRAYERS',
+      '7 DAYS FASTING AND PRAYERS',
+      '3 DAYS FASTING AND PRAYERS',
+      '21 DAYS FASTING AND PRAYERS',
+    ],
+    description: 'Powerful prayer and fasting sessions',
+    color: 'from-indigo-400 to-indigo-600',
+  },
+  {
+    name: 'Teaching Series',
+    searchTerms: [
+      'FAITH CONTEMPLATIONS',
+      'THE WORD AND THE BELIEVER',
+      'DIVINE INSTRUCTIONS',
+      'THE LAW OF CONFESSION',
+      'FAITH SERIES',
+    ],
+    description: 'Biblical teaching and faith series',
+    color: 'from-teal-400 to-teal-600',
+  },
+  {
+    name: 'Special Events',
+    searchTerms: [
+      'CONVERSATIONAL SERVICE',
+      'NEXT LEVEL SERVICE',
+      'CROSSOVER SERVICE',
+      'SPECIAL SERVICE',
+      'APOSTOLIC SERVICE',
+    ],
+    description: 'Special events and services',
+    color: 'from-pink-400 to-pink-600',
+  },
+  {
+    name: 'Midweek Services',
+    searchTerms: ['MIDWEEK SERVICE', 'MDWK SERVICE'],
+    description: 'Midweek teaching and fellowship',
+    color: 'from-gray-400 to-gray-600',
+  },
 ];

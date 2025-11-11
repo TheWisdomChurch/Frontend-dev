@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/contexts/ThemeContext';
 import { HeaderProvider } from '@/components/providers/NavProviders';
+import ReduxProvider from '@/components/providers/ReduxProvider'; // Add this import
 import {
   bricolageGrotesque,
   worksans,
@@ -29,19 +30,22 @@ export default function RootLayout({
       <body
         className={`${bricolageGrotesque.className} flex flex-col min-h-screen`}
       >
-        <ThemeProvider>
-          {/* Wrap with HeaderProvider */}
-          <HeaderProvider>
-            {/* Header at the top */}
-            <Header />
+        {/* Wrap everything with ReduxProvider */}
+        <ReduxProvider>
+          <ThemeProvider>
+            {/* Wrap with HeaderProvider */}
+            <HeaderProvider>
+              {/* Header at the top */}
+              <Header />
 
-            {/* Main content grows to fill space */}
-            <main className="flex-1">{children}</main>
+              {/* Main content grows to fill space */}
+              <main className="flex-1">{children}</main>
 
-            {/* Footer at the bottom */}
-            <Footer />
-          </HeaderProvider>
-        </ThemeProvider>
+              {/* Footer at the bottom */}
+              <Footer />
+            </HeaderProvider>
+          </ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

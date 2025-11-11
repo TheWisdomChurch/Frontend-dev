@@ -89,6 +89,8 @@ export interface YouTubeVideo {
   tags?: string[];
   url: string;
   embedUrl: string;
+  series: string; // Make sure these are properly defined
+  preacher: string;
 }
 
 export interface YouTubeChannel {
@@ -105,4 +107,42 @@ export interface VideoFilters {
   searchTerm: string;
   sortBy: 'newest' | 'oldest' | 'popular';
   category?: string;
+}
+
+// export interface YouTubeVideo {
+//   id: string;
+//   title: string;
+//   description: string;
+//   thumbnail: string;
+//   publishedAt: string;
+//   viewCount: string;
+//   series: string;
+//   preacher: string;
+//   duration: string;
+// }
+
+// Define types for grouped series
+export interface SeriesGroup {
+  name: string;
+  searchTerms: string[];
+  description: string;
+  color: string;
+}
+
+export interface GroupedSeriesData {
+  name: string;
+  description: string;
+  count: number;
+  latestThumbnail?: string;
+  color: string;
+  uniqueSeries: string[];
+  videos: YouTubeVideo[];
+  searchTerms: string[];
+}
+
+export interface UngroupedSeriesData {
+  name: string;
+  count: number;
+  latestThumbnail?: string;
+  isUngrouped: boolean;
 }

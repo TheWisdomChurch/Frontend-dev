@@ -6,20 +6,24 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - '2000:2000' # host 2000 → container 2000 (since Next runs on 2000)
+      - '2000:2000'
     environment:
       - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true # ensures hot reload works on Windows/macOS
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true # Add this for better file watching
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/.next # Exclude Next.js build directory from bind mount
     command: npm run dev
+    stdin_open: true # Add this for better signal handling
+    tty: true # Add this for interactive terminal
 
   app-prod:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '4000:3000' # different port for production container
+      - '4000:3000'
     environment:
       - NODE_ENV=production

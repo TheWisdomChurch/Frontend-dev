@@ -33,6 +33,24 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // ✅ Add webpack configuration for better hot reload in Docker
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      config.watchOptions = {
+        poll: 1000, // Check for changes every second
+        aggregateTimeout: 300, // Delay before rebuilding
+      };
+    }
+
+    // Important: return the modified config
+    return config;
+  },
+
+  // ✅ Additional development settings
+  experimental: {
+    // This can help with file watching in some environments
+  },
 };
 
 export default nextConfig;
