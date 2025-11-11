@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { YouTubeVideo } from '@/lib/types';
 import { useEffect, useState } from 'react';
 
