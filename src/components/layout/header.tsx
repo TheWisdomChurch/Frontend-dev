@@ -24,6 +24,7 @@ import { WisdomeHouseLogo } from '@/components/assets';
 import { cn } from '@/lib/cn';
 import { bricolageGrotesque, worksans } from '../fonts/fonts';
 import JoinCommunityModal from '../modal/joinUsModal';
+
 import { QRDisplayModal } from '../modal/QrModal';
 import { useHeader } from '../utils/hooks/header';
 
@@ -323,14 +324,14 @@ export default function Header() {
       <JoinCommunityModal
         isOpen={isCommunityModalOpen}
         onClose={closeCommunityModal}
-        colorScheme={colorScheme}
+        // colorScheme={colorScheme}
       />
 
       {/* QR Display Modal */}
       <QRDisplayModal
         isOpen={isQRDisplayOpen}
         onClose={closeQRDisplay}
-        colorScheme={colorScheme}
+        // colorScheme={colorScheme}
       />
     </>
   );

@@ -5,9 +5,8 @@ import Image from 'next/image';
 import { pastorsData, ministryLeadersData } from '@/lib/data';
 import { H1, H2, H3, P } from '@/components/text';
 import CustomButton from '@/components/utils/CustomButton';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useAssociatePastors } from '@/components/utils/hooks/useAssociate';
+import { ArrowRight } from 'lucide-react';
 
 export default function AssociatePastors() {
   const { sectionRef, contentRef, headingRef, handleSeeMore, addToRefs } =
@@ -119,14 +118,10 @@ export default function AssociatePastors() {
           <div className="text-center mt-8">
             <CustomButton
               onClick={handleSeeMore}
-              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-6 group"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-3 group"
             >
               See More
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                className="w-4 h-4 transition-transform duration-300 
-      group-hover:translate-x-1 ml-20"
-              />
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </CustomButton>
           </div>
         </div>

@@ -9,13 +9,9 @@ import { BaseText, LightText } from '@/components/text';
 import { photos } from '@/lib/data';
 import Button from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faChevronLeft,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
 import { FormModal } from '@/components/modal/FormModal';
 import { useJoinWisdomHouse } from '@/components/utils/hooks/useJoin';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function JoinWisdomHouse() {
   const { colorScheme } = useTheme();
@@ -169,7 +165,7 @@ export default function JoinWisdomHouse() {
                 onClick={scrollLeft}
                 className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
               >
-                <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4" />
               </button>
 
               <span className="text-white text-sm font-medium px-4">
@@ -180,7 +176,7 @@ export default function JoinWisdomHouse() {
                 onClick={scrollRight}
                 className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
               >
-                <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
 
@@ -318,7 +314,7 @@ export default function JoinWisdomHouse() {
         isOpen={showForm}
         onClose={() => setShowForm(false)}
         department={selectedDepartment || ''}
-        colorScheme={colorScheme}
+        // colorScheme={colorScheme}
       />
 
       <style jsx>{`
