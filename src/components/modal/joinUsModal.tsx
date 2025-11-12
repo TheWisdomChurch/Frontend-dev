@@ -1,30 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// components/modals/JoinCommunityModal.tsx
 import { ChevronDown, X } from 'lucide-react';
 import Button from '../utils/CustomButton';
 import { bricolageGrotesque } from '../fonts/fonts';
 import { communityLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '../assets';
 import Image from 'next/image';
+import { useTheme } from '@/components/contexts/ThemeContext';
 
 export default function JoinCommunityModal({
   isOpen,
   onClose,
-  colorScheme,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  colorScheme: any;
 }) {
+  const { colorScheme } = useTheme();
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-300"
-      style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-      }}
+      className="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-300 backdrop-blur-sm"
+      style={{ backgroundColor: colorScheme.backdrop }}
       onClick={onClose}
     >
       <div
@@ -39,7 +36,6 @@ export default function JoinCommunityModal({
         {/* Close Button */}
         <div className="relative w-full">
           <div className="absolute -top-3 -right-3 z-50">
-            {/* ✅ Moved outside main container for better placement */}
             <Button
               variant="ghost"
               size="icon"
@@ -47,14 +43,13 @@ export default function JoinCommunityModal({
               className="z-[100] rounded-full p-3 transform hover:scale-110 transition-all duration-200 shadow-lg flex items-center justify-center"
               curvature="full"
               style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                backgroundColor: colorScheme.opacity.black80,
                 border: `2px solid ${colorScheme.primary}`,
                 color: colorScheme.primary,
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
               }}
             >
-              <X className="w-5 h-5" strokeWidth={2} />{' '}
-              {/* ✅ Properly centered, sharp icon */}
+              <X className="w-5 h-5" strokeWidth={2} />
             </Button>
           </div>
         </div>
@@ -98,21 +93,20 @@ export default function JoinCommunityModal({
           {/* Community Links */}
           <div className="space-y-4">
             {communityLinks.map((link, index) => {
-              const Icon = link.icon; // ✅ use component reference
+              const Icon = link.icon;
               return (
                 <a
                   key={index}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`
-          flex items-center p-4 rounded-xl transition-all duration-300 transform hover:scale-105 
-          bg-gradient-to-r ${link.bgColor} ${link.hoverColor} text-white shadow-lg hover:shadow-xl
-        `}
+                  className="flex items-center p-4 rounded-xl transition-all duration-300 transform hover:scale-105 text-white shadow-lg hover:shadow-xl"
+                  style={{
+                    background: `linear-gradient(135deg, ${link.bgColor}, ${link.hoverColor})`,
+                  }}
                 >
                   <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/20 mr-4">
-                    <Icon className="w-6 h-6 text-white" />{' '}
-                    {/* ✅ render dynamic icon */}
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
 
                   <div className="flex-1">

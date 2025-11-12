@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/ui/fonts/color/colorScheme.ts
 // Base color interfaces
 type BackgroundColor = string;
@@ -22,6 +23,21 @@ interface BorderRadius {
   large: string;
   xlarge: string;
   full: string;
+}
+
+interface OpacityColors {
+  warning10: string;
+  warning20: string;
+  primary10: string;
+  primary20: string;
+  primary30: string;
+  black10: string;
+  black20: string;
+  black50: string;
+  black80: string;
+  white10: string;
+  white20: string;
+  white50: string;
 }
 
 export interface ColorScheme {
@@ -74,6 +90,7 @@ export interface ColorScheme {
 
   // Focus states
   focusRing: string;
+  focusBorder: string;
 
   // Shadows
   shadowSm: string;
@@ -91,12 +108,19 @@ export interface ColorScheme {
   // Highlight color
   highlight: string;
 
+  // Opacity colors
+  opacity: OpacityColors;
+
   // Material-like color scheme additions
   tertiary?: BackgroundColor;
   onTertiary?: Color;
   onPrimary?: Color;
   onSecondary?: Color;
   outline?: string;
+
+  // Modal and overlay colors
+  overlay: string;
+  backdrop: string;
 }
 
 const baseGrayScale: GrayScale = {
@@ -119,6 +143,26 @@ const baseBorderRadius: BorderRadius = {
   xlarge: '16px',
   full: '9999px',
 };
+
+const createOpacityColors = (
+  primary: string,
+  black: string,
+  white: string,
+  warning: string
+): OpacityColors => ({
+  primary10: `${primary}1A`, // 10% opacity
+  primary20: `${primary}33`, // 20% opacity
+  primary30: `${primary}4D`, // 30% opacity
+  black10: `${black}1A`,
+  black20: `${black}33`,
+  black50: `${black}80`,
+  black80: `${black}CC`,
+  white10: `${white}1A`,
+  white20: `${white}33`,
+  white50: `${white}80`,
+  warning10: `${warning}1A`, // 10% opacity for warning
+  warning20: `${warning}33`, // 20% opacity for warning
+});
 
 export const darkShades: ColorScheme = {
   // Primary colors based on #F7DE12 (your yellow)
@@ -169,6 +213,7 @@ export const darkShades: ColorScheme = {
   secondaryGradient: 'linear-gradient(135deg, #1F2937 0%, #000000 100%)',
 
   focusRing: '0 0 0 3px rgba(247, 222, 18, 0.5)',
+  focusBorder: '#F7DE12',
 
   shadowSm: '0 1px 3px rgba(0,0,0,0.5)',
   shadowMd: '0 4px 6px -1px rgba(0,0,0,0.5),0 2px 4px -1px rgba(0,0,0,0.3)',
@@ -181,6 +226,14 @@ export const darkShades: ColorScheme = {
   black: '#000000',
   highlight: '#F7DE12', // Using yellow as highlight
 
+  // Opacity colors
+  opacity: createOpacityColors('#F7DE12', '#000000', '#FFFFFF', '#F59E0B'),
+
+  // Modal and overlay
+  overlay: 'rgba(0, 0, 0, 0.8)',
+  backdrop: 'rgba(0, 0, 0, 0.5)',
+
+  // Material-like color scheme additions
   tertiary: '#374151',
   onTertiary: '#FFFFFF',
   onPrimary: '#000000', // Black text on yellow
@@ -237,6 +290,7 @@ export const lightShades: ColorScheme = {
   secondaryGradient: 'linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)',
 
   focusRing: '0 0 0 3px rgba(247, 222, 18, 0.3)',
+  focusBorder: '#F7DE12',
 
   shadowSm: '0 1px 3px rgba(0,0,0,0.1)',
   shadowMd: '0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06)',
@@ -249,6 +303,14 @@ export const lightShades: ColorScheme = {
   black: '#000000',
   highlight: '#F7DE12', // Using yellow as highlight
 
+  // Opacity colors
+  opacity: createOpacityColors('#F7DE12', '#000000', '#FFFFFF', '#F59E0B'),
+
+  // Modal and overlay
+  overlay: 'rgba(0, 0, 0, 0.8)',
+  backdrop: 'rgba(0, 0, 0, 0.5)',
+
+  // Material-like color scheme additions
   tertiary: '#F3F4F6',
   onTertiary: '#000000', // Black text on light gray
   onPrimary: '#000000', // Black text on yellow
@@ -257,6 +319,33 @@ export const lightShades: ColorScheme = {
 };
 
 // Utility types for theme usage
-export type ThemeColor = keyof Omit<ColorScheme, 'gray' | 'borderRadius'>;
+export type ThemeColor = keyof Omit<
+  ColorScheme,
+  'gray' | 'borderRadius' | 'opacity'
+>;
 export type GrayColor = keyof GrayScale;
 export type BorderRadiusSize = keyof BorderRadius;
+export type OpacityColor = keyof OpacityColors;
+
+// Utility functions for color manipulation
+export const colorUtils = {
+  // Convert hex to rgba
+  hexToRgba: (hex: string, alpha: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  },
+
+  // Lighten color
+  lighten: (color: string, percent: number): string => {
+    // Implementation for lightening colors
+    return color; // You can implement this based on your needs
+  },
+
+  // Darken color
+  darken: (color: string, percent: number): string => {
+    // Implementation for darkening colors
+    return color; // You can implement this based on your needs
+  },
+};

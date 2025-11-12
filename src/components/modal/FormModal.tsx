@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// components/modals/FormModal.tsx
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { useTheme } from '@/components/contexts/ThemeContext';
 
 interface FormModalProps {
   isOpen: boolean;
   onClose: () => void;
   department: string;
-  colorScheme: any;
 }
 
 interface FormData {
@@ -22,12 +22,8 @@ interface FormData {
   department: string;
 }
 
-export const FormModal = ({
-  isOpen,
-  onClose,
-  department,
-  colorScheme,
-}: FormModalProps) => {
+export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
+  const { colorScheme } = useTheme();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
@@ -176,22 +172,36 @@ export const FormModal = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      style={{ backgroundColor: colorScheme.backdrop }}
       onClick={handleBackdropClick}
     >
       <div
         ref={modalRef}
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="relative rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        style={{
+          backgroundColor: colorScheme.background,
+          border: `1px solid ${colorScheme.border}`,
+        }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 rounded-t-2xl p-6 z-10">
+        <div
+          className="sticky top-0 rounded-t-2xl p-6 z-10"
+          style={{
+            backgroundColor: colorScheme.background,
+            borderBottom: `1px solid ${colorScheme.border}`,
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3
+                className="text-2xl font-bold"
+                style={{ color: colorScheme.text }}
+              >
                 {showAgreement ? 'Membership Agreement' : `Join ${department}`}
               </h3>
-              <p className="text-gray-600 mt-1">
+              <p className="mt-1" style={{ color: colorScheme.textSecondary }}>
                 {showAgreement
                   ? 'Important information about our membership process'
                   : 'Fill out the form below to express your interest'}
@@ -199,12 +209,21 @@ export const FormModal = ({
             </div>
             <button
               onClick={handleClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 rounded-full transition-colors"
+              style={{
+                color: colorScheme.textSecondary,
+                backgroundColor: colorScheme.opacity.white10,
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.white20;
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.white10;
+              }}
             >
-              <FontAwesomeIcon
-                icon={faXmark}
-                className="w-5 h-5 text-gray-500"
-              />
+              <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -216,7 +235,8 @@ export const FormModal = ({
               <div>
                 <label
                   htmlFor="fullName"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: colorScheme.text }}
                 >
                   Full Name *
                 </label>
@@ -235,15 +255,21 @@ export const FormModal = ({
                       message: 'Name must be at least 2 characters long',
                     },
                   })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    errors.fullName
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-gray-300'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
+                  style={{
+                    borderColor: errors.fullName
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your full name"
                 />
                 {errors.fullName && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                  <p
+                    className="mt-1 text-sm flex items-center gap-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="currentColor"
@@ -263,7 +289,8 @@ export const FormModal = ({
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: colorScheme.text }}
                 >
                   Email Address *
                 </label>
@@ -277,15 +304,21 @@ export const FormModal = ({
                       message: 'Please enter a valid email address',
                     },
                   })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    errors.email
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-gray-300'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
+                  style={{
+                    borderColor: errors.email
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your email"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                  <p
+                    className="mt-1 text-sm flex items-center gap-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="currentColor"
@@ -307,7 +340,8 @@ export const FormModal = ({
               <div>
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: colorScheme.text }}
                 >
                   Phone Number *
                 </label>
@@ -325,15 +359,21 @@ export const FormModal = ({
                       message: 'Phone number must be at least 10 digits',
                     },
                   })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    errors.phone
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-gray-300'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
+                  style={{
+                    borderColor: errors.phone
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your phone number"
                 />
                 {errors.phone && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                  <p
+                    className="mt-1 text-sm flex items-center gap-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="currentColor"
@@ -353,7 +393,8 @@ export const FormModal = ({
               <div>
                 <label
                   htmlFor="occupation"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: colorScheme.text }}
                 >
                   Current Occupation *
                 </label>
@@ -367,15 +408,21 @@ export const FormModal = ({
                       message: 'Occupation must be at least 2 characters long',
                     },
                   })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    errors.occupation
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-gray-300'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
+                  style={{
+                    borderColor: errors.occupation
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="e.g., Student, Engineer, Teacher, etc."
                 />
                 {errors.occupation && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                  <p
+                    className="mt-1 text-sm flex items-center gap-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="currentColor"
@@ -396,7 +443,8 @@ export const FormModal = ({
             <div>
               <label
                 htmlFor="message"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium mb-2"
+                style={{ color: colorScheme.text }}
               >
                 Why do you want to join {department}? *
               </label>
@@ -416,16 +464,22 @@ export const FormModal = ({
                     message: 'Message is too long (maximum 500 characters)',
                   },
                 })}
-                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-vertical ${
-                  errors.message
-                    ? 'border-red-300 bg-red-50'
-                    : 'border-gray-300'
-                }`}
+                className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200 resize-vertical"
+                style={{
+                  borderColor: errors.message
+                    ? colorScheme.error
+                    : colorScheme.border,
+                  backgroundColor: colorScheme.background,
+                  color: colorScheme.text,
+                }}
                 placeholder="Tell us about your interest, skills, and what you hope to contribute to our ministry..."
               />
               <div className="flex justify-between items-center mt-1">
                 {errors.message ? (
-                  <p className="text-sm text-red-600 flex items-center gap-1">
+                  <p
+                    className="text-sm flex items-center gap-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="currentColor"
@@ -444,10 +498,14 @@ export const FormModal = ({
                 )}
                 <span
                   className={`text-xs ${
-                    watch('message')?.length > 450
-                      ? 'text-orange-600'
-                      : 'text-gray-500'
+                    watch('message')?.length > 450 ? 'text-orange-600' : ''
                   }`}
+                  style={{
+                    color:
+                      watch('message')?.length > 450
+                        ? colorScheme.warning
+                        : colorScheme.textSecondary,
+                  }}
                 >
                   {watch('message')?.length || 0}/500
                 </span>
@@ -455,11 +513,23 @@ export const FormModal = ({
             </div>
 
             {/* Agreement Notice */}
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div
+              className="rounded-xl p-4"
+              style={{
+                backgroundColor: colorScheme.opacity.primary10,
+                border: `1px solid ${colorScheme.opacity.primary20}`,
+              }}
+            >
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
+                <div
+                  className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
+                  style={{
+                    backgroundColor: colorScheme.primary,
+                    color: colorScheme.black,
+                  }}
+                >
                   <svg
-                    className="w-3 h-3 text-white"
+                    className="w-3 h-3"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -471,11 +541,17 @@ export const FormModal = ({
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-blue-800 font-medium">
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: colorScheme.primary }}
+                  >
                     By submitting this form, you agree to join our compulsory
                     1-month membership class
                   </p>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p
+                    className="text-xs mt-1"
+                    style={{ color: colorScheme.primary }}
+                  >
                     This foundational training is required for all new members
                     to understand our vision and values
                   </p>
@@ -487,16 +563,28 @@ export const FormModal = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: colorScheme.black,
+                }}
+                onMouseEnter={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.primaryLight;
+                  }
+                }}
+                onMouseLeave={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  }
                 }}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
                     <svg
-                      className="animate-spin h-5 w-5 text-white"
+                      className="animate-spin h-5 w-5"
+                      style={{ color: colorScheme.black }}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -525,7 +613,24 @@ export const FormModal = ({
                 type="button"
                 onClick={handleClose}
                 disabled={isSubmitting}
-                className="flex-1 border border-gray-300 text-gray-700 py-4 px-6 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 border py-4 px-6 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  borderColor: colorScheme.border,
+                  color: colorScheme.text,
+                  backgroundColor: colorScheme.background,
+                }}
+                onMouseEnter={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.opacity.white10;
+                  }
+                }}
+                onMouseLeave={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.background;
+                  }
+                }}
               >
                 Cancel
               </button>
@@ -535,11 +640,23 @@ export const FormModal = ({
           /* Agreement Information Section */
           <div className="p-6 space-y-6">
             {/* Main Agreement Content */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6">
+            <div
+              className="border rounded-2xl p-6"
+              style={{
+                backgroundColor: colorScheme.surface,
+                borderColor: colorScheme.border,
+              }}
+            >
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                  style={{
+                    backgroundColor: colorScheme.opacity.primary20,
+                    color: colorScheme.primary,
+                  }}
+                >
                   <svg
-                    className="w-8 h-8 text-blue-600"
+                    className="w-8 h-8"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -552,33 +669,66 @@ export const FormModal = ({
                     />
                   </svg>
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">
+                <h4
+                  className="text-xl font-bold mb-2"
+                  style={{ color: colorScheme.text }}
+                >
                   Welcome to Wisdom House Ministry!
                 </h4>
-                <p className="text-gray-600">
+                <p style={{ color: colorScheme.textSecondary }}>
                   Thank you for your interest in joining our {department} team
                 </p>
               </div>
 
               <div className="space-y-4">
-                <div className="bg-white rounded-xl p-4 border border-blue-100">
-                  <h5 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                <div
+                  className="rounded-xl p-4 border"
+                  style={{
+                    backgroundColor: colorScheme.background,
+                    borderColor: colorScheme.border,
+                  }}
+                >
+                  <h5
+                    className="font-semibold mb-2 flex items-center gap-2"
+                    style={{ color: colorScheme.text }}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: colorScheme.primary }}
+                    ></span>
                     Compulsory 1-Month Membership Class
                   </h5>
-                  <p className="text-sm text-gray-600">
+                  <p
+                    className="text-sm"
+                    style={{ color: colorScheme.textSecondary }}
+                  >
                     Every new member is required to complete our foundational
                     membership class. This ensures everyone understands our
                     vision, values, and ministry philosophy.
                   </p>
                 </div>
 
-                <div className="bg-white rounded-xl p-4 border border-blue-100">
-                  <h5 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                <div
+                  className="rounded-xl p-4 border"
+                  style={{
+                    backgroundColor: colorScheme.background,
+                    borderColor: colorScheme.border,
+                  }}
+                >
+                  <h5
+                    className="font-semibold mb-2 flex items-center gap-2"
+                    style={{ color: colorScheme.text }}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: colorScheme.success }}
+                    ></span>
                     What You'll Learn
                   </h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <ul
+                    className="text-sm space-y-1"
+                    style={{ color: colorScheme.textSecondary }}
+                  >
                     <li>• Our church history and vision</li>
                     <li>• Biblical foundations for ministry service</li>
                     <li>• Understanding your spiritual gifts</li>
@@ -587,12 +737,27 @@ export const FormModal = ({
                   </ul>
                 </div>
 
-                <div className="bg-white rounded-xl p-4 border border-blue-100">
-                  <h5 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                <div
+                  className="rounded-xl p-4 border"
+                  style={{
+                    backgroundColor: colorScheme.background,
+                    borderColor: colorScheme.border,
+                  }}
+                >
+                  <h5
+                    className="font-semibold mb-2 flex items-center gap-2"
+                    style={{ color: colorScheme.text }}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: colorScheme.secondary }}
+                    ></span>
                     Class Schedule & Commitment
                   </h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <ul
+                    className="text-sm space-y-1"
+                    style={{ color: colorScheme.textSecondary }}
+                  >
                     <li>
                       • Duration: This will be communicated upon completion of
                       form
@@ -603,10 +768,19 @@ export const FormModal = ({
                   </ul>
                 </div>
 
-                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                  <h5 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                <div
+                  className="rounded-xl p-4"
+                  style={{
+                    backgroundColor: colorScheme.opacity.warning10,
+                    border: `1px solid ${colorScheme.opacity.warning20}`,
+                  }}
+                >
+                  <h5
+                    className="font-semibold mb-2 flex items-center gap-2"
+                    style={{ color: colorScheme.warning }}
+                  >
                     <svg
-                      className="w-4 h-4 text-yellow-600"
+                      className="w-4 h-4"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -618,7 +792,7 @@ export const FormModal = ({
                     </svg>
                     Important Notice
                   </h5>
-                  <p className="text-sm text-yellow-700">
+                  <p className="text-sm" style={{ color: colorScheme.warning }}>
                     Your application will be processed after successful
                     completion of the membership class. This ensures we place
                     everyone in roles where they can thrive and serve
@@ -633,16 +807,28 @@ export const FormModal = ({
               <button
                 onClick={handleFinalSubmit}
                 disabled={isSubmitting}
-                className="flex-1 bg-green-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: colorScheme.black,
+                }}
+                onMouseEnter={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.primaryLight;
+                  }
+                }}
+                onMouseLeave={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  }
                 }}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
                     <svg
-                      className="animate-spin h-5 w-5 text-white"
+                      className="animate-spin h-5 w-5"
+                      style={{ color: colorScheme.black }}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -670,7 +856,24 @@ export const FormModal = ({
               <button
                 onClick={handleContinueToForm}
                 disabled={isSubmitting}
-                className="flex-1 border border-gray-300 text-gray-700 py-4 px-6 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 border py-4 px-6 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  borderColor: colorScheme.border,
+                  color: colorScheme.text,
+                  backgroundColor: colorScheme.background,
+                }}
+                onMouseEnter={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.opacity.white10;
+                  }
+                }}
+                onMouseLeave={(e: any) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.background;
+                  }
+                }}
               >
                 Back to Form
               </button>

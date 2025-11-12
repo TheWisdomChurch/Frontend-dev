@@ -146,3 +146,33 @@ export interface UngroupedSeriesData {
   latestThumbnail?: string;
   isUngrouped: boolean;
 }
+// types/events.ts
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  type: string;
+  location: string;
+  description?: string;
+  logo?: string;
+}
+
+export interface MonthlyEvents {
+  [key: number]: CalendarEvent[];
+}
+
+export interface RegistrationFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  location: string;
+}
+
+export interface ReminderFormData {
+  email: string;
+  frequency: 'daily' | 'weekly' | 'monthly';
+  eventType: 'conference' | 'lifting';
+}

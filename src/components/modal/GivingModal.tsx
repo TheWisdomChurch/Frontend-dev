@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// components/modals/GivingModal.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -23,7 +25,7 @@ interface GivingOption {
 interface GivingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  givingOption: GivingOption | null; // Make it nullable
+  givingOption: GivingOption | null;
 }
 
 export default function GivingModal({
@@ -31,13 +33,13 @@ export default function GivingModal({
   onClose,
   givingOption,
 }: GivingModalProps) {
+  const { colorScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [openAccountIndex, setOpenAccountIndex] = useState<number | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const accountRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const { colorScheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -158,12 +160,8 @@ export default function GivingModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500"
-      style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500 backdrop-blur-sm"
+      style={{ backgroundColor: colorScheme.backdrop }}
       onClick={handleBackdropClick}
     >
       <div
@@ -183,7 +181,7 @@ export default function GivingModal({
           onClick={handleClose}
           className="absolute top-4 right-4 z-50 rounded-full p-2 transform hover:scale-110 transition-all duration-200"
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            backgroundColor: colorScheme.opacity.black80,
             border: `1px solid ${colorScheme.primary}50`,
             color: colorScheme.primary,
           }}
@@ -452,6 +450,13 @@ export default function GivingModal({
               style={{
                 backgroundColor: colorScheme.primary,
                 color: colorScheme.black,
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.primaryLight;
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.backgroundColor = colorScheme.primary;
               }}
             >
               Close

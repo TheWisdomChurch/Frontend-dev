@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // components/qr/QRDisplayModal.tsx
 'use client';
@@ -7,12 +6,12 @@ import { useState, useRef, useEffect } from 'react';
 import { QrCode, X, Share2, Scan } from 'lucide-react';
 import { worksans } from '../fonts/fonts';
 import { Button } from '../ui/button';
+import { useTheme } from '@/components/contexts/ThemeContext';
 
 // Types for QR Display
 interface QRDisplayModalProps {
   isOpen: boolean;
   onClose: () => void;
-  colorScheme: any;
 }
 
 // Professional QR Code Generator using Canvas (No external dependencies)
@@ -256,8 +255,9 @@ const ProfessionalQRCode: React.FC<{
 export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
   isOpen,
   onClose,
-  colorScheme,
 }) => {
+  const { colorScheme } = useTheme();
+
   // URLs for different QR codes - Only community for now
   const qrCodes = {
     community: {
@@ -265,10 +265,10 @@ export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
       description: 'Scan to join our WhatsApp community and stay connected',
       url: 'https://wa.me/2347069995333',
       value: 'https://wa.me/2347069995333',
-      color: '#10B981', // Green
+      color: colorScheme.success,
       gradient: 'from-emerald-500 to-green-600',
       icon: '👥',
-      bgColor: '#F0FDF4',
+      bgColor: colorScheme.background,
     },
   };
 
@@ -301,7 +301,10 @@ export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
   const currentQR = qrCodes.community;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+      style={{ backgroundColor: colorScheme.backdrop }}
+    >
       <div
         className="relative mx-4 w-full max-w-md rounded-2xl p-6 shadow-2xl"
         style={{
@@ -377,9 +380,16 @@ export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
             >
               {currentQR.description}
             </p>
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-3 rounded-xl border">
+            <div
+              className="p-3 rounded-xl border"
+              style={{
+                backgroundColor: colorScheme.surface,
+                borderColor: colorScheme.border,
+              }}
+            >
               <p
-                className={`${worksans.className} text-xs font-mono text-gray-600 break-all`}
+                className={`${worksans.className} text-xs font-mono break-all`}
+                style={{ color: colorScheme.textSecondary }}
               >
                 {currentQR.url}
               </p>
@@ -407,19 +417,37 @@ export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
             style={{ color: colorScheme.text }}
           >
             <li className="flex items-start gap-2">
-              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">
+              <span
+                className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs"
+                style={{
+                  backgroundColor: `${colorScheme.success}20`,
+                  color: colorScheme.success,
+                }}
+              >
                 1
               </span>
               <span>Open your phone's camera app</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs">
+              <span
+                className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs"
+                style={{
+                  backgroundColor: `${colorScheme.primary}20`,
+                  color: colorScheme.primary,
+                }}
+              >
                 2
               </span>
               <span>Point camera at the QR code above</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xs">
+              <span
+                className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs"
+                style={{
+                  backgroundColor: `${colorScheme.secondary}20`,
+                  color: colorScheme.secondary,
+                }}
+              >
                 3
               </span>
               <span>Tap the notification to open the link</span>
@@ -434,7 +462,7 @@ export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
             className="flex-1 transition-all duration-200 hover:scale-105"
             style={{
               backgroundColor: currentQR.color,
-              color: '#ffffff',
+              color: colorScheme.white,
               borderRadius: colorScheme.borderRadius.large,
             }}
           >
