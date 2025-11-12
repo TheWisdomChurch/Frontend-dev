@@ -2,6 +2,7 @@
 // components/modals/DateEventsModal.tsx
 import { CalendarEvent } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { X } from 'lucide-react';
 
 interface DateEventsModalProps {
   dateEvents: {
@@ -54,7 +55,7 @@ export const DateEventsModal = ({
             </div>
             <button
               onClick={onClose}
-              className="text-2xl p-2 rounded-xl transition-colors duration-300"
+              className="p-2 rounded-xl transition-colors duration-300"
               style={{
                 color: colorScheme.textSecondary,
                 backgroundColor: colorScheme.opacity.white10,
@@ -68,7 +69,7 @@ export const DateEventsModal = ({
                   colorScheme.opacity.white10;
               }}
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
 
