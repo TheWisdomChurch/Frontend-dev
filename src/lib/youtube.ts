@@ -16,7 +16,6 @@ function extractMetadata(
   let series = 'General';
   let preacher = 'Wisdom House Ministry';
 
-  // Primary pattern: "TITLE | PREACHER | DATE"
   // Example: "GAINING WISDOM SERVICE | THE WISDOM CHURCH | 9TH OF NOVEMBER 2025"
   const primaryPattern = /^(.+?)\s*\|\s*(.+?)\s*\|\s*(.+)$/i;
   const match = title.match(primaryPattern);

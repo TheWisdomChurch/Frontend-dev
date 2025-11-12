@@ -96,7 +96,7 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     icon: 'Calendar',
     dropdown: [
       { label: 'Upcoming Events', href: '/events/upcoming' },
-      { label: 'Weekly Services', href: '/events/weekly' },
+      // { label: 'Weekly Services', href: '/events/weekly' },
       { label: 'Special Events', href: '/events/special' },
     ],
   },
