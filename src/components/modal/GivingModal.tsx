@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { BaseText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { ChevronDown, Copy, Check, Info } from 'lucide-react';
+import { ChevronDown, Copy, Check, Info, X } from 'lucide-react';
 
 interface GivingOption {
   title: string;
@@ -186,19 +186,7 @@ export default function GivingModal({
             color: colorScheme.primary,
           }}
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <X className="w-5 h-5" />
         </Button>
 
         {/* Content Area */}

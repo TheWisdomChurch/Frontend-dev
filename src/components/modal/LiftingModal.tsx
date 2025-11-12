@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/modals/LiftingModal.tsx
 import { RegistrationFormData } from '@/lib/types';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { X, Loader2 } from 'lucide-react';
 
 interface LiftingModalProps {
   formData: RegistrationFormData;
@@ -20,31 +23,60 @@ export const LiftingModal = ({
   onSubmit,
   onClose,
 }: LiftingModalProps) => {
+  const { colorScheme } = useTheme();
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 lifting-modal">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 p-4 lifting-modal"
+      style={{ backgroundColor: colorScheme.backdrop }}
+    >
+      <div
+        className="rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        style={{
+          backgroundColor: colorScheme.background,
+          border: `1px solid ${colorScheme.border}`,
+        }}
+      >
         <div className="p-8">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-3xl font-black text-gray-900 mb-2">
+              <h3
+                className="text-3xl font-black mb-2"
+                style={{ color: colorScheme.text }}
+              >
                 Register for 7 Nights of Lifting
               </h3>
-              <p className="text-gray-600">
+              <p style={{ color: colorScheme.textSecondary }}>
                 Join us for seven powerful nights of spiritual elevation
               </p>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl p-2 hover:bg-gray-100 rounded-xl transition-colors duration-300"
+              className="p-2 rounded-xl transition-colors duration-300"
+              style={{
+                color: colorScheme.textSecondary,
+                backgroundColor: colorScheme.opacity.white10,
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.white20;
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.white10;
+              }}
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  style={{ color: colorScheme.text }}
+                >
                   First Name *
                 </label>
                 <input
@@ -52,22 +84,31 @@ export const LiftingModal = ({
                   name="firstName"
                   value={formData.firstName}
                   onChange={onInputChange}
-                  className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                    formErrors.firstName
-                      ? 'border-red-500'
-                      : 'border-gray-200 focus:border-yellow-400'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  style={{
+                    borderColor: formErrors.firstName
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your first name"
                 />
                 {formErrors.firstName && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p
+                    className="text-sm mt-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     {formErrors.firstName}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  style={{ color: colorScheme.text }}
+                >
                   Last Name *
                 </label>
                 <input
@@ -75,15 +116,21 @@ export const LiftingModal = ({
                   name="lastName"
                   value={formData.lastName}
                   onChange={onInputChange}
-                  className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                    formErrors.lastName
-                      ? 'border-red-500'
-                      : 'border-gray-200 focus:border-yellow-400'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  style={{
+                    borderColor: formErrors.lastName
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your last name"
                 />
                 {formErrors.lastName && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p
+                    className="text-sm mt-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     {formErrors.lastName}
                   </p>
                 )}
@@ -92,7 +139,10 @@ export const LiftingModal = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  style={{ color: colorScheme.text }}
+                >
                   Email Address *
                 </label>
                 <input
@@ -100,22 +150,31 @@ export const LiftingModal = ({
                   name="email"
                   value={formData.email}
                   onChange={onInputChange}
-                  className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                    formErrors.email
-                      ? 'border-red-500'
-                      : 'border-gray-200 focus:border-yellow-400'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  style={{
+                    borderColor: formErrors.email
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your email"
                 />
                 {formErrors.email && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p
+                    className="text-sm mt-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     {formErrors.email}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  style={{ color: colorScheme.text }}
+                >
                   Phone Number *
                 </label>
                 <input
@@ -123,15 +182,21 @@ export const LiftingModal = ({
                   name="phone"
                   value={formData.phone}
                   onChange={onInputChange}
-                  className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                    formErrors.phone
-                      ? 'border-red-500'
-                      : 'border-gray-200 focus:border-yellow-400'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  style={{
+                    borderColor: formErrors.phone
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your phone number"
                 />
                 {formErrors.phone && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p
+                    className="text-sm mt-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     {formErrors.phone}
                   </p>
                 )}
@@ -140,18 +205,24 @@ export const LiftingModal = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  style={{ color: colorScheme.text }}
+                >
                   Country *
                 </label>
                 <select
                   name="country"
                   value={formData.country}
                   onChange={onInputChange}
-                  className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                    formErrors.country
-                      ? 'border-red-500'
-                      : 'border-gray-200 focus:border-yellow-400'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  style={{
+                    borderColor: formErrors.country
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                 >
                   <option value="">Select your country</option>
                   <option value="US">United States</option>
@@ -163,14 +234,20 @@ export const LiftingModal = ({
                   <option value="Other">Other</option>
                 </select>
                 {formErrors.country && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p
+                    className="text-sm mt-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     {formErrors.country}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  style={{ color: colorScheme.text }}
+                >
                   Location/City *
                 </label>
                 <input
@@ -178,23 +255,35 @@ export const LiftingModal = ({
                   name="location"
                   value={formData.location}
                   onChange={onInputChange}
-                  className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                    formErrors.location
-                      ? 'border-red-500'
-                      : 'border-gray-200 focus:border-yellow-400'
-                  }`}
+                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  style={{
+                    borderColor: formErrors.location
+                      ? colorScheme.error
+                      : colorScheme.border,
+                    backgroundColor: colorScheme.background,
+                    color: colorScheme.text,
+                  }}
                   placeholder="Enter your city"
                 />
                 {formErrors.location && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p
+                    className="text-sm mt-1"
+                    style={{ color: colorScheme.error }}
+                  >
                     {formErrors.location}
                   </p>
                 )}
               </div>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-              <p className="text-sm text-yellow-800">
+            <div
+              className="rounded-xl p-4"
+              style={{
+                backgroundColor: colorScheme.opacity.primary10,
+                border: `1px solid ${colorScheme.opacity.primary20}`,
+              }}
+            >
+              <p className="text-sm" style={{ color: colorScheme.primary }}>
                 <strong>Note:</strong> This registration covers all seven nights
                 of the event. You will receive a detailed schedule and
                 preparation materials via email.
@@ -204,30 +293,29 @@ export const LiftingModal = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              style={{
+                backgroundColor: colorScheme.primary,
+                color: colorScheme.black,
+              }}
+              onMouseEnter={(e: any) => {
+                if (!isSubmitting) {
+                  e.currentTarget.style.backgroundColor =
+                    colorScheme.primaryLight;
+                }
+              }}
+              onMouseLeave={(e: any) => {
+                if (!isSubmitting) {
+                  e.currentTarget.style.backgroundColor = colorScheme.primary;
+                }
+              }}
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-900"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <Loader2
+                    className="animate-spin -ml-1 mr-3 h-5 w-5"
+                    style={{ color: colorScheme.black }}
+                  />
                   Processing Registration...
                 </span>
               ) : (
