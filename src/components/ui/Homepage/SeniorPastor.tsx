@@ -1,18 +1,24 @@
+// components/sections/SeniorPastor.tsx
 'use client';
 
 import { Banner_2 } from '@/components/assets';
 import Image from 'next/image';
 import { LightText } from '@/components/text';
-import Button from '../../utils/CustomButton';
+import { Button } from '../button';
 import { useSeniorPastor } from '@/components/utils/hooks/useSeniorPastor';
+import { seniorPastorData } from '@/lib/data';
 
-export default function SeniorPastor() {
+interface SeniorPastorProps {
+  className?: string;
+}
+
+export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   const { isVisible, sectionRef, handleLearnMore } = useSeniorPastor();
 
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen w-full flex items-center justify-center"
+      className={`relative min-h-screen w-full flex items-center justify-center ${className}`}
     >
       {/* Main Background Image with Black Gradient */}
       <div className="absolute inset-0 w-full h-full">
@@ -33,7 +39,7 @@ export default function SeniorPastor() {
           {/* Header */}
           <div className="w-full text-center mb-8 md:mb-10 lg:mb-12">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-white mb-4">
-              Meet Our Senior Pastor
+              {seniorPastorData.title}
             </h1>
           </div>
 
@@ -50,30 +56,13 @@ export default function SeniorPastor() {
               <div className="relative z-10 p-6 sm:p-7 md:p-8 lg:p-10">
                 {/* Text Content */}
                 <div className="space-y-5 md:space-y-6 lg:space-y-6">
-                  <div className="text-center md:text-left">
-                    <LightText className="text-white text-base sm:text-lg md:text-lg lg:text-lg leading-relaxed md:leading-loose">
-                      Our dear esteemed Pastor Bishop Gabriel Ayilara, is the
-                      Senior Pastor of the Wisdom House Church. Over the years,
-                      he has faithfully discipled and mentored countless
-                      individuals, demonstrating the practical workings of God's
-                      Word in everyday life. He is lawfully wedded to Pastor
-                      Kenny Ayilara, and together they are blessed with godly
-                      children. Through their exemplary marriage and ministry,
-                      they continue to inspire, equip, and impact lives for the
-                      Kingdom of God.
-                    </LightText>
-                  </div>
-
-                  <div className="text-center md:text-left">
-                    <LightText className="text-white text-base sm:text-lg md:text-lg lg:text-lg leading-relaxed md:leading-loose">
-                      His vision for The Wisdom Church is to create a place
-                      where everyone can encounter God's transformative love and
-                      discover their unique purpose. Through powerful preaching,
-                      genuine relationships, and Spirit-led worship, Our Senior
-                      Pastor guides our church family toward a deeper
-                      relationship with Christ.
-                    </LightText>
-                  </div>
+                  {seniorPastorData.description.map((paragraph, index) => (
+                    <div key={index} className="text-center md:text-left">
+                      <LightText className="text-white text-base sm:text-lg md:text-lg lg:text-lg leading-relaxed md:leading-loose">
+                        {paragraph}
+                      </LightText>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Button */}
@@ -84,7 +73,7 @@ export default function SeniorPastor() {
                     size="lg"
                     className="min-w-[180px] px-6 py-2.5 text-sm sm:text-base md:text-base"
                   >
-                    Learn More About Our Pastor
+                    {seniorPastorData.buttonText}
                   </Button>
                 </div>
               </div>
