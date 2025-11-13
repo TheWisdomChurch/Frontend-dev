@@ -1,16 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 'use client';
 
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@/lib/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2 } from '@/components/text';
+import { H2, BaseText, LightText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 import SermonUtil from '@/components/ui/Sermons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+import Button from '@/components/utils/CustomButton';
+import {
+  Section,
+  Container,
+  GridboxLayout,
+  FlexboxLayout,
+} from '@/components/layout';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,7 +33,7 @@ const SermonPage = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen">
       <HeroSection
         title="Sermons & Teachings"
         subtitle="Catch up on all our Sermons and Teachings"
@@ -44,11 +51,34 @@ const SermonPage = () => {
       <SermonUtil />
 
       {/* Ways to Listen Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <H2 className="mb-8">Watch & Listen Anywhere</H2>
-            <div className="grid grid-cols-1 gap-8">
+      <Section
+        background="light"
+        padding="lg"
+        fullHeight={false}
+        className="bg-white"
+      >
+        <Container size="xl">
+          <FlexboxLayout
+            direction="column"
+            justify="center"
+            align="center"
+            gap="lg"
+            className="text-center"
+          >
+            <H2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center mb-8">
+              Watch & Listen Anywhere
+            </H2>
+
+            <GridboxLayout
+              columns={1}
+              gap="lg"
+              responsive={{
+                sm: 1,
+                md: 1,
+                lg: 1,
+              }}
+              className="max-w-4xl mx-auto"
+            >
               {[
                 {
                   platform: 'YouTube',
@@ -64,26 +94,61 @@ const SermonPage = () => {
               ].map((option, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow border border-gray-100 max-w-md mx-auto"
+                  className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl hover:shadow-2xl transition-all duration-300 border border-gray-100 max-w-md mx-auto"
                 >
-                  <div className="flex justify-center mb-4">{option.icon}</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    {option.platform}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{option.description}</p>
-                  <button
-                    onClick={handleYouTubeRedirect}
-                    className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                  <FlexboxLayout
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    gap="md"
+                    className="text-center"
                   >
-                    <FontAwesomeIcon icon={faYoutube} className="w-5 h-5" />
-                    {option.action}
-                  </button>
+                    <div className="flex justify-center mb-4">
+                      {option.icon}
+                    </div>
+
+                    <BaseText
+                      fontFamily="bricolage"
+                      weight="bold"
+                      className="text-xl sm:text-2xl mb-3"
+                    >
+                      {option.platform}
+                    </BaseText>
+
+                    <LightText className="mb-6 text-sm sm:text-base">
+                      {option.description}
+                    </LightText>
+
+                    <Button
+                      onClick={handleYouTubeRedirect}
+                      variant="primary"
+                      size="lg"
+                      curvature="full"
+                      elevated={true}
+                      leftIcon={
+                        <FontAwesomeIcon icon={faYoutube} className="w-5 h-5" />
+                      }
+                      className="w-full transition-all duration-300 transform hover:scale-105"
+                      style={{
+                        backgroundColor: '#dc2626',
+                        color: 'white',
+                      }}
+                      onMouseEnter={(e: any) => {
+                        e.currentTarget.style.backgroundColor = '#b91c1c';
+                      }}
+                      onMouseLeave={(e: any) => {
+                        e.currentTarget.style.backgroundColor = '#dc2626';
+                      }}
+                    >
+                      {option.action}
+                    </Button>
+                  </FlexboxLayout>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
+            </GridboxLayout>
+          </FlexboxLayout>
+        </Container>
+      </Section>
     </div>
   );
 };
