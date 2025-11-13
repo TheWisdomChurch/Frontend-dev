@@ -1,242 +1,241 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client';
 
-import Image from 'next/image';
-import { Workforce_bg } from '@/components/assets';
-import { BaseText, LightText } from '@/components/text';
-import { photos } from '@/lib/data';
-import Button from '@/components/utils/CustomButton';
+import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { FormModal } from '@/components/modal/FormModal';
-import { useJoinWisdomHouse } from '@/components/utils/hooks/useJoin';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import GivingModal from '@/components/modal/GivingModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faChevronLeft,
+  faChevronRight,
+  faPhone,
+} from '@fortawesome/free-solid-svg-icons';
+import { useOnlineGiving } from '@/components/utils/hooks/Onlinegiving';
+import {
+  handleContactCall,
+  useIntersectionObserver,
+} from '@/components/utils/functionUtils/contactUtils';
 
-export default function JoinWisdomHouse() {
+export default function OnlineGiving() {
   const { colorScheme } = useTheme();
 
   const {
     isVisible,
-    selectedDepartment,
-    showForm,
+    setIsVisible,
+    selectedGivingOption,
+    isModalOpen,
     sectionRef,
     scrollContainerRef,
-    addToRefs,
-    handleLearnMore,
+    handleGiveNow,
+    closeModal,
     scrollLeft,
     scrollRight,
-    handleCardEnter,
-    handleCardLeave,
-    setShowForm,
-  } = useJoinWisdomHouse();
+  } = useOnlineGiving();
+
+  // Use the intersection observer utility
+  useIntersectionObserver(setIsVisible, sectionRef);
 
   return (
     <>
       <section
         ref={sectionRef}
-        className="relative py-16 md:py-24 overflow-hidden"
+        className="py-20"
+        style={{
+          background: colorScheme.heading,
+          color: colorScheme.textInverted,
+        }}
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${Workforce_bg.src})`,
-          }}
-        >
-          <div className="absolute inset-0 bg-black/80" />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-2 font-bold leading-tight">
-              Join Our{' '}
-              <BaseText
-                weight="regular"
-                fontFamily="playfair"
-                style={{
-                  fontStyle: 'italic',
-                  color: colorScheme.primary,
-                  display: 'inline',
-                  fontSize: 'inherit',
-                  lineHeight: 'inherit',
-                }}
-              >
-                Workforce
-              </BaseText>
-            </h2>
-
-            <LightText
-              className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-center leading-relaxed text-gray-300"
-              style={{ color: colorScheme.textSecondary }}
+            <h2
+              className="text-4xl md:text-5xl font-bold mb-4"
+              style={{ color: colorScheme.textInverted }}
             >
-              "Each of you should use whatever gift you have received to serve
-              others, as faithful stewards of God's grace in its various forms."
-              – 1 Peter 4:10
-            </LightText>
+              Online Giving
+            </h2>
+            <p
+              className="max-w-2xl mx-auto text-lg"
+              style={{ color: colorScheme.primaryGradient }}
+            >
+              Your generosity helps us continue to spread the Gospel and serve
+              our community. Choose how you would like to give today.
+            </p>
           </div>
 
           {/* Desktop Layout - Grid */}
-          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-            {photos.map((photo, index) => (
-              <div
-                key={photo.title}
-                ref={el => addToRefs(el, index)}
-                onMouseEnter={e => handleCardEnter(index, e)}
-                onMouseLeave={e => handleCardLeave(index, e)}
-                className="relative bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 cursor-pointer"
-                style={{
-                  transform: 'translateY(0) scale(1)',
-                }}
-              >
-                {/* Image Container */}
-                <div className="relative h-64 overflow-hidden">
-                  <Image
-                    src={photo.image}
-                    alt={photo.title}
-                    fill
-                    className="object-cover"
-                    style={{ transform: 'scale(1)' }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </div>
-
-                {/* Main Content Section - Always Visible */}
-                <div className="p-6 bg-gradient-to-b from-white/5 to-transparent">
-                  <BaseText
-                    className="text-white font-bold text-lg mb-4 text-center"
-                    style={{ color: colorScheme.white }}
-                  >
-                    {photo.title}
-                  </BaseText>
-                </div>
-
-                {/* Hover Overlay Content */}
+          <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6 justify-items-center">
+            {OnlinegivingOptions.map((option, index) => {
+              const Icon = option.icon;
+              return (
                 <div
-                  className="card-content absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-8 opacity-0 translate-y-30"
-                  style={{ pointerEvents: 'none' }}
+                  key={option.title}
+                  className={`transition-all duration-700 w-full max-w-sm ${
+                    isVisible
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className="text-center">
-                    <BaseText
-                      className="text-white font-bold text-xl mb-4"
-                      style={{ color: colorScheme.white }}
-                    >
-                      {photo.title}
-                    </BaseText>
-
-                    <p className="text-gray-200 text-center mb-6 text-sm leading-relaxed max-w-xs">
-                      Discover how you can contribute to our ministry through{' '}
-                      {photo.title.toLowerCase()}. Join us in making a
-                      difference in our community.
-                    </p>
-
-                    <Button
-                      variant="primary"
-                      size="md"
-                      curvature="full"
-                      className="inline-flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                  <div
+                    className="rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col"
+                    style={{
+                      backgroundColor: colorScheme.body,
+                      boxShadow: colorScheme.shadowMd,
+                    }}
+                  >
+                    <div
+                      className="p-6"
                       style={{
                         backgroundColor: colorScheme.primary,
                         color: colorScheme.black,
-                        pointerEvents: 'auto',
-                      }}
-                      onClick={() => handleLearnMore(photo.title)}
-                      onMouseEnter={(e: any) => {
-                        e.currentTarget.style.backgroundColor =
-                          colorScheme.heading;
-                      }}
-                      onMouseLeave={(e: any) => {
-                        e.currentTarget.style.backgroundColor =
-                          colorScheme.primary;
                       }}
                     >
-                      <span className="font-medium">Learn More</span>
-                    </Button>
+                      <Icon size={40} className="mb-4" />
+                      <h3 className="text-xl font-bold mb-2">{option.title}</h3>
+                    </div>
+                    <div className="p-6 flex-1 flex flex-col">
+                      <p
+                        className="mb-6 flex-1"
+                        style={{ color: colorScheme.textSecondary }}
+                      >
+                        {option.description}
+                      </p>
+                      <button
+                        onClick={() => handleGiveNow(option)}
+                        className="w-full font-semibold py-3 px-6 rounded-lg transition-all duration-300 border mt-auto"
+                        style={{
+                          backgroundColor: colorScheme.black,
+                          color: colorScheme.white,
+                          borderColor: colorScheme.primary,
+                          borderWidth: '2px',
+                          borderRadius: colorScheme.borderRadius.medium,
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.backgroundColor =
+                            colorScheme.primary;
+                          e.currentTarget.style.color = colorScheme.black;
+                          e.currentTarget.style.borderColor =
+                            colorScheme.primary;
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.backgroundColor =
+                            colorScheme.black;
+                          e.currentTarget.style.color = colorScheme.white;
+                          e.currentTarget.style.borderColor =
+                            colorScheme.primary;
+                        }}
+                      >
+                        Give Now
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Mobile & Tablet Layout - Horizontal Scroll */}
-          <div className="md:hidden relative">
+          <div className="lg:hidden relative">
             {/* Scroll Navigation Buttons */}
             <div className="flex justify-between items-center mb-6">
               <button
                 onClick={scrollLeft}
                 className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
+                style={{
+                  backgroundColor: colorScheme.primary + '30',
+                  borderColor: colorScheme.primary,
+                  color: colorScheme.textInverted,
+                }}
               >
-                <ChevronLeft className="w-4 h-4" />
+                <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
               </button>
 
-              <span className="text-white text-sm font-medium px-4">
-                Scroll to Choose Your Preferred Department
+              <span
+                className="text-sm font-medium px-4"
+                style={{ color: colorScheme.textInverted }}
+              >
+                Scroll to explore giving options
               </span>
 
               <button
                 onClick={scrollRight}
                 className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
+                style={{
+                  backgroundColor: colorScheme.primary + '30',
+                  borderColor: colorScheme.primary,
+                  color: colorScheme.textInverted,
+                }}
               >
-                <ChevronRight className="w-4 h-4" />
+                <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
               </button>
             </div>
 
             {/* Horizontal Scroll Container */}
             <div
               ref={scrollContainerRef}
-              className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide"
+              className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide px-2"
               style={{
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
               }}
             >
-              {photos.map((photo, index) => (
-                <div
-                  key={photo.title}
-                  className="flex-shrink-0 w-80 bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/20 transition-all duration-300"
-                >
-                  {/* Image Container */}
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={photo.image}
-                      alt={photo.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  </div>
-
-                  {/* Content Section */}
-                  <div className="p-5">
-                    <BaseText
-                      className="text-white font-bold text-lg mb-4 text-center"
-                      style={{ color: colorScheme.white }}
+              {OnlinegivingOptions.map((option, index) => {
+                const Icon = option.icon;
+                return (
+                  <div
+                    key={option.title}
+                    className={`flex-shrink-0 w-80 transition-all duration-700 ${
+                      isVisible
+                        ? 'opacity-100 translate-y-0'
+                        : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{
+                      transitionDelay: `${index * 100}ms`,
+                    }}
+                  >
+                    <div
+                      className="rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full flex flex-col"
+                      style={{
+                        backgroundColor: colorScheme.body,
+                        boxShadow: colorScheme.shadowMd,
+                      }}
                     >
-                      {photo.title}
-                    </BaseText>
-
-                    <p className="text-gray-200 text-center mb-4 text-sm leading-relaxed">
-                      Discover how you can contribute to our ministry through{' '}
-                      {photo.title.toLowerCase()}.
-                    </p>
-
-                    <div className="flex justify-center">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        curvature="full"
-                        className="inline-flex items-center justify-center gap-2 w-full"
+                      <div
+                        className="p-6"
                         style={{
                           backgroundColor: colorScheme.primary,
                           color: colorScheme.black,
                         }}
-                        onClick={() => handleLearnMore(photo.title)}
                       >
-                        Learn More
-                      </Button>
+                        <Icon size={40} className="mb-4" />
+                        <h3 className="text-xl font-bold mb-2">
+                          {option.title}
+                        </h3>
+                      </div>
+                      <div className="p-6 flex-1 flex flex-col">
+                        <p
+                          className="mb-6 flex-1"
+                          style={{ color: colorScheme.textSecondary }}
+                        >
+                          {option.description}
+                        </p>
+                        <button
+                          onClick={() => handleGiveNow(option)}
+                          className="w-full font-semibold py-3 px-6 rounded-lg transition-all duration-300 border mt-auto"
+                          style={{
+                            backgroundColor: colorScheme.black,
+                            color: colorScheme.white,
+                            borderColor: colorScheme.primary,
+                            borderWidth: '2px',
+                            borderRadius: colorScheme.borderRadius.medium,
+                          }}
+                        >
+                          Give Now
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               {/* Add some extra space at the end for better scrolling */}
               <div className="flex-shrink-0 w-4" />
@@ -244,78 +243,94 @@ export default function JoinWisdomHouse() {
 
             {/* Scroll Indicator */}
             <div className="flex justify-center mt-4 space-x-2">
-              {photos.map((_, index) => (
+              {OnlinegivingOptions.map((_, index) => (
                 <div
                   key={index}
-                  className="w-2 h-2 rounded-full bg-white/30 transition-all duration-300"
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{ backgroundColor: colorScheme.primary + '50' }}
                 />
               ))}
             </div>
           </div>
 
-          {/* Tablet Layout - 2 columns with horizontal scroll for overflow */}
-          <div className="hidden md:block lg:hidden">
-            <div className="flex gap-6 overflow-x-auto pb-8 px-2 scrollbar-hide">
-              {photos.map((photo, index) => (
-                <div
-                  key={photo.title}
-                  className="flex-shrink-0 w-96 bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 cursor-pointer"
-                  onMouseEnter={e => handleCardEnter(index, e)}
-                  onMouseLeave={e => handleCardLeave(index, e)}
+          <div
+            className={`mt-16 text-center transition-all duration-1000 delay-500 ${
+              isVisible
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-10'
+            }`}
+          >
+            <div
+              className="rounded-xl shadow-xl p-8 max-w-3xl mx-auto"
+              style={{
+                backgroundColor: colorScheme.card,
+                boxShadow: colorScheme.shadowLg,
+                borderRadius: colorScheme.borderRadius.large,
+              }}
+            >
+              <h3
+                className="text-2xl font-bold mb-4"
+                style={{ color: colorScheme.heading }}
+              >
+                Other Ways to Give
+              </h3>
+              <p className="mb-6" style={{ color: colorScheme.textSecondary }}>
+                You can also give by mail, in person during our services, or set
+                up recurring donations. For more information about giving
+                options, please contact our Admin.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button
+                  onClick={handleContactCall}
+                  className="font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                  style={{
+                    backgroundColor: colorScheme.primary,
+                    color: colorScheme.black,
+                    borderRadius: colorScheme.borderRadius.full,
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.primaryLight;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  }}
                 >
-                  {/* Image Container */}
-                  <div className="relative h-56 overflow-hidden">
-                    <Image
-                      src={photo.image}
-                      alt={photo.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  </div>
-
-                  {/* Content Section */}
-                  <div className="p-6">
-                    <BaseText
-                      className="text-white font-bold text-lg mb-4 text-center"
-                      style={{ color: colorScheme.white }}
-                    >
-                      {photo.title}
-                    </BaseText>
-
-                    <div className="flex justify-center">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        curvature="full"
-                        className="inline-flex items-center justify-center gap-2"
-                        style={{
-                          backgroundColor: colorScheme.primary,
-                          color: colorScheme.black,
-                        }}
-                        onClick={() => handleLearnMore(photo.title)}
-                      >
-                        Learn More
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {/* Add some extra space at the end for better scrolling */}
-              <div className="flex-shrink-0 w-4" />
+                  <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
+                  Contact Us
+                </button>
+                <button
+                  className="border-2 font-bold py-3 px-8 rounded-full transition-all duration-300"
+                  style={{
+                    borderColor: colorScheme.black,
+                    color: colorScheme.text,
+                    borderRadius: colorScheme.borderRadius.full,
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.backgroundColor = colorScheme.black;
+                    e.currentTarget.style.color = colorScheme.white;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = colorScheme.text;
+                  }}
+                >
+                  Learn More
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Form Modal */}
-      <FormModal
-        isOpen={showForm}
-        onClose={() => setShowForm(false)}
-        department={selectedDepartment || ''}
-        // colorScheme={colorScheme}
-      />
+      {/* Giving Modal */}
+      {selectedGivingOption && (
+        <GivingModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          givingOption={selectedGivingOption}
+        />
+      )}
 
       <style jsx>{`
         .scrollbar-hide {

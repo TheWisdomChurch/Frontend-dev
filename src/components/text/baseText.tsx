@@ -33,6 +33,11 @@ export interface BaseTextProps {
   children: React.ReactNode;
   weight?: FontWeight;
   fontWeight?: FontWeight;
+  // Responsive weight props
+  smWeight?: FontWeight;
+  mdWeight?: FontWeight;
+  lgWeight?: FontWeight;
+  xlWeight?: FontWeight;
   color?: string;
   margin?: string;
   lineHeight?: string;
@@ -49,6 +54,10 @@ export interface BaseTextProps {
   useThemeColor?: boolean;
   style?: React.CSSProperties;
   variant?: TextVariant;
+  // Add these missing event handlers
+  onMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const fontFamilyMap: Record<string, string> = {
@@ -58,12 +67,12 @@ const fontFamilyMap: Record<string, string> = {
 };
 
 const fontSizeMap: Record<string, string> = {
-  xs: '12px',
-  sm: '14px',
-  md: '16px',
-  lg: '18px',
-  xl: '20px',
-  xxl: '24px',
+  xs: 'text-xs',
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+  xxl: 'text-2xl',
 };
 
 const weightClassMap: Record<FontWeight, string> = {
@@ -75,25 +84,66 @@ const weightClassMap: Record<FontWeight, string> = {
   extrabold: 'font-extrabold',
 };
 
+// Updated variantMap with more appropriate base weights
 const variantMap: Record<
   string,
   { fontSize: FontSize; weight: FontWeight; fontFamily: string }
 > = {
   'heading-xl': {
     fontSize: 'xxl',
-    weight: 'extrabold',
+    weight: 'bold', // Changed from 'extrabold' to 'bold' for better responsiveness
     fontFamily: 'bricolage',
   },
-  'heading-lg': { fontSize: 'xl', weight: 'bold', fontFamily: 'bricolage' },
-  'heading-md': { fontSize: 'lg', weight: 'semibold', fontFamily: 'bricolage' },
-  'heading-sm': { fontSize: 'md', weight: 'medium', fontFamily: 'bricolage' },
-  'body-lg': { fontSize: 'lg', weight: 'regular', fontFamily: 'worksans' },
-  'body-md': { fontSize: 'md', weight: 'regular', fontFamily: 'worksans' },
-  'body-sm': { fontSize: 'sm', weight: 'regular', fontFamily: 'worksans' },
-  caption: { fontSize: 'xs', weight: 'light', fontFamily: 'worksans' },
-  'elegant-lg': { fontSize: 'lg', weight: 'regular', fontFamily: 'playfair' },
-  'elegant-md': { fontSize: 'md', weight: 'regular', fontFamily: 'playfair' },
-  'elegant-sm': { fontSize: 'sm', weight: 'regular', fontFamily: 'playfair' },
+  'heading-lg': {
+    fontSize: 'xl',
+    weight: 'bold',
+    fontFamily: 'bricolage',
+  },
+  'heading-md': {
+    fontSize: 'lg',
+    weight: 'semibold',
+    fontFamily: 'bricolage',
+  },
+  'heading-sm': {
+    fontSize: 'md',
+    weight: 'medium',
+    fontFamily: 'bricolage',
+  },
+  'body-lg': {
+    fontSize: 'lg',
+    weight: 'regular',
+    fontFamily: 'worksans',
+  },
+  'body-md': {
+    fontSize: 'md',
+    weight: 'regular',
+    fontFamily: 'worksans',
+  },
+  'body-sm': {
+    fontSize: 'sm',
+    weight: 'regular',
+    fontFamily: 'worksans',
+  },
+  caption: {
+    fontSize: 'xs',
+    weight: 'light',
+    fontFamily: 'worksans',
+  },
+  'elegant-lg': {
+    fontSize: 'lg',
+    weight: 'regular',
+    fontFamily: 'playfair',
+  },
+  'elegant-md': {
+    fontSize: 'md',
+    weight: 'regular',
+    fontFamily: 'playfair',
+  },
+  'elegant-sm': {
+    fontSize: 'sm',
+    weight: 'regular',
+    fontFamily: 'playfair',
+  },
 };
 
 export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
@@ -113,6 +163,11 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       variant,
       weight,
       fontWeight,
+      // New responsive weight props
+      smWeight,
+      mdWeight,
+      lgWeight,
+      xlWeight,
       ...props
     },
     ref
@@ -131,25 +186,38 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
     // Get text color - use theme color if useThemeColor is true and no explicit color is provided
     const textColor = useThemeColor && !color ? colorScheme.text : color;
 
-    const resolvedFontSize = fontSizeMap[finalFontSize] || finalFontSize;
+    // Convert fontSize to Tailwind class instead of inline style
+    const fontSizeClass = fontSizeMap[finalFontSize] || '';
     const resolvedFontFamily =
       fontFamilyMap[finalFontFamily] || worksans.className;
-    const resolvedWeightClass = weightClassMap[finalWeight];
+
+    // Base weight class
+    const baseWeightClass = weightClassMap[finalWeight];
+
+    // Responsive weight classes
+    const responsiveWeightClasses = [
+      smWeight ? `sm:${weightClassMap[smWeight]}` : '',
+      mdWeight ? `md:${weightClassMap[mdWeight]}` : '',
+      lgWeight ? `lg:${weightClassMap[lgWeight]}` : '',
+      xlWeight ? `xl:${weightClassMap[xlWeight]}` : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
 
     const styles: React.CSSProperties = {
       margin,
       lineHeight,
       textDecoration,
-      fontSize: resolvedFontSize,
+      // fontSize is now handled by Tailwind classes, removed from inline styles
       ...(textColor && { color: textColor }),
       ...style,
     };
 
     return (
       <Component
-        ref={ref} // Add ref here
+        ref={ref}
         style={styles}
-        className={`${resolvedFontFamily} ${resolvedWeightClass} ${className}`}
+        className={`${resolvedFontFamily} ${baseWeightClass} ${fontSizeClass} ${responsiveWeightClasses} ${className}`}
         {...props}
       >
         {children}
@@ -158,4 +226,4 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
   }
 );
 
-BaseText.displayName = 'BaseText'; // Add display name for better debugging
+BaseText.displayName = 'BaseText';

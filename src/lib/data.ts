@@ -266,19 +266,31 @@ export const pastorsData: Leader[] = [
   {
     id: 2,
     name: 'Deacon Bamidele',
-    role: 'Head Technical & Sound',
+    role: 'Head Technical & Sound Unit',
     image: Associate_1,
     description: 'Oversees technical operations and sound systems.',
   },
   {
     id: 3,
     name: 'Deacon Adeyemi',
-    role: 'Head Service Preparatory Team',
+    role: 'Head Service Preparatory Unit',
     image: Associate_1,
     description: 'Manages service preparation and logistics.',
   },
 ];
-
+// Add this to your data.ts file
+export const associatePastorsContent = {
+  mainHeader: 'Meet Our Departmental Leaders & Ministry Leaders',
+  mainDescription:
+    'Our devoted leaders faithfully oversee various departments, guiding the church family with wisdom, compassion, and a shared commitment to spiritual growth and service.',
+  pastoralSection: {
+    title: 'Pastoral Leadership',
+  },
+  ministrySection: {
+    title: 'Ministry Department Heads',
+  },
+  seeMoreButton: 'See More',
+};
 export const ministryLeadersData: MinistryLeader[] = [
   {
     id: 1,

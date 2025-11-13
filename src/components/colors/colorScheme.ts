@@ -52,7 +52,7 @@ export interface ColorScheme {
   warning: string;
   info: string;
 
-  // Text colors
+  // Text colors - UPDATED FOR BETTER CONTRAST
   text: string;
   textSecondary: string;
   textTertiary: string;
@@ -176,12 +176,12 @@ export const darkShades: ColorScheme = {
   warning: '#F59E0B',
   info: '#3B82F6',
 
-  // Text colors
+  // Text colors - UPDATED FOR BETTER VISIBILITY
   text: '#FFFFFF',
-  textSecondary: '#E5E7EB',
-  textTertiary: '#9CA3AF',
+  textSecondary: '#F3F4F6', // Much lighter gray for better contrast on dark
+  textTertiary: '#E5E7EB', // Even lighter for tertiary text
   textInverted: '#000000', // Black for text on yellow
-  subtleText: '#9CA3AF',
+  subtleText: '#D1D5DB', // Brighter subtle text
 
   // Background colors
   background: '#000000', // Black background
@@ -253,12 +253,12 @@ export const lightShades: ColorScheme = {
   warning: '#F59E0B',
   info: '#3B82F6',
 
-  // Text colors
+  // Text colors - UPDATED FOR BETTER VISIBILITY
   text: '#000000', // Black text
-  textSecondary: '#374151', // Dark gray
-  textTertiary: '#6B7280',
+  textSecondary: '#374151', // Darker gray for better contrast on light
+  textTertiary: '#4B5563', // Even darker for tertiary text
   textInverted: '#000000', // Black for text on yellow
-  subtleText: '#6B7280',
+  subtleText: '#6B7280', // Good contrast subtle text
 
   // Background colors
   background: '#FFFFFF', // White background

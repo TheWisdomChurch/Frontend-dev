@@ -8,6 +8,7 @@ interface ThemeContextType {
   colorScheme: ColorScheme;
   isDark: boolean;
   toggleTheme: () => void;
+  mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -24,10 +25,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       '(prefers-color-scheme: dark)'
     ).matches;
 
-    if (savedTheme) {
-      setIsDark(savedTheme === 'dark');
+    // Apply theme class to html element
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+      setIsDark(true);
+      document.documentElement.classList.add('dark');
     } else {
-      setIsDark(systemPrefersDark);
+      setIsDark(false);
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 
@@ -37,6 +41,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const newTheme = !isDark;
     setIsDark(newTheme);
 
+    // Apply the theme class immediately
     if (newTheme) {
       document.documentElement.classList.add('dark');
     } else {
@@ -47,29 +52,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Use the imported color schemes
-  const colorScheme = !mounted
-    ? lightShades
-    : isDark
-      ? darkShades
-      : lightShades;
+  const colorScheme = isDark ? darkShades : lightShades;
 
   // Prevent flash of unstyled content
   if (!mounted) {
     return (
-      <ThemeContext.Provider
-        value={{
-          colorScheme: lightShades,
-          isDark: false,
-          toggleTheme: () => {},
-        }}
-      >
-        {children}
-      </ThemeContext.Provider>
+      <div style={{ visibility: 'hidden' }}>
+        <ThemeContext.Provider
+          value={{
+            colorScheme: lightShades,
+            isDark: false,
+            toggleTheme: () => {},
+            mounted: false,
+          }}
+        >
+          {children}
+        </ThemeContext.Provider>
+      </div>
     );
   }
 
   return (
-    <ThemeContext.Provider value={{ colorScheme, isDark, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{ colorScheme, isDark, toggleTheme, mounted }}
+    >
       {children}
     </ThemeContext.Provider>
   );
