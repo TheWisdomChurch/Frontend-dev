@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Image from 'next/image';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import GivingModal from '@/components/modal/GivingModal';
@@ -14,6 +16,15 @@ import {
   handleContactCall,
   useIntersectionObserver,
 } from '@/components/utils/functionUtils/contactUtils';
+import { H2, BaseText, LightText } from '@/components/text';
+import Button from '@/components/utils/CustomButton';
+import {
+  Section,
+  Container,
+  GridboxLayout,
+  FlexboxLayout,
+} from '@/components/layout';
+import { WisdomeHouseLogo } from '@/components/assets';
 
 export default function OnlineGiving() {
   const { colorScheme } = useTheme();
@@ -36,167 +47,78 @@ export default function OnlineGiving() {
 
   return (
     <>
-      <section
+      <Section
         ref={sectionRef}
-        className="py-20"
+        background="dark"
+        padding="lg"
+        fullHeight={false}
+        className="overflow-hidden"
         style={{
           background: colorScheme.heading,
           color: colorScheme.textInverted,
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2
-              className="text-4xl md:text-5xl font-bold mb-4"
-              style={{ color: colorScheme.textInverted }}
+        <Container size="xl" className="relative z-10">
+          {/* Header Section */}
+          <FlexboxLayout
+            direction="column"
+            justify="center"
+            align="center"
+            gap="md"
+            className="text-center mb-12 sm:mb-16"
+          >
+            {/* Wisdom House Logo */}
+            <div className="mb-4">
+              <Image
+                src={WisdomeHouseLogo}
+                alt="Wisdom House Church Logo"
+                width={80}
+                height={80}
+                className="mx-auto"
+              />
+            </div>
+
+            <H2
+              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center"
+              style={{ color: colorScheme.black }}
             >
               Online Giving
-            </h2>
-            <p
-              className="max-w-2xl mx-auto text-lg"
-              style={{ color: colorScheme.primaryGradient }}
+            </H2>
+
+            <LightText
+              className="max-w-2xl text-sm sm:text-base md:text-lg text-center leading-relaxed px-4"
+              style={{ color: colorScheme.buttonText }}
             >
               Your generosity helps us continue to spread the Gospel and serve
               our community. Choose how you would like to give today.
-            </p>
-          </div>
+            </LightText>
+          </FlexboxLayout>
 
           {/* Desktop Layout - Grid */}
-          <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6 justify-items-center">
-            {OnlinegivingOptions.map((option, index) => {
-              const Icon = option.icon;
-              return (
-                <div
-                  key={option.title}
-                  className={`transition-all duration-700 w-full max-w-sm ${
-                    isVisible
-                      ? 'opacity-100 translate-y-0'
-                      : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <div
-                    className="rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col"
-                    style={{
-                      backgroundColor: colorScheme.body,
-                      boxShadow: colorScheme.shadowMd,
-                    }}
-                  >
-                    <div
-                      className="p-6"
-                      style={{
-                        backgroundColor: colorScheme.primary,
-                        color: colorScheme.black,
-                      }}
-                    >
-                      <Icon size={40} className="mb-4" />
-                      <h3 className="text-xl font-bold mb-2">{option.title}</h3>
-                    </div>
-                    <div className="p-6 flex-1 flex flex-col">
-                      <p
-                        className="mb-6 flex-1"
-                        style={{ color: colorScheme.textSecondary }}
-                      >
-                        {option.description}
-                      </p>
-                      <button
-                        onClick={() => handleGiveNow(option)}
-                        className="w-full font-semibold py-3 px-6 rounded-lg transition-all duration-300 border mt-auto"
-                        style={{
-                          backgroundColor: colorScheme.black,
-                          color: colorScheme.white,
-                          borderColor: colorScheme.primary,
-                          borderWidth: '2px',
-                          borderRadius: colorScheme.borderRadius.medium,
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.backgroundColor =
-                            colorScheme.primary;
-                          e.currentTarget.style.color = colorScheme.black;
-                          e.currentTarget.style.borderColor =
-                            colorScheme.primary;
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.backgroundColor =
-                            colorScheme.black;
-                          e.currentTarget.style.color = colorScheme.white;
-                          e.currentTarget.style.borderColor =
-                            colorScheme.primary;
-                        }}
-                      >
-                        Give Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Mobile & Tablet Layout - Horizontal Scroll */}
-          <div className="lg:hidden relative">
-            {/* Scroll Navigation Buttons */}
-            <div className="flex justify-between items-center mb-6">
-              <button
-                onClick={scrollLeft}
-                className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
-                style={{
-                  backgroundColor: colorScheme.primary + '30',
-                  borderColor: colorScheme.primary,
-                  color: colorScheme.textInverted,
-                }}
-              >
-                <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
-              </button>
-
-              <span
-                className="text-sm font-medium px-4"
-                style={{ color: colorScheme.textInverted }}
-              >
-                Scroll to explore giving options
-              </span>
-
-              <button
-                onClick={scrollRight}
-                className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10"
-                style={{
-                  backgroundColor: colorScheme.primary + '30',
-                  borderColor: colorScheme.primary,
-                  color: colorScheme.textInverted,
-                }}
-              >
-                <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Horizontal Scroll Container */}
-            <div
-              ref={scrollContainerRef}
-              className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide px-2"
-              style={{
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
+          <div className="hidden lg:block">
+            <GridboxLayout
+              columns={3}
+              gap="lg"
+              responsive={{
+                lg: 3,
               }}
             >
               {OnlinegivingOptions.map((option, index) => {
-                const Icon = option.icon;
                 return (
                   <div
                     key={option.title}
-                    className={`flex-shrink-0 w-80 transition-all duration-700 ${
+                    className={`transition-all duration-700 w-full ${
                       isVisible
                         ? 'opacity-100 translate-y-0'
                         : 'opacity-0 translate-y-10'
                     }`}
-                    style={{
-                      transitionDelay: `${index * 100}ms`,
-                    }}
+                    style={{ transitionDelay: `${index * 100}ms` }}
                   >
                     <div
-                      className="rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full flex flex-col"
+                      className="rounded-2xl overflow-hidden shadow-2xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full border"
                       style={{
                         backgroundColor: colorScheme.body,
-                        boxShadow: colorScheme.shadowMd,
+                        // borderColor: colorScheme.border,
                       }}
                     >
                       <div
@@ -206,122 +128,275 @@ export default function OnlineGiving() {
                           color: colorScheme.black,
                         }}
                       >
-                        <Icon size={40} className="mb-4" />
-                        <h3 className="text-xl font-bold mb-2">
+                        {/* Wisdom House Logo instead of icon */}
+                        <div className="mb-4 flex justify-center">
+                          <Image
+                            src={WisdomeHouseLogo}
+                            alt="Wisdom House Church Logo"
+                            width={40}
+                            height={40}
+                            className="mx-auto"
+                          />
+                        </div>
+                        <BaseText
+                          fontFamily="bricolage"
+                          weight="bold"
+                          className="text-xl mb-2 text-center"
+                        >
                           {option.title}
-                        </h3>
+                        </BaseText>
                       </div>
                       <div className="p-6 flex-1 flex flex-col">
-                        <p
-                          className="mb-6 flex-1"
-                          style={{ color: colorScheme.textSecondary }}
+                        <LightText
+                          className="mb-6 flex-1 text-center"
+                          style={{ color: colorScheme.white }}
                         >
                           {option.description}
-                        </p>
-                        <button
+                        </LightText>
+                        <Button
                           onClick={() => handleGiveNow(option)}
-                          className="w-full font-semibold py-3 px-6 rounded-lg transition-all duration-300 border mt-auto"
+                          variant="primary"
+                          size="md"
+                          curvature="full"
+                          elevated={true}
+                          className="w-full mt-auto transition-all duration-300"
                           style={{
-                            backgroundColor: colorScheme.black,
+                            backgroundColor: colorScheme.primary,
+                            borderColor: colorScheme.white,
                             color: colorScheme.white,
-                            borderColor: colorScheme.primary,
-                            borderWidth: '2px',
-                            borderRadius: colorScheme.borderRadius.medium,
+                          }}
+                          onMouseEnter={(e: any) => {
+                            e.currentTarget.style.backgroundColor =
+                              colorScheme.primary;
+                            e.currentTarget.style.color = colorScheme.black;
+                          }}
+                          onMouseLeave={(e: any) => {
+                            e.currentTarget.style.backgroundColor =
+                              colorScheme.primary;
+                            e.currentTarget.style.color = colorScheme.black;
                           }}
                         >
                           Give Now
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   </div>
                 );
               })}
-
-              {/* Add some extra space at the end for better scrolling */}
-              <div className="flex-shrink-0 w-4" />
-            </div>
-
-            {/* Scroll Indicator */}
-            <div className="flex justify-center mt-4 space-x-2">
-              {OnlinegivingOptions.map((_, index) => (
-                <div
-                  key={index}
-                  className="w-2 h-2 rounded-full transition-all duration-300"
-                  style={{ backgroundColor: colorScheme.primary + '50' }}
-                />
-              ))}
-            </div>
+            </GridboxLayout>
           </div>
 
+          {/* Mobile & Tablet Layout - Horizontal Scroll */}
+          <div className="lg:hidden">
+            <FlexboxLayout direction="column" gap="md" className="relative">
+              {/* Scroll Navigation Buttons */}
+              <FlexboxLayout justify="between" align="center" className="mb-6">
+                <button
+                  onClick={scrollLeft}
+                  className="p-2 bg-white/10 backdrop-blur-md rounded-full border hover:bg-white/20 transition-all duration-300 z-10"
+                  style={{
+                    backgroundColor: colorScheme.primary + '30',
+                    borderColor: colorScheme.primary,
+                    color: colorScheme.textInverted,
+                  }}
+                >
+                  <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
+                </button>
+
+                <LightText className="text-xs font-medium px-2 text-center max-w-[200px]">
+                  Scroll to explore giving options
+                </LightText>
+
+                <button
+                  onClick={scrollRight}
+                  className="p-2 bg-white/10 backdrop-blur-md rounded-full border hover:bg-white/20 transition-all duration-300 z-10"
+                  style={{
+                    backgroundColor: colorScheme.primary + '30',
+                    borderColor: colorScheme.primary,
+                    color: colorScheme.textInverted,
+                  }}
+                >
+                  <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+                </button>
+              </FlexboxLayout>
+
+              {/* Horizontal Scroll Container */}
+              <div
+                ref={scrollContainerRef}
+                className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+              >
+                {OnlinegivingOptions.map((option, index) => {
+                  return (
+                    <div
+                      key={option.title}
+                      className={`flex-shrink-0 w-64 transition-all duration-700 ${
+                        isVisible
+                          ? 'opacity-100 translate-y-0'
+                          : 'opacity-0 translate-y-10'
+                      }`}
+                      style={{
+                        transitionDelay: `${index * 100}ms`,
+                      }}
+                    >
+                      <div
+                        className="rounded-xl overflow-hidden shadow-xl transition-all duration-300 h-full flex flex-col border"
+                        style={{
+                          backgroundColor: colorScheme.body,
+                          borderColor: colorScheme.border,
+                        }}
+                      >
+                        <div
+                          className="p-5"
+                          style={{
+                            backgroundColor: colorScheme.primary,
+                            color: colorScheme.black,
+                          }}
+                        >
+                          {/* Wisdom House Logo instead of icon */}
+                          <div className="mb-3 flex justify-center">
+                            <Image
+                              src={WisdomeHouseLogo}
+                              alt="Wisdom House Church Logo"
+                              width={32}
+                              height={32}
+                              className="mx-auto"
+                            />
+                          </div>
+                          <BaseText
+                            fontFamily="bricolage"
+                            weight="bold"
+                            className="text-lg mb-2 text-center"
+                          >
+                            {option.title}
+                          </BaseText>
+                        </div>
+                        <div className="p-4 flex-1 flex flex-col">
+                          <LightText
+                            className="mb-4 flex-1 text-sm leading-relaxed text-center"
+                            style={{ color: colorScheme.white }}
+                          >
+                            {option.description}
+                          </LightText>
+                          <Button
+                            onClick={() => handleGiveNow(option)}
+                            variant="primary"
+                            size="sm"
+                            curvature="full"
+                            className="w-full mt-auto"
+                            style={{
+                              // backgroundColor: colorScheme.,
+                              color: colorScheme.black,
+                              borderColor: colorScheme.primary,
+                            }}
+                          >
+                            Give Now
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Add some extra space at the end for better scrolling */}
+                <div className="flex-shrink-0 w-2" />
+              </div>
+
+              {/* Scroll Indicator */}
+              <FlexboxLayout justify="center" gap="xs" className="mt-2">
+                {OnlinegivingOptions.map((_, index) => (
+                  <div
+                    key={index}
+                    className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                    style={{ backgroundColor: colorScheme.black + '50' }}
+                  />
+                ))}
+              </FlexboxLayout>
+            </FlexboxLayout>
+          </div>
+
+          {/* Other Ways to Give Section */}
           <div
-            className={`mt-16 text-center transition-all duration-1000 delay-500 ${
+            className={`mt-12 sm:mt-16 transition-all duration-1000 delay-500 ${
               isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
             }`}
           >
             <div
-              className="rounded-xl shadow-xl p-8 max-w-3xl mx-auto"
+              className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-3xl mx-auto border"
               style={{
-                backgroundColor: colorScheme.card,
-                boxShadow: colorScheme.shadowLg,
-                borderRadius: colorScheme.borderRadius.large,
+                backgroundColor: colorScheme.background,
+                borderColor: colorScheme.border,
               }}
             >
-              <h3
-                className="text-2xl font-bold mb-4"
-                style={{ color: colorScheme.heading }}
+              <FlexboxLayout
+                direction="column"
+                gap="md"
+                className="text-center"
               >
-                Other Ways to Give
-              </h3>
-              <p className="mb-6" style={{ color: colorScheme.textSecondary }}>
-                You can also give by mail, in person during our services, or set
-                up recurring donations. For more information about giving
-                options, please contact our Admin.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <button
-                  onClick={handleContactCall}
-                  className="font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
-                  style={{
-                    backgroundColor: colorScheme.primary,
-                    color: colorScheme.black,
-                    borderRadius: colorScheme.borderRadius.full,
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.primaryLight;
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.backgroundColor = colorScheme.primary;
-                  }}
+                <BaseText
+                  fontFamily="bricolage"
+                  weight="bold"
+                  className="text-xl sm:text-2xl"
+                  style={{ color: colorScheme.heading }}
                 >
-                  <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
-                  Contact Us
-                </button>
-                <button
-                  className="border-2 font-bold py-3 px-8 rounded-full transition-all duration-300"
-                  style={{
-                    borderColor: colorScheme.black,
-                    color: colorScheme.text,
-                    borderRadius: colorScheme.borderRadius.full,
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.backgroundColor = colorScheme.black;
-                    e.currentTarget.style.color = colorScheme.white;
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = colorScheme.text;
-                  }}
+                  Other Ways to Give
+                </BaseText>
+
+                <LightText
+                  className="mb-4 sm:mb-6"
+                  style={{ color: colorScheme.primary }}
                 >
-                  Learn More
-                </button>
-              </div>
+                  You can also give by mail, in person during our services, or
+                  set up recurring donations. For more information about giving
+                  options, please contact our Admin.
+                </LightText>
+
+                <FlexboxLayout justify="center" gap="sm" className="flex-wrap">
+                  <Button
+                    onClick={handleContactCall}
+                    variant="primary"
+                    size="md"
+                    curvature="full"
+                    elevated={true}
+                    leftIcon={
+                      <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
+                    }
+                    className="transition-all duration-300 transform hover:scale-105"
+                    style={{
+                      backgroundColor: colorScheme.primary,
+                      color: colorScheme.black,
+                    }}
+                  >
+                    Contact Us
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="md"
+                    curvature="full"
+                    className="transition-all duration-300"
+                    style={{
+                      borderColor: colorScheme.primary,
+                      color: colorScheme.text,
+                    }}
+                    onMouseEnter={(e: any) => {
+                      e.currentTarget.style.backgroundColor = colorScheme.black;
+                      e.currentTarget.style.color = colorScheme.white;
+                    }}
+                    onMouseLeave={(e: any) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = colorScheme.text;
+                    }}
+                  >
+                    Learn More
+                  </Button>
+                </FlexboxLayout>
+              </FlexboxLayout>
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Giving Modal */}
       {selectedGivingOption && (
@@ -331,16 +406,6 @@ export default function OnlineGiving() {
           givingOption={selectedGivingOption}
         />
       )}
-
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </>
   );
 }

@@ -20,6 +20,7 @@ interface SectionProps {
   className?: string;
   fullHeight?: boolean;
   centered?: boolean;
+  style?: React.CSSProperties; // Add this line
 }
 
 const Section = forwardRef<HTMLElement, SectionProps>(
@@ -35,6 +36,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
       className = '',
       fullHeight = false,
       centered = false,
+      style, // Add this line
     },
     ref
   ) => {
@@ -76,11 +78,17 @@ const Section = forwardRef<HTMLElement, SectionProps>(
       className,
     ].join(' ');
 
+    // Combine background styles with custom style prop
+    const combinedStyles = {
+      ...(background !== 'none' ? backgroundStyles[background] : {}),
+      ...style,
+    };
+
     return (
       <section
         ref={ref}
         className={sectionClasses}
-        style={background !== 'none' ? backgroundStyles[background] : undefined}
+        style={combinedStyles} // Use combined styles
       >
         {background === 'image' && overlay && (
           <div
