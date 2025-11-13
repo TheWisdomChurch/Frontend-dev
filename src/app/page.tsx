@@ -1,3 +1,4 @@
+// app/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -56,17 +57,20 @@ export default function Home() {
         {/* Add debug component in development */}
         {process.env.NODE_ENV === 'development' && <MobileDebug />}
 
-        <HeroSection
-          slides={slides}
-          showButtons={true}
-          showScrollIndicator={true}
-          showSlideIndicators={true}
-        />
-        <WhatWeDo />
-        <SeniorPastor />
-        <AssociatePastors />
-        <JoinWisdomHouse />
-        <OnlineGiving />
+        {/* Remove any potential gaps between components */}
+        <div className="space-y-0">
+          <HeroSection
+            slides={slides}
+            showButtons={true}
+            showScrollIndicator={true}
+            showSlideIndicators={true}
+          />
+          <WhatWeDo />
+          <SeniorPastor />
+          <AssociatePastors />
+          <JoinWisdomHouse />
+          <OnlineGiving />
+        </div>
 
         {showModal && (
           <ProfessionalPopup onClose={handleCloseModal} delay={0} />

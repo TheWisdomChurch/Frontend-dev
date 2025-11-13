@@ -15,7 +15,8 @@ export type ButtonVariant =
   | 'danger'
   | 'success';
 
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl' | 'icon';
+// Add 'xs' to ButtonSize type
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
 export interface ButtonProps {
   children: React.ReactNode;
@@ -67,8 +68,9 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const { colorScheme } = useTheme();
 
-  // Size styles with better proportions
+  // Size styles with better proportions - ADD 'xs' SIZE
   const sizeStyles = {
+    xs: 'px-3 py-1.5 text-xs min-h-[32px]', // Added xs size
     sm: 'px-4 py-2 text-sm min-h-[36px]',
     md: 'px-6 py-3 text-base min-h-[44px]',
     lg: 'px-8 py-4 text-lg min-h-[52px]',

@@ -2,11 +2,11 @@
 'use client';
 
 import { Banner_2 } from '@/components/assets';
-import Image from 'next/image';
-import { LightText } from '@/components/text';
-import { Button } from '../button';
+import { H1, LightText } from '@/components/text';
+import Button from '@/components/utils/CustomButton';
 import { useSeniorPastor } from '@/components/utils/hooks/useSeniorPastor';
 import { seniorPastorData } from '@/lib/data';
+import { Section, Container, FlexboxLayout } from '@/components/layout';
 
 interface SeniorPastorProps {
   className?: string;
@@ -16,71 +16,84 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   const { isVisible, sectionRef, handleLearnMore } = useSeniorPastor();
 
   return (
-    <section
+    <Section
       ref={sectionRef}
-      className={`relative min-h-screen w-full flex items-center justify-center ${className}`}
+      background="image"
+      customBackground={`url(${Banner_2.src})`}
+      backgroundImage={Banner_2.src}
+      overlay={true}
+      overlayOpacity={70}
+      padding="lg"
+      fullHeight={false}
+      className={`py-8 sm:py-12 md:py-16 lg:py-20 ${className}`}
     >
-      {/* Main Background Image with Black Gradient */}
-      <div className="absolute inset-0 w-full h-full">
-        <Image
-          src={Banner_2}
-          alt="Senior Pastor background"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" />
-      </div>
-
-      {/* Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
-        <div className="flex flex-col items-center">
+      <Container size="xl" className="relative z-10">
+        <FlexboxLayout
+          direction="column"
+          justify="center"
+          align="center"
+          gap="lg"
+          className="min-h-[70vh] sm:min-h-[80vh] md:min-h-screen"
+        >
           {/* Header */}
-          <div className="w-full text-center mb-8 md:mb-10 lg:mb-12">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-white mb-4">
+          <FlexboxLayout
+            direction="column"
+            justify="center"
+            align="center"
+            gap="md"
+            className="w-full mb-6 sm:mb-8 md:mb-10 lg:mb-12"
+          >
+            <H1
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-center px-4"
+              style={{ color: 'white' }}
+            >
               {seniorPastorData.title}
-            </h1>
-          </div>
+            </H1>
+          </FlexboxLayout>
 
-          {/* Content Card - Clean without background image */}
+          {/* Content Card */}
           <div
-            className={`w-full max-w-3xl lg:max-w-2xl xl:max-w-2xl transition-all duration-1000 ${
+            className={`w-full max-w-3xl lg:max-w-2xl xl:max-w-2xl transition-all duration-1000 px-4 sm:px-6 ${
               isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
             }`}
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/30 bg-black/60 backdrop-blur-sm">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/30 bg-black/60 backdrop-blur-sm mx-auto">
               {/* Content */}
               <div className="relative z-10 p-6 sm:p-7 md:p-8 lg:p-10">
                 {/* Text Content */}
-                <div className="space-y-5 md:space-y-6 lg:space-y-6">
+                <FlexboxLayout direction="column" gap="md" className="w-full">
                   {seniorPastorData.description.map((paragraph, index) => (
                     <div key={index} className="text-center md:text-left">
-                      <LightText className="text-white text-base sm:text-lg md:text-lg lg:text-lg leading-relaxed md:leading-loose">
+                      <LightText className="text-white text-sm sm:text-base md:text-lg lg:text-lg leading-relaxed md:leading-loose">
                         {paragraph}
                       </LightText>
                     </div>
                   ))}
-                </div>
+                </FlexboxLayout>
 
                 {/* Button */}
-                <div className="text-center mt-6 md:mt-7 lg:mt-8">
+                <FlexboxLayout
+                  justify="center"
+                  className="mt-6 md:mt-7 lg:mt-8"
+                >
                   <Button
                     onClick={handleLearnMore}
                     variant="primary"
                     size="lg"
-                    className="min-w-[180px] px-6 py-2.5 text-sm sm:text-base md:text-base"
+                    curvature="full"
+                    elevated={true}
+                    className="min-w-[160px] sm:min-w-[180px] px-4 sm:px-6 py-2.5 text-sm sm:text-base md:text-base transition-all duration-300 transform hover:scale-105"
                   >
                     {seniorPastorData.buttonText}
                   </Button>
-                </div>
+                </FlexboxLayout>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </FlexboxLayout>
+      </Container>
+    </Section>
   );
 }

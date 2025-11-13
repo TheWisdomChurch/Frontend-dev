@@ -77,6 +77,50 @@ body {
   min-height: 100vh;
 }
 
+/* Scrollbar utilities */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card hover animations */
+.card-hover-content {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.3s ease-in-out;
+}
+
+.card-hover:hover .card-hover-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Image optimization */
+.image-full-cover {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
 /* Ensure hero section containers work properly */
 .hero-container {
   width: 100vw;
@@ -102,13 +146,9 @@ body {
   background-color: var(--color-charcoal);
 }
 
-/* Typography Utilities
-.font-bricolage-grotesque {
-  font-family: var(--font-bricolage-grotesque), sans-serif;
-} */
-/* In your global CSS */
+/* Typography Utilities */
 .font-bricolage {
-  font-family: var(--font-bricolage);
+  font-family: var(--font-bricolage-grotesque), sans-serif;
 }
 
 .font-worksans {
@@ -280,4 +320,37 @@ div[style*='position: fixed'][style*='bottom:'] {
 
 body > div[style*='position: fixed']:last-child {
   display: none !important;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Remove default spacing from all elements */
+div,
+section,
+article,
+header,
+footer,
+main,
+nav,
+aside {
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure no gaps between sections */
+section {
+  display: block;
 }
