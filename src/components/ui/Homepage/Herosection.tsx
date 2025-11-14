@@ -340,4 +340,3 @@ const HeroSection = ({
 };
 
 export default HeroSection;
-z
