@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/lib/store';
 import {
-  setCurrentPage,
   setSelectedSeries,
   setSelectedPreacher,
   setSortBy,
@@ -13,6 +12,7 @@ import {
   resetFilters,
 } from '@/lib/store/slices/sermonsSlice';
 import gsap from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { seriesGroups } from '@/lib/data';
 import {
   YouTubeVideo,
@@ -20,6 +20,16 @@ import {
   GroupedSeriesData,
   UngroupedSeriesData,
 } from '@/lib/types';
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollToPlugin);
+
+// Suppress GSAP warnings in development
+if (process.env.NODE_ENV === 'development') {
+  gsap.config({
+    nullTargetWarn: false,
+  });
+}
 
 export const useSermonUtil = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -41,12 +51,37 @@ export const useSermonUtil = () => {
     videos[0]
   );
   const [playerKey, setPlayerKey] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   // Refs for animations
   const cardsRef = useRef<HTMLDivElement>(null);
   const horizontalScrollRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const horizontalGridRef = useRef<HTMLDivElement>(null);
+  const featuredCategoriesRef = useRef<HTMLElement>(null);
+
+  // Enhanced scroll function with GSAP
+  const smoothScrollToElement = useCallback(
+    (element: HTMLElement | null, offset = 80) => {
+      if (!element) return;
+
+      setIsAnimating(true);
+
+      gsap.to(window, {
+        duration: 1.2,
+        scrollTo: {
+          y: element,
+          offsetY: offset,
+          autoKill: true,
+        },
+        ease: 'power2.inOut',
+        onComplete: () => {
+          setIsAnimating(false);
+        },
+      });
+    },
+    []
+  );
 
   // Featured Series Handlers
   const handleVideoSelect = useCallback((video: YouTubeVideo) => {
@@ -55,15 +90,22 @@ export const useSermonUtil = () => {
   }, []);
 
   const handleWatchSeries = useCallback(() => {
-    dispatch(setCurrentPage(featuredSeries[0]?.series || 'Latest Content'));
-  }, [dispatch, featuredSeries]);
+    if (featuredSeries.length > 0) {
+      dispatch(
+        setSelectedSeries(featuredSeries[0]?.series || 'Latest Content')
+      );
+
+      // Enhanced scroll with delay for better UX
+      setTimeout(() => {
+        const gridSection = document.getElementById('sermons-grid');
+        smoothScrollToElement(gridSection, 100);
+      }, 300);
+    }
+  }, [dispatch, featuredSeries, smoothScrollToElement]);
 
   const handleViewMore = useCallback(() => {
-    const seriesSection = document.getElementById('series-section');
-    if (seriesSection) {
-      seriesSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
+    smoothScrollToElement(featuredCategoriesRef.current, 120);
+  }, [smoothScrollToElement]);
 
   // Series Cards Logic
   const getGroupVideos = useCallback(
@@ -120,33 +162,57 @@ export const useSermonUtil = () => {
     .sort((a, b) => b.count - a.count)
     .slice(0, 8);
 
-  // Series Cards Handlers
+  // Enhanced Series Cards Handlers with better animations
   const handleSeriesClick = useCallback(
     (seriesName: string) => {
+      if (isAnimating) return;
+
+      // Add click animation feedback
+      if (featuredCategoriesRef.current) {
+        gsap.to(featuredCategoriesRef.current, {
+          scale: 0.98,
+          duration: 0.2,
+          ease: 'power2.out',
+          yoyo: true,
+          repeat: 1,
+        });
+      }
+
       dispatch(setSelectedSeries(seriesName));
 
+      // Enhanced scroll with coordinated timing
       setTimeout(() => {
         const gridSection = document.getElementById('sermons-grid');
-        if (gridSection) {
-          gridSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+        smoothScrollToElement(gridSection, 100);
+      }, 400);
     },
-    [dispatch]
+    [dispatch, isAnimating, smoothScrollToElement]
   );
 
   const handleGroupClick = useCallback(
     (searchTerms: string[]) => {
+      if (isAnimating) return;
+
+      // Add click animation feedback
+      if (featuredCategoriesRef.current) {
+        gsap.to(featuredCategoriesRef.current, {
+          scale: 0.98,
+          duration: 0.2,
+          ease: 'power2.out',
+          yoyo: true,
+          repeat: 1,
+        });
+      }
+
       dispatch(setSelectedSeries(searchTerms[0]));
 
+      // Enhanced scroll with coordinated timing
       setTimeout(() => {
         const gridSection = document.getElementById('sermons-grid');
-        if (gridSection) {
-          gridSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+        smoothScrollToElement(gridSection, 100);
+      }, 400);
     },
-    [dispatch]
+    [dispatch, isAnimating, smoothScrollToElement]
   );
 
   // Sermons Grid Handlers
@@ -156,24 +222,32 @@ export const useSermonUtil = () => {
     dispatch(loadMoreVideos());
 
     setTimeout(() => {
+      // Enhanced animations for new cards
       if (gridRef.current) {
         const cards = gridRef.current.querySelectorAll('.sermon-card');
         const newCards = Array.from(cards).slice(-12);
 
-        gsap.fromTo(
-          newCards,
-          {
-            opacity: 0,
-            y: 30,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: 'power2.out',
-          }
-        );
+        if (newCards.length > 0) {
+          gsap.fromTo(
+            newCards,
+            {
+              opacity: 0,
+              y: 60,
+              scale: 0.85,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.7,
+              stagger: {
+                amount: 0.6,
+                from: 'random',
+              },
+              ease: 'back.out(1.7)',
+            }
+          );
+        }
       }
 
       if (horizontalGridRef.current) {
@@ -181,22 +255,29 @@ export const useSermonUtil = () => {
           horizontalGridRef.current.querySelectorAll('.sermon-card');
         const newCards = Array.from(cards).slice(-12);
 
-        gsap.fromTo(
-          newCards,
-          {
-            opacity: 0,
-            x: 30,
-          },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: 'power2.out',
-          }
-        );
+        if (newCards.length > 0) {
+          gsap.fromTo(
+            newCards,
+            {
+              opacity: 0,
+              x: 80,
+              scale: 0.9,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.6,
+              stagger: {
+                amount: 0.5,
+                from: 'center',
+              },
+              ease: 'power3.out',
+            }
+          );
+        }
       }
-    }, 100);
+    }, 150);
   }, [dispatch]);
 
   // Search Filters Handlers
@@ -241,75 +322,150 @@ export const useSermonUtil = () => {
     dispatch(resetFilters());
   }, [dispatch]);
 
-  // GSAP Animations
+  // Enhanced GSAP Animations with better timing and safety checks
   useEffect(() => {
-    if (cardsRef.current && groupedSeries.length > 0) {
-      const cards = cardsRef.current.querySelectorAll('.series-card');
-
-      if (cards.length > 0) {
-        gsap.fromTo(
-          cards,
-          {
-            opacity: 0,
-            y: 50,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: 'back.out(1.7)',
-          }
-        );
+    const animateCards = () => {
+      if (cardsRef.current && groupedSeries.length > 0) {
+        const cards = cardsRef.current.querySelectorAll('.series-card');
+        if (cards && cards.length > 0) {
+          gsap.fromTo(
+            cards,
+            {
+              opacity: 0,
+              y: 80,
+              scale: 0.9,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.9,
+              stagger: {
+                amount: 0.8,
+                from: 'start',
+              },
+              ease: 'back.out(1.7)',
+            }
+          );
+        }
       }
-    }
+    };
+
+    // Use a timeout to ensure DOM is ready
+    const timer = setTimeout(() => {
+      requestAnimationFrame(animateCards);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [groupedSeries]);
 
   useEffect(() => {
-    if (gridRef.current) {
-      const cards = gridRef.current.querySelectorAll('.sermon-card');
-
-      gsap.fromTo(
-        cards,
-        {
-          opacity: 0,
-          y: 50,
-          scale: 0.9,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'back.out(1.7)',
+    const animateGrid = () => {
+      if (gridRef.current && displayedVideos.length > 0) {
+        const cards = gridRef.current.querySelectorAll('.sermon-card');
+        if (cards && cards.length > 0) {
+          gsap.fromTo(
+            cards,
+            {
+              opacity: 0,
+              y: 80,
+              scale: 0.85,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              stagger: {
+                amount: 0.7,
+                from: 'random',
+              },
+              ease: 'back.out(1.7)',
+            }
+          );
         }
-      );
-    }
+      }
+    };
+
+    const timer = setTimeout(() => {
+      requestAnimationFrame(animateGrid);
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [displayedVideos]);
 
   useEffect(() => {
-    if (horizontalGridRef.current && displayedVideos.length > 0) {
-      const cards = horizontalGridRef.current.querySelectorAll('.sermon-card');
-
-      gsap.fromTo(
-        cards,
-        {
-          opacity: 0,
-          x: 30,
-          scale: 0.95,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          duration: 0.5,
-          stagger: 0.08,
-          ease: 'power2.out',
+    const animateHorizontalGrid = () => {
+      if (horizontalGridRef.current && displayedVideos.length > 0) {
+        const cards =
+          horizontalGridRef.current.querySelectorAll('.sermon-card');
+        if (cards && cards.length > 0) {
+          gsap.fromTo(
+            cards,
+            {
+              opacity: 0,
+              x: 100,
+              scale: 0.9,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.7,
+              stagger: {
+                amount: 0.6,
+                from: 'start',
+              },
+              ease: 'power3.out',
+            }
+          );
         }
-      );
-    }
+      }
+    };
+
+    const timer = setTimeout(() => {
+      requestAnimationFrame(animateHorizontalGrid);
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [displayedVideos]);
+
+  // Enhanced horizontal scroll animation for mobile
+  useEffect(() => {
+    const animateHorizontalScroll = () => {
+      if (horizontalScrollRef.current && groupedSeries.length > 0) {
+        const cards =
+          horizontalScrollRef.current.querySelectorAll('.series-card');
+        if (cards && cards.length > 0) {
+          gsap.fromTo(
+            cards,
+            {
+              opacity: 0,
+              x: 120,
+              scale: 0.9,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.8,
+              stagger: {
+                amount: 0.7,
+                from: 'start',
+              },
+              ease: 'power3.out',
+            }
+          );
+        }
+      }
+    };
+
+    const timer = setTimeout(() => {
+      requestAnimationFrame(animateHorizontalScroll);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [groupedSeries]);
 
   // Featured Series Data
   const featuredSeriesName = featuredSeries[0]?.series || 'Latest Content';
@@ -334,12 +490,14 @@ export const useSermonUtil = () => {
     preacherOptions,
     recentVideos,
     featuredSeriesName,
+    isAnimating,
 
     // Refs
     cardsRef,
     horizontalScrollRef,
     gridRef,
     horizontalGridRef,
+    featuredCategoriesRef,
 
     // Handlers
     handleVideoSelect,
@@ -353,6 +511,7 @@ export const useSermonUtil = () => {
     handlePreacherChange,
     handleSortChange,
     handleResetFilters,
+    smoothScrollToElement,
 
     // Setters
     setCurrentVideo,

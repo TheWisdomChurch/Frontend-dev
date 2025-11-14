@@ -20,6 +20,7 @@ interface FlexboxLayoutProps {
     md?: 'row' | 'column';
     lg?: 'row' | 'column';
   };
+  style?: React.CSSProperties; // Add this line
 }
 
 const FlexboxLayout: React.FC<FlexboxLayoutProps> = ({
@@ -36,6 +37,7 @@ const FlexboxLayout: React.FC<FlexboxLayoutProps> = ({
   customBackground,
   padding = 'md',
   responsiveDirection,
+  style, // Add this line
 }) => {
   const { colorScheme } = useTheme();
 
@@ -131,10 +133,18 @@ const FlexboxLayout: React.FC<FlexboxLayoutProps> = ({
     className,
   ].join(' ');
 
+  // Combine background styles with custom style prop
+  const combinedStyles = {
+    ...(background !== 'none' ? backgroundStyles[background] : {}),
+    ...style,
+  };
+
   return (
     <div
       className={layoutClasses}
-      style={background !== 'none' ? backgroundStyles[background] : undefined}
+      style={
+        Object.keys(combinedStyles).length > 0 ? combinedStyles : undefined
+      }
     >
       {children}
     </div>

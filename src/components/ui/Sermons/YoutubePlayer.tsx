@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { Play, Pause, PictureInPicture, X } from 'lucide-react';
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -12,6 +13,7 @@ interface YouTubePlayerProps {
   className?: string;
   autoPlay?: boolean;
   playsInline?: boolean;
+  iframeClassName?: string;
 }
 
 const YouTubePlayer = ({
@@ -165,21 +167,9 @@ const YouTubePlayer = ({
           aria-label={isPlaying ? 'Pause video' : 'Play video'}
         >
           {isPlaying ? (
-            <svg
-              className="w-6 h-6 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
-            </svg>
+            <Pause className="w-6 h-6 text-white" />
           ) : (
-            <svg
-              className="w-6 h-6 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
+            <Play className="w-6 h-6 text-white" />
           )}
         </button>
       </div>
@@ -254,33 +244,9 @@ export const YouTubePlayerWithBackground = ({
           }
         >
           {isDetached ? (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="w-4 h-4" />
           ) : (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
-              />
-            </svg>
+            <PictureInPicture className="w-4 h-4" />
           )}
         </button>
 

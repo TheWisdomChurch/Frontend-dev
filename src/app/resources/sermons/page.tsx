@@ -1,4 +1,4 @@
- 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect } from 'react';
@@ -9,8 +9,6 @@ import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, BaseText, LightText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 import SermonUtil from '@/components/ui/Sermons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faYoutube } from '@fortawesome/free-brands-svg-icons';
 import Button from '@/components/utils/CustomButton';
 import {
   Section,
@@ -18,9 +16,12 @@ import {
   GridboxLayout,
   FlexboxLayout,
 } from '@/components/layout';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { Youtube } from 'lucide-react';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { colorScheme } = useTheme();
   // useSelector((state: RootState) => state.sermons);
 
   useEffect(() => {
@@ -52,10 +53,9 @@ const SermonPage = () => {
 
       {/* Ways to Listen Section */}
       <Section
-        background="light"
         padding="lg"
         fullHeight={false}
-        className="bg-white"
+        style={{ backgroundColor: colorScheme.white }}
       >
         <Container size="xl">
           <FlexboxLayout
@@ -65,7 +65,10 @@ const SermonPage = () => {
             gap="lg"
             className="text-center"
           >
-            <H2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center mb-8">
+            <H2
+              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center mb-8"
+              style={{ color: colorScheme.black }}
+            >
               Watch & Listen Anywhere
             </H2>
 
@@ -85,16 +88,20 @@ const SermonPage = () => {
                   description: 'Full video messages with interactive features',
                   action: 'Subscribe to Channel',
                   icon: (
-                    <FontAwesomeIcon
-                      icon={faYoutube}
-                      className="text-3xl text-red-600"
+                    <Youtube
+                      className="w-12 h-12"
+                      style={{ color: '#FF0000' }}
                     />
                   ),
                 },
               ].map((option, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl hover:shadow-2xl transition-all duration-300 border border-gray-100 max-w-md mx-auto"
+                  className="rounded-2xl p-6 sm:p-8 shadow-2xl hover:shadow-2xl transition-all duration-300 border max-w-md mx-auto"
+                  style={{
+                    backgroundColor: colorScheme.black,
+                    borderColor: colorScheme.border,
+                  }}
                 >
                   <FlexboxLayout
                     direction="column"
@@ -111,11 +118,15 @@ const SermonPage = () => {
                       fontFamily="bricolage"
                       weight="bold"
                       className="text-xl sm:text-2xl mb-3"
+                      style={{ color: colorScheme.white }}
                     >
                       {option.platform}
                     </BaseText>
 
-                    <LightText className="mb-6 text-sm sm:text-base">
+                    <LightText
+                      className="mb-6 text-sm sm:text-base"
+                      style={{ color: colorScheme.textSecondary }}
+                    >
                       {option.description}
                     </LightText>
 
@@ -126,18 +137,21 @@ const SermonPage = () => {
                       curvature="full"
                       elevated={true}
                       leftIcon={
-                        <FontAwesomeIcon icon={faYoutube} className="w-5 h-5" />
+                        <Youtube
+                          className="w-5 h-5"
+                          style={{ color: 'white' }}
+                        />
                       }
                       className="w-full transition-all duration-300 transform hover:scale-105"
                       style={{
-                        backgroundColor: '#dc2626',
+                        backgroundColor: '#FF0000',
                         color: 'white',
                       }}
                       onMouseEnter={(e: any) => {
-                        e.currentTarget.style.backgroundColor = '#b91c1c';
+                        e.currentTarget.style.backgroundColor = '#CC0000';
                       }}
                       onMouseLeave={(e: any) => {
-                        e.currentTarget.style.backgroundColor = '#dc2626';
+                        e.currentTarget.style.backgroundColor = '#FF0000';
                       }}
                     >
                       {option.action}

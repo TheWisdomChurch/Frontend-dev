@@ -176,3 +176,58 @@ export interface ReminderFormData {
   frequency: 'daily' | 'weekly' | 'monthly';
   eventType: 'conference' | 'lifting';
 }
+
+// store section
+export interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  originalPrice?: string;
+  image: string;
+  description: string;
+  sizes: string[];
+  colors: string[];
+  tags: string[];
+  stock: number;
+}
+
+export interface CartItem {
+  id: string;
+  productId: number;
+  name: string;
+  price: string;
+  image: string;
+  quantity: number;
+  size: string;
+  color: string;
+  selectedColor: string;
+  selectedSize: string;
+}
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  total: number;
+  customerInfo: CustomerInfo;
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered';
+  createdAt: string;
+  estimatedDelivery?: string;
+}
+
+export interface CustomerInfo {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  deliveryInstructions?: string;
+}
+
+export interface FiltersState {
+  searchTerm: string;
+  selectedCategory: string;
+  sortBy: 'name' | 'price-low' | 'price-high' | 'newest';
+}

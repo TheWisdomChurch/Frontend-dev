@@ -20,7 +20,8 @@ interface SectionProps {
   className?: string;
   fullHeight?: boolean;
   centered?: boolean;
-  style?: React.CSSProperties; // Add this line
+  style?: React.CSSProperties;
+  id?: string; // Add this line
 }
 
 const Section = forwardRef<HTMLElement, SectionProps>(
@@ -36,7 +37,8 @@ const Section = forwardRef<HTMLElement, SectionProps>(
       className = '',
       fullHeight = false,
       centered = false,
-      style, // Add this line
+      style,
+      id, // Add this line
     },
     ref
   ) => {
@@ -87,6 +89,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
     return (
       <section
         ref={ref}
+        id={id} // Add this line
         className={sectionClasses}
         style={combinedStyles} // Use combined styles
       >
