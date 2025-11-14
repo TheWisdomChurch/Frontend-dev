@@ -15,11 +15,6 @@ import { LiftingModal } from '@/components/modal/LiftingModal';
 import { ReminderModal } from '@/components/modal/reminderModal';
 import { DateEventsModal } from '@/components/modal/dateEvent';
 
-// import { DateEventsModal } from './modals/DateEventsModal';
-// import { ConferenceModal } from './modals/ConferenceModal';
-// import { LiftingModal } from './modals/LiftingModal';
-// import { ReminderModal } from './modals/ReminderModal';
-
 const Upcoming = () => {
   const {
     // State
@@ -98,9 +93,9 @@ const Upcoming = () => {
         subtitle="What's Happening at Wisdom House"
         description="Stay connected with all the activities, studies, and gatherings happening throughout the week. There's always something going on!"
         backgroundImage={hero_bg_2.src}
-        showButtons={true}
-        primaryButtonText="Download Calendar"
-        secondaryButtonText="Subscribe to Updates"
+        showButtons={false}
+        // primaryButtonText="Download Calendar"
+        // secondaryButtonText="Subscribe to Updates"
         showScrollIndicator={true}
       />
 

@@ -105,10 +105,10 @@ const HeroSection = ({
           <div
             key={index}
             ref={el => addToSlidesRef(el, index)}
-            className={`absolute inset-0 ${
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
               index === currentSlide
-                ? 'opacity-100'
-                : 'opacity-0 pointer-events-none'
+                ? 'opacity-100 z-10'
+                : 'opacity-0 pointer-events-none z-0'
             }`}
           >
             <div className="relative w-full h-full">
@@ -118,18 +118,20 @@ const HeroSection = ({
                 className="
                   w-full h-full 
                   object-cover 
-                  object-center 
-                  lg:object-[center_top] 
-                  xl:object-[center_center] 
-                  scale-105 lg:scale-100
+                  object-center
+                  md:object-center
+                  lg:object-center
+                  xl:object-center
+                  scale-100
                 "
                 style={{
                   maxHeight: '120vh',
+                  objectPosition: 'center center',
                 }}
               />
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/50 to-black/70" />
-              <div className="absolute inset-0 bg-[#001910]/40 mix-blend-overlay" />
+              {/* Enhanced Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
             </div>
           </div>
         ))
@@ -143,18 +145,20 @@ const HeroSection = ({
               className="
                 w-full h-full 
                 object-cover 
-                object-center 
-                lg:object-[center_top] 
-                xl:object-[center_center] 
-                scale-105 lg:scale-100
+                object-center
+                md:object-center
+                lg:object-center
+                xl:object-center
+                scale-100
               "
               style={{
                 maxHeight: '100vh',
+                objectPosition: 'center center',
               }}
             />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-black/90" />
-            <div className="absolute inset-0 bg-[#001910]/40 mix-blend-overlay" />
+            {/* Enhanced Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
           </div>
         </div>
       )}
@@ -162,7 +166,7 @@ const HeroSection = ({
       {/* Content - Centered in the container */}
       <div
         ref={contentRef}
-        className="relative z-10 h-full flex items-center justify-center px-4"
+        className="relative z-20 h-full flex items-center justify-center px-4"
       >
         <div className="w-full max-w-7xl mx-auto">
           <div className="text-center" style={{ color: colorScheme.text }}>
@@ -258,7 +262,7 @@ const HeroSection = ({
 
       {/* Slide Indicators - Only show for multi-slide mode */}
       {isMultiSlide && showSlideIndicators && (
-        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center space-y-2">
+        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center space-y-2">
           {slides!.map((_, index) => (
             <button
               key={index}
@@ -296,7 +300,7 @@ const HeroSection = ({
           {/* Desktop Scroll Indicator */}
           <div
             ref={scrollIndicatorRef}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block cursor-pointer group"
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 hidden sm:block cursor-pointer group"
             onClick={scrollToNextSection}
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
@@ -315,7 +319,7 @@ const HeroSection = ({
 
           {/* Mobile Scroll Indicator */}
           <div
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 sm:hidden cursor-pointer"
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30 sm:hidden cursor-pointer"
             onClick={scrollToNextSection}
           >
             <div className="flex flex-col items-center animate-bounce">
@@ -336,3 +340,4 @@ const HeroSection = ({
 };
 
 export default HeroSection;
+z

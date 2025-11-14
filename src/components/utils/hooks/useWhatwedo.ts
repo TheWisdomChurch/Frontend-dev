@@ -1,3 +1,4 @@
+// components/utils/hooks/useWhatwedo.ts
 'use client';
 
 import { useRef, useEffect } from 'react';
@@ -17,96 +18,71 @@ export const useWhatWeDo = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate main heading
+      // Clean, professional heading animation
       gsap.fromTo(
         headingRef.current,
         {
-          y: 100,
+          y: 30,
           opacity: 0,
-          scale: 0.8,
         },
         {
           y: 0,
           opacity: 1,
-          scale: 1,
-          duration: 1.2,
-          ease: 'power3.out',
+          duration: 0.8,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: headingRef.current,
-            start: 'top 80%',
+            start: 'top 85%',
             end: 'bottom 20%',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
           },
         }
       );
 
-      // Animate boxes with staggered effect
+      // Subtle staggered box animations
       boxesRef.current.forEach((box, index) => {
         if (box) {
           gsap.fromTo(
             box,
             {
-              y: 100,
+              y: 40,
               opacity: 0,
-              rotationY: 15,
-              scale: 0.9,
             },
             {
               y: 0,
               opacity: 1,
-              rotationY: 0,
-              scale: 1,
-              duration: 1.2,
-              delay: index * 0.15,
-              ease: 'power3.out',
+              duration: 0.6,
+              delay: index * 0.1,
+              ease: 'power2.out',
               scrollTrigger: {
                 trigger: box,
-                start: 'top 75%',
-                end: 'bottom 25%',
-                toggleActions: 'play none none reverse',
+                start: 'top 80%',
+                end: 'bottom 20%',
+                toggleActions: 'play none none none',
               },
             }
           );
-
-          // Hover animation for boxes
-          box.addEventListener('mouseenter', () => {
-            gsap.to(box, {
-              scale: 1.02,
-              y: -8,
-              duration: 0.6,
-              ease: 'power2.out',
-            });
-          });
-
-          box.addEventListener('mouseleave', () => {
-            gsap.to(box, {
-              scale: 1,
-              y: 0,
-              duration: 0.6,
-              ease: 'power2.out',
-            });
-          });
         }
       });
 
-      // Animate mission statement text
+      // Mission statement animation
       gsap.fromTo(
         textRef.current,
         {
-          y: 50,
+          y: 20,
           opacity: 0,
         },
         {
           y: 0,
           opacity: 1,
-          duration: 1,
-          delay: 0.5,
+          duration: 0.8,
+          delay: 0.3,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: textRef.current,
             start: 'top 85%',
             end: 'bottom 15%',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
           },
         }
       );

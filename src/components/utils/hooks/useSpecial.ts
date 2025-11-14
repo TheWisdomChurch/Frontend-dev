@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { NL } from '@/components/assets';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,17 +75,17 @@ export const useSpecialEvents = () => {
         'Seven consecutive nights of spiritual elevation, powerful worship, and breakthrough messages. Each night focuses on a different aspect of spiritual growth and divine encounter.',
       location: 'Main Sanctuary',
       type: 'conference',
-      image: '/images/7-nights-lifting.jpg',
+      image: NL.src,
       featured: true,
     },
     {
       id: '3',
-      title: 'Easter Celebration Service',
-      date: 'April 20, 2025',
-      time: '8:00 AM & 10:30 AM',
+      title: '7 Nights of Lifting',
+      date: 'NOVEMBER 17 - 23, 2025',
+      time: '5PM Daily',
       description:
-        'Join us for a powerful Easter service celebrating the resurrection of Jesus Christ. Special music, message of hope, and family activities.',
-      location: 'Main Sanctuary & Outdoor Tent',
+        'Join us for a powerful 7 Nights of Lifting service celebrating the resurrection of Jesus Christ. Special music, message of hope, and family activities.',
+      location: 'Honors Gardens, opposite Dominion Church , Alasia Bus Stop',
       type: 'celebration',
       image: '/images/easter-service.jpg',
     },
@@ -99,17 +100,7 @@ export const useSpecialEvents = () => {
       type: 'celebration',
       image: '/images/christmas-eve.jpg',
     },
-    {
-      id: '5',
-      title: 'Thanksgiving Community Dinner',
-      date: 'November 28, 2024',
-      time: '12:00 PM - 3:00 PM',
-      description:
-        'Free community Thanksgiving dinner for all. Come enjoy a traditional meal and give thanks together as a church family.',
-      location: 'Church Fellowship Hall',
-      type: 'outreach',
-      image: '/images/thanksgiving-dinner.jpg',
-    },
+
     {
       id: '6',
       title: 'Supernatural Service',
@@ -127,22 +118,13 @@ export const useSpecialEvents = () => {
     {
       day: 'Sunday',
       services: [
-        { time: '7:00 AM', name: 'Early Morning Prayer', type: 'prayer' },
         { time: '9:00 AM', name: 'Main Worship Service', type: 'worship' },
-        { time: '11:30 AM', name: 'Contemporary Service', type: 'worship' },
       ],
     },
     {
-      day: 'Wednesday',
+      day: 'Thursday',
       services: [
-        { time: '6:00 PM', name: 'Bible Study', type: 'teaching' },
-        { time: '7:30 PM', name: 'Youth Service', type: 'youth' },
-      ],
-    },
-    {
-      day: 'Friday',
-      services: [
-        { time: '6:00 PM', name: 'Friday Night Fire', type: 'prayer' },
+        { time: '6:00 PM', name: 'Midweek Service', type: 'teaching' },
       ],
     },
   ];

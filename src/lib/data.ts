@@ -1,4 +1,4 @@
-import { BookOpen, Church, DollarSign, Heart, Users } from 'lucide-react';
+import { Church } from 'lucide-react';
 import {
   NavLink,
   ExtendedNavLink,
@@ -7,7 +7,7 @@ import {
   Sermon,
   Ministry,
   ServiceBox,
-  GivingOption,
+  // GivingOption,
   Photo,
   Slide,
 } from './types';
@@ -97,7 +97,7 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     dropdown: [
       { label: 'Upcoming Events', href: '/events/upcoming' },
       // { label: 'Weekly Services', href: '/events/weekly' },
-      { label: 'Special Events', href: '/events/special' },
+      // { label: 'Special Events', href: '/events/special' },
     ],
   },
   {
@@ -388,33 +388,6 @@ export const photos: Photo[] = [
   },
 ];
 
-export const givingOptions: GivingOption[] = [
-  {
-    title: 'Tithes & Offerings',
-    description:
-      'Support the ongoing ministry and mission of The Lighthouse Church',
-    icon: DollarSign,
-    color: 'from-green-600 to-green-700',
-  },
-  {
-    title: 'Building Fund',
-    description: 'Help us expand our facilities to reach more people',
-    icon: Heart,
-    color: 'from-blue-600 to-blue-700',
-  },
-  {
-    title: 'Missions & Outreach',
-    description: 'Support our global mission efforts and community programs',
-    icon: Users,
-    color: 'from-purple-600 to-purple-700',
-  },
-  {
-    title: 'Youth & Education',
-    description: 'Invest in the next generation through our youth programs',
-    icon: BookOpen,
-    color: 'from-orange-600 to-orange-700',
-  },
-];
 // popup content
 export const confessionContent = `
     I AM BLESSED, PROSPEROUS, REDEEMED, FORGIVEN, HEALTHY, WHOLE, TALENTED, CREATIVE, CONFIDENT, SECURE, DISCIPLINED, FOCUSED,

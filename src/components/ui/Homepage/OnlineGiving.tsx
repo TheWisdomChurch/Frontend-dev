@@ -129,7 +129,7 @@ export default function OnlineGiving() {
                         }}
                       >
                         {/* Wisdom House Logo instead of icon */}
-                        <div className="mb-4 flex justify-center">
+                        {/* <div className="mb-4 flex justify-center">
                           <Image
                             src={WisdomeHouseLogo}
                             alt="Wisdom House Church Logo"
@@ -137,7 +137,7 @@ export default function OnlineGiving() {
                             height={40}
                             className="mx-auto"
                           />
-                        </div>
+                        </div> */}
                         <BaseText
                           fontFamily="bricolage"
                           weight="bold"
@@ -253,7 +253,7 @@ export default function OnlineGiving() {
                           }}
                         >
                           {/* Wisdom House Logo instead of icon */}
-                          <div className="mb-3 flex justify-center">
+                          {/* <div className="mb-3 flex justify-center">
                             <Image
                               src={WisdomeHouseLogo}
                               alt="Wisdom House Church Logo"
@@ -261,7 +261,7 @@ export default function OnlineGiving() {
                               height={32}
                               className="mx-auto"
                             />
-                          </div>
+                          </div> */}
                           <BaseText
                             fontFamily="bricolage"
                             weight="bold"
