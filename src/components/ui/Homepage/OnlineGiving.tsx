@@ -52,7 +52,7 @@ export default function OnlineGiving() {
         background="dark"
         padding="lg"
         fullHeight={false}
-        className="overflow-hidden"
+        className="overflow-hidden py-16 lg:py-20"
         style={{
           background: colorScheme.heading,
           color: colorScheme.textInverted,
@@ -65,7 +65,7 @@ export default function OnlineGiving() {
             justify="center"
             align="center"
             gap="md"
-            className="text-center mb-12 sm:mb-16"
+            className="text-center mb-12 lg:mb-16"
           >
             {/* Wisdom House Logo */}
             <div className="mb-4">
@@ -79,14 +79,14 @@ export default function OnlineGiving() {
             </div>
 
             <H2
-              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
               style={{ color: colorScheme.black }}
             >
               Online Giving
             </H2>
 
             <LightText
-              className="max-w-2xl text-sm sm:text-base md:text-lg text-center leading-relaxed px-4"
+              className="max-w-2xl text-base sm:text-lg md:text-xl lg:text-xl text-center leading-relaxed px-4"
               style={{ color: colorScheme.buttonText }}
             >
               Your generosity helps us continue to spread the Gospel and serve
@@ -118,7 +118,6 @@ export default function OnlineGiving() {
                       className="rounded-2xl overflow-hidden shadow-2xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full border"
                       style={{
                         backgroundColor: colorScheme.body,
-                        // borderColor: colorScheme.border,
                       }}
                     >
                       <div
@@ -128,16 +127,6 @@ export default function OnlineGiving() {
                           color: colorScheme.black,
                         }}
                       >
-                        {/* Wisdom House Logo instead of icon */}
-                        {/* <div className="mb-4 flex justify-center">
-                          <Image
-                            src={WisdomeHouseLogo}
-                            alt="Wisdom House Church Logo"
-                            width={40}
-                            height={40}
-                            className="mx-auto"
-                          />
-                        </div> */}
                         <BaseText
                           fontFamily="bricolage"
                           weight="bold"
@@ -252,16 +241,6 @@ export default function OnlineGiving() {
                             color: colorScheme.black,
                           }}
                         >
-                          {/* Wisdom House Logo instead of icon */}
-                          {/* <div className="mb-3 flex justify-center">
-                            <Image
-                              src={WisdomeHouseLogo}
-                              alt="Wisdom House Church Logo"
-                              width={32}
-                              height={32}
-                              className="mx-auto"
-                            />
-                          </div> */}
                           <BaseText
                             fontFamily="bricolage"
                             weight="bold"
@@ -284,7 +263,6 @@ export default function OnlineGiving() {
                             curvature="full"
                             className="w-full mt-auto"
                             style={{
-                              // backgroundColor: colorScheme.,
                               color: colorScheme.black,
                               borderColor: colorScheme.primary,
                             }}
@@ -316,7 +294,7 @@ export default function OnlineGiving() {
 
           {/* Other Ways to Give Section */}
           <div
-            className={`mt-12 sm:mt-16 transition-all duration-1000 delay-500 ${
+            className={`mt-12 lg:mt-16 transition-all duration-1000 delay-500 ${
               isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
@@ -337,7 +315,7 @@ export default function OnlineGiving() {
                 <BaseText
                   fontFamily="bricolage"
                   weight="bold"
-                  className="text-xl sm:text-2xl"
+                  className="text-xl sm:text-2xl lg:text-3xl"
                   style={{ color: colorScheme.heading }}
                 >
                   Other Ways to Give

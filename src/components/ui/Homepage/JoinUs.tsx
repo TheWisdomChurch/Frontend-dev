@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client';
 
 import Image from 'next/image';
@@ -46,21 +45,21 @@ export default function JoinWisdomHouse() {
         backgroundImage={Workforce_bg.src}
         overlay={true}
         overlayOpacity={80}
-        padding="lg"
+        // REMOVED: padding="lg" - This was causing the gap!
         fullHeight={false}
-        className="overflow-hidden min-h-screen"
+        className="overflow-hidden"
       >
-        <Container size="xl" className="relative z-10">
-          {/* Reduced spacing for mobile */}
+        <Container size="xl" className="relative z-10 py-16 lg:py-20">
+          {/* Header Section */}
           <FlexboxLayout
             direction="column"
             justify="center"
             align="center"
             gap="md"
-            className="text-center mb-8 sm:mb-12 md:mb-16"
+            className="text-center mb-12 lg:mb-16"
           >
             <H2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-2 font-bold leading-tight text-center"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
               style={{ color: colorScheme.white }}
             >
               Join Our{' '}
@@ -80,7 +79,7 @@ export default function JoinWisdomHouse() {
             </H2>
 
             <LightText
-              className="max-w-2xl text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-center leading-relaxed px-4"
+              className="max-w-2xl text-base sm:text-lg md:text-xl lg:text-xl text-center leading-relaxed px-4"
               style={{ color: colorScheme.textSecondary }}
             >
               "Each of you should use whatever gift you have received to serve
@@ -110,7 +109,7 @@ export default function JoinWisdomHouse() {
                     transform: 'translateY(0) scale(1)',
                   }}
                 >
-                  {/* Image Container - Larger height for better visibility */}
+                  {/* Image Container */}
                   <div className="relative h-56 md:h-72 lg:h-80 flex-shrink-0 overflow-hidden">
                     <Image
                       src={photo.image}
@@ -123,7 +122,7 @@ export default function JoinWisdomHouse() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                   </div>
 
-                  {/* Main Content Section - Always Visible */}
+                  {/* Main Content Section */}
                   <div className="p-4 sm:p-6 bg-gradient-to-b from-white/5 to-transparent flex-grow flex flex-col">
                     <BaseText
                       fontFamily="bricolage"
@@ -187,10 +186,10 @@ export default function JoinWisdomHouse() {
             </GridboxLayout>
           </div>
 
-          {/* Mobile & Tablet Layout - Horizontal Scroll - COMPACT VERSION */}
+          {/* Mobile & Tablet Layout - Horizontal Scroll */}
           <div className="md:hidden">
             <FlexboxLayout direction="column" gap="sm" className="relative">
-              {/* Scroll Navigation Buttons - More Compact */}
+              {/* Scroll Navigation Buttons */}
               <FlexboxLayout justify="between" align="center" className="mb-4">
                 <button
                   onClick={scrollLeft}
@@ -213,7 +212,7 @@ export default function JoinWisdomHouse() {
                 </button>
               </FlexboxLayout>
 
-              {/* Horizontal Scroll Container - More Compact Cards */}
+              {/* Horizontal Scroll Container */}
               <div
                 ref={scrollContainerRef}
                 className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
@@ -223,7 +222,7 @@ export default function JoinWisdomHouse() {
                     key={photo.title}
                     className="flex-shrink-0 w-64 bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-xl border border-white/20 transition-all duration-300"
                   >
-                    {/* Image Container - Larger height for better visibility */}
+                    {/* Image Container */}
                     <div className="relative h-40 overflow-hidden">
                       <Image
                         src={photo.image}
@@ -236,7 +235,7 @@ export default function JoinWisdomHouse() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                     </div>
 
-                    {/* Content Section - More Compact */}
+                    {/* Content Section */}
                     <div className="p-3">
                       <BaseText
                         fontFamily="bricolage"

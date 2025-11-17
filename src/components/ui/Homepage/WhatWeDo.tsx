@@ -1,4 +1,3 @@
-// components/ui/WhatWeDo.tsx
 'use client';
 
 import { whatWeDoData, missionStatement } from '@/lib/data';
@@ -83,7 +82,7 @@ export default function WhatWeDo() {
       padding="lg"
       fullHeight={false}
       style={{ backgroundColor: colorScheme.background }}
-      className="relative overflow-hidden"
+      className="relative overflow-hidden py-16 lg:py-20"
     >
       {/* Subtle background elements */}
       <div
@@ -101,11 +100,11 @@ export default function WhatWeDo() {
           justify="center"
           align="center"
           gap="lg"
-          className="text-center mb-16"
+          className="text-center mb-12 lg:mb-16"
         >
           <H2
             ref={headingRef}
-            className="text-4xl md:text-6xl font-bold font-work-sans"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold font-work-sans"
             style={{
               color: colorScheme.text,
             }}
@@ -132,7 +131,7 @@ export default function WhatWeDo() {
           ref={textRef}
           justify="center"
           align="center"
-          className="mt-16 md:mt-20 text-center"
+          className="mt-12 lg:mt-16 text-center"
         >
           <LightText
             className="max-w-4xl mx-auto leading-relaxed font-work-sans text-lg md:text-xl font-light"

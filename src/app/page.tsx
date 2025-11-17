@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // app/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
+import Senior from '@/components/ui/Homepage/senior';
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import WhatWeDo from '@/components/ui/Homepage/WhatWeDo';
 import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
@@ -17,7 +19,6 @@ export default function Home() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    // Check if fonts are loaded
     const checkFonts = () => {
       if (document.fonts && typeof document.fonts.check === 'function') {
         document.fonts.ready.then(() => {
@@ -54,11 +55,10 @@ export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <main className="flex-1 w-full">
-        {/* Add debug component in development */}
         {process.env.NODE_ENV === 'development' && <MobileDebug />}
 
-        {/* Remove any potential gaps between components */}
-        <div className="space-y-0">
+        {/* Force remove ALL spacing between components */}
+        <div className="[&>*]:m-0 [&>*]:p-0 [&>*]:border-0">
           <HeroSection
             slides={slides}
             showButtons={true}
@@ -66,7 +66,8 @@ export default function Home() {
             showSlideIndicators={true}
           />
           <WhatWeDo />
-          <SeniorPastor />
+          {/* <SeniorPastor /> */}
+          <Senior />
           <AssociatePastors />
           <JoinWisdomHouse />
           <OnlineGiving />

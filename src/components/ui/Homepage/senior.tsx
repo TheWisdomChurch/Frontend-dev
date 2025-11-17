@@ -1,50 +1,23 @@
 'use client';
 
-import { Banner_2 } from '@/components/assets';
+import React from 'react';
 import { H1, LightText } from '@/components/text';
 import Button from '@/components/utils/CustomButton';
 import { useSeniorPastor } from '@/components/utils/hooks/useSeniorPastor';
 import { seniorPastorData } from '@/lib/data';
-import { Section, Container, FlexboxLayout } from '@/components/layout';
 
-interface SeniorPastorProps {
-  className?: string;
-}
-
-export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
+const Senior = () => {
   const { isVisible, sectionRef, handleLearnMore } = useSeniorPastor();
 
   return (
-    <Section
+    <div
       ref={sectionRef}
-      className={`
-        relative min-h-screen w-full overflow-hidden
-        bg-cover bg-center bg-no-repeat
-        ${className}
-      `}
-      style={{
-        backgroundImage: `url(${Banner_2.src})`,
-      }}
+      className="min-h-screen flex items-center justify-center bg-gray-50"
     >
-      {/* Dark Overlay - Only on Desktop */}
-      <div className="absolute inset-0 bg-black/70 hidden lg:block pointer-events-none" />
-
-      {/* Mobile: No overlay, just image */}
-      <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/30 pointer-events-none" />
-
-      <Container
-        size="xl"
-        className="relative z-10 h-full flex items-center justify-center py-8 px-4 sm:px-6"
-      >
-        <FlexboxLayout
-          direction="column"
-          justify="center"
-          align="center"
-          gap="lg"
-          className="w-full max-w-4xl text-center"
-        >
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-center py-8 px-4 sm:px-6">
+        <div className="w-full max-w-4xl text-center flex flex-col items-center justify-center gap-8">
           {/* Title */}
-          <H1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white drop-shadow-lg">
+          <H1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
             {seniorPastorData.title}
           </H1>
 
@@ -55,9 +28,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
               ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
             `}
           >
-            <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-black/60 backdrop-blur-lg p-6 sm:p-8 lg:p-10">
+            <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-700 bg-black p-6 sm:p-8 lg:p-10">
               {/* Paragraphs */}
-              <FlexboxLayout direction="column" gap="md">
+              <div className="flex flex-col gap-6">
                 {seniorPastorData.description.slice(0, 2).map((p, i) => (
                   <LightText
                     key={i}
@@ -66,7 +39,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     {p}
                   </LightText>
                 ))}
-              </FlexboxLayout>
+              </div>
 
               {/* Button */}
               <div className="mt-8">
@@ -83,8 +56,10 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
               </div>
             </div>
           </div>
-        </FlexboxLayout>
-      </Container>
-    </Section>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default Senior;

@@ -8,7 +8,7 @@ import {
   ministryLeadersData,
   associatePastorsContent,
 } from '@/lib/data';
-import { H1, H2, H3, LightText, P, SmallText } from '@/components/text';
+import { H1, H2, H3, LightText, SmallText } from '@/components/text';
 import CustomButton from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useAssociatePastors } from '@/components/utils/hooks/useAssociate';
@@ -29,21 +29,21 @@ export default function AssociatePastors() {
     <Section
       ref={sectionRef}
       background="light"
-      padding="xl"
-      className="bg-gradient-to-b from-gray-50 to-white"
+      // REMOVE THIS: padding="xl" - This is causing the gap!
+      className="bg-gradient-to-b from-gray-500 to-white"
     >
-      <Container size="xl">
-        {/* Main Section Header - Reduced spacing */}
+      <Container size="xl" className="py-16 lg:py-20">
+        {/* Main Section Header */}
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
           gap="md"
-          className="text-center mb-8"
+          className="text-center mb-12 lg:mb-16"
         >
           <H1
             ref={headingRef}
-            className="text-2xl sm:text-4xl md:text-4xl lg:text-4xl md:font-extrabold lg:font-black leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
             style={{
               color: colorScheme.background,
             }}
@@ -59,10 +59,14 @@ export default function AssociatePastors() {
         </FlexboxLayout>
 
         <div ref={contentRef} className="flex flex-col items-center">
-          {/* First Leaders Section - Reduced spacing */}
-          <FlexboxLayout direction="column" gap="lg" className="w-full mb-12">
+          {/* First Leaders Section */}
+          <FlexboxLayout
+            direction="column"
+            gap="lg"
+            className="w-full mb-16 lg:mb-20"
+          >
             <H2
-              className="text-xl sm:text-1xl md:text-2xl lg:text-2xl   text-center mb-8"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-12"
               style={{
                 color: colorScheme.background,
               }}
@@ -100,7 +104,7 @@ export default function AssociatePastors() {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </div>
-                    {/* Responsive badge with proper font sizes */}
+                    {/* Responsive badge */}
                     <div
                       className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs md:text-sm lg:text-base font-medium shadow-lg whitespace-normal text-center max-w-[130px] md:max-w-[150px] break-words leading-tight"
                       style={{
@@ -137,10 +141,14 @@ export default function AssociatePastors() {
             </GridboxLayout>
           </FlexboxLayout>
 
-          {/* Second Leaders Section - Reduced spacing */}
-          <FlexboxLayout direction="column" gap="lg" className="w-full mb-12">
+          {/* Second Leaders Section */}
+          <FlexboxLayout
+            direction="column"
+            gap="lg"
+            className="w-full mb-16 lg:mb-20"
+          >
             <H2
-              className="text-xl sm:text-1xl md:text-2xl lg:text-2xl  text-center mb-8"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-12"
               style={{
                 color: colorScheme.black,
               }}
@@ -178,7 +186,7 @@ export default function AssociatePastors() {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </div>
-                    {/* Responsive badge with proper font sizes */}
+                    {/* Responsive badge */}
                     <div
                       className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs md:text-sm lg:text-base font-medium shadow-lg whitespace-normal text-center max-w-[130px] md:max-w-[150px] break-words leading-tight"
                       style={{
@@ -215,8 +223,8 @@ export default function AssociatePastors() {
             </GridboxLayout>
           </FlexboxLayout>
 
-          {/* See More Button - Reduced spacing */}
-          <FlexboxLayout justify="center" className="mt-6">
+          {/* See More Button */}
+          <FlexboxLayout justify="center" className="mt-8">
             <CustomButton
               onClick={handleSeeMore}
               variant="primary"
