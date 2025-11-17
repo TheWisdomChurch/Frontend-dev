@@ -29,21 +29,20 @@ export default function AssociatePastors() {
     <Section
       ref={sectionRef}
       background="light"
-      // REMOVE THIS: padding="xl" - This is causing the gap!
       className="bg-gradient-to-b from-gray-200 to-white"
     >
-      <Container size="xl" className="py-16 lg:py-20">
+      <Container size="xl" className="py-12 sm:py-16 lg:py-20">
         {/* Main Section Header */}
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
           gap="md"
-          className="text-center mb-12 lg:mb-16"
+          className="text-center mb-10 sm:mb-12 lg:mb-16 px-4"
         >
           <H1
             ref={headingRef}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+            className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
             style={{
               color: colorScheme.background,
             }}
@@ -51,7 +50,7 @@ export default function AssociatePastors() {
             {associatePastorsContent.mainHeader}
           </H1>
           <LightText
-            className="text-base sm:text-lg md:text-xl lg:text-xl max-w-3xl mx-auto leading-relaxed mt-4"
+            className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-xl max-w-3xl mx-auto leading-relaxed mt-3 sm:mt-4 px-2"
             style={{ color: colorScheme.buttonText }}
           >
             {associatePastorsContent.mainDescription}
@@ -63,10 +62,10 @@ export default function AssociatePastors() {
           <FlexboxLayout
             direction="column"
             gap="lg"
-            className="w-full mb-16 lg:mb-20"
+            className="w-full mb-12 sm:mb-16 lg:mb-20 px-4 sm:px-0"
           >
             <H2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-12"
+              className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
               style={{
                 color: colorScheme.background,
               }}
@@ -78,9 +77,10 @@ export default function AssociatePastors() {
               gap="lg"
               responsive={{
                 sm: 1,
-                md: 3,
+                md: 2,
                 lg: 3,
               }}
+              className="w-full"
             >
               {pastorsData.slice(0, 3).map((pastor, index) => (
                 <div
@@ -88,9 +88,9 @@ export default function AssociatePastors() {
                   ref={addToRefs}
                   className="flex flex-col items-center group"
                 >
-                  <div className="relative inline-block mb-6">
+                  <div className="relative inline-block mb-4 sm:mb-6">
                     <div
-                      className="w-52 h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500"
+                      className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500"
                       style={{
                         borderColor: colorScheme.white,
                         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
@@ -106,7 +106,7 @@ export default function AssociatePastors() {
                     </div>
                     {/* Responsive badge */}
                     <div
-                      className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs md:text-sm lg:text-base font-medium shadow-lg whitespace-normal text-center max-w-[130px] md:max-w-[150px] break-words leading-tight"
+                      className="absolute -bottom-2 sm:-bottom-3 left-1/2 transform -translate-x-1/2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm md:text-base font-medium shadow-lg whitespace-normal text-center max-w-[110px] sm:max-w-[130px] md:max-w-[150px] break-words leading-tight"
                       style={{
                         background: `linear-gradient(to right, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                         color: colorScheme.black,
@@ -117,7 +117,7 @@ export default function AssociatePastors() {
                   </div>
 
                   <H3
-                    className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold mb-3 transition-colors duration-300"
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 transition-colors duration-300 text-center px-2"
                     style={{ color: colorScheme.black }}
                     onMouseEnter={(e: any) => {
                       e.currentTarget.style.color = colorScheme.primary;
@@ -130,7 +130,7 @@ export default function AssociatePastors() {
                   </H3>
                   {pastor.description && (
                     <SmallText
-                      className="text-sm md:text-base lg:text-base leading-relaxed px-2 text-center"
+                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center"
                       style={{ color: colorScheme.body }}
                     >
                       {pastor.description}
@@ -145,10 +145,10 @@ export default function AssociatePastors() {
           <FlexboxLayout
             direction="column"
             gap="lg"
-            className="w-full mb-16 lg:mb-20"
+            className="w-full mb-12 sm:mb-16 lg:mb-20 px-4 sm:px-0"
           >
             <H2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-12"
+              className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
               style={{
                 color: colorScheme.black,
               }}
@@ -160,9 +160,10 @@ export default function AssociatePastors() {
               gap="lg"
               responsive={{
                 sm: 1,
-                md: 3,
+                md: 2,
                 lg: 3,
               }}
+              className="w-full"
             >
               {ministryLeadersData.slice(3, 6).map((pastor, index) => (
                 <div
@@ -170,9 +171,9 @@ export default function AssociatePastors() {
                   ref={addToRefs}
                   className="flex flex-col items-center group"
                 >
-                  <div className="relative inline-block mb-6">
+                  <div className="relative inline-block mb-4 sm:mb-6">
                     <div
-                      className="w-52 h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500"
+                      className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500"
                       style={{
                         borderColor: colorScheme.white,
                         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
@@ -188,7 +189,7 @@ export default function AssociatePastors() {
                     </div>
                     {/* Responsive badge */}
                     <div
-                      className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs md:text-sm lg:text-base font-medium shadow-lg whitespace-normal text-center max-w-[130px] md:max-w-[150px] break-words leading-tight"
+                      className="absolute -bottom-2 sm:-bottom-3 left-1/2 transform -translate-x-1/2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm md:text-base font-medium shadow-lg whitespace-normal text-center max-w-[110px] sm:max-w-[130px] md:max-w-[150px] break-words leading-tight"
                       style={{
                         background: `linear-gradient(to right, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                         color: colorScheme.black,
@@ -199,7 +200,7 @@ export default function AssociatePastors() {
                   </div>
 
                   <H3
-                    className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold mb-3 transition-colors duration-300"
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 transition-colors duration-300 text-center px-2"
                     style={{ color: colorScheme.black }}
                     onMouseEnter={(e: any) => {
                       e.currentTarget.style.color = colorScheme.primary;
@@ -212,7 +213,7 @@ export default function AssociatePastors() {
                   </H3>
                   {pastor.description && (
                     <SmallText
-                      className="text-sm md:text-base lg:text-base leading-relaxed px-2 text-center"
+                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center"
                       style={{ color: colorScheme.buttonText }}
                     >
                       {pastor.description}
@@ -224,7 +225,7 @@ export default function AssociatePastors() {
           </FlexboxLayout>
 
           {/* See More Button */}
-          <FlexboxLayout justify="center" className="mt-8">
+          <FlexboxLayout justify="center" className="mt-6 sm:mt-8 px-4">
             <CustomButton
               onClick={handleSeeMore}
               variant="primary"
@@ -234,7 +235,7 @@ export default function AssociatePastors() {
               rightIcon={
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 ml-2" />
               }
-              className="group transition-all duration-300 transform hover:scale-105"
+              className="group transition-all duration-300 transform hover:scale-105 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base"
               style={{
                 background: `linear-gradient(to right, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                 color: colorScheme.black,
