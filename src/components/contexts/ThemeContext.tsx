@@ -26,7 +26,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   // Apply theme to DOM immediately (synchronous)
-  const applyThemeToDOM = (dark: boolean) => {
+  const applyThemeToDOM = (dark: boolean): void => {
     if (typeof document === 'undefined') return;
 
     if (dark) {
@@ -39,7 +39,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Apply CSS variables immediately
-  const applyCSSVariables = (scheme: ColorScheme) => {
+  const applyCSSVariables = (scheme: ColorScheme): void => {
     if (typeof document === 'undefined') return;
 
     const root = document.documentElement;
@@ -53,7 +53,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const initializeTheme = () => {
+    const initializeTheme = (): void => {
       try {
         let theme = 'light';
 
@@ -92,7 +92,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     initializeTheme();
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     const newTheme = !isDark;
 
     // Apply immediately
