@@ -50,43 +50,48 @@ export default function OnlineGiving() {
       <Section
         ref={sectionRef}
         background="dark"
-        padding="lg"
+        padding="none" // Remove section padding
         fullHeight={false}
-        className="overflow-hidden py-16 lg:py-20"
+        className="overflow-hidden"
         style={{
           background: colorScheme.heading,
           color: colorScheme.textInverted,
         }}
       >
-        <Container size="xl" className="relative z-10">
+        <Container
+          size="xl"
+          className="relative z-10 py-12 sm:py-16 lg:py-20"
+          padding="none"
+        >
           {/* Header Section */}
           <FlexboxLayout
             direction="column"
             justify="center"
             align="center"
-            gap="md"
-            className="text-center mb-12 lg:mb-16"
+            gap="sm" // Reduced gap
+            className="text-center mb-10 sm:mb-12 lg:mb-16 px-4" // Added horizontal padding
+            padding="none"
           >
             {/* Wisdom House Logo */}
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
               <Image
                 src={WisdomeHouseLogo}
                 alt="Wisdom House Church Logo"
-                width={80}
-                height={80}
+                width={60}
+                height={60}
                 className="mx-auto"
               />
             </div>
 
             <H2
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
+              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
               style={{ color: colorScheme.black }}
             >
               Online Giving
             </H2>
 
             <LightText
-              className="max-w-2xl text-base sm:text-lg md:text-xl lg:text-xl text-center leading-relaxed px-4"
+              className="max-w-2xl text-sm xs:text-base sm:text-lg md:text-xl text-center leading-relaxed px-2"
               style={{ color: colorScheme.buttonText }}
             >
               Your generosity helps us continue to spread the Gospel and serve
@@ -95,13 +100,15 @@ export default function OnlineGiving() {
           </FlexboxLayout>
 
           {/* Desktop Layout - Grid */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block px-4 sm:px-6">
             <GridboxLayout
               columns={3}
               gap="lg"
               responsive={{
                 lg: 3,
               }}
+              className="w-full mb-12 lg:mb-16" // Added bottom margin
+              padding="none"
             >
               {OnlinegivingOptions.map((option, index) => {
                 return (
@@ -115,13 +122,13 @@ export default function OnlineGiving() {
                     style={{ transitionDelay: `${index * 100}ms` }}
                   >
                     <div
-                      className="rounded-2xl overflow-hidden shadow-2xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full border"
+                      className="rounded-xl sm:rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full border"
                       style={{
                         backgroundColor: colorScheme.body,
                       }}
                     >
                       <div
-                        className="p-6"
+                        className="p-4 sm:p-6"
                         style={{
                           backgroundColor: colorScheme.primary,
                           color: colorScheme.black,
@@ -130,14 +137,14 @@ export default function OnlineGiving() {
                         <BaseText
                           fontFamily="bricolage"
                           weight="bold"
-                          className="text-xl mb-2 text-center"
+                          className="text-lg sm:text-xl mb-2 text-center"
                         >
                           {option.title}
                         </BaseText>
                       </div>
-                      <div className="p-6 flex-1 flex flex-col">
+                      <div className="p-4 sm:p-6 flex-1 flex flex-col">
                         <LightText
-                          className="mb-6 flex-1 text-center"
+                          className="mb-4 sm:mb-6 flex-1 text-center text-sm sm:text-base"
                           style={{ color: colorScheme.white }}
                         >
                           {option.description}
@@ -148,7 +155,7 @@ export default function OnlineGiving() {
                           size="md"
                           curvature="full"
                           elevated={true}
-                          className="w-full mt-auto transition-all duration-300"
+                          className="w-full mt-auto transition-all duration-300 py-2 sm:py-3"
                           style={{
                             backgroundColor: colorScheme.primary,
                             borderColor: colorScheme.white,
@@ -176,10 +183,20 @@ export default function OnlineGiving() {
           </div>
 
           {/* Mobile & Tablet Layout - Horizontal Scroll */}
-          <div className="lg:hidden">
-            <FlexboxLayout direction="column" gap="md" className="relative">
+          <div className="lg:hidden px-4">
+            <FlexboxLayout
+              direction="column"
+              gap="sm"
+              className="relative"
+              padding="none"
+            >
               {/* Scroll Navigation Buttons */}
-              <FlexboxLayout justify="between" align="center" className="mb-6">
+              <FlexboxLayout
+                justify="between"
+                align="center"
+                className="mb-4"
+                padding="none"
+              >
                 <button
                   onClick={scrollLeft}
                   className="p-2 bg-white/10 backdrop-blur-md rounded-full border hover:bg-white/20 transition-all duration-300 z-10"
@@ -192,7 +209,7 @@ export default function OnlineGiving() {
                   <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
                 </button>
 
-                <LightText className="text-xs font-medium px-2 text-center max-w-[200px]">
+                <LightText className="text-xs font-medium px-2 text-center max-w-[160px]">
                   Scroll to explore giving options
                 </LightText>
 
@@ -212,13 +229,13 @@ export default function OnlineGiving() {
               {/* Horizontal Scroll Container */}
               <div
                 ref={scrollContainerRef}
-                className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+                className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide" // Reduced gap
               >
                 {OnlinegivingOptions.map((option, index) => {
                   return (
                     <div
                       key={option.title}
-                      className={`flex-shrink-0 w-64 transition-all duration-700 ${
+                      className={`flex-shrink-0 w-56 transition-all duration-700 ${
                         isVisible
                           ? 'opacity-100 translate-y-0'
                           : 'opacity-0 translate-y-10'
@@ -228,14 +245,14 @@ export default function OnlineGiving() {
                       }}
                     >
                       <div
-                        className="rounded-xl overflow-hidden shadow-xl transition-all duration-300 h-full flex flex-col border"
+                        className="rounded-lg overflow-hidden shadow-lg transition-all duration-300 h-full flex flex-col border"
                         style={{
                           backgroundColor: colorScheme.body,
                           borderColor: colorScheme.border,
                         }}
                       >
                         <div
-                          className="p-5"
+                          className="p-3"
                           style={{
                             backgroundColor: colorScheme.primary,
                             color: colorScheme.black,
@@ -244,14 +261,14 @@ export default function OnlineGiving() {
                           <BaseText
                             fontFamily="bricolage"
                             weight="bold"
-                            className="text-lg mb-2 text-center"
+                            className="text-base mb-1 text-center"
                           >
                             {option.title}
                           </BaseText>
                         </div>
-                        <div className="p-4 flex-1 flex flex-col">
+                        <div className="p-3 flex-1 flex flex-col">
                           <LightText
-                            className="mb-4 flex-1 text-sm leading-relaxed text-center"
+                            className="mb-3 flex-1 text-xs leading-relaxed text-center"
                             style={{ color: colorScheme.white }}
                           >
                             {option.description}
@@ -261,7 +278,7 @@ export default function OnlineGiving() {
                             variant="primary"
                             size="sm"
                             curvature="full"
-                            className="w-full mt-auto"
+                            className="w-full mt-auto py-1.5"
                             style={{
                               color: colorScheme.black,
                               borderColor: colorScheme.primary,
@@ -280,11 +297,16 @@ export default function OnlineGiving() {
               </div>
 
               {/* Scroll Indicator */}
-              <FlexboxLayout justify="center" gap="xs" className="mt-2">
+              <FlexboxLayout
+                justify="center"
+                gap="xs"
+                className="mt-2"
+                padding="none"
+              >
                 {OnlinegivingOptions.map((_, index) => (
                   <div
                     key={index}
-                    className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                    className="w-1 h-1 rounded-full transition-all duration-300"
                     style={{ backgroundColor: colorScheme.black + '50' }}
                   />
                 ))}
@@ -294,14 +316,14 @@ export default function OnlineGiving() {
 
           {/* Other Ways to Give Section */}
           <div
-            className={`mt-12 lg:mt-16 transition-all duration-1000 delay-500 ${
+            className={`mt-10 sm:mt-12 lg:mt-16 transition-all duration-1000 delay-500 px-4 sm:px-6 ${
               isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
             }`}
           >
             <div
-              className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-3xl mx-auto border"
+              className="rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto border"
               style={{
                 backgroundColor: colorScheme.background,
                 borderColor: colorScheme.border,
@@ -309,20 +331,21 @@ export default function OnlineGiving() {
             >
               <FlexboxLayout
                 direction="column"
-                gap="md"
+                gap="sm" // Reduced gap
                 className="text-center"
+                padding="none"
               >
                 <BaseText
                   fontFamily="bricolage"
                   weight="bold"
-                  className="text-xl sm:text-2xl lg:text-3xl"
+                  className="text-lg sm:text-xl lg:text-2xl"
                   style={{ color: colorScheme.heading }}
                 >
                   Other Ways to Give
                 </BaseText>
 
                 <LightText
-                  className="mb-4 sm:mb-6"
+                  className="mb-3 sm:mb-4 text-sm sm:text-base"
                   style={{ color: colorScheme.primary }}
                 >
                   You can also give by mail, in person during our services, or
@@ -330,17 +353,25 @@ export default function OnlineGiving() {
                   options, please contact our Admin.
                 </LightText>
 
-                <FlexboxLayout justify="center" gap="sm" className="flex-wrap">
+                <FlexboxLayout
+                  justify="center"
+                  gap="xs"
+                  className="flex-wrap"
+                  padding="none"
+                >
                   <Button
                     onClick={handleContactCall}
                     variant="primary"
-                    size="md"
+                    size="sm"
                     curvature="full"
                     elevated={true}
                     leftIcon={
-                      <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
+                      <FontAwesomeIcon
+                        icon={faPhone}
+                        className="w-3 h-3 sm:w-4 sm:h-4"
+                      />
                     }
-                    className="transition-all duration-300 transform hover:scale-105"
+                    className="transition-all duration-300 transform hover:scale-105 px-3 sm:px-4 py-2 text-xs sm:text-sm"
                     style={{
                       backgroundColor: colorScheme.primary,
                       color: colorScheme.black,
@@ -351,9 +382,9 @@ export default function OnlineGiving() {
 
                   <Button
                     variant="outline"
-                    size="md"
+                    size="sm"
                     curvature="full"
-                    className="transition-all duration-300"
+                    className="transition-all duration-300 px-3 sm:px-4 py-2 text-xs sm:text-sm"
                     style={{
                       borderColor: colorScheme.primary,
                       color: colorScheme.text,
