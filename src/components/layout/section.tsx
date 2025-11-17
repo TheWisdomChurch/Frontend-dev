@@ -21,14 +21,14 @@ interface SectionProps {
   fullHeight?: boolean;
   centered?: boolean;
   style?: React.CSSProperties;
-  id?: string; // Add this line
+  id?: string;
 }
 
 const Section = forwardRef<HTMLElement, SectionProps>(
   (
     {
       children,
-      padding = 'lg',
+      padding = 'none', // CHANGED: Default to none
       background = 'none',
       customBackground,
       backgroundImage,
@@ -38,21 +38,21 @@ const Section = forwardRef<HTMLElement, SectionProps>(
       fullHeight = false,
       centered = false,
       style,
-      id, // Add this line
+      id,
     },
     ref
   ) => {
     const { colorScheme } = useTheme();
 
-    // Responsive padding classes - FIXED for mobile
+    // REMOVED all vertical padding - only apply when explicitly requested
     const paddingClasses = {
-      none: 'py-0',
-      xs: 'py-4 sm:py-4',
-      sm: 'py-6 sm:py-8',
-      md: 'py-8 sm:py-12',
-      lg: 'py-12 sm:py-16',
-      xl: 'py-16 sm:py-20',
-      '2xl': 'py-20 sm:py-24',
+      none: '',
+      xs: 'py-4',
+      sm: 'py-6',
+      md: 'py-8',
+      lg: 'py-12',
+      xl: 'py-16',
+      '2xl': 'py-20',
     };
 
     // Background colors
@@ -74,13 +74,14 @@ const Section = forwardRef<HTMLElement, SectionProps>(
 
     const sectionClasses = [
       'relative w-full overflow-hidden',
-      paddingClasses[padding],
-      fullHeight ? 'min-h-screen' : 'min-h-0',
+      paddingClasses[padding], // Only applied if explicitly set
+      fullHeight ? 'min-h-screen' : '',
       centered ? 'flex items-center' : '',
       className,
-    ].join(' ');
+    ]
+      .join(' ')
+      .trim();
 
-    // Combine background styles with custom style prop
     const combinedStyles = {
       ...(background !== 'none' ? backgroundStyles[background] : {}),
       ...style,
@@ -89,9 +90,9 @@ const Section = forwardRef<HTMLElement, SectionProps>(
     return (
       <section
         ref={ref}
-        id={id} // Add this line
+        id={id}
         className={sectionClasses}
-        style={combinedStyles} // Use combined styles
+        style={combinedStyles}
       >
         {background === 'image' && overlay && (
           <div

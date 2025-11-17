@@ -1,5 +1,5 @@
 // components/layout/FlexboxLayout.tsx
-import React, { forwardRef } from 'react'; // Add forwardRef import
+import React, { forwardRef } from 'react';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
 interface FlexboxLayoutProps {
@@ -23,7 +23,6 @@ interface FlexboxLayoutProps {
   style?: React.CSSProperties;
 }
 
-// Use forwardRef to wrap the component
 const FlexboxLayout = forwardRef<HTMLDivElement, FlexboxLayoutProps>(
   (
     {
@@ -38,13 +37,12 @@ const FlexboxLayout = forwardRef<HTMLDivElement, FlexboxLayoutProps>(
       fullHeight = false,
       background = 'none',
       customBackground,
-      padding = 'md',
+      padding = 'none', // CHANGED: Default to none
       responsiveDirection,
       style,
     },
     ref
   ) => {
-    // Add ref parameter
     const { colorScheme } = useTheme();
 
     // Direction classes with responsive options
@@ -94,26 +92,26 @@ const FlexboxLayout = forwardRef<HTMLDivElement, FlexboxLayoutProps>(
       baseline: 'items-baseline',
     };
 
-    // Responsive gap classes - FIXED for mobile
+    // Gap classes - SIMPLIFIED (no extra padding)
     const gapClasses = {
       none: 'gap-0',
-      xs: 'gap-2 sm:gap-2',
-      sm: 'gap-3 sm:gap-4',
-      md: 'gap-4 sm:gap-6',
-      lg: 'gap-6 sm:gap-8',
-      xl: 'gap-8 sm:gap-12',
-      '2xl': 'gap-12 sm:gap-16',
+      xs: 'gap-2',
+      sm: 'gap-3',
+      md: 'gap-4',
+      lg: 'gap-6',
+      xl: 'gap-8',
+      '2xl': 'gap-12',
     };
 
-    // Responsive padding classes - FIXED for mobile
+    // REMOVED all padding classes - use 'none' by default
     const paddingClasses = {
-      none: 'p-0',
-      xs: 'p-2 sm:p-2',
-      sm: 'p-3 sm:p-4',
-      md: 'p-4 sm:p-6',
-      lg: 'p-6 sm:p-8',
-      xl: 'p-8 sm:p-12',
-      '2xl': 'p-12 sm:p-16',
+      none: '',
+      xs: 'p-2',
+      sm: 'p-3',
+      md: 'p-4',
+      lg: 'p-6',
+      xl: 'p-8',
+      '2xl': 'p-12',
     };
 
     // Background colors
@@ -133,13 +131,14 @@ const FlexboxLayout = forwardRef<HTMLDivElement, FlexboxLayoutProps>(
       alignClasses[align],
       `flex-${wrap}`,
       gapClasses[gap],
-      paddingClasses[padding],
+      paddingClasses[padding], // Only applied if explicitly set
       fullWidth ? 'w-full' : '',
       fullHeight ? 'h-full' : '',
       className,
-    ].join(' ');
+    ]
+      .join(' ')
+      .trim();
 
-    // Combine background styles with custom style prop
     const combinedStyles = {
       ...(background !== 'none' ? backgroundStyles[background] : {}),
       ...style,
@@ -147,7 +146,7 @@ const FlexboxLayout = forwardRef<HTMLDivElement, FlexboxLayoutProps>(
 
     return (
       <div
-        ref={ref} // Add the ref here
+        ref={ref}
         className={layoutClasses}
         style={
           Object.keys(combinedStyles).length > 0 ? combinedStyles : undefined
@@ -159,7 +158,6 @@ const FlexboxLayout = forwardRef<HTMLDivElement, FlexboxLayoutProps>(
   }
 );
 
-// Add display name for better debugging
 FlexboxLayout.displayName = 'FlexboxLayout';
 
 export default FlexboxLayout;

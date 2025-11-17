@@ -17,75 +17,143 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   return (
     <Section
       ref={sectionRef}
+      padding="none"
+      fullHeight={true}
       className={`
-        relative min-h-screen w-full overflow-hidden
-        bg-cover bg-center bg-no-repeat lg:bg-none
+        relative w-full overflow-hidden
         ${className}
       `}
-      style={{
-        backgroundImage: `url(${Bishop.src})`,
-      }}
     >
-      {/* Black Linear Gradient Overlay - Hidden on large screens */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 pointer-events-none lg:hidden" />
+      {/* Background Image - Show on mobile ONLY */}
+      <div
+        className="
+          absolute inset-0 
+          bg-cover bg-center bg-no-repeat 
+          lg:hidden /* Hide on desktop */
+          z-0
+        "
+        style={{
+          backgroundImage: `url(${Bishop.src})`,
+        }}
+      />
 
-      {/* White background for large screens */}
-      <div className="hidden lg:block absolute inset-0 bg-white pointer-events-none" />
+      {/* Black Linear Gradient Overlay - Mobile only */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 pointer-events-none lg:hidden z-1" />
 
-      <Container
-        size="xl"
-        className="relative z-10 h-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8"
-      >
+      {/* Background Image for Desktop - Full opacity */}
+      <div
+        className="
+          hidden lg:block absolute inset-0 
+          bg-cover bg-center bg-no-repeat 
+          z-0
+        "
+        style={{
+          backgroundImage: `url(${Bishop.src})`,
+        }}
+      />
+
+      {/* Dark Overlay for Desktop - To tone down the background */}
+      <div className="hidden lg:block absolute inset-0 bg-black/30 pointer-events-none z-1" />
+
+      <Container size="xl" padding="none" className="relative z-10 h-full">
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
-          gap="xl"
-          className="w-full text-center"
+          gap="lg"
+          className="w-full h-full min-h-screen py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8"
+          fullHeight={true}
         >
-          {/* Title - Full width with proper spacing */}
-          <div className="w-full max-w-6xl">
-            <H1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white lg:text-gray-900 drop-shadow-2xl mb-4">
+          {/* Title */}
+          <div className="w-full max-w-6xl mb-4 sm:mb-6 lg:mb-8">
+            <H1
+              className="
+              text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl 
+              font-bold 
+              leading-tight sm:leading-tight md:leading-tight lg:leading-tight
+              text-white /* Keep white text on both mobile and desktop */
+              drop-shadow-lg
+              px-2
+            "
+            >
               {seniorPastorData.title}
             </H1>
           </div>
 
-          {/* Content Card - Full width container */}
+          {/* Content Card */}
           <div
             className={`
-              w-full max-w-6xl transition-all duration-1000
+              w-full max-w-4xl lg:max-w-6xl transition-all duration-1000
               ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
             `}
           >
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/30 lg:border-gray-200 bg-black/90 lg:bg-white backdrop-blur-lg relative min-h-[400px] flex items-center">
-              {/* Content - Centered and properly spaced */}
-              <div className="relative z-10 w-full p-8 sm:p-12 lg:p-16">
-                <FlexboxLayout direction="column" gap="lg" className="w-full">
-                  {/* Paragraphs - Left aligned */}
+            <div
+              className="
+              rounded-xl md:rounded-2xl lg:rounded-3xl 
+              overflow-hidden 
+              shadow-2xl 
+              border border-white/20 
+              bg-black/80 /* Keep dark background on both */
+              backdrop-blur-sm
+              min-h-[280px] sm:min-h-[320px] lg:min-h-[380px] 
+              flex items-center
+            "
+            >
+              {/* Content */}
+              <div className="relative z-10 w-full p-4 sm:p-6 md:p-8 lg:p-12">
+                <FlexboxLayout
+                  direction="column"
+                  gap="md"
+                  className="w-full"
+                  padding="none"
+                >
+                  {/* Paragraphs */}
                   <FlexboxLayout
                     direction="column"
-                    gap="md"
-                    className="w-full max-w-4xl mx-auto"
+                    gap="sm"
+                    className="w-full max-w-3xl lg:max-w-4xl mx-auto"
+                    padding="none"
                   >
                     {seniorPastorData.description.slice(0, 2).map((p, i) => (
                       <LightText
                         key={i}
-                        className="text-white lg:text-gray-700 text-lg sm:text-xl md:text-2xl leading-relaxed font-light text-left"
+                        className="
+                          text-white /* Keep white text on both */
+                          text-sm sm:text-base md:text-lg lg:text-xl
+                          leading-relaxed sm:leading-relaxed md:leading-relaxed
+                          font-light 
+                          text-left
+                        "
                       >
                         {p}
                       </LightText>
                     ))}
                   </FlexboxLayout>
 
-                  {/* Button - Properly centered */}
-                  <div className="mt-10 flex justify-center">
+                  {/* Button */}
+                  <div className="mt-4 sm:mt-6 lg:mt-8 flex justify-center">
                     <Button
                       onClick={handleLearnMore}
                       variant="primary"
-                      size="xl"
+                      size="lg"
                       curvature="full"
                       elevated={true}
-                      className="min-w-[200px] px-8 py-4 text-lg sm:text-xl font-semibold hover:scale-105 transition-transform duration-300"
+                      className="
+                        w-full max-w-[260px] 
+                        sm:max-w-[280px]
+                        lg:max-w-[300px]
+                        min-w-[140px] 
+                        sm:min-w-[160px] 
+                        lg:min-w-[180px]
+                        px-4 sm:px-6 lg:px-8
+                        py-3 sm:py-3.5 lg:py-4
+                        text-sm sm:text-base lg:text-lg
+                        font-semibold
+                        hover:scale-105 
+                        transition-all 
+                        duration-300
+                        whitespace-nowrap
+                      "
                     >
                       {seniorPastorData.buttonText}
                     </Button>

@@ -26,7 +26,7 @@ export default function WhatWeDo() {
         ref={el => {
           addToBoxesRef(el, index);
         }}
-        className={`group relative overflow-hidden rounded-2xl shadow-lg ${
+        className={`group relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl ${
           isLargeBox
             ? 'md:col-span-2 aspect-[4/3] md:aspect-[21/9]'
             : 'aspect-[4/3]'
@@ -39,7 +39,7 @@ export default function WhatWeDo() {
             alt={box.imageAlt}
             fill
             style={box.imageOpacity ? { opacity: box.imageOpacity / 100 } : {}}
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes={
               isLargeBox
                 ? '(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 80vw'
@@ -49,24 +49,25 @@ export default function WhatWeDo() {
           />
         </div>
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/40 to-black/60 z-0"></div>
+        {/* Lighter Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/30 to-black/40 z-0"></div>
 
-        {/* Content Overlay */}
-        <div className="absolute inset-0 flex items-end z-10 p-6 md:p-8">
-          <div className="text-left w-full">
+        {/* Content Overlay - FIXED: Added top padding to push content down */}
+        <div className="absolute inset-0 flex items-end z-10 p-6 sm:p-8 lg:p-10">
+          <div className="text-left w-full pt-16 sm:pt-20 lg:pt-24 pb-4">
+            {' '}
+            {/* Added top and bottom padding */}
             {/* Title */}
             <h3
-              className="text-2xl md:text-4xl font-bold font-work-sans mb-3 md:mb-4 text-white drop-shadow-lg"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-work-sans mb-3 sm:mb-4 text-white drop-shadow-lg"
               style={{
                 color: colorScheme.primary,
               }}
             >
               {box.title}
             </h3>
-
             {/* Description */}
-            <LightText className="text-white/90 text-base md:text-lg leading-relaxed font-work-sans font-light drop-shadow-md max-w-2xl">
+            <LightText className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed sm:leading-relaxed font-work-sans font-light drop-shadow-md max-w-2xl">
               {box.description}
             </LightText>
           </div>
@@ -79,66 +80,79 @@ export default function WhatWeDo() {
     <Section
       id="what-we-do"
       ref={sectionRef}
-      padding="lg"
+      padding="xl"
       fullHeight={false}
-      style={{ backgroundColor: colorScheme.background }}
-      className="relative overflow-hidden py-16 lg:py-20"
+      style={{ backgroundColor: colorScheme.white }}
+      className="relative overflow-hidden"
     >
-      {/* Subtle background elements */}
-      <div
-        className="absolute top-0 left-0 w-72 h-72 rounded-full mix-blend-multiply filter blur-3xl opacity-5"
+      {/* Subtle background elements - Lighter and more subtle */}
+      {/* <div
+        className="absolute top-10 left-10 w-64 h-64 rounded-full mix-blend-multiply filter blur-3xl opacity-3"
         style={{ backgroundColor: colorScheme.primary }}
-      ></div>
-      <div
-        className="absolute bottom-0 right-0 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl opacity-5"
+      ></div> */}
+      {/* <div
+        className="absolute bottom-10 right-10 w-80 h-80 rounded-full mix-blend-multiply filter blur-3xl opacity-3"
         style={{ backgroundColor: colorScheme.primaryLight }}
-      ></div>
+      ></div> */}
 
       <Container size="xl" className="relative z-10">
+        {/* Header Section with More Spacing */}
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
-          gap="lg"
-          className="text-center mb-12 lg:mb-16"
+          gap="xl"
+          className="text-center pt-12 sm:pt-16 lg:pt-20 pb-8 sm:pb-12 lg:pb-16" // Added responsive top and bottom padding
+          padding="none"
         >
           <H2
             ref={headingRef}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold font-work-sans"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-work-sans leading-tight"
             style={{
-              color: colorScheme.text,
+              color: colorScheme.background,
             }}
           >
             What To Expect
           </H2>
+
+          {/* Optional Subtitle for Better Spacing */}
+          {/* <div className="w-24 h-1 rounded-full opacity-20" 
+       style={{ backgroundColor: colorScheme.primary }}>
+  </div> */}
         </FlexboxLayout>
 
-        {/* Grid Layout */}
+        {/* Grid Layout with More Spacing */}
         <GridboxLayout
           columns={1}
-          gap="lg"
+          gap="xl"
           responsive={{
             sm: 1,
             md: 2,
             lg: 2,
           }}
-          className="w-full"
+          className="w-full mb-16 lg:mb-20"
+          padding="none"
         >
           {whatWeDoData.map((box, index) => renderBox(box, index))}
         </GridboxLayout>
 
+        {/* Mission Statement with Better Spacing */}
         <FlexboxLayout
           ref={textRef}
+          direction="column"
           justify="center"
           align="center"
-          className="mt-12 lg:mt-16 text-center"
+          className="text-center pt-4 sm:pt-6 lg:pt-8 pb-8 sm:pb-10 lg:pb-12" // Reduced top and bottom padding
+          padding="none"
         >
-          <LightText
-            className="max-w-4xl mx-auto leading-relaxed font-work-sans text-lg md:text-xl font-light"
-            style={{ color: colorScheme.textSecondary }}
-          >
-            {missionStatement}
-          </LightText>
+          <div className="max-w-4xl mx-auto">
+            <LightText
+              className="leading-relaxed sm:leading-loose font-work-sans text-base sm:text-lg md:text-xl lg:text-2xl font-light px-4 sm:px-6 lg:px-0"
+              style={{ color: colorScheme.black }}
+            >
+              {missionStatement}
+            </LightText>
+          </div>
         </FlexboxLayout>
       </Container>
     </Section>

@@ -29,61 +29,52 @@ const GridboxLayout: React.FC<GridboxLayoutProps> = ({
   fullHeight = false,
   background = 'none',
   customBackground,
-  padding = 'md',
+  padding = 'none', // CHANGED: Default to none
   responsive,
 }) => {
   const { colorScheme } = useTheme();
 
-  // Default responsive behavior - FIXED for mobile
+  // Default responsive behavior
   const defaultResponsive = {
-    sm: 1, // Mobile: 1 column
-    md: 2, // Tablet: 2 columns
-    lg: columns, // Desktop: use provided columns
-    ...responsive, // Override with custom responsive settings
+    sm: 1,
+    md: 2,
+    lg: columns,
+    ...responsive,
   };
 
   // Build responsive grid classes
   const getGridClasses = () => {
     const classes = [];
-
-    // Mobile first (sm)
     classes.push(`grid-cols-${defaultResponsive.sm}`);
-
-    // Tablet (md)
     if (defaultResponsive.md)
       classes.push(`md:grid-cols-${defaultResponsive.md}`);
-
-    // Desktop (lg)
     if (defaultResponsive.lg)
       classes.push(`lg:grid-cols-${defaultResponsive.lg}`);
-
-    // Large desktop (xl)
     if (defaultResponsive.xl)
       classes.push(`xl:grid-cols-${defaultResponsive.xl}`);
-
     return classes.join(' ');
   };
 
-  // Responsive gap classes - FIXED for mobile
+  // Gap classes - SIMPLIFIED
   const gapClasses = {
     none: 'gap-0',
-    xs: 'gap-2 sm:gap-2',
-    sm: 'gap-3 sm:gap-4',
-    md: 'gap-4 sm:gap-6',
-    lg: 'gap-6 sm:gap-8',
-    xl: 'gap-8 sm:gap-12',
-    '2xl': 'gap-12 sm:gap-16',
+    xs: 'gap-2',
+    sm: 'gap-3',
+    md: 'gap-4',
+    lg: 'gap-6',
+    xl: 'gap-8',
+    '2xl': 'gap-12',
   };
 
-  // Responsive padding classes - FIXED for mobile
+  // REMOVED all padding classes - use 'none' by default
   const paddingClasses = {
-    none: 'p-0',
-    xs: 'p-2 sm:p-2',
-    sm: 'p-3 sm:p-4',
-    md: 'p-4 sm:p-6',
-    lg: 'p-6 sm:p-8',
-    xl: 'p-8 sm:p-12',
-    '2xl': 'p-12 sm:p-16',
+    none: '',
+    xs: 'p-2',
+    sm: 'p-3',
+    md: 'p-4',
+    lg: 'p-6',
+    xl: 'p-8',
+    '2xl': 'p-12',
   };
 
   // Background colors
@@ -100,11 +91,13 @@ const GridboxLayout: React.FC<GridboxLayoutProps> = ({
     'grid w-full',
     getGridClasses(),
     gapClasses[gap],
-    paddingClasses[padding],
+    paddingClasses[padding], // Only applied if explicitly set
     fullWidth ? 'w-full' : '',
     fullHeight ? 'h-full' : '',
     className,
-  ].join(' ');
+  ]
+    .join(' ')
+    .trim();
 
   return (
     <div
