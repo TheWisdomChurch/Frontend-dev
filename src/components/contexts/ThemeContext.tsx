@@ -25,57 +25,83 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Apply theme to DOM immediately (synchronous)
+  const applyThemeToDOM = (dark: boolean) => {
+    if (typeof document === 'undefined') return;
+
+    if (dark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.style.colorScheme = 'light';
+    }
+  };
+
+  // Apply CSS variables immediately
+  const applyCSSVariables = (scheme: ColorScheme) => {
+    if (typeof document === 'undefined') return;
+
+    const root = document.documentElement;
+
+    // Apply all color scheme variables
+    Object.entries(scheme).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        root.style.setProperty(`--color-${key}`, value);
+      }
+    });
+  };
+
   useEffect(() => {
-    setMounted(true);
-
-    const applyTheme = () => {
+    const initializeTheme = () => {
       try {
-        if (typeof window === 'undefined' || typeof document === 'undefined') {
-          return;
+        let theme = 'light';
+
+        if (typeof window !== 'undefined') {
+          // Check localStorage first
+          const saved = localStorage.getItem('theme');
+
+          // If no saved theme, check system preference
+          if (!saved) {
+            const systemDark = window.matchMedia(
+              '(prefers-color-scheme: dark)'
+            ).matches;
+            theme = systemDark ? 'dark' : 'light';
+          } else {
+            theme = saved;
+          }
         }
 
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia(
-          '(prefers-color-scheme: dark)'
-        ).matches;
+        const darkMode = theme === 'dark';
 
-        const shouldBeDark =
-          savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+        // Apply theme immediately before React state update
+        applyThemeToDOM(darkMode);
+        applyCSSVariables(darkMode ? darkShades : lightShades);
 
-        setIsDark(shouldBeDark);
-
-        if (shouldBeDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
+        setIsDark(darkMode);
       } catch (error) {
-        console.warn('Theme detection failed:', error);
-        const systemPrefersDark = window.matchMedia(
-          '(prefers-color-scheme: dark)'
-        ).matches;
-        setIsDark(systemPrefersDark);
-        if (systemPrefersDark) {
-          document.documentElement.classList.add('dark');
-        }
+        console.warn('Theme initialization failed:', error);
+        // Apply light theme as fallback
+        applyThemeToDOM(false);
+        applyCSSVariables(lightShades);
+      } finally {
+        setMounted(true);
       }
     };
 
-    applyTheme();
+    initializeTheme();
   }, []);
 
   const toggleTheme = () => {
-    if (!mounted) return;
-
     const newTheme = !isDark;
+
+    // Apply immediately
+    applyThemeToDOM(newTheme);
+    applyCSSVariables(newTheme ? darkShades : lightShades);
+
     setIsDark(newTheme);
 
     try {
-      if (newTheme) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
       localStorage.setItem('theme', newTheme ? 'dark' : 'light');
     } catch (error) {
       console.warn('Failed to save theme preference:', error);
@@ -84,15 +110,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const colorScheme = isDark ? darkShades : lightShades;
 
-  if (!mounted) {
-    return (
-      <div style={{ visibility: 'hidden' }}>
-        <ThemeContext.Provider value={defaultTheme}>
-          {children}
-        </ThemeContext.Provider>
-      </div>
-    );
-  }
+  // Apply CSS variables whenever color scheme changes
+  useEffect(() => {
+    if (mounted) {
+      applyCSSVariables(colorScheme);
+    }
+  }, [colorScheme, mounted]);
 
   return (
     <ThemeContext.Provider
@@ -106,7 +129,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme() {
   const context = useContext(ThemeContext);
 
-  // During build, return default values instead of throwing
   if (context === undefined) {
     if (typeof window === 'undefined') {
       return defaultTheme;

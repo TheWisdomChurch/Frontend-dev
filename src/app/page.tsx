@@ -8,12 +8,12 @@ import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
 import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';
 import JoinWisdomHouse from '@/components/ui/Homepage/JoinUs';
 import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
-// import JoinIndex from '@/components/ui/Homepage/JoinUsIndex';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
 import MobileDebug from '@/components/utils/mobileDebug';
 import { slides } from '@/lib/data';
+import ClientRoot from './Clientroot';
 
-export default function Home() {
+function HomeContent() {
   const [showModal, setShowModal] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -56,7 +56,6 @@ export default function Home() {
       <main className="flex-1 w-full">
         {process.env.NODE_ENV === 'development' && <MobileDebug />}
 
-        {/* Force remove ALL spacing between components */}
         <div className="[&>*]:m-0 [&>*]:p-0 [&>*]:border-0">
           <HeroSection
             slides={slides}
@@ -66,9 +65,7 @@ export default function Home() {
           />
           <WhatWeDo />
           <SeniorPastor />
-
           <AssociatePastors />
-          {/* <JoinIndex /> */}
           <JoinWisdomHouse />
           <OnlineGiving />
         </div>
@@ -78,5 +75,13 @@ export default function Home() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <ClientRoot>
+      <HomeContent />
+    </ClientRoot>
   );
 }
