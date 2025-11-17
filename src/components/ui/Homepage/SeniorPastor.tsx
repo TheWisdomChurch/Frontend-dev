@@ -1,6 +1,6 @@
 'use client';
 
-import { Banner_2 } from '@/components/assets';
+import { Bishop } from '@/components/assets';
 import { H1, LightText } from '@/components/text';
 import Button from '@/components/utils/CustomButton';
 import { useSeniorPastor } from '@/components/utils/hooks/useSeniorPastor';
@@ -19,67 +19,78 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       ref={sectionRef}
       className={`
         relative min-h-screen w-full overflow-hidden
-        bg-cover bg-center bg-no-repeat
+        bg-cover bg-center bg-no-repeat lg:bg-none
         ${className}
       `}
       style={{
-        backgroundImage: `url(${Banner_2.src})`,
+        backgroundImage: `url(${Bishop.src})`,
       }}
     >
-      {/* Dark Overlay - Only on Desktop */}
-      <div className="absolute inset-0 bg-black/70 hidden lg:block pointer-events-none" />
+      {/* Black Linear Gradient Overlay - Hidden on large screens */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 pointer-events-none lg:hidden" />
 
-      {/* Mobile: No overlay, just image */}
-      <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/30 pointer-events-none" />
+      {/* White background for large screens */}
+      <div className="hidden lg:block absolute inset-0 bg-white pointer-events-none" />
 
       <Container
         size="xl"
-        className="relative z-10 h-full flex items-center justify-center py-8 px-4 sm:px-6"
+        className="relative z-10 h-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8"
       >
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
-          gap="lg"
-          className="w-full max-w-4xl text-center"
+          gap="xl"
+          className="w-full text-center"
         >
-          {/* Title */}
-          <H1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white drop-shadow-lg">
-            {seniorPastorData.title}
-          </H1>
+          {/* Title - Full width with proper spacing */}
+          <div className="w-full max-w-6xl">
+            <H1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white lg:text-gray-900 drop-shadow-2xl mb-4">
+              {seniorPastorData.title}
+            </H1>
+          </div>
 
-          {/* Content Card */}
+          {/* Content Card - Full width container */}
           <div
             className={`
-              w-full transition-all duration-1000 mt-8
+              w-full max-w-6xl transition-all duration-1000
               ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
             `}
           >
-            <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-black/60 backdrop-blur-lg p-6 sm:p-8 lg:p-10">
-              {/* Paragraphs */}
-              <FlexboxLayout direction="column" gap="md">
-                {seniorPastorData.description.slice(0, 2).map((p, i) => (
-                  <LightText
-                    key={i}
-                    className="text-white text-base sm:text-lg md:text-xl leading-relaxed font-light"
+            <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/30 lg:border-gray-200 bg-black/90 lg:bg-white backdrop-blur-lg relative min-h-[400px] flex items-center">
+              {/* Content - Centered and properly spaced */}
+              <div className="relative z-10 w-full p-8 sm:p-12 lg:p-16">
+                <FlexboxLayout direction="column" gap="lg" className="w-full">
+                  {/* Paragraphs - Left aligned */}
+                  <FlexboxLayout
+                    direction="column"
+                    gap="md"
+                    className="w-full max-w-4xl mx-auto"
                   >
-                    {p}
-                  </LightText>
-                ))}
-              </FlexboxLayout>
+                    {seniorPastorData.description.slice(0, 2).map((p, i) => (
+                      <LightText
+                        key={i}
+                        className="text-white lg:text-gray-700 text-lg sm:text-xl md:text-2xl leading-relaxed font-light text-left"
+                      >
+                        {p}
+                      </LightText>
+                    ))}
+                  </FlexboxLayout>
 
-              {/* Button */}
-              <div className="mt-8">
-                <Button
-                  onClick={handleLearnMore}
-                  variant="primary"
-                  size="lg"
-                  curvature="full"
-                  elevated={true}
-                  className="min-w-[160px] px-6 py-3 text-base sm:text-lg font-semibold hover:scale-105 transition-transform"
-                >
-                  {seniorPastorData.buttonText}
-                </Button>
+                  {/* Button - Properly centered */}
+                  <div className="mt-10 flex justify-center">
+                    <Button
+                      onClick={handleLearnMore}
+                      variant="primary"
+                      size="xl"
+                      curvature="full"
+                      elevated={true}
+                      className="min-w-[200px] px-8 py-4 text-lg sm:text-xl font-semibold hover:scale-105 transition-transform duration-300"
+                    >
+                      {seniorPastorData.buttonText}
+                    </Button>
+                  </div>
+                </FlexboxLayout>
               </div>
             </div>
           </div>

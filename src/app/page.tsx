@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 // app/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
-import Senior from '@/components/ui/Homepage/senior';
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import WhatWeDo from '@/components/ui/Homepage/WhatWeDo';
 import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
@@ -66,8 +65,8 @@ export default function Home() {
             showSlideIndicators={true}
           />
           <WhatWeDo />
-          {/* <SeniorPastor /> */}
-          <Senior />
+          <SeniorPastor />
+
           <AssociatePastors />
           <JoinWisdomHouse />
           <OnlineGiving />

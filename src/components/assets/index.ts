@@ -1,6 +1,7 @@
 import Banner_1 from './banner1.webp';
 import Banner_2 from './banner2.webp';
 import Banner_3 from './banner3.webp';
+import Bishop from './bishop.webp';
 
 // test
 import hero_bg_1 from './hero_img (1).jpg';
@@ -56,6 +57,7 @@ export {
   Banner_1,
   WisdomShirt_2,
   wisdomShirt_1,
+  Bishop,
   NL,
   Cap_1,
   Cap_2,

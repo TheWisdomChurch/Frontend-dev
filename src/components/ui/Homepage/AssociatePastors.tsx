@@ -30,7 +30,7 @@ export default function AssociatePastors() {
       ref={sectionRef}
       background="light"
       // REMOVE THIS: padding="xl" - This is causing the gap!
-      className="bg-gradient-to-b from-gray-500 to-white"
+      className="bg-gradient-to-b from-gray-200 to-white"
     >
       <Container size="xl" className="py-16 lg:py-20">
         {/* Main Section Header */}
