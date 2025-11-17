@@ -142,7 +142,7 @@ export default function WhatWeDo() {
           direction="column"
           justify="center"
           align="center"
-          className="text-center pt-4 sm:pt-6 lg:pt-8 pb-8 sm:pb-10 lg:pb-12" // Reduced top and bottom padding
+          className="text-center pt-4 sm:pt-6 lg:pt-8 pb-8 sm:pb-10 lg:pb-12" 
           padding="none"
         >
           <div className="max-w-4xl mx-auto">
