@@ -20,19 +20,43 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
 
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia(
-      '(prefers-color-scheme: dark)'
-    ).matches;
+    const applyTheme = () => {
+      try {
+        // Check if we're in a browser environment
+        if (typeof window === 'undefined' || typeof document === 'undefined') {
+          return;
+        }
 
-    // Apply theme class to html element
-    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    }
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches;
+
+        const shouldBeDark =
+          savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+
+        setIsDark(shouldBeDark);
+
+        // Apply theme class immediately and synchronously
+        if (shouldBeDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (error) {
+        // Fallback to system preference if localStorage fails
+        console.warn('Theme detection failed, using system preference:', error);
+        const systemPrefersDark = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches;
+        setIsDark(systemPrefersDark);
+        if (systemPrefersDark) {
+          document.documentElement.classList.add('dark');
+        }
+      }
+    };
+
+    applyTheme();
   }, []);
 
   const toggleTheme = () => {
@@ -41,34 +65,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const newTheme = !isDark;
     setIsDark(newTheme);
 
-    // Apply the theme class immediately
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    try {
+      // Apply the theme class immediately
+      if (newTheme) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
 
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    } catch (error) {
+      console.warn('Failed to save theme preference:', error);
+    }
   };
 
   // Use the imported color schemes
   const colorScheme = isDark ? darkShades : lightShades;
 
-  // Prevent flash of unstyled content
+  // Prevent flash of unstyled content - return minimal content
   if (!mounted) {
     return (
-      <div style={{ visibility: 'hidden' }}>
-        <ThemeContext.Provider
-          value={{
-            colorScheme: lightShades,
-            isDark: false,
-            toggleTheme: () => {},
-            mounted: false,
-          }}
-        >
-          {children}
-        </ThemeContext.Provider>
-      </div>
+      <div style={{ visibility: 'hidden', height: '100vh' }}>{children}</div>
     );
   }
 
