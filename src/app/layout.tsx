@@ -9,15 +9,33 @@ import {
   playfair,
 } from '@/components/fonts/fonts';
 import './globals.css';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
-import ScrollToTop from '@/components/utils/ScrollToTop';
-import ScrollHandler from '@/components/utils/ScrollHandler';
+import ClientHeader from '@/components/layout/ClientHeader';
+
+import ClientFooter from '@/components/layout/ClientFooter';
+import ClientScrollToTop from '@/components/layout/ClientscrollTop';
+import ScrollHandler from '@/components/layout/ClientScrollHandler';
 
 export const metadata: Metadata = {
   title: 'The Wisdomhouse Church',
   description: 'Wisdom HouseHq - We Are Transformed',
 };
+
+// Client wrapper component that contains all client-side providers
+function ClientLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <ReduxProvider>
+      <ThemeProvider>
+        <HeaderProvider>
+          <ScrollHandler />
+          <ClientHeader />
+          <main className="flex-1">{children}</main>
+          <ClientFooter />
+          <ClientScrollToTop />
+        </HeaderProvider>
+      </ThemeProvider>
+    </ReduxProvider>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -32,29 +50,9 @@ export default function RootLayout({
     >
       <body
         className={`${bricolageGrotesque.className} flex flex-col min-h-screen`}
+        suppressHydrationWarning
       >
-        {/* Wrap everything with ReduxProvider */}
-        <ReduxProvider>
-          <ThemeProvider>
-            {/* Wrap with HeaderProvider */}
-            <HeaderProvider>
-              {/* Scroll Handler for automatic scroll to top on page change */}
-              <ScrollHandler />
-
-              {/* Header at the top */}
-              <Header />
-
-              {/* Main content grows to fill space */}
-              <main className="flex-1">{children}</main>
-
-              {/* Footer at the bottom */}
-              <Footer />
-
-              {/* Scroll to Top Button - appears when scrolled down */}
-              <ScrollToTop />
-            </HeaderProvider>
-          </ThemeProvider>
-        </ReduxProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

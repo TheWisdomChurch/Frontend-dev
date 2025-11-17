@@ -13,6 +13,14 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Safe default values for build time
+const defaultTheme: ThemeContextType = {
+  colorScheme: lightShades,
+  isDark: false,
+  toggleTheme: () => {},
+  mounted: false,
+};
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -22,7 +30,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const applyTheme = () => {
       try {
-        // Check if we're in a browser environment
         if (typeof window === 'undefined' || typeof document === 'undefined') {
           return;
         }
@@ -37,15 +44,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
         setIsDark(shouldBeDark);
 
-        // Apply theme class immediately and synchronously
         if (shouldBeDark) {
           document.documentElement.classList.add('dark');
         } else {
           document.documentElement.classList.remove('dark');
         }
       } catch (error) {
-        // Fallback to system preference if localStorage fails
-        console.warn('Theme detection failed, using system preference:', error);
+        console.warn('Theme detection failed:', error);
         const systemPrefersDark = window.matchMedia(
           '(prefers-color-scheme: dark)'
         ).matches;
@@ -66,26 +71,26 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setIsDark(newTheme);
 
     try {
-      // Apply the theme class immediately
       if (newTheme) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
-
       localStorage.setItem('theme', newTheme ? 'dark' : 'light');
     } catch (error) {
       console.warn('Failed to save theme preference:', error);
     }
   };
 
-  // Use the imported color schemes
   const colorScheme = isDark ? darkShades : lightShades;
 
-  // Prevent flash of unstyled content - return minimal content
   if (!mounted) {
     return (
-      <div style={{ visibility: 'hidden', height: '100vh' }}>{children}</div>
+      <div style={{ visibility: 'hidden' }}>
+        <ThemeContext.Provider value={defaultTheme}>
+          {children}
+        </ThemeContext.Provider>
+      </div>
     );
   }
 
@@ -100,8 +105,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function useTheme() {
   const context = useContext(ThemeContext);
+
+  // During build, return default values instead of throwing
   if (context === undefined) {
+    if (typeof window === 'undefined') {
+      return defaultTheme;
+    }
     throw new Error('useTheme must be used within a ThemeProvider');
   }
+
   return context;
 }
