@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react'; // Added useState
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
@@ -22,16 +22,32 @@ import { Youtube } from 'lucide-react';
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { colorScheme } = useTheme();
-  // useSelector((state: RootState) => state.sermons);
+  const [isClient, setIsClient] = useState(false); // Added client check
 
+  // Set client state on mount
   useEffect(() => {
-    dispatch(fetchSermons());
-  }, [dispatch]);
+    setIsClient(true);
+  }, []);
+
+  // Only dispatch on client side
+  useEffect(() => {
+    if (isClient) {
+      dispatch(fetchSermons());
+    }
+  }, [dispatch, isClient]);
 
   const handleYouTubeRedirect = () => {
-    // Replace with your actual YouTube channel URL
     window.open('https://www.youtube.com/@wisdomhousehq', '_blank');
   };
+
+  // Show loading state during SSR
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading sermons...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -41,10 +57,6 @@ const SermonPage = () => {
         description="Discover transformative messages from Sunday Teachings, Catch up on all our teachings from our Outreaches(Wisdom Power Conferences,Prayer), and special teachings. Grow spiritually through practical biblical Teachings."
         backgroundImage={hero_bg_1.src}
         showButtons={false}
-        // primaryButtonText="Watch Latest Message"
-        // secondaryButtonText="Browse All Series"
-        // onPrimaryButtonClick={handleWatchSeries}
-        // onSecondaryButtonClick={scrollToSeries}
         showScrollIndicator={true}
       />
 

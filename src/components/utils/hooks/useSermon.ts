@@ -33,6 +33,26 @@ if (process.env.NODE_ENV === 'development') {
 
 export const useSermonUtil = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [isClient, setIsClient] = useState(false);
+
+  // Initialize with empty/default values for SSR
+  const sermonsState = useSelector((state: RootState) =>
+    isClient
+      ? state.sermons
+      : {
+          videos: [],
+          featuredSeries: [],
+          displayedVideos: [],
+          filteredVideos: [],
+          visibleCount: 0,
+          loading: false,
+          searchTerm: '',
+          selectedSeries: 'all',
+          selectedPreacher: 'all',
+          sortBy: 'newest' as const,
+        }
+  );
+
   const {
     videos,
     featuredSeries,
@@ -44,11 +64,11 @@ export const useSermonUtil = () => {
     selectedSeries,
     selectedPreacher,
     sortBy,
-  } = useSelector((state: RootState) => state.sermons);
+  } = sermonsState;
 
   // Featured Series State
   const [currentVideo, setCurrentVideo] = useState<YouTubeVideo | undefined>(
-    videos[0]
+    undefined
   );
   const [playerKey, setPlayerKey] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -60,10 +80,22 @@ export const useSermonUtil = () => {
   const horizontalGridRef = useRef<HTMLDivElement>(null);
   const featuredCategoriesRef = useRef<HTMLElement>(null);
 
+  // Set client state on mount
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Set current video when videos are loaded
+  useEffect(() => {
+    if (isClient && videos.length > 0 && !currentVideo) {
+      setCurrentVideo(videos[0]);
+    }
+  }, [isClient, videos, currentVideo]);
+
   // Enhanced scroll function with GSAP
   const smoothScrollToElement = useCallback(
     (element: HTMLElement | null, offset = 80) => {
-      if (!element) return;
+      if (!element || !isClient) return;
 
       setIsAnimating(true);
 
@@ -80,16 +112,22 @@ export const useSermonUtil = () => {
         },
       });
     },
-    []
+    [isClient]
   );
 
   // Featured Series Handlers
-  const handleVideoSelect = useCallback((video: YouTubeVideo) => {
-    setCurrentVideo(video);
-    setPlayerKey(prev => prev + 1);
-  }, []);
+  const handleVideoSelect = useCallback(
+    (video: YouTubeVideo) => {
+      if (!isClient) return;
+      setCurrentVideo(video);
+      setPlayerKey(prev => prev + 1);
+    },
+    [isClient]
+  );
 
   const handleWatchSeries = useCallback(() => {
+    if (!isClient) return;
+
     if (featuredSeries.length > 0) {
       dispatch(
         setSelectedSeries(featuredSeries[0]?.series || 'Latest Content')
@@ -101,15 +139,17 @@ export const useSermonUtil = () => {
         smoothScrollToElement(gridSection, 100);
       }, 300);
     }
-  }, [dispatch, featuredSeries, smoothScrollToElement]);
+  }, [dispatch, featuredSeries, smoothScrollToElement, isClient]);
 
   const handleViewMore = useCallback(() => {
+    if (!isClient) return;
     smoothScrollToElement(featuredCategoriesRef.current, 120);
-  }, [smoothScrollToElement]);
+  }, [smoothScrollToElement, isClient]);
 
   // Series Cards Logic
   const getGroupVideos = useCallback(
     (searchTerms: string[]): YouTubeVideo[] => {
+      if (!isClient) return [];
       return videos.filter(video => {
         const videoSeries = video.series.toUpperCase();
         return searchTerms.some(term =>
@@ -117,55 +157,60 @@ export const useSermonUtil = () => {
         );
       });
     },
-    [videos]
+    [videos, isClient]
   );
 
-  const groupedSeries: GroupedSeriesData[] = seriesGroups
-    .map((group: SeriesGroup) => {
-      const groupVideos = getGroupVideos(group.searchTerms);
-      const uniqueSeriesInGroup = Array.from(
-        new Set(groupVideos.map(video => video.series))
-      );
+  const groupedSeries: GroupedSeriesData[] = isClient
+    ? seriesGroups
+        .map((group: SeriesGroup) => {
+          const groupVideos = getGroupVideos(group.searchTerms);
+          const uniqueSeriesInGroup = Array.from(
+            new Set(groupVideos.map(video => video.series))
+          );
 
-      return {
-        name: group.name,
-        description: group.description,
-        count: groupVideos.length,
-        latestThumbnail: groupVideos[0]?.thumbnail,
-        color: group.color,
-        uniqueSeries: uniqueSeriesInGroup,
-        videos: groupVideos,
-        searchTerms: group.searchTerms,
-      };
-    })
-    .filter(group => group.count > 0)
-    .sort((a, b) => b.count - a.count);
+          return {
+            name: group.name,
+            description: group.description,
+            count: groupVideos.length,
+            latestThumbnail: groupVideos[0]?.thumbnail,
+            color: group.color,
+            uniqueSeries: uniqueSeriesInGroup,
+            videos: groupVideos,
+            searchTerms: group.searchTerms,
+          };
+        })
+        .filter(group => group.count > 0)
+        .sort((a, b) => b.count - a.count)
+    : [];
 
-  const allIndividualSeries = Array.from(
-    new Set(videos.map(video => video.series).filter(Boolean))
-  );
+  const allIndividualSeries = isClient
+    ? Array.from(new Set(videos.map(video => video.series).filter(Boolean)))
+    : [];
 
   const groupedSeriesNames = groupedSeries.flatMap(group => group.searchTerms);
-  const ungroupedSeries: UngroupedSeriesData[] = allIndividualSeries
-    .filter(
-      series =>
-        !groupedSeriesNames.some(term =>
-          series.toUpperCase().includes(term.toUpperCase())
+  const ungroupedSeries: UngroupedSeriesData[] = isClient
+    ? allIndividualSeries
+        .filter(
+          series =>
+            !groupedSeriesNames.some(term =>
+              series.toUpperCase().includes(term.toUpperCase())
+            )
         )
-    )
-    .map(series => ({
-      name: series,
-      count: videos.filter(video => video.series === series).length,
-      latestThumbnail: videos.find(video => video.series === series)?.thumbnail,
-      isUngrouped: true,
-    }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 8);
+        .map(series => ({
+          name: series,
+          count: videos.filter(video => video.series === series).length,
+          latestThumbnail: videos.find(video => video.series === series)
+            ?.thumbnail,
+          isUngrouped: true,
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 8)
+    : [];
 
   // Enhanced Series Cards Handlers with better animations
   const handleSeriesClick = useCallback(
     (seriesName: string) => {
-      if (isAnimating) return;
+      if (isAnimating || !isClient) return;
 
       // Add click animation feedback
       if (featuredCategoriesRef.current) {
@@ -186,12 +231,12 @@ export const useSermonUtil = () => {
         smoothScrollToElement(gridSection, 100);
       }, 400);
     },
-    [dispatch, isAnimating, smoothScrollToElement]
+    [dispatch, isAnimating, smoothScrollToElement, isClient]
   );
 
   const handleGroupClick = useCallback(
     (searchTerms: string[]) => {
-      if (isAnimating) return;
+      if (isAnimating || !isClient) return;
 
       // Add click animation feedback
       if (featuredCategoriesRef.current) {
@@ -212,13 +257,15 @@ export const useSermonUtil = () => {
         smoothScrollToElement(gridSection, 100);
       }, 400);
     },
-    [dispatch, isAnimating, smoothScrollToElement]
+    [dispatch, isAnimating, smoothScrollToElement, isClient]
   );
 
   // Sermons Grid Handlers
-  const hasMoreVideos = visibleCount < filteredVideos.length;
+  const hasMoreVideos = isClient ? visibleCount < filteredVideos.length : false;
 
   const handleLoadMore = useCallback(() => {
+    if (!isClient) return;
+
     dispatch(loadMoreVideos());
 
     setTimeout(() => {
@@ -278,52 +325,64 @@ export const useSermonUtil = () => {
         }
       }
     }, 150);
-  }, [dispatch]);
+  }, [dispatch, isClient]);
 
   // Search Filters Handlers
-  const seriesOptions = [
-    'all',
-    ...new Set(videos.map(video => video.series).filter(Boolean)),
-  ].sort();
-  const preacherOptions = [
-    'all',
-    ...new Set(videos.map(video => video.preacher).filter(Boolean)),
-  ].sort();
+  const seriesOptions = isClient
+    ? [
+        'all',
+        ...new Set(videos.map(video => video.series).filter(Boolean)),
+      ].sort()
+    : ['all'];
+
+  const preacherOptions = isClient
+    ? [
+        'all',
+        ...new Set(videos.map(video => video.preacher).filter(Boolean)),
+      ].sort()
+    : ['all'];
 
   const handleSearchChange = useCallback(
     (term: string) => {
+      if (!isClient) return;
       dispatch(setSearchTerm(term));
     },
-    [dispatch]
+    [dispatch, isClient]
   );
 
   const handleSeriesFilterChange = useCallback(
     (series: string) => {
+      if (!isClient) return;
       dispatch(setSelectedSeries(series));
     },
-    [dispatch]
+    [dispatch, isClient]
   );
 
   const handlePreacherChange = useCallback(
     (preacher: string) => {
+      if (!isClient) return;
       dispatch(setSelectedPreacher(preacher));
     },
-    [dispatch]
+    [dispatch, isClient]
   );
 
   const handleSortChange = useCallback(
     (sort: 'newest' | 'oldest' | 'popular') => {
+      if (!isClient) return;
       dispatch(setSortBy(sort));
     },
-    [dispatch]
+    [dispatch, isClient]
   );
 
   const handleResetFilters = useCallback(() => {
+    if (!isClient) return;
     dispatch(resetFilters());
-  }, [dispatch]);
+  }, [dispatch, isClient]);
 
   // Enhanced GSAP Animations with better timing and safety checks
   useEffect(() => {
+    if (!isClient) return;
+
     const animateCards = () => {
       if (cardsRef.current && groupedSeries.length > 0) {
         const cards = cardsRef.current.querySelectorAll('.series-card');
@@ -357,9 +416,11 @@ export const useSermonUtil = () => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [groupedSeries]);
+  }, [groupedSeries, isClient]);
 
   useEffect(() => {
+    if (!isClient) return;
+
     const animateGrid = () => {
       if (gridRef.current && displayedVideos.length > 0) {
         const cards = gridRef.current.querySelectorAll('.sermon-card');
@@ -392,9 +453,11 @@ export const useSermonUtil = () => {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [displayedVideos]);
+  }, [displayedVideos, isClient]);
 
   useEffect(() => {
+    if (!isClient) return;
+
     const animateHorizontalGrid = () => {
       if (horizontalGridRef.current && displayedVideos.length > 0) {
         const cards =
@@ -428,10 +491,12 @@ export const useSermonUtil = () => {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [displayedVideos]);
+  }, [displayedVideos, isClient]);
 
   // Enhanced horizontal scroll animation for mobile
   useEffect(() => {
+    if (!isClient) return;
+
     const animateHorizontalScroll = () => {
       if (horizontalScrollRef.current && groupedSeries.length > 0) {
         const cards =
@@ -465,11 +530,13 @@ export const useSermonUtil = () => {
     }, 150);
 
     return () => clearTimeout(timer);
-  }, [groupedSeries]);
+  }, [groupedSeries, isClient]);
 
   // Featured Series Data
-  const featuredSeriesName = featuredSeries[0]?.series || 'Latest Content';
-  const recentVideos = videos.slice(0, 5);
+  const featuredSeriesName = isClient
+    ? featuredSeries[0]?.series || 'Latest Content'
+    : 'Latest Content';
+  const recentVideos = isClient ? videos.slice(0, 5) : [];
 
   return {
     // State
@@ -491,6 +558,7 @@ export const useSermonUtil = () => {
     recentVideos,
     featuredSeriesName,
     isAnimating,
+    isClient, // Return this to use in components
 
     // Refs
     cardsRef,

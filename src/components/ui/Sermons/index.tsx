@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Added useEffect
 import { H2, BaseText, LightText, H1 } from '@/components/text';
 import YouTubePlayer from './YoutubePlayer';
 import Image from 'next/image';
@@ -781,6 +781,13 @@ const FeaturedSection = () => {
 
 const SermonUtil = () => {
   const { colorScheme } = useTheme();
+  const [isClient, setIsClient] = useState(false); // Added client check
+
+  // Add useEffect to set client state
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const {
     // State
     videos,
@@ -812,8 +819,16 @@ const SermonUtil = () => {
     handlePreacherChange,
     handleSortChange,
     handleResetFilters,
-    // handleViewMore,
   } = useSermonUtil();
+
+  // Show loading state during SSR
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading sermons...</div>
+      </div>
+    );
+  }
 
   const SearchFiltersComponent = () => (
     <div className="max-w-6xl mx-auto mb-12">
