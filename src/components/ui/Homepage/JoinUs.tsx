@@ -41,25 +41,32 @@ export default function JoinWisdomHouse() {
       <Section
         ref={sectionRef}
         background="image"
-        customBackground={`url(${Workforce_bg.src})`}
-        backgroundImage={Workforce_bg.src}
+        backgroundImage={Workforce_bg.src} // Use only this one
         overlay={true}
         overlayOpacity={80}
-        // REMOVED: padding="lg" - This was causing the gap!
         fullHeight={false}
-        className="overflow-hidden"
+        className="overflow-hidden min-h-[600px] sm:min-h-[700px] lg:min-h-[800px]" // Ensure minimum height
+        padding="none"
       >
-        <Container size="xl" className="relative z-10 py-16 lg:py-20">
-          {/* Header Section */}
+        {/* Background Overlay */}
+        <div className="absolute inset-0 bg-black/60 z-0" />{' '}
+        {/* Dark overlay */}
+        <Container
+          size="xl"
+          className="relative z-10 py-12 sm:py-16 lg:py-20 h-full"
+          padding="none"
+        >
+          {/* Header Section - Tight spacing */}
           <FlexboxLayout
             direction="column"
             justify="center"
             align="center"
-            gap="md"
-            className="text-center mb-12 lg:mb-16"
+            gap="sm"
+            className="text-center mb-8 sm:mb-10 lg:mb-12 px-4"
+            padding="none"
           >
             <H2
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
+              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
               style={{ color: colorScheme.white }}
             >
               Join Our{' '}
@@ -79,7 +86,7 @@ export default function JoinWisdomHouse() {
             </H2>
 
             <LightText
-              className="max-w-2xl text-base sm:text-lg md:text-xl lg:text-xl text-center leading-relaxed px-4"
+              className="max-w-2xl text-sm xs:text-base sm:text-lg md:text-xl text-center leading-relaxed px-2"
               style={{ color: colorScheme.textSecondary }}
             >
               "Each of you should use whatever gift you have received to serve
@@ -89,14 +96,16 @@ export default function JoinWisdomHouse() {
           </FlexboxLayout>
 
           {/* Desktop Layout - Grid */}
-          <div className="hidden md:block">
+          <div className="hidden md:block px-4 sm:px-6">
             <GridboxLayout
               columns={3}
-              gap="lg"
+              gap="md"
               responsive={{
                 md: 2,
                 lg: 3,
               }}
+              className="w-full"
+              padding="none"
             >
               {photos.map((photo, index) => (
                 <div
@@ -104,13 +113,13 @@ export default function JoinWisdomHouse() {
                   ref={el => addToRefs(el, index)}
                   onMouseEnter={e => handleCardEnter(index, e)}
                   onMouseLeave={e => handleCardLeave(index, e)}
-                  className="relative bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 cursor-pointer flex flex-col h-full card-hover"
+                  className="relative bg-white/5 backdrop-blur-md rounded-xl sm:rounded-2xl overflow-hidden shadow-xl border border-white/10 transition-all duration-300 cursor-pointer flex flex-col h-full card-hover"
                   style={{
                     transform: 'translateY(0) scale(1)',
                   }}
                 >
                   {/* Image Container */}
-                  <div className="relative h-56 md:h-72 lg:h-80 flex-shrink-0 overflow-hidden">
+                  <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 flex-shrink-0 overflow-hidden">
                     <Image
                       src={photo.image}
                       alt={photo.title}
@@ -123,11 +132,11 @@ export default function JoinWisdomHouse() {
                   </div>
 
                   {/* Main Content Section */}
-                  <div className="p-4 sm:p-6 bg-gradient-to-b from-white/5 to-transparent flex-grow flex flex-col">
+                  <div className="p-3 sm:p-4 bg-gradient-to-b from-white/5 to-transparent flex-grow flex flex-col">
                     <BaseText
                       fontFamily="bricolage"
                       weight="bold"
-                      className="text-base sm:text-lg mb-3 sm:mb-4 text-center"
+                      className="text-sm sm:text-base mb-2 sm:mb-3 text-center"
                       style={{ color: colorScheme.white }}
                     >
                       {photo.title}
@@ -136,20 +145,20 @@ export default function JoinWisdomHouse() {
 
                   {/* Hover Overlay Content */}
                   <div
-                    className="card-hover-content absolute inset-0 bg-gradient-to-br from-black/85 via-black/75 to-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-6 md:p-8"
+                    className="card-hover-content absolute inset-0 bg-gradient-to-br from-black/85 via-black/75 to-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-3 sm:p-4 md:p-6"
                     style={{ pointerEvents: 'none' }}
                   >
                     <div className="text-center">
                       <BaseText
                         fontFamily="bricolage"
                         weight="bold"
-                        className="text-lg sm:text-xl mb-3 sm:mb-4"
+                        className="text-base sm:text-lg mb-2 sm:mb-3"
                         style={{ color: colorScheme.white }}
                       >
                         {photo.title}
                       </BaseText>
 
-                      <LightText className="text-center mb-4 sm:mb-6 text-xs sm:text-sm leading-relaxed max-w-xs line-clamp-3">
+                      <LightText className="text-center mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed max-w-xs line-clamp-3">
                         Discover how you can contribute to our ministry through{' '}
                         {photo.title.toLowerCase()}. Join us in making a
                         difference in our community.
@@ -159,7 +168,7 @@ export default function JoinWisdomHouse() {
                         variant="primary"
                         size="sm"
                         curvature="full"
-                        className="inline-flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                        className="inline-flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 px-3 py-2"
                         style={{
                           backgroundColor: colorScheme.primary,
                           color: colorScheme.black,
@@ -187,10 +196,20 @@ export default function JoinWisdomHouse() {
           </div>
 
           {/* Mobile & Tablet Layout - Horizontal Scroll */}
-          <div className="md:hidden">
-            <FlexboxLayout direction="column" gap="sm" className="relative">
+          <div className="md:hidden px-4">
+            <FlexboxLayout
+              direction="column"
+              gap="xs"
+              className="relative"
+              padding="none"
+            >
               {/* Scroll Navigation Buttons */}
-              <FlexboxLayout justify="between" align="center" className="mb-4">
+              <FlexboxLayout
+                justify="between"
+                align="center"
+                className="mb-3"
+                padding="none"
+              >
                 <button
                   onClick={scrollLeft}
                   className="p-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300 z-10"
@@ -199,7 +218,7 @@ export default function JoinWisdomHouse() {
                   <ChevronLeft className="w-4 h-4" />
                 </button>
 
-                <LightText className="text-xs font-medium px-2 text-center max-w-[200px]">
+                <LightText className="text-xs font-medium px-2 text-center max-w-[160px]">
                   Choose Your Department
                 </LightText>
 
@@ -215,15 +234,15 @@ export default function JoinWisdomHouse() {
               {/* Horizontal Scroll Container */}
               <div
                 ref={scrollContainerRef}
-                className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+                className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide"
               >
                 {photos.map((photo, index) => (
                   <div
                     key={photo.title}
-                    className="flex-shrink-0 w-64 bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-xl border border-white/20 transition-all duration-300"
+                    className="flex-shrink-0 w-56 bg-white/10 backdrop-blur-md rounded-lg overflow-hidden shadow-lg border border-white/20 transition-all duration-300"
                   >
                     {/* Image Container */}
-                    <div className="relative h-40 overflow-hidden">
+                    <div className="relative h-36 overflow-hidden">
                       <Image
                         src={photo.image}
                         alt={photo.title}
@@ -240,13 +259,13 @@ export default function JoinWisdomHouse() {
                       <BaseText
                         fontFamily="bricolage"
                         weight="bold"
-                        className="text-sm mb-2 text-center"
+                        className="text-sm mb-1 text-center"
                         style={{ color: colorScheme.white }}
                       >
                         {photo.title}
                       </BaseText>
 
-                      <LightText className="text-center mb-3 text-xs leading-relaxed line-clamp-2">
+                      <LightText className="text-center mb-2 text-xs leading-relaxed line-clamp-2">
                         Discover how you can contribute to our ministry through{' '}
                         {photo.title.toLowerCase()}.
                       </LightText>
@@ -256,7 +275,7 @@ export default function JoinWisdomHouse() {
                           variant="primary"
                           size="xs"
                           curvature="full"
-                          className="inline-flex items-center justify-center gap-1 w-full py-1"
+                          className="inline-flex items-center justify-center gap-1 w-full py-1 px-2"
                           style={{
                             backgroundColor: colorScheme.primary,
                             color: colorScheme.black,
@@ -275,11 +294,16 @@ export default function JoinWisdomHouse() {
               </div>
 
               {/* Compact Scroll Indicator */}
-              <FlexboxLayout justify="center" gap="xs" className="mt-2">
+              <FlexboxLayout
+                justify="center"
+                gap="xs"
+                className="mt-1"
+                padding="none"
+              >
                 {photos.map((_, index) => (
                   <div
                     key={index}
-                    className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                    className="w-1 h-1 rounded-full transition-all duration-300"
                     style={{ backgroundColor: colorScheme.white + '30' }}
                   />
                 ))}

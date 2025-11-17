@@ -8,6 +8,7 @@ import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
 import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';
 import JoinWisdomHouse from '@/components/ui/Homepage/JoinUs';
 import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
+// import JoinIndex from '@/components/ui/Homepage/JoinUsIndex';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
 import MobileDebug from '@/components/utils/mobileDebug';
 import { slides } from '@/lib/data';
@@ -67,6 +68,7 @@ export default function Home() {
           <SeniorPastor />
 
           <AssociatePastors />
+          {/* <JoinIndex /> */}
           <JoinWisdomHouse />
           <OnlineGiving />
         </div>
