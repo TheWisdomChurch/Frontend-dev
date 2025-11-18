@@ -5,15 +5,6 @@ import { hero_bg_1 } from '@/components/assets'; // Import your background image
 const BeliefsPage = () => {
   return (
     <div>
-      {/* Hero Section with custom props */}
-      {/* <HeroSection
-       
-        backgroundImage={hero_bg_1.src}
-        showButtons={true}
-        primaryButtonText="Learn More About Us"
-        secondaryButtonText="Visit Our Church"
-        showScrollIndicator={true}
-      /> */}
       <HeroSection
         title="Our Beliefs"
         subtitle="Foundational Truths We Stand On"

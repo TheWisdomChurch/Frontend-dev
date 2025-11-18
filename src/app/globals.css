@@ -27,13 +27,27 @@
   --font-bricolage-grotesque: 'Bricolage Grotesque', system-ui, sans-serif;
 }
 
-/* COMPLETE RESET - Remove ALL default spacing */
+/* FIXED RESET - Less aggressive */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* Remove default margin only, keep padding */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin: 0;
-  padding: 0;
 }
 
 html,
@@ -59,27 +73,8 @@ body {
   min-height: 100vh;
 }
 
-/* Remove spacing from ALL layout elements */
-div,
-section,
-article,
-header,
-footer,
-main,
-nav,
-aside,
-figure,
-figcaption {
-  margin: 0;
-  padding: 0;
-}
-
-/* Ensure sections have no gaps */
-section {
-  display: block;
-  margin: 0 !important;
-  padding: 0 !important;
-}
+/* REMOVED the aggressive section reset that was causing issues */
+/* Let sections have normal flow and allow Tailwind to control spacing */
 
 /* Scrollbar utilities */
 .scrollbar-hide {
@@ -171,6 +166,7 @@ button:focus-visible {
   white-space: nowrap;
   border: 0;
 }
+
 /* Add to globals.css - Critical theme styles */
 :root {
   /* Light theme defaults */
@@ -207,7 +203,6 @@ html.light body {
   background-color: #ffffff;
   color: #000000;
 }
-/* Add to your globals.css file */
 
 /* Professional Popup Responsive Widths */
 .popup-modal-container {
@@ -277,6 +272,7 @@ html.light body {
     height: 130vh !important;
   }
 }
+
 /* ===== COMPLETE NEXT.JS DEV INDICATOR REMOVAL ===== */
 .nextjs-toast,
 [data-nextjs-toast],
