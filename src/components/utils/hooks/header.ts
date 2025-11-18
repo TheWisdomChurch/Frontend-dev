@@ -19,13 +19,13 @@ export const useHeader = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll effect
+  // Handle scroll effect - More sensitive
   useEffect(() => {
     const handleScroll = () => {
-      setIsHeaderScrolled(window.scrollY > 50);
+      setIsHeaderScrolled(window.scrollY > 30); // Reduced from 50 to 30
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -43,6 +43,26 @@ export const useHeader = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Prevent body scroll when mobile sheet is open
+  useEffect(() => {
+    if (isSheetOpen) {
+      document.body.style.overflow = 'hidden';
+      // Add custom scrollbar styles
+      document.body.style.scrollbarWidth = 'thin';
+      document.body.style.scrollbarColor = `${colorScheme.primary}30 transparent`;
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.scrollbarWidth = 'unset';
+      document.body.style.scrollbarColor = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.scrollbarWidth = 'unset';
+      document.body.style.scrollbarColor = 'unset';
+    };
+  }, [isSheetOpen, colorScheme.primary]);
 
   // Navigation handlers
   const handleLinkClick = (
@@ -114,7 +134,7 @@ export const useHeader = () => {
     colorScheme,
 
     // State setters
-    setActiveDropdown, // Add this
+    setActiveDropdown,
     setSheetOpen,
 
     // Handlers

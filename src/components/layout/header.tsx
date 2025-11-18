@@ -1,12 +1,10 @@
 // components/Header.tsx
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/Sheet';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/Sheet';
 import {
   Menu,
   Church,
@@ -16,7 +14,6 @@ import {
   Calendar,
   BookOpen,
   Phone,
-  QrCode,
   X,
 } from 'lucide-react';
 import { extendedNavLinks } from '@/lib/data';
@@ -24,11 +21,9 @@ import { WisdomeHouseLogo } from '@/components/assets';
 import { cn } from '@/lib/cn';
 import { bricolageGrotesque, worksans } from '../fonts/fonts';
 import JoinCommunityModal from '../modal/joinUsModal';
-
 import { QRDisplayModal } from '../modal/QrModal';
 import { useHeader } from '../utils/hooks/header';
 
-// Icon mapping
 const iconMap = {
   Home: Home,
   Users: Users,
@@ -39,29 +34,21 @@ const iconMap = {
 
 export default function Header() {
   const {
-    // State
     isHeaderScrolled,
     activeDropdown,
     mobileOpenDropdown,
     isSheetOpen,
     isCommunityModalOpen,
     isQRDisplayOpen,
-
-    // Refs
     dropdownRef,
-
-    // Theme
     colorScheme,
-
-    // Handlers
     setSheetOpen,
-    setActiveDropdown, // Add this missing handler
+    setActiveDropdown,
     handleLinkClick,
     handleDropdownItemClick,
     toggleMobileDropdown,
     openCommunityModal,
     closeCommunityModal,
-    openQRDisplay,
     closeQRDisplay,
     isLinkActive,
     closeAllDropdowns,
@@ -71,534 +58,392 @@ export default function Header() {
     <>
       <header
         className={cn(
-          'fixed z-50 transition-all duration-500 ease-out',
+          'fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out',
           isHeaderScrolled
-            ? 'top-0 left-0 right-0 bg-transparent border-b-4 border-yellow-400 shadow-lg py-0'
-            : 'top-8 left-4 right-4 mx-auto max-w-7xl bg-transparent border border-yellow-400 rounded-2xl py-0'
+            ? 'h-12 bg-background/90 backdrop-blur-xl border-b border-border/50'
+            : 'h-14 top-2 left-1/2 -translate-x-1/2 w-[96%] max-w-4xl rounded-xl bg-background/80 backdrop-blur-xl border border-border/30 shadow-sm'
         )}
         style={{
           backgroundColor: isHeaderScrolled
-            ? colorScheme.background
+            ? `${colorScheme.background}cc`
             : 'transparent',
-          borderColor: colorScheme.primary,
+          borderColor: colorScheme.primary + '40',
         }}
       >
-        <div
-          className={cn(
-            'mx-auto transition-all duration-500',
-            isHeaderScrolled ? 'max-w-full' : 'max-w-screen-2xl'
-          )}
-        >
-          <div
-            className={cn(
-              'flex items-center justify-between mx-auto transition-all duration-500',
-              isHeaderScrolled ? 'h-16 px-6' : 'h-14 px-4 sm:px-6 lg:px-8'
-            )}
-          >
-            {/* Logo - Left */}
-            <div className="relative flex items-center space-x-3">
-              <Link href="/" onClick={closeAllDropdowns}>
-                <div className="relative">
-                  <Image
-                    src={WisdomeHouseLogo}
-                    alt="WisdomHouse"
-                    className={cn(
-                      'rounded-full transition-all duration-500',
-                      isHeaderScrolled ? 'h-10 w-10' : 'h-8 w-8'
-                    )}
-                    width={isHeaderScrolled ? 40 : 32}
-                    height={isHeaderScrolled ? 40 : 32}
-                  />
-                </div>
-              </Link>
-
-              {!isHeaderScrolled && (
-                <div
-                  className="h-6 w-px mx-1"
-                  style={{ backgroundColor: colorScheme.border }}
+        <div className="h-full flex items-center justify-between px-4 sm:px-6">
+          {/* Left: Logo - More Compact */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <Link
+              href="/"
+              onClick={closeAllDropdowns}
+              className="flex items-center gap-2 group"
+            >
+              <div className="relative">
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt="The Wisdom House"
+                  width={isHeaderScrolled ? 28 : 32}
+                  height={isHeaderScrolled ? 28 : 32}
+                  className="rounded-full ring-1 ring-primary/20 transition-all duration-300 group-hover:ring-primary/40"
                 />
-              )}
-
-              <span
-                className={cn(
-                  `${worksans.className} font-medium transition-all duration-500 hidden sm:flex items-center gap-1 leading-none`,
-                  isHeaderScrolled ? 'text-xs' : 'text-[8px]'
-                )}
-                style={{
-                  color: isHeaderScrolled
-                    ? colorScheme.text
-                    : colorScheme.white,
-                }}
-              >
-                The
-                <span style={{ color: colorScheme.primary }}> Wisdom </span>
-                <span style={{ color: colorScheme.primary }}>Church</span>
-              </span>
-            </div>
-
-            {/* Navigation Links - Centered */}
-            <nav className="hidden lg:flex items-center justify-center flex-1 max-w-2xl">
-              <div className="flex items-center space-x-1" ref={dropdownRef}>
-                {extendedNavLinks.map(link => {
-                  const isActive = isLinkActive(link.href);
-                  const hasDropdown = !!link.dropdown;
-                  const IconComponent =
-                    iconMap[link.icon as keyof typeof iconMap];
-                  const isHome = link.label === 'Home';
-
-                  return (
-                    <div key={link.label} className="relative">
-                      <div className="flex items-center">
-                        <Link
-                          href={link.href}
-                          onClick={e =>
-                            handleLinkClick(link.href, hasDropdown, e)
-                          }
-                          onMouseEnter={() =>
-                            hasDropdown && setActiveDropdown(link.label)
-                          } // FIXED: Use setActiveDropdown
-                          className={cn(
-                            `${worksans.className} flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative group`,
-                            isActive
-                              ? isHome
-                                ? 'text-gray-900 shadow-md'
-                                : 'text-gray-900 shadow-md'
-                              : isHeaderScrolled
-                                ? 'hover:bg-yellow-400/20'
-                                : 'hover:bg-white/20'
-                          )}
-                          style={{
-                            backgroundColor: isActive
-                              ? isHome
-                                ? colorScheme.primary
-                                : '#8bea19'
-                              : 'transparent',
-                            color: isActive
-                              ? colorScheme.textInverted
-                              : isHeaderScrolled
-                                ? colorScheme.text
-                                : colorScheme.white,
-                            borderRadius: colorScheme.borderRadius.medium,
-                          }}
-                        >
-                          <IconComponent className="h-4 w-4" />
-                          <span>{link.label}</span>
-                          {hasDropdown && (
-                            <ChevronDown
-                              className={cn(
-                                'h-4 w-4 transition-transform duration-300',
-                                activeDropdown === link.label
-                                  ? 'rotate-180'
-                                  : ''
-                              )}
-                            />
-                          )}
-                        </Link>
-
-                        {isActive && !isHome && (
-                          <div
-                            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-0.5 rounded-full"
-                            style={{ backgroundColor: '#8bea19' }}
-                          ></div>
-                        )}
-                      </div>
-
-                      {/* Dropdown Menu */}
-                      {hasDropdown &&
-                        activeDropdown === link.label &&
-                        link.dropdown && (
-                          <div
-                            className="absolute top-full left-0 mt-2 w-56 backdrop-blur-md rounded-xl shadow-xl border py-2 animate-in fade-in-0 zoom-in-95 duration-200 origin-top"
-                            style={{
-                              backgroundColor: colorScheme.surface,
-                              borderColor: colorScheme.primary,
-                              borderRadius: colorScheme.borderRadius.large,
-                            }}
-                            onMouseLeave={() => setActiveDropdown(null)} // FIXED: Use setActiveDropdown
-                          >
-                            {link.dropdown.map(dropdownItem => (
-                              <Link
-                                key={dropdownItem.label}
-                                href={dropdownItem.href}
-                                className={`${worksans.className} flex items-center px-4 py-3 text-sm transition-all duration-300 group rounded-lg mx-2 hover:bg-opacity-10`}
-                                style={{
-                                  color: colorScheme.text,
-                                }}
-                                onClick={handleDropdownItemClick}
-                              >
-                                <div
-                                  className="w-1 h-1 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                  style={{
-                                    backgroundColor: colorScheme.primary,
-                                  }}
-                                ></div>
-                                <span className="flex-1">
-                                  {dropdownItem.label}
-                                </span>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                    </div>
-                  );
-                })}
               </div>
-            </nav>
 
-            {/* CTA Button - Right */}
-            <div className="flex items-center justify-end flex-shrink-0">
-              <Button
-                onClick={openCommunityModal}
-                className={cn(
-                  `${worksans.className} hidden lg:flex items-center transition-all duration-500 cursor-pointer`,
-                  isHeaderScrolled
-                    ? 'hover:scale-105 h-10 px-6 text-sm border-2'
-                    : 'backdrop-blur-sm hover:bg-white hover:text-gray-900 border h-8 px-3 text-xs'
-                )}
+              {/* Text - Smaller & More Compact */}
+              <div className="flex items-center gap-2">
+                {/* Vertical Demarcation Line */}
+                <div
+                  className="h-3 w-px opacity-40"
+                  style={{ backgroundColor: colorScheme.primary }}
+                />
+
+                <span
+                  className={`${bricolageGrotesque.className} text-xs font-medium tracking-tight hidden sm:flex flex-col`}
+                >
+                  <span
+                    className="leading-[0.9]"
+                    style={{ color: colorScheme.white }}
+                  >
+                    The
+                  </span>
+                  <span
+                    className="leading-[0.9]"
+                    style={{ color: colorScheme.primary }}
+                  >
+                    Wisdom House
+                  </span>
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Center: Navigation - Smaller Text */}
+          <nav
+            className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            ref={dropdownRef}
+          >
+            <div className="flex items-center gap-0">
+              {extendedNavLinks.map(link => {
+                const isActive = isLinkActive(link.href);
+                const hasDropdown = !!link.dropdown;
+                const Icon = iconMap[link.icon as keyof typeof iconMap];
+
+                return (
+                  <div key={link.label} className="relative">
+                    <Link
+                      href={link.href}
+                      onClick={e => handleLinkClick(link.href, hasDropdown, e)}
+                      onMouseEnter={() =>
+                        hasDropdown && setActiveDropdown(link.label)
+                      }
+                      className={cn(
+                        'flex items-center gap-1 px-2 py-1.5 rounded-full text-[11px] font-medium transition-all duration-300 mx-0.5',
+                        'hover:bg-white/10'
+                      )}
+                      style={{
+                        backgroundColor: isActive
+                          ? colorScheme.primary + '20'
+                          : 'transparent',
+                        color: colorScheme.white,
+                      }}
+                    >
+                      {Icon && <Icon className="w-3 h-3" />}
+                      <span className="text-[11px]">{link.label}</span>
+                      {hasDropdown && (
+                        <ChevronDown
+                          className={cn(
+                            'w-2.5 h-2.5 transition-transform duration-300',
+                            activeDropdown === link.label && 'rotate-180'
+                          )}
+                        />
+                      )}
+                    </Link>
+
+                    {/* Dropdown - Primary background with black text on hover */}
+                    {hasDropdown && activeDropdown === link.label && (
+                      <div
+                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 rounded-2xl bg-background/95 backdrop-blur-xl border shadow-xl overflow-hidden"
+                        style={{
+                          backgroundColor: `${colorScheme.background}ee`,
+                          borderColor: colorScheme.primary + '40',
+                          borderWidth: '1px',
+                        }}
+                        onMouseLeave={() => setActiveDropdown(null)}
+                      >
+                        <div className="p-2">
+                          {link.dropdown?.map((item, index) => (
+                            <Link
+                              key={item.label}
+                              href={item.href}
+                              onClick={handleDropdownItemClick}
+                              className={cn(
+                                'block px-4 py-3 text-sm transition-all duration-300 rounded-xl hover:bg-primary hover:text-black',
+                                index === 0 && 'rounded-t-xl',
+                                index === (link.dropdown?.length || 0) - 1 &&
+                                  'rounded-b-xl'
+                              )}
+                              style={{
+                                color: colorScheme.white,
+                              }}
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </nav>
+
+          {/* Right: CTA + Mobile Menu - More Compact */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Desktop Join Us Button - Smaller */}
+            <Button
+              onClick={openCommunityModal}
+              className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all duration-300 hover:scale-105"
+              style={{
+                backgroundColor: colorScheme.primary,
+                color: colorScheme.black || '#000',
+              }}
+            >
+              <Church className="w-3 h-3" />
+              Join Us
+            </Button>
+
+            {/* Mobile Menu Trigger - Smaller */}
+            <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden rounded-full p-1 hover:bg-white/10 transition-colors"
+                  style={{ color: colorScheme.white }}
+                >
+                  <Menu className="h-3.5 w-3.5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="w-full max-w-sm p-0 border-0 overflow-y-auto"
                 style={{
-                  backgroundColor: isHeaderScrolled
-                    ? colorScheme.primary
-                    : colorScheme.white + '20',
-                  color: isHeaderScrolled
-                    ? colorScheme.textInverted
-                    : colorScheme.white,
-                  borderColor: isHeaderScrolled
-                    ? colorScheme.primary
-                    : colorScheme.white + '30',
-                  borderRadius: colorScheme.borderRadius.medium,
+                  backgroundColor: colorScheme.background,
                 }}
               >
-                <Church className="mr-2 h-4 w-4" />
-                Join Us
-              </Button>
-
-              {/* Mobile Menu Button */}
-              <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
-                <SheetTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn(
-                      'lg:hidden transition-colors ml-2',
-                      isHeaderScrolled
-                        ? 'hover:bg-yellow-400/20 h-10 w-10'
-                        : 'hover:bg-white/20 h-8 w-8'
-                    )}
-                    style={{
-                      color: isHeaderScrolled
-                        ? colorScheme.text
-                        : colorScheme.white,
-                      borderRadius: colorScheme.borderRadius.medium,
-                    }}
-                  >
-                    <Menu className="h-5 w-5" />
-                    <span className="sr-only">Toggle Menu</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent
-                  side="left"
-                  className="w-[320px] sm:w-[380px] p-0"
-                  style={{
-                    backgroundColor: colorScheme.background,
-                    borderColor: colorScheme.border,
-                  }}
-                >
-                  <MobileNavigation
-                    colorScheme={colorScheme}
-                    isLinkActive={isLinkActive}
-                    mobileOpenDropdown={mobileOpenDropdown}
-                    toggleMobileDropdown={toggleMobileDropdown}
-                    setSheetOpen={setSheetOpen}
-                    closeAllDropdowns={closeAllDropdowns}
-                    openCommunityModal={openCommunityModal}
-                    openQRDisplay={openQRDisplay}
-                  />
-                </SheetContent>
-              </Sheet>
-            </div>
+                <MobileNavigation
+                  colorScheme={colorScheme}
+                  isLinkActive={isLinkActive}
+                  mobileOpenDropdown={mobileOpenDropdown}
+                  toggleMobileDropdown={toggleMobileDropdown}
+                  setSheetOpen={setSheetOpen}
+                  openCommunityModal={openCommunityModal}
+                />
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
 
-      {/* Community Modal */}
       <JoinCommunityModal
         isOpen={isCommunityModalOpen}
         onClose={closeCommunityModal}
-        // colorScheme={colorScheme}
       />
-
-      {/* QR Display Modal */}
-      <QRDisplayModal
-        isOpen={isQRDisplayOpen}
-        onClose={closeQRDisplay}
-        // colorScheme={colorScheme}
-      />
+      <QRDisplayModal isOpen={isQRDisplayOpen} onClose={closeQRDisplay} />
     </>
   );
 }
 
-// Mobile Navigation Component
+// Enhanced Mobile Navigation with Better UX
 const MobileNavigation: React.FC<{
   colorScheme: any;
   isLinkActive: (href: string) => boolean;
   mobileOpenDropdown: string | null;
   toggleMobileDropdown: (label: string, e: React.MouseEvent) => void;
   setSheetOpen: (open: boolean) => void;
-  closeAllDropdowns: () => void;
   openCommunityModal: () => void;
-  openQRDisplay: () => void;
 }> = ({
   colorScheme,
   isLinkActive,
   mobileOpenDropdown,
   toggleMobileDropdown,
   setSheetOpen,
-  closeAllDropdowns,
   openCommunityModal,
-  openQRDisplay,
 }) => {
   return (
-    <div className="flex flex-col h-full">
-      {/* Mobile Logo */}
+    <div
+      className="flex flex-col h-full"
+      style={{
+        backgroundColor: colorScheme.background,
+      }}
+    >
+      {/* Enhanced Header with better spacing */}
       <div
-        className="p-6 border-b relative"
-        style={{ borderColor: colorScheme.border }}
+        className="flex items-center justify-between p-6 border-b"
+        style={{ borderColor: colorScheme.primary + '30' }}
       >
-        {/* Close Button */}
-        <button
-          onClick={() => setSheetOpen(false)}
-          className="absolute top-7 right-4 h-8 w-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-200"
-          style={{
-            backgroundColor: colorScheme.primary,
-            color: colorScheme.textInverted,
-          }}
-        >
-          <X className="h-4 w-4" />
-        </button>
-
         <Link
           href="/"
-          className="flex items-center space-x-4"
           onClick={() => setSheetOpen(false)}
+          className="flex items-center gap-3"
         >
-          {/* Rounded Logo Image */}
-          <div className="relative">
-            <Image
-              src={WisdomeHouseLogo}
-              alt="Wisdom House Logo"
-              className="h-10 w-10 rounded-full border-2"
-              width={30}
-              height={30}
-              style={{ borderColor: colorScheme.primary }}
-            />
-          </div>
-
-          {/* White Divider */}
-          <div
-            className="h-12 w-px"
-            style={{ backgroundColor: colorScheme.border }}
+          <Image
+            src={WisdomeHouseLogo}
+            alt="Logo"
+            width={40}
+            height={40}
+            className="rounded-full"
           />
-
-          {/* Stacked Text */}
-          <div className="flex flex-col">
+          {/* Enhanced Mobile Logo Text */}
+          <div className="flex items-center gap-3">
+            <div
+              className="h-6 w-px opacity-40"
+              style={{ backgroundColor: colorScheme.primary }}
+            />
             <span
-              className={`${bricolageGrotesque.className} font-bold text-xs leading-tight`}
-              style={{ color: colorScheme.text }}
+              className={`${bricolageGrotesque.className} text-base font-semibold flex flex-col`}
+              style={{ color: colorScheme.white }}
             >
-              The
-            </span>
-            <span
-              className={`${bricolageGrotesque.className} font-bold text-xs leading-tight`}
-              style={{ color: colorScheme.text }}
-            >
-              WisdomHouse
-            </span>
-            <span
-              className={`${bricolageGrotesque.className} font-bold text-xs leading-tight`}
-              style={{ color: colorScheme.primary }}
-            >
-              Church
+              <span className="leading-none">The</span>
+              <span
+                className="leading-none"
+                style={{ color: colorScheme.primary }}
+              >
+                Wisdom House
+              </span>
             </span>
           </div>
         </Link>
+        <button
+          onClick={() => setSheetOpen(false)}
+          className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+        >
+          <X className="w-5 h-5" style={{ color: colorScheme.white }} />
+        </button>
       </div>
 
-      {/* Mobile Navigation */}
-      <nav className="flex-1 p-4 sm:p-6 overflow-y-auto">
-        <div className="space-y-3">
-          {extendedNavLinks.map(link => {
-            const isActive = isLinkActive(link.href);
-            const hasDropdown = !!link.dropdown;
-            const IconComponent = iconMap[link.icon as keyof typeof iconMap];
-            const isMobileDropdownOpen = mobileOpenDropdown === link.label;
-            const isHome = link.label === 'Home';
+      {/* Enhanced Navigation Links with Better Spacing */}
+      <nav className="flex-1 px-4 py-6 space-y-2">
+        {extendedNavLinks.map(link => {
+          const isActive = isLinkActive(link.href);
+          const Icon = iconMap[link.icon as keyof typeof iconMap];
+          const isOpen = mobileOpenDropdown === link.label;
+          const hasDropdown = !!link.dropdown;
 
-            return (
-              <div key={link.label} className="space-y-2">
-                <div
-                  className="flex items-center justify-between rounded-xl border"
+          return (
+            <div key={link.label} className="space-y-1">
+              {/* Main Navigation Item */}
+              <div className="flex flex-col">
+                <button
+                  onClick={e => toggleMobileDropdown(link.label, e)}
+                  className={cn(
+                    'w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group',
+                    isActive ? 'bg-primary/20' : 'hover:bg-white/10'
+                  )}
                   style={{
-                    backgroundColor: colorScheme.surface,
-                    borderColor: colorScheme.border,
-                    borderRadius: colorScheme.borderRadius.large,
+                    color: colorScheme.white,
+                    border: isActive
+                      ? `1px solid ${colorScheme.primary}40`
+                      : '1px solid transparent',
                   }}
                 >
-                  <Link
-                    href={link.href}
-                    onClick={e => {
-                      if (hasDropdown) {
-                        toggleMobileDropdown(link.label, e);
-                      } else {
-                        setSheetOpen(false);
-                        closeAllDropdowns();
-                      }
-                    }}
-                    className={cn(
-                      `${worksans.className} flex items-center space-x-3 px-4 py-3 text-base font-medium transition-all duration-300 flex-1 rounded-xl`,
-                      isActive && 'font-semibold'
-                    )}
-                    style={{
-                      backgroundColor: isActive
-                        ? isHome
-                          ? colorScheme.primary
-                          : '#8bea19'
-                        : 'transparent',
-                      color: isActive
-                        ? colorScheme.textInverted
-                        : colorScheme.text,
-                      borderRadius: colorScheme.borderRadius.large,
-                    }}
-                  >
-                    <IconComponent className="h-5 w-5" />
-                    <span className="text-sm sm:text-base">{link.label}</span>
-                  </Link>
-
-                  {hasDropdown && (
-                    <button
-                      type="button"
-                      onClick={e => toggleMobileDropdown(link.label, e)}
-                      className="h-12 w-12 flex items-center justify-center transition-colors rounded-r-xl hover:bg-white/10"
-                      style={{
-                        color: colorScheme.text,
-                        borderRadius: colorScheme.borderRadius.large,
-                      }}
-                    >
-                      <ChevronDown
-                        className={cn(
-                          'h-5 w-5 transition-transform duration-300',
-                          isMobileDropdownOpen ? 'rotate-180' : ''
-                        )}
-                      />
-                    </button>
-                  )}
-                </div>
-
-                {/* Mobile Dropdown Items */}
-                {hasDropdown && isMobileDropdownOpen && link.dropdown && (
-                  <div
-                    className="ml-4 mt-2 space-y-2 rounded-lg p-3 border"
-                    style={{
-                      backgroundColor: colorScheme.surfaceVariant,
-                      borderColor: colorScheme.border,
-                      borderRadius: colorScheme.borderRadius.large,
-                    }}
-                  >
-                    {link.dropdown.map(dropdownItem => (
-                      <Link
-                        key={dropdownItem.label}
-                        href={dropdownItem.href}
-                        onClick={() => {
-                          setSheetOpen(false);
-                          closeAllDropdowns();
-                        }}
-                        className={`${worksans.className} flex items-center px-4 py-3 text-sm rounded-lg transition-all duration-200 group hover:bg-white/10`}
+                  <div className="flex items-center gap-3">
+                    {Icon && (
+                      <div
+                        className="p-2 rounded-xl transition-all duration-300 group-hover:scale-110"
                         style={{
-                          color: colorScheme.text,
-                          borderRadius: colorScheme.borderRadius.medium,
+                          backgroundColor: isActive
+                            ? colorScheme.primary + '30'
+                            : colorScheme.primary + '15',
                         }}
                       >
-                        <div
-                          className="w-2 h-2 rounded-full mr-3 opacity-70 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{
-                            backgroundColor: colorScheme.primary,
-                          }}
-                        ></div>
-                        <span className="font-medium text-sm sm:text-base">
-                          {dropdownItem.label}
-                        </span>
+                        <Icon
+                          className="w-4 h-4"
+                          style={{ color: colorScheme.primary }}
+                        />
+                      </div>
+                    )}
+                    <span
+                      className={`${worksans.className} font-semibold text-sm`}
+                    >
+                      {link.label}
+                    </span>
+                  </div>
+                  {hasDropdown && (
+                    <ChevronDown
+                      className={cn(
+                        'w-4 h-4 transition-transform duration-300 text-primary',
+                        isOpen && 'rotate-180'
+                      )}
+                    />
+                  )}
+                </button>
+
+                {/* Enhanced Dropdown with Primary background and Black text on hover */}
+                {hasDropdown && isOpen && link.dropdown && (
+                  <div
+                    className="mt-2 ml-4 space-y-1 rounded-2xl overflow-hidden"
+                    style={{
+                      backgroundColor: colorScheme.primary + '10',
+                      border: `1px solid ${colorScheme.primary}20`,
+                    }}
+                  >
+                    {link.dropdown.map((item, index) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setSheetOpen(false)}
+                        className={cn(
+                          'block px-4 py-3 text-sm transition-all duration-300 hover:bg-primary hover:text-black border-l-4',
+                          index === 0 && 'rounded-t-2xl',
+                          index === link.dropdown!.length - 1 && 'rounded-b-2xl'
+                        )}
+                        style={{
+                          color: colorScheme.body,
+                          borderLeftColor: colorScheme.primary,
+                          backgroundColor: 'transparent',
+                        }}
+                      >
+                        {item.label}
                       </Link>
                     ))}
                   </div>
                 )}
               </div>
-            );
-          })}
-        </div>
-
-        {/* QR Code Section */}
-        <div
-          className="mt-8 pt-6 border-t"
-          style={{ borderColor: colorScheme.border }}
-        >
-          <div className="grid grid-cols-2 gap-4 items-center">
-            {/* QR Code Display Trigger */}
-            <button
-              onClick={openQRDisplay}
-              className="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              style={{
-                // borderColor: colorScheme.primary,
-                backgroundColor: colorScheme.surface,
-              }}
-            >
-              <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center mb-2 shadow-inner">
-                <QrCode className="h-8 w-8 text-white" />
-              </div>
-              <span
-                className={`${worksans.className} text-xs sm:text-sm text-center font-medium`}
-                style={{ color: colorScheme.text }}
-              >
-                Show QR Code
-              </span>
-            </button>
-
-            {/* Text Column */}
-            <div className="flex flex-col justify-center">
-              <p
-                className={`${worksans.className} font-semibold text-sm sm:text-base leading-tight mb-2`}
-                style={{ color: colorScheme.primary }}
-              >
-                Join our Whatsapp Community
-              </p>
-              <p
-                className={`${worksans.className} text-xs text-white leading-tight`}
-              >
-                Get latest news and updates
-              </p>
             </div>
-          </div>
-        </div>
+          );
+        })}
       </nav>
 
-      {/* Mobile CTA Button */}
+      {/* Enhanced Mobile Footer CTA */}
       <div
-        className="p-4 sm:p-6 border-t"
-        style={{ borderColor: colorScheme.border }}
+        className="p-6 border-t"
+        style={{ borderColor: colorScheme.primary + '30' }}
       >
-        <Button
-          onClick={() => {
-            setSheetOpen(false);
-            openCommunityModal();
-          }}
-          className={`${worksans.className} w-full h-14 text-base sm:text-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center`}
-          style={{
-            backgroundColor: colorScheme.primary,
-            color: colorScheme.textInverted,
-            borderRadius: colorScheme.borderRadius.large,
-          }}
-        >
-          <Church className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-          Join Our Community
-        </Button>
+        <div className="space-y-3">
+          <div className="text-center">
+            <p
+              className={`${worksans.className} text-xs opacity-70 mb-2`}
+              style={{ color: colorScheme.white }}
+            >
+              Ready to join our community?
+            </p>
+          </div>
+          <Button
+            onClick={() => {
+              setSheetOpen(false);
+              openCommunityModal();
+            }}
+            className="w-full py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 text-sm shadow-lg"
+            style={{
+              backgroundColor: colorScheme.primary,
+              color: colorScheme.black || '#000',
+            }}
+          >
+            <Church className="w-4 h-4 mr-2" />
+            Join Community
+          </Button>
+        </div>
       </div>
     </div>
   );
