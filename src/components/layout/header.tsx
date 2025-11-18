@@ -256,6 +256,7 @@ export default function Header() {
 }
 
 // Enhanced Mobile Navigation with Better UX
+// Enhanced Mobile Navigation with Better UX
 const MobileNavigation: React.FC<{
   colorScheme: any;
   isLinkActive: (href: string) => boolean;
@@ -400,7 +401,7 @@ const MobileNavigation: React.FC<{
                           index === link.dropdown!.length - 1 && 'rounded-b-2xl'
                         )}
                         style={{
-                          color: colorScheme.body,
+                          color: colorScheme.white, // Changed from colorScheme.body to white
                           borderLeftColor: colorScheme.primary,
                           backgroundColor: 'transparent',
                         }}
