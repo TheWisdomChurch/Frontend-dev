@@ -163,9 +163,10 @@ const HeroSection = ({
       >
         <div className="w-full max-w-7xl mx-auto">
           <div className="text-center" style={{ color: colorScheme.text }}>
+            {/* Main Title - Reduced mobile size */}
             <H1
               ref={titleRef}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight tracking-tight"
+              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight"
             >
               {currentSlideData.title}
             </H1>
@@ -173,7 +174,7 @@ const HeroSection = ({
             {/* Primary Color Divider Line - Only show if subtitle exists */}
             {currentSlideData.subtitle && (
               <div
-                className="divider-line h-1 w-20 mx-auto mb-6 rounded-full transform origin-center"
+                className="divider-line h-0.5 xs:h-1 w-16 xs:w-20 mx-auto mb-4 sm:mb-6 rounded-full transform origin-center"
                 style={{ backgroundColor: colorScheme.primary }}
               ></div>
             )}
@@ -182,7 +183,7 @@ const HeroSection = ({
             {currentSlideData.subtitle && (
               <h2
                 ref={subtitleRef}
-                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-6 leading-tight"
+                className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-4 sm:mb-6 leading-tight"
                 style={{ color: colorScheme.primary }}
               >
                 {currentSlideData.subtitle}
@@ -193,7 +194,7 @@ const HeroSection = ({
             {currentSlideData.description && (
               <p
                 ref={descriptionRef}
-                className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto mb-8 leading-relaxed sm:leading-loose"
+                className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl max-w-xs xs:max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto mb-6 sm:mb-8 leading-relaxed sm:leading-loose"
               >
                 {currentSlideData.description}
               </p>
@@ -203,26 +204,26 @@ const HeroSection = ({
             {showButtons && (
               <div
                 ref={buttonsRef}
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+                className="flex flex-col sm:flex-row gap-2 xs:gap-3 sm:gap-4 justify-center items-center w-full xs:w-auto"
               >
-                {/* Primary Button */}
+                {/* Primary Button - Reduced mobile width */}
                 <Button
                   variant="primary"
                   size="lg"
                   elevated={true}
                   curvature="lg"
-                  className="w-full sm:w-auto"
+                  className="w-4/5 xs:w-full sm:w-auto text-sm xs:text-base px-4 xs:px-6 py-2 xs:py-3"
                   onClick={onPrimaryButtonClick}
                 >
                   {primaryButtonText}
                 </Button>
 
-                {/* Secondary Button */}
+                {/* Secondary Button - Reduced mobile width */}
                 <Button
                   variant="outline"
                   size="lg"
                   curvature="lg"
-                  className="w-full sm:w-auto"
+                  className="w-4/5 xs:w-full sm:w-auto text-sm xs:text-base px-4 xs:px-6 py-2 xs:py-3"
                   style={{
                     borderColor: colorScheme.primary,
                     color: colorScheme.white,
@@ -255,13 +256,13 @@ const HeroSection = ({
 
       {/* Slide Indicators - Only show for multi-slide mode */}
       {isMultiSlide && showSlideIndicators && (
-        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center space-y-2">
+        <div className="absolute right-4 xs:right-6 sm:right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center space-y-1 xs:space-y-2">
           {slides!.map((_, index) => (
             <button
               key={index}
               ref={el => addToIndicatorsRef(el, index)}
               onClick={() => goToSlide(index)}
-              className={`relative w-1 h-1 rounded-full overflow-hidden transition-all duration-500 ease-out hover:scale-110 ${
+              className={`relative w-1 h-1 xs:w-1 xs:h-1 rounded-full overflow-hidden transition-all duration-500 ease-out hover:scale-110 ${
                 index === currentSlide ? 'scale-125' : ''
               }`}
               style={{
@@ -293,7 +294,7 @@ const HeroSection = ({
           {/* Desktop Scroll Indicator */}
           <div
             ref={scrollIndicatorRef}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 hidden sm:block cursor-pointer group"
+            className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-30 hidden sm:block cursor-pointer group"
             onClick={scrollToNextSection}
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
@@ -312,16 +313,16 @@ const HeroSection = ({
 
           {/* Mobile Scroll Indicator */}
           <div
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30 sm:hidden cursor-pointer"
+            className="absolute bottom-3 xs:bottom-4 left-1/2 transform -translate-x-1/2 z-30 sm:hidden cursor-pointer"
             onClick={scrollToNextSection}
           >
             <div className="flex flex-col items-center animate-bounce">
               <ChevronDown
-                className="w-5 h-5"
+                className="w-4 h-4 xs:w-5 xs:h-5"
                 style={{ color: colorScheme.primary }}
               />
               <ChevronDown
-                className="w-5 h-5 -mt-[5px]"
+                className="w-4 h-4 xs:w-5 xs:h-5 -mt-[4px] xs:-mt-[5px]"
                 style={{ color: colorScheme.primary }}
               />
             </div>
