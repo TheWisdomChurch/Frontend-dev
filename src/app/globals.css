@@ -207,6 +207,76 @@ html.light body {
   background-color: #ffffff;
   color: #000000;
 }
+/* Add to your globals.css file */
+
+/* Professional Popup Responsive Widths */
+.popup-modal-container {
+  /* Mobile first */
+  max-width: min(95vw, 420px);
+  width: 100%;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .popup-modal-container {
+    max-width: min(90vw, 500px);
+  }
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+  .popup-modal-container {
+    max-width: min(85vw, 600px);
+  }
+}
+
+/* Extra large devices (large desktops, 1280px and up) */
+@media (min-width: 1280px) {
+  .popup-modal-container {
+    max-width: min(80vw, 700px);
+  }
+}
+
+/* Increase height for medium devices and above */
+/* Hero Section Height - Mobile first approach */
+.hero-section {
+  height: 100vh !important;
+}
+
+.hero-section img {
+  height: 100vh !important;
+}
+
+/* Increase height for medium devices and above */
+@media (min-width: 768px) {
+  .hero-section {
+    height: 110vh !important;
+  }
+
+  .hero-section img {
+    height: 110vh !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-section {
+    height: 120vh !important;
+  }
+
+  .hero-section img {
+    height: 120vh !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-section {
+    height: 130vh !important;
+  }
+
+  .hero-section img {
+    height: 130vh !important;
+  }
+}
 /* ===== COMPLETE NEXT.JS DEV INDICATOR REMOVAL ===== */
 .nextjs-toast,
 [data-nextjs-toast],

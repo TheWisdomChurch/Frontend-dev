@@ -34,23 +34,29 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // ✅ Add webpack configuration for better hot reload in Docker
+  // ✅ Webpack configuration
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
       config.watchOptions = {
-        poll: 1000, // Check for changes every second
-        aggregateTimeout: 300, // Delay before rebuilding
+        poll: 1000,
+        aggregateTimeout: 300,
       };
     }
-
-    // Important: return the modified config
     return config;
   },
 
-  // ✅ Additional development settings
+  // ✅ Comprehensive CSS handling
   experimental: {
-    // This can help with file watching in some environments
+    optimizeCss: false,
   },
+
+  // ✅ Production optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
+  // ✅ Reduce preloading for development
+  poweredByHeader: false,
 };
 
 export default nextConfig;

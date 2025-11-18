@@ -1,7 +1,7 @@
 // components/text/baseText.tsx
 'use client';
 
-import React, { forwardRef } from 'react'; // Import forwardRef
+import React, { forwardRef } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { bricolageGrotesque, worksans, playfair } from '../fonts/fonts';
 
@@ -91,7 +91,7 @@ const variantMap: Record<
 > = {
   'heading-xl': {
     fontSize: 'xxl',
-    weight: 'bold', // Changed from 'extrabold' to 'bold' for better responsiveness
+    weight: 'bold',
     fontFamily: 'bricolage',
   },
   'heading-lg': {

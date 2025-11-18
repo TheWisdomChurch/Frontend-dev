@@ -5,57 +5,94 @@ import React from 'react';
 import { BaseText, BaseTextProps } from './baseText';
 
 // Work Sans Weight Variants
-export const LightText: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="light" fontFamily="worksans" />
+export const LightText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="light" fontFamily="worksans" />
+  )
 );
+LightText.displayName = 'LightText';
 
-export const RegularText: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="regular" fontFamily="worksans" />
+export const RegularText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="regular" fontFamily="worksans" />
+  )
 );
+RegularText.displayName = 'RegularText';
 
-export const MediumText: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="medium" fontFamily="worksans" />
+export const MediumText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="medium" fontFamily="worksans" />
+  )
 );
+MediumText.displayName = 'MediumText';
 
-export const SemiBoldText: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="semibold" fontFamily="worksans" />
+export const SemiBoldText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="semibold" fontFamily="worksans" />
+  )
 );
+SemiBoldText.displayName = 'SemiBoldText';
 
 // Bricolage Weight Variants
-export const BricolageMedium: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="medium" fontFamily="bricolage" />
+export const BricolageMedium = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="medium" fontFamily="bricolage" />
+  )
 );
+BricolageMedium.displayName = 'BricolageMedium';
 
-export const BricolageSemiBold: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="semibold" fontFamily="bricolage" />
+export const BricolageSemiBold = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="semibold" fontFamily="bricolage" />
+  )
 );
+BricolageSemiBold.displayName = 'BricolageSemiBold';
 
-export const BricolageBold: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="bold" fontFamily="bricolage" />
+export const BricolageBold = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="bold" fontFamily="bricolage" />
+  )
 );
+BricolageBold.displayName = 'BricolageBold';
 
-export const BricolageExtraBold: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="extrabold" fontFamily="bricolage" />
+export const BricolageExtraBold = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="extrabold" fontFamily="bricolage" />
+  )
 );
+BricolageExtraBold.displayName = 'BricolageExtraBold';
 
 // Playfair Weight Variants
-export const PlayfairRegular: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="regular" fontFamily="playfair" />
+export const PlayfairRegular = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="regular" fontFamily="playfair" />
+  )
 );
+PlayfairRegular.displayName = 'PlayfairRegular';
 
-export const PlayfairBold: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="bold" fontFamily="playfair" />
+export const PlayfairBold = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="bold" fontFamily="playfair" />
+  )
 );
+PlayfairBold.displayName = 'PlayfairBold';
 
-export const PlayfairExtraBold: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} weight="extrabold" fontFamily="playfair" />
+export const PlayfairExtraBold = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="extrabold" fontFamily="playfair" />
+  )
 );
+PlayfairExtraBold.displayName = 'PlayfairExtraBold';
 
-export const PlayfairItalic: React.FC<BaseTextProps> = props => (
-  <BaseText
-    {...props}
-    weight="regular"
-    fontFamily="playfair"
-    style={{ fontStyle: 'italic' }}
-  />
+export const PlayfairItalic = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText
+      ref={ref}
+      {...props}
+      weight="regular"
+      fontFamily="playfair"
+      style={{ fontStyle: 'italic' }}
+    />
+  )
 );
+PlayfairItalic.displayName = 'PlayfairItalic';

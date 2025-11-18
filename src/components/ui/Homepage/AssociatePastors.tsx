@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import Image from 'next/image';
@@ -22,8 +21,15 @@ import {
 
 export default function AssociatePastors() {
   const { colorScheme } = useTheme();
-  const { sectionRef, contentRef, headingRef, handleSeeMore, addToRefs } =
-    useAssociatePastors();
+  const {
+    sectionRef,
+    contentRef,
+    headingRef,
+    descriptionRef,
+    handleSeeMore,
+    addToRefs,
+    addSectionHeaderRef,
+  } = useAssociatePastors();
 
   return (
     <Section
@@ -50,6 +56,7 @@ export default function AssociatePastors() {
             {associatePastorsContent.mainHeader}
           </H1>
           <LightText
+            ref={descriptionRef}
             className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-xl max-w-3xl mx-auto leading-relaxed mt-3 sm:mt-4 px-2"
             style={{ color: colorScheme.buttonText }}
           >
@@ -65,6 +72,7 @@ export default function AssociatePastors() {
             className="w-full mb-12 sm:mb-16 lg:mb-20 px-4 sm:px-0"
           >
             <H2
+              ref={addSectionHeaderRef}
               className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
               style={{
                 color: colorScheme.background,
@@ -82,7 +90,7 @@ export default function AssociatePastors() {
               }}
               className="w-full"
             >
-              {pastorsData.slice(0, 3).map((pastor, index) => (
+              {pastorsData.slice(0, 3).map(pastor => (
                 <div
                   key={`pastoral-${pastor.name}`}
                   ref={addToRefs}
@@ -90,7 +98,7 @@ export default function AssociatePastors() {
                 >
                   <div className="relative inline-block mb-4 sm:mb-6">
                     <div
-                      className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500"
+                      className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto transition-all duration-300"
                       style={{
                         borderColor: colorScheme.white,
                         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
@@ -101,7 +109,7 @@ export default function AssociatePastors() {
                         alt={pastor.name}
                         width={208}
                         height={208}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover transition-transform duration-300"
                       />
                     </div>
                     {/* Responsive badge */}
@@ -119,12 +127,6 @@ export default function AssociatePastors() {
                   <H3
                     className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 transition-colors duration-300 text-center px-2"
                     style={{ color: colorScheme.black }}
-                    onMouseEnter={(e: any) => {
-                      e.currentTarget.style.color = colorScheme.primary;
-                    }}
-                    onMouseLeave={(e: any) => {
-                      e.currentTarget.style.color = colorScheme.black;
-                    }}
                   >
                     {pastor.name}
                   </H3>
@@ -148,6 +150,7 @@ export default function AssociatePastors() {
             className="w-full mb-12 sm:mb-16 lg:mb-20 px-4 sm:px-0"
           >
             <H2
+              ref={addSectionHeaderRef}
               className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
               style={{
                 color: colorScheme.black,
@@ -165,7 +168,7 @@ export default function AssociatePastors() {
               }}
               className="w-full"
             >
-              {ministryLeadersData.slice(3, 6).map((pastor, index) => (
+              {ministryLeadersData.slice(3, 6).map(pastor => (
                 <div
                   key={`ministry-${pastor.name}`}
                   ref={addToRefs}
@@ -173,7 +176,7 @@ export default function AssociatePastors() {
                 >
                   <div className="relative inline-block mb-4 sm:mb-6">
                     <div
-                      className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto group-hover:shadow-2xl transition-all duration-500"
+                      className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto transition-all duration-300"
                       style={{
                         borderColor: colorScheme.white,
                         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
@@ -184,7 +187,7 @@ export default function AssociatePastors() {
                         alt={pastor.name}
                         width={208}
                         height={208}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover transition-transform duration-300"
                       />
                     </div>
                     {/* Responsive badge */}
@@ -202,12 +205,6 @@ export default function AssociatePastors() {
                   <H3
                     className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 transition-colors duration-300 text-center px-2"
                     style={{ color: colorScheme.black }}
-                    onMouseEnter={(e: any) => {
-                      e.currentTarget.style.color = colorScheme.primary;
-                    }}
-                    onMouseLeave={(e: any) => {
-                      e.currentTarget.style.color = colorScheme.black;
-                    }}
                   >
                     {pastor.name}
                   </H3>

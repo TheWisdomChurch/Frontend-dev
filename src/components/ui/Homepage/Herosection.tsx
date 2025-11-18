@@ -95,8 +95,7 @@ const HeroSection = ({
   return (
     <section
       ref={heroRef}
-      className="relative w-full overflow-hidden"
-      style={{ height: isMultiSlide ? '120vh' : '100vh' }}
+      className="relative w-full overflow-hidden hero-section"
     >
       {/* Background Images */}
       {isMultiSlide ? (
@@ -105,13 +104,13 @@ const HeroSection = ({
           <div
             key={index}
             ref={el => addToSlidesRef(el, index)}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out hero-section ${
               index === currentSlide
                 ? 'opacity-100 z-10'
                 : 'opacity-0 pointer-events-none z-0'
             }`}
           >
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full hero-section">
               <img
                 src={slide.image.src}
                 alt={slide.image.alt || slide.title}
@@ -123,11 +122,8 @@ const HeroSection = ({
                   lg:object-center
                   xl:object-center
                   scale-100
+                  hero-section
                 "
-                style={{
-                  maxHeight: '120vh',
-                  objectPosition: 'center center',
-                }}
               />
               {/* Enhanced Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80" />
@@ -137,8 +133,8 @@ const HeroSection = ({
         ))
       ) : (
         // Single slide mode
-        <div className="absolute inset-0">
-          <div className="relative w-full h-full">
+        <div className="absolute inset-0 hero-section">
+          <div className="relative w-full h-full hero-section">
             <img
               src={backgroundImage}
               alt={title}
@@ -150,11 +146,8 @@ const HeroSection = ({
                 lg:object-center
                 xl:object-center
                 scale-100
+                hero-section
               "
-              style={{
-                maxHeight: '100vh',
-                objectPosition: 'center center',
-              }}
             />
             {/* Enhanced Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80" />
@@ -166,7 +159,7 @@ const HeroSection = ({
       {/* Content - Centered in the container */}
       <div
         ref={contentRef}
-        className="relative z-20 h-full flex items-center justify-center px-4"
+        className="relative z-20 h-full flex items-center justify-center px-4 hero-section"
       >
         <div className="w-full max-w-7xl mx-auto">
           <div className="text-center" style={{ color: colorScheme.text }}>

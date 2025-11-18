@@ -5,6 +5,14 @@ import {
   worksans,
   playfair,
 } from '@/components/fonts/fonts';
+import { ThemeProvider } from '@/components/contexts/ThemeContext';
+import { HeaderProvider } from '@/components/providers/NavProviders';
+import ReduxProvider from '@/components/providers/ReduxProvider';
+import ErrorBoundary from '@/components/layout/ErrorBoundary';
+import ClientHeader from '@/components/layout/ClientHeader';
+import ClientFooter from '@/components/layout/ClientFooter';
+import ClientScrollToTop from '@/components/layout/ClientscrollTop';
+import ScrollHandler from '@/components/layout/ClientScrollHandler';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -14,7 +22,23 @@ export const metadata: Metadata = {
 
 // Client wrapper component that contains all client-side providers
 function ClientLayout({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col min-h-screen">{children}</div>;
+  return (
+    <ReduxProvider>
+      <ThemeProvider>
+        <HeaderProvider>
+          <ErrorBoundary>
+            <ScrollHandler />
+            <ClientHeader />
+            <main className="flex-1 flex flex-col min-h-screen">
+              {children}
+            </main>
+            <ClientFooter />
+            <ClientScrollToTop />
+          </ErrorBoundary>
+        </HeaderProvider>
+      </ThemeProvider>
+    </ReduxProvider>
+  );
 }
 
 export default function RootLayout({

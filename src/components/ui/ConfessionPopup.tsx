@@ -33,12 +33,10 @@ export default function ProfessionalPopup({
   useEffect(() => {
     setMounted(true);
 
-    // Use localStorage with a timestamp to show modal once per day
     const hasSeenPopup = localStorage.getItem('hasSeenPopup');
     const lastSeenDate = localStorage.getItem('popupLastSeen');
     const today = new Date().toDateString();
 
-    // Show modal only if never seen before or last seen was not today
     if (!hasSeenPopup || lastSeenDate !== today) {
       const showTimer = setTimeout(() => {
         setIsVisible(true);
@@ -52,7 +50,6 @@ export default function ProfessionalPopup({
     if (isVisible && modalRef.current) {
       document.body.style.overflow = 'hidden';
 
-      // Professional entrance animation
       const tl = gsap.timeline();
       tl.fromTo(
         modalRef.current,
@@ -112,7 +109,6 @@ export default function ProfessionalPopup({
         ease: 'power2.in',
         onComplete: () => {
           setIsVisible(false);
-          // Mark as seen for today
           localStorage.setItem('hasSeenPopup', 'true');
           localStorage.setItem('popupLastSeen', new Date().toDateString());
           setTimeout(() => {
@@ -130,7 +126,6 @@ export default function ProfessionalPopup({
     }
   };
 
-  // FIXED: Allow backdrop click to close modal
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       handleClose();
@@ -149,7 +144,7 @@ export default function ProfessionalPopup({
 
   return createPortal(
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500 ${
+      className={`fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-3 md:p-4 lg:p-6 transition-all duration-500 ${
         isVisible
           ? 'opacity-100 pointer-events-auto'
           : 'opacity-0 pointer-events-none'
@@ -161,10 +156,10 @@ export default function ProfessionalPopup({
       }}
       onClick={handleBackdropClick}
     >
-      {/* Professional Modal Container - Properly Sized */}
+      {/* Wider Responsive Modal Container - Using CSS classes for responsive width */}
       <div
         ref={modalRef}
-        className="relative rounded-xl w-full mx-auto overflow-hidden"
+        className="relative rounded-xl w-full mx-auto overflow-hidden popup-modal-container"
         style={{
           backgroundColor: colorScheme.black,
           border: `1px solid ${colorScheme.primary}30`,
@@ -172,9 +167,7 @@ export default function ProfessionalPopup({
             0 25px 50px -12px rgba(0, 0, 0, 0.5),
             0 0 0 1px rgba(247, 222, 18, 0.1)
           `,
-          maxHeight: '85vh',
-          maxWidth: 'min(90vw, 500px)',
-          width: '100%',
+          maxHeight: '90vh',
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -192,16 +185,14 @@ export default function ProfessionalPopup({
           />
         </div>
 
-        {/* Professional Close Button - Top Right - OVERLAPPING POSITION */}
+        {/* Responsive Close Button */}
         <div className="relative w-full">
-          <div className="absolute -top-3 -right-3 z-50">
-            {' '}
-            {/* ✅ Moves it outside the container */}
+          <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 md:-top-4 md:-right-4 z-50">
             <Button
               variant="ghost"
               size="icon"
               onClick={handleClose}
-              className="z-[100] rounded-full p-3 transform hover:scale-110 transition-all duration-200 shadow-lg"
+              className="z-[100] rounded-full p-2 sm:p-3 md:p-4 transform hover:scale-110 transition-all duration-200 shadow-lg"
               curvature="full"
               style={{
                 backgroundColor: 'rgba(0, 0, 0, 0.9)',
@@ -211,7 +202,7 @@ export default function ProfessionalPopup({
               }}
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -227,17 +218,17 @@ export default function ProfessionalPopup({
           </div>
         </div>
 
-        {/* Content Area */}
+        {/* Content Area with increased padding for wider screens */}
         <div
           ref={contentRef}
-          className="p-6 transition-all duration-300 h-full overflow-y-auto"
+          className="p-4 sm:p-5 md:p-6 lg:p-8 transition-all duration-300 h-full overflow-y-auto"
         >
           {/* Step 1: Welcome (First Step) */}
           {currentStep === 'welcome' && (
             <div className="text-center h-full flex flex-col">
-              <div className="flex-shrink-0 mb-6 mt-10">
+              <div className="flex-shrink-0 mb-4 sm:mb-6 md:mb-8 mt-6 sm:mt-10 md:mt-12">
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border overflow-hidden"
+                  className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-5 border overflow-hidden"
                   style={{
                     backgroundColor: 'rgba(247, 222, 18, 0.1)',
                     borderColor: colorScheme.primary,
@@ -248,13 +239,13 @@ export default function ProfessionalPopup({
                     alt="The Wisdom House Church Logo"
                     width={40}
                     height={40}
-                    className="w-10 h-10 object-contain"
+                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 object-contain"
                   />
                 </div>
 
                 <H2
                   as="h2"
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-3 tracking-tight leading-tight"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-2 sm:mb-3 md:mb-4 tracking-tight leading-tight"
                   style={{ color: colorScheme.white }}
                 >
                   Welcome to{' '}
@@ -273,17 +264,17 @@ export default function ProfessionalPopup({
                 </H2>
 
                 <div
-                  className="w-16 h-0.5 mx-auto rounded-full mb-4"
+                  className="w-12 sm:w-16 md:w-20 lg:w-24 h-0.5 mx-auto rounded-full mb-3 sm:mb-4 md:mb-5"
                   style={{
                     background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
                   }}
                 />
               </div>
 
-              <div className="flex-1 overflow-y-auto mb-6">
+              <div className="flex-1 overflow-y-auto mb-4 sm:mb-6 md:mb-8">
                 <BricolageText
                   as="p"
-                  className="text-lg sm:text-xl md:text-2xl leading-relaxed max-w-md mx-auto mb-6 font-light opacity-90 text-center"
+                  className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-md md:max-w-lg mx-auto mb-4 sm:mb-6 md:mb-8 font-light opacity-90 text-center px-2"
                   style={{ color: colorScheme.white }}
                   weight="light"
                 >
@@ -304,32 +295,38 @@ export default function ProfessionalPopup({
                   .
                 </BricolageText>
 
-                {/* Compact Mini Boxes with Lucide Icons */}
-                <div className="flex justify-center gap-3 mb-6">
+                {/* Wider Mini Boxes with Lucide Icons */}
+                <div className="flex justify-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 px-2">
                   {[
                     {
-                      icon: <Church className="w-4 h-4 text-black" />,
+                      icon: (
+                        <Church className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-black" />
+                      ),
                       title: 'Worship',
                     },
                     {
-                      icon: <Hand className="w-4 h-4 text-black" />,
+                      icon: (
+                        <Hand className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-black" />
+                      ),
                       title: 'Pray',
                     },
                     {
-                      icon: <TrendingUp className="w-4 h-4 text-black" />,
+                      icon: (
+                        <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-black" />
+                      ),
                       title: 'Grow',
                     },
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="text-center p-3 rounded-lg border transition-all duration-300 hover:scale-105 flex-1 min-w-0 max-w-24"
+                      className="text-center p-2 sm:p-3 md:p-4 rounded-lg border transition-all duration-300 hover:scale-105 flex-1 min-w-0 max-w-20 sm:max-w-24 md:max-w-28 lg:max-w-32"
                       style={{
                         backgroundColor: 'rgba(255, 255, 255, 0.05)',
                         borderColor: 'rgba(247, 222, 18, 0.3)',
                       }}
                     >
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-2 border"
+                        className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2 md:mb-3 border"
                         style={{
                           background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                           borderColor: colorScheme.white,
@@ -339,7 +336,7 @@ export default function ProfessionalPopup({
                       </div>
                       <BricolageText
                         as="h3"
-                        className="font-bold text-xs truncate"
+                        className="font-bold text-xs sm:text-sm md:text-base truncate"
                         weight="semibold"
                         style={{ color: colorScheme.white }}
                       >
@@ -350,13 +347,13 @@ export default function ProfessionalPopup({
                 </div>
               </div>
 
-              {/* Navigation - Two buttons side by side */}
-              <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 justify-center items-center">
+              {/* Navigation - Wider buttons for desktop */}
+              <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2">
                 <Button
                   variant="outline"
-                  size="md"
+                  size="sm"
                   onClick={showConfession}
-                  className="font-bold transition-all duration-300 transform hover:scale-105 border w-full sm:w-auto"
+                  className="font-bold transition-all duration-300 transform hover:scale-105 border w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
                   curvature="xl"
                   style={{
                     borderColor: colorScheme.primary,
@@ -369,9 +366,9 @@ export default function ProfessionalPopup({
 
                 <Button
                   variant="primary"
-                  size="md"
+                  size="sm"
                   onClick={handleClose}
-                  className="font-bold transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+                  className="font-bold transition-all duration-300 transform hover:scale-105 w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
                   curvature="xl"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
@@ -382,9 +379,9 @@ export default function ProfessionalPopup({
                 </Button>
               </div>
 
-              <H2
+              <BricolageText
                 as="p"
-                className="text-lg sm:text-xl md:text-2xl leading-relaxed max-w-md mx-auto pt-10 mb-6 font-light opacity-90 text-center"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-md md:max-w-lg mx-auto pt-4 sm:pt-6 md:pt-8 mb-4 sm:mb-6 md:mb-8 font-light opacity-90 text-center px-2"
                 style={{ color: colorScheme.white }}
                 weight="light"
               >
@@ -402,7 +399,7 @@ export default function ProfessionalPopup({
                 >
                   with us today.
                 </BaseText>
-              </H2>
+              </BricolageText>
             </div>
           )}
 
@@ -410,25 +407,25 @@ export default function ProfessionalPopup({
           {currentStep === 'confession' && (
             <div className="text-center h-full flex flex-col">
               {/* Header */}
-              <div className="flex-shrink-0 mb-6">
+              <div className="flex-shrink-0 mb-4 sm:mb-6 md:mb-8">
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border"
+                  className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-5 border"
                   style={{
                     backgroundColor: 'rgba(247, 222, 18, 0.1)',
                     borderColor: colorScheme.primary,
                   }}
                 >
                   <span
-                    className="text-2xl"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl"
                     style={{ color: colorScheme.primary }}
                   >
                     📖
                   </span>
                 </div>
 
-                <H2
+                <BricolageText
                   as="p"
-                  className="text-lg sm:text-xl md:text-2xl leading-relaxed max-w-md mx-auto pt-10 mb-6 font-light opacity-90 text-center"
+                  className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-md md:max-w-lg mx-auto pt-4 sm:pt-6 md:pt-8 mb-4 sm:mb-6 md:mb-8 font-light opacity-90 text-center px-2"
                   style={{ color: colorScheme.white }}
                   weight="light"
                 >
@@ -446,22 +443,22 @@ export default function ProfessionalPopup({
                   >
                     Confession
                   </BaseText>
-                </H2>
+                </BricolageText>
 
                 <div
-                  className="w-16 h-0.5 mx-auto rounded-full mb-4"
+                  className="w-12 sm:w-16 md:w-20 lg:w-24 h-0.5 mx-auto rounded-full mb-3 sm:mb-4 md:mb-5"
                   style={{
                     background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
                   }}
                 />
               </div>
 
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto mb-6">
-                <div className="max-w-md mx-auto">
+              {/* Content - Wider for desktop */}
+              <div className="flex-1 overflow-y-auto mb-4 sm:mb-6 md:mb-8 px-2">
+                <div className="max-w-md md:max-w-lg lg:max-w-xl mx-auto">
                   <PlayfairText
                     as="p"
-                    className="text-lg leading-relaxed mb-6 italic text-center"
+                    className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed mb-4 sm:mb-6 md:mb-8 italic text-center"
                     style={{ color: colorScheme.white }}
                     weight="light"
                   >
@@ -483,7 +480,7 @@ export default function ProfessionalPopup({
                   </PlayfairText>
 
                   <div
-                    className="rounded-lg p-4 border max-h-56 overflow-y-auto"
+                    className="rounded-lg p-3 sm:p-4 md:p-6 border max-h-40 sm:max-h-56 md:max-h-64 overflow-y-auto"
                     style={{
                       backgroundColor: 'rgba(255, 255, 255, 0.05)',
                       borderColor: 'rgba(247, 222, 18, 0.3)',
@@ -491,14 +488,17 @@ export default function ProfessionalPopup({
                   >
                     <PlayfairText
                       as="div"
-                      className="leading-relaxed space-y-3 text-justify text-sm"
+                      className="leading-relaxed space-y-2 sm:space-y-3 md:space-y-4 text-justify text-xs sm:text-sm md:text-base"
                       style={{ color: colorScheme.white }}
                       weight="regular"
                     >
                       {confessionContent
                         .split('\n\n')
                         .map((paragraph, index) => (
-                          <P key={index} className="mb-3 last:mb-0 opacity-90">
+                          <P
+                            key={index}
+                            className="mb-2 sm:mb-3 md:mb-4 last:mb-0 opacity-90"
+                          >
                             {paragraph}
                           </P>
                         ))}
@@ -507,15 +507,15 @@ export default function ProfessionalPopup({
                 </div>
               </div>
 
-              {/* Navigation - Back to Welcome and Explore Site */}
-              <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 justify-center items-center">
+              {/* Navigation - Wider buttons for desktop */}
+              <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2">
                 <Button
                   variant="outline"
-                  size="md"
+                  size="sm"
                   onClick={showWelcome}
                   leftIcon={
                     <svg
-                      className="w-4 h-4 mr-2"
+                      className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1 sm:mr-2"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -528,7 +528,7 @@ export default function ProfessionalPopup({
                       />
                     </svg>
                   }
-                  className="font-bold transition-all duration-300 transform hover:scale-105 border w-full sm:w-auto"
+                  className="font-bold transition-all duration-300 transform hover:scale-105 border w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
                   curvature="xl"
                   style={{
                     borderColor: colorScheme.primary,
@@ -541,9 +541,9 @@ export default function ProfessionalPopup({
 
                 <Button
                   variant="primary"
-                  size="md"
+                  size="sm"
                   onClick={handleClose}
-                  className="font-bold transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+                  className="font-bold transition-all duration-300 transform hover:scale-105 w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
                   curvature="xl"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,

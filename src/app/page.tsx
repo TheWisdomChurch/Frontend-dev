@@ -11,9 +11,8 @@ import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
 import MobileDebug from '@/components/utils/mobileDebug';
 import { slides } from '@/lib/data';
-import ClientRoot from './Clientroot';
 
-function HomeContent() {
+export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -75,13 +74,5 @@ function HomeContent() {
         )}
       </main>
     </div>
-  );
-}
-
-export default function Home() {
-  return (
-    <ClientRoot>
-      <HomeContent />
-    </ClientRoot>
   );
 }
