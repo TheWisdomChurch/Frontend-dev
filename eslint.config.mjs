@@ -58,8 +58,8 @@ export default [
       'postcss.config.mjs',
       'tailwind.config.js',
       'eslint.config.mjs',
-      'next-env.d.ts',              // ✅ CRITICAL LINE — FIXES THE ERROR
-      '.next/types/**',             // optional extra safety
+      'next-env.d.ts', // ✅ CRITICAL LINE — FIXES THE ERROR
+      '.next/types/**', // optional extra safety
     ],
   },
 ];
