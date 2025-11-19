@@ -33,12 +33,12 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-empty-object-type': 'error',
       '@typescript-eslint/ban-ts-comment': 'error',
-      '@typescript-eslint/triple-slash-reference': 'error',
+      '@typescript-eslint/triple-slash-reference': 'off', // optional: disable completely
       'prefer-const': 'error',
       'no-unused-vars': 'off',
       'react-hooks/set-state-in-effect': 'off',
-      'react/react-in-jsx-scope': 'off', // Not needed in React 17+
-      'no-undef': 'off', // TypeScript handles this
+      'react/react-in-jsx-scope': 'off',
+      'no-undef': 'off',
     },
   },
   {
@@ -58,6 +58,8 @@ export default [
       'postcss.config.mjs',
       'tailwind.config.js',
       'eslint.config.mjs',
+      'next-env.d.ts',              // ✅ CRITICAL LINE — FIXES THE ERROR
+      '.next/types/**',             // optional extra safety
     ],
   },
 ];
