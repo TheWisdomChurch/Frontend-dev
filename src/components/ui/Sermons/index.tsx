@@ -37,7 +37,7 @@ const SeriesCard = ({
   // Determine if we're in dark mode based on background color
   const isDarkMode = colorScheme.background === '#000000';
 
-  // Theme-based styles - FIXED: Dark mode = light card with dark text, Light mode = dark card with white text
+  // Theme-based styles - FIXED: Light mode = dark card with white text, Dark mode = light card with dark text
   const cardBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
   const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
   const secondaryTextColor = isDarkMode
@@ -106,7 +106,7 @@ const SeriesCard = ({
               backgroundColor: isDarkMode
                 ? colorScheme.opacity.primary10
                 : colorScheme.opacity.primary20,
-              color: isDarkMode ? colorScheme.primaryDark : colorScheme.primary,
+              color: colorScheme.primary, // Always use primary color for better visibility
             }}
           >
             {group.uniqueSeries.length} series
@@ -155,7 +155,7 @@ const SeriesCard = ({
                 <div className="flex items-center">
                   <div
                     className="w-1 h-1 rounded-full mr-2"
-                    style={{ backgroundColor: borderColor }}
+                    style={{ backgroundColor: colorScheme.primary }}
                   ></div>
                   <LightText
                     className="text-xs md:text-sm"
@@ -196,7 +196,7 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
   // Determine if we're in dark mode based on background color
   const isDarkMode = colorScheme.background === '#000000';
 
-  // Theme-based styles - FIXED: Dark mode = light card with dark text, Light mode = dark card with white text
+  // Theme-based styles - FIXED: Light mode = dark card with white text, Dark mode = light card with dark text
   const cardBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
   const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
   const secondaryTextColor = isDarkMode
@@ -278,7 +278,7 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
               backgroundColor: isDarkMode
                 ? colorScheme.opacity.primary10
                 : colorScheme.opacity.primary20,
-              color: isDarkMode ? colorScheme.primaryDark : colorScheme.primary,
+              color: colorScheme.primary, // Always use primary color for better visibility
             }}
           >
             {video.series}
@@ -972,9 +972,9 @@ const SermonUtil = () => {
               onChange={e => handleSeriesFilterChange(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               style={{
-                backgroundColor: inputBackground,
+                backgroundColor: colorScheme.white, // Always white background for dropdowns
                 borderColor: inputBorderColor,
-                color: textColor,
+                color: colorScheme.black, // Always black text for dropdowns
               }}
             >
               {seriesOptions.map((series: string) => (
@@ -996,9 +996,9 @@ const SermonUtil = () => {
               onChange={e => handlePreacherChange(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               style={{
-                backgroundColor: inputBackground,
+                backgroundColor: colorScheme.white, // Always white background for dropdowns
                 borderColor: inputBorderColor,
-                color: textColor,
+                color: colorScheme.black, // Always black text for dropdowns
               }}
             >
               {preacherOptions.map((preacher: string) => (
@@ -1024,9 +1024,9 @@ const SermonUtil = () => {
               }
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               style={{
-                backgroundColor: inputBackground,
+                backgroundColor: colorScheme.white, // Always white background for dropdowns
                 borderColor: inputBorderColor,
-                color: textColor,
+                color: colorScheme.black, // Always black text for dropdowns
               }}
             >
               <option value="newest">Newest First</option>

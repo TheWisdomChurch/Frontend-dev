@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect, useState } from 'react'; // Added useState
+// import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
@@ -22,14 +23,27 @@ import { Youtube } from 'lucide-react';
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { colorScheme } = useTheme();
-  const [isClient, setIsClient] = useState(false); // Added client check
+  const [isClient, setIsClient] = useState(false);
 
-  // Set client state on mount
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles using colorScheme
+  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.black;
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const cardBackground = isDarkMode ? colorScheme.black : colorScheme.white;
+  const cardTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Only dispatch on client side
   useEffect(() => {
     if (isClient) {
       dispatch(fetchSermons());
@@ -40,7 +54,6 @@ const SermonPage = () => {
     window.open('https://www.youtube.com/@wisdomhousehq', '_blank');
   };
 
-  // Show loading state during SSR
   if (!isClient) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -60,14 +73,13 @@ const SermonPage = () => {
         showScrollIndicator={true}
       />
 
-      {/* Use the unified SermonUtil component */}
       <SermonUtil />
 
       {/* Ways to Listen Section */}
       <Section
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: colorScheme.white }}
+        style={{ backgroundColor: sectionBackground }}
       >
         <Container size="xl">
           <FlexboxLayout
@@ -79,7 +91,7 @@ const SermonPage = () => {
           >
             <H2
               className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center mb-8"
-              style={{ color: colorScheme.black }}
+              style={{ color: textColor }}
             >
               Watch & Listen Anywhere
             </H2>
@@ -87,11 +99,7 @@ const SermonPage = () => {
             <GridboxLayout
               columns={1}
               gap="lg"
-              responsive={{
-                sm: 1,
-                md: 1,
-                lg: 1,
-              }}
+              responsive={{ sm: 1, md: 1, lg: 1 }}
               className="max-w-4xl mx-auto"
             >
               {[
@@ -111,8 +119,8 @@ const SermonPage = () => {
                   key={index}
                   className="rounded-2xl p-6 sm:p-8 shadow-2xl hover:shadow-2xl transition-all duration-300 border max-w-md mx-auto"
                   style={{
-                    backgroundColor: colorScheme.black,
-                    borderColor: colorScheme.border,
+                    backgroundColor: cardBackground,
+                    borderColor: borderColor,
                   }}
                 >
                   <FlexboxLayout
@@ -130,14 +138,14 @@ const SermonPage = () => {
                       fontFamily="bricolage"
                       weight="bold"
                       className="text-xl sm:text-2xl mb-3"
-                      style={{ color: colorScheme.white }}
+                      style={{ color: cardTextColor }}
                     >
                       {option.platform}
                     </BaseText>
 
                     <LightText
                       className="mb-6 text-sm sm:text-base"
-                      style={{ color: colorScheme.textSecondary }}
+                      style={{ color: secondaryTextColor }}
                     >
                       {option.description}
                     </LightText>
