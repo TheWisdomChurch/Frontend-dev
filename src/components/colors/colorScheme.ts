@@ -40,10 +40,12 @@ interface OpacityColors {
   white50: string;
   error10: string;
   error20: string;
-  success10: string; // ← ADDED: Success opacity color
-  success20: string; // ← ADDED: Success opacity color
-  info10: string; // ← ADDED: Info opacity color
-  info20: string; // ← ADDED: Info opacity color
+  success10: string;
+  success20: string;
+  info10: string;
+  info20: string;
+  secondary10?: string; // ← ADDED: Secondary opacity color
+  secondary20?: string; // ← ADDED: Secondary opacity color
 }
 
 export interface ColorScheme {
@@ -149,7 +151,8 @@ const createOpacityColors = (
   warning: string,
   error: string,
   success: string,
-  info: string
+  info: string,
+  secondary?: string // ← ADDED: Secondary color parameter
 ): OpacityColors => ({
   primary10: `${primary}1A`,
   primary20: `${primary}33`,
@@ -165,10 +168,12 @@ const createOpacityColors = (
   warning20: `${warning}33`,
   error10: `${error}1A`,
   error20: `${error}33`,
-  success10: `${success}1A`, // ← ADDED: Success opacity
-  success20: `${success}33`, // ← ADDED: Success opacity
-  info10: `${info}1A`, // ← ADDED: Info opacity
-  info20: `${info}33`, // ← ADDED: Info opacity
+  success10: `${success}1A`,
+  success20: `${success}33`,
+  info10: `${info}1A`,
+  info20: `${info}33`,
+  secondary10: secondary ? `${secondary}1A` : undefined, // ← ADDED: Secondary opacity
+  secondary20: secondary ? `${secondary}33` : undefined, // ← ADDED: Secondary opacity
 });
 
 export const darkShades: ColorScheme = {
@@ -236,7 +241,8 @@ export const darkShades: ColorScheme = {
     '#F59E0B',
     '#EF4444',
     '#10B981',
-    '#3B82F6'
+    '#3B82F6',
+    '#1F2937' // ← ADDED: Secondary color for dark mode
   ),
 
   overlay: 'rgba(0, 0, 0, 0.8)',
@@ -314,7 +320,8 @@ export const lightShades: ColorScheme = {
     '#F59E0B',
     '#EF4444',
     '#10B981',
-    '#3B82F6'
+    '#3B82F6',
+    '#FFFFFF' // ← ADDED: Secondary color for light mode
   ),
 
   overlay: 'rgba(0, 0, 0, 0.8)',

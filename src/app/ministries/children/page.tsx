@@ -1,3 +1,5 @@
+'use client';
+
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, BaseText, LightText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
