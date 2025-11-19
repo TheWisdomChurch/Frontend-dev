@@ -333,7 +333,10 @@ const AboutUsPage = () => {
         style={{ backgroundColor: colorScheme.text }}
       >
         <Container size="xl" className="text-center px-6 lg:px-8">
-          <H1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-8">
+          <H1
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-8"
+            style={{ color: colorScheme.black }}
+          >
             Join Our Family
           </H1>
           <LightText className="text-xl lg:text-2xl text-white/90 mb-12 max-w-3xl mx-auto">
