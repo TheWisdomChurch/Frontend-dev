@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useState, useEffect } from 'react'; // Added useEffect
+import { useState, useEffect } from 'react';
 import { H2, BaseText, LightText, H1 } from '@/components/text';
 import YouTubePlayer from './YoutubePlayer';
 import Image from 'next/image';
@@ -33,13 +33,27 @@ const SeriesCard = ({
   onClick,
 }: SeriesCardProps) => {
   const { colorScheme } = useTheme();
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles - FIXED: Dark mode = light card with dark text, Light mode = dark card with white text
+  const cardBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.primary
+    : colorScheme.primary + '40';
+
   return (
     <div
       className="series-card group hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border rounded-2xl p-4 sm:p-6 flex-shrink-0 w-[280px] sm:w-auto"
       onClick={onClick}
       style={{
-        backgroundColor: colorScheme.black,
-        borderColor: colorScheme.primary,
+        backgroundColor: cardBackground,
+        borderColor: borderColor,
       }}
     >
       <div className="flex items-start justify-between mb-3 sm:mb-4">
@@ -70,14 +84,14 @@ const SeriesCard = ({
 
       <BaseText
         className="text-base md:text-lg lg:text-xl font-semibold md:font-bold mb-2 group-hover:text-primary transition-colors leading-tight line-clamp-2"
-        style={{ color: colorScheme.black }}
+        style={{ color: textColor }}
       >
         {group.name}
       </BaseText>
 
       <LightText
         className="text-xs md:text-sm mb-2 sm:mb-3 leading-relaxed line-clamp-2"
-        style={{ color: colorScheme.textSecondary }}
+        style={{ color: secondaryTextColor }}
       >
         {'description' in group
           ? group.description
@@ -89,8 +103,10 @@ const SeriesCard = ({
           <span
             className="px-2 py-1 rounded-full text-xs md:text-sm font-medium"
             style={{
-              backgroundColor: colorScheme.primary + '10',
-              color: colorScheme.primaryDark,
+              backgroundColor: isDarkMode
+                ? colorScheme.opacity.primary10
+                : colorScheme.opacity.primary20,
+              color: isDarkMode ? colorScheme.primaryDark : colorScheme.primary,
             }}
           >
             {group.uniqueSeries.length} series
@@ -100,7 +116,7 @@ const SeriesCard = ({
 
       <LightText
         className="text-sm md:text-base mb-3 sm:mb-4"
-        style={{ color: colorScheme.textSecondary }}
+        style={{ color: secondaryTextColor }}
       >
         {group.count} {group.count === 1 ? 'message' : 'messages'}
       </LightText>
@@ -111,7 +127,7 @@ const SeriesCard = ({
           <div className="mt-2">
             <LightText
               className="text-xs md:text-sm font-medium mb-1"
-              style={{ color: colorScheme.textSecondary }}
+              style={{ color: secondaryTextColor }}
             >
               Includes:
             </LightText>
@@ -129,7 +145,7 @@ const SeriesCard = ({
                     ></div>
                     <LightText
                       className="text-xs md:text-sm truncate"
-                      style={{ color: colorScheme.textSecondary }}
+                      style={{ color: secondaryTextColor }}
                     >
                       {seriesName}
                     </LightText>
@@ -139,11 +155,11 @@ const SeriesCard = ({
                 <div className="flex items-center">
                   <div
                     className="w-1 h-1 rounded-full mr-2"
-                    style={{ backgroundColor: colorScheme.border }}
+                    style={{ backgroundColor: borderColor }}
                   ></div>
                   <LightText
                     className="text-xs md:text-sm"
-                    style={{ color: colorScheme.textSecondary }}
+                    style={{ color: secondaryTextColor }}
                   >
                     +{group.uniqueSeries.length - 2} more
                   </LightText>
@@ -155,7 +171,7 @@ const SeriesCard = ({
 
       <div
         className="flex items-center justify-between pt-3 border-t mt-2"
-        style={{ borderColor: colorScheme.border }}
+        style={{ borderColor: borderColor }}
       >
         <BaseText
           className="font-semibold md:font-bold text-sm md:text-base group-hover:text-primaryDark transition-colors"
@@ -176,6 +192,22 @@ const SeriesCard = ({
 
 const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
   const { colorScheme } = useTheme();
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles - FIXED: Dark mode = light card with dark text, Light mode = dark card with white text
+  const cardBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
+  const modalTextColor = isDarkMode ? colorScheme.black : colorScheme.white;
+
   const [showPlayer, setShowPlayer] = useState(false);
 
   const formatDate = (dateString: string): string => {
@@ -194,8 +226,8 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
     <div
       className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border overflow-hidden"
       style={{
-        backgroundColor: colorScheme.black,
-        borderColor: colorScheme.border,
+        backgroundColor: cardBackground,
+        borderColor: borderColor,
       }}
     >
       <div
@@ -243,8 +275,10 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
           <span
             className="text-xs px-2 py-1 rounded font-medium"
             style={{
-              backgroundColor: colorScheme.primary + '10',
-              color: colorScheme.primaryDark,
+              backgroundColor: isDarkMode
+                ? colorScheme.opacity.primary10
+                : colorScheme.opacity.primary20,
+              color: isDarkMode ? colorScheme.primaryDark : colorScheme.primary,
             }}
           >
             {video.series}
@@ -252,8 +286,10 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
           <span
             className="text-xs px-2 py-1 rounded font-medium"
             style={{
-              backgroundColor: colorScheme.surface,
-              color: colorScheme.textSecondary,
+              backgroundColor: isDarkMode
+                ? colorScheme.surface
+                : colorScheme.black,
+              color: secondaryTextColor,
             }}
           >
             {video.preacher}
@@ -262,14 +298,14 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
 
         <H1
           className="text-lg md:text-xl lg:text-2xl font-bold mb-3 line-clamp-2 leading-tight"
-          style={{ color: colorScheme.primaryDark }}
+          style={{ color: textColor }}
         >
           {video.title}
         </H1>
 
         <LightText
           className="text-sm md:text-base mb-4 line-clamp-2 leading-relaxed"
-          style={{ color: colorScheme.white }}
+          style={{ color: secondaryTextColor }}
         >
           {video.description}
         </LightText>
@@ -278,7 +314,7 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
           justify="between"
           align="center"
           className="text-sm md:text-base"
-          style={{ color: colorScheme.textSecondary }}
+          style={{ color: secondaryTextColor }}
         >
           <span>{formatDate(video.publishedAt)}</span>
           <span>{video.duration}</span>
@@ -290,8 +326,8 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
           <div
             className="rounded-2xl max-w-6xl w-full h-[90vh] overflow-hidden shadow-2xl border flex flex-col"
             style={{
-              backgroundColor: colorScheme.white,
-              borderColor: colorScheme.border,
+              backgroundColor: modalBackground,
+              borderColor: borderColor,
             }}
           >
             <FlexboxLayout
@@ -299,13 +335,13 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
               align="center"
               className="p-4 border-b flex-shrink-0"
               style={{
-                borderColor: colorScheme.border,
-                backgroundColor: colorScheme.white,
+                borderColor: borderColor,
+                backgroundColor: modalBackground,
               }}
             >
               <BaseText
                 className="text-lg md:text-xl font-semibold pr-4 line-clamp-1"
-                style={{ color: colorScheme.black }}
+                style={{ color: modalTextColor }}
               >
                 {video.title}
               </BaseText>
@@ -313,8 +349,20 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
                 onClick={() => setShowPlayer(false)}
                 className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
                 style={{
-                  color: colorScheme.textSecondary,
-                  backgroundColor: 'transparent',
+                  color: modalTextColor,
+                  backgroundColor: isDarkMode
+                    ? colorScheme.opacity.black10
+                    : colorScheme.opacity.white10,
+                }}
+                onMouseEnter={(e: any) => {
+                  e.currentTarget.style.backgroundColor = isDarkMode
+                    ? colorScheme.opacity.black20
+                    : colorScheme.opacity.white20;
+                }}
+                onMouseLeave={(e: any) => {
+                  e.currentTarget.style.backgroundColor = isDarkMode
+                    ? colorScheme.opacity.black10
+                    : colorScheme.opacity.white10;
                 }}
               >
                 <span className="text-2xl leading-none">×</span>
@@ -332,18 +380,18 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
 
             <div
               className="p-4 border-t flex-shrink-0"
-              style={{ borderColor: colorScheme.border }}
+              style={{ borderColor: borderColor }}
             >
               <FlexboxLayout direction="column" gap="sm">
                 <BaseText
                   className="text-base font-semibold"
-                  style={{ color: colorScheme.black }}
+                  style={{ color: modalTextColor }}
                 >
                   {video.series} • {video.preacher}
                 </BaseText>
                 <LightText
                   className="text-sm"
-                  style={{ color: colorScheme.textSecondary }}
+                  style={{ color: secondaryTextColor }}
                 >
                   Published on {formatDate(video.publishedAt)} •{' '}
                   {formatViewCount(video.viewCount)} views
@@ -360,6 +408,21 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
 // New Component: FeaturedSection
 const FeaturedSection = () => {
   const { colorScheme } = useTheme();
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles - FIXED: Always white background with black text
+  const sectionBackground = colorScheme.white; // Always white
+  const textColor = colorScheme.black; // Always black for "Latest from WisdomHouse"
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const cardBackground = colorScheme.white; // Always white for content card
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+
   const {
     videos,
     currentVideo,
@@ -375,7 +438,7 @@ const FeaturedSection = () => {
       background="dark"
       padding="lg"
       fullHeight={false}
-      style={{ backgroundColor: colorScheme.white }}
+      style={{ backgroundColor: sectionBackground }}
     >
       <Container size="xl">
         <FlexboxLayout
@@ -387,7 +450,7 @@ const FeaturedSection = () => {
         >
           <H2
             className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold md:font-extrabold mb-8 md:mb-12"
-            style={{ color: colorScheme.black }}
+            style={{ color: textColor }}
           >
             Latest from WisdomHouse
           </H2>
@@ -395,8 +458,8 @@ const FeaturedSection = () => {
           <div
             className="rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg border w-full max-w-7xl mx-auto"
             style={{
-              backgroundColor: colorScheme.white,
-              borderColor: colorScheme.white,
+              backgroundColor: cardBackground,
+              borderColor: borderColor,
             }}
           >
             {/* Main Content Layout */}
@@ -436,7 +499,7 @@ const FeaturedSection = () => {
                   <div className="mb-3">
                     <BaseText
                       className="font-semibold md:font-bold text-sm md:text-base uppercase tracking-wide"
-                      style={{ color: colorScheme.black }}
+                      style={{ color: textColor }}
                     >
                       {currentVideo === videos[0]
                         ? 'Latest Upload'
@@ -446,7 +509,7 @@ const FeaturedSection = () => {
 
                   <BaseText
                     className="text-xl md:text-2xl lg:text-3xl font-bold md:font-extrabold mb-4 leading-tight"
-                    style={{ color: colorScheme.black }}
+                    style={{ color: textColor }}
                   >
                     {currentVideo?.title || 'New Content Coming Soon'}
                   </BaseText>
@@ -462,7 +525,9 @@ const FeaturedSection = () => {
                         <span
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
-                            backgroundColor: colorScheme.primary + '10',
+                            backgroundColor: isDarkMode
+                              ? colorScheme.opacity.primary10
+                              : colorScheme.opacity.primary20,
                             color: colorScheme.primary,
                           }}
                         >
@@ -471,7 +536,9 @@ const FeaturedSection = () => {
                         <span
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
-                            backgroundColor: colorScheme.black,
+                            backgroundColor: isDarkMode
+                              ? colorScheme.black
+                              : colorScheme.surface,
                             color: colorScheme.primary,
                           }}
                         >
@@ -480,7 +547,9 @@ const FeaturedSection = () => {
                         <span
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
-                            backgroundColor: colorScheme.primary + '10',
+                            backgroundColor: isDarkMode
+                              ? colorScheme.opacity.primary10
+                              : colorScheme.opacity.primary20,
                             color: colorScheme.primary,
                           }}
                         >
@@ -493,7 +562,7 @@ const FeaturedSection = () => {
                       <div className="mb-6">
                         <LightText
                           className="text-sm md:text-base leading-relaxed"
-                          style={{ color: colorScheme.black }}
+                          style={{ color: secondaryTextColor }}
                         >
                           {currentVideo.description ||
                             'Watch our latest content from WisdomHouse.'}
@@ -535,7 +604,7 @@ const FeaturedSection = () => {
                   <div className="mb-3">
                     <BaseText
                       className="font-semibold md:font-bold text-sm md:text-base uppercase tracking-wide"
-                      style={{ color: colorScheme.black }}
+                      style={{ color: textColor }}
                     >
                       {currentVideo === videos[0]
                         ? 'Latest Upload'
@@ -545,7 +614,7 @@ const FeaturedSection = () => {
 
                   <BaseText
                     className="text-xl md:text-2xl font-bold md:font-extrabold mb-4 leading-tight line-clamp-3"
-                    style={{ color: colorScheme.black }}
+                    style={{ color: textColor }}
                   >
                     {currentVideo?.title || 'New Content Coming Soon'}
                   </BaseText>
@@ -561,7 +630,9 @@ const FeaturedSection = () => {
                         <span
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
-                            backgroundColor: colorScheme.primary + '10',
+                            backgroundColor: isDarkMode
+                              ? colorScheme.opacity.primary10
+                              : colorScheme.opacity.primary20,
                             color: colorScheme.primary,
                           }}
                         >
@@ -570,7 +641,9 @@ const FeaturedSection = () => {
                         <span
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
-                            backgroundColor: colorScheme.black,
+                            backgroundColor: isDarkMode
+                              ? colorScheme.black
+                              : colorScheme.surface,
                             color: colorScheme.primary,
                           }}
                         >
@@ -579,7 +652,9 @@ const FeaturedSection = () => {
                         <span
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
-                            backgroundColor: colorScheme.primary + '10',
+                            backgroundColor: isDarkMode
+                              ? colorScheme.opacity.primary10
+                              : colorScheme.opacity.primary20,
                             color: colorScheme.primary,
                           }}
                         >
@@ -592,7 +667,7 @@ const FeaturedSection = () => {
                       <div className="mb-4">
                         <LightText
                           className="text-sm md:text-base leading-relaxed max-h-24 overflow-y-auto pr-2"
-                          style={{ color: colorScheme.black }}
+                          style={{ color: secondaryTextColor }}
                         >
                           {currentVideo.description ||
                             'Watch our latest content from WisdomHouse.'}
@@ -634,15 +709,17 @@ const FeaturedSection = () => {
                     >
                       <BaseText
                         className="text-lg md:text-xl font-semibold md:font-bold"
-                        style={{ color: colorScheme.primaryDark }}
+                        style={{ color: textColor }}
                       >
                         Recent Uploads
                       </BaseText>
                       <span
                         className="text-xs md:text-sm px-3 py-1 rounded font-medium"
                         style={{
-                          backgroundColor: colorScheme.black,
-                          color: colorScheme.textSecondary,
+                          backgroundColor: isDarkMode
+                            ? colorScheme.black
+                            : colorScheme.surface,
+                          color: secondaryTextColor,
                         }}
                       >
                         {recentVideos.length} videos
@@ -661,12 +738,14 @@ const FeaturedSection = () => {
                           style={{
                             backgroundColor:
                               currentVideo?.id === video.id
-                                ? colorScheme.primary + '10'
-                                : colorScheme.surface,
+                                ? isDarkMode
+                                  ? colorScheme.opacity.primary10
+                                  : colorScheme.opacity.primary20
+                                : cardBackground,
                             borderColor:
                               currentVideo?.id === video.id
                                 ? colorScheme.primary + '30'
-                                : colorScheme.border,
+                                : borderColor,
                           }}
                           onClick={() => handleVideoSelect(video)}
                         >
@@ -675,7 +754,7 @@ const FeaturedSection = () => {
                               src={video.thumbnail}
                               alt={video.title}
                               className="w-16 h-12 rounded object-cover border"
-                              style={{ borderColor: colorScheme.border }}
+                              style={{ borderColor: borderColor }}
                             />
                             <div
                               className={`absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center transition-opacity ${
@@ -702,26 +781,26 @@ const FeaturedSection = () => {
                           <div className="flex-1 min-w-0">
                             <BaseText
                               className="text-sm font-medium md:font-semibold truncate leading-tight"
-                              style={{ color: colorScheme.black }}
+                              style={{ color: textColor }}
                             >
                               {video.title}
                             </BaseText>
                             <div className="flex items-center gap-2 mt-1">
                               <LightText
                                 className="text-xs truncate"
-                                style={{ color: colorScheme.textSecondary }}
+                                style={{ color: secondaryTextColor }}
                               >
                                 {video.series}
                               </LightText>
                               <span
                                 className="text-xs"
-                                style={{ color: colorScheme.border }}
+                                style={{ color: borderColor }}
                               >
                                 •
                               </span>
                               <LightText
                                 className="text-xs"
-                                style={{ color: colorScheme.textSecondary }}
+                                style={{ color: secondaryTextColor }}
                               >
                                 {new Date(
                                   video.publishedAt
@@ -733,7 +812,9 @@ const FeaturedSection = () => {
                             <span
                               className="px-2 py-1 rounded text-xs font-medium flex-shrink-0"
                               style={{
-                                backgroundColor: colorScheme.error + '10',
+                                backgroundColor: isDarkMode
+                                  ? colorScheme.opacity.error10
+                                  : colorScheme.opacity.error20,
                                 color: colorScheme.error,
                               }}
                             >
@@ -781,7 +862,26 @@ const FeaturedSection = () => {
 
 const SermonUtil = () => {
   const { colorScheme } = useTheme();
-  const [isClient, setIsClient] = useState(false); // Added client check
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles - FIXED: Series section follows card logic
+  const sectionBackground = isDarkMode ? colorScheme.black : colorScheme.white;
+  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const cardBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const inputBorderColor = isDarkMode
+    ? colorScheme.borderLight
+    : colorScheme.border;
+
+  const [isClient, setIsClient] = useState(false);
 
   // Add useEffect to set client state
   useEffect(() => {
@@ -835,15 +935,15 @@ const SermonUtil = () => {
       <div
         className="rounded-2xl p-6 border"
         style={{
-          backgroundColor: colorScheme.black,
-          borderColor: colorScheme.border,
+          backgroundColor: cardBackground,
+          borderColor: borderColor,
         }}
       >
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
           <div>
             <label
               className="block text-sm md:text-base font-medium mb-2"
-              style={{ color: colorScheme.primary }}
+              style={{ color: textColor }}
             >
               Search Messages
             </label>
@@ -854,16 +954,16 @@ const SermonUtil = () => {
               placeholder="Search by title, description, series, or preacher..."
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-gray-400"
               style={{
-                backgroundColor: colorScheme.white,
-                borderColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: inputBackground,
+                borderColor: inputBorderColor,
+                color: textColor,
               }}
             />
           </div>
           <div>
             <label
               className="block text-sm md:text-base font-medium mb-2"
-              style={{ color: colorScheme.primary }}
+              style={{ color: textColor }}
             >
               Series
             </label>
@@ -872,9 +972,9 @@ const SermonUtil = () => {
               onChange={e => handleSeriesFilterChange(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               style={{
-                backgroundColor: colorScheme.white,
-                borderColor: colorScheme.border,
-                color: colorScheme.black,
+                backgroundColor: inputBackground,
+                borderColor: inputBorderColor,
+                color: textColor,
               }}
             >
               {seriesOptions.map((series: string) => (
@@ -887,7 +987,7 @@ const SermonUtil = () => {
           <div>
             <label
               className="block text-sm md:text-base font-medium mb-2"
-              style={{ color: colorScheme.primary }}
+              style={{ color: textColor }}
             >
               Preacher
             </label>
@@ -896,9 +996,9 @@ const SermonUtil = () => {
               onChange={e => handlePreacherChange(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               style={{
-                backgroundColor: colorScheme.white,
-                borderColor: colorScheme.border,
-                color: colorScheme.black,
+                backgroundColor: inputBackground,
+                borderColor: inputBorderColor,
+                color: textColor,
               }}
             >
               {preacherOptions.map((preacher: string) => (
@@ -911,7 +1011,7 @@ const SermonUtil = () => {
           <div>
             <label
               className="block text-sm md:text-base font-medium mb-2"
-              style={{ color: colorScheme.primary }}
+              style={{ color: textColor }}
             >
               Sort By
             </label>
@@ -924,9 +1024,9 @@ const SermonUtil = () => {
               }
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               style={{
-                backgroundColor: colorScheme.white,
-                borderColor: colorScheme.border,
-                color: colorScheme.black,
+                backgroundColor: inputBackground,
+                borderColor: inputBorderColor,
+                color: textColor,
               }}
             >
               <option value="newest">Newest First</option>
@@ -937,7 +1037,7 @@ const SermonUtil = () => {
           <div className="text-center lg:text-right">
             <LightText
               className="text-sm md:text-base"
-              style={{ color: colorScheme.textSecondary }}
+              style={{ color: secondaryTextColor }}
             >
               Showing{' '}
               <BaseText
@@ -984,7 +1084,7 @@ const SermonUtil = () => {
       <div className="text-center mt-2">
         <LightText
           className="text-sm md:text-base"
-          style={{ color: colorScheme.black }}
+          style={{ color: textColor }}
         >
           ← Scroll horizontally →
         </LightText>
@@ -1026,7 +1126,7 @@ const SermonUtil = () => {
         <div className="text-center mt-2">
           <LightText
             className="text-sm md:text-base"
-            style={{ color: colorScheme.black }}
+            style={{ color: textColor }}
           >
             ← Scroll horizontally →
           </LightText>
@@ -1057,7 +1157,7 @@ const SermonUtil = () => {
       <Section
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: colorScheme.black }}
+        style={{ backgroundColor: sectionBackground }}
       >
         <Container size="xl">
           {!videos.length ? (
@@ -1071,11 +1171,11 @@ const SermonUtil = () => {
               <div className="animate-pulse">
                 <div
                   className="h-8 rounded w-1/4 mx-auto mb-4"
-                  style={{ backgroundColor: colorScheme.black }}
+                  style={{ backgroundColor: sectionBackground }}
                 ></div>
                 <div
                   className="h-4 rounded w-1/2 mx-auto mb-12"
-                  style={{ backgroundColor: colorScheme.surface }}
+                  style={{ backgroundColor: cardBackground }}
                 ></div>
               </div>
               <GridboxLayout
@@ -1088,7 +1188,7 @@ const SermonUtil = () => {
                   <div
                     key={i}
                     className="rounded-2xl h-64 animate-pulse"
-                    style={{ backgroundColor: colorScheme.surface }}
+                    style={{ backgroundColor: cardBackground }}
                   ></div>
                 ))}
               </GridboxLayout>
@@ -1102,7 +1202,7 @@ const SermonUtil = () => {
               >
                 <BaseText
                   className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold md:font-extrabold text-center"
-                  style={{ color: colorScheme.white }}
+                  style={{ color: textColor }}
                 >
                   Featured Categories
                 </BaseText>
@@ -1118,7 +1218,7 @@ const SermonUtil = () => {
                 >
                   <BaseText
                     className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold md:font-extrabold text-center"
-                    style={{ color: colorScheme.black }}
+                    style={{ color: textColor }}
                   >
                     More Sermons
                   </BaseText>
@@ -1138,7 +1238,7 @@ const SermonUtil = () => {
                     <div className="text-center mt-2">
                       <LightText
                         className="text-sm md:text-base"
-                        style={{ color: colorScheme.textSecondary }}
+                        style={{ color: secondaryTextColor }}
                       >
                         ← Scroll horizontally →
                       </LightText>
@@ -1208,7 +1308,7 @@ const SermonUtil = () => {
             >
               <LightText
                 className="text-base md:text-lg lg:text-xl mb-3 sm:mb-4"
-                style={{ color: colorScheme.textSecondary }}
+                style={{ color: secondaryTextColor }}
               >
                 No sermons found matching your criteria.
               </LightText>

@@ -38,6 +38,8 @@ interface OpacityColors {
   white10: string;
   white20: string;
   white50: string;
+  error10: string; // ← ADDED: Missing error opacity color
+  error20: string; // ← ADDED: For consistency
 }
 
 export interface ColorScheme {
@@ -142,7 +144,8 @@ const createOpacityColors = (
   primary: string,
   black: string,
   white: string,
-  warning: string
+  warning: string,
+  error: string // ← ADDED: Error color parameter
 ): OpacityColors => ({
   primary10: `${primary}1A`,
   primary20: `${primary}33`,
@@ -156,6 +159,8 @@ const createOpacityColors = (
   white50: `${white}80`,
   warning10: `${warning}1A`,
   warning20: `${warning}33`,
+  error10: `${error}1A`, // ← ADDED: Error opacity colors
+  error20: `${error}33`,
 });
 
 export const darkShades: ColorScheme = {
@@ -216,7 +221,13 @@ export const darkShades: ColorScheme = {
   black: '#000000',
   highlight: '#F7DE12',
 
-  opacity: createOpacityColors('#F7DE12', '#000000', '#FFFFFF', '#F59E0B'),
+  opacity: createOpacityColors(
+    '#F7DE12',
+    '#000000',
+    '#FFFFFF',
+    '#F59E0B',
+    '#EF4444'
+  ), // ← UPDATED: Added error color
 
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
@@ -288,7 +299,13 @@ export const lightShades: ColorScheme = {
   black: '#000000',
   highlight: '#F7DE12',
 
-  opacity: createOpacityColors('#F7DE12', '#000000', '#FFFFFF', '#F59E0B'),
+  opacity: createOpacityColors(
+    '#F7DE12',
+    '#000000',
+    '#FFFFFF',
+    '#F59E0B',
+    '#EF4444'
+  ), // ← UPDATED: Added error color
 
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
