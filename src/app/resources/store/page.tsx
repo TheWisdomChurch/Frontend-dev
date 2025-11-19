@@ -25,11 +25,32 @@ import {
 } from '@/components/layout';
 import CartSidebar from '@/components/ui/Store/CartSidebar';
 import { Product } from '@/lib/types';
+import { useTheme } from '@/components/contexts/ThemeContext';
 
 const StorePage = () => {
   const dispatch = useAppDispatch();
   const { filteredProducts, filters } = useAppSelector(state => state.products);
   const { itemCount } = useAppSelector(state => state.cart);
+  const { colorScheme } = useTheme();
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.black;
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const cardBackground = isDarkMode ? colorScheme.black : colorScheme.white;
+  const cardTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const inputBorderColor = isDarkMode
+    ? colorScheme.borderLight
+    : colorScheme.border;
 
   const [showSearchAlert, setShowSearchAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -223,7 +244,11 @@ const StorePage = () => {
       </button>
 
       {/* Search and Filter Section */}
-      <Section background="light" padding="lg" fullHeight={false}>
+      <Section
+        padding="lg"
+        fullHeight={false}
+        style={{ backgroundColor: sectionBackground }}
+      >
         <Container size="xl">
           <FlexboxLayout direction="column" gap="lg" className="w-full">
             <FlexboxLayout
@@ -243,7 +268,12 @@ const StorePage = () => {
                     placeholder="Search for products (polo, mug, cap, book, etc.)..."
                     value={filters.searchTerm}
                     onChange={e => handleSearch(e.target.value)}
-                    className="w-full pl-12 pr-12 py-4 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 bg-gray-50 hover:bg-white"
+                    className="w-full pl-12 pr-12 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300"
+                    style={{
+                      backgroundColor: inputBackground,
+                      borderColor: inputBorderColor,
+                      color: textColor,
+                    }}
                   />
                   {filters.searchTerm && (
                     <button
@@ -258,11 +288,16 @@ const StorePage = () => {
 
               {/* Category Filter */}
               <FlexboxLayout align="center" gap="sm">
-                <Filter className="w-5 h-5 text-gray-600" />
+                <Filter className="w-5 h-5" style={{ color: textColor }} />
                 <select
                   value={filters.selectedCategory}
                   onChange={e => handleCategoryClick(e.target.value)}
-                  className="px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 bg-gray-50 hover:bg-white"
+                  className="px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300"
+                  style={{
+                    backgroundColor: colorScheme.white, // Always white for dropdowns
+                    borderColor: inputBorderColor,
+                    color: colorScheme.black, // Always black for dropdown text
+                  }}
                 >
                   {categories.map(category => (
                     <option key={category.value} value={category.value}>
@@ -275,8 +310,21 @@ const StorePage = () => {
 
             {/* Search Alert */}
             {showSearchAlert && (
-              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-2xl animate-pulse">
-                <LightText className="text-yellow-800 text-sm font-medium">
+              <div
+                className="mt-4 p-4 border rounded-2xl animate-pulse"
+                style={{
+                  backgroundColor: isDarkMode
+                    ? colorScheme.opacity.warning10
+                    : colorScheme.opacity.warning20,
+                  borderColor: isDarkMode
+                    ? colorScheme.opacity.warning20
+                    : colorScheme.opacity.warning10,
+                }}
+              >
+                <LightText
+                  className="text-sm font-medium"
+                  style={{ color: colorScheme.warning }}
+                >
                   {alertMessage}
                 </LightText>
               </div>
@@ -287,10 +335,13 @@ const StorePage = () => {
 
       {/* Categories Navigation */}
       <Section
-        background="custom"
         padding="lg"
         fullHeight={false}
-        customBackground="#f9fafb"
+        style={{
+          backgroundColor: isDarkMode
+            ? colorScheme.surface
+            : colorScheme.backgroundSecondary,
+        }}
       >
         <Container size="xl">
           <FlexboxLayout justify="center" className="w-full">
@@ -303,8 +354,18 @@ const StorePage = () => {
                     className={`category-card px-6 py-4 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 ${
                       filters.selectedCategory === category.value
                         ? 'bg-yellow-400 text-gray-900 shadow-lg'
-                        : 'bg-white text-gray-700 hover:bg-yellow-50 shadow-md'
+                        : 'shadow-md'
                     }`}
+                    style={{
+                      backgroundColor:
+                        filters.selectedCategory === category.value
+                          ? colorScheme.primary
+                          : cardBackground,
+                      color:
+                        filters.selectedCategory === category.value
+                          ? colorScheme.black
+                          : cardTextColor,
+                    }}
                   >
                     {category.name} ({category.count})
                   </button>
@@ -316,20 +377,30 @@ const StorePage = () => {
       </Section>
 
       {/* Products Grid */}
-      <Section background="light" padding="lg" fullHeight={false}>
+      <Section
+        padding="lg"
+        fullHeight={false}
+        style={{ backgroundColor: sectionBackground }}
+      >
         <Container size="xl">
           <FlexboxLayout
             direction="column"
             gap="lg"
             className="text-center mb-12"
           >
-            <H2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+            <H2
+              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
+              style={{ color: textColor }}
+            >
               {filters.selectedCategory === 'all'
                 ? 'All Products'
                 : categories.find(c => c.value === filters.selectedCategory)
                     ?.name}
             </H2>
-            <LightText className="text-xl">
+            <LightText
+              className="text-xl"
+              style={{ color: secondaryTextColor }}
+            >
               {filteredProducts.length} product
               {filteredProducts.length !== 1 ? 's' : ''} found
             </LightText>
@@ -344,15 +415,22 @@ const StorePage = () => {
                 gap="md"
                 className="py-16 text-center"
               >
-                <ShoppingBag className="w-24 h-24 text-gray-300" />
+                <ShoppingBag
+                  className="w-24 h-24"
+                  style={{ color: secondaryTextColor }}
+                />
                 <BaseText
                   fontFamily="bricolage"
                   weight="bold"
-                  className="text-2xl text-gray-600"
+                  className="text-2xl"
+                  style={{ color: textColor }}
                 >
                   No products found
                 </BaseText>
-                <LightText className="text-gray-500 mb-8">
+                <LightText
+                  className="mb-8"
+                  style={{ color: secondaryTextColor }}
+                >
                   Try adjusting your search terms or browse different categories
                 </LightText>
                 <Button
@@ -365,6 +443,17 @@ const StorePage = () => {
                   curvature="full"
                   elevated={true}
                   className="transition-all duration-300 transform hover:scale-105"
+                  style={{
+                    backgroundColor: colorScheme.primary,
+                    color: colorScheme.black,
+                  }}
+                  onMouseEnter={(e: any) => {
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.primaryDark;
+                  }}
+                  onMouseLeave={(e: any) => {
+                    e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  }}
                 >
                   View All Products
                 </Button>
@@ -382,7 +471,11 @@ const StorePage = () => {
                 {filteredProducts.map(product => (
                   <div
                     key={product.id}
-                    className="product-card bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 group"
+                    className="product-card rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 group"
+                    style={{
+                      backgroundColor: cardBackground,
+                      borderColor: borderColor,
+                    }}
                   >
                     {/* Product Image */}
                     <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
@@ -393,6 +486,18 @@ const StorePage = () => {
                           curvature="full"
                           className="w-full transition-all duration-300 transform hover:scale-105"
                           onClick={() => handleQuickView(product)}
+                          style={{
+                            backgroundColor: colorScheme.primary,
+                            color: colorScheme.black,
+                          }}
+                          onMouseEnter={(e: any) => {
+                            e.currentTarget.style.backgroundColor =
+                              colorScheme.primaryDark;
+                          }}
+                          onMouseLeave={(e: any) => {
+                            e.currentTarget.style.backgroundColor =
+                              colorScheme.primary;
+                          }}
                         >
                           Quick View
                         </Button>
@@ -412,13 +517,17 @@ const StorePage = () => {
                         <BaseText
                           fontFamily="bricolage"
                           weight="bold"
-                          className="text-lg text-gray-900 leading-tight"
+                          className="text-lg leading-tight"
+                          style={{ color: cardTextColor }}
                         >
                           {product.name}
                         </BaseText>
                       </div>
 
-                      <LightText className="text-sm mb-4 leading-relaxed">
+                      <LightText
+                        className="text-sm mb-4 leading-relaxed"
+                        style={{ color: secondaryTextColor }}
+                      >
                         {product.description}
                       </LightText>
 
@@ -426,29 +535,54 @@ const StorePage = () => {
                       <FlexboxLayout align="center" gap="sm" className="mb-4">
                         <BaseText
                           weight="bold"
-                          className="text-2xl text-yellow-600"
+                          className="text-2xl"
+                          style={{ color: colorScheme.primary }}
                         >
                           {product.price}
                         </BaseText>
                         {product.originalPrice && (
-                          <LightText className="text-lg line-through">
+                          <LightText
+                            className="text-lg line-through"
+                            style={{ color: secondaryTextColor }}
+                          >
                             {product.originalPrice}
                           </LightText>
                         )}
                       </FlexboxLayout>
 
                       {/* Product Meta */}
-                      <FlexboxLayout
-                        justify="between"
-                        className="text-xs text-gray-500 mb-6"
-                      >
-                        <span className="bg-gray-100 px-3 py-1 rounded-full">
+                      <FlexboxLayout justify="between" className="text-xs mb-6">
+                        <span
+                          className="px-3 py-1 rounded-full"
+                          style={{
+                            backgroundColor: isDarkMode
+                              ? colorScheme.opacity.black10
+                              : colorScheme.opacity.white10,
+                            color: secondaryTextColor,
+                          }}
+                        >
                           {product.sizes.length} sizes
                         </span>
-                        <span className="bg-gray-100 px-3 py-1 rounded-full">
+                        <span
+                          className="px-3 py-1 rounded-full"
+                          style={{
+                            backgroundColor: isDarkMode
+                              ? colorScheme.opacity.black10
+                              : colorScheme.opacity.white10,
+                            color: secondaryTextColor,
+                          }}
+                        >
                           {product.colors.length} colors
                         </span>
-                        <span className="bg-gray-100 px-3 py-1 rounded-full">
+                        <span
+                          className="px-3 py-1 rounded-full"
+                          style={{
+                            backgroundColor: isDarkMode
+                              ? colorScheme.opacity.black10
+                              : colorScheme.opacity.white10,
+                            color: secondaryTextColor,
+                          }}
+                        >
                           {product.stock} in stock
                         </span>
                       </FlexboxLayout>
@@ -463,6 +597,18 @@ const StorePage = () => {
                           leftIcon={<ShoppingBag className="w-4 h-4" />}
                           onClick={() => handleQuickView(product)}
                           className="flex-1 transition-all duration-300 transform hover:scale-105"
+                          style={{
+                            backgroundColor: colorScheme.primary,
+                            color: colorScheme.black,
+                          }}
+                          onMouseEnter={(e: any) => {
+                            e.currentTarget.style.backgroundColor =
+                              colorScheme.primaryDark;
+                          }}
+                          onMouseLeave={(e: any) => {
+                            e.currentTarget.style.backgroundColor =
+                              colorScheme.primary;
+                          }}
                         >
                           Add to Cart
                         </Button>
@@ -471,6 +617,19 @@ const StorePage = () => {
                           size="md"
                           curvature="full"
                           className="w-14 transition-all duration-300 transform hover:scale-105"
+                          style={{
+                            borderColor: borderColor,
+                            color: cardTextColor,
+                          }}
+                          onMouseEnter={(e: any) => {
+                            e.currentTarget.style.backgroundColor = isDarkMode
+                              ? colorScheme.opacity.black10
+                              : colorScheme.opacity.white10;
+                          }}
+                          onMouseLeave={(e: any) => {
+                            e.currentTarget.style.backgroundColor =
+                              'transparent';
+                          }}
                         >
                           <Heart className="w-4 h-4" />
                         </Button>
