@@ -1,9 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2 } from '@/components/text';
+import { H2, BaseText, LightText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import {
+  Section,
+  Container,
+  GridboxLayout,
+  FlexboxLayout,
+} from '@/components/layout';
+import Button from '@/components/utils/CustomButton';
 
 const ContactPage = () => {
+  const { colorScheme } = useTheme();
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const sectionBackground = isDarkMode ? colorScheme.black : colorScheme.white;
+  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const cardBackground = isDarkMode ? colorScheme.surface : colorScheme.white;
+  const cardTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const formBackground = isDarkMode
+    ? colorScheme.surface
+    : colorScheme.backgroundSecondary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const inputBorderColor = isDarkMode
+    ? colorScheme.borderLight
+    : colorScheme.border;
+
   const contactMethods = [
     {
       title: 'Visit Us',
@@ -100,139 +133,271 @@ const ContactPage = () => {
       />
 
       {/* Contact Methods Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <H2>Get In Touch</H2>
-            <p className="text-xl text-gray-600 mt-4 max-w-2xl mx-auto">
+      <Section
+        padding="lg"
+        fullHeight={false}
+        style={{ backgroundColor: sectionBackground }}
+      >
+        <Container size="xl">
+          <FlexboxLayout
+            direction="column"
+            justify="center"
+            align="center"
+            gap="md"
+            className="text-center mb-12"
+          >
+            <H2 style={{ color: textColor }}>Get In Touch</H2>
+            <LightText
+              className="text-xl mt-4 max-w-2xl mx-auto"
+              style={{ color: secondaryTextColor }}
+            >
               Multiple ways to connect with our church family and leadership
-            </p>
-          </div>
+            </LightText>
+          </FlexboxLayout>
 
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <GridboxLayout columns={1} responsive={{ md: 2, lg: 4 }} gap="lg">
               {contactMethods.map((method, index) => (
                 <div
                   key={index}
-                  className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow duration-300"
+                  className="rounded-2xl p-6 text-center hover:shadow-lg transition-shadow duration-300"
+                  style={{
+                    backgroundColor: cardBackground,
+                    border: `1px solid ${borderColor}`,
+                  }}
                 >
                   <div className="text-4xl mb-4">{method.icon}</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="bold"
+                    className="text-xl mb-2"
+                    style={{ color: cardTextColor }}
+                  >
                     {method.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{method.description}</p>
+                  </BaseText>
+                  <LightText
+                    className="mb-4"
+                    style={{ color: secondaryTextColor }}
+                  >
+                    {method.description}
+                  </LightText>
                   <div className="space-y-2">
                     {method.details.map((detail, idx) => (
-                      <p key={idx} className="text-gray-700 text-sm">
+                      <LightText
+                        key={idx}
+                        className="text-sm"
+                        style={{ color: secondaryTextColor }}
+                      >
                         {detail}
-                      </p>
+                      </LightText>
                     ))}
                   </div>
                 </div>
               ))}
-            </div>
+            </GridboxLayout>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Ministry Contacts Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <Section
+        padding="lg"
+        fullHeight={false}
+        style={{
+          backgroundColor: isDarkMode
+            ? colorScheme.surface
+            : colorScheme.backgroundSecondary,
+        }}
+      >
+        <Container size="xl">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <H2>Ministry Contacts</H2>
-              <p className="text-xl text-gray-600 mt-4 max-w-2xl mx-auto">
+            <FlexboxLayout
+              direction="column"
+              justify="center"
+              align="center"
+              gap="md"
+              className="text-center mb-12"
+            >
+              <H2 style={{ color: textColor }}>Ministry Contacts</H2>
+              <LightText
+                className="text-xl mt-4 max-w-2xl mx-auto"
+                style={{ color: secondaryTextColor }}
+              >
                 Connect directly with our ministry leaders and staff
-              </p>
-            </div>
+              </LightText>
+            </FlexboxLayout>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <GridboxLayout columns={1} responsive={{ md: 2, lg: 3 }} gap="lg">
               {ministryContacts.map((contact, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
+                  className="rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
+                  style={{
+                    backgroundColor: cardBackground,
+                    border: `1px solid ${borderColor}`,
+                  }}
                 >
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="bold"
+                    className="text-lg mb-2"
+                    style={{ color: cardTextColor }}
+                  >
                     {contact.department}
-                  </h3>
-                  <p className="text-gray-700 font-semibold mb-3">
+                  </BaseText>
+                  <BaseText
+                    weight="semibold"
+                    className="mb-3"
+                    style={{ color: cardTextColor }}
+                  >
                     {contact.contact}
-                  </p>
+                  </BaseText>
                   <div className="space-y-2">
-                    <p className="text-gray-600 text-sm">📧 {contact.email}</p>
-                    <p className="text-gray-600 text-sm">📞 {contact.phone}</p>
+                    <LightText
+                      className="text-sm"
+                      style={{ color: secondaryTextColor }}
+                    >
+                      📧 {contact.email}
+                    </LightText>
+                    <LightText
+                      className="text-sm"
+                      style={{ color: secondaryTextColor }}
+                    >
+                      📞 {contact.phone}
+                    </LightText>
                   </div>
                 </div>
               ))}
-            </div>
+            </GridboxLayout>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Contact Form Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+      <Section
+        padding="lg"
+        fullHeight={false}
+        style={{ backgroundColor: sectionBackground }}
+      >
+        <Container size="xl">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <H2>Send Us a Message</H2>
-              <p className="text-xl text-gray-600 mt-4">
+            <FlexboxLayout
+              direction="column"
+              justify="center"
+              align="center"
+              gap="md"
+              className="text-center mb-12"
+            >
+              <H2 style={{ color: textColor }}>Send Us a Message</H2>
+              <LightText
+                className="text-xl mt-4"
+                style={{ color: secondaryTextColor }}
+              >
                 Have a question or prayer request? We're here to help.
-              </p>
-            </div>
+              </LightText>
+            </FlexboxLayout>
 
-            <div className="bg-gray-50 rounded-2xl p-8">
+            <div
+              className="rounded-2xl p-8"
+              style={{
+                backgroundColor: formBackground,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
               <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="lg">
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">
+                    <label
+                      className="block font-semibold mb-2"
+                      style={{ color: textColor }}
+                    >
                       First Name
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       placeholder="Your first name"
+                      style={{
+                        backgroundColor: inputBackground,
+                        borderColor: inputBorderColor,
+                        color: textColor,
+                      }}
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">
+                    <label
+                      className="block font-semibold mb-2"
+                      style={{ color: textColor }}
+                    >
                       Last Name
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       placeholder="Your last name"
+                      style={{
+                        backgroundColor: inputBackground,
+                        borderColor: inputBorderColor,
+                        color: textColor,
+                      }}
                     />
                   </div>
-                </div>
+                </GridboxLayout>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="lg">
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">
+                    <label
+                      className="block font-semibold mb-2"
+                      style={{ color: textColor }}
+                    >
                       Email Address
                     </label>
                     <input
                       type="email"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       placeholder="your.email@example.com"
+                      style={{
+                        backgroundColor: inputBackground,
+                        borderColor: inputBorderColor,
+                        color: textColor,
+                      }}
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">
+                    <label
+                      className="block font-semibold mb-2"
+                      style={{ color: textColor }}
+                    >
                       Phone Number
                     </label>
                     <input
                       type="tel"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       placeholder="(555) 123-4567"
+                      style={{
+                        backgroundColor: inputBackground,
+                        borderColor: inputBorderColor,
+                        color: textColor,
+                      }}
                     />
                   </div>
-                </div>
+                </GridboxLayout>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">
+                  <label
+                    className="block font-semibold mb-2"
+                    style={{ color: textColor }}
+                  >
                     Department
                   </label>
-                  <select className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                  <select
+                    className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    style={{
+                      backgroundColor: colorScheme.white, // Always white for dropdowns
+                      borderColor: inputBorderColor,
+                      color: colorScheme.black, // Always black for dropdown text
+                    }}
+                  >
                     <option value="">Select a department...</option>
                     <option value="general">General Inquiry</option>
                     <option value="pastoral">Pastoral Care</option>
@@ -245,29 +410,52 @@ const ContactPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">
+                  <label
+                    className="block font-semibold mb-2"
+                    style={{ color: textColor }}
+                  >
                     Message
                   </label>
                   <textarea
                     rows={6}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     placeholder="Tell us how we can help you..."
+                    style={{
+                      backgroundColor: inputBackground,
+                      borderColor: inputBorderColor,
+                      color: textColor,
+                    }}
                   ></textarea>
                 </div>
 
-                <div className="text-center">
-                  <button
+                <FlexboxLayout justify="center">
+                  <Button
                     type="submit"
-                    className="bg-yellow-400 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+                    variant="primary"
+                    size="lg"
+                    curvature="full"
+                    className="px-8 py-3 font-semibold transition-colors"
+                    style={{
+                      backgroundColor: colorScheme.primary,
+                      color: colorScheme.black,
+                    }}
+                    onMouseEnter={(e: any) => {
+                      e.currentTarget.style.backgroundColor =
+                        colorScheme.primaryDark;
+                    }}
+                    onMouseLeave={(e: any) => {
+                      e.currentTarget.style.backgroundColor =
+                        colorScheme.primary;
+                    }}
                   >
                     Send Message
-                  </button>
-                </div>
+                  </Button>
+                </FlexboxLayout>
               </form>
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </div>
   );
 };
