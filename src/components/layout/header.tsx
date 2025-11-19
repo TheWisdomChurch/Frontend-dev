@@ -61,13 +61,13 @@ export default function Header() {
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out',
           isHeaderScrolled
-            ? 'h-12 bg-background/90 backdrop-blur-xl border-b border-border/50'
-            : 'h-14 top-2 left-1/2 -translate-x-1/2 w-[96%] max-w-4xl rounded-xl bg-background/80 backdrop-blur-xl border border-border/30 shadow-sm'
+            ? 'h-12 bg-black/90 backdrop-blur-xl border-b border-primary/30' // Always dark background when scrolled
+            : 'h-14 top-2 left-1/2 -translate-x-1/2 w-[96%] max-w-4xl rounded-xl bg-black/80 backdrop-blur-xl border border-primary/30 shadow-sm' // Always dark background
         )}
         style={{
           backgroundColor: isHeaderScrolled
-            ? `${colorScheme.background}cc`
-            : 'transparent',
+            ? '#000000cc' // Always black background
+            : '#000000cc', // Always black background
           borderColor: colorScheme.primary + '40',
         }}
       >
@@ -102,13 +102,13 @@ export default function Header() {
                 >
                   <span
                     className="leading-[0.9]"
-                    style={{ color: colorScheme.white }}
+                    style={{ color: colorScheme.white }} // Always white text
                   >
                     The
                   </span>
                   <span
                     className="leading-[0.9]"
-                    style={{ color: colorScheme.primary }}
+                    style={{ color: colorScheme.primary }} // Primary color for emphasis
                   >
                     Wisdom House
                   </span>
@@ -144,10 +144,10 @@ export default function Header() {
                         backgroundColor: isActive
                           ? colorScheme.primary + '20'
                           : 'transparent',
-                        color: colorScheme.white,
+                        color: colorScheme.white, // Always white text
                       }}
                     >
-                      {Icon && <Icon className="w-3 h-3" />}
+                      {Icon && <Icon className="w-3 h-3" style={{ color: colorScheme.white }} />}
                       <span className="text-[11px]">{link.label}</span>
                       {hasDropdown && (
                         <ChevronDown
@@ -155,16 +155,17 @@ export default function Header() {
                             'w-2.5 h-2.5 transition-transform duration-300',
                             activeDropdown === link.label && 'rotate-180'
                           )}
+                          style={{ color: colorScheme.white }}
                         />
                       )}
                     </Link>
 
-                    {/* Dropdown - Primary background with black text on hover */}
+                    {/* Dropdown - Dark background with white text */}
                     {hasDropdown && activeDropdown === link.label && (
                       <div
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 rounded-2xl bg-background/95 backdrop-blur-xl border shadow-xl overflow-hidden"
+                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 rounded-2xl bg-black/95 backdrop-blur-xl border shadow-xl overflow-hidden"
                         style={{
-                          backgroundColor: `${colorScheme.background}ee`,
+                          backgroundColor: '#000000ee', // Dark background
                           borderColor: colorScheme.primary + '40',
                           borderWidth: '1px',
                         }}
@@ -183,7 +184,7 @@ export default function Header() {
                                   'rounded-b-xl'
                               )}
                               style={{
-                                color: colorScheme.white,
+                                color: colorScheme.white, // White text
                               }}
                             >
                               {item.label}
@@ -220,7 +221,7 @@ export default function Header() {
                   variant="ghost"
                   size="icon"
                   className="lg:hidden rounded-full p-1 hover:bg-white/10 transition-colors"
-                  style={{ color: colorScheme.white }}
+                  style={{ color: colorScheme.white }} // White icon
                 >
                   <Menu className="h-3.5 w-3.5" />
                 </Button>
@@ -229,7 +230,7 @@ export default function Header() {
                 side="left"
                 className="w-full max-w-sm p-0 border-0 overflow-y-auto"
                 style={{
-                  backgroundColor: colorScheme.background,
+                  backgroundColor: '#000000', // Dark background for mobile menu
                 }}
               >
                 <MobileNavigation
@@ -256,7 +257,6 @@ export default function Header() {
 }
 
 // Enhanced Mobile Navigation with Better UX
-// Enhanced Mobile Navigation with Better UX
 const MobileNavigation: React.FC<{
   colorScheme: any;
   isLinkActive: (href: string) => boolean;
@@ -272,11 +272,37 @@ const MobileNavigation: React.FC<{
   setSheetOpen,
   openCommunityModal,
 }) => {
+  
+  // Fixed dropdown item click handler
+  const handleMobileDropdownItemClick = () => {
+    setSheetOpen(false); // Close sheet when dropdown item is clicked
+  };
+
+  // Fixed main dropdown link click handler - NOW NAVIGATES TO PAGE
+  const handleMobileMainLinkClick = (label: string, href: string, hasDropdown: boolean, e: React.MouseEvent) => {
+    // If clicking the chevron icon, toggle dropdown
+    const isChevronClick = (e.target as HTMLElement).closest('svg') || 
+                          (e.target as HTMLElement).tagName === 'svg';
+    
+    if (hasDropdown && isChevronClick) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMobileDropdown(label, e);
+    } else if (hasDropdown && !isChevronClick) {
+      // Clicking the main link area (not chevron) - navigate to page
+      setSheetOpen(false);
+      // Navigation will happen automatically via the Link component
+    } else {
+      // Regular link - close sheet and navigate
+      setSheetOpen(false);
+    }
+  };
+
   return (
     <div
       className="flex flex-col h-full"
       style={{
-        backgroundColor: colorScheme.background,
+        backgroundColor: '#000000', // Dark background for mobile menu
       }}
     >
       {/* Enhanced Header with better spacing */}
@@ -304,12 +330,12 @@ const MobileNavigation: React.FC<{
             />
             <span
               className={`${bricolageGrotesque.className} text-base font-semibold flex flex-col`}
-              style={{ color: colorScheme.white }}
+              style={{ color: colorScheme.white }} // White text
             >
               <span className="leading-none">The</span>
               <span
                 className="leading-none"
-                style={{ color: colorScheme.primary }}
+                style={{ color: colorScheme.primary }} // Primary color for emphasis
               >
                 Wisdom House
               </span>
@@ -320,7 +346,7 @@ const MobileNavigation: React.FC<{
           onClick={() => setSheetOpen(false)}
           className="p-2 hover:bg-white/10 rounded-xl transition-colors"
         >
-          <X className="w-5 h-5" style={{ color: colorScheme.white }} />
+          <X className="w-5 h-5" style={{ color: colorScheme.white }} /> {/* White icon */}
         </button>
       </div>
 
@@ -334,22 +360,23 @@ const MobileNavigation: React.FC<{
 
           return (
             <div key={link.label} className="space-y-1">
-              {/* Main Navigation Item */}
+              {/* Main Navigation Item - FIXED: All items use Link for navigation */}
               <div className="flex flex-col">
-                <button
-                  onClick={e => toggleMobileDropdown(link.label, e)}
+                <Link
+                  href={link.href}
+                  onClick={(e) => handleMobileMainLinkClick(link.label, link.href, hasDropdown, e)}
                   className={cn(
-                    'w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group',
+                    'w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group relative',
                     isActive ? 'bg-primary/20' : 'hover:bg-white/10'
                   )}
                   style={{
-                    color: colorScheme.white,
+                    color: colorScheme.white, // White text
                     border: isActive
                       ? `1px solid ${colorScheme.primary}40`
                       : '1px solid transparent',
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-1">
                     {Icon && (
                       <div
                         className="p-2 rounded-xl transition-all duration-300 group-hover:scale-110"
@@ -366,22 +393,33 @@ const MobileNavigation: React.FC<{
                       </div>
                     )}
                     <span
-                      className={`${worksans.className} font-semibold text-sm`}
+                      className={`${worksans.className} font-semibold text-sm flex-1`}
+                      style={{ color: colorScheme.white }} // White text
                     >
                       {link.label}
                     </span>
                   </div>
                   {hasDropdown && (
-                    <ChevronDown
-                      className={cn(
-                        'w-4 h-4 transition-transform duration-300 text-primary',
-                        isOpen && 'rotate-180'
-                      )}
-                    />
+                    <div 
+                      className="flex-shrink-0 ml-2 p-1 rounded-lg hover:bg-white/10 transition-colors"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleMobileDropdown(link.label, e);
+                      }}
+                    >
+                      <ChevronDown
+                        className={cn(
+                          'w-4 h-4 transition-transform duration-300',
+                          isOpen && 'rotate-180'
+                        )}
+                        style={{ color: colorScheme.primary }} // Primary color for chevron
+                      />
+                    </div>
                   )}
-                </button>
+                </Link>
 
-                {/* Enhanced Dropdown with Primary background and Black text on hover */}
+                {/* Enhanced Dropdown with Dark background */}
                 {hasDropdown && isOpen && link.dropdown && (
                   <div
                     className="mt-2 ml-4 space-y-1 rounded-2xl overflow-hidden"
@@ -394,14 +432,14 @@ const MobileNavigation: React.FC<{
                       <Link
                         key={item.label}
                         href={item.href}
-                        onClick={() => setSheetOpen(false)}
+                        onClick={handleMobileDropdownItemClick}
                         className={cn(
                           'block px-4 py-3 text-sm transition-all duration-300 hover:bg-primary hover:text-black border-l-4',
                           index === 0 && 'rounded-t-2xl',
                           index === link.dropdown!.length - 1 && 'rounded-b-2xl'
                         )}
                         style={{
-                          color: colorScheme.white, // Changed from colorScheme.body to white
+                          color: colorScheme.white, // White text
                           borderLeftColor: colorScheme.primary,
                           backgroundColor: 'transparent',
                         }}
@@ -426,7 +464,7 @@ const MobileNavigation: React.FC<{
           <div className="text-center">
             <p
               className={`${worksans.className} text-xs opacity-70 mb-2`}
-              style={{ color: colorScheme.white }}
+              style={{ color: colorScheme.white }} // White text
             >
               Ready to join our community?
             </p>
