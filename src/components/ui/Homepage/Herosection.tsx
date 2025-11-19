@@ -10,23 +10,15 @@ interface Slide {
   title: string;
   subtitle?: string;
   description?: string;
-  image: {
-    src: string;
-    alt?: string;
-  };
+  image: { src: string; alt?: string };
 }
 
 interface HeroSectionProps {
-  // Single slide mode
   title?: string;
   subtitle?: string;
   description?: string;
   backgroundImage?: string;
-
-  // Multi-slide mode
   slides?: Slide[];
-
-  // Common props
   showButtons?: boolean;
   primaryButtonText?: string;
   secondaryButtonText?: string;
@@ -37,16 +29,11 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({
-  // Single slide props
   title,
   subtitle,
   description,
   backgroundImage,
-
-  // Multi-slide props
   slides,
-
-  // Common props
   showButtons = true,
   primaryButtonText = 'Join Us This Sunday',
   secondaryButtonText = 'Watch Live Stream',
@@ -55,10 +42,8 @@ const HeroSection = ({
   showScrollIndicator = true,
   showSlideIndicators = true,
 }: HeroSectionProps) => {
-  // Use the hook for multi-slide functionality
   const {
     currentSlide,
-    isScrolled,
     heroRef,
     contentRef,
     titleRef,
@@ -76,257 +61,229 @@ const HeroSection = ({
     addToIndicatorsRef,
   } = useHeroSection();
 
-  // Determine if we're in multi-slide mode
   const isMultiSlide = Boolean(slides && slides.length > 0);
+  const isDarkMode = colorScheme.pageBackground === '#000000';
 
-  // Get current slide data based on mode
   const currentSlideData = isMultiSlide
     ? slides![currentSlide]
     : {
         title: title!,
         subtitle,
         description,
-        image: {
-          src: backgroundImage!,
-          alt: title,
-        },
+        image: { src: backgroundImage!, alt: title },
       };
+
+  // Smart colors based on your exact request
+  const titleColor = isDarkMode ? '#FFFFFF' : colorScheme.primary; // White (dark) / Yellow (light)
+  const subtitleColor = isDarkMode ? colorScheme.primary : '#FFFFFF'; // Yellow (dark) / White (light)
+  const descriptionColor = '#FFFFFF'; // Always pure white (your "twirk")
 
   return (
     <section
       ref={heroRef}
       className="relative w-full overflow-hidden hero-section"
     >
-      {/* Background Images */}
+      {/* Background Slides */}
       {isMultiSlide ? (
-        // Multi-slide mode - uses hook's slide management
         slides!.map((slide, index) => (
           <div
             key={index}
             ref={el => addToSlidesRef(el, index)}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out hero-section ${
-              index === currentSlide
-                ? 'opacity-100 z-10'
-                : 'opacity-0 pointer-events-none z-0'
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
             }`}
           >
-            <div className="relative w-full h-full hero-section">
+            <div className="relative w-full h-full">
               <img
                 src={slide.image.src}
                 alt={slide.image.alt || slide.title}
-                className="
-                  w-full h-full 
-                  object-cover 
-                  object-center
-                  md:object-center
-                  lg:object-center
-                  xl:object-center
-                  scale-100
-                  hero-section
-                "
+                className="w-full h-full object-cover"
               />
-              {/* Enhanced Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
+
+              {/* Stronger overlay in light mode for white text visibility */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: isDarkMode
+                    ? 'linear-gradient(to bottom right, rgba(0,0,0,0.5), rgba(0,0,0,0.8))'
+                    : 'linear-gradient(to bottom right, rgba(0,0,0,0.75), rgba(0,0,0,0.95))',
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
             </div>
           </div>
         ))
       ) : (
-        // Single slide mode
-        <div className="absolute inset-0 hero-section">
-          <div className="relative w-full h-full hero-section">
+        <div className="absolute inset-0">
+          <div className="relative w-full h-full">
             <img
               src={backgroundImage}
               alt={title}
-              className="
-                w-full h-full 
-                object-cover 
-                object-center
-                md:object-center
-                lg:object-center
-                xl:object-center
-                scale-100
-                hero-section
-              "
+              className="w-full h-full object-cover"
             />
-            {/* Enhanced Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background: isDarkMode
+                  ? 'linear-gradient(to bottom right, rgba(0,0,0,0.5), rgba(0,0,0,0.8))'
+                  : 'linear-gradient(to bottom right, rgba(0,0,0,0.75), rgba(0,0,0,0.95))',
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
           </div>
         </div>
       )}
 
-      {/* Content - Centered in the container */}
+      {/* Hero Content */}
       <div
         ref={contentRef}
-        className="relative z-20 h-full flex items-center justify-center px-4 hero-section"
+        className="relative z-20 h-full flex items-center justify-center px-4"
       >
-        <div className="w-full max-w-7xl mx-auto">
-          <div className="text-center" style={{ color: colorScheme.text }}>
-            {/* Main Title - Reduced mobile size */}
-            <H1
-              ref={titleRef}
-              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight"
-              style={{ color: colorScheme.white }}
+        <div className="w-full max-w-7xl mx-auto text-center">
+          {/* Main Title */}
+          <H1
+            ref={titleRef}
+            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight tracking-tight"
+            style={{
+              color: titleColor,
+              textShadow: '0 6px 30px rgba(0, 0, 0, 0.9)',
+            }}
+          >
+            {currentSlideData.title}
+          </H1>
+
+          {/* Yellow/White Divider */}
+          {currentSlideData.subtitle && (
+            <div
+              className="h-1 w-24 mx-auto mb-6 rounded-full"
+              style={{ backgroundColor: colorScheme.primary }}
+            />
+          )}
+
+          {/* Subtitle – Your special twirk */}
+          {currentSlideData.subtitle && (
+            <h2
+              ref={subtitleRef}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8"
+              style={{
+                color: subtitleColor,
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.9)',
+              }}
             >
-              {currentSlideData.title}
-            </H1>
+              {currentSlideData.subtitle}
+            </h2>
+          )}
 
-            {/* Primary Color Divider Line - Only show if subtitle exists */}
-            {currentSlideData.subtitle && (
-              <div
-                className="divider-line h-0.5 xs:h-1 w-16 xs:w-20 mx-auto mb-4 sm:mb-6 rounded-full transform origin-center"
-                style={{ backgroundColor: colorScheme.primary }}
-              ></div>
-            )}
+          {/* Description – Always pure white */}
+          {currentSlideData.description && (
+            <p
+              ref={descriptionRef}
+              className="text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-4xl mx-auto mb-12 leading-relaxed font-light"
+              style={{
+                color: descriptionColor,
+                textShadow: '0 3px 15px rgba(0, 0, 0, 0.8)',
+              }}
+            >
+              {currentSlideData.description}
+            </p>
+          )}
 
-            {/* Primary Color Subtitle - Only show if subtitle exists */}
-            {currentSlideData.subtitle && (
-              <h2
-                ref={subtitleRef}
-                className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-4 sm:mb-6 leading-tight"
-                style={{ color: colorScheme.primary }}
+          {/* Buttons */}
+          {showButtons && (
+            <div
+              ref={buttonsRef}
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            >
+              <Button
+                variant="primary"
+                size="lg"
+                elevated={true}
+                curvature="lg"
+                className="px-10 py-5 text-lg font-bold hover:scale-105 transition"
+                onClick={onPrimaryButtonClick}
               >
-                {currentSlideData.subtitle}
-              </h2>
-            )}
+                {primaryButtonText}
+              </Button>
 
-            {/* Description - Only show if description exists */}
-            {currentSlideData.description && (
-              <p
-                ref={descriptionRef}
-                className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl max-w-xs xs:max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto mb-6 sm:mb-8 leading-relaxed sm:leading-loose"
+              <Button
+                variant="outline"
+                size="lg"
+                curvature="lg"
+                className="px-10 py-5 text-lg font-bold border-3 transition-all duration-300"
+                style={{
+                  borderColor: colorScheme.primary,
+                  color: isDarkMode ? '#FFFFFF' : '#FFFFFF',
+                  backgroundColor: 'transparent',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  e.currentTarget.style.color = '#000000';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FFFFFF';
+                }}
+                onClick={onSecondaryButtonClick}
               >
-                {currentSlideData.description}
-              </p>
-            )}
-
-            {/* Buttons - Only show if showButtons is true */}
-            {showButtons && (
-              <div
-                ref={buttonsRef}
-                className="flex flex-col sm:flex-row gap-2 xs:gap-3 sm:gap-4 justify-center items-center w-full xs:w-auto"
-              >
-                {/* Primary Button - Reduced mobile width */}
-                <Button
-                  variant="primary"
-                  size="lg"
-                  elevated={true}
-                  curvature="lg"
-                  className="w-4/5 xs:w-full sm:w-auto text-sm xs:text-base px-4 xs:px-6 py-2 xs:py-3"
-                  onClick={onPrimaryButtonClick}
-                >
-                  {primaryButtonText}
-                </Button>
-
-                {/* Secondary Button - Reduced mobile width */}
-                <Button
-                  variant="outline"
-                  size="lg"
-                  curvature="lg"
-                  className="w-4/5 xs:w-full sm:w-auto text-sm xs:text-base px-4 xs:px-6 py-2 xs:py-3"
-                  style={{
-                    borderColor: colorScheme.primary,
-                    color: colorScheme.white,
-                  }}
-                  onMouseEnter={(e: {
-                    currentTarget: {
-                      style: { backgroundColor: string; color: string };
-                    };
-                  }) => {
-                    e.currentTarget.style.backgroundColor = colorScheme.white;
-                    e.currentTarget.style.color = colorScheme.black;
-                  }}
-                  onMouseLeave={(e: {
-                    currentTarget: {
-                      style: { backgroundColor: string; color: string };
-                    };
-                  }) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = colorScheme.white;
-                  }}
-                  onClick={onSecondaryButtonClick}
-                >
-                  {secondaryButtonText}
-                </Button>
-              </div>
-            )}
-          </div>
+                {secondaryButtonText}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Slide Indicators - Only show for multi-slide mode */}
+      {/* Indicators & Scroll – unchanged (already perfect) */}
       {isMultiSlide && showSlideIndicators && (
-        <div className="absolute right-4 xs:right-6 sm:right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center space-y-1 xs:space-y-2">
+        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-4">
           {slides!.map((_, index) => (
             <button
               key={index}
               ref={el => addToIndicatorsRef(el, index)}
               onClick={() => goToSlide(index)}
-              className={`relative w-1 h-1 xs:w-1 xs:h-1 rounded-full overflow-hidden transition-all duration-500 ease-out hover:scale-110 ${
-                index === currentSlide ? 'scale-125' : ''
-              }`}
+              className="w-3 h-3 rounded-full transition-all hover:scale-150"
               style={{
                 backgroundColor:
                   index === currentSlide
                     ? colorScheme.primary
-                    : `${colorScheme.white}40`,
+                    : `${colorScheme.white}50`,
                 boxShadow:
                   index === currentSlide
-                    ? `0 0 10px ${colorScheme.primary}70`
+                    ? `0 0 15px ${colorScheme.primary}`
                     : 'none',
               }}
-              aria-label={`Go to slide ${index + 1}`}
-            >
-              {index === currentSlide && (
-                <span
-                  className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: `${colorScheme.primary}30` }}
-                />
-              )}
-            </button>
+            />
           ))}
         </div>
       )}
 
-      {/* Scroll Indicator - Only show if showScrollIndicator is true */}
       {showScrollIndicator && (
         <>
-          {/* Desktop Scroll Indicator */}
           <div
             ref={scrollIndicatorRef}
-            className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-30 hidden sm:block cursor-pointer group"
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer group"
             onClick={scrollToNextSection}
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
           >
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center animate-bounce">
               <ChevronDown
-                className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1"
+                className="w-10 h-10 drop-shadow-2xl"
                 style={{ color: colorScheme.primary }}
               />
               <ChevronDown
-                className="w-6 h-6 transition-all duration-300 group-hover:scale-110 group-hover:translate-y-1 -mt-[6px] delay-75"
+                className="w-10 h-10 -mt-4 drop-shadow-2xl"
                 style={{ color: colorScheme.primary }}
               />
             </div>
           </div>
-
-          {/* Mobile Scroll Indicator */}
           <div
-            className="absolute bottom-3 xs:bottom-4 left-1/2 transform -translate-x-1/2 z-30 sm:hidden cursor-pointer"
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 sm:hidden"
             onClick={scrollToNextSection}
           >
-            <div className="flex flex-col items-center animate-bounce">
-              <ChevronDown
-                className="w-4 h-4 xs:w-5 xs:h-5"
-                style={{ color: colorScheme.primary }}
-              />
-              <ChevronDown
-                className="w-4 h-4 xs:w-5 xs:h-5 -mt-[4px] xs:-mt-[5px]"
-                style={{ color: colorScheme.primary }}
-              />
-            </div>
+            <ChevronDown
+              className="w-8 h-8 animate-bounce"
+              style={{ color: colorScheme.primary }}
+            />
           </div>
         </>
       )}

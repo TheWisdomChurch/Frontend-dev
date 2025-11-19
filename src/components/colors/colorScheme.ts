@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/ui/fonts/color/colorScheme.ts
 
-// Base color interfaces
 type BackgroundColor = string;
 type Color = string;
 
@@ -53,16 +52,18 @@ export interface ColorScheme {
   warning: string;
   info: string;
 
-  // === TEXT COLORS - FIXED FOR MAXIMUM CONTRAST ===
-  text: string; // Main body text (high contrast)
-  textSecondary: string; // Secondary labels, captions
-  textTertiary: string; // Subtle hints
-  textInverted: string; // Text on primary/yellow backgrounds
-  subtleText: string; // Very low-priority text
+  // ← NEW: Darker accent text for headings/mission on white backgrounds
+  accentText: string;
 
-  heading: string; // H1-H6 headings (highest contrast)
+  // Text colors
+  text: string;
+  textSecondary: string;
+  textTertiary: string;
+  textInverted: string;
+  subtleText: string;
+  heading: string;
 
-  // Background colors
+  // Backgrounds
   background: string;
   backgroundSecondary: string;
   surface: string;
@@ -72,18 +73,17 @@ export interface ColorScheme {
   footer: string;
   pageBackground: string;
 
-  // Interactive elements
+  // Interactive
   button: string;
   buttonText: string;
   buttonHover: string;
   buttonActive: string;
 
-  // Borders and dividers
+  // Borders
   border: string;
   borderLight: string;
   borderDark: string;
 
-  // Gray scale
   gray: GrayScale;
 
   // Gradients
@@ -91,36 +91,28 @@ export interface ColorScheme {
   primaryGradientLight: string;
   secondaryGradient: string;
 
-  // Focus states
+  // Focus & Shadows
   focusRing: string;
   focusBorder: string;
-
-  // Shadows
   shadowSm: string;
   shadowMd: string;
   shadowLg: string;
 
-  // Border radius
   borderRadius: BorderRadius;
 
-  // Core black/white
   white: string;
   black: string;
-
-  // Highlight color
   highlight: string;
 
-  // Opacity colors
   opacity: OpacityColors;
 
-  // Material-like additions
+  // Material-like
   tertiary?: BackgroundColor;
   onTertiary?: Color;
   onPrimary?: Color;
   onSecondary?: Color;
   outline?: string;
 
-  // Modal and overlay
   overlay: string;
   backdrop: string;
 }
@@ -167,27 +159,25 @@ const createOpacityColors = (
 });
 
 export const darkShades: ColorScheme = {
-  // Primary palette (your signature yellow)
   primary: '#F7DE12',
   primaryLight: '#F9E755',
   primaryDark: '#D4BC0F',
   secondary: '#1F2937',
   accent: '#F7DE12',
+  accentText: '#D4BC0F', // Bright yellow in dark mode
+
   error: '#EF4444',
   success: '#10B981',
   warning: '#F59E0B',
   info: '#3B82F6',
 
-  // TEXT - HIGH CONTRAST ON DARK BACKGROUND
-  text: '#F3F4F6', // gray-100 → excellent readability
-  textSecondary: '#D1D5DB', // gray-300
-  textTertiary: '#9CA3AF', // gray-400
-  textInverted: '#000000', // black on yellow
+  text: '#F3F4F6',
+  textSecondary: '#D1D5DB',
+  textTertiary: '#9CA3AF',
+  textInverted: '#000000',
   subtleText: '#9CA3AF',
+  heading: '#FFFFFF',
 
-  heading: '#FFFFFF', // pure white for maximum impact
-
-  // Backgrounds
   background: '#000000',
   backgroundSecondary: '#111827',
   surface: '#1F2937',
@@ -197,20 +187,17 @@ export const darkShades: ColorScheme = {
   footer: '#000000',
   pageBackground: '#000000',
 
-  // Buttons
   button: '#F7DE12',
   buttonText: '#000000',
   buttonHover: '#F9E755',
   buttonActive: '#D4BC0F',
 
-  // Borders
   border: '#374151',
   borderLight: '#4B5563',
   borderDark: '#1F2937',
 
   gray: baseGrayScale,
 
-  // Gradients
   primaryGradient: 'linear-gradient(135deg, #F7DE12 0%, #D4BC0F 100%)',
   primaryGradientLight:
     'linear-gradient(135deg, rgba(247, 222, 18, 0.1) 0%, rgba(212, 188, 15, 0.1) 100%)',
@@ -234,7 +221,6 @@ export const darkShades: ColorScheme = {
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
 
-  // Material-like
   tertiary: '#374151',
   onTertiary: '#FFFFFF',
   onPrimary: '#000000',
@@ -243,27 +229,27 @@ export const darkShades: ColorScheme = {
 };
 
 export const lightShades: ColorScheme = {
-  // Primary palette (same yellow)
   primary: '#F7DE12',
   primaryLight: '#F9E755',
   primaryDark: '#D4BC0F',
   secondary: '#FFFFFF',
   accent: '#F7DE12',
+
+  // ← DARK & BOLD gold for text on white background (perfect readability)
+  accentText: '#A67C00',
+
   error: '#EF4444',
   success: '#10B981',
   warning: '#F59E0B',
   info: '#3B82F6',
 
-  // TEXT - HIGH CONTRAST ON LIGHT BACKGROUND
-  text: '#111827', // gray-900 → very dark
-  textSecondary: '#374151', // gray-700
-  textTertiary: '#6B7280', // gray-500
+  text: '#111827',
+  textSecondary: '#374151',
+  textTertiary: '#6B7280',
   textInverted: '#000000',
   subtleText: '#6B7280',
+  heading: '#000000',
 
-  heading: '#000000', // pure black for strong headings
-
-  // Backgrounds
   background: '#FFFFFF',
   backgroundSecondary: '#F8FAFC',
   surface: '#FFFFFF',
@@ -273,20 +259,17 @@ export const lightShades: ColorScheme = {
   footer: '#F8FAFC',
   pageBackground: '#FFFFFF',
 
-  // Buttons
   button: '#F7DE12',
   buttonText: '#000000',
   buttonHover: '#F9E755',
   buttonActive: '#D4BC0F',
 
-  // Borders
   border: '#E5E7EB',
   borderLight: '#F3F4F6',
   borderDark: '#D1D5DB',
 
   gray: baseGrayScale,
 
-  // Gradagem
   primaryGradient: 'linear-gradient(135deg, #F7DE12 0%, #D4BC0F 100%)',
   primaryGradientLight:
     'linear-gradient(135deg, rgba(247, 222, 18, 0.1) 0%, rgba(212, 188, 15, 0.1) 100%)',
@@ -310,7 +293,6 @@ export const lightShades: ColorScheme = {
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
 
-  // Material-like
   tertiary: '#F3F4F6',
   onTertiary: '#000000',
   onPrimary: '#000000',
@@ -318,7 +300,7 @@ export const lightShades: ColorScheme = {
   outline: '#D1D5DB',
 };
 
-// Utility types
+// Utility types & functions
 export type ThemeColor = keyof Omit<
   ColorScheme,
   'gray' | 'borderRadius' | 'opacity'
@@ -327,7 +309,6 @@ export type GrayColor = keyof GrayScale;
 export type BorderRadiusSize = keyof BorderRadius;
 export type OpacityColor = keyof OpacityColors;
 
-// Optional: color manipulation utilities (you can expand later)
 export const colorUtils = {
   hexToRgba: (hex: string, alpha: number): string => {
     const r = parseInt(hex.slice(1, 3), 16);
