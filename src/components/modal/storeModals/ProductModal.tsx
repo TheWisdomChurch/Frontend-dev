@@ -1,6 +1,7 @@
+ 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useAppDispatch } from '@/components/utils/hooks/redux';
@@ -9,6 +10,8 @@ import { Product } from '@/lib/types';
 import Button from '@/components/utils/CustomButton';
 import { BaseText, LightText } from '@/components/text';
 import { FlexboxLayout } from '@/components/layout';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { useEffect, useRef, useState } from 'react';
 
 interface ProductModalProps {
   product: Product | null;
@@ -21,8 +24,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { colorScheme } = useTheme();
   const dispatch = useAppDispatch();
   const modalRef = useRef<HTMLDivElement>(null);
+
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -40,23 +45,15 @@ const ProductModal: React.FC<ProductModalProps> = ({
       if (isOpen && product) {
         gsap.fromTo(
           modalRef.current,
-          { opacity: 0, scale: 0.8, y: 50 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'back.out(1.7)' }
+          { opacity: 0, scale: 0.85, y: 100 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.7)' }
         );
-      } else {
-        gsap.to(modalRef.current, {
-          opacity: 0,
-          scale: 0.8,
-          y: 50,
-          duration: 0.3,
-        });
       }
     }
   }, [isOpen, product]);
 
   const handleAddToCart = () => {
     if (!product || !selectedSize || !selectedColor) return;
-
     dispatch(
       addToCart({
         productId: product.id,
@@ -68,61 +65,74 @@ const ProductModal: React.FC<ProductModalProps> = ({
         quantity,
       })
     );
-
     onClose();
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+    if (e.target === e.currentTarget) onClose();
   };
 
   if (!isOpen || !product) return null;
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={handleOverlayClick}
     >
       <div
         ref={modalRef}
-        className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+        className="bg-black rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-yellow-600/20"
+        style={{ backgroundColor: '#000000f0', backdropFilter: 'blur(20px)' }}
       >
-        <div className="flex flex-col lg:flex-row">
-          {/* Product Image */}
-          <div className="lg:w-1/2 h-80 lg:h-auto bg-gradient-to-br from-gray-100 to-gray-200 relative">
+        <div className="flex flex-col lg:flex-row h-full">
+          {/* Product Image - Full height on mobile */}
+          <div className="relative lg:w-1/2 h-64 lg:h-full bg-gradient-to-br from-gray-900 to-black overflow-hidden">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+            {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 bg-white/90 rounded-full p-2 hover:bg-white transition-colors"
+              className="absolute top-4 right-4 z-20 bg-white/20 backdrop-blur-md rounded-full p-3 hover:bg-white/30 transition-all"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6 text-white" />
             </button>
           </div>
 
           {/* Product Details */}
-          <div className="lg:w-1/2 p-6 lg:p-8 overflow-y-auto">
-            <div className="space-y-6">
+          <div className="lg:w-1/2 p-6 lg:p-10 overflow-y-auto bg-gradient-to-b from-black/95 to-black">
+            <div className="space-y-8">
+              {/* Title & Description */}
               <div>
                 <BaseText
                   fontFamily="bricolage"
                   weight="bold"
-                  className="text-2xl lg:text-3xl"
+                  className="text-3xl lg:text-4xl text-white"
                 >
                   {product.name}
                 </BaseText>
-                <LightText className="text-lg mt-2">
+                <LightText className="text-gray-300 text-base lg:text-lg mt-3 leading-relaxed">
                   {product.description}
                 </LightText>
               </div>
 
               {/* Price */}
-              <FlexboxLayout align="center" gap="sm">
-                <BaseText weight="bold" className="text-3xl text-yellow-600">
+              <FlexboxLayout align="center" gap="md">
+                <BaseText
+                  weight="bold"
+                  className="text-4xl"
+                  style={{ color: colorScheme.primary }}
+                >
                   {product.price}
                 </BaseText>
                 {product.originalPrice && (
-                  <LightText className="text-xl line-through">
+                  <LightText className="text-2xl line-through text-gray-500">
                     {product.originalPrice}
                   </LightText>
                 )}
@@ -130,18 +140,18 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               {/* Size Selection */}
               <div>
-                <BaseText weight="semibold" className="text-lg mb-3">
-                  Size
+                <BaseText weight="semibold" className="text-xl text-white mb-4">
+                  Select Size
                 </BaseText>
                 <FlexboxLayout gap="sm" className="flex-wrap">
                   {product.sizes.map(size => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 rounded-xl border-2 transition-all duration-300 ${
+                      className={`px-6 py-3 rounded-xl border-2 text-sm font-medium transition-all duration-300 ${
                         selectedSize === size
-                          ? 'border-yellow-400 bg-yellow-50 text-gray-900'
-                          : 'border-gray-200 hover:border-yellow-300'
+                          ? 'border-yellow-500 bg-yellow-500/20 text-yellow-400'
+                          : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
                       }`}
                     >
                       {size}
@@ -152,18 +162,18 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               {/* Color Selection */}
               <div>
-                <BaseText weight="semibold" className="text-lg mb-3">
-                  Color
+                <BaseText weight="semibold" className="text-xl text-white mb-4">
+                  Select Color
                 </BaseText>
                 <FlexboxLayout gap="sm" className="flex-wrap">
                   {product.colors.map(color => (
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
-                      className={`px-4 py-2 rounded-xl border-2 transition-all duration-300 ${
+                      className={`px-6 py-3 rounded-xl border-2 text-sm font-medium transition-all duration-300 ${
                         selectedColor === color
-                          ? 'border-yellow-400 bg-yellow-50 text-gray-900'
-                          : 'border-gray-200 hover:border-yellow-300'
+                          ? 'border-yellow-500 bg-yellow-500/20 text-yellow-400'
+                          : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
                       }`}
                     >
                       {color}
@@ -172,29 +182,32 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 </FlexboxLayout>
               </div>
 
-              {/* Quantity Selection */}
+              {/* Quantity */}
               <div>
-                <BaseText weight="semibold" className="text-lg mb-3">
+                <BaseText weight="semibold" className="text-xl text-white mb-4">
                   Quantity
                 </BaseText>
-                <FlexboxLayout align="center" gap="md">
+                <FlexboxLayout align="center" gap="lg">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-yellow-400 transition-colors"
+                    className="w-12 h-12 rounded-full border-2 border-gray-600 hover:border-yellow-500 flex items-center justify-center transition-all"
                   >
-                    <Minus className="w-4 h-4" />
+                    <Minus className="w-5 h-5 text-gray-300" />
                   </button>
-                  <BaseText weight="bold" className="text-xl w-8 text-center">
+                  <BaseText
+                    weight="bold"
+                    className="text-2xl text-white w-16 text-center"
+                  >
                     {quantity}
                   </BaseText>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-yellow-400 transition-colors"
+                    className="w-12 h-12 rounded-full border-2 border-gray-600 hover:border-yellow-500 flex items-center justify-center transition-all"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-5 h-5 text-gray-300" />
                   </button>
-                  <LightText className="text-sm text-gray-500">
-                    {product.stock} available
+                  <LightText className="text-sm text-gray-400">
+                    {product.stock} in stock
                   </LightText>
                 </FlexboxLayout>
               </div>
@@ -205,12 +218,16 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 size="lg"
                 curvature="full"
                 elevated={true}
-                leftIcon={<ShoppingBag className="w-5 h-5" />}
+                leftIcon={<ShoppingBag className="w-6 h-6" />}
                 onClick={handleAddToCart}
                 disabled={!selectedSize || !selectedColor}
-                className="w-full transition-all duration-300 transform hover:scale-105"
+                className="w-full py-5 text-lg font-bold transition-all duration-300 hover:scale-105 shadow l-2xl"
+                style={{
+                  backgroundColor: colorScheme.primary,
+                  color: '#000000',
+                }}
               >
-                Add to Cart - {product.price}
+                Add to Cart • {product.price}
               </Button>
             </div>
           </div>
