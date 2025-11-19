@@ -330,7 +330,7 @@ const AboutUsPage = () => {
       {/* CTA */}
       <Section
         className="py-28 lg:py-36"
-        style={{ backgroundColor: colorScheme.primary }}
+        style={{ backgroundColor: colorScheme.text }}
       >
         <Container size="xl" className="text-center px-6 lg:px-8">
           <H1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-8">
