@@ -31,11 +31,22 @@ export default function AssociatePastors() {
     addSectionHeaderRef,
   } = useAssociatePastors();
 
+  const isDarkMode = colorScheme.pageBackground === '#000000';
+
+  // Main headings & names: yellow in dark, deep gold in light
+  const mainAccentColor = isDarkMode
+    ? colorScheme.primary
+    : colorScheme.accentText;
+
+  // Sub-text (descriptions): always black on white background → perfect visibility
+  const subTextColor = '#000000';
+
   return (
     <Section
       ref={sectionRef}
       background="light"
-      className="bg-gradient-to-b from-gray-200 to-white"
+      style={{ backgroundColor: '#FFFFFF' }} // Always white bg
+      className="relative"
     >
       <Container size="xl" className="py-12 sm:py-16 lg:py-20">
         {/* Main Section Header */}
@@ -49,23 +60,21 @@ export default function AssociatePastors() {
           <H1
             ref={headingRef}
             className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
-            style={{
-              color: colorScheme.background,
-            }}
+            style={{ color: mainAccentColor }}
           >
             {associatePastorsContent.mainHeader}
           </H1>
           <LightText
             ref={descriptionRef}
             className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-xl max-w-3xl mx-auto leading-relaxed mt-3 sm:mt-4 px-2"
-            style={{ color: colorScheme.buttonText }}
+            style={{ color: subTextColor }}
           >
             {associatePastorsContent.mainDescription}
           </LightText>
         </FlexboxLayout>
 
         <div ref={contentRef} className="flex flex-col items-center">
-          {/* First Leaders Section */}
+          {/* Pastoral Team */}
           <FlexboxLayout
             direction="column"
             gap="lg"
@@ -74,20 +83,14 @@ export default function AssociatePastors() {
             <H2
               ref={addSectionHeaderRef}
               className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
-              style={{
-                color: colorScheme.background,
-              }}
+              style={{ color: mainAccentColor }}
             >
               {associatePastorsContent.pastoralSection.title}
             </H2>
             <GridboxLayout
               columns={3}
               gap="lg"
-              responsive={{
-                sm: 1,
-                md: 2,
-                lg: 3,
-              }}
+              responsive={{ sm: 1, md: 2, lg: 3 }}
               className="w-full"
             >
               {pastorsData.slice(0, 3).map(pastor => (
@@ -100,8 +103,8 @@ export default function AssociatePastors() {
                     <div
                       className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto transition-all duration-300"
                       style={{
-                        borderColor: colorScheme.white,
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                        borderColor: colorScheme.primary,
+                        boxShadow: `0 25px 50px -12px ${colorScheme.black}40`,
                       }}
                     >
                       <Image
@@ -109,10 +112,9 @@ export default function AssociatePastors() {
                         alt={pastor.name}
                         width={208}
                         height={208}
-                        className="w-full h-full object-cover transition-transform duration-300"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       />
                     </div>
-                    {/* Responsive badge */}
                     <div
                       className="absolute -bottom-2 sm:-bottom-3 left-1/2 transform -translate-x-1/2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm md:text-base font-medium shadow-lg whitespace-normal text-center max-w-[110px] sm:max-w-[130px] md:max-w-[150px] break-words leading-tight"
                       style={{
@@ -125,15 +127,15 @@ export default function AssociatePastors() {
                   </div>
 
                   <H3
-                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 transition-colors duration-300 text-center px-2"
-                    style={{ color: colorScheme.black }}
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 text-center px-2"
+                    style={{ color: mainAccentColor }}
                   >
                     {pastor.name}
                   </H3>
                   {pastor.description && (
                     <SmallText
-                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center"
-                      style={{ color: colorScheme.body }}
+                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center opacity-90"
+                      style={{ color: subTextColor }}
                     >
                       {pastor.description}
                     </SmallText>
@@ -143,7 +145,7 @@ export default function AssociatePastors() {
             </GridboxLayout>
           </FlexboxLayout>
 
-          {/* Second Leaders Section */}
+          {/* Ministry Leaders */}
           <FlexboxLayout
             direction="column"
             gap="lg"
@@ -152,20 +154,14 @@ export default function AssociatePastors() {
             <H2
               ref={addSectionHeaderRef}
               className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
-              style={{
-                color: colorScheme.black,
-              }}
+              style={{ color: mainAccentColor }}
             >
               {associatePastorsContent.ministrySection.title}
             </H2>
             <GridboxLayout
               columns={3}
               gap="lg"
-              responsive={{
-                sm: 1,
-                md: 2,
-                lg: 3,
-              }}
+              responsive={{ sm: 1, md: 2, lg: 3 }}
               className="w-full"
             >
               {ministryLeadersData.slice(3, 6).map(pastor => (
@@ -178,8 +174,8 @@ export default function AssociatePastors() {
                     <div
                       className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden border-4 shadow-2xl mx-auto transition-all duration-300"
                       style={{
-                        borderColor: colorScheme.white,
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                        borderColor: colorScheme.primary,
+                        boxShadow: `0 25px 50px -12px ${colorScheme.black}40`,
                       }}
                     >
                       <Image
@@ -187,10 +183,9 @@ export default function AssociatePastors() {
                         alt={pastor.name}
                         width={208}
                         height={208}
-                        className="w-full h-full object-cover transition-transform duration-300"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       />
                     </div>
-                    {/* Responsive badge */}
                     <div
                       className="absolute -bottom-2 sm:-bottom-3 left-1/2 transform -translate-x-1/2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm md:text-base font-medium shadow-lg whitespace-normal text-center max-w-[110px] sm:max-w-[130px] md:max-w-[150px] break-words leading-tight"
                       style={{
@@ -203,15 +198,15 @@ export default function AssociatePastors() {
                   </div>
 
                   <H3
-                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 transition-colors duration-300 text-center px-2"
-                    style={{ color: colorScheme.black }}
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 text-center px-2"
+                    style={{ color: mainAccentColor }}
                   >
                     {pastor.name}
                   </H3>
                   {pastor.description && (
                     <SmallText
-                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center"
-                      style={{ color: colorScheme.buttonText }}
+                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center opacity-90"
+                      style={{ color: subTextColor }}
                     >
                       {pastor.description}
                     </SmallText>
