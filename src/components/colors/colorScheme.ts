@@ -38,8 +38,12 @@ interface OpacityColors {
   white10: string;
   white20: string;
   white50: string;
-  error10: string; // ← ADDED: Missing error opacity color
-  error20: string; // ← ADDED: For consistency
+  error10: string;
+  error20: string;
+  success10: string; // ← ADDED: Success opacity color
+  success20: string; // ← ADDED: Success opacity color
+  info10: string; // ← ADDED: Info opacity color
+  info20: string; // ← ADDED: Info opacity color
 }
 
 export interface ColorScheme {
@@ -54,10 +58,8 @@ export interface ColorScheme {
   warning: string;
   info: string;
 
-  // ← NEW: Darker accent text for headings/mission on white backgrounds
-  accentText: string;
-
   // Text colors
+  accentText: string;
   text: string;
   textSecondary: string;
   textTertiary: string;
@@ -145,7 +147,9 @@ const createOpacityColors = (
   black: string,
   white: string,
   warning: string,
-  error: string // ← ADDED: Error color parameter
+  error: string,
+  success: string,
+  info: string
 ): OpacityColors => ({
   primary10: `${primary}1A`,
   primary20: `${primary}33`,
@@ -159,8 +163,12 @@ const createOpacityColors = (
   white50: `${white}80`,
   warning10: `${warning}1A`,
   warning20: `${warning}33`,
-  error10: `${error}1A`, // ← ADDED: Error opacity colors
+  error10: `${error}1A`,
   error20: `${error}33`,
+  success10: `${success}1A`, // ← ADDED: Success opacity
+  success20: `${success}33`, // ← ADDED: Success opacity
+  info10: `${info}1A`, // ← ADDED: Info opacity
+  info20: `${info}33`, // ← ADDED: Info opacity
 });
 
 export const darkShades: ColorScheme = {
@@ -169,7 +177,7 @@ export const darkShades: ColorScheme = {
   primaryDark: '#D4BC0F',
   secondary: '#1F2937',
   accent: '#F7DE12',
-  accentText: '#D4BC0F', // Bright yellow in dark mode
+  accentText: '#D4BC0F',
 
   error: '#EF4444',
   success: '#10B981',
@@ -226,8 +234,10 @@ export const darkShades: ColorScheme = {
     '#000000',
     '#FFFFFF',
     '#F59E0B',
-    '#EF4444'
-  ), // ← UPDATED: Added error color
+    '#EF4444',
+    '#10B981',
+    '#3B82F6'
+  ),
 
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
@@ -245,8 +255,6 @@ export const lightShades: ColorScheme = {
   primaryDark: '#D4BC0F',
   secondary: '#FFFFFF',
   accent: '#F7DE12',
-
-  // ← DARK & BOLD gold for text on white background (perfect readability)
   accentText: '#A67C00',
 
   error: '#EF4444',
@@ -304,8 +312,10 @@ export const lightShades: ColorScheme = {
     '#000000',
     '#FFFFFF',
     '#F59E0B',
-    '#EF4444'
-  ), // ← UPDATED: Added error color
+    '#EF4444',
+    '#10B981',
+    '#3B82F6'
+  ),
 
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
