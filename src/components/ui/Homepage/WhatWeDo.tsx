@@ -32,7 +32,7 @@ export default function WhatWeDo() {
             : 'aspect-[4/3]'
         }`}
       >
-        {/* Background Image Container */}
+        {/* Background Image */}
         <div className="relative w-full h-full">
           <Image
             src={box.image}
@@ -49,25 +49,30 @@ export default function WhatWeDo() {
           />
         </div>
 
-        {/* Lighter Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/30 to-black/40 z-0"></div>
+        {/* Dark gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/50 z-10"></div>
 
-        {/* Content Overlay - FIXED: Added top padding to push content down */}
-        <div className="absolute inset-0 flex items-end z-10 p-6 sm:p-8 lg:p-10">
+        {/* Content */}
+        <div className="absolute inset-0 flex items-end z-20 p-6 sm:p-8 lg:p-10">
           <div className="text-left w-full pt-16 sm:pt-20 lg:pt-24 pb-4">
-            {' '}
-            {/* Added top and bottom padding */}
-            {/* Title */}
+            {/* Title - Your signature yellow */}
             <h3
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-work-sans mb-3 sm:mb-4 text-white drop-shadow-lg"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-work-sans mb-3 sm:mb-4 drop-shadow-2xl"
               style={{
                 color: colorScheme.primary,
+                textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
               }}
             >
               {box.title}
             </h3>
-            {/* Description */}
-            <LightText className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed sm:leading-relaxed font-work-sans font-light drop-shadow-md max-w-2xl">
+
+            {/* Description - Always readable on dark overlay */}
+            <LightText
+              className="text-white/95 text-sm sm:text-base md:text-lg leading-relaxed font-work-sans font-light drop-shadow-lg max-w-2xl"
+              style={{
+                textShadow: '1px 1px 6px rgba(0,0,0,0.9)',
+              }}
+            >
               {box.description}
             </LightText>
           </div>
@@ -82,46 +87,43 @@ export default function WhatWeDo() {
       ref={sectionRef}
       padding="xl"
       fullHeight={false}
-      style={{ backgroundColor: colorScheme.white }}
+      style={{
+        backgroundColor: colorScheme.pageBackground, // ← Fixed: respects dark/light mode
+      }}
       className="relative overflow-hidden"
     >
-      {/* Subtle background elements - Lighter and more subtle */}
+      {/* Optional subtle background blobs (uncomment if you want them back) */}
       {/* <div
-        className="absolute top-10 left-10 w-64 h-64 rounded-full mix-blend-multiply filter blur-3xl opacity-3"
+        className="absolute top-10 left-10 w-64 h-64 rounded-full mix-blend-multiply blur-3xl opacity-20 animate-pulse"
         style={{ backgroundColor: colorScheme.primary }}
-      ></div> */}
-      {/* <div
-        className="absolute bottom-10 right-10 w-80 h-80 rounded-full mix-blend-multiply filter blur-3xl opacity-3"
+      />
+      <div
+        className="absolute bottom-10 right-10 w-80 h-80 rounded-full mix-blend-multiply blur-3xl opacity-20 animate-pulse delay-1000"
         style={{ backgroundColor: colorScheme.primaryLight }}
-      ></div> */}
+      /> */}
 
       <Container size="xl" className="relative z-10">
-        {/* Header Section with More Spacing */}
+        {/* Header */}
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
           gap="xl"
-          className="text-center pt-12 sm:pt-16 lg:pt-20 pb-8 sm:pb-12 lg:pb-16" // Added responsive top and bottom padding
+          className="text-center pt-12 sm:pt-16 lg:pt-20 pb-8 sm:pb-12 lg:pb-16"
           padding="none"
         >
           <H2
             ref={headingRef}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-work-sans leading-tight"
             style={{
-              color: colorScheme.background,
+              color: colorScheme.heading, // ← Now correct in both themes
             }}
           >
             What To Expect
           </H2>
-
-          {/* Optional Subtitle for Better Spacing */}
-          {/* <div className="w-24 h-1 rounded-full opacity-20" 
-       style={{ backgroundColor: colorScheme.primary }}>
-  </div> */}
         </FlexboxLayout>
 
-        {/* Grid Layout with More Spacing */}
+        {/* Service Boxes Grid */}
         <GridboxLayout
           columns={1}
           gap="xl"
@@ -136,7 +138,7 @@ export default function WhatWeDo() {
           {whatWeDoData.map((box, index) => renderBox(box, index))}
         </GridboxLayout>
 
-        {/* Mission Statement with Better Spacing */}
+        {/* Mission Statement */}
         <FlexboxLayout
           ref={textRef}
           direction="column"
@@ -147,8 +149,10 @@ export default function WhatWeDo() {
         >
           <div className="max-w-4xl mx-auto">
             <LightText
-              className="leading-relaxed sm:leading-loose font-work-sans text-base sm:text-lg md:text-xl lg:text-2xl font-light px-4 sm:px-6 lg:px-0"
-              style={{ color: colorScheme.black }}
+              className="leading-relaxed sm:leading-loose font-work-sans text-base sm:text-lg md:text-xl lg:text-2xl font-light px-4 sm:px-6 lg:px-0 opacity-90"
+              style={{
+                color: colorScheme.text, // ← Semantic, high-contrast text
+              }}
             >
               {missionStatement}
             </LightText>

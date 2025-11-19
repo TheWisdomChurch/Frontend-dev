@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/ui/fonts/color/colorScheme.ts
+
 // Base color interfaces
 type BackgroundColor = string;
 type Color = string;
@@ -52,12 +53,14 @@ export interface ColorScheme {
   warning: string;
   info: string;
 
-  // Text colors - UPDATED FOR BETTER CONTRAST
-  text: string;
-  textSecondary: string;
-  textTertiary: string;
-  textInverted: string;
-  subtleText: string;
+  // === TEXT COLORS - FIXED FOR MAXIMUM CONTRAST ===
+  text: string; // Main body text (high contrast)
+  textSecondary: string; // Secondary labels, captions
+  textTertiary: string; // Subtle hints
+  textInverted: string; // Text on primary/yellow backgrounds
+  subtleText: string; // Very low-priority text
+
+  heading: string; // H1-H6 headings (highest contrast)
 
   // Background colors
   background: string;
@@ -100,8 +103,7 @@ export interface ColorScheme {
   // Border radius
   borderRadius: BorderRadius;
 
-  // Additional colors
-  heading: string;
+  // Core black/white
   white: string;
   black: string;
 
@@ -111,14 +113,14 @@ export interface ColorScheme {
   // Opacity colors
   opacity: OpacityColors;
 
-  // Material-like color scheme additions
+  // Material-like additions
   tertiary?: BackgroundColor;
   onTertiary?: Color;
   onPrimary?: Color;
   onSecondary?: Color;
   outline?: string;
 
-  // Modal and overlay colors
+  // Modal and overlay
   overlay: string;
   backdrop: string;
 }
@@ -150,9 +152,9 @@ const createOpacityColors = (
   white: string,
   warning: string
 ): OpacityColors => ({
-  primary10: `${primary}1A`, // 10% opacity
-  primary20: `${primary}33`, // 20% opacity
-  primary30: `${primary}4D`, // 30% opacity
+  primary10: `${primary}1A`,
+  primary20: `${primary}33`,
+  primary30: `${primary}4D`,
   black10: `${black}1A`,
   black20: `${black}33`,
   black50: `${black}80`,
@@ -160,44 +162,46 @@ const createOpacityColors = (
   white10: `${white}1A`,
   white20: `${white}33`,
   white50: `${white}80`,
-  warning10: `${warning}1A`, // 10% opacity for warning
-  warning20: `${warning}33`, // 20% opacity for warning
+  warning10: `${warning}1A`,
+  warning20: `${warning}33`,
 });
 
 export const darkShades: ColorScheme = {
-  // Primary colors based on #F7DE12 (your yellow)
-  primary: '#F7DE12', // Your yellow
-  primaryLight: '#F9E755', // Lighter yellow
-  primaryDark: '#D4BC0F', // Darker yellow
-  secondary: '#1F2937', // Dark gray
-  accent: '#F7DE12', // Using yellow as accent too
+  // Primary palette (your signature yellow)
+  primary: '#F7DE12',
+  primaryLight: '#F9E755',
+  primaryDark: '#D4BC0F',
+  secondary: '#1F2937',
+  accent: '#F7DE12',
   error: '#EF4444',
   success: '#10B981',
   warning: '#F59E0B',
   info: '#3B82F6',
 
-  // Text colors - UPDATED FOR BETTER VISIBILITY
-  text: '#FFFFFF',
-  textSecondary: '#F3F4F6', // Much lighter gray for better contrast on dark
-  textTertiary: '#E5E7EB', // Even lighter for tertiary text
-  textInverted: '#000000', // Black for text on yellow
-  subtleText: '#D1D5DB', // Brighter subtle text
+  // TEXT - HIGH CONTRAST ON DARK BACKGROUND
+  text: '#F3F4F6', // gray-100 → excellent readability
+  textSecondary: '#D1D5DB', // gray-300
+  textTertiary: '#9CA3AF', // gray-400
+  textInverted: '#000000', // black on yellow
+  subtleText: '#9CA3AF',
 
-  // Background colors
-  background: '#000000', // Black background
-  backgroundSecondary: '#111827', // Very dark gray
-  surface: '#1F2937', // Dark gray
-  surfaceVariant: '#374151', // Medium dark gray
+  heading: '#FFFFFF', // pure white for maximum impact
+
+  // Backgrounds
+  background: '#000000',
+  backgroundSecondary: '#111827',
+  surface: '#1F2937',
+  surfaceVariant: '#374151',
   card: '#1F2937',
-  body: '#000000', // Black
-  footer: '#000000', // Black
-  pageBackground: '#000000', // Black
+  body: '#000000',
+  footer: '#000000',
+  pageBackground: '#000000',
 
-  // Buttons - using yellow
+  // Buttons
   button: '#F7DE12',
-  buttonText: '#000000', // Black text on yellow buttons
-  buttonHover: '#F9E755', // Lighter yellow on hover
-  buttonActive: '#D4BC0F', // Darker yellow when active
+  buttonText: '#000000',
+  buttonHover: '#F9E755',
+  buttonActive: '#D4BC0F',
 
   // Borders
   border: '#374151',
@@ -206,7 +210,7 @@ export const darkShades: ColorScheme = {
 
   gray: baseGrayScale,
 
-  // Gradients using yellow
+  // Gradients
   primaryGradient: 'linear-gradient(135deg, #F7DE12 0%, #D4BC0F 100%)',
   primaryGradientLight:
     'linear-gradient(135deg, rgba(247, 222, 18, 0.1) 0%, rgba(212, 188, 15, 0.1) 100%)',
@@ -216,65 +220,64 @@ export const darkShades: ColorScheme = {
   focusBorder: '#F7DE12',
 
   shadowSm: '0 1px 3px rgba(0,0,0,0.5)',
-  shadowMd: '0 4px 6px -1px rgba(0,0,0,0.5),0 2px 4px -1px rgba(0,0,0,0.3)',
-  shadowLg: '0 10px 15px -3px rgba(0,0,0,0.5),0 4px 6px -2px rgba(0,0,0,0.25)',
+  shadowMd: '0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -1px rgba(0,0,0,0.3)',
+  shadowLg: '0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.25)',
 
   borderRadius: baseBorderRadius,
 
-  heading: '#FFFFFF',
   white: '#FFFFFF',
   black: '#000000',
-  highlight: '#F7DE12', // Using yellow as highlight
+  highlight: '#F7DE12',
 
-  // Opacity colors
   opacity: createOpacityColors('#F7DE12', '#000000', '#FFFFFF', '#F59E0B'),
 
-  // Modal and overlay
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
 
-  // Material-like color scheme additions
+  // Material-like
   tertiary: '#374151',
   onTertiary: '#FFFFFF',
-  onPrimary: '#000000', // Black text on yellow
+  onPrimary: '#000000',
   onSecondary: '#FFFFFF',
   outline: '#4B5563',
 };
 
 export const lightShades: ColorScheme = {
-  // Primary colors based on #F7DE12 (your yellow)
-  primary: '#F7DE12', // Your yellow
-  primaryLight: '#F9E755', // Lighter yellow
-  primaryDark: '#D4BC0F', // Darker yellow
-  secondary: '#FFFFFF', // White
-  accent: '#F7DE12', // Using yellow as accent too
+  // Primary palette (same yellow)
+  primary: '#F7DE12',
+  primaryLight: '#F9E755',
+  primaryDark: '#D4BC0F',
+  secondary: '#FFFFFF',
+  accent: '#F7DE12',
   error: '#EF4444',
   success: '#10B981',
   warning: '#F59E0B',
   info: '#3B82F6',
 
-  // Text colors - UPDATED FOR BETTER VISIBILITY
-  text: '#000000', // Black text
-  textSecondary: '#374151', // Darker gray for better contrast on light
-  textTertiary: '#4B5563', // Even darker for tertiary text
-  textInverted: '#000000', // Black for text on yellow
-  subtleText: '#6B7280', // Good contrast subtle text
+  // TEXT - HIGH CONTRAST ON LIGHT BACKGROUND
+  text: '#111827', // gray-900 → very dark
+  textSecondary: '#374151', // gray-700
+  textTertiary: '#6B7280', // gray-500
+  textInverted: '#000000',
+  subtleText: '#6B7280',
 
-  // Background colors
-  background: '#FFFFFF', // White background
+  heading: '#000000', // pure black for strong headings
+
+  // Backgrounds
+  background: '#FFFFFF',
   backgroundSecondary: '#F8FAFC',
   surface: '#FFFFFF',
   surfaceVariant: '#F3F4F6',
   card: '#FFFFFF',
-  body: '#FFFFFF', // White
+  body: '#FFFFFF',
   footer: '#F8FAFC',
-  pageBackground: '#FFFFFF', // White
+  pageBackground: '#FFFFFF',
 
-  // Buttons - using yellow
+  // Buttons
   button: '#F7DE12',
-  buttonText: '#000000', // Black text on yellow buttons
-  buttonHover: '#F9E755', // Lighter yellow on hover
-  buttonActive: '#D4BC0F', // Darker yellow when active
+  buttonText: '#000000',
+  buttonHover: '#F9E755',
+  buttonActive: '#D4BC0F',
 
   // Borders
   border: '#E5E7EB',
@@ -283,7 +286,7 @@ export const lightShades: ColorScheme = {
 
   gray: baseGrayScale,
 
-  // Gradients using yellow
+  // Gradagem
   primaryGradient: 'linear-gradient(135deg, #F7DE12 0%, #D4BC0F 100%)',
   primaryGradientLight:
     'linear-gradient(135deg, rgba(247, 222, 18, 0.1) 0%, rgba(212, 188, 15, 0.1) 100%)',
@@ -293,32 +296,29 @@ export const lightShades: ColorScheme = {
   focusBorder: '#F7DE12',
 
   shadowSm: '0 1px 3px rgba(0,0,0,0.1)',
-  shadowMd: '0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06)',
-  shadowLg: '0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)',
+  shadowMd: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)',
+  shadowLg: '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)',
 
   borderRadius: baseBorderRadius,
 
-  heading: '#000000', // Black headings
   white: '#FFFFFF',
   black: '#000000',
-  highlight: '#F7DE12', // Using yellow as highlight
+  highlight: '#F7DE12',
 
-  // Opacity colors
   opacity: createOpacityColors('#F7DE12', '#000000', '#FFFFFF', '#F59E0B'),
 
-  // Modal and overlay
   overlay: 'rgba(0, 0, 0, 0.8)',
   backdrop: 'rgba(0, 0, 0, 0.5)',
 
-  // Material-like color scheme additions
+  // Material-like
   tertiary: '#F3F4F6',
-  onTertiary: '#000000', // Black text on light gray
-  onPrimary: '#000000', // Black text on yellow
-  onSecondary: '#000000', // Black text on white
+  onTertiary: '#000000',
+  onPrimary: '#000000',
+  onSecondary: '#000000',
   outline: '#D1D5DB',
 };
 
-// Utility types for theme usage
+// Utility types
 export type ThemeColor = keyof Omit<
   ColorScheme,
   'gray' | 'borderRadius' | 'opacity'
@@ -327,25 +327,14 @@ export type GrayColor = keyof GrayScale;
 export type BorderRadiusSize = keyof BorderRadius;
 export type OpacityColor = keyof OpacityColors;
 
-// Utility functions for color manipulation
+// Optional: color manipulation utilities (you can expand later)
 export const colorUtils = {
-  // Convert hex to rgba
   hexToRgba: (hex: string, alpha: number): string => {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   },
-
-  // Lighten color
-  lighten: (color: string, percent: number): string => {
-    // Implementation for lightening colors
-    return color; // You can implement this based on your needs
-  },
-
-  // Darken color
-  darken: (color: string, percent: number): string => {
-    // Implementation for darkening colors
-    return color; // You can implement this based on your needs
-  },
+  lighten: (color: string, percent: number): string => color,
+  darken: (color: string, percent: number): string => color,
 };

@@ -167,6 +167,7 @@ const HeroSection = ({
             <H1
               ref={titleRef}
               className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight"
+              style={{ color: colorScheme.white }}
             >
               {currentSlideData.title}
             </H1>
