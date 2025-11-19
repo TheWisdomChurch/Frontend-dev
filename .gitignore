@@ -18,6 +18,13 @@ husky/
 # next.js
 /.next/
 /out/
+lintstagedrc.json
+eslintrc.json
+prettierignore
+prettierrc
+commitlint.config.js
+dockerignore
+eslint.config.mjs
 
 # production
 /build
