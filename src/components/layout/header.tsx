@@ -147,7 +147,12 @@ export default function Header() {
                         color: colorScheme.white, // Always white text
                       }}
                     >
-                      {Icon && <Icon className="w-3 h-3" style={{ color: colorScheme.white }} />}
+                      {Icon && (
+                        <Icon
+                          className="w-3 h-3"
+                          style={{ color: colorScheme.white }}
+                        />
+                      )}
                       <span className="text-[11px]">{link.label}</span>
                       {hasDropdown && (
                         <ChevronDown
@@ -272,18 +277,23 @@ const MobileNavigation: React.FC<{
   setSheetOpen,
   openCommunityModal,
 }) => {
-  
   // Fixed dropdown item click handler
   const handleMobileDropdownItemClick = () => {
     setSheetOpen(false); // Close sheet when dropdown item is clicked
   };
 
   // Fixed main dropdown link click handler - NOW NAVIGATES TO PAGE
-  const handleMobileMainLinkClick = (label: string, href: string, hasDropdown: boolean, e: React.MouseEvent) => {
+  const handleMobileMainLinkClick = (
+    label: string,
+    href: string,
+    hasDropdown: boolean,
+    e: React.MouseEvent
+  ) => {
     // If clicking the chevron icon, toggle dropdown
-    const isChevronClick = (e.target as HTMLElement).closest('svg') || 
-                          (e.target as HTMLElement).tagName === 'svg';
-    
+    const isChevronClick =
+      (e.target as HTMLElement).closest('svg') ||
+      (e.target as HTMLElement).tagName === 'svg';
+
     if (hasDropdown && isChevronClick) {
       e.preventDefault();
       e.stopPropagation();
@@ -346,7 +356,8 @@ const MobileNavigation: React.FC<{
           onClick={() => setSheetOpen(false)}
           className="p-2 hover:bg-white/10 rounded-xl transition-colors"
         >
-          <X className="w-5 h-5" style={{ color: colorScheme.white }} /> {/* White icon */}
+          <X className="w-5 h-5" style={{ color: colorScheme.white }} />{' '}
+          {/* White icon */}
         </button>
       </div>
 
@@ -364,7 +375,14 @@ const MobileNavigation: React.FC<{
               <div className="flex flex-col">
                 <Link
                   href={link.href}
-                  onClick={(e) => handleMobileMainLinkClick(link.label, link.href, hasDropdown, e)}
+                  onClick={e =>
+                    handleMobileMainLinkClick(
+                      link.label,
+                      link.href,
+                      hasDropdown,
+                      e
+                    )
+                  }
                   className={cn(
                     'w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group relative',
                     isActive ? 'bg-primary/20' : 'hover:bg-white/10'
@@ -400,9 +418,9 @@ const MobileNavigation: React.FC<{
                     </span>
                   </div>
                   {hasDropdown && (
-                    <div 
+                    <div
                       className="flex-shrink-0 ml-2 p-1 rounded-lg hover:bg-white/10 transition-colors"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.preventDefault();
                         e.stopPropagation();
                         toggleMobileDropdown(link.label, e);
