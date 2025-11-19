@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
+
 import React from 'react';
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, BaseText, LightText } from '@/components/text';
