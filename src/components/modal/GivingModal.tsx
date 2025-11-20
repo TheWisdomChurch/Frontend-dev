@@ -41,6 +41,24 @@ export default function GivingModal({
   const contentRef = useRef<HTMLDivElement>(null);
   const accountRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
+  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const surfaceBackground = isDarkMode
+    ? colorScheme.surface
+    : colorScheme.surfaceVariant;
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -160,17 +178,15 @@ export default function GivingModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500 backdrop-blur-sm"
-      style={{ backgroundColor: colorScheme.backdrop }}
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
       onClick={handleBackdropClick}
     >
       <div
         ref={modalRef}
-        className="relative rounded-xl w-full mx-auto overflow-hidden max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="rounded-3xl w-full mx-auto overflow-hidden max-w-2xl max-h-[90vh] overflow-y-auto border shadow-2xl"
         style={{
-          backgroundColor: colorScheme.background,
-          border: `2px solid ${colorScheme.primary}30`,
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+          backgroundColor: modalBackground,
+          borderColor: borderColor,
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -181,16 +197,27 @@ export default function GivingModal({
           onClick={handleClose}
           className="absolute top-4 right-4 z-50 rounded-full p-2 transform hover:scale-110 transition-all duration-200"
           style={{
-            backgroundColor: colorScheme.opacity.black80,
-            border: `1px solid ${colorScheme.primary}50`,
-            color: colorScheme.primary,
+            backgroundColor: isDarkMode
+              ? colorScheme.opacity.black10
+              : colorScheme.opacity.white10,
+            color: textColor,
+          }}
+          onMouseEnter={(e: any) => {
+            e.currentTarget.style.backgroundColor = isDarkMode
+              ? colorScheme.opacity.black20
+              : colorScheme.opacity.white20;
+          }}
+          onMouseLeave={(e: any) => {
+            e.currentTarget.style.backgroundColor = isDarkMode
+              ? colorScheme.opacity.black10
+              : colorScheme.opacity.white10;
           }}
         >
           <X className="w-5 h-5" />
         </Button>
 
         {/* Content Area */}
-        <div ref={contentRef} className="p-6">
+        <div ref={contentRef} className="p-6 lg:p-8">
           {/* Header */}
           <div className="text-center mb-8">
             <div
@@ -206,32 +233,40 @@ export default function GivingModal({
             </div>
 
             <h2
-              className="text-3xl font-black mb-4 tracking-tight"
-              style={{ color: colorScheme.text }}
+              className="text-2xl lg:text-3xl font-black mb-4 tracking-tight"
+              style={{ color: textColor }}
             >
               {givingOption.title}
             </h2>
 
             <p
-              className="text-lg opacity-90 leading-relaxed mb-6"
-              style={{ color: colorScheme.text }}
+              className="text-base lg:text-lg opacity-90 leading-relaxed mb-6"
+              style={{ color: secondaryTextColor }}
             >
               {givingOption.description}
             </p>
 
             {/* Scripture Verse */}
             <div
-              className="rounded-lg p-4 mb-8 border"
+              className="rounded-xl p-4 mb-8 border"
               style={{
-                backgroundColor: `${colorScheme.primary}10`,
-                borderColor: colorScheme.primary,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.primary10
+                  : colorScheme.opacity.primary20,
+                borderColor: isDarkMode
+                  ? colorScheme.opacity.primary20
+                  : colorScheme.opacity.primary30,
               }}
             >
               <BaseText
                 weight="light"
                 fontFamily="playfair"
                 className="text-lg italic text-center leading-relaxed"
-                style={{ color: colorScheme.text }}
+                style={{
+                  color: isDarkMode
+                    ? colorScheme.primary
+                    : colorScheme.primaryLight,
+                }}
               >
                 "Each of you should give what you have decided in your heart to
                 give, not reluctantly or under compulsion, for God loves a
@@ -239,7 +274,11 @@ export default function GivingModal({
               </BaseText>
               <p
                 className="text-sm font-medium mt-2 text-center"
-                style={{ color: colorScheme.primary }}
+                style={{
+                  color: isDarkMode
+                    ? colorScheme.primary
+                    : colorScheme.primaryLight,
+                }}
               >
                 2 Corinthians 9:7
               </p>
@@ -249,8 +288,8 @@ export default function GivingModal({
           {/* Accounts Section */}
           <div className="mb-8">
             <h3
-              className="text-2xl font-bold text-center mb-6"
-              style={{ color: colorScheme.text }}
+              className="text-xl lg:text-2xl font-bold text-center mb-6"
+              style={{ color: textColor }}
             >
               Pay Into Our Accounts
             </h3>
@@ -258,7 +297,7 @@ export default function GivingModal({
             {/* Conditional rendering for accounts */}
             {accounts.length === 0 ? (
               <div className="text-center py-8">
-                <p style={{ color: colorScheme.textSecondary }}>
+                <p style={{ color: secondaryTextColor }}>
                   No accounts available at the moment.
                 </p>
               </div>
@@ -268,13 +307,15 @@ export default function GivingModal({
                   <div key={index} className="text-center">
                     {/* Account Circle */}
                     <div
-                      className="relative w-24 h-24 rounded-full mx-auto mb-4 border-4 cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-lg"
+                      className="relative w-20 h-20 lg:w-24 lg:h-24 rounded-full mx-auto mb-4 border-4 cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-lg"
                       style={{
-                        backgroundColor: colorScheme.surface,
+                        backgroundColor: surfaceBackground,
                         borderColor:
                           openAccountIndex === index
                             ? colorScheme.primary
-                            : colorScheme.border,
+                            : isDarkMode
+                              ? colorScheme.borderLight
+                              : colorScheme.border,
                       }}
                       onClick={() => toggleAccount(index)}
                     >
@@ -295,7 +336,7 @@ export default function GivingModal({
                       <div
                         className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center border-2"
                         style={{
-                          backgroundColor: colorScheme.background,
+                          backgroundColor: modalBackground,
                           borderColor: colorScheme.primary,
                         }}
                       >
@@ -309,8 +350,8 @@ export default function GivingModal({
                     </div>
 
                     <h4
-                      className="font-bold text-lg mb-2"
-                      style={{ color: colorScheme.text }}
+                      className="font-bold text-base lg:text-lg mb-2"
+                      style={{ color: textColor }}
                     >
                       {account.bank}
                     </h4>
@@ -328,22 +369,24 @@ export default function GivingModal({
                       <div
                         className="rounded-lg p-4 border mt-2"
                         style={{
-                          backgroundColor: colorScheme.surface,
-                          borderColor: colorScheme.border,
+                          backgroundColor: surfaceBackground,
+                          borderColor: isDarkMode
+                            ? colorScheme.borderLight
+                            : colorScheme.border,
                         }}
                       >
                         <div className="space-y-3">
                           <div>
                             <p
                               className="text-sm font-medium mb-1"
-                              style={{ color: colorScheme.textSecondary }}
+                              style={{ color: secondaryTextColor }}
                             >
                               Account Number
                             </p>
                             <div className="flex items-center justify-between">
                               <code
-                                className="font-mono text-lg font-bold"
-                                style={{ color: colorScheme.text }}
+                                className="font-mono text-base lg:text-lg font-bold"
+                                style={{ color: textColor }}
                               >
                                 {account.accountNumber}
                               </code>
@@ -377,13 +420,13 @@ export default function GivingModal({
                           <div>
                             <p
                               className="text-sm font-medium mb-1"
-                              style={{ color: colorScheme.textSecondary }}
+                              style={{ color: secondaryTextColor }}
                             >
                               Account Name
                             </p>
                             <p
                               className="font-semibold"
-                              style={{ color: colorScheme.text }}
+                              style={{ color: textColor }}
                             >
                               {account.accountName}
                             </p>
@@ -393,8 +436,10 @@ export default function GivingModal({
                           <div
                             className="rounded-lg p-3 mt-2"
                             style={{
-                              backgroundColor: `${colorScheme.primary}10`,
-                              border: `1px solid ${colorScheme.primary}30`,
+                              backgroundColor: isDarkMode
+                                ? colorScheme.opacity.primary10
+                                : colorScheme.opacity.primary20,
+                              border: `1px solid ${isDarkMode ? colorScheme.opacity.primary20 : colorScheme.opacity.primary30}`,
                             }}
                           >
                             <div className="flex items-start gap-2">
@@ -404,7 +449,7 @@ export default function GivingModal({
                               />
                               <p
                                 className="text-xs leading-relaxed"
-                                style={{ color: colorScheme.text }}
+                                style={{ color: textColor }}
                               >
                                 <strong>Please Kindly add narration</strong> to
                                 your transactions for proper appropriation of
@@ -424,27 +469,32 @@ export default function GivingModal({
           {/* Footer */}
           <div
             className="text-center pt-6 border-t"
-            style={{ borderColor: colorScheme.border }}
+            style={{
+              borderColor: isDarkMode
+                ? colorScheme.borderLight
+                : colorScheme.border,
+            }}
           >
             <p
               className="text-sm opacity-80 mb-4"
-              style={{ color: colorScheme.text }}
+              style={{ color: secondaryTextColor }}
             >
               Thank you for your generous giving. May God bless you abundantly.
             </p>
             <Button
               onClick={handleClose}
-              className="font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
+              className="font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
               style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: buttonBackground,
+                color: buttonTextColor,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.primaryLight;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.gray[800]
+                  : colorScheme.primaryLight;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = colorScheme.primary;
+                e.currentTarget.style.backgroundColor = buttonBackground;
               }}
             >
               Close

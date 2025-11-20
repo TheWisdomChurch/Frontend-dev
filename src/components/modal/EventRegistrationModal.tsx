@@ -27,37 +27,70 @@ export const EventRegistrationModal = ({
 }: EventRegistrationModalProps) => {
   const { colorScheme } = useTheme();
 
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
+  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const inputBorderColor = isDarkMode
+    ? colorScheme.borderLight
+    : colorScheme.border;
+
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50 p-4 event-modal"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       style={{ backgroundColor: colorScheme.backdrop }}
+      onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="relative rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border shadow-2xl"
         style={{
-          backgroundColor: colorScheme.background,
-          border: `1px solid ${colorScheme.border}`,
+          backgroundColor: modalBackground,
+          borderColor: borderColor,
         }}
+        onClick={e => e.stopPropagation()}
       >
         <div className="p-8">
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3
                 className="text-3xl font-black mb-2"
-                style={{ color: colorScheme.text }}
+                style={{ color: textColor }}
               >
                 Register for {event.title}
               </h3>
-              <p style={{ color: colorScheme.textSecondary }}>
+              <p style={{ color: secondaryTextColor }}>
                 {event.date} • {event.time}
               </p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl transition-colors duration-300"
+              className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
               style={{
-                color: colorScheme.textSecondary,
-                backgroundColor: colorScheme.opacity.white10,
+                color: textColor,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10,
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black20
+                  : colorScheme.opacity.white20;
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10;
               }}
             >
               <X className="w-5 h-5" />
@@ -69,7 +102,7 @@ export const EventRegistrationModal = ({
               <div>
                 <label
                   className="block text-sm font-bold mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   First Name *
                 </label>
@@ -82,9 +115,9 @@ export const EventRegistrationModal = ({
                   style={{
                     borderColor: formErrors.firstName
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your first name"
                 />
@@ -101,7 +134,7 @@ export const EventRegistrationModal = ({
               <div>
                 <label
                   className="block text-sm font-bold mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Last Name *
                 </label>
@@ -114,9 +147,9 @@ export const EventRegistrationModal = ({
                   style={{
                     borderColor: formErrors.lastName
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your last name"
                 />
@@ -135,7 +168,7 @@ export const EventRegistrationModal = ({
               <div>
                 <label
                   className="block text-sm font-bold mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Email Address *
                 </label>
@@ -148,9 +181,9 @@ export const EventRegistrationModal = ({
                   style={{
                     borderColor: formErrors.email
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your email"
                 />
@@ -167,7 +200,7 @@ export const EventRegistrationModal = ({
               <div>
                 <label
                   className="block text-sm font-bold mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Phone Number *
                 </label>
@@ -180,9 +213,9 @@ export const EventRegistrationModal = ({
                   style={{
                     borderColor: formErrors.phone
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your phone number"
                 />
@@ -201,7 +234,7 @@ export const EventRegistrationModal = ({
               <div>
                 <label
                   className="block text-sm font-bold mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Country *
                 </label>
@@ -213,9 +246,9 @@ export const EventRegistrationModal = ({
                   style={{
                     borderColor: formErrors.country
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                 >
                   <option value="">Select your country</option>
@@ -240,7 +273,7 @@ export const EventRegistrationModal = ({
               <div>
                 <label
                   className="block text-sm font-bold mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Location/City *
                 </label>
@@ -253,9 +286,9 @@ export const EventRegistrationModal = ({
                   style={{
                     borderColor: formErrors.location
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your city"
                 />
@@ -271,13 +304,24 @@ export const EventRegistrationModal = ({
             </div>
 
             <div
-              className="rounded-xl p-4"
+              className="rounded-xl p-4 border"
               style={{
-                backgroundColor: colorScheme.opacity.primary10,
-                border: `1px solid ${colorScheme.opacity.primary20}`,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.primary10
+                  : colorScheme.opacity.primary20,
+                borderColor: isDarkMode
+                  ? colorScheme.opacity.primary20
+                  : colorScheme.opacity.primary30,
               }}
             >
-              <p className="text-sm" style={{ color: colorScheme.primary }}>
+              <p
+                className="text-sm font-medium"
+                style={{
+                  color: isDarkMode
+                    ? colorScheme.primary
+                    : colorScheme.primaryLight,
+                }}
+              >
                 <strong>Note:</strong> After registration, you will receive a
                 confirmation email with event details and next steps. For group
                 registrations, please contact our events team directly.
@@ -289,22 +333,27 @@ export const EventRegistrationModal = ({
               disabled={isSubmitting}
               className="w-full py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: buttonBackground,
+                color: buttonTextColor,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.primaryLight;
+                if (!isSubmitting) {
+                  e.currentTarget.style.backgroundColor = isDarkMode
+                    ? colorScheme.gray[800]
+                    : colorScheme.primaryLight;
+                }
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = colorScheme.primary;
+                if (!isSubmitting) {
+                  e.currentTarget.style.backgroundColor = buttonBackground;
+                }
               }}
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
                   <Loader2
                     className="animate-spin -ml-1 mr-3 h-5 w-5"
-                    style={{ color: colorScheme.black }}
+                    style={{ color: buttonTextColor }}
                   />
                   Processing Registration...
                 </span>

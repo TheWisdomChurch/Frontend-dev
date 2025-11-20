@@ -22,24 +22,44 @@ export const DateEventsModal = ({
 }: DateEventsModalProps) => {
   const { colorScheme } = useTheme();
 
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
+  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const surfaceBackground = isDarkMode
+    ? colorScheme.surface
+    : colorScheme.surfaceVariant;
+
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50 p-4 date-events-modal"
-      style={{ backgroundColor: colorScheme.backdrop }}
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
     >
       <div
-        className="rounded-3xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-y-auto"
+        className="rounded-3xl max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl border"
         style={{
-          backgroundColor: colorScheme.background,
-          border: `1px solid ${colorScheme.border}`,
+          backgroundColor: modalBackground,
+          borderColor: borderColor,
         }}
+        onClick={e => e.stopPropagation()}
       >
-        <div className="p-8">
+        <div className="p-6 lg:p-8">
+          {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3
-                className="text-2xl font-black mb-2"
-                style={{ color: colorScheme.text }}
+                className="text-xl lg:text-2xl font-black mb-2"
+                style={{ color: textColor }}
               >
                 {dateEvents.date.toLocaleDateString('en-US', {
                   weekday: 'long',
@@ -48,46 +68,55 @@ export const DateEventsModal = ({
                   year: 'numeric',
                 })}
               </h3>
-              <p style={{ color: colorScheme.textSecondary }}>
+              <p
+                className="text-sm lg:text-base"
+                style={{ color: secondaryTextColor }}
+              >
                 {dateEvents.events.length} event
                 {dateEvents.events.length > 1 ? 's' : ''} scheduled
               </p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl transition-colors duration-300"
+              className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
               style={{
-                color: colorScheme.textSecondary,
-                backgroundColor: colorScheme.opacity.white10,
+                color: textColor,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black20
+                  : colorScheme.opacity.white20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10;
               }}
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
+          {/* Events List */}
           <div className="space-y-4 mb-6">
             {dateEvents.events.map(event => (
               <div
                 key={event.id}
                 className="rounded-xl p-4 border-l-4 cursor-pointer transition-colors duration-300"
                 style={{
-                  backgroundColor: colorScheme.surface,
+                  backgroundColor: surfaceBackground,
                   borderLeftColor: colorScheme.primary,
                 }}
                 onMouseEnter={(e: any) => {
-                  e.currentTarget.style.backgroundColor =
-                    colorScheme.opacity.white10;
+                  e.currentTarget.style.backgroundColor = isDarkMode
+                    ? colorScheme.opacity.black10
+                    : colorScheme.opacity.white10;
                 }}
                 onMouseLeave={(e: any) => {
-                  e.currentTarget.style.backgroundColor = colorScheme.surface;
+                  e.currentTarget.style.backgroundColor = surfaceBackground;
                 }}
                 onClick={() => {
                   onClose();
@@ -99,28 +128,28 @@ export const DateEventsModal = ({
                   <span
                     className="inline-block px-2 py-1 rounded text-xs font-bold"
                     style={{
-                      backgroundColor: colorScheme.opacity.primary20,
+                      backgroundColor: isDarkMode
+                        ? colorScheme.opacity.primary20
+                        : colorScheme.opacity.primary30,
                       color: colorScheme.primary,
                     }}
                   >
                     {event.type}
                   </span>
                 </div>
-                <h4
-                  className="font-bold mb-1"
-                  style={{ color: colorScheme.text }}
-                >
+                <h4 className="font-bold mb-1" style={{ color: textColor }}>
                   {event.title}
                 </h4>
-                <p
-                  className="text-sm"
-                  style={{ color: colorScheme.textSecondary }}
-                >
+                <p className="text-sm" style={{ color: secondaryTextColor }}>
                   {event.time}
                 </p>
                 <p
                   className="text-sm"
-                  style={{ color: colorScheme.textTertiary }}
+                  style={{
+                    color: isDarkMode
+                      ? colorScheme.textTertiary
+                      : colorScheme.textSecondary,
+                  }}
                 >
                   {event.location}
                 </p>
@@ -128,20 +157,22 @@ export const DateEventsModal = ({
             ))}
           </div>
 
+          {/* Buttons */}
           <div className="flex gap-3">
             <button
               onClick={onViewEvents}
-              className="flex-1 py-3 rounded-xl font-bold transition-colors duration-300 shadow-lg"
+              className="flex-1 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:scale-105"
               style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: buttonBackground,
+                color: buttonTextColor,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.primaryLight;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.gray[800]
+                  : colorScheme.primaryLight;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = colorScheme.primary;
+                e.currentTarget.style.backgroundColor = buttonBackground;
               }}
             >
               View All Events
@@ -150,16 +181,19 @@ export const DateEventsModal = ({
               onClick={onClose}
               className="flex-1 border-2 py-3 rounded-xl font-bold transition-colors duration-300"
               style={{
-                borderColor: colorScheme.border,
-                color: colorScheme.text,
-                backgroundColor: colorScheme.background,
+                borderColor: isDarkMode
+                  ? colorScheme.borderLight
+                  : colorScheme.border,
+                color: textColor,
+                backgroundColor: modalBackground,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = colorScheme.background;
+                e.currentTarget.style.backgroundColor = modalBackground;
               }}
             >
               Close

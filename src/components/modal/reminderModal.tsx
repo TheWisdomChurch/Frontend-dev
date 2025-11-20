@@ -25,28 +25,49 @@ export const ReminderModal = ({
 }: ReminderModalProps) => {
   const { colorScheme } = useTheme();
 
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
+  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const inputBorderColor = isDarkMode
+    ? colorScheme.borderLight
+    : colorScheme.border;
+
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50 p-4 reminder-modal"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       style={{ backgroundColor: colorScheme.backdrop }}
+      onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="rounded-3xl shadow-2xl max-w-md w-full"
+        className="relative rounded-3xl w-full max-w-md border shadow-2xl"
         style={{
-          backgroundColor: colorScheme.background,
-          border: `1px solid ${colorScheme.border}`,
+          backgroundColor: modalBackground,
+          borderColor: borderColor,
         }}
+        onClick={e => e.stopPropagation()}
       >
         <div className="p-8">
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3
                 className="text-2xl font-black mb-2"
-                style={{ color: colorScheme.text }}
+                style={{ color: textColor }}
               >
                 Set Reminder
               </h3>
-              <p style={{ color: colorScheme.textSecondary }}>
+              <p style={{ color: secondaryTextColor }}>
                 Get notified about the{' '}
                 {formData.eventType === 'conference'
                   ? 'Wisdom Power Conference 2026'
@@ -55,18 +76,22 @@ export const ReminderModal = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl transition-colors duration-300"
+              className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
               style={{
-                color: colorScheme.textSecondary,
-                backgroundColor: colorScheme.opacity.white10,
+                color: textColor,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black20
+                  : colorScheme.opacity.white20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10;
               }}
             >
               <X className="w-5 h-5" />
@@ -77,7 +102,7 @@ export const ReminderModal = ({
             <div>
               <label
                 className="block text-sm font-bold mb-2"
-                style={{ color: colorScheme.text }}
+                style={{ color: textColor }}
               >
                 Email Address *
               </label>
@@ -90,9 +115,9 @@ export const ReminderModal = ({
                 style={{
                   borderColor: formErrors.email
                     ? colorScheme.error
-                    : colorScheme.border,
-                  backgroundColor: colorScheme.background,
-                  color: colorScheme.text,
+                    : inputBorderColor,
+                  backgroundColor: inputBackground,
+                  color: textColor,
                 }}
                 placeholder="Enter your email"
               />
@@ -109,7 +134,7 @@ export const ReminderModal = ({
             <div>
               <label
                 className="block text-sm font-bold mb-2"
-                style={{ color: colorScheme.text }}
+                style={{ color: textColor }}
               >
                 Reminder Frequency
               </label>
@@ -119,9 +144,9 @@ export const ReminderModal = ({
                 onChange={onInputChange}
                 className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
                 style={{
-                  borderColor: colorScheme.border,
-                  backgroundColor: colorScheme.background,
-                  color: colorScheme.text,
+                  borderColor: inputBorderColor,
+                  backgroundColor: inputBackground,
+                  color: textColor,
                 }}
               >
                 <option value="daily">Daily Updates</option>
@@ -133,7 +158,7 @@ export const ReminderModal = ({
             <div>
               <label
                 className="block text-sm font-bold mb-2"
-                style={{ color: colorScheme.text }}
+                style={{ color: textColor }}
               >
                 Event Type
               </label>
@@ -143,9 +168,9 @@ export const ReminderModal = ({
                 onChange={onInputChange}
                 className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
                 style={{
-                  borderColor: colorScheme.border,
-                  backgroundColor: colorScheme.background,
-                  color: colorScheme.text,
+                  borderColor: inputBorderColor,
+                  backgroundColor: inputBackground,
+                  color: textColor,
                 }}
               >
                 <option value="conference">Wisdom Power Conference 2026</option>
@@ -154,13 +179,24 @@ export const ReminderModal = ({
             </div>
 
             <div
-              className="rounded-xl p-4"
+              className="rounded-xl p-4 border"
               style={{
-                backgroundColor: colorScheme.opacity.primary10,
-                border: `1px solid ${colorScheme.opacity.primary20}`,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.primary10
+                  : colorScheme.opacity.primary20,
+                borderColor: isDarkMode
+                  ? colorScheme.opacity.primary20
+                  : colorScheme.opacity.primary30,
               }}
             >
-              <p className="text-sm" style={{ color: colorScheme.primary }}>
+              <p
+                className="text-sm font-medium"
+                style={{
+                  color: isDarkMode
+                    ? colorScheme.primary
+                    : colorScheme.primaryLight,
+                }}
+              >
                 <strong>How it works:</strong> We'll send you periodic updates
                 about the event, including important dates, speaker
                 announcements, and registration reminders.
@@ -172,18 +208,19 @@ export const ReminderModal = ({
               disabled={isSettingReminder}
               className="w-full py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: buttonBackground,
+                color: buttonTextColor,
               }}
               onMouseEnter={(e: any) => {
                 if (!isSettingReminder) {
-                  e.currentTarget.style.backgroundColor =
-                    colorScheme.primaryLight;
+                  e.currentTarget.style.backgroundColor = isDarkMode
+                    ? colorScheme.gray[800]
+                    : colorScheme.primaryLight;
                 }
               }}
               onMouseLeave={(e: any) => {
                 if (!isSettingReminder) {
-                  e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  e.currentTarget.style.backgroundColor = buttonBackground;
                 }
               }}
             >
@@ -191,7 +228,7 @@ export const ReminderModal = ({
                 <span className="flex items-center justify-center">
                   <Loader2
                     className="animate-spin -ml-1 mr-3 h-5 w-5"
-                    style={{ color: colorScheme.black }}
+                    style={{ color: buttonTextColor }}
                   />
                   Setting Reminder...
                 </span>

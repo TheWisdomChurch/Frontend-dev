@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/modals/JoinCommunityModal.tsx
 import { ChevronDown, X } from 'lucide-react';
 import Button from '../utils/CustomButton';
@@ -16,37 +17,58 @@ export default function JoinCommunityModal({
 }) {
   const { colorScheme } = useTheme();
 
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-300 backdrop-blur-sm"
-      style={{ backgroundColor: colorScheme.backdrop }}
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[10000] flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="relative rounded-2xl w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in fade-in-0 zoom-in-95"
+        className="relative rounded-3xl w-full max-w-md mx-auto overflow-hidden border shadow-2xl"
         style={{
-          backgroundColor: colorScheme.background,
-          border: `2px solid ${colorScheme.primary}40`,
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+          backgroundColor: modalBackground,
+          borderColor: borderColor,
         }}
         onClick={e => e.stopPropagation()}
       >
         {/* Close Button */}
         <div className="relative w-full">
-          <div className="absolute -top-3 -right-3 z-50">
+          <div className="absolute top-4 right-4 z-50">
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="z-[100] rounded-full p-3 transform hover:scale-110 transition-all duration-200 shadow-lg flex items-center justify-center"
+              className="rounded-full p-2 transform hover:scale-110 transition-all duration-200"
               curvature="full"
               style={{
-                backgroundColor: colorScheme.opacity.black80,
-                border: `2px solid ${colorScheme.primary}`,
-                color: colorScheme.primary,
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10,
+                color: textColor,
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black20
+                  : colorScheme.opacity.white20;
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10;
               }}
             >
               <X className="w-5 h-5" strokeWidth={2} />
@@ -55,7 +77,7 @@ export default function JoinCommunityModal({
         </div>
 
         {/* Modal Content */}
-        <div className="p-8">
+        <div className="p-6 lg:p-8">
           {/* Header */}
           <div className="text-center mb-8">
             <div
@@ -75,15 +97,15 @@ export default function JoinCommunityModal({
             </div>
 
             <h2
-              className={`${bricolageGrotesque.className} text-3xl font-black mb-4 tracking-tight`}
-              style={{ color: colorScheme.text }}
+              className={`${bricolageGrotesque.className} text-2xl lg:text-3xl font-black mb-4 tracking-tight`}
+              style={{ color: textColor }}
             >
               Join Our Community
             </h2>
 
             <p
-              className="text-lg opacity-90 leading-relaxed"
-              style={{ color: colorScheme.text }}
+              className="text-base lg:text-lg opacity-90 leading-relaxed"
+              style={{ color: secondaryTextColor }}
             >
               Connect with us across different platforms and grow together in
               faith
@@ -123,11 +145,15 @@ export default function JoinCommunityModal({
           {/* Footer */}
           <div
             className="text-center mt-6 pt-6 border-t"
-            style={{ borderColor: `${colorScheme.primary}20` }}
+            style={{
+              borderColor: isDarkMode
+                ? colorScheme.borderLight
+                : colorScheme.border,
+            }}
           >
             <p
               className="text-sm opacity-80"
-              style={{ color: colorScheme.text }}
+              style={{ color: secondaryTextColor }}
             >
               We can't wait to connect with you!
             </p>

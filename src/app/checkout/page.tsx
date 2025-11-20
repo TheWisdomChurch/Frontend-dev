@@ -6,11 +6,23 @@ import CheckoutForm from '@/components/ui/Store/checkoutForm';
 import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import { Section, Container, FlexboxLayout } from '@/components/layout';
-import { H2, BaseText } from '@/components/text';
+import { H2, LightText } from '@/components/text';
+import { useTheme } from '@/components/contexts/ThemeContext';
 
 const CheckoutPage = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
+  const { colorScheme } = useTheme();
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const sectionBackground = isDarkMode ? colorScheme.black : colorScheme.white;
+  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
 
   useEffect(() => {
     if (items.length === 0) {
@@ -31,20 +43,33 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Section background="light" padding="xl" fullHeight={false}>
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: sectionBackground }}
+    >
+      <Section
+        padding="xl"
+        fullHeight={false}
+        style={{ backgroundColor: sectionBackground }}
+      >
         <Container size="xl">
           <FlexboxLayout
             direction="column"
             gap="lg"
             className="text-center mb-12 checkout-section"
           >
-            <H2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+            <H2
+              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
+              style={{ color: textColor }}
+            >
               Checkout
             </H2>
-            <BaseText className="text-xl text-gray-600">
+            <LightText
+              className="text-xl"
+              style={{ color: secondaryTextColor }}
+            >
               Complete your order with confidence
-            </BaseText>
+            </LightText>
           </FlexboxLayout>
 
           <div className="checkout-section">
