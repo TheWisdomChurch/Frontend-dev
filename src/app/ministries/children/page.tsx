@@ -1,8 +1,37 @@
+'use client';
+
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2 } from '@/components/text';
+import { H2, BaseText, LightText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import {
+  Section,
+  Container,
+  GridboxLayout,
+  FlexboxLayout,
+} from '@/components/layout';
 
 const ChildrenPage = () => {
+  const { colorScheme } = useTheme();
+
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const sectionBackground = isDarkMode ? colorScheme.black : colorScheme.white;
+  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const cardBackground = isDarkMode ? colorScheme.surface : colorScheme.white;
+  const cardTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const accentBackground = isDarkMode
+    ? colorScheme.opacity.primary20
+    : colorScheme.opacity.primary10;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+
   return (
     <div>
       <HeroSection
@@ -17,73 +46,148 @@ const ChildrenPage = () => {
       />
 
       {/* Ministry Details */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+      <Section
+        padding="lg"
+        fullHeight={false}
+        style={{ backgroundColor: sectionBackground }}
+      >
+        <Container size="xl">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <H2>Welcome to Our Children's Ministry!</H2>
-              <p className="text-xl text-gray-600 mt-4">
+            <FlexboxLayout
+              direction="column"
+              justify="center"
+              align="center"
+              gap="md"
+              className="text-center mb-12"
+            >
+              <H2 style={{ color: textColor }}>
+                Welcome to Our Children's Ministry!
+              </H2>
+              <LightText
+                className="text-xl mt-4"
+                style={{ color: secondaryTextColor }}
+              >
                 Where kids learn about Jesus in a way they can understand and
                 enjoy
-              </p>
-            </div>
+              </LightText>
+            </FlexboxLayout>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <GridboxLayout
+              columns={1}
+              responsive={{ md: 2 }}
+              gap="lg"
+              className="items-center"
+            >
               <div>
-                <h3 className="text-2xl font-bold mb-6 text-gray-900">
+                <BaseText
+                  fontFamily="bricolage"
+                  weight="bold"
+                  className="text-2xl mb-6"
+                  style={{ color: textColor }}
+                >
                   Our Mission
-                </h3>
-                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+                </BaseText>
+                <LightText
+                  className="mb-6 text-lg leading-relaxed"
+                  style={{ color: secondaryTextColor }}
+                >
                   To partner with parents in laying a spiritual foundation that,
                   in God's timing, will lead a child into a personal
                   relationship with Jesus Christ.
-                </p>
-                <p className="text-gray-700 text-lg leading-relaxed">
+                </LightText>
+                <LightText
+                  className="text-lg leading-relaxed"
+                  style={{ color: secondaryTextColor }}
+                >
                   We create engaging, age-appropriate environments where
                   children can learn biblical truths and discover how much God
                   loves them.
-                </p>
+                </LightText>
               </div>
 
-              <div className="bg-yellow-50 rounded-2xl p-8">
-                <h3 className="text-2xl font-bold mb-6 text-gray-900">
+              <div
+                className="rounded-2xl p-8"
+                style={{
+                  backgroundColor: accentBackground,
+                  border: `1px solid ${borderColor}`,
+                }}
+              >
+                <BaseText
+                  fontFamily="bricolage"
+                  weight="bold"
+                  className="text-2xl mb-6"
+                  style={{ color: textColor }}
+                >
                   Service Times
-                </h3>
+                </BaseText>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center pb-4 border-b border-yellow-200">
-                    <span className="font-semibold text-gray-800">
+                  <FlexboxLayout
+                    justify="between"
+                    align="center"
+                    className="pb-4 border-b"
+                    style={{ borderColor: borderColor }}
+                  >
+                    <BaseText weight="semibold" style={{ color: textColor }}>
                       Sunday School
-                    </span>
-                    <span className="text-yellow-600 font-bold">10:30 AM</span>
-                  </div>
-                  <div className="flex justify-between items-center pb-4 border-b border-yellow-200">
-                    <span className="font-semibold text-gray-800">
+                    </BaseText>
+                    <BaseText
+                      weight="bold"
+                      style={{ color: colorScheme.primary }}
+                    >
+                      10:30 AM
+                    </BaseText>
+                  </FlexboxLayout>
+                  <FlexboxLayout
+                    justify="between"
+                    align="center"
+                    className="pb-4 border-b"
+                    style={{ borderColor: borderColor }}
+                  >
+                    <BaseText weight="semibold" style={{ color: textColor }}>
                       Children's Church
-                    </span>
-                    <span className="text-yellow-600 font-bold">
+                    </BaseText>
+                    <BaseText
+                      weight="bold"
+                      style={{ color: colorScheme.primary }}
+                    >
                       9:00 AM & 11:00 AM
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-gray-800">
+                    </BaseText>
+                  </FlexboxLayout>
+                  <FlexboxLayout justify="between" align="center">
+                    <BaseText weight="semibold" style={{ color: textColor }}>
                       Wednesday Nights
-                    </span>
-                    <span className="text-yellow-600 font-bold">7:00 PM</span>
-                  </div>
+                    </BaseText>
+                    <BaseText
+                      weight="bold"
+                      style={{ color: colorScheme.primary }}
+                    >
+                      7:00 PM
+                    </BaseText>
+                  </FlexboxLayout>
                 </div>
               </div>
-            </div>
+            </GridboxLayout>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Age Groups */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <Section
+        padding="lg"
+        fullHeight={false}
+        style={{
+          backgroundColor: isDarkMode
+            ? colorScheme.surface
+            : colorScheme.backgroundSecondary,
+        }}
+      >
+        <Container size="xl">
           <div className="max-w-6xl mx-auto">
-            <H2 className="text-center mb-12">Programs by Age Group</H2>
+            <H2 className="text-center mb-12" style={{ color: textColor }}>
+              Programs by Age Group
+            </H2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <GridboxLayout columns={1} responsive={{ md: 3 }} gap="lg">
               {[
                 {
                   age: 'Ages 2-4',
@@ -121,28 +225,50 @@ const ChildrenPage = () => {
               ].map((group, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl p-6 shadow-lg text-center"
+                  className="rounded-2xl p-6 shadow-lg text-center"
+                  style={{
+                    backgroundColor: cardBackground,
+                    border: `1px solid ${borderColor}`,
+                  }}
                 >
-                  <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-white font-bold text-lg">
+                  <div
+                    className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+                    style={{
+                      backgroundColor: colorScheme.primary,
+                      color: colorScheme.black,
+                    }}
+                  >
+                    <BaseText weight="bold" className="text-lg">
                       {group.age.split('-')[0]}
-                    </span>
+                    </BaseText>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="bold"
+                    className="text-xl mb-2"
+                    style={{ color: cardTextColor }}
+                  >
                     {group.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{group.description}</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  </BaseText>
+                  <LightText
+                    className="mb-4"
+                    style={{ color: secondaryTextColor }}
+                  >
+                    {group.description}
+                  </LightText>
+                  <ul className="text-sm space-y-1">
                     {group.activities.map((activity, i) => (
-                      <li key={i}>• {activity}</li>
+                      <li key={i} style={{ color: secondaryTextColor }}>
+                        • {activity}
+                      </li>
                     ))}
                   </ul>
                 </div>
               ))}
-            </div>
+            </GridboxLayout>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </div>
   );
 };

@@ -28,6 +28,28 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
 
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
+
+  // Theme-based styles
+  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
+  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
+  const secondaryTextColor = isDarkMode
+    ? colorScheme.textSecondary
+    : colorScheme.textTertiary;
+  const borderColor = isDarkMode
+    ? colorScheme.border
+    : colorScheme.primary + '40';
+  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
+  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
+  const inputBorderColor = isDarkMode
+    ? colorScheme.borderLight
+    : colorScheme.border;
+  const surfaceBackground = isDarkMode
+    ? colorScheme.surface
+    : colorScheme.surfaceVariant;
+
   const {
     register,
     handleSubmit,
@@ -172,36 +194,32 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-      style={{ backgroundColor: colorScheme.backdrop }}
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
     >
       <div
         ref={modalRef}
-        className="relative rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="relative rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border shadow-2xl"
         style={{
-          backgroundColor: colorScheme.background,
-          border: `1px solid ${colorScheme.border}`,
+          backgroundColor: modalBackground,
+          borderColor: borderColor,
         }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div
-          className="sticky top-0 rounded-t-2xl p-6 z-10"
+          className="sticky top-0 rounded-t-3xl p-6 z-10"
           style={{
-            backgroundColor: colorScheme.background,
-            borderBottom: `1px solid ${colorScheme.border}`,
+            backgroundColor: modalBackground,
+            borderBottom: `1px solid ${isDarkMode ? colorScheme.borderLight : colorScheme.border}`,
           }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <h3
-                className="text-2xl font-bold"
-                style={{ color: colorScheme.text }}
-              >
+              <h3 className="text-2xl font-bold" style={{ color: textColor }}>
                 {showAgreement ? 'Membership Agreement' : `Join ${department}`}
               </h3>
-              <p className="mt-1" style={{ color: colorScheme.textSecondary }}>
+              <p className="mt-1" style={{ color: secondaryTextColor }}>
                 {showAgreement
                   ? 'Important information about our membership process'
                   : 'Fill out the form below to express your interest'}
@@ -209,18 +227,22 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
             </div>
             <button
               onClick={handleClose}
-              className="p-2 rounded-full transition-colors"
+              className="p-2 rounded-full transition-colors flex-shrink-0"
               style={{
-                color: colorScheme.textSecondary,
-                backgroundColor: colorScheme.opacity.white10,
+                color: textColor,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black20
+                  : colorScheme.opacity.white20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor = isDarkMode
+                  ? colorScheme.opacity.black10
+                  : colorScheme.opacity.white10;
               }}
             >
               <X className="w-5 h-5" />
@@ -230,13 +252,16 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
         {!showAgreement ? (
           /* Main Form */
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="p-6 lg:p-8 space-y-6"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
               <div>
                 <label
                   htmlFor="fullName"
                   className="block text-sm font-medium mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Full Name *
                 </label>
@@ -259,9 +284,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   style={{
                     borderColor: errors.fullName
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your full name"
                 />
@@ -280,7 +305,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Email Address *
                 </label>
@@ -298,9 +323,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   style={{
                     borderColor: errors.email
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your email"
                 />
@@ -316,12 +341,12 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
               <div>
                 <label
                   htmlFor="phone"
                   className="block text-sm font-medium mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Phone Number *
                 </label>
@@ -343,9 +368,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   style={{
                     borderColor: errors.phone
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="Enter your phone number"
                 />
@@ -364,7 +389,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <label
                   htmlFor="occupation"
                   className="block text-sm font-medium mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Current Occupation *
                 </label>
@@ -382,9 +407,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   style={{
                     borderColor: errors.occupation
                       ? colorScheme.error
-                      : colorScheme.border,
-                    backgroundColor: colorScheme.background,
-                    color: colorScheme.text,
+                      : inputBorderColor,
+                    backgroundColor: inputBackground,
+                    color: textColor,
                   }}
                   placeholder="e.g., Student, Engineer, Teacher, etc."
                 />
@@ -404,7 +429,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               <label
                 htmlFor="message"
                 className="block text-sm font-medium mb-2"
-                style={{ color: colorScheme.text }}
+                style={{ color: textColor }}
               >
                 Why do you want to join {department}? *
               </label>
@@ -428,9 +453,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 style={{
                   borderColor: errors.message
                     ? colorScheme.error
-                    : colorScheme.border,
-                  backgroundColor: colorScheme.background,
-                  color: colorScheme.text,
+                    : inputBorderColor,
+                  backgroundColor: inputBackground,
+                  color: textColor,
                 }}
                 placeholder="Tell us about your interest, skills, and what you hope to contribute to our ministry..."
               />
@@ -454,7 +479,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     color:
                       watch('message')?.length > 450
                         ? colorScheme.warning
-                        : colorScheme.textSecondary,
+                        : secondaryTextColor,
                   }}
                 >
                   {watch('message')?.length || 0}/500
@@ -464,10 +489,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
             {/* Agreement Notice */}
             <div
-              className="rounded-xl p-4"
+              className="rounded-xl p-4 border"
               style={{
-                backgroundColor: colorScheme.opacity.primary10,
-                border: `1px solid ${colorScheme.opacity.primary20}`,
+                backgroundColor: isDarkMode
+                  ? colorScheme.opacity.primary10
+                  : colorScheme.opacity.primary20,
+                borderColor: isDarkMode
+                  ? colorScheme.opacity.primary20
+                  : colorScheme.opacity.primary30,
               }}
             >
               <div className="flex items-start gap-3">
@@ -483,14 +512,22 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <div>
                   <p
                     className="text-sm font-medium"
-                    style={{ color: colorScheme.primary }}
+                    style={{
+                      color: isDarkMode
+                        ? colorScheme.primary
+                        : colorScheme.primaryLight,
+                    }}
                   >
                     By submitting this form, you agree to join our compulsory
                     1-month membership class
                   </p>
                   <p
                     className="text-xs mt-1"
-                    style={{ color: colorScheme.primary }}
+                    style={{
+                      color: isDarkMode
+                        ? colorScheme.primary
+                        : colorScheme.primaryLight,
+                    }}
                   >
                     This foundational training is required for all new members
                     to understand our vision and values
@@ -503,20 +540,21 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
                 style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
+                  backgroundColor: buttonBackground,
+                  color: buttonTextColor,
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.primaryLight;
+                    e.currentTarget.style.backgroundColor = isDarkMode
+                      ? colorScheme.gray[800]
+                      : colorScheme.primaryLight;
                   }
                 }}
                 onMouseLeave={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = colorScheme.primary;
+                    e.currentTarget.style.backgroundColor = buttonBackground;
                   }
                 }}
               >
@@ -524,7 +562,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   <span className="flex items-center justify-center gap-2">
                     <Loader2
                       className="animate-spin h-5 w-5"
-                      style={{ color: colorScheme.black }}
+                      style={{ color: buttonTextColor }}
                     />
                     Processing...
                   </span>
@@ -538,20 +576,22 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 disabled={isSubmitting}
                 className="flex-1 border py-4 px-6 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
-                  borderColor: colorScheme.border,
-                  color: colorScheme.text,
-                  backgroundColor: colorScheme.background,
+                  borderColor: isDarkMode
+                    ? colorScheme.borderLight
+                    : colorScheme.border,
+                  color: textColor,
+                  backgroundColor: modalBackground,
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.opacity.white10;
+                    e.currentTarget.style.backgroundColor = isDarkMode
+                      ? colorScheme.opacity.black10
+                      : colorScheme.opacity.white10;
                   }
                 }}
                 onMouseLeave={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.background;
+                    e.currentTarget.style.backgroundColor = modalBackground;
                   }
                 }}
               >
@@ -561,20 +601,24 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
           </form>
         ) : (
           /* Agreement Information Section */
-          <div className="p-6 space-y-6">
+          <div className="p-6 lg:p-8 space-y-6">
             {/* Main Agreement Content */}
             <div
               className="border rounded-2xl p-6"
               style={{
-                backgroundColor: colorScheme.surface,
-                borderColor: colorScheme.border,
+                backgroundColor: surfaceBackground,
+                borderColor: isDarkMode
+                  ? colorScheme.borderLight
+                  : colorScheme.border,
               }}
             >
               <div className="text-center mb-6">
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
                   style={{
-                    backgroundColor: colorScheme.opacity.primary20,
+                    backgroundColor: isDarkMode
+                      ? colorScheme.opacity.primary20
+                      : colorScheme.opacity.primary30,
                     color: colorScheme.primary,
                   }}
                 >
@@ -582,11 +626,11 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 </div>
                 <h4
                   className="text-xl font-bold mb-2"
-                  style={{ color: colorScheme.text }}
+                  style={{ color: textColor }}
                 >
                   Welcome to Wisdom House Ministry!
                 </h4>
-                <p style={{ color: colorScheme.textSecondary }}>
+                <p style={{ color: secondaryTextColor }}>
                   Thank you for your interest in joining our {department} team
                 </p>
               </div>
@@ -595,13 +639,15 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <div
                   className="rounded-xl p-4 border"
                   style={{
-                    backgroundColor: colorScheme.background,
-                    borderColor: colorScheme.border,
+                    backgroundColor: modalBackground,
+                    borderColor: isDarkMode
+                      ? colorScheme.borderLight
+                      : colorScheme.border,
                   }}
                 >
                   <h5
                     className="font-semibold mb-2 flex items-center gap-2"
-                    style={{ color: colorScheme.text }}
+                    style={{ color: textColor }}
                   >
                     <span
                       className="w-2 h-2 rounded-full"
@@ -609,10 +655,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     ></span>
                     Compulsory 1-Month Membership Class
                   </h5>
-                  <p
-                    className="text-sm"
-                    style={{ color: colorScheme.textSecondary }}
-                  >
+                  <p className="text-sm" style={{ color: secondaryTextColor }}>
                     Every new member is required to complete our foundational
                     membership class. This ensures everyone understands our
                     vision, values, and ministry philosophy.
@@ -622,13 +665,15 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <div
                   className="rounded-xl p-4 border"
                   style={{
-                    backgroundColor: colorScheme.background,
-                    borderColor: colorScheme.border,
+                    backgroundColor: modalBackground,
+                    borderColor: isDarkMode
+                      ? colorScheme.borderLight
+                      : colorScheme.border,
                   }}
                 >
                   <h5
                     className="font-semibold mb-2 flex items-center gap-2"
-                    style={{ color: colorScheme.text }}
+                    style={{ color: textColor }}
                   >
                     <span
                       className="w-2 h-2 rounded-full"
@@ -638,7 +683,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   </h5>
                   <ul
                     className="text-sm space-y-1"
-                    style={{ color: colorScheme.textSecondary }}
+                    style={{ color: secondaryTextColor }}
                   >
                     <li>• Our church history and vision</li>
                     <li>• Biblical foundations for ministry service</li>
@@ -651,13 +696,15 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <div
                   className="rounded-xl p-4 border"
                   style={{
-                    backgroundColor: colorScheme.background,
-                    borderColor: colorScheme.border,
+                    backgroundColor: modalBackground,
+                    borderColor: isDarkMode
+                      ? colorScheme.borderLight
+                      : colorScheme.border,
                   }}
                 >
                   <h5
                     className="font-semibold mb-2 flex items-center gap-2"
-                    style={{ color: colorScheme.text }}
+                    style={{ color: textColor }}
                   >
                     <span
                       className="w-2 h-2 rounded-full"
@@ -667,7 +714,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   </h5>
                   <ul
                     className="text-sm space-y-1"
-                    style={{ color: colorScheme.textSecondary }}
+                    style={{ color: secondaryTextColor }}
                   >
                     <li>
                       • Duration: This will be communicated upon completion of
@@ -680,10 +727,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 </div>
 
                 <div
-                  className="rounded-xl p-4"
+                  className="rounded-xl p-4 border"
                   style={{
-                    backgroundColor: colorScheme.opacity.warning10,
-                    border: `1px solid ${colorScheme.opacity.warning20}`,
+                    backgroundColor: isDarkMode
+                      ? colorScheme.opacity.warning10
+                      : colorScheme.opacity.warning20,
+                    borderColor: isDarkMode
+                      ? colorScheme.opacity.warning20
+                      : colorScheme.opacity.warning10,
                   }}
                 >
                   <h5
@@ -708,20 +759,21 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               <button
                 onClick={handleFinalSubmit}
                 disabled={isSubmitting}
-                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
                 style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
+                  backgroundColor: buttonBackground,
+                  color: buttonTextColor,
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.primaryLight;
+                    e.currentTarget.style.backgroundColor = isDarkMode
+                      ? colorScheme.gray[800]
+                      : colorScheme.primaryLight;
                   }
                 }}
                 onMouseLeave={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = colorScheme.primary;
+                    e.currentTarget.style.backgroundColor = buttonBackground;
                   }
                 }}
               >
@@ -729,7 +781,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   <span className="flex items-center justify-center gap-2">
                     <Loader2
                       className="animate-spin h-5 w-5"
-                      style={{ color: colorScheme.black }}
+                      style={{ color: buttonTextColor }}
                     />
                     Finalizing...
                   </span>
@@ -742,20 +794,22 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 disabled={isSubmitting}
                 className="flex-1 border py-4 px-6 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
-                  borderColor: colorScheme.border,
-                  color: colorScheme.text,
-                  backgroundColor: colorScheme.background,
+                  borderColor: isDarkMode
+                    ? colorScheme.borderLight
+                    : colorScheme.border,
+                  color: textColor,
+                  backgroundColor: modalBackground,
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.opacity.white10;
+                    e.currentTarget.style.backgroundColor = isDarkMode
+                      ? colorScheme.opacity.black10
+                      : colorScheme.opacity.white10;
                   }
                 }}
                 onMouseLeave={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.background;
+                    e.currentTarget.style.backgroundColor = modalBackground;
                   }
                 }}
               >

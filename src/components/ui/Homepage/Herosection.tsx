@@ -232,15 +232,15 @@ const HeroSection = ({
         </div>
       </div>
 
-      {/* Indicators & Scroll – unchanged (already perfect) */}
+      {/* Indicators & Scroll */}
       {isMultiSlide && showSlideIndicators && (
-        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-4">
+        <div className="absolute right-4 sm:right-6 md:right-8 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-3 sm:gap-4">
           {slides!.map((_, index) => (
             <button
               key={index}
               ref={el => addToIndicatorsRef(el, index)}
               onClick={() => goToSlide(index)}
-              className="w-3 h-3 rounded-full transition-all hover:scale-150"
+              className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full transition-all hover:scale-150"
               style={{
                 backgroundColor:
                   index === currentSlide
@@ -267,23 +267,29 @@ const HeroSection = ({
           >
             <div className="flex flex-col items-center animate-bounce">
               <ChevronDown
-                className="w-10 h-10 drop-shadow-2xl"
+                className="w-8 h-8 md:w-10 md:h-10 drop-shadow-2xl"
                 style={{ color: colorScheme.primary }}
               />
               <ChevronDown
-                className="w-10 h-10 -mt-4 drop-shadow-2xl"
+                className="w-8 h-8 md:w-10 md:h-10 -mt-4 drop-shadow-2xl"
                 style={{ color: colorScheme.primary }}
               />
             </div>
           </div>
           <div
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 sm:hidden"
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 sm:hidden cursor-pointer"
             onClick={scrollToNextSection}
           >
-            <ChevronDown
-              className="w-8 h-8 animate-bounce"
-              style={{ color: colorScheme.primary }}
-            />
+            <div className="flex flex-col items-center animate-bounce">
+              <ChevronDown
+                className="w-6 h-6 drop-shadow-2xl"
+                style={{ color: colorScheme.primary }}
+              />
+              <ChevronDown
+                className="w-6 h-6 -mt-3 drop-shadow-2xl"
+                style={{ color: colorScheme.primary }}
+              />
+            </div>
           </div>
         </>
       )}
