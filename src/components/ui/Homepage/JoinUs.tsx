@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Workforce_bg } from '@/components/assets';
-import { H2, BaseText, BodyLG, BodyMD, BodySM } from '@/components/text'; // ← Fixed imports
+import { H2, BaseText, BodySM } from '@/components/text';
 import { photos } from '@/lib/data';
 import Button from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -66,6 +66,8 @@ export default function JoinWisdomHouse() {
               className="leading-tight text-center"
               style={{ color: '#FFFFFF' }}
               useThemeColor={false}
+              weight="bold" // Ensure it's bold on all devices
+              smWeight="extrabold" // Even bolder on larger screens
             >
               Join Our{' '}
               <BaseText
@@ -84,7 +86,7 @@ export default function JoinWisdomHouse() {
               </BaseText>
             </H2>
 
-            <BodyLG
+            <BodySM // Changed to BodySM for even better mobile sizing
               className="max-w-2xl text-center leading-relaxed px-2"
               style={{ color: '#E5E7EB' }}
               useThemeColor={false}
@@ -92,7 +94,7 @@ export default function JoinWisdomHouse() {
               "Each of you should use whatever gift you have received to serve
               others, as faithful stewards of God's grace in its various forms."
               – 1 Peter 4:10
-            </BodyLG>
+            </BodySM>
           </FlexboxLayout>
 
           {/* Desktop Layout */}
@@ -152,7 +154,7 @@ export default function JoinWisdomHouse() {
                         {photo.title}
                       </BaseText>
 
-                      <BodyMD
+                      <BodySM // Changed from BodyMD to BodySM for better mobile sizing
                         className="text-center mb-3 sm:mb-4 leading-relaxed max-w-xs line-clamp-3"
                         style={{ color: '#E5E7EB' }}
                         useThemeColor={false}
@@ -160,7 +162,7 @@ export default function JoinWisdomHouse() {
                         Discover how you can contribute to our ministry through{' '}
                         {photo.title.toLowerCase()}. Join us in making a
                         difference in our community.
-                      </BodyMD>
+                      </BodySM>
 
                       <Button
                         variant="primary"
@@ -195,11 +197,11 @@ export default function JoinWisdomHouse() {
                 </button>
 
                 <BodySM
-                  className="px-2 text-center max-w-[160px]"
+                  className="px-2 text-center whitespace-nowrap" // Removed max-w, added whitespace-nowrap
                   style={{ color: '#E5E7EB' }}
                   useThemeColor={false}
                 >
-                  Choose Your Department
+                  Choose Department
                 </BodySM>
 
                 <button
