@@ -6,12 +6,15 @@ export {
   H3,
   H4,
   P,
-  LargeText,
+  BodyXL,
+  BodyLG,
+  BodyMD, // ← ADD THIS
+  BodySM, // ← ADD THIS
   SmallText,
   Caption,
-  Span,
-  Strong,
-  Em,
+  // Span,
+  // Strong,
+  // Em,
 } from './Semantictext';
 export { LightText, RegularText, MediumText, SemiBoldText } from './weightText';
 export { BricolageText } from './FontText';

@@ -38,7 +38,7 @@ const StorePage = () => {
   const isDarkMode = colorScheme.background === '#000000';
 
   // Theme-based styles
-  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.black;
+  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.white;
   const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
   const secondaryTextColor = isDarkMode
     ? colorScheme.textSecondary

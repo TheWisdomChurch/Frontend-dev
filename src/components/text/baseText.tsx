@@ -13,26 +13,44 @@ type FontWeight =
   | 'bold'
   | 'extrabold';
 
-type FontSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | string;
+type FontSize =
+  | 'xs'
+  | 'sm'
+  | 'base'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | '3xl'
+  | '4xl'
+  | '5xl'
+  | '6xl'
+  | '7xl'
+  | '8xl'
+  | '9xl';
 
 type TextVariant =
-  | 'heading-xl'
-  | 'heading-lg'
-  | 'heading-md'
-  | 'heading-sm'
+  | 'hero'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body-xl'
   | 'body-lg'
   | 'body-md'
   | 'body-sm'
+  | 'body-xs'
   | 'caption'
+  | 'elegant-xl'
   | 'elegant-lg'
-  | 'elegant-md'
-  | 'elegant-sm'
-  | string;
+  | 'elegant-md';
 
 export interface BaseTextProps {
   children: React.ReactNode;
   weight?: FontWeight;
-  fontWeight?: FontWeight;
+  // REMOVE fontWeight - use only 'weight' property
+  // fontWeight?: FontWeight; // ← DELETE THIS LINE
   // Responsive weight props
   smWeight?: FontWeight;
   mdWeight?: FontWeight;
@@ -54,7 +72,6 @@ export interface BaseTextProps {
   useThemeColor?: boolean;
   style?: React.CSSProperties;
   variant?: TextVariant;
-  // Add these missing event handlers
   onMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -66,13 +83,20 @@ const fontFamilyMap: Record<string, string> = {
   playfair: playfair.className,
 };
 
-const fontSizeMap: Record<string, string> = {
+const fontSizeMap: Record<FontSize, string> = {
   xs: 'text-xs',
   sm: 'text-sm',
-  md: 'text-base',
+  base: 'text-base',
   lg: 'text-lg',
   xl: 'text-xl',
-  xxl: 'text-2xl',
+  '2xl': 'text-2xl',
+  '3xl': 'text-3xl',
+  '4xl': 'text-4xl',
+  '5xl': 'text-5xl',
+  '6xl': 'text-6xl',
+  '7xl': 'text-7xl',
+  '8xl': 'text-8xl',
+  '9xl': 'text-9xl',
 };
 
 const weightClassMap: Record<FontWeight, string> = {
@@ -84,65 +108,127 @@ const weightClassMap: Record<FontWeight, string> = {
   extrabold: 'font-extrabold',
 };
 
-// Updated variantMap with more appropriate base weights
+// Professional variant system with responsive scaling
 const variantMap: Record<
-  string,
-  { fontSize: FontSize; weight: FontWeight; fontFamily: string }
+  TextVariant,
+  {
+    fontSize: {
+      base: FontSize;
+      sm?: FontSize;
+      md?: FontSize;
+      lg?: FontSize;
+      xl?: FontSize;
+    };
+    weight: {
+      base: FontWeight;
+      sm?: FontWeight;
+      md?: FontWeight;
+      lg?: FontWeight;
+      xl?: FontWeight;
+    };
+    fontFamily: string;
+    lineHeight?: string;
+  }
 > = {
-  'heading-xl': {
-    fontSize: 'xxl',
-    weight: 'bold',
+  // Hero - Largest, most prominent text
+  hero: {
+    fontSize: { base: '4xl', sm: '5xl', md: '6xl', lg: '7xl', xl: '8xl' },
+    weight: { base: 'bold', sm: 'bold', md: 'extrabold', lg: 'extrabold' },
     fontFamily: 'bricolage',
+    lineHeight: '1.1',
   },
-  'heading-lg': {
-    fontSize: 'xl',
-    weight: 'bold',
+  // Headings with progressive scaling
+  h1: {
+    fontSize: { base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' },
+    weight: { base: 'bold', sm: 'bold', md: 'extrabold', lg: 'extrabold' },
     fontFamily: 'bricolage',
+    lineHeight: '1.2',
   },
-  'heading-md': {
-    fontSize: 'lg',
-    weight: 'semibold',
+  h2: {
+    fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
+    weight: { base: 'semibold', sm: 'bold', md: 'bold', lg: 'extrabold' },
     fontFamily: 'bricolage',
+    lineHeight: '1.3',
   },
-  'heading-sm': {
-    fontSize: 'md',
-    weight: 'medium',
+  h3: {
+    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
+    weight: { base: 'semibold', sm: 'semibold', md: 'bold', lg: 'bold' },
     fontFamily: 'bricolage',
+    lineHeight: '1.4',
+  },
+  h4: {
+    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
+    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'bold' },
+    fontFamily: 'bricolage',
+    lineHeight: '1.4',
+  },
+  h5: {
+    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
+    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'bricolage',
+    lineHeight: '1.5',
+  },
+  h6: {
+    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
+    weight: { base: 'medium', sm: 'medium', md: 'medium', lg: 'semibold' },
+    fontFamily: 'bricolage',
+    lineHeight: '1.5',
+  },
+  // Body text - consistent readability
+  'body-xl': {
+    fontSize: { base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
+    fontFamily: 'worksans',
+    lineHeight: '1.6',
   },
   'body-lg': {
-    fontSize: 'lg',
-    weight: 'regular',
+    fontSize: { base: 'lg', sm: 'lg', md: 'xl', lg: 'xl' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
+    lineHeight: '1.6',
   },
   'body-md': {
-    fontSize: 'md',
-    weight: 'regular',
+    fontSize: { base: 'base', sm: 'base', md: 'lg', lg: 'lg' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
+    lineHeight: '1.6',
   },
   'body-sm': {
-    fontSize: 'sm',
-    weight: 'regular',
+    fontSize: { base: 'sm', sm: 'sm', md: 'base', lg: 'base' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
+    lineHeight: '1.5',
+  },
+  'body-xs': {
+    fontSize: { base: 'xs', sm: 'xs', md: 'sm', lg: 'sm' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
+    fontFamily: 'worksans',
+    lineHeight: '1.4',
   },
   caption: {
-    fontSize: 'xs',
-    weight: 'light',
+    fontSize: { base: 'xs', sm: 'xs', md: 'xs', lg: 'xs' },
+    weight: { base: 'light', sm: 'light', md: 'light', lg: 'light' },
     fontFamily: 'worksans',
+    lineHeight: '1.4',
+  },
+  // Elegant text variants
+  'elegant-xl': {
+    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
+    fontFamily: 'playfair',
+    lineHeight: '1.4',
   },
   'elegant-lg': {
-    fontSize: 'lg',
-    weight: 'regular',
+    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'playfair',
+    lineHeight: '1.4',
   },
   'elegant-md': {
-    fontSize: 'md',
-    weight: 'regular',
+    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'playfair',
-  },
-  'elegant-sm': {
-    fontSize: 'sm',
-    weight: 'regular',
-    fontFamily: 'playfair',
+    lineHeight: '1.5',
   },
 };
 
@@ -154,7 +240,7 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       margin,
       lineHeight,
       textDecoration = 'none',
-      fontSize = 'md',
+      fontSize = 'base',
       className = '',
       fontFamily,
       as: Component = 'p',
@@ -162,8 +248,8 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       style,
       variant,
       weight,
-      fontWeight,
-      // New responsive weight props
+      // REMOVE fontWeight from destructuring
+      // fontWeight, // ← DELETE THIS LINE
       smWeight,
       mdWeight,
       lgWeight,
@@ -176,39 +262,70 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
 
     const variantSettings = variant ? variantMap[variant] : null;
 
-    // Priority: variant > explicit props > defaults
-    const finalFontSize = variantSettings?.fontSize || fontSize || 'md';
-    const finalFontFamily =
-      variantSettings?.fontFamily || fontFamily || 'worksans';
-    const finalWeight =
-      weight || fontWeight || variantSettings?.weight || 'regular';
-
     // Get text color - use theme color if useThemeColor is true and no explicit color is provided
     const textColor = useThemeColor && !color ? colorScheme.text : color;
 
-    // Convert fontSize to Tailwind class instead of inline style
-    const fontSizeClass = fontSizeMap[finalFontSize] || '';
+    // Build responsive classes
+    const buildResponsiveClasses = () => {
+      const classes: string[] = [];
+
+      if (variantSettings) {
+        // Variant-based responsive sizing
+        const { fontSize: variantFontSize, weight: variantWeight } =
+          variantSettings;
+
+        // Base size and weight
+        classes.push(fontSizeMap[variantFontSize.base]);
+        classes.push(weightClassMap[variantWeight.base]);
+
+        // Responsive sizes
+        if (variantFontSize.sm)
+          classes.push(`sm:${fontSizeMap[variantFontSize.sm]}`);
+        if (variantFontSize.md)
+          classes.push(`md:${fontSizeMap[variantFontSize.md]}`);
+        if (variantFontSize.lg)
+          classes.push(`lg:${fontSizeMap[variantFontSize.lg]}`);
+        if (variantFontSize.xl)
+          classes.push(`xl:${fontSizeMap[variantFontSize.xl]}`);
+
+        // Responsive weights
+        if (variantWeight.sm)
+          classes.push(`sm:${weightClassMap[variantWeight.sm]}`);
+        if (variantWeight.md)
+          classes.push(`md:${weightClassMap[variantWeight.md]}`);
+        if (variantWeight.lg)
+          classes.push(`lg:${weightClassMap[variantWeight.lg]}`);
+        if (variantWeight.xl)
+          classes.push(`xl:${weightClassMap[variantWeight.xl]}`);
+      } else {
+        // Manual sizing and weights
+        classes.push(fontSizeMap[fontSize]);
+        if (weight) {
+          // ← REMOVE fontWeight check, use only weight
+          classes.push(weightClassMap[weight]);
+        }
+
+        // Responsive weights
+        if (smWeight) classes.push(`sm:${weightClassMap[smWeight]}`);
+        if (mdWeight) classes.push(`md:${weightClassMap[mdWeight]}`);
+        if (lgWeight) classes.push(`lg:${weightClassMap[lgWeight]}`);
+        if (xlWeight) classes.push(`xl:${weightClassMap[xlWeight]}`);
+      }
+
+      return classes.join(' ');
+    };
+
+    const finalFontFamily =
+      variantSettings?.fontFamily || fontFamily || 'worksans';
     const resolvedFontFamily =
       fontFamilyMap[finalFontFamily] || worksans.className;
-
-    // Base weight class
-    const baseWeightClass = weightClassMap[finalWeight];
-
-    // Responsive weight classes
-    const responsiveWeightClasses = [
-      smWeight ? `sm:${weightClassMap[smWeight]}` : '',
-      mdWeight ? `md:${weightClassMap[mdWeight]}` : '',
-      lgWeight ? `lg:${weightClassMap[lgWeight]}` : '',
-      xlWeight ? `xl:${weightClassMap[xlWeight]}` : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const responsiveClasses = buildResponsiveClasses();
+    const finalLineHeight = lineHeight || variantSettings?.lineHeight;
 
     const styles: React.CSSProperties = {
       margin,
-      lineHeight,
+      lineHeight: finalLineHeight,
       textDecoration,
-      // fontSize is now handled by Tailwind classes, removed from inline styles
       ...(textColor && { color: textColor }),
       ...style,
     };
@@ -217,7 +334,7 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       <Component
         ref={ref}
         style={styles}
-        className={`${resolvedFontFamily} ${baseWeightClass} ${fontSizeClass} ${responsiveWeightClasses} ${className}`}
+        className={`${resolvedFontFamily} ${responsiveClasses} ${className}`}
         {...props}
       >
         {children}
