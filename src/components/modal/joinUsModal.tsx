@@ -2,11 +2,11 @@
 // components/modals/JoinCommunityModal.tsx
 import { ChevronDown, X } from 'lucide-react';
 import Button from '../utils/CustomButton';
-import { bricolageGrotesque } from '../fonts/fonts';
 import { communityLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '../assets';
 import Image from 'next/image';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
 
 export default function JoinCommunityModal({
   isOpen,
@@ -96,20 +96,24 @@ export default function JoinCommunityModal({
               />
             </div>
 
-            <h2
-              className={`${bricolageGrotesque.className} text-2xl lg:text-3xl font-black mb-4 tracking-tight`}
+            <BaseText
+              fontFamily="bricolage"
+              weight="black"
+              className="text-2xl lg:text-3xl mb-4 tracking-tight"
               style={{ color: textColor }}
+              useThemeColor={false}
             >
               Join Our Community
-            </h2>
+            </BaseText>
 
-            <p
-              className="text-base lg:text-lg opacity-90 leading-relaxed"
+            <BodyMD
+              className="opacity-90 leading-relaxed"
               style={{ color: secondaryTextColor }}
+              useThemeColor={false}
             >
               Connect with us across different platforms and grow together in
               faith
-            </p>
+            </BodyMD>
           </div>
 
           {/* Community Links */}
@@ -132,8 +136,15 @@ export default function JoinCommunityModal({
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="font-bold text-lg mb-1">{link.title}</h3>
-                    <p className="text-white/90 text-sm">{link.description}</p>
+                    <SemiBoldText
+                      className="text-lg mb-1"
+                      useThemeColor={false}
+                    >
+                      {link.title}
+                    </SemiBoldText>
+                    <BodySM className="text-white/90" useThemeColor={false}>
+                      {link.description}
+                    </BodySM>
                   </div>
 
                   <ChevronDown className="w-5 h-5 transform -rotate-90 opacity-80" />
@@ -151,12 +162,13 @@ export default function JoinCommunityModal({
                 : colorScheme.border,
             }}
           >
-            <p
-              className="text-sm opacity-80"
+            <BodySM
+              className="opacity-80"
               style={{ color: secondaryTextColor }}
+              useThemeColor={false}
             >
               We can't wait to connect with you!
-            </p>
+            </BodySM>
           </div>
         </div>
       </div>

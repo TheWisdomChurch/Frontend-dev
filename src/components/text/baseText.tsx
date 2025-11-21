@@ -5,13 +5,15 @@ import React, { forwardRef } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { bricolageGrotesque, worksans, playfair } from '../fonts/fonts';
 
+// ADD "black" to FontWeight type
 type FontWeight =
   | 'light'
   | 'regular'
   | 'medium'
   | 'semibold'
   | 'bold'
-  | 'extrabold';
+  | 'extrabold'
+  | 'black'; // ← ADD THIS LINE
 
 type FontSize =
   | 'xs'
@@ -49,8 +51,6 @@ type TextVariant =
 export interface BaseTextProps {
   children: React.ReactNode;
   weight?: FontWeight;
-  // REMOVE fontWeight - use only 'weight' property
-  // fontWeight?: FontWeight; // ← DELETE THIS LINE
   // Responsive weight props
   smWeight?: FontWeight;
   mdWeight?: FontWeight;
@@ -99,6 +99,7 @@ const fontSizeMap: Record<FontSize, string> = {
   '9xl': 'text-9xl',
 };
 
+// ADD "black" to weightClassMap
 const weightClassMap: Record<FontWeight, string> = {
   light: 'font-light',
   regular: 'font-normal',
@@ -106,6 +107,7 @@ const weightClassMap: Record<FontWeight, string> = {
   semibold: 'font-semibold',
   bold: 'font-bold',
   extrabold: 'font-extrabold',
+  black: 'font-black', // ← ADD THIS LINE
 };
 
 // Professional variant system with responsive scaling
@@ -133,44 +135,44 @@ const variantMap: Record<
   // Hero - Largest, most prominent text
   hero: {
     fontSize: { base: '4xl', sm: '5xl', md: '6xl', lg: '7xl', xl: '8xl' },
-    weight: { base: 'bold', sm: 'bold', md: 'extrabold', lg: 'extrabold' },
+    weight: { base: 'black', sm: 'black', md: 'black', lg: 'black' }, // ← Use 'black' here
     fontFamily: 'bricolage',
     lineHeight: '1.1',
   },
   // Headings with progressive scaling
   h1: {
     fontSize: { base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' },
-    weight: { base: 'bold', sm: 'bold', md: 'extrabold', lg: 'extrabold' },
+    weight: { base: 'black', sm: 'black', md: 'black', lg: 'black' }, // ← Use 'black' here
     fontFamily: 'bricolage',
     lineHeight: '1.2',
   },
   h2: {
     fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
-    weight: { base: 'semibold', sm: 'bold', md: 'bold', lg: 'extrabold' },
+    weight: { base: 'bold', sm: 'black', md: 'black', lg: 'black' }, // ← Use 'black' here
     fontFamily: 'bricolage',
     lineHeight: '1.3',
   },
   h3: {
     fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
-    weight: { base: 'semibold', sm: 'semibold', md: 'bold', lg: 'bold' },
+    weight: { base: 'bold', sm: 'bold', md: 'black', lg: 'black' }, // ← Use 'black' here
     fontFamily: 'bricolage',
     lineHeight: '1.4',
   },
   h4: {
     fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
-    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'bold' },
+    weight: { base: 'semibold', sm: 'bold', md: 'bold', lg: 'black' }, // ← Use 'black' here
     fontFamily: 'bricolage',
     lineHeight: '1.4',
   },
   h5: {
     fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
-    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
+    weight: { base: 'semibold', sm: 'semibold', md: 'bold', lg: 'bold' },
     fontFamily: 'bricolage',
     lineHeight: '1.5',
   },
   h6: {
     fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
-    weight: { base: 'medium', sm: 'medium', md: 'medium', lg: 'semibold' },
+    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'bold' },
     fontFamily: 'bricolage',
     lineHeight: '1.5',
   },
@@ -248,8 +250,6 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       style,
       variant,
       weight,
-      // REMOVE fontWeight from destructuring
-      // fontWeight, // ← DELETE THIS LINE
       smWeight,
       mdWeight,
       lgWeight,
@@ -301,7 +301,6 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
         // Manual sizing and weights
         classes.push(fontSizeMap[fontSize]);
         if (weight) {
-          // ← REMOVE fontWeight check, use only weight
           classes.push(weightClassMap[weight]);
         }
 

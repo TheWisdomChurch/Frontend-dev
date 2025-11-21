@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { BaseText } from '@/components/text';
+import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ChevronDown, Copy, Check, Info, X } from 'lucide-react';
 
@@ -170,8 +170,11 @@ export default function GivingModal({
     }
   };
 
-  // Early return if not mounted, not open, or givingOption is null/undefined
-  if (!mounted || !isOpen || !givingOption) return null;
+  // Early return if not mounted or not open
+  if (!mounted || !isOpen) return null;
+
+  // Early return if givingOption is null/undefined
+  if (!givingOption) return null;
 
   // Safe access to accounts with fallback
   const accounts = givingOption.accounts || [];
@@ -232,19 +235,22 @@ export default function GivingModal({
               </span>
             </div>
 
-            <h2
-              className="text-2xl lg:text-3xl font-black mb-4 tracking-tight"
+            <BaseText
+              weight="black"
+              className="text-2xl lg:text-3xl mb-4 tracking-tight"
               style={{ color: textColor }}
+              useThemeColor={false}
             >
               {givingOption.title}
-            </h2>
+            </BaseText>
 
-            <p
-              className="text-base lg:text-lg opacity-90 leading-relaxed mb-6"
+            <BodyMD
+              className="opacity-90 leading-relaxed mb-6"
               style={{ color: secondaryTextColor }}
+              useThemeColor={false}
             >
               {givingOption.description}
-            </p>
+            </BodyMD>
 
             {/* Scripture Verse */}
             <div
@@ -267,39 +273,47 @@ export default function GivingModal({
                     ? colorScheme.primary
                     : colorScheme.primaryLight,
                 }}
+                useThemeColor={false}
               >
                 "Each of you should give what you have decided in your heart to
                 give, not reluctantly or under compulsion, for God loves a
                 cheerful giver."
               </BaseText>
-              <p
-                className="text-sm font-medium mt-2 text-center"
+              <BodySM
+                weight="medium"
+                className="mt-2 text-center"
                 style={{
                   color: isDarkMode
                     ? colorScheme.primary
                     : colorScheme.primaryLight,
                 }}
+                useThemeColor={false}
               >
                 2 Corinthians 9:7
-              </p>
+              </BodySM>
             </div>
           </div>
 
           {/* Accounts Section */}
           <div className="mb-8">
-            <h3
-              className="text-xl lg:text-2xl font-bold text-center mb-6"
+            <BaseText
+              weight="bold"
+              className="text-xl lg:text-2xl text-center mb-6"
               style={{ color: textColor }}
+              useThemeColor={false}
             >
               Pay Into Our Accounts
-            </h3>
+            </BaseText>
 
             {/* Conditional rendering for accounts */}
             {accounts.length === 0 ? (
               <div className="text-center py-8">
-                <p style={{ color: secondaryTextColor }}>
+                <BodyMD
+                  style={{ color: secondaryTextColor }}
+                  useThemeColor={false}
+                >
                   No accounts available at the moment.
-                </p>
+                </BodyMD>
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -349,12 +363,13 @@ export default function GivingModal({
                       </div>
                     </div>
 
-                    <h4
-                      className="font-bold text-base lg:text-lg mb-2"
+                    <SemiBoldText
+                      className="text-base lg:text-lg mb-2"
                       style={{ color: textColor }}
+                      useThemeColor={false}
                     >
                       {account.bank}
-                    </h4>
+                    </SemiBoldText>
 
                     {/* Account Details Dropdown */}
                     <div
@@ -377,12 +392,14 @@ export default function GivingModal({
                       >
                         <div className="space-y-3">
                           <div>
-                            <p
-                              className="text-sm font-medium mb-1"
+                            <BodySM
+                              weight="medium"
+                              className="mb-1"
                               style={{ color: secondaryTextColor }}
+                              useThemeColor={false}
                             >
                               Account Number
-                            </p>
+                            </BodySM>
                             <div className="flex items-center justify-between">
                               <code
                                 className="font-mono text-base lg:text-lg font-bold"
@@ -418,18 +435,20 @@ export default function GivingModal({
                           </div>
 
                           <div>
-                            <p
-                              className="text-sm font-medium mb-1"
+                            <BodySM
+                              weight="medium"
+                              className="mb-1"
                               style={{ color: secondaryTextColor }}
+                              useThemeColor={false}
                             >
                               Account Name
-                            </p>
-                            <p
-                              className="font-semibold"
+                            </BodySM>
+                            <SemiBoldText
                               style={{ color: textColor }}
+                              useThemeColor={false}
                             >
                               {account.accountName}
-                            </p>
+                            </SemiBoldText>
                           </div>
 
                           {/* Information Section */}
@@ -447,14 +466,20 @@ export default function GivingModal({
                                 className="w-4 h-4 mt-0.5 flex-shrink-0"
                                 style={{ color: colorScheme.primary }}
                               />
-                              <p
-                                className="text-xs leading-relaxed"
+                              <BodySM
+                                className="leading-relaxed"
                                 style={{ color: textColor }}
+                                useThemeColor={false}
                               >
-                                <strong>Please Kindly add narration</strong> to
-                                your transactions for proper appropriation of
+                                <SemiBoldText
+                                  style={{ color: textColor }}
+                                  useThemeColor={false}
+                                >
+                                  Please Kindly add narration
+                                </SemiBoldText>{' '}
+                                to your transactions for proper appropriation of
                                 funds. Thank you!
-                              </p>
+                              </BodySM>
                             </div>
                           </div>
                         </div>
@@ -475,15 +500,16 @@ export default function GivingModal({
                 : colorScheme.border,
             }}
           >
-            <p
-              className="text-sm opacity-80 mb-4"
+            <BodySM
+              className="opacity-80 mb-4"
               style={{ color: secondaryTextColor }}
+              useThemeColor={false}
             >
               Thank you for your generous giving. May God bless you abundantly.
-            </p>
+            </BodySM>
             <Button
               onClick={handleClose}
-              className="font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              className="py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
@@ -497,7 +523,12 @@ export default function GivingModal({
                 e.currentTarget.style.backgroundColor = buttonBackground;
               }}
             >
-              Close
+              <SemiBoldText
+                style={{ color: buttonTextColor }}
+                useThemeColor={false}
+              >
+                Close
+              </SemiBoldText>
             </Button>
           </div>
         </div>

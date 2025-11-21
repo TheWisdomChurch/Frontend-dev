@@ -6,6 +6,14 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2, Check, AlertCircle, Lock } from 'lucide-react';
+import {
+  BaseText,
+  BodySM,
+  BodyMD,
+  SemiBoldText,
+  LightText,
+  MediumText,
+} from '@/components/text';
 
 interface FormModalProps {
   isOpen: boolean;
@@ -216,14 +224,23 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-2xl font-bold" style={{ color: textColor }}>
+              <BaseText
+                weight="bold"
+                className="text-2xl"
+                style={{ color: textColor }}
+                useThemeColor={false}
+              >
                 {showAgreement ? 'Membership Agreement' : `Join ${department}`}
-              </h3>
-              <p className="mt-1" style={{ color: secondaryTextColor }}>
+              </BaseText>
+              <BodyMD
+                className="mt-1"
+                style={{ color: secondaryTextColor }}
+                useThemeColor={false}
+              >
                 {showAgreement
                   ? 'Important information about our membership process'
                   : 'Fill out the form below to express your interest'}
-              </p>
+              </BodyMD>
             </div>
             <button
               onClick={handleClose}
@@ -258,13 +275,13 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
               <div>
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm font-medium mb-2"
+                <MediumText
+                  className="block mb-2"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Full Name *
-                </label>
+                </MediumText>
                 <input
                   type="text"
                   id="fullName"
@@ -291,24 +308,25 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   placeholder="Enter your full name"
                 />
                 {errors.fullName && (
-                  <p
-                    className="mt-1 text-sm flex items-center gap-1"
+                  <BodySM
+                    className="mt-1 flex items-center gap-1"
                     style={{ color: colorScheme.error }}
+                    useThemeColor={false}
                   >
                     <AlertCircle className="w-4 h-4" />
                     {errors.fullName.message}
-                  </p>
+                  </BodySM>
                 )}
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-2"
+                <MediumText
+                  className="block mb-2"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Email Address *
-                </label>
+                </MediumText>
                 <input
                   type="email"
                   id="email"
@@ -330,26 +348,27 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   placeholder="Enter your email"
                 />
                 {errors.email && (
-                  <p
-                    className="mt-1 text-sm flex items-center gap-1"
+                  <BodySM
+                    className="mt-1 flex items-center gap-1"
                     style={{ color: colorScheme.error }}
+                    useThemeColor={false}
                   >
                     <AlertCircle className="w-4 h-4" />
                     {errors.email.message}
-                  </p>
+                  </BodySM>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
               <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium mb-2"
+                <MediumText
+                  className="block mb-2"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Phone Number *
-                </label>
+                </MediumText>
                 <input
                   type="tel"
                   id="phone"
@@ -375,24 +394,25 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   placeholder="Enter your phone number"
                 />
                 {errors.phone && (
-                  <p
-                    className="mt-1 text-sm flex items-center gap-1"
+                  <BodySM
+                    className="mt-1 flex items-center gap-1"
                     style={{ color: colorScheme.error }}
+                    useThemeColor={false}
                   >
                     <AlertCircle className="w-4 h-4" />
                     {errors.phone.message}
-                  </p>
+                  </BodySM>
                 )}
               </div>
 
               <div>
-                <label
-                  htmlFor="occupation"
-                  className="block text-sm font-medium mb-2"
+                <MediumText
+                  className="block mb-2"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Current Occupation *
-                </label>
+                </MediumText>
                 <input
                   type="text"
                   id="occupation"
@@ -414,25 +434,26 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   placeholder="e.g., Student, Engineer, Teacher, etc."
                 />
                 {errors.occupation && (
-                  <p
-                    className="mt-1 text-sm flex items-center gap-1"
+                  <BodySM
+                    className="mt-1 flex items-center gap-1"
                     style={{ color: colorScheme.error }}
+                    useThemeColor={false}
                   >
                     <AlertCircle className="w-4 h-4" />
                     {errors.occupation.message}
-                  </p>
+                  </BodySM>
                 )}
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="message"
-                className="block text-sm font-medium mb-2"
+              <MediumText
+                className="block mb-2"
                 style={{ color: textColor }}
+                useThemeColor={false}
               >
                 Why do you want to join {department}? *
-              </label>
+              </MediumText>
               <textarea
                 id="message"
                 rows={4}
@@ -461,17 +482,18 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               />
               <div className="flex justify-between items-center mt-1">
                 {errors.message ? (
-                  <p
-                    className="text-sm flex items-center gap-1"
+                  <BodySM
+                    className="flex items-center gap-1"
                     style={{ color: colorScheme.error }}
+                    useThemeColor={false}
                   >
                     <AlertCircle className="w-4 h-4" />
                     {errors.message.message}
-                  </p>
+                  </BodySM>
                 ) : (
                   <div></div>
                 )}
-                <span
+                <LightText
                   className={`text-xs ${
                     watch('message')?.length > 450 ? 'text-orange-600' : ''
                   }`}
@@ -481,9 +503,10 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                         ? colorScheme.warning
                         : secondaryTextColor,
                   }}
+                  useThemeColor={false}
                 >
                   {watch('message')?.length || 0}/500
-                </span>
+                </LightText>
               </div>
             </div>
 
@@ -510,28 +533,29 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   <Check className="w-3 h-3" />
                 </div>
                 <div>
-                  <p
-                    className="text-sm font-medium"
+                  <MediumText
                     style={{
                       color: isDarkMode
                         ? colorScheme.primary
                         : colorScheme.primaryLight,
                     }}
+                    useThemeColor={false}
                   >
                     By submitting this form, you agree to join our compulsory
                     1-month membership class
-                  </p>
-                  <p
-                    className="text-xs mt-1"
+                  </MediumText>
+                  <BodySM
+                    className="mt-1"
                     style={{
                       color: isDarkMode
                         ? colorScheme.primary
                         : colorScheme.primaryLight,
                     }}
+                    useThemeColor={false}
                   >
                     This foundational training is required for all new members
                     to understand our vision and values
-                  </p>
+                  </BodySM>
                 </div>
               </div>
             </div>
@@ -540,7 +564,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
+                className="flex-1 py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
                 style={{
                   backgroundColor: buttonBackground,
                   color: buttonTextColor,
@@ -564,17 +588,27 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       className="animate-spin h-5 w-5"
                       style={{ color: buttonTextColor }}
                     />
-                    Processing...
+                    <MediumText
+                      style={{ color: buttonTextColor }}
+                      useThemeColor={false}
+                    >
+                      Processing...
+                    </MediumText>
                   </span>
                 ) : (
-                  'Submit Application'
+                  <SemiBoldText
+                    style={{ color: buttonTextColor }}
+                    useThemeColor={false}
+                  >
+                    Submit Application
+                  </SemiBoldText>
                 )}
               </button>
               <button
                 type="button"
                 onClick={handleClose}
                 disabled={isSubmitting}
-                className="flex-1 border py-4 px-6 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 border py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   borderColor: isDarkMode
                     ? colorScheme.borderLight
@@ -595,7 +629,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   }
                 }}
               >
-                Cancel
+                <MediumText style={{ color: textColor }} useThemeColor={false}>
+                  Cancel
+                </MediumText>
               </button>
             </div>
           </form>
@@ -624,15 +660,20 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 >
                   <Lock className="w-8 h-8" />
                 </div>
-                <h4
-                  className="text-xl font-bold mb-2"
+                <BaseText
+                  weight="bold"
+                  className="text-xl mb-2"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Welcome to Wisdom House Ministry!
-                </h4>
-                <p style={{ color: secondaryTextColor }}>
+                </BaseText>
+                <BodyMD
+                  style={{ color: secondaryTextColor }}
+                  useThemeColor={false}
+                >
                   Thank you for your interest in joining our {department} team
-                </p>
+                </BodyMD>
               </div>
 
               <div className="space-y-4">
@@ -645,21 +686,25 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       : colorScheme.border,
                   }}
                 >
-                  <h5
-                    className="font-semibold mb-2 flex items-center gap-2"
+                  <MediumText
+                    className="mb-2 flex items-center gap-2"
                     style={{ color: textColor }}
+                    useThemeColor={false}
                   >
                     <span
                       className="w-2 h-2 rounded-full"
                       style={{ backgroundColor: colorScheme.primary }}
                     ></span>
                     Compulsory 1-Month Membership Class
-                  </h5>
-                  <p className="text-sm" style={{ color: secondaryTextColor }}>
+                  </MediumText>
+                  <BodySM
+                    style={{ color: secondaryTextColor }}
+                    useThemeColor={false}
+                  >
                     Every new member is required to complete our foundational
                     membership class. This ensures everyone understands our
                     vision, values, and ministry philosophy.
-                  </p>
+                  </BodySM>
                 </div>
 
                 <div
@@ -671,25 +716,36 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       : colorScheme.border,
                   }}
                 >
-                  <h5
-                    className="font-semibold mb-2 flex items-center gap-2"
+                  <MediumText
+                    className="mb-2 flex items-center gap-2"
                     style={{ color: textColor }}
+                    useThemeColor={false}
                   >
                     <span
                       className="w-2 h-2 rounded-full"
                       style={{ backgroundColor: colorScheme.success }}
                     ></span>
                     What You'll Learn
-                  </h5>
+                  </MediumText>
                   <ul
                     className="text-sm space-y-1"
                     style={{ color: secondaryTextColor }}
                   >
-                    <li>• Our church history and vision</li>
-                    <li>• Biblical foundations for ministry service</li>
-                    <li>• Understanding your spiritual gifts</li>
-                    <li>• Team dynamics and collaboration</li>
-                    <li>• Practical ministry training</li>
+                    <BodySM useThemeColor={false}>
+                      • Our church history and vision
+                    </BodySM>
+                    <BodySM useThemeColor={false}>
+                      • Biblical foundations for ministry service
+                    </BodySM>
+                    <BodySM useThemeColor={false}>
+                      • Understanding your spiritual gifts
+                    </BodySM>
+                    <BodySM useThemeColor={false}>
+                      • Team dynamics and collaboration
+                    </BodySM>
+                    <BodySM useThemeColor={false}>
+                      • Practical ministry training
+                    </BodySM>
                   </ul>
                 </div>
 
@@ -702,27 +758,34 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       : colorScheme.border,
                   }}
                 >
-                  <h5
-                    className="font-semibold mb-2 flex items-center gap-2"
+                  <MediumText
+                    className="mb-2 flex items-center gap-2"
                     style={{ color: textColor }}
+                    useThemeColor={false}
                   >
                     <span
                       className="w-2 h-2 rounded-full"
                       style={{ backgroundColor: colorScheme.secondary }}
                     ></span>
                     Class Schedule & Commitment
-                  </h5>
+                  </MediumText>
                   <ul
                     className="text-sm space-y-1"
                     style={{ color: secondaryTextColor }}
                   >
-                    <li>
+                    <BodySM useThemeColor={false}>
                       • Duration: This will be communicated upon completion of
                       form
-                    </li>
-                    <li>• Location: This will be announced during service </li>
-                    <li>• Materials: Provided at no cost</li>
-                    <li>• Certificate: Awarded upon completion</li>
+                    </BodySM>
+                    <BodySM useThemeColor={false}>
+                      • Location: This will be announced during service
+                    </BodySM>
+                    <BodySM useThemeColor={false}>
+                      • Materials: Provided at no cost
+                    </BodySM>
+                    <BodySM useThemeColor={false}>
+                      • Certificate: Awarded upon completion
+                    </BodySM>
                   </ul>
                 </div>
 
@@ -737,19 +800,23 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       : colorScheme.opacity.warning10,
                   }}
                 >
-                  <h5
-                    className="font-semibold mb-2 flex items-center gap-2"
+                  <MediumText
+                    className="mb-2 flex items-center gap-2"
                     style={{ color: colorScheme.warning }}
+                    useThemeColor={false}
                   >
                     <AlertCircle className="w-4 h-4" />
                     Important Notice
-                  </h5>
-                  <p className="text-sm" style={{ color: colorScheme.warning }}>
+                  </MediumText>
+                  <BodySM
+                    style={{ color: colorScheme.warning }}
+                    useThemeColor={false}
+                  >
                     Your application will be processed after successful
                     completion of the membership class. This ensures we place
                     everyone in roles where they can thrive and serve
                     effectively.
-                  </p>
+                  </BodySM>
                 </div>
               </div>
             </div>
@@ -759,7 +826,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               <button
                 onClick={handleFinalSubmit}
                 disabled={isSubmitting}
-                className="flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
+                className="flex-1 py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
                 style={{
                   backgroundColor: buttonBackground,
                   color: buttonTextColor,
@@ -783,16 +850,26 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       className="animate-spin h-5 w-5"
                       style={{ color: buttonTextColor }}
                     />
-                    Finalizing...
+                    <MediumText
+                      style={{ color: buttonTextColor }}
+                      useThemeColor={false}
+                    >
+                      Finalizing...
+                    </MediumText>
                   </span>
                 ) : (
-                  'I Understand & Agree to Continue'
+                  <SemiBoldText
+                    style={{ color: buttonTextColor }}
+                    useThemeColor={false}
+                  >
+                    I Understand & Agree to Continue
+                  </SemiBoldText>
                 )}
               </button>
               <button
                 onClick={handleContinueToForm}
                 disabled={isSubmitting}
-                className="flex-1 border py-4 px-6 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 border py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   borderColor: isDarkMode
                     ? colorScheme.borderLight
@@ -813,7 +890,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   }
                 }}
               >
-                Back to Form
+                <MediumText style={{ color: textColor }} useThemeColor={false}>
+                  Back to Form
+                </MediumText>
               </button>
             </div>
           </div>
