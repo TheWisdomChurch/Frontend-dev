@@ -503,6 +503,7 @@ const Upcoming = () => {
       </section>
 
       {/* Wisdom Power Conference 2026 Banner with Video Background */}
+      {/* Wisdom Power Conference 2026 Banner with Video Background */}
       <section
         ref={conferenceRef}
         className="min-h-[80vh] md:min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden"
@@ -517,9 +518,8 @@ const Upcoming = () => {
             className="absolute inset-0 w-full h-full object-cover opacity-40"
             poster="/conference-poster.jpg" // Add a poster image as fallback
           >
-            {/* Add your video source here */}
-            <source src="/videos/conference-bg.mp4" type="video/mp4" />
-            <source src="/videos/conference-bg.webm" type="video/webm" />
+            {/* Correct video source - place your video in public/videos folder */}
+            <source src="/videos/videoBg.mp4" type="video/mp4" />
             {/* Fallback image if video doesn't load */}
             <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900"></div>
           </video>
