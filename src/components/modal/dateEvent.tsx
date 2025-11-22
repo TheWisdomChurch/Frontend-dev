@@ -3,6 +3,7 @@
 import { CalendarEvent } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X } from 'lucide-react';
+import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
 
 interface DateEventsModalProps {
   dateEvents: {
@@ -57,9 +58,11 @@ export const DateEventsModal = ({
           {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3
-                className="text-xl lg:text-2xl font-black mb-2"
+              <BaseText
+                weight="black"
+                className="text-xl lg:text-2xl mb-2"
                 style={{ color: textColor }}
+                useThemeColor={false}
               >
                 {dateEvents.date.toLocaleDateString('en-US', {
                   weekday: 'long',
@@ -67,14 +70,14 @@ export const DateEventsModal = ({
                   day: 'numeric',
                   year: 'numeric',
                 })}
-              </h3>
-              <p
-                className="text-sm lg:text-base"
+              </BaseText>
+              <BodyMD
                 style={{ color: secondaryTextColor }}
+                useThemeColor={false}
               >
                 {dateEvents.events.length} event
                 {dateEvents.events.length > 1 ? 's' : ''} scheduled
-              </p>
+              </BodyMD>
             </div>
             <button
               onClick={onClose}
@@ -137,22 +140,29 @@ export const DateEventsModal = ({
                     {event.type}
                   </span>
                 </div>
-                <h4 className="font-bold mb-1" style={{ color: textColor }}>
+                <SemiBoldText
+                  className="mb-1"
+                  style={{ color: textColor }}
+                  useThemeColor={false}
+                >
                   {event.title}
-                </h4>
-                <p className="text-sm" style={{ color: secondaryTextColor }}>
+                </SemiBoldText>
+                <BodySM
+                  style={{ color: secondaryTextColor }}
+                  useThemeColor={false}
+                >
                   {event.time}
-                </p>
-                <p
-                  className="text-sm"
+                </BodySM>
+                <BodySM
                   style={{
                     color: isDarkMode
                       ? colorScheme.textTertiary
                       : colorScheme.textSecondary,
                   }}
+                  useThemeColor={false}
                 >
                   {event.location}
-                </p>
+                </BodySM>
               </div>
             ))}
           </div>
@@ -161,7 +171,7 @@ export const DateEventsModal = ({
           <div className="flex gap-3">
             <button
               onClick={onViewEvents}
-              className="flex-1 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:scale-105"
+              className="flex-1 py-3 rounded-xl transition-all duration-300 shadow-lg hover:scale-105"
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
@@ -175,11 +185,16 @@ export const DateEventsModal = ({
                 e.currentTarget.style.backgroundColor = buttonBackground;
               }}
             >
-              View All Events
+              <SemiBoldText
+                style={{ color: buttonTextColor }}
+                useThemeColor={false}
+              >
+                View All Events
+              </SemiBoldText>
             </button>
             <button
               onClick={onClose}
-              className="flex-1 border-2 py-3 rounded-xl font-bold transition-colors duration-300"
+              className="flex-1 border-2 py-3 rounded-xl transition-colors duration-300"
               style={{
                 borderColor: isDarkMode
                   ? colorScheme.borderLight
@@ -196,7 +211,9 @@ export const DateEventsModal = ({
                 e.currentTarget.style.backgroundColor = modalBackground;
               }}
             >
-              Close
+              <SemiBoldText style={{ color: textColor }} useThemeColor={false}>
+                Close
+              </SemiBoldText>
             </button>
           </div>
         </div>

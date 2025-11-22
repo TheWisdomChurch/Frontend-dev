@@ -11,7 +11,7 @@ import {
   handleContactCall,
   useIntersectionObserver,
 } from '@/components/utils/functionUtils/contactUtils';
-import { H2, BaseText, LightText } from '@/components/text';
+import { H2, BaseText, BodyLG, BodyMD, BodySM } from '@/components/text';
 import Button from '@/components/utils/CustomButton';
 import {
   Section,
@@ -46,7 +46,7 @@ export default function OnlineGiving() {
         padding="none"
         fullHeight={false}
         className="overflow-hidden"
-        style={{ backgroundColor: '#FFFFFF' }} // White section background (as requested)
+        style={{ backgroundColor: '#FFFFFF' }}
       >
         <Container size="xl" className="relative z-10 py-12 sm:py-16 lg:py-20">
           {/* Header */}
@@ -68,19 +68,21 @@ export default function OnlineGiving() {
             </div>
 
             <H2
-              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
-              style={{ color: '#000000' }} // Always bold black
+              className="leading-tight"
+              style={{ color: '#000000' }}
+              useThemeColor={false}
             >
               Online Giving
             </H2>
 
-            <LightText
-              className="max-w-2xl text-base sm:text-lg md:text-xl text-center leading-relaxed mt-4 px-4 opacity-90"
+            <BodySM
+              className="max-w-2xl text-center leading-relaxed mt-4 px-4 opacity-90"
               style={{ color: '#1a1a1a' }}
+              useThemeColor={false}
             >
               Your generosity helps us continue to spread the Gospel and serve
               our community. Choose how you would like to give today.
-            </LightText>
+            </BodySM>
           </FlexboxLayout>
 
           {/* Desktop Grid - Black Cards */}
@@ -107,22 +109,28 @@ export default function OnlineGiving() {
                       <BaseText
                         fontFamily="bricolage"
                         weight="bold"
-                        className="text-2xl"
+                        className="text-center"
+                        style={{ color: '#000000' }}
+                        useThemeColor={false}
                       >
                         {option.title}
                       </BaseText>
                     </div>
                     <div className="p-8 flex-1 flex flex-col justify-between">
-                      <LightText className="text-gray-300 text-center leading-relaxed text-lg mb-8">
+                      <BodyMD
+                        className="text-center leading-relaxed mb-8"
+                        style={{ color: '#d1d5db' }}
+                        useThemeColor={false}
+                      >
                         {option.description}
-                      </LightText>
+                      </BodyMD>
                       <Button
                         onClick={() => handleGiveNow(option)}
                         variant="primary"
                         size="lg"
                         curvature="full"
                         elevated={true}
-                        className="w-full py-4 text-lg font-bold"
+                        className="w-full py-4 font-bold"
                         style={{
                           backgroundColor: colorScheme.primary,
                           color: '#000000',
@@ -156,9 +164,13 @@ export default function OnlineGiving() {
                   <ChevronLeft className="w-5 h-5 text-white" />
                 </button>
 
-                <LightText className="text-sm font-medium text-gray-400">
+                <BodySM
+                  className="font-medium"
+                  style={{ color: '#9ca3af' }}
+                  useThemeColor={false}
+                >
                   Scroll to explore
-                </LightText>
+                </BodySM>
 
                 <button
                   onClick={scrollRight}
@@ -188,22 +200,28 @@ export default function OnlineGiving() {
                         <BaseText
                           fontFamily="bricolage"
                           weight="bold"
-                          className="text-xl"
+                          className="text-center"
+                          style={{ color: '#000000' }}
+                          useThemeColor={false}
                         >
                           {option.title}
                         </BaseText>
                       </div>
                       <div className="p-6 flex-1 flex flex-col justify-between">
-                        <LightText className="text-gray-300 text-center leading-relaxed text-base mb-6">
+                        <BodyMD
+                          className="text-center leading-relaxed mb-6"
+                          style={{ color: '#d1d5db' }}
+                          useThemeColor={false}
+                        >
                           {option.description}
-                        </LightText>
+                        </BodyMD>
                         <Button
                           onClick={() => handleGiveNow(option)}
                           variant="primary"
                           size="md"
                           curvature="full"
                           elevated={true}
-                          className="w-full py-3 text-base font-bold"
+                          className="w-full py-3 font-bold"
                           style={{
                             backgroundColor: colorScheme.primary,
                             color: '#000000',
@@ -240,16 +258,22 @@ export default function OnlineGiving() {
               <BaseText
                 fontFamily="bricolage"
                 weight="bold"
-                className="text-2xl lg:text-3xl mb-4 text-white"
+                className="text-center mb-4"
+                style={{ color: '#ffffff' }}
+                useThemeColor={false}
               >
                 Other Ways to Give
               </BaseText>
 
-              <LightText className="text-gray-300 text-base lg:text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+              <BodyLG
+                className="leading-relaxed mb-8 max-w-2xl mx-auto"
+                style={{ color: '#d1d5db' }}
+                useThemeColor={false}
+              >
                 You can also give by mail, in person during our services, or set
                 up recurring donations. For more information about giving
                 options, please contact our Admin.
-              </LightText>
+              </BodyLG>
 
               <FlexboxLayout justify="center" gap="md" className="flex-wrap">
                 <Button
@@ -259,7 +283,7 @@ export default function OnlineGiving() {
                   curvature="full"
                   elevated={true}
                   leftIcon={<Phone className="w-4 h-4" />}
-                  className="px-6 py-3 text-base font-bold hover:scale-105 transition"
+                  className="px-6 py-3 font-bold hover:scale-105 transition"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: '#000000',
@@ -272,7 +296,7 @@ export default function OnlineGiving() {
                   variant="outline"
                   size="md"
                   curvature="full"
-                  className="px-6 py-3 text-base border-2"
+                  className="px-6 py-3 border-2"
                   style={{
                     borderColor: colorScheme.primary,
                     color: '#FFFFFF',

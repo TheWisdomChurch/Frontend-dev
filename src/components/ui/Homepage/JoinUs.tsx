@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Workforce_bg } from '@/components/assets';
-import { H2, BaseText, LightText } from '@/components/text';
+import { H2, BaseText, BodySM } from '@/components/text';
 import { photos } from '@/lib/data';
 import Button from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -20,7 +20,6 @@ export default function JoinWisdomHouse() {
   const { colorScheme } = useTheme();
 
   const {
-    // isVisible,
     selectedDepartment,
     showForm,
     sectionRef,
@@ -41,7 +40,7 @@ export default function JoinWisdomHouse() {
         background="image"
         backgroundImage={Workforce_bg.src}
         overlay={true}
-        overlayOpacity={65} // ← Reduced from 80 → image more visible, text still readable
+        overlayOpacity={65}
         fullHeight={false}
         className="overflow-hidden min-h-[600px] sm:min-h-[700px] lg:min-h-[800px]"
         padding="none"
@@ -64,8 +63,11 @@ export default function JoinWisdomHouse() {
             padding="none"
           >
             <H2
-              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
-              style={{ color: '#FFFFFF' }} // Pure white — same as footer
+              className="leading-tight text-center"
+              style={{ color: '#FFFFFF' }}
+              useThemeColor={false}
+              weight="bold" // Ensure it's bold on all devices
+              smWeight="extrabold" // Even bolder on larger screens
             >
               Join Our{' '}
               <BaseText
@@ -78,19 +80,21 @@ export default function JoinWisdomHouse() {
                   fontSize: 'inherit',
                   lineHeight: 'inherit',
                 }}
+                useThemeColor={false}
               >
                 Workforce
               </BaseText>
             </H2>
 
-            <LightText
-              className="max-w-2xl text-sm xs:text-base sm:text-lg md:text-xl text-center leading-relaxed px-2"
-              style={{ color: '#E5E7EB' }} // gray-200 — same visible light gray as footer
+            <BodySM // Changed to BodySM for even better mobile sizing
+              className="max-w-2xl text-center leading-relaxed px-2"
+              style={{ color: '#E5E7EB' }}
+              useThemeColor={false}
             >
               "Each of you should use whatever gift you have received to serve
               others, as faithful stewards of God's grace in its various forms."
               – 1 Peter 4:10
-            </LightText>
+            </BodySM>
           </FlexboxLayout>
 
           {/* Desktop Layout */}
@@ -127,8 +131,9 @@ export default function JoinWisdomHouse() {
                     <BaseText
                       fontFamily="bricolage"
                       weight="bold"
-                      className="text-sm sm:text-base mb-2 sm:mb-3 text-center"
+                      className="text-center mb-2 sm:mb-3"
                       style={{ color: '#FFFFFF' }}
+                      useThemeColor={false}
                     >
                       {photo.title}
                     </BaseText>
@@ -142,17 +147,22 @@ export default function JoinWisdomHouse() {
                       <BaseText
                         fontFamily="bricolage"
                         weight="bold"
-                        className="text-base sm:text-lg mb-2 sm:mb-3"
+                        className="mb-2 sm:mb-3"
                         style={{ color: '#FFFFFF' }}
+                        useThemeColor={false}
                       >
                         {photo.title}
                       </BaseText>
 
-                      <LightText className="text-center mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed max-w-xs line-clamp-3 text-gray-200">
+                      <BodySM // Changed from BodyMD to BodySM for better mobile sizing
+                        className="text-center mb-3 sm:mb-4 leading-relaxed max-w-xs line-clamp-3"
+                        style={{ color: '#E5E7EB' }}
+                        useThemeColor={false}
+                      >
                         Discover how you can contribute to our ministry through{' '}
                         {photo.title.toLowerCase()}. Join us in making a
                         difference in our community.
-                      </LightText>
+                      </BodySM>
 
                       <Button
                         variant="primary"
@@ -166,9 +176,7 @@ export default function JoinWisdomHouse() {
                         }}
                         onClick={() => handleLearnMore(photo.title)}
                       >
-                        <span className="font-medium text-xs sm:text-sm">
-                          Learn More
-                        </span>
+                        <span className="font-medium">Learn More</span>
                       </Button>
                     </div>
                   </div>
@@ -188,9 +196,13 @@ export default function JoinWisdomHouse() {
                   <ChevronLeft className="w-4 h-4 text-white" />
                 </button>
 
-                <LightText className="text-xs font-medium px-2 text-center max-w-[160px] text-gray-300">
-                  Choose Your Department
-                </LightText>
+                <BodySM
+                  className="px-2 text-center whitespace-nowrap" // Removed max-w, added whitespace-nowrap
+                  style={{ color: '#E5E7EB' }}
+                  useThemeColor={false}
+                >
+                  Choose Department
+                </BodySM>
 
                 <button
                   onClick={scrollRight}
@@ -225,15 +237,20 @@ export default function JoinWisdomHouse() {
                       <BaseText
                         fontFamily="bricolage"
                         weight="bold"
-                        className="text-sm mb-1 text-center text-white"
+                        className="text-center mb-1 text-white"
+                        useThemeColor={false}
                       >
                         {photo.title}
                       </BaseText>
 
-                      <LightText className="text-center mb-2 text-xs leading-relaxed line-clamp-2 text-gray-300">
+                      <BodySM
+                        className="text-center mb-2 leading-relaxed line-clamp-2"
+                        style={{ color: '#E5E7EB' }}
+                        useThemeColor={false}
+                      >
                         Discover how you can contribute to our ministry through{' '}
                         {photo.title.toLowerCase()}.
-                      </LightText>
+                      </BodySM>
 
                       <div className="flex justify-center">
                         <Button
@@ -247,7 +264,7 @@ export default function JoinWisdomHouse() {
                           }}
                           onClick={() => handleLearnMore(photo.title)}
                         >
-                          <span className="text-xs">Learn More</span>
+                          <span>Learn More</span>
                         </Button>
                       </div>
                     </div>

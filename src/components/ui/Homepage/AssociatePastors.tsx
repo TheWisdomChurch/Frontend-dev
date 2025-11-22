@@ -59,15 +59,17 @@ export default function AssociatePastors() {
         >
           <H1
             ref={headingRef}
-            className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+            className="leading-tight"
             style={{ color: mainAccentColor }}
+            useThemeColor={false}
           >
             {associatePastorsContent.mainHeader}
           </H1>
           <LightText
             ref={descriptionRef}
-            className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-xl max-w-3xl mx-auto leading-relaxed mt-3 sm:mt-4 px-2"
+            className="max-w-3xl mx-auto leading-relaxed mt-3 sm:mt-4 px-2"
             style={{ color: subTextColor }}
+            useThemeColor={false}
           >
             {associatePastorsContent.mainDescription}
           </LightText>
@@ -82,8 +84,9 @@ export default function AssociatePastors() {
           >
             <H2
               ref={addSectionHeaderRef}
-              className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
+              className="text-center mb-8 sm:mb-10 lg:mb-12"
               style={{ color: mainAccentColor }}
+              useThemeColor={false}
             >
               {associatePastorsContent.pastoralSection.title}
             </H2>
@@ -127,15 +130,17 @@ export default function AssociatePastors() {
                   </div>
 
                   <H3
-                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 text-center px-2"
+                    className="text-center mb-2 sm:mb-3 px-2"
                     style={{ color: mainAccentColor }}
+                    useThemeColor={false}
                   >
                     {pastor.name}
                   </H3>
                   {pastor.description && (
                     <SmallText
-                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center opacity-90"
+                      className="leading-relaxed px-2 sm:px-3 text-center opacity-90"
                       style={{ color: subTextColor }}
+                      useThemeColor={false}
                     >
                       {pastor.description}
                     </SmallText>
@@ -153,8 +158,9 @@ export default function AssociatePastors() {
           >
             <H2
               ref={addSectionHeaderRef}
-              className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 lg:mb-12"
+              className="text-center mb-8 sm:mb-10 lg:mb-12"
               style={{ color: mainAccentColor }}
+              useThemeColor={false}
             >
               {associatePastorsContent.ministrySection.title}
             </H2>
@@ -198,15 +204,17 @@ export default function AssociatePastors() {
                   </div>
 
                   <H3
-                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 text-center px-2"
+                    className="text-center mb-2 sm:mb-3 px-2"
                     style={{ color: mainAccentColor }}
+                    useThemeColor={false}
                   >
                     {pastor.name}
                   </H3>
                   {pastor.description && (
                     <SmallText
-                      className="text-xs sm:text-sm md:text-base leading-relaxed px-2 sm:px-3 text-center opacity-90"
+                      className="leading-relaxed px-2 sm:px-3 text-center opacity-90"
                       style={{ color: subTextColor }}
+                      useThemeColor={false}
                     >
                       {pastor.description}
                     </SmallText>
@@ -227,7 +235,7 @@ export default function AssociatePastors() {
               rightIcon={
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 ml-2" />
               }
-              className="group transition-all duration-300 transform hover:scale-105 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base"
+              className="group transition-all duration-300 transform hover:scale-105 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4"
               style={{
                 background: `linear-gradient(to right, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                 color: colorScheme.black,
