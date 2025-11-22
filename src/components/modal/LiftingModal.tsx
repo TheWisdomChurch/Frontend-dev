@@ -26,24 +26,15 @@ export const LiftingModal = ({
 }: LiftingModalProps) => {
   const { colorScheme } = useTheme();
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
-  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
-  const inputBorderColor = isDarkMode
-    ? colorScheme.borderLight
-    : colorScheme.border;
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white;
+  const buttonBackground = colorScheme.primary;
+  const buttonTextColor = colorScheme.black;
+  const surfaceBackground = colorScheme.surface;
+  const borderColor = colorScheme.primary;
+  const inputBorderColor = colorScheme.border;
 
   return (
     <div
@@ -70,7 +61,7 @@ export const LiftingModal = ({
                 Register for 7 Nights of Lifting
               </BaseText>
               <BodyMD
-                style={{ color: secondaryTextColor }}
+                style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
                 Join us for seven powerful nights of spiritual elevation
@@ -81,19 +72,15 @@ export const LiftingModal = ({
               className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
               style={{
                 color: textColor,
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10,
+                backgroundColor: colorScheme.opacity.primary10,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black20
-                  : colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
               }}
             >
               <X className="w-5 h-5" />
@@ -120,7 +107,7 @@ export const LiftingModal = ({
                     borderColor: formErrors.firstName
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your first name"
@@ -154,7 +141,7 @@ export const LiftingModal = ({
                     borderColor: formErrors.lastName
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your last name"
@@ -190,7 +177,7 @@ export const LiftingModal = ({
                     borderColor: formErrors.email
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your email"
@@ -224,7 +211,7 @@ export const LiftingModal = ({
                     borderColor: formErrors.phone
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your phone number"
@@ -259,7 +246,7 @@ export const LiftingModal = ({
                     borderColor: formErrors.country
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                 >
@@ -301,7 +288,7 @@ export const LiftingModal = ({
                     borderColor: formErrors.location
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your city"
@@ -321,27 +308,19 @@ export const LiftingModal = ({
             <div
               className="rounded-xl p-4 border"
               style={{
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.primary10
-                  : colorScheme.opacity.primary20,
-                borderColor: isDarkMode
-                  ? colorScheme.opacity.primary20
-                  : colorScheme.opacity.primary30,
+                backgroundColor: colorScheme.opacity.primary10,
+                borderColor: colorScheme.opacity.primary20,
               }}
             >
               <BodySM
                 style={{
-                  color: isDarkMode
-                    ? colorScheme.primary
-                    : colorScheme.primaryLight,
+                  color: colorScheme.primary,
                 }}
                 useThemeColor={false}
               >
                 <SemiBoldText
                   style={{
-                    color: isDarkMode
-                      ? colorScheme.primary
-                      : colorScheme.primaryLight,
+                    color: colorScheme.primary,
                   }}
                   useThemeColor={false}
                 >
@@ -362,9 +341,8 @@ export const LiftingModal = ({
               }}
               onMouseEnter={(e: any) => {
                 if (!isSubmitting) {
-                  e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.gray[800]
-                    : colorScheme.primaryLight;
+                  e.currentTarget.style.backgroundColor =
+                    colorScheme.primaryLight;
                 }
               }}
               onMouseLeave={(e: any) => {

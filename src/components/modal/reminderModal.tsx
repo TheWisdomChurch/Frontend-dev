@@ -27,24 +27,15 @@ export const ReminderModal = ({
 }: ReminderModalProps) => {
   const { colorScheme } = useTheme();
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
-  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
-  const inputBorderColor = isDarkMode
-    ? colorScheme.borderLight
-    : colorScheme.border;
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white;
+  const buttonBackground = colorScheme.primary;
+  const buttonTextColor = colorScheme.black;
+  const surfaceBackground = colorScheme.surface;
+  const borderColor = colorScheme.primary;
+  const inputBorderColor = colorScheme.border;
 
   return (
     <div
@@ -67,20 +58,16 @@ export const ReminderModal = ({
           onClick={onClose}
           className="absolute top-4 right-4 z-50 rounded-full p-2 transform hover:scale-110 transition-all duration-200"
           style={{
-            backgroundColor: isDarkMode
-              ? colorScheme.opacity.black10
-              : colorScheme.opacity.white10,
+            backgroundColor: colorScheme.opacity.primary10,
             color: textColor,
           }}
           onMouseEnter={(e: any) => {
-            e.currentTarget.style.backgroundColor = isDarkMode
-              ? colorScheme.opacity.black20
-              : colorScheme.opacity.white20;
+            e.currentTarget.style.backgroundColor =
+              colorScheme.opacity.primary20;
           }}
           onMouseLeave={(e: any) => {
-            e.currentTarget.style.backgroundColor = isDarkMode
-              ? colorScheme.opacity.black10
-              : colorScheme.opacity.white10;
+            e.currentTarget.style.backgroundColor =
+              colorScheme.opacity.primary10;
           }}
         >
           <X className="w-5 h-5" />
@@ -112,7 +99,7 @@ export const ReminderModal = ({
 
             <BodyMD
               className="opacity-90 leading-relaxed"
-              style={{ color: secondaryTextColor }}
+              style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
               Get notified about the{' '}
@@ -142,7 +129,7 @@ export const ReminderModal = ({
                   borderColor: formErrors.email
                     ? colorScheme.error
                     : inputBorderColor,
-                  backgroundColor: inputBackground,
+                  backgroundColor: surfaceBackground,
                   color: textColor,
                 }}
                 placeholder="Enter your email"
@@ -174,7 +161,7 @@ export const ReminderModal = ({
                 className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
                 style={{
                   borderColor: inputBorderColor,
-                  backgroundColor: inputBackground,
+                  backgroundColor: surfaceBackground,
                   color: textColor,
                 }}
               >
@@ -200,7 +187,7 @@ export const ReminderModal = ({
                 className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
                 style={{
                   borderColor: inputBorderColor,
-                  backgroundColor: inputBackground,
+                  backgroundColor: surfaceBackground,
                   color: textColor,
                 }}
               >
@@ -213,12 +200,8 @@ export const ReminderModal = ({
             <div
               className="rounded-xl p-4 border"
               style={{
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.primary10
-                  : colorScheme.opacity.primary20,
-                borderColor: isDarkMode
-                  ? colorScheme.opacity.primary20
-                  : colorScheme.opacity.primary30,
+                backgroundColor: colorScheme.opacity.primary10,
+                borderColor: colorScheme.opacity.primary20,
               }}
             >
               <div className="flex items-start gap-2">
@@ -252,9 +235,8 @@ export const ReminderModal = ({
               }}
               onMouseEnter={(e: any) => {
                 if (!isSettingReminder) {
-                  e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.gray[800]
-                    : colorScheme.primaryLight;
+                  e.currentTarget.style.backgroundColor =
+                    colorScheme.primaryLight;
                 }
               }}
               onMouseLeave={(e: any) => {

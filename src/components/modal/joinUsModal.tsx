@@ -17,18 +17,13 @@ export default function JoinCommunityModal({
 }) {
   const { colorScheme } = useTheme();
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white;
+  // const buttonBackground = colorScheme.primary;
+  // const buttonTextColor = colorScheme.black;
+  const borderColor = colorScheme.primary;
 
   if (!isOpen) return null;
 
@@ -55,20 +50,16 @@ export default function JoinCommunityModal({
               className="rounded-full p-2 transform hover:scale-110 transition-all duration-200"
               curvature="full"
               style={{
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10,
+                backgroundColor: colorScheme.opacity.primary10,
                 color: textColor,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black20
-                  : colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
               }}
             >
               <X className="w-5 h-5" strokeWidth={2} />
@@ -108,7 +99,7 @@ export default function JoinCommunityModal({
 
             <BodyMD
               className="opacity-90 leading-relaxed"
-              style={{ color: secondaryTextColor }}
+              style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
               Connect with us across different platforms and grow together in
@@ -157,14 +148,12 @@ export default function JoinCommunityModal({
           <div
             className="text-center mt-6 pt-6 border-t"
             style={{
-              borderColor: isDarkMode
-                ? colorScheme.borderLight
-                : colorScheme.border,
+              borderColor: borderColor,
             }}
           >
             <BodySM
               className="opacity-80"
-              style={{ color: secondaryTextColor }}
+              style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
               We can't wait to connect with you!

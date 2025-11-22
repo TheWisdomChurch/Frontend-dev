@@ -23,23 +23,14 @@ export const DateEventsModal = ({
 }: DateEventsModalProps) => {
   const { colorScheme } = useTheme();
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
-  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const surfaceBackground = isDarkMode
-    ? colorScheme.surface
-    : colorScheme.surfaceVariant;
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white;
+  const buttonBackground = colorScheme.primary;
+  const buttonTextColor = colorScheme.black;
+  const surfaceBackground = colorScheme.surface;
+  const borderColor = colorScheme.primary;
 
   return (
     <div
@@ -72,7 +63,7 @@ export const DateEventsModal = ({
                 })}
               </BaseText>
               <BodyMD
-                style={{ color: secondaryTextColor }}
+                style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
                 {dateEvents.events.length} event
@@ -84,19 +75,15 @@ export const DateEventsModal = ({
               className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
               style={{
                 color: textColor,
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10,
+                backgroundColor: colorScheme.opacity.primary10,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black20
-                  : colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
               }}
             >
               <X className="w-5 h-5" />
@@ -114,9 +101,8 @@ export const DateEventsModal = ({
                   borderLeftColor: colorScheme.primary,
                 }}
                 onMouseEnter={(e: any) => {
-                  e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.opacity.black10
-                    : colorScheme.opacity.white10;
+                  e.currentTarget.style.backgroundColor =
+                    colorScheme.opacity.primary10;
                 }}
                 onMouseLeave={(e: any) => {
                   e.currentTarget.style.backgroundColor = surfaceBackground;
@@ -131,9 +117,7 @@ export const DateEventsModal = ({
                   <span
                     className="inline-block px-2 py-1 rounded text-xs font-bold"
                     style={{
-                      backgroundColor: isDarkMode
-                        ? colorScheme.opacity.primary20
-                        : colorScheme.opacity.primary30,
+                      backgroundColor: colorScheme.opacity.primary20,
                       color: colorScheme.primary,
                     }}
                   >
@@ -148,16 +132,14 @@ export const DateEventsModal = ({
                   {event.title}
                 </SemiBoldText>
                 <BodySM
-                  style={{ color: secondaryTextColor }}
+                  style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
                   {event.time}
                 </BodySM>
                 <BodySM
                   style={{
-                    color: isDarkMode
-                      ? colorScheme.textTertiary
-                      : colorScheme.textSecondary,
+                    color: subtitleTextColor,
                   }}
                   useThemeColor={false}
                 >
@@ -177,9 +159,8 @@ export const DateEventsModal = ({
                 color: buttonTextColor,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.gray[800]
-                  : colorScheme.primaryLight;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.primaryLight;
               }}
               onMouseLeave={(e: any) => {
                 e.currentTarget.style.backgroundColor = buttonBackground;
@@ -196,16 +177,13 @@ export const DateEventsModal = ({
               onClick={onClose}
               className="flex-1 border-2 py-3 rounded-xl transition-colors duration-300"
               style={{
-                borderColor: isDarkMode
-                  ? colorScheme.borderLight
-                  : colorScheme.border,
+                borderColor: borderColor,
                 color: textColor,
                 backgroundColor: modalBackground,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
               }}
               onMouseLeave={(e: any) => {
                 e.currentTarget.style.backgroundColor = modalBackground;

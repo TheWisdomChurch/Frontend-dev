@@ -41,23 +41,13 @@ export default function GivingModal({
   const contentRef = useRef<HTMLDivElement>(null);
   const accountRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
-  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const surfaceBackground = isDarkMode
-    ? colorScheme.surface
-    : colorScheme.surfaceVariant;
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white; // White for subtitles and info
+  const buttonBackground = colorScheme.primary;
+  const buttonTextColor = colorScheme.black;
+  const surfaceBackground = colorScheme.surface;
 
   useEffect(() => {
     setMounted(true);
@@ -186,10 +176,10 @@ export default function GivingModal({
     >
       <div
         ref={modalRef}
-        className="rounded-3xl w-full mx-auto overflow-hidden max-w-2xl max-h-[90vh] overflow-y-auto border shadow-2xl"
+        className="rounded-3xl w-full mx-auto overflow-hidden max-w-2xl border shadow-2xl"
         style={{
           backgroundColor: modalBackground,
-          borderColor: borderColor,
+          borderColor: colorScheme.primary,
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -198,46 +188,45 @@ export default function GivingModal({
           variant="ghost"
           size="icon"
           onClick={handleClose}
-          className="absolute top-4 right-4 z-50 rounded-full p-2 transform hover:scale-110 transition-all duration-200"
+          className="absolute top-3 right-3 z-50 rounded-full p-1.5 transform hover:scale-110 transition-all duration-200"
           style={{
-            backgroundColor: isDarkMode
-              ? colorScheme.opacity.black10
-              : colorScheme.opacity.white10,
-            color: textColor,
+            backgroundColor: colorScheme.opacity.primary10,
+            color: colorScheme.primary,
           }}
           onMouseEnter={(e: any) => {
-            e.currentTarget.style.backgroundColor = isDarkMode
-              ? colorScheme.opacity.black20
-              : colorScheme.opacity.white20;
+            e.currentTarget.style.backgroundColor =
+              colorScheme.opacity.primary20;
           }}
           onMouseLeave={(e: any) => {
-            e.currentTarget.style.backgroundColor = isDarkMode
-              ? colorScheme.opacity.black10
-              : colorScheme.opacity.white10;
+            e.currentTarget.style.backgroundColor =
+              colorScheme.opacity.primary10;
           }}
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </Button>
 
         {/* Content Area */}
-        <div ref={contentRef} className="p-6 lg:p-8">
+        <div ref={contentRef} className="p-4 lg:p-6">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <div
-              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-4"
+              className="w-14 h-14 lg:w-16 lg:h-16 rounded-full flex items-center justify-center mx-auto mb-3 border-4"
               style={{
-                backgroundColor: `${colorScheme.primary}20`,
+                backgroundColor: colorScheme.opacity.primary10,
                 borderColor: colorScheme.primary,
               }}
             >
-              <span className="text-2xl" style={{ color: colorScheme.primary }}>
+              <span
+                className="text-lg lg:text-xl"
+                style={{ color: colorScheme.primary }}
+              >
                 💰
               </span>
             </div>
 
             <BaseText
               weight="black"
-              className="text-2xl lg:text-3xl mb-4 tracking-tight"
+              className="text-lg lg:text-2xl mb-2 lg:mb-3 tracking-tight"
               style={{ color: textColor }}
               useThemeColor={false}
             >
@@ -245,8 +234,8 @@ export default function GivingModal({
             </BaseText>
 
             <BodyMD
-              className="opacity-90 leading-relaxed mb-6"
-              style={{ color: secondaryTextColor }}
+              className="opacity-90 leading-relaxed mb-3 lg:mb-4 text-xs lg:text-sm"
+              style={{ color: subtitleTextColor }} // Changed to white
               useThemeColor={false}
             >
               {givingOption.description}
@@ -254,24 +243,18 @@ export default function GivingModal({
 
             {/* Scripture Verse */}
             <div
-              className="rounded-xl p-4 mb-8 border"
+              className="rounded-lg p-2 lg:p-3 mb-4 lg:mb-6 border"
               style={{
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.primary10
-                  : colorScheme.opacity.primary20,
-                borderColor: isDarkMode
-                  ? colorScheme.opacity.primary20
-                  : colorScheme.opacity.primary30,
+                backgroundColor: colorScheme.opacity.primary10,
+                borderColor: colorScheme.primary,
               }}
             >
               <BaseText
                 weight="light"
                 fontFamily="playfair"
-                className="text-lg italic text-center leading-relaxed"
+                className="text-xs lg:text-sm italic text-center leading-relaxed"
                 style={{
-                  color: isDarkMode
-                    ? colorScheme.primary
-                    : colorScheme.primaryLight,
+                  color: subtitleTextColor, // Changed to white
                 }}
                 useThemeColor={false}
               >
@@ -281,11 +264,9 @@ export default function GivingModal({
               </BaseText>
               <BodySM
                 weight="medium"
-                className="mt-2 text-center"
+                className="mt-1 text-center text-xs"
                 style={{
-                  color: isDarkMode
-                    ? colorScheme.primary
-                    : colorScheme.primaryLight,
+                  color: subtitleTextColor, // Changed to white
                 }}
                 useThemeColor={false}
               >
@@ -295,10 +276,10 @@ export default function GivingModal({
           </div>
 
           {/* Accounts Section */}
-          <div className="mb-8">
+          <div className="mb-4 lg:mb-6">
             <BaseText
               weight="bold"
-              className="text-xl lg:text-2xl text-center mb-6"
+              className="text-base lg:text-xl text-center mb-3 lg:mb-4"
               style={{ color: textColor }}
               useThemeColor={false}
             >
@@ -307,29 +288,51 @@ export default function GivingModal({
 
             {/* Conditional rendering for accounts */}
             {accounts.length === 0 ? (
-              <div className="text-center py-8">
+              <div className="text-center py-4 lg:py-6">
                 <BodyMD
-                  style={{ color: secondaryTextColor }}
+                  style={{ color: subtitleTextColor }} // Changed to white
                   useThemeColor={false}
                 >
                   No accounts available at the moment.
                 </BodyMD>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div
+                className={`
+                ${
+                  accounts.length === 1
+                    ? 'flex justify-center'
+                    : accounts.length === 2
+                      ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-3 justify-center'
+                      : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3'
+                }
+              `}
+              >
                 {accounts.map((account, index) => (
-                  <div key={index} className="text-center">
+                  <div
+                    key={index}
+                    className={`
+                      text-center
+                      ${accounts.length === 1 ? 'w-full max-w-xs' : ''}
+                    `}
+                  >
                     {/* Account Circle */}
                     <div
-                      className="relative w-20 h-20 lg:w-24 lg:h-24 rounded-full mx-auto mb-4 border-4 cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-lg"
+                      className={`
+                        relative rounded-full mx-auto mb-2 lg:mb-3 border-4 cursor-pointer 
+                        transform transition-all duration-300 hover:scale-105 hover:shadow-lg
+                        ${
+                          accounts.length === 1
+                            ? 'w-20 h-20 lg:w-24 lg:h-24'
+                            : 'w-14 h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18'
+                        }
+                      `}
                       style={{
                         backgroundColor: surfaceBackground,
                         borderColor:
                           openAccountIndex === index
                             ? colorScheme.primary
-                            : isDarkMode
-                              ? colorScheme.borderLight
-                              : colorScheme.border,
+                            : colorScheme.border,
                       }}
                       onClick={() => toggleAccount(index)}
                     >
@@ -342,29 +345,52 @@ export default function GivingModal({
                         />
                       ) : (
                         <div className="w-full h-full rounded-full flex items-center justify-center">
-                          <span className="text-2xl">🏦</span>
+                          <span
+                            className={
+                              accounts.length === 1
+                                ? 'text-xl lg:text-2xl'
+                                : 'text-base lg:text-lg'
+                            }
+                            style={{ color: colorScheme.primary }}
+                          >
+                            🏦
+                          </span>
                         </div>
                       )}
 
                       {/* Chevron Indicator */}
                       <div
-                        className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center border-2"
+                        className={`
+                          absolute left-1/2 transform -translate-x-1/2 rounded-full 
+                          flex items-center justify-center border-2
+                          ${
+                            accounts.length === 1
+                              ? '-bottom-2 w-8 h-8 lg:-bottom-3 lg:w-10 lg:h-10'
+                              : '-bottom-1 lg:-bottom-2 w-5 h-5 lg:w-6 lg:h-6'
+                          }
+                        `}
                         style={{
                           backgroundColor: modalBackground,
                           borderColor: colorScheme.primary,
                         }}
                       >
                         <ChevronDown
-                          className={`w-4 h-4 transition-transform duration-300 ${
-                            openAccountIndex === index ? 'rotate-180' : ''
-                          }`}
+                          className={`
+                            transition-transform duration-300 ${
+                              openAccountIndex === index ? 'rotate-180' : ''
+                            }
+                            ${accounts.length === 1 ? 'w-4 h-4 lg:w-5 lg:h-5' : 'w-2.5 h-2.5 lg:w-3 lg:h-3'}
+                          `}
                           style={{ color: colorScheme.primary }}
                         />
                       </div>
                     </div>
 
                     <SemiBoldText
-                      className="text-base lg:text-lg mb-2"
+                      className={`
+                        mb-1 line-clamp-2
+                        ${accounts.length === 1 ? 'text-base lg:text-lg' : 'text-xs lg:text-sm'}
+                      `}
                       style={{ color: textColor }}
                       useThemeColor={false}
                     >
@@ -382,27 +408,41 @@ export default function GivingModal({
                       style={{ height: 0, opacity: 0 }}
                     >
                       <div
-                        className="rounded-lg p-4 border mt-2"
+                        className={`
+                          rounded-lg border mt-1
+                          ${accounts.length === 1 ? 'p-3 lg:p-4' : 'p-2 lg:p-3'}
+                        `}
                         style={{
                           backgroundColor: surfaceBackground,
-                          borderColor: isDarkMode
-                            ? colorScheme.borderLight
-                            : colorScheme.border,
+                          borderColor: colorScheme.primary,
                         }}
                       >
-                        <div className="space-y-3">
+                        <div
+                          className={
+                            accounts.length === 1
+                              ? 'space-y-3 lg:space-y-4'
+                              : 'space-y-1.5 lg:space-y-2'
+                          }
+                        >
                           <div>
                             <BodySM
                               weight="medium"
-                              className="mb-1"
-                              style={{ color: secondaryTextColor }}
+                              className={
+                                accounts.length === 1
+                                  ? 'mb-1 text-sm lg:text-base'
+                                  : 'mb-1 text-xs lg:text-sm'
+                              }
+                              style={{ color: subtitleTextColor }} // Changed to white
                               useThemeColor={false}
                             >
                               Account Number
                             </BodySM>
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between gap-1">
                               <code
-                                className="font-mono text-base lg:text-lg font-bold"
+                                className={`
+                                  font-mono font-bold break-all
+                                  ${accounts.length === 1 ? 'text-sm lg:text-base' : 'text-xs lg:text-sm'}
+                                `}
                                 style={{ color: textColor }}
                               >
                                 {account.accountNumber}
@@ -413,12 +453,15 @@ export default function GivingModal({
                                 onClick={() =>
                                   copyToClipboard(account.accountNumber, index)
                                 }
-                                className="rounded-full p-2"
+                                className={`
+                                  rounded-full flex-shrink-0
+                                  ${accounts.length === 1 ? 'p-1.5 lg:p-2' : 'p-1 lg:p-1.5'}
+                                `}
                                 style={{
                                   backgroundColor:
                                     copiedIndex === index
                                       ? colorScheme.primary
-                                      : 'transparent',
+                                      : colorScheme.opacity.primary10,
                                   color:
                                     copiedIndex === index
                                       ? colorScheme.black
@@ -426,9 +469,21 @@ export default function GivingModal({
                                 }}
                               >
                                 {copiedIndex === index ? (
-                                  <Check className="w-4 h-4" />
+                                  <Check
+                                    className={
+                                      accounts.length === 1
+                                        ? 'w-3.5 h-3.5 lg:w-4 lg:h-4'
+                                        : 'w-2.5 h-2.5 lg:w-3 lg:h-3'
+                                    }
+                                  />
                                 ) : (
-                                  <Copy className="w-4 h-4" />
+                                  <Copy
+                                    className={
+                                      accounts.length === 1
+                                        ? 'w-3.5 h-3.5 lg:w-4 lg:h-4'
+                                        : 'w-2.5 h-2.5 lg:w-3 lg:h-3'
+                                    }
+                                  />
                                 )}
                               </Button>
                             </div>
@@ -437,13 +492,22 @@ export default function GivingModal({
                           <div>
                             <BodySM
                               weight="medium"
-                              className="mb-1"
-                              style={{ color: secondaryTextColor }}
+                              className={
+                                accounts.length === 1
+                                  ? 'mb-1 text-sm lg:text-base'
+                                  : 'mb-1 text-xs lg:text-sm'
+                              }
+                              style={{ color: subtitleTextColor }} // Changed to white
                               useThemeColor={false}
                             >
                               Account Name
                             </BodySM>
                             <SemiBoldText
+                              className={
+                                accounts.length === 1
+                                  ? 'text-sm lg:text-base break-words'
+                                  : 'text-xs lg:text-sm break-words'
+                              }
                               style={{ color: textColor }}
                               useThemeColor={false}
                             >
@@ -453,32 +517,46 @@ export default function GivingModal({
 
                           {/* Information Section */}
                           <div
-                            className="rounded-lg p-3 mt-2"
+                            className={
+                              accounts.length === 1
+                                ? 'rounded-lg p-2 lg:p-3 mt-1 lg:mt-2'
+                                : 'rounded-lg p-1.5 lg:p-2 mt-1'
+                            }
                             style={{
-                              backgroundColor: isDarkMode
-                                ? colorScheme.opacity.primary10
-                                : colorScheme.opacity.primary20,
-                              border: `1px solid ${isDarkMode ? colorScheme.opacity.primary20 : colorScheme.opacity.primary30}`,
+                              backgroundColor: colorScheme.opacity.primary10,
+                              border: `1px solid ${colorScheme.primary}`,
                             }}
                           >
-                            <div className="flex items-start gap-2">
+                            <div className="flex items-start gap-1 lg:gap-2">
                               <Info
-                                className="w-4 h-4 mt-0.5 flex-shrink-0"
+                                className={
+                                  accounts.length === 1
+                                    ? 'w-4 h-4 lg:w-5 lg:h-5 mt-0.5 flex-shrink-0'
+                                    : 'w-2.5 h-2.5 lg:w-3 lg:h-3 mt-0.5 flex-shrink-0'
+                                }
                                 style={{ color: colorScheme.primary }}
                               />
                               <BodySM
-                                className="leading-relaxed"
-                                style={{ color: textColor }}
+                                className={
+                                  accounts.length === 1
+                                    ? 'leading-relaxed text-xs lg:text-sm'
+                                    : 'leading-relaxed text-xs'
+                                }
+                                style={{ color: subtitleTextColor }} // Changed to white
                                 useThemeColor={false}
                               >
                                 <SemiBoldText
-                                  style={{ color: textColor }}
+                                  className={
+                                    accounts.length === 1
+                                      ? 'text-xs lg:text-sm'
+                                      : 'text-xs'
+                                  }
+                                  style={{ color: subtitleTextColor }} // Changed to white
                                   useThemeColor={false}
                                 >
-                                  Please Kindly add narration
+                                  Please add narration
                                 </SemiBoldText>{' '}
-                                to your transactions for proper appropriation of
-                                funds. Thank you!
+                                to your transactions. Thank you!
                               </BodySM>
                             </div>
                           </div>
@@ -491,33 +569,93 @@ export default function GivingModal({
             )}
           </div>
 
+          {/* Additional Giving Information */}
+          <div className="mb-4 lg:mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
+              {/* Giving Tips */}
+              <div
+                className="rounded-lg p-3 border"
+                style={{
+                  backgroundColor: colorScheme.opacity.primary10,
+                  borderColor: colorScheme.primary,
+                }}
+              >
+                <BaseText
+                  weight="bold"
+                  className="text-xs lg:text-sm mb-1"
+                  style={{ color: textColor }}
+                  useThemeColor={false}
+                >
+                  💡 Giving Tips
+                </BaseText>
+                <BodySM
+                  className="text-xs leading-relaxed"
+                  style={{ color: subtitleTextColor }} // Changed to white
+                  useThemeColor={false}
+                >
+                  • Include your name in narration
+                  <br />
+                  • Keep transaction receipts
+                  <br />• Contact for inquiries
+                </BodySM>
+              </div>
+
+              {/* Contact Support */}
+              <div
+                className="rounded-lg p-3 border"
+                style={{
+                  backgroundColor: colorScheme.opacity.primary10,
+                  borderColor: colorScheme.primary,
+                }}
+              >
+                <BaseText
+                  weight="bold"
+                  className="text-xs lg:text-sm mb-1"
+                  style={{ color: textColor }}
+                  useThemeColor={false}
+                >
+                  📞 Need Help?
+                </BaseText>
+                <BodySM
+                  className="text-xs leading-relaxed"
+                  style={{ color: subtitleTextColor }} // Changed to white
+                  useThemeColor={false}
+                >
+                  Contact finance team for:
+                  <br />
+                  • Transaction issues
+                  <br />
+                  • Giving receipts
+                  <br />• Other inquiries
+                </BodySM>
+              </div>
+            </div>
+          </div>
+
           {/* Footer */}
           <div
-            className="text-center pt-6 border-t"
+            className="text-center pt-3 lg:pt-4 border-t"
             style={{
-              borderColor: isDarkMode
-                ? colorScheme.borderLight
-                : colorScheme.border,
+              borderColor: colorScheme.primary,
             }}
           >
             <BodySM
-              className="opacity-80 mb-4"
-              style={{ color: secondaryTextColor }}
+              className="opacity-80 mb-2 lg:mb-3 text-xs"
+              style={{ color: subtitleTextColor }} // Changed to white
               useThemeColor={false}
             >
               Thank you for your generous giving. May God bless you abundantly.
             </BodySM>
             <Button
               onClick={handleClose}
-              className="py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              className="py-1.5 lg:py-2 px-4 lg:px-6 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-xs lg:text-sm"
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.gray[800]
-                  : colorScheme.primaryLight;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.primaryLight;
               }}
               onMouseLeave={(e: any) => {
                 e.currentTarget.style.backgroundColor = buttonBackground;
