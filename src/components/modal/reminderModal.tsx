@@ -3,6 +3,8 @@
 import { ReminderFormData } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2 } from 'lucide-react';
+import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
+import { Button } from '@/components/ui/button';
 
 interface ReminderModalProps {
   formData: ReminderFormData;
@@ -58,54 +60,78 @@ export const ReminderModal = ({
         }}
         onClick={e => e.stopPropagation()}
       >
+        {/* Close Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 rounded-full p-2 transform hover:scale-110 transition-all duration-200"
+          style={{
+            backgroundColor: isDarkMode
+              ? colorScheme.opacity.black10
+              : colorScheme.opacity.white10,
+            color: textColor,
+          }}
+          onMouseEnter={(e: any) => {
+            e.currentTarget.style.backgroundColor = isDarkMode
+              ? colorScheme.opacity.black20
+              : colorScheme.opacity.white20;
+          }}
+          onMouseLeave={(e: any) => {
+            e.currentTarget.style.backgroundColor = isDarkMode
+              ? colorScheme.opacity.black10
+              : colorScheme.opacity.white10;
+          }}
+        >
+          <X className="w-5 h-5" />
+        </Button>
+
         <div className="p-8">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h3
-                className="text-2xl font-black mb-2"
-                style={{ color: textColor }}
-              >
-                Set Reminder
-              </h3>
-              <p style={{ color: secondaryTextColor }}>
-                Get notified about the{' '}
-                {formData.eventType === 'conference'
-                  ? 'Wisdom Power Conference 2026'
-                  : '7 Nights of Lifting'}
-              </p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div
+              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-4"
               style={{
-                color: textColor,
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10,
-              }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black20
-                  : colorScheme.opacity.white20;
-              }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                backgroundColor: `${colorScheme.primary}20`,
+                borderColor: colorScheme.primary,
               }}
             >
-              <X className="w-5 h-5" />
-            </button>
+              <span className="text-2xl" style={{ color: colorScheme.primary }}>
+                ⏰
+              </span>
+            </div>
+
+            <BaseText
+              weight="black"
+              className="text-2xl lg:text-3xl mb-4 tracking-tight"
+              style={{ color: textColor }}
+              useThemeColor={false}
+            >
+              Set Reminder
+            </BaseText>
+
+            <BodyMD
+              className="opacity-90 leading-relaxed"
+              style={{ color: secondaryTextColor }}
+              useThemeColor={false}
+            >
+              Get notified about the{' '}
+              {formData.eventType === 'conference'
+                ? 'Wisdom Power Conference 2026'
+                : '7 Nights of Lifting'}
+            </BodyMD>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-6">
+            {/* Email Input */}
             <div>
-              <label
-                className="block text-sm font-bold mb-2"
+              <SemiBoldText
+                className="block text-sm mb-2"
                 style={{ color: textColor }}
+                useThemeColor={false}
               >
                 Email Address *
-              </label>
+              </SemiBoldText>
               <input
                 type="email"
                 name="email"
@@ -122,22 +148,25 @@ export const ReminderModal = ({
                 placeholder="Enter your email"
               />
               {formErrors.email && (
-                <p
-                  className="text-sm mt-1"
+                <BodySM
+                  className="mt-1"
                   style={{ color: colorScheme.error }}
+                  useThemeColor={false}
                 >
                   {formErrors.email}
-                </p>
+                </BodySM>
               )}
             </div>
 
+            {/* Frequency Select */}
             <div>
-              <label
-                className="block text-sm font-bold mb-2"
+              <SemiBoldText
+                className="block text-sm mb-2"
                 style={{ color: textColor }}
+                useThemeColor={false}
               >
                 Reminder Frequency
-              </label>
+              </SemiBoldText>
               <select
                 name="frequency"
                 value={formData.frequency}
@@ -155,13 +184,15 @@ export const ReminderModal = ({
               </select>
             </div>
 
+            {/* Event Type Select */}
             <div>
-              <label
-                className="block text-sm font-bold mb-2"
+              <SemiBoldText
+                className="block text-sm mb-2"
                 style={{ color: textColor }}
+                useThemeColor={false}
               >
                 Event Type
-              </label>
+              </SemiBoldText>
               <select
                 name="eventType"
                 value={formData.eventType}
@@ -178,6 +209,7 @@ export const ReminderModal = ({
               </select>
             </div>
 
+            {/* Information Section */}
             <div
               className="rounded-xl p-4 border"
               style={{
@@ -189,24 +221,31 @@ export const ReminderModal = ({
                   : colorScheme.opacity.primary30,
               }}
             >
-              <p
-                className="text-sm font-medium"
-                style={{
-                  color: isDarkMode
-                    ? colorScheme.primary
-                    : colorScheme.primaryLight,
-                }}
-              >
-                <strong>How it works:</strong> We'll send you periodic updates
-                about the event, including important dates, speaker
-                announcements, and registration reminders.
-              </p>
+              <div className="flex items-start gap-2">
+                <span className="text-sm mt-0.5 flex-shrink-0">💡</span>
+                <BodySM
+                  className="leading-relaxed"
+                  style={{ color: textColor }}
+                  useThemeColor={false}
+                >
+                  <SemiBoldText
+                    style={{ color: textColor }}
+                    useThemeColor={false}
+                  >
+                    How it works:
+                  </SemiBoldText>{' '}
+                  We'll send you periodic updates about the event, including
+                  important dates, speaker announcements, and registration
+                  reminders.
+                </BodySM>
+              </div>
             </div>
 
-            <button
+            {/* Submit Button */}
+            <Button
               type="submit"
               disabled={isSettingReminder}
-              className="w-full py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100"
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
@@ -233,9 +272,14 @@ export const ReminderModal = ({
                   Setting Reminder...
                 </span>
               ) : (
-                'Set Reminder'
+                <SemiBoldText
+                  style={{ color: buttonTextColor }}
+                  useThemeColor={false}
+                >
+                  Set Reminder
+                </SemiBoldText>
               )}
-            </button>
+            </Button>
           </form>
         </div>
       </div>

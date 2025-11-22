@@ -2,7 +2,14 @@
 'use client';
 
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2, H3 } from '@/components/text';
+import {
+  H2,
+  H3,
+  BaseText,
+  LightText,
+  BodyMD,
+  SemiBoldText,
+} from '@/components/text';
 import { hero_bg_2 } from '@/components/assets';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -109,14 +116,18 @@ const Upcoming = () => {
           <div className="max-w-6xl mx-auto">
             {/* Bold Header */}
             <div className="text-center mb-16">
-              <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6 tracking-tight">
+              <BaseText
+                fontFamily="bricolage"
+                weight="black"
+                className="text-5xl md:text-7xl text-gray-900 mb-6 tracking-tight"
+              >
                 UPCOMING <span className="text-yellow-500">EVENTS</span>
-              </h1>
+              </BaseText>
               <div className="w-24 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto rounded-full mb-6"></div>
-              <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <BodyMD className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Discover transformative experiences and spiritual gatherings
                 designed to uplift and inspire your journey
-              </p>
+              </BodyMD>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -124,9 +135,9 @@ const Upcoming = () => {
               <div className="rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-700">
                 <div className="bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 h-96 flex items-center justify-center relative">
                   <div className="absolute inset-0 bg-black opacity-20"></div>
-                  <span className="text-white text-3xl font-bold text-center px-4 relative z-10">
+                  <SemiBoldText className="text-white text-3xl text-center px-4 relative z-10">
                     7 Nights of Lifting
-                  </span>
+                  </SemiBoldText>
                 </div>
               </div>
 
@@ -136,17 +147,17 @@ const Upcoming = () => {
                   7 Nights of <span className="text-yellow-500">Lifting</span>
                 </H2>
                 <div className="space-y-4">
-                  <p className="text-xl text-gray-600 leading-relaxed">
+                  <BodyMD className="text-xl text-gray-600 leading-relaxed">
                     Join us for seven powerful nights of worship, prayer, and
                     spiritual elevation. Each night features special guests,
                     anointed worship, and life-changing messages that will lift
                     your spirit and strengthen your faith.
-                  </p>
-                  <p className="text-xl text-gray-600 leading-relaxed">
+                  </BodyMD>
+                  <BodyMD className="text-xl text-gray-600 leading-relaxed">
                     Don't miss this transformative experience where we come
                     together as a community to seek God's presence and power in
                     our lives.
-                  </p>
+                  </BodyMD>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <button
@@ -176,10 +187,10 @@ const Upcoming = () => {
               <H2 className="mb-6 text-4xl md:text-5xl font-black">
                 Event <span className="text-yellow-400">Calendar</span>
               </H2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <BodyMD className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 Browse through our interactive calendar to stay updated with all
                 upcoming events and gatherings
-              </p>
+              </BodyMD>
 
               {/* Calendar Controls */}
               <div className="flex items-center justify-between mb-8 bg-gray-800 rounded-2xl shadow-2xl p-6">
@@ -205,11 +216,15 @@ const Upcoming = () => {
                   >
                     {view === 'month' ? 'Month View' : 'Year View'}
                   </button>
-                  <h3 className="text-3xl font-black text-white">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="black"
+                    className="text-3xl text-white"
+                  >
                     {view === 'month'
                       ? `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`
                       : currentDate.getFullYear()}
-                  </h3>
+                  </BaseText>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -263,23 +278,27 @@ const Upcoming = () => {
                             : 'border-gray-700 hover:border-gray-600'
                       }`}
                     >
-                      <h3 className="text-xl font-black text-white mb-3">
+                      <BaseText
+                        fontFamily="bricolage"
+                        weight="black"
+                        className="text-xl text-white mb-3"
+                      >
                         {month}
-                      </h3>
+                      </BaseText>
                       {hasEvents ? (
                         <div className="space-y-2">
                           <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                             {currentMonthEvents.length} event
                             {currentMonthEvents.length > 1 ? 's' : ''}
                           </span>
-                          <p className="text-sm text-gray-400">
+                          <BodyMD className="text-sm text-gray-400">
                             Click to view events
-                          </p>
+                          </BodyMD>
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-500">
+                        <BodyMD className="text-sm text-gray-500">
                           No events scheduled
-                        </p>
+                        </BodyMD>
                       )}
                     </div>
                   );
@@ -385,39 +404,43 @@ const Upcoming = () => {
                           </span>
                         </div>
                       </div>
-                      <h4 className="text-2xl font-black text-white mb-4 group-hover:text-yellow-400 transition-colors duration-300">
+                      <BaseText
+                        fontFamily="bricolage"
+                        weight="black"
+                        className="text-2xl text-white mb-4 group-hover:text-yellow-400 transition-colors duration-300"
+                      >
                         {event.title}
-                      </h4>
+                      </BaseText>
                       {event.description && (
-                        <p className="text-gray-300 mb-6 leading-relaxed">
+                        <BodyMD className="text-gray-300 mb-6 leading-relaxed">
                           {event.description}
-                        </p>
+                        </BodyMD>
                       )}
                       <div className="space-y-3 text-gray-300">
                         <div className="flex items-center">
-                          <span className="font-black w-20 text-gray-400">
+                          <SemiBoldText className="w-20 text-gray-400">
                             Date:
-                          </span>
-                          <span>
+                          </SemiBoldText>
+                          <BodyMD>
                             {new Date(event.date).toLocaleDateString('en-US', {
                               weekday: 'long',
                               year: 'numeric',
                               month: 'long',
                               day: 'numeric',
                             })}
-                          </span>
+                          </BodyMD>
                         </div>
                         <div className="flex items-center">
-                          <span className="font-black w-20 text-gray-400">
+                          <SemiBoldText className="w-20 text-gray-400">
                             Time:
-                          </span>
-                          <span>{event.time}</span>
+                          </SemiBoldText>
+                          <BodyMD>{event.time}</BodyMD>
                         </div>
                         <div className="flex items-center">
-                          <span className="font-black w-20 text-gray-400">
+                          <SemiBoldText className="w-20 text-gray-400">
                             Where:
-                          </span>
-                          <span>{event.location}</span>
+                          </SemiBoldText>
+                          <BodyMD>{event.location}</BodyMD>
                         </div>
                       </div>
                       <button className="w-full mt-6 bg-yellow-400 text-gray-900 py-4 rounded-xl font-black hover:bg-yellow-500 transition-all duration-300 hover:scale-105 shadow-lg">
@@ -429,13 +452,17 @@ const Upcoming = () => {
               ) : (
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">📅</div>
-                  <p className="text-2xl text-gray-400 mb-4 font-bold">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="bold"
+                    className="text-2xl text-gray-400 mb-4"
+                  >
                     No events scheduled for {months[currentDate.getMonth()]}{' '}
                     {currentDate.getFullYear()}
-                  </p>
-                  <p className="text-gray-500">
+                  </BaseText>
+                  <BodyMD className="text-gray-500">
                     Check back later for updates or browse other months.
-                  </p>
+                  </BodyMD>
                 </div>
               )}
             </div>
@@ -465,11 +492,11 @@ const Upcoming = () => {
                 2026
               </H2>
               <div className="w-32 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mb-8 rounded-full"></div>
-              <p className="text-2xl md:text-3xl mb-12 opacity-90 leading-relaxed font-light">
+              <BodyMD className="text-2xl md:text-3xl mb-12 opacity-90 leading-relaxed font-light">
                 The most anticipated spiritual gathering of the year is coming.
                 Experience powerful teachings, anointed worship, and
                 life-changing encounters.
-              </p>
+              </BodyMD>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={openConferenceModal}
@@ -499,10 +526,10 @@ const Upcoming = () => {
             <H2 className="mb-6 text-4xl md:text-5xl font-black text-gray-900">
               Stay <span className="text-yellow-500">Updated</span>
             </H2>
-            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+            <BodyMD className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
               Get the latest news and updates about our upcoming programs and
               events delivered to your inbox
-            </p>
+            </BodyMD>
 
             <div className="bg-white rounded-3xl p-10 shadow-2xl border border-gray-200">
               <form className="max-w-2xl mx-auto">
@@ -520,11 +547,11 @@ const Upcoming = () => {
                     Subscribe Now
                   </button>
                 </div>
-                <p className="text-sm text-gray-500">
+                <BodyMD className="text-sm text-gray-500">
                   By subscribing, you agree to receive updates about our events
                   and programs. You can unsubscribe at any time. We respect your
                   privacy.
-                </p>
+                </BodyMD>
               </form>
             </div>
           </div>

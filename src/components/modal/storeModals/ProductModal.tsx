@@ -8,7 +8,14 @@ import { useAppDispatch } from '@/components/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Product } from '@/lib/types';
 import Button from '@/components/utils/CustomButton';
-import { BaseText, LightText } from '@/components/text';
+import {
+  BaseText,
+  BodyLG,
+  BodyMD,
+  BodySM,
+  SemiBoldText,
+  LightText,
+} from '@/components/text';
 import { FlexboxLayout } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useEffect, useRef, useState } from 'react';
@@ -132,29 +139,32 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   weight="bold"
                   className="text-3xl lg:text-4xl"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   {product.name}
                 </BaseText>
-                <LightText
-                  className="text-base lg:text-lg mt-3 leading-relaxed"
+                <BodyLG
+                  className="mt-3 leading-relaxed"
                   style={{ color: mutedText }}
+                  useThemeColor={false}
                 >
                   {product.description}
-                </LightText>
+                </BodyLG>
               </div>
 
               <FlexboxLayout align="center" gap="md">
-                <BaseText
-                  weight="bold"
+                <SemiBoldText
                   className="text-4xl"
                   style={{ color: colorScheme.primary }}
+                  useThemeColor={false}
                 >
                   {product.price}
-                </BaseText>
+                </SemiBoldText>
                 {product.originalPrice && (
                   <LightText
                     className="text-2xl line-through"
                     style={{ color: mutedText }}
+                    useThemeColor={false}
                   >
                     {product.originalPrice}
                   </LightText>
@@ -163,19 +173,20 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               {/* Size */}
               <div>
-                <BaseText
+                <BodyLG
                   weight="semibold"
-                  className="text-xl mb-4"
+                  className="mb-4"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Select Size
-                </BaseText>
+                </BodyLG>
                 <FlexboxLayout gap="sm" className="flex-wrap">
                   {product.sizes.map(size => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-6 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
+                      className={`px-6 py-3 rounded-xl border-2 transition-all ${
                         selectedSize === size
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
                           : `border-gray-600 hover:border-yellow-500/50 ${isDarkMode ? 'text-gray-700' : 'text-gray-300'}`
@@ -191,7 +202,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             : mutedText,
                       }}
                     >
-                      {size}
+                      <BodyMD weight="medium" useThemeColor={false}>
+                        {size}
+                      </BodyMD>
                     </button>
                   ))}
                 </FlexboxLayout>
@@ -199,19 +212,20 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               {/* Color */}
               <div>
-                <BaseText
+                <BodyLG
                   weight="semibold"
-                  className="text-xl mb-4"
+                  className="mb-4"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Select Color
-                </BaseText>
+                </BodyLG>
                 <FlexboxLayout gap="sm" className="flex-wrap">
                   {product.colors.map(color => (
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
-                      className={`px-6 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
+                      className={`px-6 py-3 rounded-xl border-2 transition-all ${
                         selectedColor === color
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
                           : `border-gray-600 hover:border-yellow-500/50 ${isDarkMode ? 'text-gray-700' : 'text-gray-300'}`
@@ -227,7 +241,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             : mutedText,
                       }}
                     >
-                      {color}
+                      <BodyMD weight="medium" useThemeColor={false}>
+                        {color}
+                      </BodyMD>
                     </button>
                   ))}
                 </FlexboxLayout>
@@ -235,13 +251,14 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               {/* Quantity */}
               <div>
-                <BaseText
+                <BodyLG
                   weight="semibold"
-                  className="text-xl mb-4"
+                  className="mb-4"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   Quantity
-                </BaseText>
+                </BodyLG>
                 <FlexboxLayout align="center" gap="lg">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -250,13 +267,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   >
                     <Minus className="w-5 h-5" style={{ color: mutedText }} />
                   </button>
-                  <BaseText
-                    weight="bold"
+                  <SemiBoldText
                     className="text-2xl w-16 text-center"
                     style={{ color: textColor }}
+                    useThemeColor={false}
                   >
                     {quantity}
-                  </BaseText>
+                  </SemiBoldText>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all hover:scale-110"
@@ -264,9 +281,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   >
                     <Plus className="w-5 h-5" style={{ color: mutedText }} />
                   </button>
-                  <LightText className="text-sm" style={{ color: mutedText }}>
+                  <BodySM style={{ color: mutedText }} useThemeColor={false}>
                     {product.stock} in stock
-                  </LightText>
+                  </BodySM>
                 </FlexboxLayout>
               </div>
 
@@ -279,7 +296,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 leftIcon={<ShoppingBag className="w-6 h-6" />}
                 onClick={handleAddToCart}
                 disabled={!selectedSize || !selectedColor}
-                className="w-full py-5 text-lg font-bold transition-all hover:scale-105 shadow-2xl"
+                className="w-full py-5 font-bold transition-all hover:scale-105 shadow-2xl"
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: '#000000',
@@ -291,7 +308,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   e.currentTarget.style.backgroundColor = colorScheme.primary;
                 }}
               >
-                Add to Cart • {product.price}
+                <SemiBoldText
+                  className="text-lg"
+                  style={{ color: '#000000' }}
+                  useThemeColor={false}
+                >
+                  Add to Cart • {product.price}
+                </SemiBoldText>
               </Button>
             </div>
           </div>

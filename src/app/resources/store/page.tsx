@@ -13,7 +13,7 @@ import {
 
 import ProductModal from '@/components/modal/storeModals/ProductModal';
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2, BaseText, LightText } from '@/components/text';
+import { H2, BaseText, LightText, BodySM } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 import { gsap } from 'gsap';
 import { Search, X, Filter, ShoppingBag, Heart } from 'lucide-react';
@@ -38,7 +38,7 @@ const StorePage = () => {
   const isDarkMode = colorScheme.background === '#000000';
 
   // Theme-based styles
-  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.black;
+  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.white;
   const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
   const secondaryTextColor = isDarkMode
     ? colorScheme.textSecondary
@@ -322,12 +322,13 @@ const StorePage = () => {
                     : colorScheme.opacity.warning10,
                 }}
               >
-                <LightText
-                  className="text-sm font-medium"
+                <BodySM
+                  className="font-medium"
                   style={{ color: colorScheme.warning }}
+                  useThemeColor={false}
                 >
                   {alertMessage}
-                </LightText>
+                </BodySM>
               </div>
             )}
           </FlexboxLayout>

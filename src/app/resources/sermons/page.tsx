@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2, BaseText, LightText } from '@/components/text';
+import { H2, BaseText, BodyMD, SemiBoldText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 import SermonUtil from '@/components/ui/Sermons';
 import Button from '@/components/utils/CustomButton';
@@ -143,12 +143,12 @@ const SermonPage = () => {
                       {option.platform}
                     </BaseText>
 
-                    <LightText
-                      className="mb-6 text-sm sm:text-base"
+                    <BodyMD
+                      className="mb-6"
                       style={{ color: secondaryTextColor }}
                     >
                       {option.description}
-                    </LightText>
+                    </BodyMD>
 
                     <Button
                       onClick={handleYouTubeRedirect}
@@ -174,7 +174,9 @@ const SermonPage = () => {
                         e.currentTarget.style.backgroundColor = '#FF0000';
                       }}
                     >
-                      {option.action}
+                      <SemiBoldText style={{ color: 'white' }}>
+                        {option.action}
+                      </SemiBoldText>
                     </Button>
                   </FlexboxLayout>
                 </div>

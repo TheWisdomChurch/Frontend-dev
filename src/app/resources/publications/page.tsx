@@ -1,5 +1,11 @@
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2 } from '@/components/text';
+import {
+  H2,
+  BaseText,
+  LightText,
+  BodyMD,
+  SemiBoldText,
+} from '@/components/text';
 import { hero_bg_3 } from '@/components/assets';
 
 const PublicationPage = () => {
@@ -72,9 +78,9 @@ const PublicationPage = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <H2>Available Resources</H2>
-            <p className="text-xl text-gray-600 mt-4">
+            <BodyMD className="text-xl text-gray-600 mt-4">
               Free resources to support your spiritual growth
-            </p>
+            </BodyMD>
           </div>
 
           <div className="max-w-6xl mx-auto">
@@ -90,22 +96,30 @@ const PublicationPage = () => {
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="bold"
+                    className="text-xl text-gray-900 mb-3"
+                  >
                     {pub.title}
-                  </h3>
+                  </BaseText>
 
-                  <p className="text-gray-600 mb-4 leading-relaxed">
+                  <LightText className="text-gray-600 mb-4 leading-relaxed">
                     {pub.description}
-                  </p>
+                  </LightText>
 
                   <div className="space-y-3">
                     <div className="flex items-center text-sm text-gray-500">
-                      <span className="font-semibold">Format:</span>
-                      <span className="ml-2">{pub.format}</span>
+                      <SemiBoldText className="text-gray-500">
+                        Format:
+                      </SemiBoldText>
+                      <BodyMD className="ml-2 text-gray-500">
+                        {pub.format}
+                      </BodyMD>
                     </div>
 
                     <button className="w-full bg-yellow-400 text-gray-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors">
-                      {pub.action}
+                      <SemiBoldText>{pub.action}</SemiBoldText>
                     </button>
                   </div>
                 </div>
@@ -124,14 +138,18 @@ const PublicationPage = () => {
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="text-left">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="bold"
+                    className="text-2xl text-gray-900 mb-4"
+                  >
                     Get Started Today
-                  </h3>
-                  <p className="text-gray-700 mb-6">
+                  </BaseText>
+                  <BodyMD className="text-gray-700 mb-6">
                     All our publications are available free of charge. Download
                     instantly or request printed copies for yourself or your
                     small group.
-                  </p>
+                  </BodyMD>
                   <ul className="space-y-2 text-gray-600">
                     <li>✓ No cost, no registration required</li>
                     <li>✓ Available in multiple formats</li>
@@ -141,9 +159,13 @@ const PublicationPage = () => {
                 </div>
 
                 <div className="bg-yellow-50 rounded-xl p-6">
-                  <h4 className="text-lg font-bold text-gray-900 mb-4">
+                  <BaseText
+                    fontFamily="bricolage"
+                    weight="bold"
+                    className="text-lg text-gray-900 mb-4"
+                  >
                     Most Popular Downloads
-                  </h4>
+                  </BaseText>
                   <div className="space-y-3">
                     {[
                       '30-Day Prayer Challenge',
@@ -155,9 +177,9 @@ const PublicationPage = () => {
                         key={index}
                         className="w-full text-left bg-white p-3 rounded-lg hover:bg-yellow-100 transition-colors"
                       >
-                        <span className="text-gray-800 font-semibold">
+                        <SemiBoldText className="text-gray-800">
                           {item}
-                        </span>
+                        </SemiBoldText>
                       </button>
                     ))}
                   </div>
