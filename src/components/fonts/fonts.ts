@@ -1,3 +1,4 @@
+// components/fonts/fonts.ts
 import localFont from 'next/font/local';
 
 export const bricolageGrotesque = localFont({
@@ -44,11 +45,6 @@ export const worksans = localFont({
       weight: '500',
       style: 'normal',
     },
-    // {
-    //   path: './WorkSans-SemiBold.ttf',
-    //   weight: '600',
-    //   style: 'normal',
-    // },
   ],
   variable: '--font-worksans',
   display: 'swap',
@@ -70,11 +66,6 @@ export const playfair = localFont({
       path: './PlayfairDisplay-Bold.ttf',
       weight: '700',
       style: 'normal',
-    },
-    {
-      path: './PlayfairDisplay-ExtraBoldItalic.ttf',
-      weight: '800',
-      style: 'italic',
     },
   ],
   variable: '--font-playfair',

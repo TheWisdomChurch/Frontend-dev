@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { H1 } from '@/components/text';
+import { H1, H2, BodyXL } from '@/components/text'; // Fixed imports
 import { Button } from '@/components/utils';
 import { ChevronDown } from 'lucide-react';
 import { useHeroSection } from '@/components/utils/hooks/useHeroSection';
@@ -143,11 +143,12 @@ const HeroSection = ({
           {/* Main Title */}
           <H1
             ref={titleRef}
-            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight tracking-tight"
+            className="mb-4 leading-tight tracking-tight"
             style={{
               color: titleColor,
               textShadow: '0 6px 30px rgba(0, 0, 0, 0.9)',
             }}
+            useThemeColor={false}
           >
             {currentSlideData.title}
           </H1>
@@ -162,30 +163,32 @@ const HeroSection = ({
 
           {/* Subtitle – Your special twirk */}
           {currentSlideData.subtitle && (
-            <h2
+            <H2
               ref={subtitleRef}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8"
+              className="mb-8"
               style={{
                 color: subtitleColor,
                 textShadow: '0 4px 20px rgba(0, 0, 0, 0.9)',
               }}
+              useThemeColor={false}
             >
               {currentSlideData.subtitle}
-            </h2>
+            </H2>
           )}
 
           {/* Description – Always pure white */}
           {currentSlideData.description && (
-            <p
+            <BodyXL
               ref={descriptionRef}
-              className="text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-4xl mx-auto mb-12 leading-relaxed font-light"
+              className="max-w-4xl mx-auto mb-12 leading-relaxed"
               style={{
                 color: descriptionColor,
                 textShadow: '0 3px 15px rgba(0, 0, 0, 0.8)',
               }}
+              useThemeColor={false}
             >
               {currentSlideData.description}
-            </p>
+            </BodyXL>
           )}
 
           {/* Buttons */}
@@ -199,7 +202,7 @@ const HeroSection = ({
                 size="lg"
                 elevated={true}
                 curvature="lg"
-                className="px-10 py-5 text-lg font-bold hover:scale-105 transition"
+                className="px-10 py-5 font-bold hover:scale-105 transition"
                 onClick={onPrimaryButtonClick}
               >
                 {primaryButtonText}
@@ -209,7 +212,7 @@ const HeroSection = ({
                 variant="outline"
                 size="lg"
                 curvature="lg"
-                className="px-10 py-5 text-lg font-bold border-3 transition-all duration-300"
+                className="px-10 py-5 font-bold border-3 transition-all duration-300"
                 style={{
                   borderColor: colorScheme.primary,
                   color: isDarkMode ? '#FFFFFF' : '#FFFFFF',

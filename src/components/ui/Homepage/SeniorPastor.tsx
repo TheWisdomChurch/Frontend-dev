@@ -1,7 +1,7 @@
 'use client';
 
 import { Bishop } from '@/components/assets';
-import { H1, LightText } from '@/components/text';
+import { H1, BodyMD } from '@/components/text';
 import Button from '@/components/utils/CustomButton';
 import { useSeniorPastor } from '@/components/utils/hooks/useSeniorPastor';
 import { seniorPastorData } from '@/lib/data';
@@ -67,14 +67,11 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
           {/* Title */}
           <div className="w-full max-w-6xl mb-4 sm:mb-6 lg:mb-8">
             <H1
-              className="
-              text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl 
-              font-bold 
-              leading-tight sm:leading-tight md:leading-tight lg:leading-tight
-              text-white /* Keep white text on both mobile and desktop */
-              drop-shadow-lg
-              px-2
-            "
+              className="leading-tight text-white drop-shadow-lg px-2"
+              style={{ color: '#FFFFFF' }}
+              useThemeColor={false}
+              weight="bold"
+              smWeight="extrabold"
             >
               {seniorPastorData.title}
             </H1>
@@ -115,18 +112,14 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     padding="none"
                   >
                     {seniorPastorData.description.slice(0, 2).map((p, i) => (
-                      <LightText
+                      <BodyMD
                         key={i}
-                        className="
-                          text-white /* Keep white text on both */
-                          text-sm sm:text-base md:text-lg lg:text-xl
-                          leading-relaxed sm:leading-relaxed md:leading-relaxed
-                          font-light 
-                          text-left
-                        "
+                        className="leading-relaxed text-left"
+                        style={{ color: '#FFFFFF' }}
+                        useThemeColor={false}
                       >
                         {p}
-                      </LightText>
+                      </BodyMD>
                     ))}
                   </FlexboxLayout>
 
@@ -139,21 +132,23 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                       curvature="full"
                       elevated={true}
                       className="
-                        w-full max-w-[260px] 
-                        sm:max-w-[280px]
-                        lg:max-w-[300px]
-                        min-w-[140px] 
-                        sm:min-w-[160px] 
-                        lg:min-w-[180px]
-                        px-4 sm:px-6 lg:px-8
-                        py-3 sm:py-3.5 lg:py-4
-                        text-sm sm:text-base lg:text-lg
-                        font-semibold
-                        hover:scale-105 
-                        transition-all 
-                        duration-300
-                        whitespace-nowrap
-                      "
+    w-full max-w-[260px] 
+    sm:max-w-[280px]
+    lg:max-w-[300px]
+    min-w-[140px] 
+    sm:min-w-[160px] 
+    lg:min-w-[180px]
+    px-4 sm:px-6 lg:px-8
+    py-3 sm:py-3.5 lg:py-4
+    font-semibold
+    hover:scale-105 
+    transition-all 
+    duration-300
+    whitespace-nowrap
+    text-sm sm:text-base lg:text-lg  /* Add responsive text sizes */
+    text-center /* Ensure text alignment */
+    flex items-center justify-center /* Center content */
+  "
                     >
                       {seniorPastorData.buttonText}
                     </Button>
