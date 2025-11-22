@@ -601,22 +601,7 @@ export const seniorPastorData = {
   description: [
     `
     
-    Bishop Gabriel Ayilara stands as a visionary
-leader, anointed with the gift of practical
-teaching that illuminates the Word of God. As
-a faithful steward of the Spirit, he is driven by a
-divine mandate to nurture and raise a
-generation of remarkable men and women,
-imbuing them with the wisdom and power of
-God. His ministry is distinguished by
-unwavering obedience, unrelenting excellence,
-boundless love, supernatural demonstrations
-of the spirit and an unshakeable commitment
-to building a transgenerational ministry where
-Transformation happens. Through his
-dedication, lives are forever changed, and a
-legacy of faith, hope, and impact is being
-etched into eternity.
+
 
 Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wisdom House Church. Over the years, he has faithfully discipled and mentored countless 
     individuals,  demonstrating the practical workings of God's Word in everyday life. He is lawfully wedded to Pastor Kenny Ayilara, 
@@ -627,3 +612,21 @@ Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wis
   ],
   buttonText: 'Learn More About Our Pastor',
 };
+
+//If Needed
+//Bishop Gabriel Ayilara stands as a visionary
+// leader, anointed with the gift of practical
+// teaching that illuminates the Word of God. As
+// a faithful steward of the Spirit, he is driven by a
+// divine mandate to nurture and raise a
+// generation of remarkable men and women,
+// imbuing them with the wisdom and power of
+// God. His ministry is distinguished by
+// unwavering obedience, unrelenting excellence,
+// boundless love, supernatural demonstrations
+// of the spirit and an unshakeable commitment
+// to building a transgenerational ministry where
+// Transformation happens. Through his
+// dedication, lives are forever changed, and a
+// legacy of faith, hope, and impact is being
+// etched into eternity.

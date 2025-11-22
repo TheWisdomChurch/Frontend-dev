@@ -36,27 +36,15 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
-  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
-  const inputBorderColor = isDarkMode
-    ? colorScheme.borderLight
-    : colorScheme.border;
-  const surfaceBackground = isDarkMode
-    ? colorScheme.surface
-    : colorScheme.surfaceVariant;
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white;
+  const buttonBackground = colorScheme.primary;
+  const buttonTextColor = colorScheme.black;
+  const surfaceBackground = colorScheme.surface;
+  const borderColor = colorScheme.primary;
+  const inputBorderColor = colorScheme.border;
 
   const {
     register,
@@ -219,7 +207,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
           className="sticky top-0 rounded-t-3xl p-6 z-10"
           style={{
             backgroundColor: modalBackground,
-            borderBottom: `1px solid ${isDarkMode ? colorScheme.borderLight : colorScheme.border}`,
+            borderBottom: `1px solid ${borderColor}`,
           }}
         >
           <div className="flex items-center justify-between">
@@ -234,7 +222,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               </BaseText>
               <BodyMD
                 className="mt-1"
-                style={{ color: secondaryTextColor }}
+                style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
                 {showAgreement
@@ -247,19 +235,15 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               className="p-2 rounded-full transition-colors flex-shrink-0"
               style={{
                 color: textColor,
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10,
+                backgroundColor: colorScheme.opacity.primary10,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black20
-                  : colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
               }}
             >
               <X className="w-5 h-5" />
@@ -302,7 +286,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     borderColor: errors.fullName
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your full name"
@@ -342,7 +326,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     borderColor: errors.email
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your email"
@@ -388,7 +372,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     borderColor: errors.phone
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="Enter your phone number"
@@ -428,7 +412,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     borderColor: errors.occupation
                       ? colorScheme.error
                       : inputBorderColor,
-                    backgroundColor: inputBackground,
+                    backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
                   placeholder="e.g., Student, Engineer, Teacher, etc."
@@ -475,7 +459,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   borderColor: errors.message
                     ? colorScheme.error
                     : inputBorderColor,
-                  backgroundColor: inputBackground,
+                  backgroundColor: surfaceBackground,
                   color: textColor,
                 }}
                 placeholder="Tell us about your interest, skills, and what you hope to contribute to our ministry..."
@@ -501,7 +485,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     color:
                       watch('message')?.length > 450
                         ? colorScheme.warning
-                        : secondaryTextColor,
+                        : subtitleTextColor,
                   }}
                   useThemeColor={false}
                 >
@@ -514,12 +498,8 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
             <div
               className="rounded-xl p-4 border"
               style={{
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.primary10
-                  : colorScheme.opacity.primary20,
-                borderColor: isDarkMode
-                  ? colorScheme.opacity.primary20
-                  : colorScheme.opacity.primary30,
+                backgroundColor: colorScheme.opacity.primary10,
+                borderColor: colorScheme.opacity.primary20,
               }}
             >
               <div className="flex items-start gap-3">
@@ -535,9 +515,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <div>
                   <MediumText
                     style={{
-                      color: isDarkMode
-                        ? colorScheme.primary
-                        : colorScheme.primaryLight,
+                      color: colorScheme.primary,
                     }}
                     useThemeColor={false}
                   >
@@ -547,9 +525,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   <BodySM
                     className="mt-1"
                     style={{
-                      color: isDarkMode
-                        ? colorScheme.primary
-                        : colorScheme.primaryLight,
+                      color: colorScheme.primary,
                     }}
                     useThemeColor={false}
                   >
@@ -571,9 +547,8 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = isDarkMode
-                      ? colorScheme.gray[800]
-                      : colorScheme.primaryLight;
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.primaryLight;
                   }
                 }}
                 onMouseLeave={(e: any) => {
@@ -610,17 +585,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 disabled={isSubmitting}
                 className="flex-1 border py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
-                  borderColor: isDarkMode
-                    ? colorScheme.borderLight
-                    : colorScheme.border,
+                  borderColor: borderColor,
                   color: textColor,
                   backgroundColor: modalBackground,
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = isDarkMode
-                      ? colorScheme.opacity.black10
-                      : colorScheme.opacity.white10;
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.opacity.primary10;
                   }
                 }}
                 onMouseLeave={(e: any) => {
@@ -643,18 +615,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               className="border rounded-2xl p-6"
               style={{
                 backgroundColor: surfaceBackground,
-                borderColor: isDarkMode
-                  ? colorScheme.borderLight
-                  : colorScheme.border,
+                borderColor: borderColor,
               }}
             >
               <div className="text-center mb-6">
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
                   style={{
-                    backgroundColor: isDarkMode
-                      ? colorScheme.opacity.primary20
-                      : colorScheme.opacity.primary30,
+                    backgroundColor: colorScheme.opacity.primary10,
                     color: colorScheme.primary,
                   }}
                 >
@@ -669,7 +637,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   Welcome to Wisdom House Ministry!
                 </BaseText>
                 <BodyMD
-                  style={{ color: secondaryTextColor }}
+                  style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
                   Thank you for your interest in joining our {department} team
@@ -681,9 +649,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   className="rounded-xl p-4 border"
                   style={{
                     backgroundColor: modalBackground,
-                    borderColor: isDarkMode
-                      ? colorScheme.borderLight
-                      : colorScheme.border,
+                    borderColor: borderColor,
                   }}
                 >
                   <MediumText
@@ -698,7 +664,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     Compulsory 1-Month Membership Class
                   </MediumText>
                   <BodySM
-                    style={{ color: secondaryTextColor }}
+                    style={{ color: subtitleTextColor }}
                     useThemeColor={false}
                   >
                     Every new member is required to complete our foundational
@@ -711,9 +677,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   className="rounded-xl p-4 border"
                   style={{
                     backgroundColor: modalBackground,
-                    borderColor: isDarkMode
-                      ? colorScheme.borderLight
-                      : colorScheme.border,
+                    borderColor: borderColor,
                   }}
                 >
                   <MediumText
@@ -729,7 +693,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   </MediumText>
                   <ul
                     className="text-sm space-y-1"
-                    style={{ color: secondaryTextColor }}
+                    style={{ color: subtitleTextColor }}
                   >
                     <BodySM useThemeColor={false}>
                       • Our church history and vision
@@ -753,9 +717,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   className="rounded-xl p-4 border"
                   style={{
                     backgroundColor: modalBackground,
-                    borderColor: isDarkMode
-                      ? colorScheme.borderLight
-                      : colorScheme.border,
+                    borderColor: borderColor,
                   }}
                 >
                   <MediumText
@@ -771,7 +733,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   </MediumText>
                   <ul
                     className="text-sm space-y-1"
-                    style={{ color: secondaryTextColor }}
+                    style={{ color: subtitleTextColor }}
                   >
                     <BodySM useThemeColor={false}>
                       • Duration: This will be communicated upon completion of
@@ -792,12 +754,8 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 <div
                   className="rounded-xl p-4 border"
                   style={{
-                    backgroundColor: isDarkMode
-                      ? colorScheme.opacity.warning10
-                      : colorScheme.opacity.warning20,
-                    borderColor: isDarkMode
-                      ? colorScheme.opacity.warning20
-                      : colorScheme.opacity.warning10,
+                    backgroundColor: colorScheme.opacity.warning10,
+                    borderColor: colorScheme.opacity.warning20,
                   }}
                 >
                   <MediumText
@@ -833,9 +791,8 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = isDarkMode
-                      ? colorScheme.gray[800]
-                      : colorScheme.primaryLight;
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.primaryLight;
                   }
                 }}
                 onMouseLeave={(e: any) => {
@@ -871,17 +828,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 disabled={isSubmitting}
                 className="flex-1 border py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
-                  borderColor: isDarkMode
-                    ? colorScheme.borderLight
-                    : colorScheme.border,
+                  borderColor: borderColor,
                   color: textColor,
                   backgroundColor: modalBackground,
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = isDarkMode
-                      ? colorScheme.opacity.black10
-                      : colorScheme.opacity.white10;
+                    e.currentTarget.style.backgroundColor =
+                      colorScheme.opacity.primary10;
                   }
                 }}
                 onMouseLeave={(e: any) => {

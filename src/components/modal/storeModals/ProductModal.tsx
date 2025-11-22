@@ -39,16 +39,15 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
 
-  const isDarkMode = colorScheme.pageBackground === '#000000';
-
-  // Smart colors based on mode
-  const modalBg = isDarkMode ? '#FFFFFF' : '#000000f0';
-  const textColor = isDarkMode ? '#000000' : '#FFFFFF';
-  const mutedText = isDarkMode ? '#666666' : '#E5E7EB';
-  const borderColor = isDarkMode ? '#E5E7EB' : '#FFFFFF30';
-  const buttonHoverBg = isDarkMode
-    ? colorScheme.primaryLight
-    : colorScheme.primary;
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white;
+  const buttonBackground = colorScheme.primary;
+  const buttonTextColor = colorScheme.black;
+  // const surfaceBackground = colorScheme.surface;
+  const borderColor = colorScheme.primary;
+  const inputBorderColor = colorScheme.border;
 
   useEffect(() => {
     if (product) {
@@ -99,9 +98,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
         ref={modalRef}
         className="rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border"
         style={{
-          backgroundColor: modalBg,
-          borderColor: colorScheme.primary + '40',
-          backdropFilter: isDarkMode ? 'none' : 'blur(20px)',
+          backgroundColor: modalBackground,
+          borderColor: borderColor,
         }}
       >
         <div className="flex flex-col lg:flex-row h-full">
@@ -114,17 +112,22 @@ const ProductModal: React.FC<ProductModalProps> = ({
               className="object-cover"
               priority
             />
-            <div
-              className={`absolute inset-0 ${isDarkMode ? 'bg-black/40' : 'bg-black/60'}`}
-            />
+            <div className="absolute inset-0 bg-black/60" />
 
             <button
               onClick={onClose}
-              className={`absolute top-4 right-4 z-20 rounded-full p-3 transition-all ${
-                isDarkMode
-                  ? 'bg-black/20 hover:bg-black/40'
-                  : 'bg-white/20 hover:bg-white/40'
-              }`}
+              className="absolute top-4 right-4 z-20 rounded-full p-3 transition-all"
+              style={{
+                backgroundColor: colorScheme.opacity.primary10,
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary20;
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
+              }}
             >
               <X className="w-6 h-6" style={{ color: textColor }} />
             </button>
@@ -145,7 +148,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 </BaseText>
                 <BodyLG
                   className="mt-3 leading-relaxed"
-                  style={{ color: mutedText }}
+                  style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
                   {product.description}
@@ -163,7 +166,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 {product.originalPrice && (
                   <LightText
                     className="text-2xl line-through"
-                    style={{ color: mutedText }}
+                    style={{ color: subtitleTextColor }}
                     useThemeColor={false}
                   >
                     {product.originalPrice}
@@ -189,17 +192,17 @@ const ProductModal: React.FC<ProductModalProps> = ({
                       className={`px-6 py-3 rounded-xl border-2 transition-all ${
                         selectedSize === size
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
-                          : `border-gray-600 hover:border-yellow-500/50 ${isDarkMode ? 'text-gray-700' : 'text-gray-300'}`
+                          : `border-gray-600 hover:border-yellow-500/50 text-gray-300`
                       }`}
                       style={{
                         borderColor:
                           selectedSize === size
                             ? colorScheme.primary
-                            : borderColor,
+                            : inputBorderColor,
                         color:
                           selectedSize === size
                             ? colorScheme.primary
-                            : mutedText,
+                            : subtitleTextColor,
                       }}
                     >
                       <BodyMD weight="medium" useThemeColor={false}>
@@ -228,17 +231,17 @@ const ProductModal: React.FC<ProductModalProps> = ({
                       className={`px-6 py-3 rounded-xl border-2 transition-all ${
                         selectedColor === color
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
-                          : `border-gray-600 hover:border-yellow-500/50 ${isDarkMode ? 'text-gray-700' : 'text-gray-300'}`
+                          : `border-gray-600 hover:border-yellow-500/50 text-gray-300`
                       }`}
                       style={{
                         borderColor:
                           selectedColor === color
                             ? colorScheme.primary
-                            : borderColor,
+                            : inputBorderColor,
                         color:
                           selectedColor === color
                             ? colorScheme.primary
-                            : mutedText,
+                            : subtitleTextColor,
                       }}
                     >
                       <BodyMD weight="medium" useThemeColor={false}>
@@ -263,9 +266,12 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all hover:scale-110"
-                    style={{ borderColor: borderColor }}
+                    style={{ borderColor: inputBorderColor }}
                   >
-                    <Minus className="w-5 h-5" style={{ color: mutedText }} />
+                    <Minus
+                      className="w-5 h-5"
+                      style={{ color: subtitleTextColor }}
+                    />
                   </button>
                   <SemiBoldText
                     className="text-2xl w-16 text-center"
@@ -277,11 +283,17 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all hover:scale-110"
-                    style={{ borderColor: borderColor }}
+                    style={{ borderColor: inputBorderColor }}
                   >
-                    <Plus className="w-5 h-5" style={{ color: mutedText }} />
+                    <Plus
+                      className="w-5 h-5"
+                      style={{ color: subtitleTextColor }}
+                    />
                   </button>
-                  <BodySM style={{ color: mutedText }} useThemeColor={false}>
+                  <BodySM
+                    style={{ color: subtitleTextColor }}
+                    useThemeColor={false}
+                  >
                     {product.stock} in stock
                   </BodySM>
                 </FlexboxLayout>
@@ -298,19 +310,20 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 disabled={!selectedSize || !selectedColor}
                 className="w-full py-5 font-bold transition-all hover:scale-105 shadow-2xl"
                 style={{
-                  backgroundColor: colorScheme.primary,
-                  color: '#000000',
+                  backgroundColor: buttonBackground,
+                  color: buttonTextColor,
                 }}
                 onMouseEnter={(e: any) => {
-                  e.currentTarget.style.backgroundColor = buttonHoverBg;
+                  e.currentTarget.style.backgroundColor =
+                    colorScheme.primaryLight;
                 }}
                 onMouseLeave={(e: any) => {
-                  e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  e.currentTarget.style.backgroundColor = buttonBackground;
                 }}
               >
                 <SemiBoldText
                   className="text-lg"
-                  style={{ color: '#000000' }}
+                  style={{ color: buttonTextColor }}
                   useThemeColor={false}
                 >
                   Add to Cart • {product.price}

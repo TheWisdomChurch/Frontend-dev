@@ -42,29 +42,30 @@ const AboutUsPage = () => {
       />
 
       {/* Who We Are */}
+      {/* Who We Are */}
       <Section
         className="py-24 lg:py-32"
-        style={{ backgroundColor: colorScheme.background }}
+        style={{ backgroundColor: '#ffffff' }}
       >
         <Container size="xl" className="px-6 lg:px-8">
           <div className="max-w-5xl mx-auto text-center">
             <H1
               className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-10"
-              style={{ color: headingColor }}
+              style={{ color: '#000000' }}
             >
               Who We Are
             </H1>
             <div
               className="p-12 lg:p-20 rounded-3xl shadow-2xl border-l-8"
               style={{
-                backgroundColor: cardBackground,
+                backgroundColor: '#ffffff', // Force white background
                 borderLeftColor: colorScheme.primary,
-                border: `1px solid ${borderColor}`,
+                border: `1px solid ${colorScheme.border}`,
               }}
             >
               <LightText
                 className="text-xl sm:text-2xl lg:text-3xl leading-relaxed"
-                style={{ color: textColor }}
+                style={{ color: '#000000' }}
               >
                 The Wisdom House is a vibrant, spirit-filled assembly committed
                 to raising complete believers — men, women, and children — who
@@ -73,7 +74,7 @@ const AboutUsPage = () => {
               </LightText>
               <LightText
                 className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-10 block"
-                style={{ color: headingColor }}
+                style={{ color: '#000000' }}
               >
                 We are a trans-generational movement — a house of light,
                 transformation, and greatness.

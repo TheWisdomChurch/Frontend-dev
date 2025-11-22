@@ -13,20 +13,13 @@ interface EventModalProps {
 export const EventModal = ({ event, onClose }: EventModalProps) => {
   const { colorScheme } = useTheme();
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const modalBackground = isDarkMode ? colorScheme.white : '#000000f0';
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-  const buttonBackground = isDarkMode ? colorScheme.black : colorScheme.primary;
-  const buttonTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  // Theme-based styles - Always dark theme
+  const modalBackground = colorScheme.black;
+  const textColor = colorScheme.primary;
+  const subtitleTextColor = colorScheme.white;
+  const buttonBackground = colorScheme.primary;
+  const buttonTextColor = colorScheme.black;
+  const borderColor = colorScheme.primary;
 
   return (
     <div
@@ -49,9 +42,7 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
                 <div
                   className="text-4xl p-3 rounded-xl"
                   style={{
-                    backgroundColor: isDarkMode
-                      ? colorScheme.opacity.primary10
-                      : colorScheme.opacity.primary20,
+                    backgroundColor: colorScheme.opacity.primary10,
                     color: colorScheme.primary,
                   }}
                 >
@@ -62,9 +53,7 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
                 <span
                   className="inline-block px-4 py-2 rounded-full text-sm mb-4"
                   style={{
-                    backgroundColor: isDarkMode
-                      ? colorScheme.opacity.primary10
-                      : colorScheme.opacity.primary20,
+                    backgroundColor: colorScheme.opacity.primary10,
                     color: colorScheme.primary,
                   }}
                 >
@@ -90,19 +79,15 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
               className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
               style={{
                 color: textColor,
-                backgroundColor: isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10,
+                backgroundColor: colorScheme.opacity.primary10,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black20
-                  : colorScheme.opacity.white20;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary20;
               }}
               onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
               }}
             >
               <X className="w-5 h-5" />
@@ -112,7 +97,7 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
           {event.description && (
             <BodyLG
               className="mb-6 leading-relaxed"
-              style={{ color: secondaryTextColor }}
+              style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
               {event.description}
@@ -171,9 +156,8 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
                 color: buttonTextColor,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.gray[800]
-                  : colorScheme.primaryLight;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.primaryLight;
               }}
               onMouseLeave={(e: any) => {
                 e.currentTarget.style.backgroundColor = buttonBackground;
@@ -194,9 +178,8 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
                 backgroundColor: modalBackground,
               }}
               onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = isDarkMode
-                  ? colorScheme.opacity.black10
-                  : colorScheme.opacity.white10;
+                e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10;
               }}
               onMouseLeave={(e: any) => {
                 e.currentTarget.style.backgroundColor = modalBackground;
