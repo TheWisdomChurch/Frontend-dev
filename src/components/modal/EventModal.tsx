@@ -3,6 +3,7 @@
 import { CalendarEvent } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X } from 'lucide-react';
+import { BaseText, BodyLG, BodyMD, SemiBoldText } from '@/components/text';
 
 interface EventModalProps {
   event: CalendarEvent;
@@ -59,7 +60,7 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
               )}
               <div>
                 <span
-                  className="inline-block px-4 py-2 rounded-full text-sm font-black mb-4"
+                  className="inline-block px-4 py-2 rounded-full text-sm mb-4"
                   style={{
                     backgroundColor: isDarkMode
                       ? colorScheme.opacity.primary10
@@ -67,14 +68,21 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
                     color: colorScheme.primary,
                   }}
                 >
-                  {event.type}
+                  <SemiBoldText
+                    style={{ color: colorScheme.primary }}
+                    useThemeColor={false}
+                  >
+                    {event.type}
+                  </SemiBoldText>
                 </span>
-                <h3
-                  className="text-3xl font-black mb-2"
+                <BaseText
+                  weight="black"
+                  className="text-3xl mb-2"
                   style={{ color: textColor }}
+                  useThemeColor={false}
                 >
                   {event.title}
-                </h3>
+                </BaseText>
               </div>
             </div>
             <button
@@ -102,49 +110,62 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
           </div>
 
           {event.description && (
-            <p
-              className="text-lg mb-6 leading-relaxed"
+            <BodyLG
+              className="mb-6 leading-relaxed"
               style={{ color: secondaryTextColor }}
+              useThemeColor={false}
             >
               {event.description}
-            </p>
+            </BodyLG>
           )}
 
           <div className="space-y-4 mb-8">
             <div className="flex items-center">
-              <span className="font-black w-24" style={{ color: textColor }}>
+              <SemiBoldText
+                className="w-24"
+                style={{ color: textColor }}
+                useThemeColor={false}
+              >
                 Date:
-              </span>
-              <span className="text-lg" style={{ color: textColor }}>
+              </SemiBoldText>
+              <BodyMD style={{ color: textColor }} useThemeColor={false}>
                 {new Date(event.date).toLocaleDateString('en-US', {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
-              </span>
+              </BodyMD>
             </div>
             <div className="flex items-center">
-              <span className="font-black w-24" style={{ color: textColor }}>
+              <SemiBoldText
+                className="w-24"
+                style={{ color: textColor }}
+                useThemeColor={false}
+              >
                 Time:
-              </span>
-              <span className="text-lg" style={{ color: textColor }}>
+              </SemiBoldText>
+              <BodyMD style={{ color: textColor }} useThemeColor={false}>
                 {event.time}
-              </span>
+              </BodyMD>
             </div>
             <div className="flex items-center">
-              <span className="font-black w-24" style={{ color: textColor }}>
+              <SemiBoldText
+                className="w-24"
+                style={{ color: textColor }}
+                useThemeColor={false}
+              >
                 Location:
-              </span>
-              <span className="text-lg" style={{ color: textColor }}>
+              </SemiBoldText>
+              <BodyMD style={{ color: textColor }} useThemeColor={false}>
                 {event.location}
-              </span>
+              </BodyMD>
             </div>
           </div>
 
           <div className="flex gap-4">
             <button
-              className="flex-1 py-4 rounded-xl font-black transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="flex-1 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
@@ -158,10 +179,15 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
                 e.currentTarget.style.backgroundColor = buttonBackground;
               }}
             >
-              Add to Calendar
+              <SemiBoldText
+                style={{ color: buttonTextColor }}
+                useThemeColor={false}
+              >
+                Add to Calendar
+              </SemiBoldText>
             </button>
             <button
-              className="flex-1 border-2 py-4 rounded-xl font-bold transition-all duration-300 hover:shadow-lg"
+              className="flex-1 border-2 py-4 rounded-xl transition-all duration-300 hover:shadow-lg"
               style={{
                 borderColor: borderColor,
                 color: textColor,
@@ -176,7 +202,9 @@ export const EventModal = ({ event, onClose }: EventModalProps) => {
                 e.currentTarget.style.backgroundColor = modalBackground;
               }}
             >
-              Share Event
+              <SemiBoldText style={{ color: textColor }} useThemeColor={false}>
+                Share Event
+              </SemiBoldText>
             </button>
           </div>
         </div>
