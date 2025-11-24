@@ -36,26 +36,53 @@ export const useAssociatePastors = () => {
   }, []);
 
   useEffect(() => {
-    // Check if we're on a mobile device
-    const isMobile = window.innerWidth < 768;
-
     const ctx = gsap.context(() => {
-      // Mobile-optimized animations
-      if (isMobile) {
-        // Simplified mobile animations
-        const mobileTL = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 85%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none none',
-            markers: false, // Remove in production
-          },
-        });
+      // Clean, professional animations for all devices
+      const masterTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          end: 'bottom 20%',
+          toggleActions: 'play none none none',
+          markers: false,
+        },
+      });
 
-        // Basic fade in for mobile
-        mobileTL.fromTo(
-          [headingRef.current, descriptionRef.current],
+      // Main heading - subtle fade up
+      masterTL.fromTo(
+        headingRef.current,
+        {
+          y: 40,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+        }
+      );
+
+      // Description - delayed fade up
+      masterTL.fromTo(
+        descriptionRef.current,
+        {
+          y: 30,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+        },
+        '-=0.4'
+      );
+
+      // Section headers - clean staggered entrance
+      sectionHeadersRef.current.forEach((header, index) => {
+        masterTL.fromTo(
+          header,
           {
             y: 30,
             opacity: 0,
@@ -63,230 +90,99 @@ export const useAssociatePastors = () => {
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: 'power2.out',
-          }
-        );
-
-        // Simple card animations for mobile
-        mobileTL.fromTo(
-          cardsRef.current,
-          {
-            y: 50,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.1,
+            duration: 0.5,
             ease: 'power2.out',
           },
-          '-=0.3'
+          `+=${index * 0.1}`
         );
+      });
 
-        // Section headers for mobile
-        mobileTL.fromTo(
-          sectionHeadersRef.current,
-          {
-            y: 30,
-            opacity: 0,
+      // Cards - clean staggered fade up with minimal movement
+      masterTL.fromTo(
+        cardsRef.current,
+        {
+          y: 40,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: {
+            amount: 0.4,
+            from: 'start',
           },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power2.out',
-          },
-          '-=0.2'
-        );
-      } else {
-        // Desktop animations (your original animations)
-        const masterTL = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse',
-            markers: false, // Remove in production
-          },
-        });
+          ease: 'power2.out',
+        },
+        '-=0.2'
+      );
 
-        // Section mount animation
-        masterTL.fromTo(
-          sectionRef.current,
-          {
-            opacity: 0,
-            scale: 0.98,
-          },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 1.2,
-            ease: 'power2.out',
-          }
-        );
+      // Professional hover effects for desktop only
+      if (window.innerWidth >= 768) {
+        cardsRef.current.forEach(card => {
+          const image = card.querySelector('img');
+          const badge = card.querySelector('[class*="absolute"]');
 
-        // Main heading animation
-        masterTL.fromTo(
-          headingRef.current,
-          {
-            y: 80,
-            opacity: 0,
-            rotationX: 45,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            rotationX: 0,
-            duration: 1,
-            ease: 'power3.out',
-          },
-          '-=0.8'
-        );
+          // Clean hover animation
+          card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+              y: -8,
+              scale: 1.02,
+              duration: 0.3,
+              ease: 'power2.out',
+            });
 
-        // Description animation
-        masterTL.fromTo(
-          descriptionRef.current,
-          {
-            y: 40,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power2.out',
-          },
-          '-=0.5'
-        );
+            if (image) {
+              gsap.to(image, {
+                scale: 1.05,
+                duration: 0.3,
+                ease: 'power2.out',
+              });
+            }
 
-        // Section headers animation
-        sectionHeadersRef.current.forEach((header, index) => {
-          masterTL.fromTo(
-            header,
-            {
-              y: 50,
-              opacity: 0,
-              scale: 0.9,
-            },
-            {
+            if (badge) {
+              gsap.to(badge, {
+                y: -2,
+                duration: 0.2,
+                ease: 'power2.out',
+              });
+            }
+          });
+
+          // Clean mouse leave animation
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
               y: 0,
-              opacity: 1,
               scale: 1,
-              duration: 0.7,
-              ease: 'back.out(1.4)',
-            },
-            `+=${index * 0.1}`
-          );
-        });
+              duration: 0.4,
+              ease: 'power2.out',
+            });
 
-        // Cards animation
-        masterTL.fromTo(
-          cardsRef.current,
-          {
-            y: 100,
-            opacity: 0,
-            rotationY: 15,
-            scale: 0.8,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            rotationY: 0,
-            scale: 1,
-            duration: 0.9,
-            stagger: {
-              amount: 0.6,
-              from: 'center',
-              grid: 'auto',
-            },
-            ease: 'power3.out',
-          },
-          '-=0.3'
-        );
-
-        // Desktop hover effects only
-        if (!isMobile) {
-          cardsRef.current.forEach(card => {
-            const image = card.querySelector('img');
-            const badge = card.querySelector('[class*="absolute"]');
-
-            // Mouse enter animation
-            card.addEventListener('mouseenter', () => {
-              gsap.to(card, {
-                y: -15,
-                scale: 1.03,
-                rotationY: 5,
+            if (image) {
+              gsap.to(image, {
+                scale: 1,
                 duration: 0.4,
                 ease: 'power2.out',
               });
+            }
 
-              if (image) {
-                gsap.to(image, {
-                  scale: 1.1,
-                  duration: 0.4,
-                  ease: 'power2.out',
-                });
-              }
-
-              if (badge) {
-                gsap.to(badge, {
-                  y: -5,
-                  scale: 1.1,
-                  duration: 0.3,
-                  ease: 'power2.out',
-                });
-              }
-            });
-
-            // Mouse leave animation
-            card.addEventListener('mouseleave', () => {
-              gsap.to(card, {
+            if (badge) {
+              gsap.to(badge, {
                 y: 0,
-                scale: 1,
-                rotationY: 0,
-                duration: 0.5,
+                duration: 0.3,
                 ease: 'power2.out',
               });
-
-              if (image) {
-                gsap.to(image, {
-                  scale: 1,
-                  duration: 0.5,
-                  ease: 'power2.out',
-                });
-              }
-
-              if (badge) {
-                gsap.to(badge, {
-                  y: 0,
-                  scale: 1,
-                  duration: 0.4,
-                  ease: 'power2.out',
-                });
-              }
-            });
+            }
           });
-        }
-
-        // Subtle parallax effect for desktop only
-        gsap.to(sectionRef.current, {
-          y: 10,
-          duration: 3,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: -1,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-          },
         });
       }
+
+      // Remove the parallax effect as it can cause dragging feeling
+      // Add smooth scroll trigger cleanup
+      ScrollTrigger.config({
+        limitCallbacks: true,
+        ignoreMobileResize: true,
+      });
     }, sectionRef);
 
     return () => ctx.revert();
