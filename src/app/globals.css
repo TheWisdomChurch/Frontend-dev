@@ -72,7 +72,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
 }
-
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 /* REMOVED the aggressive section reset that was causing issues */
 /* Let sections have normal flow and allow Tailwind to control spacing */
 
