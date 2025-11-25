@@ -12,12 +12,13 @@ import {
   Twitter,
   ArrowRight,
 } from 'lucide-react';
-import { bricolageGrotesque, worksans } from '@/components/fonts/fonts';
+import { bricolageGrotesque } from '@/components/fonts/fonts';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { WisdomeHouseLogo } from '../assets';
+import { H4, BodySM } from '@/components/text'; // Import your text components
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -126,21 +127,22 @@ export default function Footer() {
                 >
                   The Wisdom House Church
                 </h3>
-                <p
-                  className={`${worksans.className} text-sm`}
+                <BodySM
                   style={{ color: colorScheme.primary }}
+                  useThemeColor={false}
                 >
                   Equipping & Empowering for greatness
-                </p>
+                </BodySM>
               </div>
             </div>
-
-            <p
-              className={`${worksans.className} text-base leading-relaxed text-gray-300`}
+            {/* 
+            <P
+              className="leading-relaxed text-gray-300"
+              useThemeColor={false}
             >
               A vibrant community dedicated to spiritual growth, divine wisdom,
               and kingdom impact. Join us as we pursue purpose together.
-            </p>
+            </P> */}
 
             <div className="space-y-4">
               {[
@@ -153,7 +155,6 @@ export default function Footer() {
                 { Icon: Mail, title: 'Email', text: 'info@wisdomhouse.com' },
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
-                  {/* ← Removed border on mobile/desktop */}
                   <div className="p-3 rounded-lg bg-primary/10 flex-shrink-0">
                     <item.Icon
                       className="w-5 h-5"
@@ -161,16 +162,15 @@ export default function Footer() {
                     />
                   </div>
                   <div>
-                    <p
-                      className={`${worksans.className} text-sm font-medium text-white`}
+                    <BodySM
+                      className="font-medium text-white"
+                      useThemeColor={false}
                     >
                       {item.title}
-                    </p>
-                    <p
-                      className={`${worksans.className} text-sm text-gray-300`}
-                    >
+                    </BodySM>
+                    <BodySM className="text-gray-300" useThemeColor={false}>
                       {item.text}
-                    </p>
+                    </BodySM>
                   </div>
                 </div>
               ))}
@@ -179,11 +179,9 @@ export default function Footer() {
 
           {/* Column 2 */}
           <div ref={col2Ref} className="space-y-6">
-            <h4
-              className={`${bricolageGrotesque.className} text-xl font-bold mb-6 text-white`}
-            >
+            <H4 className="mb-6 text-white" useThemeColor={false}>
               Quick Links
-            </h4>
+            </H4>
             <ul className="space-y-4">
               {[
                 { href: '/about/mission', label: 'About Us' },
@@ -211,62 +209,55 @@ export default function Footer() {
 
           {/* Column 3 */}
           <div ref={col3Ref} className="space-y-6">
-            <h4
-              className={`${bricolageGrotesque.className} text-xl font-bold mb-6 text-white`}
-            >
+            <H4 className="mb-6 text-white" useThemeColor={false}>
               Service Times
-            </h4>
+            </H4>
             <div className="space-y-4">
               {[
                 { day: 'Sunday Worship', time: '9:00 AM', highlight: true },
                 { day: 'Midweek Service', time: 'Thursday • 6:00 PM' },
-                { day: '1st Sunday', time: 'Celebration & Communion' },
-                { day: 'Last Sunday', time: 'Supernatural Encounter' },
               ].map(s => (
                 <div
                   key={s.day}
                   className={`p-4 rounded-xl ${
                     s.highlight
-                      ? 'border-2 border-primary bg-primary/10' // ← Primary border on Sunday Worship
+                      ? 'border-2 border-primary bg-primary/10'
                       : 'border border-gray-700'
                   }`}
                 >
-                  <p
-                    className={`${worksans.className} font-semibold`}
+                  <BodySM
+                    className={`font-semibold ${s.highlight ? '' : 'text-white'}`}
                     style={{
-                      color: s.highlight ? colorScheme.primary : '#FFFFFF',
+                      color: s.highlight ? colorScheme.primary : undefined,
                     }}
+                    useThemeColor={false}
                   >
                     {s.day}
-                  </p>
-                  <p
-                    className={`${worksans.className} text-sm mt-1 text-gray-300`}
-                  >
+                  </BodySM>
+                  <BodySM className="mt-1 text-gray-300" useThemeColor={false}>
                     {s.time}
-                  </p>
+                  </BodySM>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Column 4 */}
+          {/* Column 4 - Fixed Email Section */}
           <div ref={col4Ref} className="space-y-8">
             <div>
-              <h4
-                className={`${bricolageGrotesque.className} text-xl font-bold mb-4 text-white`}
-              >
+              <H4 className="mb-4 text-white" useThemeColor={false}>
                 Stay Inspired
-              </h4>
-              <p className={`${worksans.className} text-sm mb-6 text-gray-300`}>
+              </H4>
+              <BodySM className="mb-6 text-gray-300" useThemeColor={false}>
                 Get weekly sermons, event updates, and devotionals straight to
                 your inbox.
-              </p>
+              </BodySM>
 
-              <form className="flex flex-col sm:flex-row gap-3">
+              <form className="flex flex-col gap-3 w-full">
                 <input
                   type="email"
                   placeholder="Your email address"
-                  className="px-5 py-3 rounded-xl bg-white/10 border border-gray-700 focus:border-primary focus:outline-none transition-all placeholder-gray-500"
+                  className="w-full px-4 py-3 rounded-xl bg-white/10 border border-gray-700 focus:border-primary focus:outline-none transition-all placeholder-gray-500 text-sm"
                   style={{ color: '#FFFFFF' }}
                 />
                 <button
@@ -274,7 +265,7 @@ export default function Footer() {
                     backgroundColor: colorScheme.primary,
                     color: colorScheme.black,
                   }}
-                  className="px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                  className="w-full px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 text-sm"
                 >
                   Subscribe <ArrowRight className="w-4 h-4" />
                 </button>
@@ -282,11 +273,12 @@ export default function Footer() {
             </div>
 
             <div>
-              <p
-                className={`${worksans.className} text-sm font-medium mb-4 text-white`}
+              <BodySM
+                className="font-medium mb-4 text-white"
+                useThemeColor={false}
               >
                 Follow Us
-              </p>
+              </BodySM>
               <div className="flex gap-3">
                 {socialLinks.map((social, i) => (
                   <a
@@ -315,9 +307,9 @@ export default function Footer() {
           style={{ borderColor: colorScheme.primary + '40' }}
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-            <p className="text-gray-400">
+            <BodySM className="text-gray-400" useThemeColor={false}>
               © {currentYear} The Wisdom House Church. All Rights Reserved.
-            </p>
+            </BodySM>
 
             <div className="flex items-center gap-8">
               <Link
@@ -325,14 +317,14 @@ export default function Footer() {
                 className="hover:text-primary transition-colors"
                 style={{ color: colorScheme.primary }}
               >
-                Privacy Policy
+                <BodySM useThemeColor={false}>Privacy Policy</BodySM>
               </Link>
               <Link
                 href="/terms"
                 className="hover:text-primary transition-colors"
                 style={{ color: colorScheme.primary }}
               >
-                Terms of Service
+                <BodySM useThemeColor={false}>Terms of Service</BodySM>
               </Link>
             </div>
           </div>

@@ -268,7 +268,7 @@ export const pastorsData: Leader[] = [
     name: 'Deacon Bamidele',
     role: 'Head Technical & Sound Unit',
     image: Associate_1,
-    description: 'Oversees technical operations and sound systems.',
+    description: 'Oversees technical operations and sound systems',
   },
   {
     id: 3,
@@ -325,7 +325,8 @@ export const ministryLeadersData: MinistryLeader[] = [
     role: 'Outreach Coordinator',
     department: 'Outreach & Missions',
     image: Associate_2,
-    description: 'Coordinates community outreach and mission initiatives.',
+    description:
+      'Coordinates community outreach and mission initiatives and programs.',
   },
   {
     id: 5,
@@ -333,8 +334,7 @@ export const ministryLeadersData: MinistryLeader[] = [
     role: 'Music Department',
     department: 'Music & Instrumentation Mgt.',
     image: Min_Adura,
-    description: `Leads the music department, managing instrumentation, rehearsals, and performances to inspire and elevate worship experiences 
-    through harmonious and skillful musical contributions.`,
+    description: `Leads the music department, managing instrumentation and Performances.`,
   },
   {
     id: 5,
@@ -342,7 +342,8 @@ export const ministryLeadersData: MinistryLeader[] = [
     role: "Women's Ministry Leader",
     department: "Women's Ministry",
     image: PstKenny,
-    description: 'Empowers women through Bible study and fellowship.',
+    description:
+      'Empowers women through Bible study and fellowship and also organizes outreaches and conferences',
   },
   {
     id: 6,
