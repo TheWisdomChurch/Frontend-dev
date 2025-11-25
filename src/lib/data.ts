@@ -82,13 +82,13 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     label: 'Ministries',
     href: '/ministries',
     icon: 'Users',
-    dropdown: [
-      { label: 'Children Ministry', href: '/ministries/children' },
-      { label: 'Youth Ministry', href: '/ministries/youth' },
-      { label: 'Women Ministry', href: '/ministries/women' },
-      { label: 'Men Ministry', href: '/ministries/men' },
-      { label: 'Outreach', href: '/ministries/outreach' },
-    ],
+    // dropdown: [
+    //   { label: 'Children Ministry', href: '/ministries/children' },
+    //   { label: 'Youth Ministry', href: '/ministries/youth' },
+    //   { label: 'Women Ministry', href: '/ministries/women' },
+    //   { label: 'Men Ministry', href: '/ministries/men' },
+    //   { label: 'Outreach', href: '/ministries/outreach' },
+    // ],
   },
   {
     label: 'Events',
