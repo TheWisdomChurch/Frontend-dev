@@ -14,12 +14,14 @@ import ClientFooter from '@/components/layout/ClientFooter';
 import ClientScrollToTop from '@/components/layout/ClientscrollTop';
 import ScrollHandler from '@/components/layout/ClientScrollHandler';
 import './globals.css';
+import RouteLoaderProvider from '@/components/providers/RouteProvider';
 
 export const metadata: Metadata = {
   title: 'The Wisdomhouse Church',
   description: 'Wisdom HouseHq - We Are Transformed',
 };
 
+// Client wrapper component that contains all client-side providers
 // Client wrapper component that contains all client-side providers
 function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,12 +30,14 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
         <HeaderProvider>
           <ErrorBoundary>
             <ScrollHandler />
-            <ClientHeader />
-            <main className="flex-1 flex flex-col min-h-screen">
-              {children}
-            </main>
-            <ClientFooter />
-            <ClientScrollToTop />
+            <RouteLoaderProvider>
+              <ClientHeader />
+              <main className="flex-1 flex flex-col min-h-screen">
+                {children}
+              </main>
+              <ClientFooter />
+              <ClientScrollToTop />
+            </RouteLoaderProvider>
           </ErrorBoundary>
         </HeaderProvider>
       </ThemeProvider>
