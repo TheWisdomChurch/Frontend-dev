@@ -11,7 +11,7 @@ import {
   handleContactCall,
   useIntersectionObserver,
 } from '@/components/utils/functionUtils/contactUtils';
-import { H2, BaseText, BodyLG, BodyMD, BodySM } from '@/components/text';
+import { H2, BaseText, BodySM, Caption, H3 } from '@/components/text';
 import Button from '@/components/utils/CustomButton';
 import {
   Section,
@@ -58,13 +58,15 @@ export default function OnlineGiving() {
             className="text-center mb-10 sm:mb-12 lg:mb-16 px-4"
           >
             <div className="mb-4">
-              <Image
-                src={WisdomeHouseLogo}
-                alt="Wisdom House Church Logo"
-                width={64}
-                height={64}
-                className="mx-auto"
-              />
+              <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-gray-100 shadow-lg mx-auto">
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt="Wisdom House Church Logo"
+                  width={64}
+                  height={64}
+                  className="object-cover w-full h-full"
+                />
+              </div>
             </div>
 
             <H2
@@ -76,18 +78,22 @@ export default function OnlineGiving() {
             </H2>
 
             <BodySM
-              className="max-w-2xl text-center leading-relaxed mt-4 px-4 opacity-90"
+              className="max-w-2xl text-center leading-relaxed mt-4 px-4 opacity-90 text-sm sm:text-base"
               style={{ color: '#1a1a1a' }}
               useThemeColor={false}
             >
               Your generosity helps us continue to spread the Gospel and serve
-              our community. Choose how you would like to give today.
+              your community. Choose how you would like to give today.
             </BodySM>
           </FlexboxLayout>
 
           {/* Desktop Grid - Black Cards */}
           <div className="hidden lg:block">
-            <GridboxLayout columns={3} gap="xl" className="w-full mb-16">
+            <GridboxLayout
+              columns={3}
+              gap="xl"
+              className="w-full mb-16 items-stretch"
+            >
               {OnlinegivingOptions.map((option, index) => (
                 <div
                   key={option.title}
@@ -98,9 +104,22 @@ export default function OnlineGiving() {
                   }`}
                   style={{ transitionDelay: `${index * 150}ms` }}
                 >
-                  <div className="flex flex-col h-full rounded-2xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-3 bg-black border border-gray-800">
+                  <div className="bg-black backdrop-blur-sm rounded-2xl p-6 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-2 border border-gray-800 relative overflow-hidden flex flex-col h-full">
+                    {/* Animated Background Gradient */}
                     <div
-                      className="p-8 text-center"
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
+                      style={{
+                        background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}05)`,
+                      }}
+                    />
+
+                    {/* Floating Particles */}
+                    <div className="absolute top-3 right-3 w-1 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
+                    <div className="absolute bottom-3 left-3 w-1 h-1 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-ping" />
+
+                    {/* Title Section */}
+                    <div
+                      className="text-center rounded-t-2xl p-6 mb-4 flex-shrink-0"
                       style={{
                         backgroundColor: colorScheme.primary,
                         color: '#000000',
@@ -109,44 +128,43 @@ export default function OnlineGiving() {
                       <BaseText
                         fontFamily="bricolage"
                         weight="bold"
-                        className="text-center"
+                        className="text-lg mb-2 transform group-hover:scale-105 transition-transform duration-200"
                         style={{ color: '#000000' }}
                         useThemeColor={false}
                       >
                         {option.title}
                       </BaseText>
                     </div>
-                    <div className="p-8 flex-1 flex flex-col justify-between">
-                      <BodyMD
-                        className="text-center leading-relaxed mb-8"
-                        style={{ color: '#d1d5db' }}
+
+                    {/* Description Section */}
+                    <div className="text-center pt-2 relative z-10 flex flex-col flex-grow justify-start px-4">
+                      <Caption
+                        className="text-gray-300 opacity-90 px-1 transition-all duration-300 group-hover:opacity-100 line-clamp-3 leading-tight min-h-[3rem] flex items-center justify-center text-sm"
                         useThemeColor={false}
                       >
                         {option.description}
-                      </BodyMD>
+                      </Caption>
+                    </div>
+
+                    {/* Button Section */}
+                    <div className="mt-6 flex-shrink-0 px-4">
                       <Button
                         onClick={() => handleGiveNow(option)}
                         variant="primary"
-                        size="lg"
-                        curvature="full"
-                        elevated={true}
-                        className="w-full py-4 font-bold"
+                        size="md"
+                        curvature="xl"
+                        className="w-full py-3 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-white/20 backdrop-blur-sm"
                         style={{
-                          backgroundColor: colorScheme.primary,
+                          background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                           color: '#000000',
-                        }}
-                        onMouseEnter={(e: any) => {
-                          e.currentTarget.style.backgroundColor =
-                            colorScheme.primaryLight;
-                        }}
-                        onMouseLeave={(e: any) => {
-                          e.currentTarget.style.backgroundColor =
-                            colorScheme.primary;
                         }}
                       >
                         Give Now
                       </Button>
                     </div>
+
+                    {/* Hover Effect Overlay */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 </div>
               ))}
@@ -165,7 +183,7 @@ export default function OnlineGiving() {
                 </button>
 
                 <BodySM
-                  className="font-medium"
+                  className="font-medium text-sm"
                   style={{ color: '#9ca3af' }}
                   useThemeColor={false}
                 >
@@ -189,9 +207,10 @@ export default function OnlineGiving() {
                     key={option.title}
                     className="flex-shrink-0 w-72 snap-center"
                   >
-                    <div className="rounded-2xl overflow-hidden shadow-2xl bg-black border border-gray-800 h-full flex flex-col">
+                    <div className="bg-black backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-gray-800 relative overflow-hidden flex flex-col h-full">
+                      {/* Title Section */}
                       <div
-                        className="p-6 text-center"
+                        className="text-center rounded-t-2xl p-5 mb-3"
                         style={{
                           backgroundColor: colorScheme.primary,
                           color: '#000000',
@@ -200,40 +219,36 @@ export default function OnlineGiving() {
                         <BaseText
                           fontFamily="bricolage"
                           weight="bold"
-                          className="text-center"
+                          className="text-base mb-2"
                           style={{ color: '#000000' }}
                           useThemeColor={false}
                         >
                           {option.title}
                         </BaseText>
                       </div>
-                      <div className="p-6 flex-1 flex flex-col justify-between">
-                        <BodyMD
-                          className="text-center leading-relaxed mb-6"
-                          style={{ color: '#d1d5db' }}
+
+                      {/* Description Section */}
+                      <div className="text-center pt-2 flex flex-col flex-grow justify-start px-3">
+                        <Caption
+                          className="text-gray-300 opacity-90 px-1 line-clamp-3 leading-tight min-h-[3rem] flex items-center justify-center text-xs"
                           useThemeColor={false}
                         >
                           {option.description}
-                        </BodyMD>
+                        </Caption>
+                      </div>
+
+                      {/* Button Section */}
+                      <div className="mt-4 px-3">
                         <Button
                           onClick={() => handleGiveNow(option)}
                           variant="primary"
                           size="md"
-                          curvature="full"
-                          elevated={true}
-                          className="w-full py-3 font-bold"
+                          curvature="xl"
+                          className="w-full py-3 font-semibold text-sm"
                           style={{
-                            backgroundColor: colorScheme.primary,
+                            background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                             color: '#000000',
                           }}
-                          onMouseEnter={(e: any) =>
-                            (e.currentTarget.style.backgroundColor =
-                              colorScheme.primaryLight)
-                          }
-                          onMouseLeave={(e: any) =>
-                            (e.currentTarget.style.backgroundColor =
-                              colorScheme.primary)
-                          }
                         >
                           Give Now
                         </Button>
@@ -248,34 +263,40 @@ export default function OnlineGiving() {
 
           {/* Other Ways to Give - Black Background */}
           <div
-            className={`mt-16 lg:mt-20 transition-all duration-1000 delay-300 px-4 ${
+            className={`mt-12 lg:mt-16 transition-all duration-1000 delay-300 px-4 ${
               isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-12'
             }`}
           >
-            <div className="max-w-3xl mx-auto bg-black rounded-2xl p-8 lg:p-12 border border-gray-800 text-center">
-              <BaseText
-                fontFamily="bricolage"
-                weight="bold"
+            <div className="max-w-2xl mx-auto bg-black rounded-xl p-6 lg:p-8 border border-gray-800 text-center">
+              <H3
                 className="text-center mb-4"
                 style={{ color: '#ffffff' }}
                 useThemeColor={false}
+                weight="bold"
+                smWeight="extrabold"
               >
                 Other Ways to Give
-              </BaseText>
+              </H3>
 
-              <BodyLG
-                className="leading-relaxed mb-8 max-w-2xl mx-auto"
-                style={{ color: '#d1d5db' }}
+              {/** 🔥 Reduced line-height and tightened spacing */}
+              <Caption
+                className="mb-6 max-w-xl mx-auto text-gray-300 px-2"
+                style={{ lineHeight: '1.3' }}
                 useThemeColor={false}
               >
                 You can also give by mail, in person during our services, or set
                 up recurring donations. For more information about giving
                 options, please contact our Admin.
-              </BodyLG>
+              </Caption>
 
-              <FlexboxLayout justify="center" gap="md" className="flex-wrap">
+              {/** 🔥 Push all buttons downward by adding margin-top */}
+              <FlexboxLayout
+                justify="center"
+                gap="md"
+                className="flex-wrap mt-4"
+              >
                 <Button
                   onClick={handleContactCall}
                   variant="primary"
@@ -283,7 +304,7 @@ export default function OnlineGiving() {
                   curvature="full"
                   elevated={true}
                   leftIcon={<Phone className="w-4 h-4" />}
-                  className="px-6 py-3 font-bold hover:scale-105 transition"
+                  className="px-5 py-2.5 font-semibold hover:scale-105 transition text-sm"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: '#000000',
@@ -296,7 +317,7 @@ export default function OnlineGiving() {
                   variant="outline"
                   size="md"
                   curvature="full"
-                  className="px-6 py-3 border-2"
+                  className="px-5 py-2.5 border text-sm"
                   style={{
                     borderColor: colorScheme.primary,
                     color: '#FFFFFF',
