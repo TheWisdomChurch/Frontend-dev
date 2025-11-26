@@ -1,7 +1,7 @@
 // app/resources/page.tsx — THE ULTIMATE 2026 CHURCH RESOURCE HUB
 'use client';
 
-import { JSX, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -9,92 +9,12 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { H1, H2, BodyLG, Caption } from '@/components/text';
 import { Section, Container } from '@/components/layout';
 import HeroSection from '@/components/ui/Homepage/Herosection';
+import { resourceLinks } from '@/lib/data';
+import { mainResourceLink } from '@/lib/types';
 import { hero_bg_3 } from '@/components/assets';
-import {
-  Video,
-  ShoppingBag,
-  Calendar,
-  BookOpen,
-  Heart,
-  Radio,
-  Sparkles,
-  X,
-  Youtube,
-  Bell,
-} from 'lucide-react';
+import { Radio, Sparkles, X, Youtube, Bell } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
-
-interface ResourceLink {
-  title: string;
-  subtitle: string;
-  description: string;
-  path: string;
-  icon: JSX.Element;
-  gradient: string;
-  glow: string;
-  isLiveService?: boolean;
-}
-
-const resourceLinks: ResourceLink[] = [
-  {
-    title: 'Sermons & Teachings',
-    subtitle: 'Messages that transform lives',
-    description: 'Watch, listen, and grow through powerful biblical teaching',
-    path: '/resources/sermons',
-    icon: <Video className="w-10 h-10" />,
-    gradient: 'from-yellow-400/20 to-amber-600/10',
-    glow: 'rgba(251, 191, 36, 0.4)',
-  },
-  {
-    title: 'Live Services',
-    subtitle: 'Join us in real-time',
-    description:
-      'Stream Sunday services, prayer meetings, and special events live',
-    path: '#', // Changed to hash to prevent navigation
-    icon: <Radio className="w-10 h-10" />,
-    gradient: 'from-amber-500/20 to-orange-600/10',
-    glow: 'rgba(251, 146, 60, 0.5)',
-    isLiveService: true, // Flag to identify live services card
-  },
-  {
-    title: 'Events & Programs',
-    subtitle: 'Be part of something greater',
-    description:
-      'Conferences, revivals, outreaches, and life-changing gatherings',
-    path: '/events',
-    icon: <Calendar className="w-10 h-10" />,
-    gradient: 'from-orange-500/20 to-red-600/10',
-    glow: 'rgba(239, 68, 68, 0.4)',
-  },
-  {
-    title: 'Wisdom House Store',
-    subtitle: 'Wear your faith',
-    description: 'Merchandise that carries a message of hope and identity',
-    path: '/resources/store',
-    icon: <ShoppingBag className="w-10 h-10" />,
-    gradient: 'from-red-500/20 to-pink-600/10',
-    glow: 'rgba(236, 72, 153, 0.4)',
-  },
-  {
-    title: 'Publications',
-    subtitle: 'Resources for spiritual growth',
-    description: 'Devotionals, study guides, prayer journals, and more',
-    path: '/resources/publications',
-    icon: <BookOpen className="w-10 h-10" />,
-    gradient: 'from-pink-500/20 to-purple-600/10',
-    glow: 'rgba(168, 85, 247, 0.4)',
-  },
-  {
-    title: 'Pastoral Care',
-    subtitle: "We're here for life's moments",
-    description: 'Weddings, dedications, counseling, and sacred celebrations',
-    path: '/pastoral',
-    icon: <Heart className="w-10 h-10" />,
-    gradient: 'from-purple-500/20 to-indigo-600/10',
-    glow: 'rgba(99, 102, 241, 0.4)',
-  },
-];
 
 export default function ResourcesPage() {
   const { colorScheme } = useTheme();
@@ -124,7 +44,7 @@ export default function ResourcesPage() {
 
   const handleLiveServiceClick = (
     e: React.MouseEvent,
-    resource: ResourceLink
+    resource: mainResourceLink
   ) => {
     if (resource.isLiveService) {
       e.preventDefault();
@@ -320,16 +240,16 @@ export default function ResourcesPage() {
         </div>
 
         <Container size="xl">
-          <div className="text-center mb-20">
+          <div className="text-center mb-12">
             <H1
-              className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tighter"
+              className="text-3xl md:text-4xl lg:text-5xl font-black mb-3 tracking-tight"
               style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
             >
               Your Spiritual{' '}
               <span style={{ color: colorScheme.primary }}>Home</span>
             </H1>
             <BodyLG
-              className="text-xl md:text-2xl max-w-4xl mx-auto opacity-90"
+              className="text-base md:text-lg max-w-2xl mx-auto opacity-90 leading-relaxed"
               style={{
                 color: isDarkMode
                   ? colorScheme.textSecondary
@@ -341,117 +261,122 @@ export default function ResourcesPage() {
             </BodyLG>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-            {resourceLinks.map((resource, i) => (
-              <Link
-                href={resource.path}
-                key={i}
-                className="group block"
-                onClick={e => handleLiveServiceClick(e, resource)}
-              >
-                <div
-                  ref={el => {
-                    cardRefs.current[i] = el;
-                  }}
-                  className="relative h-full rounded-3xl overflow-hidden transition-all duration-700 group-hover:scale-105"
-                  style={{
-                    background: isDarkMode
-                      ? `linear-gradient(145deg, ${colorScheme.surface}ee, ${colorScheme.surfaceVariant}cc)`
-                      : `linear-gradient(145deg, #ffffff, #f8f9fa)`,
-                    border: `1px solid ${isDarkMode ? '#333' : '#E5E7EB'}`,
-                    boxShadow: isDarkMode
-                      ? '0 30px 60px rgba(0,0,0,0.8)'
-                      : '0 20px 50px rgba(0,0,0,0.1)',
-                  }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {resourceLinks.map((resource, i) => {
+              // Create the icon component dynamically
+              const IconComponent = resource.icon;
+
+              return (
+                <Link
+                  href={resource.path}
+                  key={i}
+                  className="group block"
+                  onClick={e => handleLiveServiceClick(e, resource)}
                 >
-                  {/* Gradient Overlay */}
                   <div
-                    className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-br ${resource.gradient}`}
-                  />
+                    ref={el => {
+                      cardRefs.current[i] = el;
+                    }}
+                    className="relative h-full rounded-2xl overflow-hidden transition-all duration-700 group-hover:scale-105"
+                    style={{
+                      background: isDarkMode
+                        ? `linear-gradient(145deg, ${colorScheme.surface}ee, ${colorScheme.surfaceVariant}cc)`
+                        : `linear-gradient(145deg, #ffffff, #f8f9fa)`,
+                      border: `1px solid ${isDarkMode ? '#333' : '#E5E7EB'}`,
+                      boxShadow: isDarkMode
+                        ? '0 20px 40px rgba(0,0,0,0.8)'
+                        : '0 15px 35px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    {/* Gradient Overlay */}
+                    <div
+                      className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-br ${resource.gradient}`}
+                    />
 
-                  {/* Floating Orb */}
-                  <div
-                    className="absolute top-8 right-8 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-40 transition-all duration-1000"
-                    style={{ backgroundColor: resource.glow }}
-                  />
+                    {/* Floating Orb */}
+                    <div
+                      className="absolute top-6 right-6 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-40 transition-all duration-1000"
+                      style={{ backgroundColor: resource.glow }}
+                    />
 
-                  <div className="relative p-10 lg:p-12 h-full flex flex-col justify-between">
-                    <div>
-                      {/* Icon Container - Black background in light mode, White background in dark mode */}
-                      <div
-                        className="mb-8 p-6 rounded-3xl backdrop-blur-sm w-fit group-hover:bg-white/20 transition-all duration-500"
-                        style={{
-                          backgroundColor: isDarkMode ? '#FFFFFF' : '#000000',
-                        }}
-                      >
-                        <div style={{ color: colorScheme.primary }}>
-                          {resource.icon}
+                    <div className="relative p-6 lg:p-8 h-full flex flex-col justify-between">
+                      <div>
+                        {/* Icon Container - Black background in light mode, White background in dark mode */}
+                        <div
+                          className="mb-6 p-4 rounded-2xl backdrop-blur-sm w-fit group-hover:bg-white/20 transition-all duration-500"
+                          style={{
+                            backgroundColor: isDarkMode ? '#FFFFFF' : '#000000',
+                          }}
+                        >
+                          <div style={{ color: colorScheme.primary }}>
+                            {IconComponent && (
+                              <IconComponent className="w-8 h-8" />
+                            )}
+                          </div>
                         </div>
+
+                        <h3
+                          className="text-xl lg:text-2xl font-black mb-3 leading-tight"
+                          style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        >
+                          {resource.title}
+                        </h3>
+
+                        <p
+                          className="text-base font-semibold mb-3"
+                          style={{ color: colorScheme.primary }}
+                        >
+                          {resource.subtitle}
+                        </p>
+
+                        <Caption
+                          className="text-sm leading-relaxed opacity-80"
+                          style={{
+                            color: isDarkMode
+                              ? colorScheme.textSecondary
+                              : '#666',
+                          }}
+                        >
+                          {resource.description}
+                        </Caption>
                       </div>
 
-                      <h3
-                        className="text-3xl lg:text-4xl font-black mb-4 leading-tight"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                      >
-                        {resource.title}
-                      </h3>
-
-                      <p
-                        className="text-xl font-semibold mb-4"
-                        style={{ color: colorScheme.primary }}
-                      >
-                        {resource.subtitle}
-                      </p>
-
-                      <Caption
-                        className="text-base leading-relaxed opacity-80"
-                        style={{
-                          color: isDarkMode
-                            ? colorScheme.textSecondary
-                            : '#666',
-                        }}
-                      >
-                        {resource.description}
-                      </Caption>
-                    </div>
-
-                    <div className="mt-12 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
-                      <span
-                        className="text-lg font-bold uppercase tracking-wider"
-                        style={{ color: colorScheme.primary }}
-                      >
-                        {resource.isLiveService
-                          ? 'Get Notified →'
-                          : 'Explore →'}
-                      </span>
-                      <div className="w-16 h-16 rounded-full bg-yellow-400/20 flex items-center justify-center group-hover:bg-yellow-400/40 transition-colors">
-                        <Sparkles
-                          className="w-8 h-8"
+                      <div className="mt-8 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
+                        <span
+                          className="text-sm font-bold uppercase tracking-wider"
                           style={{ color: colorScheme.primary }}
-                        />
+                        >
+                          {resource.actionText}
+                        </span>
+                        <div className="w-12 h-12 rounded-full bg-yellow-400/20 flex items-center justify-center group-hover:bg-yellow-400/40 transition-colors">
+                          <Sparkles
+                            className="w-5 h-5"
+                            style={{ color: colorScheme.primary }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Final CTA */}
-          <div className="mt-32 text-center">
+          <div className="mt-24 text-center">
             <div
-              className="inline-block p-12 rounded-3xl relative overflow-hidden"
+              className="inline-block p-8 rounded-2xl relative overflow-hidden"
               style={{
                 background: colorScheme.primaryGradient,
-                boxShadow: `0 0 120px ${colorScheme.primary}80`,
+                boxShadow: `0 0 80px ${colorScheme.primary}80`,
               }}
             >
               <div className="absolute inset-0 bg-black/20" />
               <div className="relative z-10">
-                <H2 className="text-4xl md:text-6xl font-black text-black mb-6">
+                <H2 className="text-2xl md:text-4xl font-black text-black mb-4">
                   You Belong Here
                 </H2>
-                <BodyLG className="text-black/80 text-xl max-w-2xl">
+                <BodyLG className="text-black/80 text-lg max-w-2xl">
                   Whatever you're looking for — teaching, community, worship, or
                   purpose — you've found your home.
                 </BodyLG>
