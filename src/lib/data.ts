@@ -1,4 +1,12 @@
-import { Church } from 'lucide-react';
+import {
+  Church,
+  Video,
+  Radio,
+  Calendar,
+  ShoppingBag,
+  BookOpen,
+  Heart,
+} from 'lucide-react';
 import {
   NavLink,
   ExtendedNavLink,
@@ -664,5 +672,73 @@ export const Ministries = [
     subtitle: 'Hands Extended, Hearts Transformed',
     description: "Taking God's love beyond walls — locally and globally.",
     path: '/ministries/outreach',
+  },
+];
+
+// Define the missing type for resource links
+
+export const resourceLinks = [
+  {
+    title: 'Sermons & Teachings',
+    subtitle: 'Messages that transform lives',
+    description: 'Watch, listen, and grow through powerful biblical teaching',
+    path: '/resources/sermons',
+    icon: Video,
+    gradient: 'from-yellow-400/20 to-amber-600/10',
+    glow: 'rgba(251, 191, 36, 0.4)',
+    actionText: 'Listen Now →',
+  },
+  {
+    title: 'Live Services',
+    subtitle: 'Join us in real-time',
+    description:
+      'Stream Sunday services, prayer meetings, and special events live',
+    path: '#',
+    icon: Radio,
+    gradient: 'from-amber-500/20 to-orange-600/10',
+    glow: 'rgba(251, 146, 60, 0.5)',
+    isLiveService: true,
+    actionText: 'Get Notified →',
+  },
+  {
+    title: 'Events & Programs',
+    subtitle: 'Be part of something greater',
+    description:
+      'Conferences, revivals, outreaches, and life-changing gatherings',
+    path: '/events',
+    icon: Calendar,
+    gradient: 'from-orange-500/20 to-red-600/10',
+    glow: 'rgba(239, 68, 68, 0.4)',
+    actionText: 'Join Events →',
+  },
+  {
+    title: 'Wisdom House Store',
+    subtitle: 'Wear your faith',
+    description: 'Merchandise that carries a message of hope and identity',
+    path: '/resources/store',
+    icon: ShoppingBag,
+    gradient: 'from-red-500/20 to-pink-600/10',
+    glow: 'rgba(236, 72, 153, 0.4)',
+    actionText: 'Shop Now →',
+  },
+  {
+    title: 'Publications',
+    subtitle: 'Resources for spiritual growth',
+    description: 'Devotionals, study guides, prayer journals, and more',
+    path: '/resources/publications',
+    icon: BookOpen,
+    gradient: 'from-pink-500/20 to-purple-600/10',
+    glow: 'rgba(168, 85, 247, 0.4)',
+    actionText: 'Read More →',
+  },
+  {
+    title: 'Pastoral Care',
+    subtitle: "We're here for life's moments",
+    description: 'Weddings, dedications, counseling, and sacred celebrations',
+    path: '/pastoral',
+    icon: Heart,
+    gradient: 'from-purple-500/20 to-indigo-600/10',
+    glow: 'rgba(99, 102, 241, 0.4)',
+    actionText: 'Get Support →',
   },
 ];

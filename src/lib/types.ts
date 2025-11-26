@@ -191,6 +191,17 @@ export interface Product {
   tags: string[];
   stock: number;
 }
+export type mainResourceLink = {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  path: string;
+  icon?: any;
+  gradient?: string;
+  glow?: string;
+  actionText?: string;
+  isLiveService?: boolean;
+};
 
 export interface CartItem {
   id: string;

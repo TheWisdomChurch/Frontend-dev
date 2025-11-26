@@ -99,17 +99,19 @@ const HeroSection = ({
                 className="w-full h-full object-cover"
               />
 
-              {/* Balanced overlay - darker but not too dark */}
+              {/* Enhanced gradient overlay for better text readability */}
               <div
                 className="absolute inset-0"
                 style={{
                   background: isDarkMode
-                    ? 'linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.5))' // Balanced darkness
-                    : 'linear-gradient(to bottom right, rgba(0,0,0,0.4), rgba(0,0,0,0.6))', // Balanced darkness
+                    ? 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%)'
+                    : 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%)',
                 }}
               />
-              {/* Balanced gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+              {/* Strong vertical gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              {/* Additional center gradient for focus */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
             </div>
           </div>
         ))
@@ -121,17 +123,19 @@ const HeroSection = ({
               alt={title}
               className="w-full h-full object-cover"
             />
-            {/* Balanced overlay - darker but not too dark */}
+            {/* Enhanced gradient overlay for better text readability */}
             <div
               className="absolute inset-0"
               style={{
                 background: isDarkMode
-                  ? 'linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.5))' // Balanced darkness
-                  : 'linear-gradient(to bottom right, rgba(0,0,0,0.4), rgba(0,0,0,0.6))', // Balanced darkness
+                  ? 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%)'
+                  : 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%)',
               }}
             />
-            {/* Balanced gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+            {/* Strong vertical gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+            {/* Additional center gradient for focus */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
           </div>
         </div>
       )}
@@ -148,7 +152,7 @@ const HeroSection = ({
             className="mb-4 leading-tight tracking-tight"
             style={{
               color: titleColor,
-              textShadow: '0 6px 30px rgba(0, 0, 0, 0.8)',
+              textShadow: '0 6px 30px rgba(0, 0, 0, 0.9)',
             }}
             useThemeColor={false}
           >
@@ -170,7 +174,7 @@ const HeroSection = ({
               className="mb-8"
               style={{
                 color: subtitleColor,
-                textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)',
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.9)',
               }}
               useThemeColor={false}
             >
@@ -185,7 +189,7 @@ const HeroSection = ({
               className="max-w-4xl mx-auto mb-12 leading-relaxed"
               style={{
                 color: descriptionColor,
-                textShadow: '0 3px 15px rgba(0, 0, 0, 0.7)',
+                textShadow: '0 3px 15px rgba(0, 0, 0, 0.8)',
               }}
               useThemeColor={false}
             >
