@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// components/ui/Homepage/Herosection.tsx
 'use client';
 
-import { H1, H2, BodyXL } from '@/components/text'; // Fixed imports
+import { H1, H2, BodyXL } from '@/components/text';
 import { Button } from '@/components/utils';
 import { ChevronDown } from 'lucide-react';
 import { useHeroSection } from '@/components/utils/hooks/useHeroSection';
@@ -50,7 +50,6 @@ const HeroSection = ({
     subtitleRef,
     descriptionRef,
     buttonsRef,
-    indicatorsRef,
     scrollIndicatorRef,
     colorScheme,
     scrollToNextSection,
@@ -100,16 +99,17 @@ const HeroSection = ({
                 className="w-full h-full object-cover"
               />
 
-              {/* Stronger overlay in light mode for white text visibility */}
+              {/* Balanced overlay - darker but not too dark */}
               <div
                 className="absolute inset-0"
                 style={{
                   background: isDarkMode
-                    ? 'linear-gradient(to bottom right, rgba(0,0,0,0.5), rgba(0,0,0,0.8))'
-                    : 'linear-gradient(to bottom right, rgba(0,0,0,0.75), rgba(0,0,0,0.95))',
+                    ? 'linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.5))' // Balanced darkness
+                    : 'linear-gradient(to bottom right, rgba(0,0,0,0.4), rgba(0,0,0,0.6))', // Balanced darkness
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+              {/* Balanced gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
             </div>
           </div>
         ))
@@ -121,15 +121,17 @@ const HeroSection = ({
               alt={title}
               className="w-full h-full object-cover"
             />
+            {/* Balanced overlay - darker but not too dark */}
             <div
               className="absolute inset-0"
               style={{
                 background: isDarkMode
-                  ? 'linear-gradient(to bottom right, rgba(0,0,0,0.5), rgba(0,0,0,0.8))'
-                  : 'linear-gradient(to bottom right, rgba(0,0,0,0.75), rgba(0,0,0,0.95))',
+                  ? 'linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.5))' // Balanced darkness
+                  : 'linear-gradient(to bottom right, rgba(0,0,0,0.4), rgba(0,0,0,0.6))', // Balanced darkness
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+            {/* Balanced gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
           </div>
         </div>
       )}
@@ -146,7 +148,7 @@ const HeroSection = ({
             className="mb-4 leading-tight tracking-tight"
             style={{
               color: titleColor,
-              textShadow: '0 6px 30px rgba(0, 0, 0, 0.9)',
+              textShadow: '0 6px 30px rgba(0, 0, 0, 0.8)',
             }}
             useThemeColor={false}
           >
@@ -168,7 +170,7 @@ const HeroSection = ({
               className="mb-8"
               style={{
                 color: subtitleColor,
-                textShadow: '0 4px 20px rgba(0, 0, 0, 0.9)',
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)',
               }}
               useThemeColor={false}
             >
@@ -183,7 +185,7 @@ const HeroSection = ({
               className="max-w-4xl mx-auto mb-12 leading-relaxed"
               style={{
                 color: descriptionColor,
-                textShadow: '0 3px 15px rgba(0, 0, 0, 0.8)',
+                textShadow: '0 3px 15px rgba(0, 0, 0, 0.7)',
               }}
               useThemeColor={false}
             >

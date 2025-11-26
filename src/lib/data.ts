@@ -95,7 +95,7 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     href: '/events',
     icon: 'Calendar',
     dropdown: [
-      { label: 'Upcoming Events', href: '/events/upcoming' },
+      // { label: 'Upcoming Events', href: '/events/upcoming' },
       // { label: 'Weekly Services', href: '/events/weekly' },
       // { label: 'Special Events', href: '/events/special' },
     ],
@@ -631,3 +631,38 @@ Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wis
 // dedication, lives are forever changed, and a
 // legacy of faith, hope, and impact is being
 // etched into eternity.
+export const Ministries = [
+  {
+    title: "Children's Ministry",
+    subtitle: 'Nurturing Young Hearts in Faith',
+    description:
+      "Where kids discover God's love through fun, stories, and truth.",
+    path: '/ministries/children',
+  },
+  {
+    title: 'Youth Ministry',
+    subtitle: 'Igniting the Next Generation',
+    description:
+      'A place for teens to belong, believe, and become who God made them to be.',
+    path: '/ministries/youth',
+  },
+  {
+    title: "Women's Ministry",
+    subtitle: 'Growing Together in Grace',
+    description: 'Women supporting women — in prayer, study, and sisterhood.',
+    path: '/ministries/women',
+  },
+  {
+    title: "Men's Ministry",
+    subtitle: 'Iron Sharpens Iron',
+    description:
+      'Building godly men who lead, serve, and stand strong in faith.',
+    path: '/ministries/men',
+  },
+  {
+    title: 'Outreach Ministry',
+    subtitle: 'Hands Extended, Hearts Transformed',
+    description: "Taking God's love beyond walls — locally and globally.",
+    path: '/ministries/outreach',
+  },
+];
