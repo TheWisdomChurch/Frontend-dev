@@ -13,7 +13,7 @@ interface SeniorPastorProps {
 }
 
 export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
-  const { isVisible, sectionRef, handleLearnMore } = useSeniorPastor();
+  const { isVisible, sectionRef } = useSeniorPastor();
 
   // Split the description into exactly two paragraphs
   const descriptionText = seniorPastorData.description[0];
@@ -44,91 +44,96 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
         }}
       />
 
-      {/* Dark overlay - balanced for readability */}
-      <div className="absolute inset-0 bg-black/60 z-10" />
+      {/* Enhanced dark overlay for better readability */}
+      <div className="absolute inset-0 bg-black/70 z-10" />
 
-      {/* Content */}
+      {/* Content Container with Semi-transparent Background */}
       <Container size="xl" className="relative z-20 h-full">
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
-          className="h-full min-h-screen py-20 lg:py-24 px-4"
+          className="h-full min-h-screen py-12 lg:py-16 px-4"
         >
+          {/* Content Box with Dark Background */}
           <div
-            className={`w-full max-w-5xl mx-auto text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+            className={`w-full max-w-3xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           >
-            {/* Main Title */}
-            <H1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight mb-6 lg:mb-8 drop-shadow-2xl"
-              style={{ color: '#FFFFFF' }}
-            >
-              {seniorPastorData.title}
-            </H1>
-
-            {/* Description Paragraphs */}
-            <div className="max-w-4xl mx-auto mb-8 lg:mb-12 text-left">
-              {/* First paragraph */}
-              <P
-                className="text-lg sm:text-xl lg:text-2xl leading-relaxed text-gray-100 mb-6 opacity-95"
-                style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}
+            <div className="bg-black/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 border border-white/10 shadow-xl">
+              {/* Main Title - Smaller */}
+              <H1
+                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3 lg:mb-4 text-center"
+                style={{ color: '#FFFFFF' }}
               >
-                {firstParagraph}
-              </P>
+                {seniorPastorData.title}
+              </H1>
 
-              {/* Second paragraph */}
-              <P
-                className="text-lg sm:text-xl lg:text-2xl leading-relaxed text-gray-100 mb-6 opacity-95"
-                style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}
-              >
-                {secondParagraph}
-              </P>
-            </div>
+              {/* Description Paragraphs - Smaller */}
+              <div className="max-w-2xl mx-auto mb-4 lg:mb-6">
+                {/* First paragraph */}
+                <P
+                  className="text-sm sm:text-base leading-relaxed text-gray-100 mb-3 opacity-95 text-justify"
+                  style={{ textShadow: '0 2px 8px rgba(0,0,0,0.7)' }}
+                >
+                  {firstParagraph}
+                </P>
 
-            {/* CTA Button */}
-            <div className="flex justify-center">
-              <Button
-                onClick={handleLearnMore}
-                variant="primary"
-                size="lg"
-                curvature="full"
-                elevated={true}
-                className="px-10 sm:px-12 py-5 sm:py-6 text-lg sm:text-xl lg:text-2xl font-bold shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300"
-                style={{
-                  background: `linear-gradient(135deg, #F7DE12, #D4BC0F)`,
-                  color: '#000000',
-                }}
-              >
-                {seniorPastorData.buttonText}
-              </Button>
-            </div>
-          </div>
-
-          {/* Floating Pastor Portrait — Bottom Right */}
-          <div className="hidden md:block absolute bottom-6 right-6 lg:bottom-8 lg:right-8 xl:bottom-10 xl:right-10 z-30">
-            <div className="relative">
-              {/* Glow effect - smaller */}
-              <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-2xl scale-105" />
-
-              {/* Portrait - smaller */}
-              <div className="relative w-32 h-32 lg:w-36 lg:h-36 xl:w-40 xl:h-40 rounded-full overflow-hidden ring-2 ring-white/80 shadow-lg">
-                <Image
-                  src={Bishop}
-                  alt="Senior Pastor"
-                  fill
-                  className="object-cover"
-                  priority
-                />
+                {/* Second paragraph */}
+                <P
+                  className="text-sm sm:text-base leading-relaxed text-gray-100 mb-3 opacity-95 text-justify"
+                  style={{ textShadow: '0 2px 8px rgba(0,0,0,0.7)' }}
+                >
+                  {secondParagraph}
+                </P>
               </div>
 
-              {/* Smaller badge */}
-              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold shadow-lg whitespace-nowrap bg-gradient-to-r from-yellow-400 to-yellow-600 text-black">
-                Senior Pastor
+              {/* CTA Button - Smaller */}
+              <div className="flex justify-center">
+                <Button
+                  onClick={() =>
+                    window.open(seniorPastorData.instagramUrl, '_blank')
+                  }
+                  variant="primary"
+                  size="sm"
+                  curvature="full"
+                  elevated={true}
+                  className="px-6 sm:px-8 py-3 text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                  style={{
+                    background: `linear-gradient(135deg, #F7DE12, #D4BC0F)`,
+                    color: '#000000',
+                  }}
+                >
+                  {seniorPastorData.buttonText}
+                </Button>
               </div>
             </div>
           </div>
         </FlexboxLayout>
       </Container>
+
+      {/* Floating Pastor Portrait — Smaller and More Responsive */}
+      <div className="hidden md:block absolute bottom-4 right-4 lg:bottom-6 lg:right-6 xl:bottom-8 xl:right-8 z-30">
+        <div className="relative">
+          {/* Glow effect - smaller */}
+          <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-xl scale-105" />
+
+          {/* Portrait - smaller */}
+          <div className="relative w-24 h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-full overflow-hidden ring-1 ring-white/60 shadow-md">
+            <Image
+              src={Bishop}
+              alt="Senior Pastor"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+
+          {/* Smaller badge */}
+          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold shadow-md whitespace-nowrap bg-gradient-to-r from-yellow-400 to-yellow-600 text-black">
+            Senior Pastor
+          </div>
+        </div>
+      </div>
     </Section>
   );
 }

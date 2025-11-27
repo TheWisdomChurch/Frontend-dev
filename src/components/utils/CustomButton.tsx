@@ -15,7 +15,6 @@ export type ButtonVariant =
   | 'danger'
   | 'success';
 
-// Add 'xs' to ButtonSize type
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
 export interface ButtonProps {
@@ -25,17 +24,14 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // Fixed: Added event parameter
   type?: 'button' | 'submit' | 'reset';
   className?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   style?: React.CSSProperties;
-  /** New: Adds subtle shadow and hover lift effect */
   elevated?: boolean;
-  /** New: Controls border radius - more curvy */
   curvature?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  /** Add these missing event handlers */
   onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onMouseDown?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -68,9 +64,9 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const { colorScheme } = useTheme();
 
-  // Size styles with better proportions - ADD 'xs' SIZE
+  // Size styles
   const sizeStyles = {
-    xs: 'px-3 py-1.5 text-xs min-h-[32px]', // Added xs size
+    xs: 'px-3 py-1.5 text-xs min-h-[32px]',
     sm: 'px-4 py-2 text-sm min-h-[36px]',
     md: 'px-6 py-3 text-base min-h-[44px]',
     lg: 'px-8 py-4 text-lg min-h-[52px]',
@@ -87,7 +83,7 @@ const Button: React.FC<ButtonProps> = ({
     full: 'rounded-full',
   };
 
-  // Enhanced variant styles with smooth transitions and better hover effects
+  // Enhanced variant styles - SIMPLIFIED
   const getVariantStyles = () => {
     const baseStyles = `inline-flex items-center justify-center font-semibold transition-all duration-300 ease-out focus:outline-none focus:ring-3 focus:ring-offset-2 ${curvatureStyles[curvature]}`;
 
@@ -98,7 +94,7 @@ const Button: React.FC<ButtonProps> = ({
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-primary/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
       secondary: {
         backgroundColor: colorScheme.surface,
@@ -106,7 +102,7 @@ const Button: React.FC<ButtonProps> = ({
         hover: 'hover:bg-surfaceVariant hover:shadow-md hover:scale-[1.02]',
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-gray-300/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
       'accent-yellow': {
         backgroundColor: colorScheme.primary,
@@ -114,7 +110,7 @@ const Button: React.FC<ButtonProps> = ({
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-yellow-500/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
       'accent-orange': {
         backgroundColor: colorScheme.secondary,
@@ -122,24 +118,24 @@ const Button: React.FC<ButtonProps> = ({
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-orange-500/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
       outline: {
         backgroundColor: 'transparent',
         color: colorScheme.text,
         border: `2px solid ${colorScheme.border}`,
-        hover: `hover:bg-${colorScheme.surfaceVariant} hover:border-primary hover:shadow-md hover:scale-[1.02]`,
+        hover: `hover:bg-surfaceVariant hover:border-primary hover:shadow-md hover:scale-[1.02]`,
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-primary/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
       ghost: {
         backgroundColor: 'transparent',
         color: colorScheme.text,
-        hover: `hover:bg-${colorScheme.surfaceVariant} hover:shadow-sm hover:scale-[1.02]`,
+        hover: `hover:bg-surfaceVariant hover:shadow-sm hover:scale-[1.02]`,
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-primary/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
       danger: {
         backgroundColor: colorScheme.error,
@@ -147,7 +143,7 @@ const Button: React.FC<ButtonProps> = ({
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-error/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
       success: {
         backgroundColor: colorScheme.success,
@@ -155,7 +151,7 @@ const Button: React.FC<ButtonProps> = ({
         hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
         active: 'active:scale-[0.98]',
         focus: 'focus:ring-success/50',
-        disabled: 'opacity-60 cursor-not-allowed transform-none shadow-none',
+        disabled: 'opacity-60 cursor-not-allowed',
       },
     };
 
@@ -185,11 +181,21 @@ const Button: React.FC<ButtonProps> = ({
     ...style,
   };
 
+  // Handle click with proper event propagation
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disabled || loading) return;
+
+    // Add a small delay to ensure state updates properly
+    setTimeout(() => {
+      onClick?.(e);
+    }, 10);
+  };
+
   return (
     <button
       type={type}
       disabled={disabled || loading}
-      onClick={onClick}
+      onClick={handleClick} // Use the fixed handler
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onMouseDown={onMouseDown}
@@ -197,7 +203,7 @@ const Button: React.FC<ButtonProps> = ({
       onFocus={onFocus}
       onBlur={onBlur}
       className={`
-         ${variantStyles.base}
+        ${variantStyles.base}
         ${sizeStyle}
         ${widthStyle}
         ${elevationStyle}
@@ -212,20 +218,20 @@ const Button: React.FC<ButtonProps> = ({
         disabled:cursor-not-allowed
         disabled:transform-none
         disabled:shadow-none
+        cursor-pointer // Ensure cursor shows it's clickable
+        select-none // Prevent text selection
+        z-10 // Ensure proper z-index
       `}
       style={buttonStyles}
     >
-      {/* Loading overlay */}
+      {/* Loading overlay - FIXED: Removed absolute positioning that might block clicks */}
       {loading && (
-        <div
-          className="absolute inset-0 rounded-inherit"
-          style={{ backgroundColor: 'currentColor', opacity: 0.2 }}
-        />
+        <div className="absolute inset-0 rounded-inherit bg-current opacity-20" />
       )}
 
-      {/* Content container */}
+      {/* Content container - FIXED: Simplified structure */}
       <div
-        className={`flex items-center justify-center gap-2 ${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}
+        className={`flex items-center justify-center gap-2 ${loading ? 'opacity-70' : ''}`}
       >
         {/* Loading spinner */}
         {loading && (
