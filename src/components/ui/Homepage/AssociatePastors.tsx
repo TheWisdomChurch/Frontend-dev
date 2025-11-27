@@ -8,7 +8,7 @@ import {
   ministryLeadersData,
   associatePastorsContent,
 } from '@/lib/data';
-import { H3, H4, BodyMD, SmallText, Caption } from '@/components/text';
+import { H3, H4, SmallText, Caption } from '@/components/text';
 import CustomButton from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useAssociatePastors } from '@/components/utils/hooks/useAssociate';
@@ -181,13 +181,13 @@ export default function AssociatePastors() {
           </div>
 
           {/* Description with Reduced Margin */}
-          <BodyMD
+          <Caption
             ref={descriptionRef}
             className="max-w-3xl mx-auto leading-relaxed text-gray-600 mt-4 px-4 sm:px-6 lg:px-0 text-lg sm:text-xl font-light"
             useThemeColor={false}
           >
             {associatePastorsContent.mainDescription}
-          </BodyMD>
+          </Caption>
         </FlexboxLayout>
 
         <div ref={contentRef}>

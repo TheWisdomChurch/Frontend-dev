@@ -1,38 +1,21 @@
 'use client';
 
-import { Workforce_bg } from '@/components/assets';
+import { WisdomeHouseLogo, Workforce_bg } from '@/components/assets';
 import { H2, BaseText, BodySM, Caption } from '@/components/text';
 import Button from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { FormModal } from '@/components/modal/FormModal';
 import { useJoinWisdomHouse } from '@/components/utils/hooks/useJoin';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Users,
-  Heart,
-  Mic,
-  Palette,
-  Film,
-  Headphones,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   Section,
   Container,
   GridboxLayout,
   FlexboxLayout,
 } from '@/components/layout';
+import Image from 'next/image';
 
-// Icon & color mapping
-const departmentIcons = {
-  Ushers: Users,
-  'Media Team': Film,
-  Choir: Mic,
-  'Children Ministry': Heart,
-  'Youth Ministry': Palette,
-  'Technical Team': Headphones,
-};
-
+// Remove departmentIcons mapping since we're using the same logo for all
 const departmentColors = {
   Ushers: 'from-purple-500 to-pink-500',
   'Media Team': 'from-blue-500 to-cyan-500',
@@ -149,9 +132,6 @@ export default function JoinWisdomHouse() {
               className="max-w-6xl mx-auto items-stretch"
             >
               {departments.map((dept, index) => {
-                const Icon =
-                  departmentIcons[dept.title as keyof typeof departmentIcons] ||
-                  Users;
                 const gradient =
                   departmentColors[
                     dept.title as keyof typeof departmentColors
@@ -179,7 +159,7 @@ export default function JoinWisdomHouse() {
                       <div className="absolute top-3 right-3 w-1 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
                       <div className="absolute bottom-3 left-3 w-1 h-1 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-ping" />
 
-                      {/* Centered Icon with Glow */}
+                      {/* Centered WisdomHouse Logo - ROUND SHAPE */}
                       <div className="flex justify-center mb-3 flex-shrink-0">
                         <div className="relative">
                           {/* Outer Glow Ring */}
@@ -191,11 +171,17 @@ export default function JoinWisdomHouse() {
                             }}
                           />
 
-                          {/* Icon Container */}
+                          {/* Logo Container - CHANGED TO ROUND */}
                           <div
-                            className={`relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-br ${gradient} p-4 shadow-xl transform group-hover:scale-105 transition-transform duration-300 flex items-center justify-center`}
+                            className={`relative w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-gradient-to-br ${gradient} p-3 shadow-xl transform group-hover:scale-105 transition-transform duration-300 flex items-center justify-center`}
                           >
-                            <Icon className="w-full h-full text-white transition-all duration-500 group-hover:scale-110" />
+                            <Image
+                              src={WisdomeHouseLogo}
+                              alt="WisdomHouse Logo"
+                              width={32}
+                              height={32}
+                              className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-500 rounded-full"
+                            />
                           </div>
                         </div>
                       </div>
@@ -276,10 +262,6 @@ export default function JoinWisdomHouse() {
                 className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
               >
                 {departments.map(dept => {
-                  const Icon =
-                    departmentIcons[
-                      dept.title as keyof typeof departmentIcons
-                    ] || Users;
                   const gradient =
                     departmentColors[
                       dept.title as keyof typeof departmentColors
@@ -292,12 +274,18 @@ export default function JoinWisdomHouse() {
                     >
                       {/* Mobile Card - More Compact */}
                       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-white/20 relative overflow-hidden flex flex-col h-full">
-                        {/* Centered Icon */}
+                        {/* Centered WisdomHouse Logo - ROUND SHAPE & FIXED SOURCE */}
                         <div className="flex justify-center mb-3">
                           <div
-                            className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} p-3 shadow-xl flex items-center justify-center`}
+                            className={`relative w-14 h-14 rounded-full bg-gradient-to-br ${gradient} p-2 shadow-xl flex items-center justify-center`}
                           >
-                            <Icon className="w-full h-full text-white" />
+                            <Image
+                              src={WisdomeHouseLogo} // FIXED: Using the imported variable
+                              alt="WisdomHouse Logo"
+                              width={28}
+                              height={28}
+                              className="w-full h-full object-contain rounded-full"
+                            />
                           </div>
                         </div>
 
