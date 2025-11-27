@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// components/ui/Homepage/Herosection.tsx
 'use client';
 
-import { H1, H2, BodyXL } from '@/components/text'; // Fixed imports
+import { H1, H2, BodyXL } from '@/components/text';
 import { Button } from '@/components/utils';
 import { ChevronDown } from 'lucide-react';
 import { useHeroSection } from '@/components/utils/hooks/useHeroSection';
@@ -50,7 +50,6 @@ const HeroSection = ({
     subtitleRef,
     descriptionRef,
     buttonsRef,
-    indicatorsRef,
     scrollIndicatorRef,
     colorScheme,
     scrollToNextSection,
@@ -100,16 +99,19 @@ const HeroSection = ({
                 className="w-full h-full object-cover"
               />
 
-              {/* Stronger overlay in light mode for white text visibility */}
+              {/* Enhanced gradient overlay for better text readability */}
               <div
                 className="absolute inset-0"
                 style={{
                   background: isDarkMode
-                    ? 'linear-gradient(to bottom right, rgba(0,0,0,0.5), rgba(0,0,0,0.8))'
-                    : 'linear-gradient(to bottom right, rgba(0,0,0,0.75), rgba(0,0,0,0.95))',
+                    ? 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%)'
+                    : 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%)',
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+              {/* Strong vertical gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              {/* Additional center gradient for focus */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
             </div>
           </div>
         ))
@@ -121,15 +123,19 @@ const HeroSection = ({
               alt={title}
               className="w-full h-full object-cover"
             />
+            {/* Enhanced gradient overlay for better text readability */}
             <div
               className="absolute inset-0"
               style={{
                 background: isDarkMode
-                  ? 'linear-gradient(to bottom right, rgba(0,0,0,0.5), rgba(0,0,0,0.8))'
-                  : 'linear-gradient(to bottom right, rgba(0,0,0,0.75), rgba(0,0,0,0.95))',
+                  ? 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%)'
+                  : 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%)',
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+            {/* Strong vertical gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+            {/* Additional center gradient for focus */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
           </div>
         </div>
       )}

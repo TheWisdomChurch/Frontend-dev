@@ -1,4 +1,12 @@
-import { Church } from 'lucide-react';
+import {
+  Church,
+  Video,
+  Radio,
+  Calendar,
+  ShoppingBag,
+  BookOpen,
+  Heart,
+} from 'lucide-react';
 import {
   NavLink,
   ExtendedNavLink,
@@ -82,20 +90,20 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     label: 'Ministries',
     href: '/ministries',
     icon: 'Users',
-    dropdown: [
-      { label: 'Children Ministry', href: '/ministries/children' },
-      { label: 'Youth Ministry', href: '/ministries/youth' },
-      { label: 'Women Ministry', href: '/ministries/women' },
-      { label: 'Men Ministry', href: '/ministries/men' },
-      { label: 'Outreach', href: '/ministries/outreach' },
-    ],
+    // dropdown: [
+    //   { label: 'Children Ministry', href: '/ministries/children' },
+    //   { label: 'Youth Ministry', href: '/ministries/youth' },
+    //   { label: 'Women Ministry', href: '/ministries/women' },
+    //   { label: 'Men Ministry', href: '/ministries/men' },
+    //   { label: 'Outreach', href: '/ministries/outreach' },
+    // ],
   },
   {
     label: 'Events',
     href: '/events',
     icon: 'Calendar',
     dropdown: [
-      { label: 'Upcoming Events', href: '/events/upcoming' },
+      // { label: 'Upcoming Events', href: '/events/upcoming' },
       // { label: 'Weekly Services', href: '/events/weekly' },
       // { label: 'Special Events', href: '/events/special' },
     ],
@@ -631,3 +639,106 @@ Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wis
 // dedication, lives are forever changed, and a
 // legacy of faith, hope, and impact is being
 // etched into eternity.
+export const Ministries = [
+  {
+    title: "Children's Ministry",
+    subtitle: 'Nurturing Young Hearts in Faith',
+    description:
+      "Where kids discover God's love through fun, stories, and truth.",
+    path: '/ministries/children',
+  },
+  {
+    title: 'Youth Ministry',
+    subtitle: 'Igniting the Next Generation',
+    description:
+      'A place for teens to belong, believe, and become who God made them to be.',
+    path: '/ministries/youth',
+  },
+  {
+    title: "Women's Ministry",
+    subtitle: 'Growing Together in Grace',
+    description: 'Women supporting women — in prayer, study, and sisterhood.',
+    path: '/ministries/women',
+  },
+  {
+    title: "Men's Ministry",
+    subtitle: 'Iron Sharpens Iron',
+    description:
+      'Building godly men who lead, serve, and stand strong in faith.',
+    path: '/ministries/men',
+  },
+  {
+    title: 'Outreach Ministry',
+    subtitle: 'Hands Extended, Hearts Transformed',
+    description: "Taking God's love beyond walls — locally and globally.",
+    path: '/ministries/outreach',
+  },
+];
+
+// Define the missing type for resource links
+
+export const resourceLinks = [
+  {
+    title: 'Sermons & Teachings',
+    subtitle: 'Messages that transform lives',
+    description: 'Watch, listen, and grow through powerful biblical teaching',
+    path: '/resources/sermons',
+    icon: Video,
+    gradient: 'from-yellow-400/20 to-amber-600/10',
+    glow: 'rgba(251, 191, 36, 0.4)',
+    actionText: 'Listen Now →',
+  },
+  {
+    title: 'Live Services',
+    subtitle: 'Join us in real-time',
+    description:
+      'Stream Sunday services, prayer meetings, and special events live',
+    path: '#',
+    icon: Radio,
+    gradient: 'from-amber-500/20 to-orange-600/10',
+    glow: 'rgba(251, 146, 60, 0.5)',
+    isLiveService: true,
+    actionText: 'Get Notified →',
+  },
+  {
+    title: 'Events & Programs',
+    subtitle: 'Be part of something greater',
+    description:
+      'Conferences, revivals, outreaches, and life-changing gatherings',
+    path: '/events',
+    icon: Calendar,
+    gradient: 'from-orange-500/20 to-red-600/10',
+    glow: 'rgba(239, 68, 68, 0.4)',
+    actionText: 'Join Events →',
+  },
+  {
+    title: 'Wisdom House Store',
+    subtitle: 'Wear your faith',
+    description: 'Merchandise that carries a message of hope and identity',
+    path: '/resources/store',
+    icon: ShoppingBag,
+    gradient: 'from-red-500/20 to-pink-600/10',
+    glow: 'rgba(236, 72, 153, 0.4)',
+    actionText: 'Shop Now →',
+  },
+  {
+    title: 'Publications',
+    subtitle: 'Resources for spiritual growth',
+    description: 'Devotionals, study guides, prayer journals, and more',
+    path: '/resources/publications',
+    icon: BookOpen,
+    gradient: 'from-pink-500/20 to-purple-600/10',
+    glow: 'rgba(168, 85, 247, 0.4)',
+    actionText: 'Read More →',
+  },
+  {
+    title: 'Pastoral Care',
+    subtitle: "We're here for life's moments",
+    description: 'Weddings, dedications, counseling, and sacred celebrations',
+    path: '/pastoral',
+    icon: Heart,
+    gradient: 'from-purple-500/20 to-indigo-600/10',
+    glow: 'rgba(99, 102, 241, 0.4)',
+    actionText: 'Get Support →',
+  },
+];
