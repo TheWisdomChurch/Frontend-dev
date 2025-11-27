@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // components/modals/ReminderModal.tsx
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { gsap } from 'gsap';
 import { ReminderFormData } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2 } from 'lucide-react';
@@ -26,6 +31,9 @@ export const ReminderModal = ({
   onClose,
 }: ReminderModalProps) => {
   const { colorScheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Theme-based styles - Always dark theme
   const modalBackground = colorScheme.black;
@@ -37,26 +45,114 @@ export const ReminderModal = ({
   const borderColor = colorScheme.primary;
   const inputBorderColor = colorScheme.border;
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (modalRef.current) {
+      document.body.style.overflow = 'hidden';
+
+      const tl = gsap.timeline();
+
+      if (isMobile) {
+        tl.fromTo(
+          modalRef.current,
+          { y: '100%', opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+        );
+      } else {
+        tl.fromTo(
+          modalRef.current,
+          { opacity: 0, scale: 0.95, y: 30 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+        );
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobile]);
+
+  const handleClose = () => {
+    if (modalRef.current) {
+      if (isMobile) {
+        gsap.to(modalRef.current, {
+          y: '100%',
+          opacity: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      } else {
+        gsap.to(modalRef.current, {
+          opacity: 0,
+          scale: 0.95,
+          y: 30,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      }
+    } else {
+      onClose();
+    }
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
+  };
+
+  if (!mounted) return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: colorScheme.backdrop }}
-      onClick={e => e.target === e.currentTarget && onClose()}
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+        isMobile ? 'pb-0' : ''
+      }`}
+      onClick={handleBackdropClick}
     >
       <div
-        className="relative rounded-3xl w-full max-w-md border shadow-2xl"
+        ref={modalRef}
+        className={`
+          w-full mx-auto overflow-hidden border shadow-2xl
+          ${
+            isMobile
+              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
+              : 'rounded-3xl max-w-md max-h-[90vh]'
+          }
+        `}
         style={{
           backgroundColor: modalBackground,
           borderColor: borderColor,
         }}
         onClick={e => e.stopPropagation()}
       >
+        {/* Mobile Drag Handle */}
+        {isMobile && (
+          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+            <div
+              className="w-12 h-1 rounded-full"
+              style={{ backgroundColor: colorScheme.primary }}
+            />
+          </div>
+        )}
+
         {/* Close Button */}
         <Button
           variant="ghost"
           size="icon"
-          onClick={onClose}
-          className="absolute top-4 right-4 z-50 rounded-full p-2 transform hover:scale-110 transition-all duration-200"
+          onClick={handleClose}
+          className={`absolute rounded-full transform hover:scale-110 transition-all duration-200 ${
+            isMobile ? 'top-2 right-2 p-1.5' : 'top-3 right-3 p-2'
+          }`}
           style={{
             backgroundColor: colorScheme.opacity.primary10,
             color: textColor,
@@ -70,27 +166,36 @@ export const ReminderModal = ({
               colorScheme.opacity.primary10;
           }}
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </Button>
 
-        <div className="p-8">
+        <div
+          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
+        >
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className={`text-center ${isMobile ? 'mb-6' : 'mb-8'}`}>
             <div
-              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-4"
+              className={`rounded-full flex items-center justify-center mx-auto border-4 ${
+                isMobile ? 'w-16 h-16 mb-3' : 'w-20 h-20 mb-4'
+              }`}
               style={{
                 backgroundColor: `${colorScheme.primary}20`,
                 borderColor: colorScheme.primary,
               }}
             >
-              <span className="text-2xl" style={{ color: colorScheme.primary }}>
+              <span
+                className={isMobile ? 'text-xl' : 'text-2xl'}
+                style={{ color: colorScheme.primary }}
+              >
                 ⏰
               </span>
             </div>
 
             <BaseText
               weight="black"
-              className="text-2xl lg:text-3xl mb-4 tracking-tight"
+              className={`mb-2 tracking-tight ${
+                isMobile ? 'text-xl' : 'text-2xl lg:text-3xl'
+              }`}
               style={{ color: textColor }}
               useThemeColor={false}
             >
@@ -98,7 +203,7 @@ export const ReminderModal = ({
             </BaseText>
 
             <BodyMD
-              className="opacity-90 leading-relaxed"
+              className="opacity-90 leading-relaxed text-sm"
               style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
@@ -109,11 +214,11 @@ export const ReminderModal = ({
             </BodyMD>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-4">
             {/* Email Input */}
             <div>
               <SemiBoldText
-                className="block text-sm mb-2"
+                className="block mb-2 text-sm"
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
@@ -124,7 +229,7 @@ export const ReminderModal = ({
                 name="email"
                 value={formData.email}
                 onChange={onInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                 style={{
                   borderColor: formErrors.email
                     ? colorScheme.error
@@ -136,7 +241,7 @@ export const ReminderModal = ({
               />
               {formErrors.email && (
                 <BodySM
-                  className="mt-1"
+                  className="mt-1 text-xs"
                   style={{ color: colorScheme.error }}
                   useThemeColor={false}
                 >
@@ -148,7 +253,7 @@ export const ReminderModal = ({
             {/* Frequency Select */}
             <div>
               <SemiBoldText
-                className="block text-sm mb-2"
+                className="block mb-2 text-sm"
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
@@ -158,7 +263,7 @@ export const ReminderModal = ({
                 name="frequency"
                 value={formData.frequency}
                 onChange={onInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                 style={{
                   borderColor: inputBorderColor,
                   backgroundColor: surfaceBackground,
@@ -174,7 +279,7 @@ export const ReminderModal = ({
             {/* Event Type Select */}
             <div>
               <SemiBoldText
-                className="block text-sm mb-2"
+                className="block mb-2 text-sm"
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
@@ -184,7 +289,7 @@ export const ReminderModal = ({
                 name="eventType"
                 value={formData.eventType}
                 onChange={onInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                 style={{
                   borderColor: inputBorderColor,
                   backgroundColor: surfaceBackground,
@@ -198,7 +303,7 @@ export const ReminderModal = ({
 
             {/* Information Section */}
             <div
-              className="rounded-xl p-4 border"
+              className="rounded-xl p-3 border text-sm"
               style={{
                 backgroundColor: colorScheme.opacity.primary10,
                 borderColor: colorScheme.opacity.primary20,
@@ -228,7 +333,9 @@ export const ReminderModal = ({
             <Button
               type="submit"
               disabled={isSettingReminder}
-              className="w-full py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100"
+              className={`w-full rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
+                isMobile ? 'py-3 text-base' : 'py-4 text-lg'
+              }`}
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
@@ -255,6 +362,7 @@ export const ReminderModal = ({
                 </span>
               ) : (
                 <SemiBoldText
+                  className={isMobile ? 'text-base' : 'text-lg'}
                   style={{ color: buttonTextColor }}
                   useThemeColor={false}
                 >
@@ -265,6 +373,7 @@ export const ReminderModal = ({
           </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -244,7 +244,7 @@ export default function OnlineGiving() {
                           variant="primary"
                           size="md"
                           curvature="xl"
-                          className="w-full py-3 font-semibold text-sm"
+                          className="w-full py-3 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-white/20 backdrop-blur-sm"
                           style={{
                             background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                             color: '#000000',

@@ -42,6 +42,7 @@ type TextVariant =
   | 'body-lg'
   | 'body-md'
   | 'body-sm'
+  | 'body-responsive'
   | 'body-xs'
   | 'caption'
   | 'elegant-xl'
@@ -200,6 +201,12 @@ const variantMap: Record<
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
     lineHeight: '1.5',
+  },
+  'body-responsive': {
+    fontSize: { base: 'sm', sm: 'base', md: 'base', lg: 'lg' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
+    fontFamily: 'worksans',
+    lineHeight: '1.6',
   },
   'body-xs': {
     fontSize: { base: 'xs', sm: 'xs', md: 'sm', lg: 'sm' },

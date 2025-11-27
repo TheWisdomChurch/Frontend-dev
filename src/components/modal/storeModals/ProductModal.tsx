@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// components/modals/ProductModal.tsx
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { gsap } from 'gsap';
 import Image from 'next/image';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
-import { gsap } from 'gsap';
 import { useAppDispatch } from '@/components/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Product } from '@/lib/types';
@@ -18,7 +21,6 @@ import {
 } from '@/components/text';
 import { FlexboxLayout } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { useEffect, useRef, useState } from 'react';
 
 interface ProductModalProps {
   product: Product | null;
@@ -33,21 +35,29 @@ const ProductModal: React.FC<ProductModalProps> = ({
 }) => {
   const { colorScheme } = useTheme();
   const dispatch = useAppDispatch();
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
 
-  // Theme-based styles - Always dark theme
   const modalBackground = colorScheme.black;
   const textColor = colorScheme.primary;
   const subtitleTextColor = colorScheme.white;
   const buttonBackground = colorScheme.primary;
   const buttonTextColor = colorScheme.black;
-  // const surfaceBackground = colorScheme.surface;
   const borderColor = colorScheme.primary;
   const inputBorderColor = colorScheme.border;
+
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (product) {
@@ -57,15 +67,74 @@ const ProductModal: React.FC<ProductModalProps> = ({
     }
   }, [product]);
 
+  // FULL SCROLL LOCK
   useEffect(() => {
-    if (modalRef.current && isOpen && product) {
-      gsap.fromTo(
-        modalRef.current,
-        { opacity: 0, scale: 0.85, y: 100 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.7)' }
-      );
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.touchAction = 'none';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'auto';
+      document.body.style.touchAction = 'auto';
     }
-  }, [isOpen, product]);
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'auto';
+      document.body.style.touchAction = 'auto';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && modalRef.current && product) {
+      const tl = gsap.timeline();
+      if (isMobile) {
+        tl.fromTo(
+          modalRef.current,
+          { y: '100%', opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+        );
+      } else {
+        tl.fromTo(
+          modalRef.current,
+          { opacity: 0, scale: 0.85, y: 100 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.7)' }
+        );
+      }
+    }
+  }, [isOpen, isMobile, product]);
+
+  const handleClose = () => {
+    if (modalRef.current) {
+      if (isMobile) {
+        gsap.to(modalRef.current, {
+          y: '100%',
+          opacity: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      } else {
+        gsap.to(modalRef.current, {
+          opacity: 0,
+          scale: 0.85,
+          y: 100,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      }
+    } else {
+      onClose();
+    }
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) handleClose();
+  };
 
   const handleAddToCart = () => {
     if (!product || !selectedSize || !selectedColor) return;
@@ -80,31 +149,39 @@ const ProductModal: React.FC<ProductModalProps> = ({
         quantity,
       })
     );
-    onClose();
+    handleClose();
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose();
-  };
+  if (!mounted || !isOpen || !product) return null;
 
-  if (!isOpen || !product) return null;
-
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={handleOverlayClick}
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${isMobile ? 'pb-0' : ''}`}
+      onClick={handleBackdropClick}
     >
       <div
         ref={modalRef}
-        className="rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border"
-        style={{
-          backgroundColor: modalBackground,
-          borderColor: borderColor,
-        }}
+        className={`
+          w-full mx-auto overflow-hidden border shadow-2xl
+          ${isMobile ? 'rounded-t-3xl rounded-b-none max-h-[92vh]' : 'rounded-3xl max-w-5xl max-h-[92vh]'}
+        `}
+        style={{ backgroundColor: modalBackground, borderColor: borderColor }}
       >
+        {/* Mobile Drag Handle */}
+        {isMobile && (
+          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+            <div
+              className="w-12 h-1 rounded-full"
+              style={{ backgroundColor: colorScheme.primary }}
+            />
+          </div>
+        )}
+
         <div className="flex flex-col lg:flex-row h-full">
-          {/* Product Image */}
-          <div className="relative lg:w-1/2 h-64 lg:h-full overflow-hidden">
+          {/* Product Image — Reduced height on mobile */}
+          <div
+            className={`relative lg:w-1/2 ${isMobile ? 'h-48' : 'h-64 lg:h-full'} overflow-hidden`}
+          >
             <Image
               src={product.image}
               alt={product.name}
@@ -115,39 +192,54 @@ const ProductModal: React.FC<ProductModalProps> = ({
             <div className="absolute inset-0 bg-black/60" />
 
             <button
-              onClick={onClose}
-              className="absolute top-4 right-4 z-20 rounded-full p-3 transition-all"
-              style={{
-                backgroundColor: colorScheme.opacity.primary10,
-              }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary20;
-              }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary10;
-              }}
+              onClick={handleClose}
+              className={`absolute z-20 rounded-full transition-all ${isMobile ? 'top-2 right-2 p-2' : 'top-4 right-4 p-3'}`}
+              style={{ backgroundColor: colorScheme.opacity.primary10 }}
+              onMouseEnter={(e: any) =>
+                (e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary20)
+              }
+              onMouseLeave={(e: any) =>
+                (e.currentTarget.style.backgroundColor =
+                  colorScheme.opacity.primary10)
+              }
             >
-              <X className="w-6 h-6" style={{ color: textColor }} />
+              <X
+                className={isMobile ? 'w-5 h-5' : 'w-6 h-6'}
+                style={{ color: textColor }}
+              />
             </button>
           </div>
 
-          {/* Product Details */}
-          <div className="lg:w-1/2 p-6 lg:p-10 overflow-y-auto">
-            <div className="space-y-8">
+          {/* Product Details — FIXED HEIGHT & SCROLL */}
+          <div
+            className={`lg:w-1/2 overflow-y-auto scrollbar-hide ${isMobile ? 'p-5 pb-8' : 'p-6 lg:p-10'} ${isMobile ? 'max-h-[calc(92vh-14rem)]' : 'max-h-[calc(92vh-80px)]'}`}
+            style={
+              {
+                msOverflowStyle: 'none',
+                scrollbarWidth: 'none',
+              } as React.CSSProperties
+            }
+          >
+            <style jsx>{`
+              .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+
+            <div className="space-y-6">
               <div>
                 <BaseText
                   fontFamily="bricolage"
                   weight="bold"
-                  className="text-3xl lg:text-4xl"
+                  className={isMobile ? 'text-2xl' : 'text-3xl lg:text-4xl'}
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   {product.name}
                 </BaseText>
                 <BodyLG
-                  className="mt-3 leading-relaxed"
+                  className="mt-2 leading-relaxed text-sm"
                   style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
@@ -157,7 +249,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               <FlexboxLayout align="center" gap="md">
                 <SemiBoldText
-                  className="text-4xl"
+                  className={isMobile ? 'text-3xl' : 'text-4xl'}
                   style={{ color: colorScheme.primary }}
                   useThemeColor={false}
                 >
@@ -165,7 +257,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 </SemiBoldText>
                 {product.originalPrice && (
                   <LightText
-                    className="text-2xl line-through"
+                    className={
+                      isMobile
+                        ? 'text-xl line-through'
+                        : 'text-2xl line-through'
+                    }
                     style={{ color: subtitleTextColor }}
                     useThemeColor={false}
                   >
@@ -178,7 +274,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
               <div>
                 <BodyLG
                   weight="semibold"
-                  className="mb-4"
+                  className={`mb-3 ${isMobile ? 'text-base' : 'text-lg'}`}
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -189,10 +285,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-6 py-3 rounded-xl border-2 transition-all ${
+                      className={`rounded-xl border-2 transition-all ${isMobile ? 'px-4 py-2 text-sm' : 'px-6 py-3'} ${
                         selectedSize === size
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
-                          : `border-gray-600 hover:border-yellow-500/50 text-gray-300`
+                          : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
                       }`}
                       style={{
                         borderColor:
@@ -205,7 +301,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             : subtitleTextColor,
                       }}
                     >
-                      <BodyMD weight="medium" useThemeColor={false}>
+                      <BodyMD
+                        weight="medium"
+                        className={isMobile ? 'text-sm' : 'text-base'}
+                        useThemeColor={false}
+                      >
                         {size}
                       </BodyMD>
                     </button>
@@ -217,7 +317,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
               <div>
                 <BodyLG
                   weight="semibold"
-                  className="mb-4"
+                  className={`mb-3 ${isMobile ? 'text-base' : 'text-lg'}`}
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -228,10 +328,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
-                      className={`px-6 py-3 rounded-xl border-2 transition-all ${
+                      className={`rounded-xl border-2 transition-all ${isMobile ? 'px-4 py-2 text-sm' : 'px-6 py-3'} ${
                         selectedColor === color
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
-                          : `border-gray-600 hover:border-yellow-500/50 text-gray-300`
+                          : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
                       }`}
                       style={{
                         borderColor:
@@ -244,7 +344,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             : subtitleTextColor,
                       }}
                     >
-                      <BodyMD weight="medium" useThemeColor={false}>
+                      <BodyMD
+                        weight="medium"
+                        className={isMobile ? 'text-sm' : 'text-base'}
+                        useThemeColor={false}
+                      >
                         {color}
                       </BodyMD>
                     </button>
@@ -256,7 +360,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
               <div>
                 <BodyLG
                   weight="semibold"
-                  className="mb-4"
+                  className={`mb-3 ${isMobile ? 'text-base' : 'text-lg'}`}
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -265,16 +369,16 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 <FlexboxLayout align="center" gap="lg">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all hover:scale-110"
+                    className={`rounded-full border-2 flex items-center justify-center transition-all hover:scale-110 ${isMobile ? 'w-10 h-10' : 'w-12 h-12'}`}
                     style={{ borderColor: inputBorderColor }}
                   >
                     <Minus
-                      className="w-5 h-5"
+                      className={isMobile ? 'w-4 h-4' : 'w-5 h-5'}
                       style={{ color: subtitleTextColor }}
                     />
                   </button>
                   <SemiBoldText
-                    className="text-2xl w-16 text-center"
+                    className={`text-center ${isMobile ? 'text-xl w-12' : 'text-2xl w-16'}`}
                     style={{ color: textColor }}
                     useThemeColor={false}
                   >
@@ -282,15 +386,16 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   </SemiBoldText>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all hover:scale-110"
+                    className={`rounded-full border-2 flex items-center justify-center transition-all hover:scale-110 ${isMobile ? 'w-10 h-10' : 'w-12 h-12'}`}
                     style={{ borderColor: inputBorderColor }}
                   >
                     <Plus
-                      className="w-5 h-5"
+                      className={isMobile ? 'w-4 h-4' : 'w-5 h-5'}
                       style={{ color: subtitleTextColor }}
                     />
                   </button>
                   <BodySM
+                    className="text-sm"
                     style={{ color: subtitleTextColor }}
                     useThemeColor={false}
                   >
@@ -299,41 +404,46 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 </FlexboxLayout>
               </div>
 
-              {/* Add to Cart */}
-              <Button
-                variant="primary"
-                size="lg"
-                curvature="full"
-                elevated={true}
-                leftIcon={<ShoppingBag className="w-6 h-6" />}
-                onClick={handleAddToCart}
-                disabled={!selectedSize || !selectedColor}
-                className="w-full py-5 font-bold transition-all hover:scale-105 shadow-2xl"
-                style={{
-                  backgroundColor: buttonBackground,
-                  color: buttonTextColor,
-                }}
-                onMouseEnter={(e: any) => {
-                  e.currentTarget.style.backgroundColor =
-                    colorScheme.primaryLight;
-                }}
-                onMouseLeave={(e: any) => {
-                  e.currentTarget.style.backgroundColor = buttonBackground;
-                }}
-              >
-                <SemiBoldText
-                  className="text-lg"
-                  style={{ color: buttonTextColor }}
-                  useThemeColor={false}
+              {/* Add to Cart — Always visible */}
+              <div className="pt-4">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  curvature="full"
+                  elevated={true}
+                  leftIcon={
+                    <ShoppingBag className={isMobile ? 'w-5 h-5' : 'w-6 h-6'} />
+                  }
+                  onClick={handleAddToCart}
+                  disabled={!selectedSize || !selectedColor}
+                  className={`w-full font-bold transition-all hover:scale-105 shadow-2xl ${isMobile ? 'py-3.5 text-base' : 'py-5 text-lg'}`}
+                  style={{
+                    backgroundColor: buttonBackground,
+                    color: buttonTextColor,
+                  }}
+                  onMouseEnter={(e: any) =>
+                    (e.currentTarget.style.backgroundColor =
+                      colorScheme.primaryLight)
+                  }
+                  onMouseLeave={(e: any) =>
+                    (e.currentTarget.style.backgroundColor = buttonBackground)
+                  }
                 >
-                  Add to Cart • {product.price}
-                </SemiBoldText>
-              </Button>
+                  <SemiBoldText
+                    className={isMobile ? 'text-base' : 'text-lg'}
+                    style={{ color: buttonTextColor }}
+                    useThemeColor={false}
+                  >
+                    Add to Cart • {product.price}
+                  </SemiBoldText>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

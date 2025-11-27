@@ -619,7 +619,9 @@ Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wis
     genuine relationships, and Spirit-led worship, Our Senior Pastor guides our church family toward a deeper relationship with Christ.
     `,
   ],
-  buttonText: 'Learn More About Our Pastor',
+  buttonText: 'Connect with our Pastor',
+  instagramUrl:
+    'https://www.instagram.com/gabrielayilara?igsh=MXZpMHhnNGloMnViZw==',
 };
 
 //If Needed
