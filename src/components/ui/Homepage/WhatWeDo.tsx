@@ -3,7 +3,7 @@
 import { whatWeDoData, missionStatement } from '@/lib/data';
 import { ServiceBox } from '@/lib/types';
 import Image from 'next/image';
-import { H2, BodyLG, BodyMD } from '@/components/text';
+import { H2, BodyMD, BodySM } from '@/components/text';
 import { useWhatWeDo } from '@/components/utils/hooks/useWhatwedo';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import {
@@ -119,7 +119,7 @@ export default function WhatWeDo() {
           {whatWeDoData.map((box, index) => renderBox(box, index))}
         </GridboxLayout>
 
-        {/* Mission Statement */}
+        {/* Mission Statement - Fixed Structure */}
         <FlexboxLayout
           ref={textRef}
           direction="column"
@@ -127,14 +127,14 @@ export default function WhatWeDo() {
           align="center"
           className="text-center pt-4 sm:pt-6 lg:pt-8 pb-8 sm:pb-10 lg:pb-12"
         >
-          <div className="max-w-4xl mx-auto">
-            <BodyLG
-              className="leading-relaxed sm:leading-loose font-light px-4 sm:px-6 lg:px-0"
+          <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <BodySM
+              className="text-xs sm:text-sm md:text-base leading-relaxed font-normal text-left"
               style={{ color: accentTextColor }}
               useThemeColor={false}
             >
               {missionStatement}
-            </BodyLG>
+            </BodySM>
           </div>
         </FlexboxLayout>
       </Container>
