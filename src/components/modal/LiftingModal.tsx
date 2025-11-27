@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // components/modals/LiftingModal.tsx
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { gsap } from 'gsap';
 import { RegistrationFormData } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2 } from 'lucide-react';
@@ -25,6 +30,9 @@ export const LiftingModal = ({
   onClose,
 }: LiftingModalProps) => {
   const { colorScheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Theme-based styles - Always dark theme
   const modalBackground = colorScheme.black;
@@ -36,31 +44,123 @@ export const LiftingModal = ({
   const borderColor = colorScheme.primary;
   const inputBorderColor = colorScheme.border;
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (modalRef.current) {
+      document.body.style.overflow = 'hidden';
+
+      const tl = gsap.timeline();
+
+      if (isMobile) {
+        tl.fromTo(
+          modalRef.current,
+          { y: '100%', opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+        );
+      } else {
+        tl.fromTo(
+          modalRef.current,
+          { opacity: 0, scale: 0.95, y: 30 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+        );
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobile]);
+
+  const handleClose = () => {
+    if (modalRef.current) {
+      if (isMobile) {
+        gsap.to(modalRef.current, {
+          y: '100%',
+          opacity: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      } else {
+        gsap.to(modalRef.current, {
+          opacity: 0,
+          scale: 0.95,
+          y: 30,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      }
+    } else {
+      onClose();
+    }
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
+  };
+
+  if (!mounted) return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={onClose}
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+        isMobile ? 'pb-0' : ''
+      }`}
+      onClick={handleBackdropClick}
     >
       <div
-        className="rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border"
+        ref={modalRef}
+        className={`
+          w-full mx-auto overflow-hidden border shadow-2xl
+          ${
+            isMobile
+              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
+              : 'rounded-3xl max-w-2xl max-h-[90vh]'
+          }
+        `}
         style={{
           backgroundColor: modalBackground,
           borderColor: borderColor,
         }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-6 lg:p-8">
+        {/* Mobile Drag Handle */}
+        {isMobile && (
+          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+            <div
+              className="w-12 h-1 rounded-full"
+              style={{ backgroundColor: colorScheme.primary }}
+            />
+          </div>
+        )}
+
+        <div
+          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
+        >
           <div className="flex justify-between items-start mb-6">
             <div>
               <BaseText
                 weight="black"
-                className="text-2xl lg:text-3xl mb-2"
+                className={`mb-2 tracking-tight ${
+                  isMobile ? 'text-xl' : 'text-2xl lg:text-3xl'
+                }`}
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
                 Register for 7 Nights of Lifting
               </BaseText>
               <BodyMD
+                className="text-sm"
                 style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
@@ -68,8 +168,10 @@ export const LiftingModal = ({
               </BodyMD>
             </div>
             <button
-              onClick={onClose}
-              className="p-2 rounded-xl transition-colors duration-300 flex-shrink-0"
+              onClick={handleClose}
+              className={`rounded-xl transition-colors duration-300 flex-shrink-0 ${
+                isMobile ? 'p-1.5' : 'p-2'
+              }`}
               style={{
                 color: textColor,
                 backgroundColor: colorScheme.opacity.primary10,
@@ -83,15 +185,15 @@ export const LiftingModal = ({
                   colorScheme.opacity.primary10;
               }}
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <SemiBoldText
-                  className="block mb-2"
+                  className="block mb-2 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -102,7 +204,7 @@ export const LiftingModal = ({
                   name="firstName"
                   value={formData.firstName}
                   onChange={onInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                   style={{
                     borderColor: formErrors.firstName
                       ? colorScheme.error
@@ -114,7 +216,7 @@ export const LiftingModal = ({
                 />
                 {formErrors.firstName && (
                   <BodySM
-                    className="mt-1"
+                    className="mt-1 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -125,7 +227,7 @@ export const LiftingModal = ({
 
               <div>
                 <SemiBoldText
-                  className="block mb-2"
+                  className="block mb-2 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -136,7 +238,7 @@ export const LiftingModal = ({
                   name="lastName"
                   value={formData.lastName}
                   onChange={onInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                   style={{
                     borderColor: formErrors.lastName
                       ? colorScheme.error
@@ -148,7 +250,7 @@ export const LiftingModal = ({
                 />
                 {formErrors.lastName && (
                   <BodySM
-                    className="mt-1"
+                    className="mt-1 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -158,10 +260,10 @@ export const LiftingModal = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <SemiBoldText
-                  className="block mb-2"
+                  className="block mb-2 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -172,7 +274,7 @@ export const LiftingModal = ({
                   name="email"
                   value={formData.email}
                   onChange={onInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                   style={{
                     borderColor: formErrors.email
                       ? colorScheme.error
@@ -184,7 +286,7 @@ export const LiftingModal = ({
                 />
                 {formErrors.email && (
                   <BodySM
-                    className="mt-1"
+                    className="mt-1 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -195,7 +297,7 @@ export const LiftingModal = ({
 
               <div>
                 <SemiBoldText
-                  className="block mb-2"
+                  className="block mb-2 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -206,7 +308,7 @@ export const LiftingModal = ({
                   name="phone"
                   value={formData.phone}
                   onChange={onInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                   style={{
                     borderColor: formErrors.phone
                       ? colorScheme.error
@@ -218,7 +320,7 @@ export const LiftingModal = ({
                 />
                 {formErrors.phone && (
                   <BodySM
-                    className="mt-1"
+                    className="mt-1 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -228,10 +330,10 @@ export const LiftingModal = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <SemiBoldText
-                  className="block mb-2"
+                  className="block mb-2 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -241,7 +343,7 @@ export const LiftingModal = ({
                   name="country"
                   value={formData.country}
                   onChange={onInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                   style={{
                     borderColor: formErrors.country
                       ? colorScheme.error
@@ -261,7 +363,7 @@ export const LiftingModal = ({
                 </select>
                 {formErrors.country && (
                   <BodySM
-                    className="mt-1"
+                    className="mt-1 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -272,7 +374,7 @@ export const LiftingModal = ({
 
               <div>
                 <SemiBoldText
-                  className="block mb-2"
+                  className="block mb-2 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -283,7 +385,7 @@ export const LiftingModal = ({
                   name="location"
                   value={formData.location}
                   onChange={onInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
                   style={{
                     borderColor: formErrors.location
                       ? colorScheme.error
@@ -295,7 +397,7 @@ export const LiftingModal = ({
                 />
                 {formErrors.location && (
                   <BodySM
-                    className="mt-1"
+                    className="mt-1 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -306,22 +408,18 @@ export const LiftingModal = ({
             </div>
 
             <div
-              className="rounded-xl p-4 border"
+              className="rounded-xl p-3 border text-sm"
               style={{
                 backgroundColor: colorScheme.opacity.primary10,
                 borderColor: colorScheme.opacity.primary20,
               }}
             >
               <BodySM
-                style={{
-                  color: colorScheme.primary,
-                }}
+                style={{ color: colorScheme.primary }}
                 useThemeColor={false}
               >
                 <SemiBoldText
-                  style={{
-                    color: colorScheme.primary,
-                  }}
+                  style={{ color: colorScheme.primary }}
                   useThemeColor={false}
                 >
                   Note:
@@ -334,7 +432,9 @@ export const LiftingModal = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 rounded-xl text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-lg"
+              className={`w-full rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
+                isMobile ? 'py-3 text-base' : 'py-4 text-lg'
+              }`}
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
@@ -359,6 +459,7 @@ export const LiftingModal = ({
                   />
                   <BaseText
                     weight="bold"
+                    className="text-sm"
                     style={{ color: buttonTextColor }}
                     useThemeColor={false}
                   >
@@ -367,6 +468,7 @@ export const LiftingModal = ({
                 </span>
               ) : (
                 <SemiBoldText
+                  className={isMobile ? 'text-base' : 'text-lg'}
                   style={{ color: buttonTextColor }}
                   useThemeColor={false}
                 >
@@ -377,6 +479,7 @@ export const LiftingModal = ({
           </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

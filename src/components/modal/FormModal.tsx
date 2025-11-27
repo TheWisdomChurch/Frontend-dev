@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // components/modals/FormModal.tsx
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -32,9 +35,11 @@ interface FormData {
 
 export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
   const { colorScheme } = useTheme();
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Theme-based styles - Always dark theme
   const modalBackground = colorScheme.black;
@@ -64,7 +69,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
     },
   });
 
-  // Set department when component mounts or department changes
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     setValue('department', department);
   }, [department, setValue]);
@@ -74,44 +86,59 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
       document.body.style.overflow = 'hidden';
 
       const tl = gsap.timeline();
-      tl.fromTo(
-        modalRef.current,
-        {
-          opacity: 0,
-          scale: 0.9,
-          y: 50,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-        }
-      );
+
+      if (isMobile) {
+        tl.fromTo(
+          modalRef.current,
+          { y: '100%', opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+        );
+      } else {
+        tl.fromTo(
+          modalRef.current,
+          { opacity: 0, scale: 0.95, y: 30 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+        );
+      }
     }
 
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen]);
+  }, [isOpen, isMobile]);
 
   const handleClose = () => {
     if (modalRef.current) {
-      gsap.to(modalRef.current, {
-        opacity: 0,
-        scale: 0.9,
-        y: 50,
-        duration: 0.4,
-        ease: 'power2.in',
-        onComplete: () => {
-          reset();
-          onClose();
-        },
-      });
+      if (isMobile) {
+        gsap.to(modalRef.current, {
+          y: '100%',
+          opacity: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: () => {
+            reset();
+            onClose();
+            setShowAgreement(false);
+          },
+        });
+      } else {
+        gsap.to(modalRef.current, {
+          opacity: 0,
+          scale: 0.95,
+          y: 30,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: () => {
+            reset();
+            onClose();
+            setShowAgreement(false);
+          },
+        });
+      }
     } else {
       reset();
       onClose();
+      setShowAgreement(false);
     }
   };
 
@@ -125,17 +152,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
     setIsSubmitting(true);
 
     try {
-      // Simulate form submission
       console.log('Form submitted:', data);
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Show success message
       toast.success('Application submitted successfully!', {
         description: `Your application for ${department} has been received.`,
         duration: 4000,
       });
 
-      // Show agreement information
       setShowAgreement(true);
     } catch (error) {
       console.error('Form submission error:', error);
@@ -156,7 +180,6 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
   const handleFinalSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // Final submission logic here
       const formData = watch();
       console.log('Final form submission:', formData);
 
@@ -186,25 +209,44 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
   const phonePattern = /^[+]?[0-9\s\-()]{10,}$/;
   const namePattern = /^[a-zA-Z\s]{2,50}$/;
 
-  if (!isOpen) return null;
+  if (!mounted || !isOpen) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+        isMobile ? 'pb-0' : ''
+      }`}
       onClick={handleBackdropClick}
     >
       <div
         ref={modalRef}
-        className="relative rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border shadow-2xl"
+        className={`
+          w-full mx-auto overflow-hidden border shadow-2xl
+          ${
+            isMobile
+              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
+              : 'rounded-3xl max-w-2xl max-h-[90vh]'
+          }
+        `}
         style={{
           backgroundColor: modalBackground,
           borderColor: borderColor,
         }}
         onClick={e => e.stopPropagation()}
       >
+        {/* Mobile Drag Handle */}
+        {isMobile && (
+          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+            <div
+              className="w-12 h-1 rounded-full"
+              style={{ backgroundColor: colorScheme.primary }}
+            />
+          </div>
+        )}
+
         {/* Header */}
         <div
-          className="sticky top-0 rounded-t-3xl p-6 z-10"
+          className={`sticky top-0 z-10 ${isMobile ? 'p-4' : 'p-6'}`}
           style={{
             backgroundColor: modalBackground,
             borderBottom: `1px solid ${borderColor}`,
@@ -214,14 +256,14 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
             <div>
               <BaseText
                 weight="bold"
-                className="text-2xl"
+                className={isMobile ? 'text-xl' : 'text-2xl'}
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
                 {showAgreement ? 'Membership Agreement' : `Join ${department}`}
               </BaseText>
               <BodyMD
-                className="mt-1"
+                className="mt-1 text-sm"
                 style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
@@ -232,7 +274,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
             </div>
             <button
               onClick={handleClose}
-              className="p-2 rounded-full transition-colors flex-shrink-0"
+              className={`rounded-full transition-colors flex-shrink-0 ${
+                isMobile ? 'p-1.5' : 'p-2'
+              }`}
               style={{
                 color: textColor,
                 backgroundColor: colorScheme.opacity.primary10,
@@ -246,612 +290,634 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   colorScheme.opacity.primary10;
               }}
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {!showAgreement ? (
-          /* Main Form */
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="p-6 lg:p-8 space-y-6"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-              <div>
-                <MediumText
-                  className="block mb-2"
-                  style={{ color: textColor }}
-                  useThemeColor={false}
-                >
-                  Full Name *
-                </MediumText>
-                <input
-                  type="text"
-                  id="fullName"
-                  {...register('fullName', {
-                    required: 'Full name is required',
-                    pattern: {
-                      value: namePattern,
-                      message:
-                        'Please enter a valid name (letters and spaces only)',
-                    },
-                    minLength: {
-                      value: 2,
-                      message: 'Name must be at least 2 characters long',
-                    },
-                  })}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
-                  style={{
-                    borderColor: errors.fullName
-                      ? colorScheme.error
-                      : inputBorderColor,
-                    backgroundColor: surfaceBackground,
-                    color: textColor,
-                  }}
-                  placeholder="Enter your full name"
-                />
-                {errors.fullName && (
-                  <BodySM
-                    className="mt-1 flex items-center gap-1"
-                    style={{ color: colorScheme.error }}
-                    useThemeColor={false}
-                  >
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.fullName.message}
-                  </BodySM>
-                )}
-              </div>
-
-              <div>
-                <MediumText
-                  className="block mb-2"
-                  style={{ color: textColor }}
-                  useThemeColor={false}
-                >
-                  Email Address *
-                </MediumText>
-                <input
-                  type="email"
-                  id="email"
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: {
-                      value: emailPattern,
-                      message: 'Please enter a valid email address',
-                    },
-                  })}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
-                  style={{
-                    borderColor: errors.email
-                      ? colorScheme.error
-                      : inputBorderColor,
-                    backgroundColor: surfaceBackground,
-                    color: textColor,
-                  }}
-                  placeholder="Enter your email"
-                />
-                {errors.email && (
-                  <BodySM
-                    className="mt-1 flex items-center gap-1"
-                    style={{ color: colorScheme.error }}
-                    useThemeColor={false}
-                  >
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.email.message}
-                  </BodySM>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-              <div>
-                <MediumText
-                  className="block mb-2"
-                  style={{ color: textColor }}
-                  useThemeColor={false}
-                >
-                  Phone Number *
-                </MediumText>
-                <input
-                  type="tel"
-                  id="phone"
-                  {...register('phone', {
-                    required: 'Phone number is required',
-                    pattern: {
-                      value: phonePattern,
-                      message: 'Please enter a valid phone number',
-                    },
-                    minLength: {
-                      value: 10,
-                      message: 'Phone number must be at least 10 digits',
-                    },
-                  })}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
-                  style={{
-                    borderColor: errors.phone
-                      ? colorScheme.error
-                      : inputBorderColor,
-                    backgroundColor: surfaceBackground,
-                    color: textColor,
-                  }}
-                  placeholder="Enter your phone number"
-                />
-                {errors.phone && (
-                  <BodySM
-                    className="mt-1 flex items-center gap-1"
-                    style={{ color: colorScheme.error }}
-                    useThemeColor={false}
-                  >
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.phone.message}
-                  </BodySM>
-                )}
-              </div>
-
-              <div>
-                <MediumText
-                  className="block mb-2"
-                  style={{ color: textColor }}
-                  useThemeColor={false}
-                >
-                  Current Occupation *
-                </MediumText>
-                <input
-                  type="text"
-                  id="occupation"
-                  {...register('occupation', {
-                    required: 'Occupation is required',
-                    minLength: {
-                      value: 2,
-                      message: 'Occupation must be at least 2 characters long',
-                    },
-                  })}
-                  className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200"
-                  style={{
-                    borderColor: errors.occupation
-                      ? colorScheme.error
-                      : inputBorderColor,
-                    backgroundColor: surfaceBackground,
-                    color: textColor,
-                  }}
-                  placeholder="e.g., Student, Engineer, Teacher, etc."
-                />
-                {errors.occupation && (
-                  <BodySM
-                    className="mt-1 flex items-center gap-1"
-                    style={{ color: colorScheme.error }}
-                    useThemeColor={false}
-                  >
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.occupation.message}
-                  </BodySM>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <MediumText
-                className="block mb-2"
-                style={{ color: textColor }}
-                useThemeColor={false}
-              >
-                Why do you want to join {department}? *
-              </MediumText>
-              <textarea
-                id="message"
-                rows={4}
-                {...register('message', {
-                  required:
-                    'Please tell us why you want to join this department',
-                  minLength: {
-                    value: 20,
-                    message:
-                      'Please provide more details (at least 20 characters)',
-                  },
-                  maxLength: {
-                    value: 500,
-                    message: 'Message is too long (maximum 500 characters)',
-                  },
-                })}
-                className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-200 resize-vertical"
-                style={{
-                  borderColor: errors.message
-                    ? colorScheme.error
-                    : inputBorderColor,
-                  backgroundColor: surfaceBackground,
-                  color: textColor,
-                }}
-                placeholder="Tell us about your interest, skills, and what you hope to contribute to our ministry..."
-              />
-              <div className="flex justify-between items-center mt-1">
-                {errors.message ? (
-                  <BodySM
-                    className="flex items-center gap-1"
-                    style={{ color: colorScheme.error }}
-                    useThemeColor={false}
-                  >
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.message.message}
-                  </BodySM>
-                ) : (
-                  <div></div>
-                )}
-                <LightText
-                  className={`text-xs ${
-                    watch('message')?.length > 450 ? 'text-orange-600' : ''
-                  }`}
-                  style={{
-                    color:
-                      watch('message')?.length > 450
-                        ? colorScheme.warning
-                        : subtitleTextColor,
-                  }}
-                  useThemeColor={false}
-                >
-                  {watch('message')?.length || 0}/500
-                </LightText>
-              </div>
-            </div>
-
-            {/* Agreement Notice */}
-            <div
-              className="rounded-xl p-4 border"
-              style={{
-                backgroundColor: colorScheme.opacity.primary10,
-                borderColor: colorScheme.opacity.primary20,
-              }}
-            >
-              <div className="flex items-start gap-3">
-                <div
-                  className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
-                  style={{
-                    backgroundColor: colorScheme.primary,
-                    color: colorScheme.black,
-                  }}
-                >
-                  <Check className="w-3 h-3" />
-                </div>
+        <div
+          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-120px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-140px)]'}`}
+        >
+          {!showAgreement ? (
+            /* Main Form */
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <MediumText
-                    style={{
-                      color: colorScheme.primary,
-                    }}
+                    className="block mb-2 text-sm"
+                    style={{ color: textColor }}
                     useThemeColor={false}
                   >
-                    By submitting this form, you agree to join our compulsory
-                    1-month membership class
+                    Full Name *
                   </MediumText>
-                  <BodySM
-                    className="mt-1"
+                  <input
+                    type="text"
+                    id="fullName"
+                    {...register('fullName', {
+                      required: 'Full name is required',
+                      pattern: {
+                        value: namePattern,
+                        message:
+                          'Please enter a valid name (letters and spaces only)',
+                      },
+                      minLength: {
+                        value: 2,
+                        message: 'Name must be at least 2 characters long',
+                      },
+                    })}
+                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
                     style={{
-                      color: colorScheme.primary,
+                      borderColor: errors.fullName
+                        ? colorScheme.error
+                        : inputBorderColor,
+                      backgroundColor: surfaceBackground,
+                      color: textColor,
                     }}
-                    useThemeColor={false}
-                  >
-                    This foundational training is required for all new members
-                    to understand our vision and values
-                  </BodySM>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1 py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
-                style={{
-                  backgroundColor: buttonBackground,
-                  color: buttonTextColor,
-                }}
-                onMouseEnter={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.primaryLight;
-                  }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = buttonBackground;
-                  }
-                }}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2
-                      className="animate-spin h-5 w-5"
-                      style={{ color: buttonTextColor }}
-                    />
-                    <MediumText
-                      style={{ color: buttonTextColor }}
+                    placeholder="Enter your full name"
+                  />
+                  {errors.fullName && (
+                    <BodySM
+                      className="mt-1 flex items-center gap-1 text-xs"
+                      style={{ color: colorScheme.error }}
                       useThemeColor={false}
                     >
-                      Processing...
-                    </MediumText>
-                  </span>
-                ) : (
-                  <SemiBoldText
-                    style={{ color: buttonTextColor }}
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.fullName.message}
+                    </BodySM>
+                  )}
+                </div>
+
+                <div>
+                  <MediumText
+                    className="block mb-2 text-sm"
+                    style={{ color: textColor }}
                     useThemeColor={false}
                   >
-                    Submit Application
-                  </SemiBoldText>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={handleClose}
-                disabled={isSubmitting}
-                className="flex-1 border py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  borderColor: borderColor,
-                  color: textColor,
-                  backgroundColor: modalBackground,
-                }}
-                onMouseEnter={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.opacity.primary10;
-                  }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = modalBackground;
-                  }
-                }}
-              >
-                <MediumText style={{ color: textColor }} useThemeColor={false}>
-                  Cancel
-                </MediumText>
-              </button>
-            </div>
-          </form>
-        ) : (
-          /* Agreement Information Section */
-          <div className="p-6 lg:p-8 space-y-6">
-            {/* Main Agreement Content */}
-            <div
-              className="border rounded-2xl p-6"
-              style={{
-                backgroundColor: surfaceBackground,
-                borderColor: borderColor,
-              }}
-            >
-              <div className="text-center mb-6">
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-                  style={{
-                    backgroundColor: colorScheme.opacity.primary10,
-                    color: colorScheme.primary,
-                  }}
-                >
-                  <Lock className="w-8 h-8" />
+                    Email Address *
+                  </MediumText>
+                  <input
+                    type="email"
+                    id="email"
+                    {...register('email', {
+                      required: 'Email is required',
+                      pattern: {
+                        value: emailPattern,
+                        message: 'Please enter a valid email address',
+                      },
+                    })}
+                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
+                    style={{
+                      borderColor: errors.email
+                        ? colorScheme.error
+                        : inputBorderColor,
+                      backgroundColor: surfaceBackground,
+                      color: textColor,
+                    }}
+                    placeholder="Enter your email"
+                  />
+                  {errors.email && (
+                    <BodySM
+                      className="mt-1 flex items-center gap-1 text-xs"
+                      style={{ color: colorScheme.error }}
+                      useThemeColor={false}
+                    >
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.email.message}
+                    </BodySM>
+                  )}
                 </div>
-                <BaseText
-                  weight="bold"
-                  className="text-xl mb-2"
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <MediumText
+                    className="block mb-2 text-sm"
+                    style={{ color: textColor }}
+                    useThemeColor={false}
+                  >
+                    Phone Number *
+                  </MediumText>
+                  <input
+                    type="tel"
+                    id="phone"
+                    {...register('phone', {
+                      required: 'Phone number is required',
+                      pattern: {
+                        value: phonePattern,
+                        message: 'Please enter a valid phone number',
+                      },
+                      minLength: {
+                        value: 10,
+                        message: 'Phone number must be at least 10 digits',
+                      },
+                    })}
+                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
+                    style={{
+                      borderColor: errors.phone
+                        ? colorScheme.error
+                        : inputBorderColor,
+                      backgroundColor: surfaceBackground,
+                      color: textColor,
+                    }}
+                    placeholder="Enter your phone number"
+                  />
+                  {errors.phone && (
+                    <BodySM
+                      className="mt-1 flex items-center gap-1 text-xs"
+                      style={{ color: colorScheme.error }}
+                      useThemeColor={false}
+                    >
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.phone.message}
+                    </BodySM>
+                  )}
+                </div>
+
+                <div>
+                  <MediumText
+                    className="block mb-2 text-sm"
+                    style={{ color: textColor }}
+                    useThemeColor={false}
+                  >
+                    Current Occupation *
+                  </MediumText>
+                  <input
+                    type="text"
+                    id="occupation"
+                    {...register('occupation', {
+                      required: 'Occupation is required',
+                      minLength: {
+                        value: 2,
+                        message:
+                          'Occupation must be at least 2 characters long',
+                      },
+                    })}
+                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
+                    style={{
+                      borderColor: errors.occupation
+                        ? colorScheme.error
+                        : inputBorderColor,
+                      backgroundColor: surfaceBackground,
+                      color: textColor,
+                    }}
+                    placeholder="e.g., Student, Engineer, Teacher, etc."
+                  />
+                  {errors.occupation && (
+                    <BodySM
+                      className="mt-1 flex items-center gap-1 text-xs"
+                      style={{ color: colorScheme.error }}
+                      useThemeColor={false}
+                    >
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.occupation.message}
+                    </BodySM>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <MediumText
+                  className="block mb-2 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
-                  Welcome to Wisdom House Ministry!
-                </BaseText>
-                <BodyMD
-                  style={{ color: subtitleTextColor }}
-                  useThemeColor={false}
-                >
-                  Thank you for your interest in joining our {department} team
-                </BodyMD>
-              </div>
-
-              <div className="space-y-4">
-                <div
-                  className="rounded-xl p-4 border"
+                  Why do you want to join {department}? *
+                </MediumText>
+                <textarea
+                  id="message"
+                  rows={4}
+                  {...register('message', {
+                    required:
+                      'Please tell us why you want to join this department',
+                    minLength: {
+                      value: 20,
+                      message:
+                        'Please provide more details (at least 20 characters)',
+                    },
+                    maxLength: {
+                      value: 500,
+                      message: 'Message is too long (maximum 500 characters)',
+                    },
+                  })}
+                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 resize-vertical text-sm"
                   style={{
-                    backgroundColor: modalBackground,
-                    borderColor: borderColor,
+                    borderColor: errors.message
+                      ? colorScheme.error
+                      : inputBorderColor,
+                    backgroundColor: surfaceBackground,
+                    color: textColor,
                   }}
-                >
-                  <MediumText
-                    className="mb-2 flex items-center gap-2"
-                    style={{ color: textColor }}
+                  placeholder="Tell us about your interest, skills, and what you hope to contribute to our ministry..."
+                />
+                <div className="flex justify-between items-center mt-1">
+                  {errors.message ? (
+                    <BodySM
+                      className="flex items-center gap-1 text-xs"
+                      style={{ color: colorScheme.error }}
+                      useThemeColor={false}
+                    >
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.message.message}
+                    </BodySM>
+                  ) : (
+                    <div></div>
+                  )}
+                  <LightText
+                    className={`text-xs ${
+                      watch('message')?.length > 450 ? 'text-orange-600' : ''
+                    }`}
+                    style={{
+                      color:
+                        watch('message')?.length > 450
+                          ? colorScheme.warning
+                          : subtitleTextColor,
+                    }}
                     useThemeColor={false}
                   >
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: colorScheme.primary }}
-                    ></span>
-                    Compulsory 1-Month Membership Class
-                  </MediumText>
-                  <BodySM
-                    style={{ color: subtitleTextColor }}
-                    useThemeColor={false}
-                  >
-                    Every new member is required to complete our foundational
-                    membership class. This ensures everyone understands our
-                    vision, values, and ministry philosophy.
-                  </BodySM>
-                </div>
-
-                <div
-                  className="rounded-xl p-4 border"
-                  style={{
-                    backgroundColor: modalBackground,
-                    borderColor: borderColor,
-                  }}
-                >
-                  <MediumText
-                    className="mb-2 flex items-center gap-2"
-                    style={{ color: textColor }}
-                    useThemeColor={false}
-                  >
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: colorScheme.success }}
-                    ></span>
-                    What You'll Learn
-                  </MediumText>
-                  <ul
-                    className="text-sm space-y-1"
-                    style={{ color: subtitleTextColor }}
-                  >
-                    <BodySM useThemeColor={false}>
-                      • Our church history and vision
-                    </BodySM>
-                    <BodySM useThemeColor={false}>
-                      • Biblical foundations for ministry service
-                    </BodySM>
-                    <BodySM useThemeColor={false}>
-                      • Understanding your spiritual gifts
-                    </BodySM>
-                    <BodySM useThemeColor={false}>
-                      • Team dynamics and collaboration
-                    </BodySM>
-                    <BodySM useThemeColor={false}>
-                      • Practical ministry training
-                    </BodySM>
-                  </ul>
-                </div>
-
-                <div
-                  className="rounded-xl p-4 border"
-                  style={{
-                    backgroundColor: modalBackground,
-                    borderColor: borderColor,
-                  }}
-                >
-                  <MediumText
-                    className="mb-2 flex items-center gap-2"
-                    style={{ color: textColor }}
-                    useThemeColor={false}
-                  >
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: colorScheme.secondary }}
-                    ></span>
-                    Class Schedule & Commitment
-                  </MediumText>
-                  <ul
-                    className="text-sm space-y-1"
-                    style={{ color: subtitleTextColor }}
-                  >
-                    <BodySM useThemeColor={false}>
-                      • Duration: This will be communicated upon completion of
-                      form
-                    </BodySM>
-                    <BodySM useThemeColor={false}>
-                      • Location: This will be announced during service
-                    </BodySM>
-                    <BodySM useThemeColor={false}>
-                      • Materials: Provided at no cost
-                    </BodySM>
-                    <BodySM useThemeColor={false}>
-                      • Certificate: Awarded upon completion
-                    </BodySM>
-                  </ul>
-                </div>
-
-                <div
-                  className="rounded-xl p-4 border"
-                  style={{
-                    backgroundColor: colorScheme.opacity.warning10,
-                    borderColor: colorScheme.opacity.warning20,
-                  }}
-                >
-                  <MediumText
-                    className="mb-2 flex items-center gap-2"
-                    style={{ color: colorScheme.warning }}
-                    useThemeColor={false}
-                  >
-                    <AlertCircle className="w-4 h-4" />
-                    Important Notice
-                  </MediumText>
-                  <BodySM
-                    style={{ color: colorScheme.warning }}
-                    useThemeColor={false}
-                  >
-                    Your application will be processed after successful
-                    completion of the membership class. This ensures we place
-                    everyone in roles where they can thrive and serve
-                    effectively.
-                  </BodySM>
+                    {watch('message')?.length || 0}/500
+                  </LightText>
                 </div>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button
-                onClick={handleFinalSubmit}
-                disabled={isSubmitting}
-                className="flex-1 py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl"
+              {/* Agreement Notice */}
+              <div
+                className="rounded-xl p-3 border text-sm"
                 style={{
-                  backgroundColor: buttonBackground,
-                  color: buttonTextColor,
-                }}
-                onMouseEnter={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.primaryLight;
-                  }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = buttonBackground;
-                  }
+                  backgroundColor: colorScheme.opacity.primary10,
+                  borderColor: colorScheme.opacity.primary20,
                 }}
               >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2
-                      className="animate-spin h-5 w-5"
-                      style={{ color: buttonTextColor }}
-                    />
+                <div className="flex items-start gap-2">
+                  <div
+                    className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5"
+                    style={{
+                      backgroundColor: colorScheme.primary,
+                      color: colorScheme.black,
+                    }}
+                  >
+                    <Check className="w-2.5 h-2.5" />
+                  </div>
+                  <div>
                     <MediumText
+                      style={{ color: colorScheme.primary }}
+                      useThemeColor={false}
+                    >
+                      By submitting this form, you agree to join our compulsory
+                      1-month membership class
+                    </MediumText>
+                    <BodySM
+                      className="mt-1"
+                      style={{ color: colorScheme.primary }}
+                      useThemeColor={false}
+                    >
+                      This foundational training is required for all new members
+                      to understand our vision and values
+                    </BodySM>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 pt-3">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`flex-1 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl ${
+                    isMobile ? 'py-3' : 'py-4'
+                  }`}
+                  style={{
+                    backgroundColor: buttonBackground,
+                    color: buttonTextColor,
+                  }}
+                  onMouseEnter={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor =
+                        colorScheme.primaryLight;
+                    }
+                  }}
+                  onMouseLeave={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor = buttonBackground;
+                    }
+                  }}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2
+                        className="animate-spin h-4 w-4"
+                        style={{ color: buttonTextColor }}
+                      />
+                      <MediumText
+                        className="text-sm"
+                        style={{ color: buttonTextColor }}
+                        useThemeColor={false}
+                      >
+                        Processing...
+                      </MediumText>
+                    </span>
+                  ) : (
+                    <SemiBoldText
+                      className={isMobile ? 'text-base' : 'text-lg'}
                       style={{ color: buttonTextColor }}
                       useThemeColor={false}
                     >
-                      Finalizing...
-                    </MediumText>
-                  </span>
-                ) : (
-                  <SemiBoldText
-                    style={{ color: buttonTextColor }}
+                      Submit Application
+                    </SemiBoldText>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  disabled={isSubmitting}
+                  className={`flex-1 border rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isMobile ? 'py-3' : 'py-4'
+                  }`}
+                  style={{
+                    borderColor: borderColor,
+                    color: textColor,
+                    backgroundColor: modalBackground,
+                  }}
+                  onMouseEnter={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor =
+                        colorScheme.opacity.primary10;
+                    }
+                  }}
+                  onMouseLeave={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor = modalBackground;
+                    }
+                  }}
+                >
+                  <MediumText
+                    className={isMobile ? 'text-base' : 'text-lg'}
+                    style={{ color: textColor }}
                     useThemeColor={false}
                   >
-                    I Understand & Agree to Continue
-                  </SemiBoldText>
-                )}
-              </button>
-              <button
-                onClick={handleContinueToForm}
-                disabled={isSubmitting}
-                className="flex-1 border py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    Cancel
+                  </MediumText>
+                </button>
+              </div>
+            </form>
+          ) : (
+            /* Agreement Information Section */
+            <div className="space-y-4">
+              {/* Main Agreement Content */}
+              <div
+                className="border rounded-2xl p-4"
                 style={{
+                  backgroundColor: surfaceBackground,
                   borderColor: borderColor,
-                  color: textColor,
-                  backgroundColor: modalBackground,
-                }}
-                onMouseEnter={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor =
-                      colorScheme.opacity.primary10;
-                  }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (!isSubmitting) {
-                    e.currentTarget.style.backgroundColor = modalBackground;
-                  }
                 }}
               >
-                <MediumText style={{ color: textColor }} useThemeColor={false}>
-                  Back to Form
-                </MediumText>
-              </button>
+                <div className="text-center mb-4">
+                  <div
+                    className={`rounded-full flex items-center justify-center mx-auto mb-3 ${
+                      isMobile ? 'w-12 h-12' : 'w-16 h-16'
+                    }`}
+                    style={{
+                      backgroundColor: colorScheme.opacity.primary10,
+                      color: colorScheme.primary,
+                    }}
+                  >
+                    <Lock className={isMobile ? 'w-6 h-6' : 'w-8 h-8'} />
+                  </div>
+                  <BaseText
+                    weight="bold"
+                    className={isMobile ? 'text-lg mb-2' : 'text-xl mb-2'}
+                    style={{ color: textColor }}
+                    useThemeColor={false}
+                  >
+                    Welcome to Wisdom House Ministry!
+                  </BaseText>
+                  <BodyMD
+                    className="text-sm"
+                    style={{ color: subtitleTextColor }}
+                    useThemeColor={false}
+                  >
+                    Thank you for your interest in joining our {department} team
+                  </BodyMD>
+                </div>
+
+                <div className="space-y-3">
+                  <div
+                    className="rounded-xl p-3 border text-sm"
+                    style={{
+                      backgroundColor: modalBackground,
+                      borderColor: borderColor,
+                    }}
+                  >
+                    <MediumText
+                      className="mb-2 flex items-center gap-2"
+                      style={{ color: textColor }}
+                      useThemeColor={false}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: colorScheme.primary }}
+                      ></span>
+                      Compulsory 1-Month Membership Class
+                    </MediumText>
+                    <BodySM
+                      style={{ color: subtitleTextColor }}
+                      useThemeColor={false}
+                    >
+                      Every new member is required to complete our foundational
+                      membership class. This ensures everyone understands our
+                      vision, values, and ministry philosophy.
+                    </BodySM>
+                  </div>
+
+                  <div
+                    className="rounded-xl p-3 border text-sm"
+                    style={{
+                      backgroundColor: modalBackground,
+                      borderColor: borderColor,
+                    }}
+                  >
+                    <MediumText
+                      className="mb-2 flex items-center gap-2"
+                      style={{ color: textColor }}
+                      useThemeColor={false}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: colorScheme.success }}
+                      ></span>
+                      What You'll Learn
+                    </MediumText>
+                    <ul
+                      className="text-sm space-y-1"
+                      style={{ color: subtitleTextColor }}
+                    >
+                      <BodySM useThemeColor={false}>
+                        • Our church history and vision
+                      </BodySM>
+                      <BodySM useThemeColor={false}>
+                        • Biblical foundations for ministry service
+                      </BodySM>
+                      <BodySM useThemeColor={false}>
+                        • Understanding your spiritual gifts
+                      </BodySM>
+                      <BodySM useThemeColor={false}>
+                        • Team dynamics and collaboration
+                      </BodySM>
+                      <BodySM useThemeColor={false}>
+                        • Practical ministry training
+                      </BodySM>
+                    </ul>
+                  </div>
+
+                  <div
+                    className="rounded-xl p-3 border text-sm"
+                    style={{
+                      backgroundColor: modalBackground,
+                      borderColor: borderColor,
+                    }}
+                  >
+                    <MediumText
+                      className="mb-2 flex items-center gap-2"
+                      style={{ color: textColor }}
+                      useThemeColor={false}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: colorScheme.secondary }}
+                      ></span>
+                      Class Schedule & Commitment
+                    </MediumText>
+                    <ul
+                      className="text-sm space-y-1"
+                      style={{ color: subtitleTextColor }}
+                    >
+                      <BodySM useThemeColor={false}>
+                        • Duration: This will be communicated upon completion of
+                        form
+                      </BodySM>
+                      <BodySM useThemeColor={false}>
+                        • Location: This will be announced during service
+                      </BodySM>
+                      <BodySM useThemeColor={false}>
+                        • Materials: Provided at no cost
+                      </BodySM>
+                      <BodySM useThemeColor={false}>
+                        • Certificate: Awarded upon completion
+                      </BodySM>
+                    </ul>
+                  </div>
+
+                  <div
+                    className="rounded-xl p-3 border text-sm"
+                    style={{
+                      backgroundColor: colorScheme.opacity.warning10,
+                      borderColor: colorScheme.opacity.warning20,
+                    }}
+                  >
+                    <MediumText
+                      className="mb-2 flex items-center gap-2"
+                      style={{ color: colorScheme.warning }}
+                      useThemeColor={false}
+                    >
+                      <AlertCircle className="w-4 h-4" />
+                      Important Notice
+                    </MediumText>
+                    <BodySM
+                      style={{ color: colorScheme.warning }}
+                      useThemeColor={false}
+                    >
+                      Your application will be processed after successful
+                      completion of the membership class. This ensures we place
+                      everyone in roles where they can thrive and serve
+                      effectively.
+                    </BodySM>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-3">
+                <button
+                  onClick={handleFinalSubmit}
+                  disabled={isSubmitting}
+                  className={`flex-1 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl ${
+                    isMobile ? 'py-3' : 'py-4'
+                  }`}
+                  style={{
+                    backgroundColor: buttonBackground,
+                    color: buttonTextColor,
+                  }}
+                  onMouseEnter={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor =
+                        colorScheme.primaryLight;
+                    }
+                  }}
+                  onMouseLeave={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor = buttonBackground;
+                    }
+                  }}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2
+                        className="animate-spin h-4 w-4"
+                        style={{ color: buttonTextColor }}
+                      />
+                      <MediumText
+                        className="text-sm"
+                        style={{ color: buttonTextColor }}
+                        useThemeColor={false}
+                      >
+                        Finalizing...
+                      </MediumText>
+                    </span>
+                  ) : (
+                    <SemiBoldText
+                      className={isMobile ? 'text-sm' : 'text-base'}
+                      style={{ color: buttonTextColor }}
+                      useThemeColor={false}
+                    >
+                      I Understand & Agree to Continue
+                    </SemiBoldText>
+                  )}
+                </button>
+                <button
+                  onClick={handleContinueToForm}
+                  disabled={isSubmitting}
+                  className={`flex-1 border rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isMobile ? 'py-3' : 'py-4'
+                  }`}
+                  style={{
+                    borderColor: borderColor,
+                    color: textColor,
+                    backgroundColor: modalBackground,
+                  }}
+                  onMouseEnter={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor =
+                        colorScheme.opacity.primary10;
+                    }
+                  }}
+                  onMouseLeave={(e: any) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor = modalBackground;
+                    }
+                  }}
+                >
+                  <MediumText
+                    className={isMobile ? 'text-base' : 'text-lg'}
+                    style={{ color: textColor }}
+                    useThemeColor={false}
+                  >
+                    Back to Form
+                  </MediumText>
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
