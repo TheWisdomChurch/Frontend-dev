@@ -5,49 +5,15 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ChevronRight } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { H1, H2, BodyLG, BodyMD, Caption } from '@/components/text';
 import { Section, Container, GridboxLayout } from '@/components/layout';
 import { hero_bg_3 } from '@/components/assets';
 import HeroSection from '@/components/ui/Homepage/Herosection';
+import { Ministries } from '@/lib/data';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ministries = [
-  {
-    title: "Children's Ministry",
-    subtitle: 'Nurturing Young Hearts in Faith',
-    description:
-      "Where kids discover God's love through fun, stories, and truth.",
-    path: '/ministries/children',
-  },
-  {
-    title: 'Youth Ministry',
-    subtitle: 'Igniting the Next Generation',
-    description:
-      'A place for teens to belong, believe, and become who God made them to be.',
-    path: '/ministries/youth',
-  },
-  {
-    title: "Women's Ministry",
-    subtitle: 'Growing Together in Grace',
-    description: 'Women supporting women — in prayer, study, and sisterhood.',
-    path: '/ministries/women',
-  },
-  {
-    title: "Men's Ministry",
-    subtitle: 'Iron Sharpens Iron',
-    description:
-      'Building godly men who lead, serve, and stand strong in faith.',
-    path: '/ministries/men',
-  },
-  {
-    title: 'Outreach Ministry',
-    subtitle: 'Hands Extended, Hearts Transformed',
-    description: "Taking God's love beyond walls — locally and globally.",
-    path: '/ministries/outreach',
-  },
-];
 
 export default function MinistryPage() {
   const { colorScheme } = useTheme();
@@ -128,7 +94,7 @@ export default function MinistryPage() {
             gap="md"
             className="relative z-10"
           >
-            {ministries.map((ministry, i) => (
+            {Ministries.map((ministry, i) => (
               <Link href={ministry.path} key={i} className="block group">
                 <div
                   ref={el => {
@@ -185,7 +151,7 @@ export default function MinistryPage() {
                       </Caption>
                     </div>
 
-                    {/* CTA - Smaller and more compact */}
+                    {/* CTA - Smaller and more compact with Lucide icon */}
                     <div className="mt-3 lg:mt-4 flex items-center gap-2 opacity-70 group-hover:opacity-100 transition-all duration-300">
                       <span
                         className="text-xs font-normal uppercase tracking-wide"
@@ -194,20 +160,11 @@ export default function MinistryPage() {
                         Learn More
                       </span>
                       <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center bg-yellow-500/10 group-hover:bg-yellow-500/20 transition-colors">
-                        <svg
-                          className="w-2.5 h-2.5 lg:w-3 lg:h-3"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                        <ChevronRight
+                          size={14}
+                          className="lg:w-3 lg:h-3"
                           style={{ color: colorScheme.primary }}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2.5}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
+                        />
                       </div>
                     </div>
                   </div>
