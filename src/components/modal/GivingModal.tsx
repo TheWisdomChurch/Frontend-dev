@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 // components/modals/GivingModal.tsx
 'use client';
 import { useEffect, useRef, useState } from 'react';
@@ -6,7 +6,7 @@ import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
+import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ChevronDown, Copy, Check, Info, X } from 'lucide-react';
 import { WisdomeHouseLogo } from '../assets';
@@ -86,13 +86,13 @@ export default function GivingModal({
         tl.fromTo(
           modalRef.current,
           { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
         );
       } else {
         tl.fromTo(
           modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, scale: 0.95, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
         );
       }
     }
@@ -104,7 +104,7 @@ export default function GivingModal({
         gsap.to(modalRef.current, {
           y: '100%',
           opacity: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: () => {
             onClose();
@@ -115,8 +115,8 @@ export default function GivingModal({
         gsap.to(modalRef.current, {
           opacity: 0,
           scale: 0.95,
-          y: 30,
-          duration: 0.4,
+          y: 20,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: () => {
             onClose();
@@ -192,7 +192,7 @@ export default function GivingModal({
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${
         isMobile ? 'pb-0' : ''
       }`}
       onClick={handleBackdropClick}
@@ -200,11 +200,11 @@ export default function GivingModal({
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-2xl
+          w-full mx-auto overflow-hidden border shadow-xl
           ${
             isMobile
-              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
-              : 'rounded-3xl max-w-2xl max-h-[90vh]'
+              ? 'rounded-t-2xl rounded-b-none max-h-[85vh]'
+              : 'rounded-2xl max-w-md max-h-[85vh]'
           }
         `}
         style={{
@@ -215,9 +215,9 @@ export default function GivingModal({
       >
         {/* Mobile Drag Handle */}
         {isMobile && (
-          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
             <div
-              className="w-12 h-1 rounded-full"
+              className="w-10 h-1 rounded-full"
               style={{ backgroundColor: colorScheme.primary }}
             />
           </div>
@@ -228,23 +228,15 @@ export default function GivingModal({
           variant="ghost"
           size="icon"
           onClick={handleClose}
-          className={`absolute rounded-full p-1.5 transform hover:scale-110 transition-all duration-200 ${
-            isMobile ? 'top-2 right-2' : 'top-3 right-3'
+          className={`absolute rounded-full p-1 transform hover:scale-110 transition-all duration-200 ${
+            isMobile ? 'top-1 right-1' : 'top-2 right-2'
           }`}
           style={{
             backgroundColor: colorScheme.opacity.primary10,
             color: colorScheme.primary,
           }}
-          onMouseEnter={(e: any) => {
-            e.currentTarget.style.backgroundColor =
-              colorScheme.opacity.primary20;
-          }}
-          onMouseLeave={(e: any) => {
-            e.currentTarget.style.backgroundColor =
-              colorScheme.opacity.primary10;
-          }}
         >
-          <X className="w-4 h-4" />
+          <X className="w-3 h-3" />
         </Button>
 
         {/* SCROLLABLE CONTENT — HIDDEN SCROLLBAR, NO BACKGROUND SCROLL */}
@@ -252,7 +244,7 @@ export default function GivingModal({
           ref={contentRef}
           className={`
             overflow-y-auto scrollbar-hide
-            ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 max-h-[calc(90vh-80px)]'}
+            ${isMobile ? 'p-3 max-h-[calc(85vh-40px)]' : 'p-4 max-h-[calc(85vh-40px)]'}
           `}
           style={
             {
@@ -268,53 +260,49 @@ export default function GivingModal({
             }
           `}</style>
 
-          {/* === YOUR ORIGINAL CONTENT — 100% UNCHANGED === */}
-          <div className={`text-center ${isMobile ? 'mb-4' : 'mb-6'}`}>
-            {/* === YOUR ORIGINAL CONTENT — 100% UNCHANGED === */}
-            <div className={`text-center ${isMobile ? 'mb-4' : 'mb-6'}`}>
-              <div
-                className={`rounded-full flex items-center justify-center mx-auto border-4 ${
-                  isMobile ? 'w-12 h-12 mb-2' : 'w-16 h-16 mb-3'
-                }`}
-                style={{
-                  backgroundColor: colorScheme.opacity.primary10,
-                  borderColor: colorScheme.primary,
-                }}
-              >
-                {/* Replace this span with your logo image */}
-                <Image
-                  src={WisdomeHouseLogo} // Update this path to your actual logo
-                  alt="WisdomHouse Logo"
-                  width={isMobile ? 24 : 32}
-                  height={isMobile ? 24 : 32}
-                  className="object-contain"
-                />
-              </div>
+          {/* Header */}
+          <div className={`text-center ${isMobile ? 'mb-3' : 'mb-4'}`}>
+            <div
+              className={`rounded-full flex items-center justify-center mx-auto border-2 ${
+                isMobile ? 'w-10 h-10 mb-2' : 'w-12 h-12 mb-2'
+              }`}
+              style={{
+                backgroundColor: colorScheme.opacity.primary10,
+                borderColor: colorScheme.primary,
+              }}
+            >
+              <Image
+                src={WisdomeHouseLogo}
+                alt="WisdomHouse Logo"
+                width={isMobile ? 20 : 24}
+                height={isMobile ? 20 : 24}
+                className="object-contain"
+              />
             </div>
-            <BaseText
-              weight="black"
-              className={`mb-2 tracking-tight ${isMobile ? 'text-lg' : 'text-2xl'}`}
+            <H4
+              fontFamily="bricolage"
+              className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
               style={{ color: textColor }}
               useThemeColor={false}
+              weight="bold"
             >
               {givingOption.title}
-            </BaseText>
+            </H4>
             <BodyMD
-              className="opacity-90 leading-relaxed mb-3 text-sm"
+              className="text-xs leading-relaxed mb-2"
               style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
               {givingOption.description}
             </BodyMD>
             <div
-              className={`rounded-lg border mb-4 ${isMobile ? 'p-2 text-xs' : 'p-3 text-sm'}`}
+              className={`rounded-lg border mb-3 ${isMobile ? 'p-2' : 'p-2'}`}
               style={{
                 backgroundColor: colorScheme.opacity.primary10,
                 borderColor: colorScheme.primary,
               }}
             >
-              <BaseText
-                weight="light"
+              <Caption
                 fontFamily="playfair"
                 className="italic text-center leading-relaxed"
                 style={{ color: subtitleTextColor }}
@@ -323,9 +311,8 @@ export default function GivingModal({
                 "Each of you should give what you have decided in your heart to
                 give, not reluctantly or under compulsion, for God loves a
                 cheerful giver."
-              </BaseText>
+              </Caption>
               <BodySM
-                weight="medium"
                 className="mt-1 text-center"
                 style={{ color: subtitleTextColor }}
                 useThemeColor={false}
@@ -335,17 +322,16 @@ export default function GivingModal({
             </div>
           </div>
 
-          <div className={isMobile ? 'mb-4' : 'mb-6'}>
-            <BaseText
-              weight="bold"
-              className={`text-center mb-3 ${isMobile ? 'text-base' : 'text-xl'}`}
+          <div className={isMobile ? 'mb-3' : 'mb-4'}>
+            <MediumText
+              className={`text-center mb-2 ${isMobile ? 'text-sm' : 'text-base'}`}
               style={{ color: textColor }}
               useThemeColor={false}
             >
               Pay Into Our Accounts
-            </BaseText>
+            </MediumText>
             {accounts.length === 0 ? (
-              <div className="text-center py-4">
+              <div className="text-center py-2">
                 <BodyMD
                   style={{ color: subtitleTextColor }}
                   useThemeColor={false}
@@ -372,9 +358,9 @@ export default function GivingModal({
                   >
                     <div
                       className={`
-                        relative rounded-full mx-auto mb-2 border-4 cursor-pointer
-                        transform transition-all duration-300 hover:scale-105 hover:shadow-lg
-                        ${isMobile ? 'w-16 h-16' : 'w-20 h-20'}
+                        relative rounded-full mx-auto mb-1 border-2 cursor-pointer
+                        transform transition-all duration-300 hover:scale-105
+                        ${isMobile ? 'w-12 h-12' : 'w-14 h-14'}
                       `}
                       style={{
                         backgroundColor: surfaceBackground,
@@ -395,7 +381,7 @@ export default function GivingModal({
                       ) : (
                         <div className="w-full h-full rounded-full flex items-center justify-center">
                           <span
-                            className={isMobile ? 'text-lg' : 'text-xl'}
+                            className={isMobile ? 'text-sm' : 'text-base'}
                             style={{ color: colorScheme.primary }}
                           >
                             Bank
@@ -404,8 +390,8 @@ export default function GivingModal({
                       )}
                       <div
                         className={`
-                          absolute left-1/2 transform -translate-x-1/2 rounded-full flex items-center justify-center border-2
-                          ${isMobile ? '-bottom-1 w-5 h-5' : '-bottom-2 w-6 h-6'}
+                          absolute left-1/2 transform -translate-x-1/2 rounded-full flex items-center justify-center border
+                          ${isMobile ? '-bottom-1 w-4 h-4' : '-bottom-1 w-4 h-4'}
                         `}
                         style={{
                           backgroundColor: modalBackground,
@@ -415,20 +401,20 @@ export default function GivingModal({
                         <ChevronDown
                           className={`transition-transform duration-300 ${
                             openAccountIndex === index ? 'rotate-180' : ''
-                          } ${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`}
+                          } ${isMobile ? 'w-2 h-2' : 'w-2 h-2'}`}
                           style={{ color: colorScheme.primary }}
                         />
                       </div>
                     </div>
-                    <SemiBoldText
-                      className={`text-center mb-1 line-clamp-2 ${
+                    <MediumText
+                      className={`text-center mb-0.5 line-clamp-2 ${
                         isMobile ? 'text-xs' : 'text-sm'
                       }`}
                       style={{ color: textColor }}
                       useThemeColor={false}
                     >
                       {account.bank}
-                    </SemiBoldText>
+                    </MediumText>
                     <div
                       ref={el => {
                         if (el) accountRefs.current[index] = el;
@@ -437,17 +423,16 @@ export default function GivingModal({
                       style={{ height: 0, opacity: 0 }}
                     >
                       <div
-                        className={`rounded-lg border mt-1 ${isMobile ? 'p-2' : 'p-3'}`}
+                        className={`rounded-lg border mt-1 ${isMobile ? 'p-2' : 'p-2'}`}
                         style={{
                           backgroundColor: surfaceBackground,
                           borderColor: colorScheme.primary,
                         }}
                       >
-                        <div className={isMobile ? 'space-y-2' : 'space-y-3'}>
+                        <div className={isMobile ? 'space-y-2' : 'space-y-2'}>
                           <div>
                             <BodySM
-                              weight="medium"
-                              className="mb-1 text-xs"
+                              className="mb-0.5 text-xs"
                               style={{ color: subtitleTextColor }}
                               useThemeColor={false}
                             >
@@ -455,9 +440,7 @@ export default function GivingModal({
                             </BodySM>
                             <div className="flex items-center justify-between gap-1">
                               <code
-                                className={`font-mono font-bold break-all ${
-                                  isMobile ? 'text-xs' : 'text-sm'
-                                }`}
+                                className={`font-mono font-bold break-all text-xs`}
                                 style={{ color: textColor }}
                               >
                                 {account.accountNumber}
@@ -468,7 +451,7 @@ export default function GivingModal({
                                 onClick={() =>
                                   copyToClipboard(account.accountNumber, index)
                                 }
-                                className={`rounded-full flex-shrink-0 ${isMobile ? 'p-1' : 'p-1.5'}`}
+                                className={`rounded-full flex-shrink-0 p-1`}
                                 style={{
                                   backgroundColor:
                                     copiedIndex === index
@@ -481,40 +464,31 @@ export default function GivingModal({
                                 }}
                               >
                                 {copiedIndex === index ? (
-                                  <Check
-                                    className={
-                                      isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5'
-                                    }
-                                  />
+                                  <Check className="w-2.5 h-2.5" />
                                 ) : (
-                                  <Copy
-                                    className={
-                                      isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5'
-                                    }
-                                  />
+                                  <Copy className="w-2.5 h-2.5" />
                                 )}
                               </Button>
                             </div>
                           </div>
                           <div>
                             <BodySM
-                              weight="medium"
-                              className="mb-1 text-xs"
+                              className="mb-0.5 text-xs"
                               style={{ color: subtitleTextColor }}
                               useThemeColor={false}
                             >
                               Account Name
                             </BodySM>
-                            <SemiBoldText
-                              className={`break-words ${isMobile ? 'text-xs' : 'text-sm'}`}
+                            <MediumText
+                              className={`break-words text-xs`}
                               style={{ color: textColor }}
                               useThemeColor={false}
                             >
                               {account.accountName}
-                            </SemiBoldText>
+                            </MediumText>
                           </div>
                           <div
-                            className={`rounded-lg border ${isMobile ? 'p-1.5 text-xs' : 'p-2 text-sm'}`}
+                            className={`rounded-lg border ${isMobile ? 'p-1.5' : 'p-1.5'}`}
                             style={{
                               backgroundColor: colorScheme.opacity.primary10,
                               borderColor: colorScheme.primary,
@@ -522,22 +496,22 @@ export default function GivingModal({
                           >
                             <div className="flex items-start gap-1">
                               <Info
-                                className={`flex-shrink-0 mt-0.5 ${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`}
+                                className={`flex-shrink-0 mt-0.5 ${isMobile ? 'w-3 h-3' : 'w-3 h-3'}`}
                                 style={{ color: colorScheme.primary }}
                               />
-                              <BodySM
+                              <Caption
                                 className="leading-relaxed"
                                 style={{ color: subtitleTextColor }}
                                 useThemeColor={false}
                               >
-                                <SemiBoldText
+                                <MediumText
                                   style={{ color: subtitleTextColor }}
                                   useThemeColor={false}
                                 >
                                   Please add narration
-                                </SemiBoldText>{' '}
+                                </MediumText>{' '}
                                 to your transactions. Thank you!
-                              </BodySM>
+                              </Caption>
                             </div>
                           </div>
                         </div>
@@ -549,50 +523,48 @@ export default function GivingModal({
             )}
           </div>
 
-          <div className={isMobile ? 'mb-4' : 'mb-6'}>
+          <div className={isMobile ? 'mb-3' : 'mb-4'}>
             <div
               className={`grid gap-2 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}
             >
               <div
-                className="rounded-lg p-2 border text-xs"
+                className="rounded-lg p-2 border"
                 style={{
                   backgroundColor: colorScheme.opacity.primary10,
                   borderColor: colorScheme.primary,
                 }}
               >
-                <BaseText
-                  weight="bold"
-                  className="mb-1"
+                <MediumText
+                  className="mb-0.5 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   Giving Tips
-                </BaseText>
-                <BodySM
+                </MediumText>
+                <Caption
                   style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
                   • Include your name in narration
                   <br />• Keep transaction receipts
                   <br />• Contact for inquiries
-                </BodySM>
+                </Caption>
               </div>
               <div
-                className="rounded-lg p-2 border text-xs"
+                className="rounded-lg p-2 border"
                 style={{
                   backgroundColor: colorScheme.opacity.primary10,
                   borderColor: colorScheme.primary,
                 }}
               >
-                <BaseText
-                  weight="bold"
-                  className="mb-1"
+                <MediumText
+                  className="mb-0.5 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   Need Help?
-                </BaseText>
-                <BodySM
+                </MediumText>
+                <Caption
                   style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
@@ -600,38 +572,38 @@ export default function GivingModal({
                   <br />• Transaction issues
                   <br />• Giving receipts
                   <br />• Other inquiries
-                </BodySM>
+                </Caption>
               </div>
             </div>
           </div>
 
           <div
-            className="text-center pt-3 border-t"
+            className="text-center pt-2 border-t"
             style={{ borderColor: colorScheme.primary }}
           >
-            <BodySM
-              className="opacity-80 mb-2 text-xs"
+            <Caption
+              className="mb-1"
               style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
               Thank you for your generous giving. May God bless you abundantly.
-            </BodySM>
+            </Caption>
             <Button
               onClick={handleClose}
-              className={`rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
-                isMobile ? 'py-2 px-6 text-sm' : 'py-2.5 px-8 text-base'
+              className={`rounded-lg transition-all duration-200 ${
+                isMobile ? 'py-1.5 px-4 text-sm' : 'py-2 px-6 text-sm'
               }`}
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
               }}
             >
-              <SemiBoldText
+              <MediumText
                 style={{ color: buttonTextColor }}
                 useThemeColor={false}
               >
                 Close
-              </SemiBoldText>
+              </MediumText>
             </Button>
           </div>
         </div>
