@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// components/modals/FormModal.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -9,14 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2, Check, AlertCircle, Lock } from 'lucide-react';
-import {
-  BaseText,
-  BodySM,
-  BodyMD,
-  SemiBoldText,
-  LightText,
-  MediumText,
-} from '@/components/text';
+import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
 
 interface FormModalProps {
   isOpen: boolean;
@@ -91,13 +82,13 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
         tl.fromTo(
           modalRef.current,
           { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
         );
       } else {
         tl.fromTo(
           modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, scale: 0.95, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
         );
       }
     }
@@ -113,7 +104,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
         gsap.to(modalRef.current, {
           y: '100%',
           opacity: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: () => {
             reset();
@@ -125,8 +116,8 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
         gsap.to(modalRef.current, {
           opacity: 0,
           scale: 0.95,
-          y: 30,
-          duration: 0.4,
+          y: 20,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: () => {
             reset();
@@ -213,7 +204,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${
         isMobile ? 'pb-0' : ''
       }`}
       onClick={handleBackdropClick}
@@ -221,11 +212,11 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-2xl
+          w-full mx-auto overflow-hidden border shadow-xl
           ${
             isMobile
-              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
-              : 'rounded-3xl max-w-2xl max-h-[90vh]'
+              ? 'rounded-t-2xl rounded-b-none max-h-[85vh]'
+              : 'rounded-2xl max-w-md max-h-[85vh]'
           }
         `}
         style={{
@@ -236,9 +227,9 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
       >
         {/* Mobile Drag Handle */}
         {isMobile && (
-          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
             <div
-              className="w-12 h-1 rounded-full"
+              className="w-10 h-1 rounded-full"
               style={{ backgroundColor: colorScheme.primary }}
             />
           </div>
@@ -246,7 +237,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
         {/* Header */}
         <div
-          className={`sticky top-0 z-10 ${isMobile ? 'p-4' : 'p-6'}`}
+          className={`sticky top-0 z-10 ${isMobile ? 'p-3' : 'p-4'}`}
           style={{
             backgroundColor: modalBackground,
             borderBottom: `1px solid ${borderColor}`,
@@ -254,16 +245,17 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <BaseText
-                weight="bold"
-                className={isMobile ? 'text-xl' : 'text-2xl'}
+              <H4
+                fontFamily="bricolage"
+                className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
                 style={{ color: textColor }}
                 useThemeColor={false}
+                weight="bold"
               >
                 {showAgreement ? 'Membership Agreement' : `Join ${department}`}
-              </BaseText>
+              </H4>
               <BodyMD
-                className="mt-1 text-sm"
+                className="text-xs"
                 style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
@@ -274,37 +266,27 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
             </div>
             <button
               onClick={handleClose}
-              className={`rounded-full transition-colors flex-shrink-0 ${
-                isMobile ? 'p-1.5' : 'p-2'
-              }`}
+              className="rounded-lg transition-colors flex-shrink-0 p-1.5"
               style={{
                 color: textColor,
                 backgroundColor: colorScheme.opacity.primary10,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary20;
-              }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary10;
-              }}
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3" />
             </button>
           </div>
         </div>
 
         <div
-          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-120px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-140px)]'}`}
+          className={`overflow-y-auto ${isMobile ? 'p-3 max-h-[calc(85vh-80px)]' : 'p-4 max-h-[calc(85vh-90px)]'}`}
         >
           {!showAgreement ? (
             /* Main Form */
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
                   <MediumText
-                    className="block mb-2 text-sm"
+                    className="block mb-1 text-xs"
                     style={{ color: textColor }}
                     useThemeColor={false}
                   >
@@ -325,7 +307,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                         message: 'Name must be at least 2 characters long',
                       },
                     })}
-                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                     style={{
                       borderColor: errors.fullName
                         ? colorScheme.error
@@ -349,7 +331,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
                 <div>
                   <MediumText
-                    className="block mb-2 text-sm"
+                    className="block mb-1 text-xs"
                     style={{ color: textColor }}
                     useThemeColor={false}
                   >
@@ -365,7 +347,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                         message: 'Please enter a valid email address',
                       },
                     })}
-                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                     style={{
                       borderColor: errors.email
                         ? colorScheme.error
@@ -388,10 +370,10 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
                   <MediumText
-                    className="block mb-2 text-sm"
+                    className="block mb-1 text-xs"
                     style={{ color: textColor }}
                     useThemeColor={false}
                   >
@@ -411,7 +393,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                         message: 'Phone number must be at least 10 digits',
                       },
                     })}
-                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                     style={{
                       borderColor: errors.phone
                         ? colorScheme.error
@@ -435,7 +417,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
                 <div>
                   <MediumText
-                    className="block mb-2 text-sm"
+                    className="block mb-1 text-xs"
                     style={{ color: textColor }}
                     useThemeColor={false}
                   >
@@ -452,7 +434,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                           'Occupation must be at least 2 characters long',
                       },
                     })}
-                    className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                     style={{
                       borderColor: errors.occupation
                         ? colorScheme.error
@@ -477,7 +459,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
 
               <div>
                 <MediumText
-                  className="block mb-2 text-sm"
+                  className="block mb-1 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
@@ -485,7 +467,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                 </MediumText>
                 <textarea
                   id="message"
-                  rows={4}
+                  rows={3}
                   {...register('message', {
                     required:
                       'Please tell us why you want to join this department',
@@ -499,7 +481,7 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       message: 'Message is too long (maximum 500 characters)',
                     },
                   })}
-                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-200 resize-vertical text-sm"
+                  className="w-full px-2 py-1.5 rounded-lg border focus:outline-none resize-vertical text-xs"
                   style={{
                     borderColor: errors.message
                       ? colorScheme.error
@@ -522,8 +504,8 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   ) : (
                     <div></div>
                   )}
-                  <LightText
-                    className={`text-xs ${
+                  <Caption
+                    className={`${
                       watch('message')?.length > 450 ? 'text-orange-600' : ''
                     }`}
                     style={{
@@ -535,13 +517,13 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                     useThemeColor={false}
                   >
                     {watch('message')?.length || 0}/500
-                  </LightText>
+                  </Caption>
                 </div>
               </div>
 
               {/* Agreement Notice */}
               <div
-                className="rounded-xl p-3 border text-sm"
+                className="rounded-lg p-2 border"
                 style={{
                   backgroundColor: colorScheme.opacity.primary10,
                   borderColor: colorScheme.opacity.primary20,
@@ -549,61 +531,51 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
               >
                 <div className="flex items-start gap-2">
                   <div
-                    className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5"
+                    className="flex-shrink-0 w-3 h-3 rounded-full flex items-center justify-center mt-0.5"
                     style={{
                       backgroundColor: colorScheme.primary,
                       color: colorScheme.black,
                     }}
                   >
-                    <Check className="w-2.5 h-2.5" />
+                    <Check className="w-2 h-2" />
                   </div>
                   <div>
                     <MediumText
+                      className="text-xs"
                       style={{ color: colorScheme.primary }}
                       useThemeColor={false}
                     >
                       By submitting this form, you agree to join our compulsory
                       1-month membership class
                     </MediumText>
-                    <BodySM
-                      className="mt-1"
+                    <Caption
+                      className="mt-0.5"
                       style={{ color: colorScheme.primary }}
                       useThemeColor={false}
                     >
                       This foundational training is required for all new members
                       to understand our vision and values
-                    </BodySM>
+                    </Caption>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 pt-3">
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`flex-1 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl ${
-                    isMobile ? 'py-3' : 'py-4'
+                  className={`flex-1 rounded-lg transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isMobile ? 'py-2' : 'py-2.5'
                   }`}
                   style={{
                     backgroundColor: buttonBackground,
                     color: buttonTextColor,
                   }}
-                  onMouseEnter={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor =
-                        colorScheme.primaryLight;
-                    }
-                  }}
-                  onMouseLeave={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor = buttonBackground;
-                    }
-                  }}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
                       <Loader2
-                        className="animate-spin h-4 w-4"
+                        className="animate-spin h-3 w-3"
                         style={{ color: buttonTextColor }}
                       />
                       <MediumText
@@ -615,44 +587,25 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       </MediumText>
                     </span>
                   ) : (
-                    <SemiBoldText
-                      className={isMobile ? 'text-base' : 'text-lg'}
-                      style={{ color: buttonTextColor }}
-                      useThemeColor={false}
-                    >
+                    <MediumText className="text-sm" useThemeColor={false}>
                       Submit Application
-                    </SemiBoldText>
+                    </MediumText>
                   )}
                 </button>
                 <button
                   type="button"
                   onClick={handleClose}
                   disabled={isSubmitting}
-                  className={`flex-1 border rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    isMobile ? 'py-3' : 'py-4'
+                  className={`flex-1 border rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isMobile ? 'py-2' : 'py-2.5'
                   }`}
                   style={{
                     borderColor: borderColor,
                     color: textColor,
                     backgroundColor: modalBackground,
                   }}
-                  onMouseEnter={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor =
-                        colorScheme.opacity.primary10;
-                    }
-                  }}
-                  onMouseLeave={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor = modalBackground;
-                    }
-                  }}
                 >
-                  <MediumText
-                    className={isMobile ? 'text-base' : 'text-lg'}
-                    style={{ color: textColor }}
-                    useThemeColor={false}
-                  >
+                  <MediumText className="text-sm" useThemeColor={false}>
                     Cancel
                   </MediumText>
                 </button>
@@ -660,37 +613,38 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
             </form>
           ) : (
             /* Agreement Information Section */
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* Main Agreement Content */}
               <div
-                className="border rounded-2xl p-4"
+                className="border rounded-xl p-3"
                 style={{
                   backgroundColor: surfaceBackground,
                   borderColor: borderColor,
                 }}
               >
-                <div className="text-center mb-4">
+                <div className="text-center mb-3">
                   <div
-                    className={`rounded-full flex items-center justify-center mx-auto mb-3 ${
-                      isMobile ? 'w-12 h-12' : 'w-16 h-16'
+                    className={`rounded-full flex items-center justify-center mx-auto mb-2 ${
+                      isMobile ? 'w-10 h-10' : 'w-12 h-12'
                     }`}
                     style={{
                       backgroundColor: colorScheme.opacity.primary10,
                       color: colorScheme.primary,
                     }}
                   >
-                    <Lock className={isMobile ? 'w-6 h-6' : 'w-8 h-8'} />
+                    <Lock className={isMobile ? 'w-5 h-5' : 'w-6 h-6'} />
                   </div>
-                  <BaseText
-                    weight="bold"
-                    className={isMobile ? 'text-lg mb-2' : 'text-xl mb-2'}
+                  <H4
+                    fontFamily="bricolage"
+                    className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
                     style={{ color: textColor }}
                     useThemeColor={false}
+                    weight="bold"
                   >
                     Welcome to Wisdom House Ministry!
-                  </BaseText>
+                  </H4>
                   <BodyMD
-                    className="text-sm"
+                    className="text-xs"
                     style={{ color: subtitleTextColor }}
                     useThemeColor={false}
                   >
@@ -698,129 +652,123 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                   </BodyMD>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div
-                    className="rounded-xl p-3 border text-sm"
+                    className="rounded-lg p-2 border"
                     style={{
                       backgroundColor: modalBackground,
                       borderColor: borderColor,
                     }}
                   >
                     <MediumText
-                      className="mb-2 flex items-center gap-2"
+                      className="mb-1 flex items-center gap-1 text-xs"
                       style={{ color: textColor }}
                       useThemeColor={false}
                     >
                       <span
-                        className="w-2 h-2 rounded-full"
+                        className="w-1.5 h-1.5 rounded-full"
                         style={{ backgroundColor: colorScheme.primary }}
                       ></span>
                       Compulsory 1-Month Membership Class
                     </MediumText>
-                    <BodySM
+                    <Caption
                       style={{ color: subtitleTextColor }}
                       useThemeColor={false}
                     >
                       Every new member is required to complete our foundational
                       membership class. This ensures everyone understands our
                       vision, values, and ministry philosophy.
-                    </BodySM>
+                    </Caption>
                   </div>
 
                   <div
-                    className="rounded-xl p-3 border text-sm"
+                    className="rounded-lg p-2 border"
                     style={{
                       backgroundColor: modalBackground,
                       borderColor: borderColor,
                     }}
                   >
                     <MediumText
-                      className="mb-2 flex items-center gap-2"
+                      className="mb-1 flex items-center gap-1 text-xs"
                       style={{ color: textColor }}
                       useThemeColor={false}
                     >
                       <span
-                        className="w-2 h-2 rounded-full"
+                        className="w-1.5 h-1.5 rounded-full"
                         style={{ backgroundColor: colorScheme.success }}
                       ></span>
                       What You'll Learn
                     </MediumText>
-                    <ul
-                      className="text-sm space-y-1"
-                      style={{ color: subtitleTextColor }}
-                    >
-                      <BodySM useThemeColor={false}>
+                    <ul className="space-y-0.5">
+                      <Caption useThemeColor={false}>
                         • Our church history and vision
-                      </BodySM>
-                      <BodySM useThemeColor={false}>
+                      </Caption>
+                      <Caption useThemeColor={false}>
                         • Biblical foundations for ministry service
-                      </BodySM>
-                      <BodySM useThemeColor={false}>
+                      </Caption>
+                      <Caption useThemeColor={false}>
                         • Understanding your spiritual gifts
-                      </BodySM>
-                      <BodySM useThemeColor={false}>
+                      </Caption>
+                      <Caption useThemeColor={false}>
                         • Team dynamics and collaboration
-                      </BodySM>
-                      <BodySM useThemeColor={false}>
+                      </Caption>
+                      <Caption useThemeColor={false}>
                         • Practical ministry training
-                      </BodySM>
+                      </Caption>
                     </ul>
                   </div>
 
                   <div
-                    className="rounded-xl p-3 border text-sm"
+                    className="rounded-lg p-2 border"
                     style={{
                       backgroundColor: modalBackground,
                       borderColor: borderColor,
                     }}
                   >
                     <MediumText
-                      className="mb-2 flex items-center gap-2"
+                      className="mb-1 flex items-center gap-1 text-xs"
                       style={{ color: textColor }}
                       useThemeColor={false}
                     >
                       <span
-                        className="w-2 h-2 rounded-full"
+                        className="w-1.5 h-1.5 rounded-full"
                         style={{ backgroundColor: colorScheme.secondary }}
                       ></span>
                       Class Schedule & Commitment
                     </MediumText>
-                    <ul
-                      className="text-sm space-y-1"
-                      style={{ color: subtitleTextColor }}
-                    >
-                      <BodySM useThemeColor={false}>
+                    <ul className="space-y-0.5">
+                      <Caption useThemeColor={false}>
                         • Duration: This will be communicated upon completion of
                         form
-                      </BodySM>
-                      <BodySM useThemeColor={false}>
+                      </Caption>
+                      <Caption useThemeColor={false}>
                         • Location: This will be announced during service
-                      </BodySM>
-                      <BodySM useThemeColor={false}>
+                      </Caption>
+                      <Caption useThemeColor={false}>
                         • Materials: Provided at no cost
-                      </BodySM>
-                      <BodySM useThemeColor={false}>
+                      </Caption>
+                      <Caption useThemeColor={false}>
                         • Certificate: Awarded upon completion
-                      </BodySM>
+                      </Caption>
                     </ul>
                   </div>
 
                   <div
-                    className="rounded-xl p-3 border text-sm"
+                    className="rounded-lg p-2 border"
                     style={{
                       backgroundColor: colorScheme.opacity.warning10,
                       borderColor: colorScheme.opacity.warning20,
                     }}
                   >
                     <MediumText
-                      className="mb-2 flex items-center gap-2"
+                      className="mb-1 flex items-center gap-1 text-xs"
                       style={{ color: colorScheme.warning }}
                       useThemeColor={false}
                     >
-                      <AlertCircle className="w-4 h-4" />
+                      <AlertCircle className="w-3 h-3" />
                       Important Notice
                     </MediumText>
-                    <BodySM
+                    <Caption
                       style={{ color: colorScheme.warning }}
                       useThemeColor={false}
                     >
@@ -828,39 +776,28 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       completion of the membership class. This ensures we place
                       everyone in roles where they can thrive and serve
                       effectively.
-                    </BodySM>
+                    </Caption>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-3">
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
                 <button
                   onClick={handleFinalSubmit}
                   disabled={isSubmitting}
-                  className={`flex-1 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:shadow-xl ${
-                    isMobile ? 'py-3' : 'py-4'
+                  className={`flex-1 rounded-lg transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isMobile ? 'py-2' : 'py-2.5'
                   }`}
                   style={{
                     backgroundColor: buttonBackground,
                     color: buttonTextColor,
                   }}
-                  onMouseEnter={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor =
-                        colorScheme.primaryLight;
-                    }
-                  }}
-                  onMouseLeave={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor = buttonBackground;
-                    }
-                  }}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
                       <Loader2
-                        className="animate-spin h-4 w-4"
+                        className="animate-spin h-3 w-3"
                         style={{ color: buttonTextColor }}
                       />
                       <MediumText
@@ -872,43 +809,24 @@ export const FormModal = ({ isOpen, onClose, department }: FormModalProps) => {
                       </MediumText>
                     </span>
                   ) : (
-                    <SemiBoldText
-                      className={isMobile ? 'text-sm' : 'text-base'}
-                      style={{ color: buttonTextColor }}
-                      useThemeColor={false}
-                    >
+                    <MediumText className="text-sm" useThemeColor={false}>
                       I Understand & Agree to Continue
-                    </SemiBoldText>
+                    </MediumText>
                   )}
                 </button>
                 <button
                   onClick={handleContinueToForm}
                   disabled={isSubmitting}
-                  className={`flex-1 border rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    isMobile ? 'py-3' : 'py-4'
+                  className={`flex-1 border rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isMobile ? 'py-2' : 'py-2.5'
                   }`}
                   style={{
                     borderColor: borderColor,
                     color: textColor,
                     backgroundColor: modalBackground,
                   }}
-                  onMouseEnter={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor =
-                        colorScheme.opacity.primary10;
-                    }
-                  }}
-                  onMouseLeave={(e: any) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor = modalBackground;
-                    }
-                  }}
                 >
-                  <MediumText
-                    className={isMobile ? 'text-base' : 'text-lg'}
-                    style={{ color: textColor }}
-                    useThemeColor={false}
-                  >
+                  <MediumText className="text-sm" useThemeColor={false}>
                     Back to Form
                   </MediumText>
                 </button>
