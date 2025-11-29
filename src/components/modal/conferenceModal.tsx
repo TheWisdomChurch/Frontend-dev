@@ -1,4 +1,3 @@
- 
 // components/modals/ConferenceModal.tsx
 'use client';
 
