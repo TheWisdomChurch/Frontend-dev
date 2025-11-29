@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/modals/ProductModal.tsx
 'use client';
 
@@ -12,12 +11,11 @@ import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Product } from '@/lib/types';
 import Button from '@/components/utils/CustomButton';
 import {
-  BaseText,
-  BodyLG,
+  H4,
   BodyMD,
-  BodySM,
-  SemiBoldText,
-  LightText,
+  RegularText,
+  MediumText,
+  Caption,
 } from '@/components/text';
 import { FlexboxLayout } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -95,13 +93,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
         tl.fromTo(
           modalRef.current,
           { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
         );
       } else {
         tl.fromTo(
           modalRef.current,
-          { opacity: 0, scale: 0.85, y: 100 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.7)' }
+          { opacity: 0, scale: 0.95, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
         );
       }
     }
@@ -113,16 +111,16 @@ const ProductModal: React.FC<ProductModalProps> = ({
         gsap.to(modalRef.current, {
           y: '100%',
           opacity: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
       } else {
         gsap.to(modalRef.current, {
           opacity: 0,
-          scale: 0.85,
-          y: 100,
-          duration: 0.4,
+          scale: 0.95,
+          y: 20,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
@@ -156,31 +154,31 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${isMobile ? 'pb-0' : ''}`}
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${isMobile ? 'pb-0' : ''}`}
       onClick={handleBackdropClick}
     >
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-2xl
-          ${isMobile ? 'rounded-t-3xl rounded-b-none max-h-[92vh]' : 'rounded-3xl max-w-5xl max-h-[92vh]'}
+          w-full mx-auto overflow-hidden border shadow-xl
+          ${isMobile ? 'rounded-t-2xl rounded-b-none max-h-[85vh]' : 'rounded-2xl max-w-md max-h-[85vh]'}
         `}
         style={{ backgroundColor: modalBackground, borderColor: borderColor }}
       >
         {/* Mobile Drag Handle */}
         {isMobile && (
-          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
             <div
-              className="w-12 h-1 rounded-full"
+              className="w-10 h-1 rounded-full"
               style={{ backgroundColor: colorScheme.primary }}
             />
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row h-full">
-          {/* Product Image — Reduced height on mobile */}
+        <div className="flex flex-col h-full">
+          {/* Product Image — Reduced height */}
           <div
-            className={`relative lg:w-1/2 ${isMobile ? 'h-48' : 'h-64 lg:h-full'} overflow-hidden`}
+            className={`relative ${isMobile ? 'h-32' : 'h-40'} overflow-hidden`}
           >
             <Image
               src={product.image}
@@ -193,99 +191,78 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
             <button
               onClick={handleClose}
-              className={`absolute z-20 rounded-full transition-all ${isMobile ? 'top-2 right-2 p-2' : 'top-4 right-4 p-3'}`}
+              className={`absolute z-20 rounded-lg transition-all ${isMobile ? 'top-1 right-1 p-1' : 'top-2 right-2 p-1.5'}`}
               style={{ backgroundColor: colorScheme.opacity.primary10 }}
-              onMouseEnter={(e: any) =>
-                (e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary20)
-              }
-              onMouseLeave={(e: any) =>
-                (e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary10)
-              }
             >
               <X
-                className={isMobile ? 'w-5 h-5' : 'w-6 h-6'}
+                className={isMobile ? 'w-3 h-3' : 'w-4 h-4'}
                 style={{ color: textColor }}
               />
             </button>
           </div>
 
-          {/* Product Details — FIXED HEIGHT & SCROLL */}
+          {/* Product Details */}
           <div
-            className={`lg:w-1/2 overflow-y-auto scrollbar-hide ${isMobile ? 'p-5 pb-8' : 'p-6 lg:p-10'} ${isMobile ? 'max-h-[calc(92vh-14rem)]' : 'max-h-[calc(92vh-80px)]'}`}
-            style={
-              {
-                msOverflowStyle: 'none',
-                scrollbarWidth: 'none',
-              } as React.CSSProperties
-            }
+            className={`overflow-y-auto ${isMobile ? 'p-3 max-h-[calc(85vh-10rem)]' : 'p-4 max-h-[calc(85vh-12rem)]'}`}
           >
-            <style jsx>{`
-              .scrollbar-hide::-webkit-scrollbar {
-                display: none;
-              }
-            `}</style>
-
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div>
-                <BaseText
+                <H4
                   fontFamily="bricolage"
-                  weight="bold"
-                  className={isMobile ? 'text-2xl' : 'text-3xl lg:text-4xl'}
+                  className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
                   style={{ color: textColor }}
                   useThemeColor={false}
+                  weight="bold"
                 >
                   {product.name}
-                </BaseText>
-                <BodyLG
-                  className="mt-2 leading-relaxed text-sm"
+                </H4>
+                <BodyMD
+                  className="text-xs"
                   style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
                   {product.description}
-                </BodyLG>
+                </BodyMD>
               </div>
 
               <FlexboxLayout align="center" gap="md">
-                <SemiBoldText
-                  className={isMobile ? 'text-3xl' : 'text-4xl'}
+                <MediumText
+                  className={isMobile ? 'text-xl' : 'text-2xl'}
                   style={{ color: colorScheme.primary }}
                   useThemeColor={false}
                 >
                   {product.price}
-                </SemiBoldText>
+                </MediumText>
                 {product.originalPrice && (
-                  <LightText
+                  <RegularText
                     className={
                       isMobile
-                        ? 'text-xl line-through'
-                        : 'text-2xl line-through'
+                        ? 'text-sm line-through'
+                        : 'text-base line-through'
                     }
                     style={{ color: subtitleTextColor }}
                     useThemeColor={false}
                   >
                     {product.originalPrice}
-                  </LightText>
+                  </RegularText>
                 )}
               </FlexboxLayout>
 
               {/* Size */}
               <div>
-                <BodyLG
-                  weight="semibold"
-                  className={`mb-3 ${isMobile ? 'text-base' : 'text-lg'}`}
+                <MediumText
+                  className="block mb-2 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   Select Size
-                </BodyLG>
+                </MediumText>
                 <FlexboxLayout gap="sm" className="flex-wrap">
                   {product.sizes.map(size => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`rounded-xl border-2 transition-all ${isMobile ? 'px-4 py-2 text-sm' : 'px-6 py-3'} ${
+                      className={`rounded-lg border transition-all px-3 py-1.5 text-xs ${
                         selectedSize === size
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
                           : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
@@ -301,13 +278,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             : subtitleTextColor,
                       }}
                     >
-                      <BodyMD
-                        weight="medium"
-                        className={isMobile ? 'text-sm' : 'text-base'}
-                        useThemeColor={false}
-                      >
-                        {size}
-                      </BodyMD>
+                      {size}
                     </button>
                   ))}
                 </FlexboxLayout>
@@ -315,20 +286,19 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               {/* Color */}
               <div>
-                <BodyLG
-                  weight="semibold"
-                  className={`mb-3 ${isMobile ? 'text-base' : 'text-lg'}`}
+                <MediumText
+                  className="block mb-2 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   Select Color
-                </BodyLG>
+                </MediumText>
                 <FlexboxLayout gap="sm" className="flex-wrap">
                   {product.colors.map(color => (
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
-                      className={`rounded-xl border-2 transition-all ${isMobile ? 'px-4 py-2 text-sm' : 'px-6 py-3'} ${
+                      className={`rounded-lg border transition-all px-3 py-1.5 text-xs ${
                         selectedColor === color
                           ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
                           : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
@@ -344,13 +314,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             : subtitleTextColor,
                       }}
                     >
-                      <BodyMD
-                        weight="medium"
-                        className={isMobile ? 'text-sm' : 'text-base'}
-                        useThemeColor={false}
-                      >
-                        {color}
-                      </BodyMD>
+                      {color}
                     </button>
                   ))}
                 </FlexboxLayout>
@@ -358,84 +322,71 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
               {/* Quantity */}
               <div>
-                <BodyLG
-                  weight="semibold"
-                  className={`mb-3 ${isMobile ? 'text-base' : 'text-lg'}`}
+                <MediumText
+                  className="block mb-2 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   Quantity
-                </BodyLG>
-                <FlexboxLayout align="center" gap="lg">
+                </MediumText>
+                <FlexboxLayout align="center" gap="md">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className={`rounded-full border-2 flex items-center justify-center transition-all hover:scale-110 ${isMobile ? 'w-10 h-10' : 'w-12 h-12'}`}
+                    className={`rounded-full border flex items-center justify-center transition-all ${isMobile ? 'w-8 h-8' : 'w-9 h-9'}`}
                     style={{ borderColor: inputBorderColor }}
                   >
                     <Minus
-                      className={isMobile ? 'w-4 h-4' : 'w-5 h-5'}
+                      className={isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5'}
                       style={{ color: subtitleTextColor }}
                     />
                   </button>
-                  <SemiBoldText
-                    className={`text-center ${isMobile ? 'text-xl w-12' : 'text-2xl w-16'}`}
+                  <MediumText
+                    className={`text-center ${isMobile ? 'text-lg w-8' : 'text-xl w-10'}`}
                     style={{ color: textColor }}
                     useThemeColor={false}
                   >
                     {quantity}
-                  </SemiBoldText>
+                  </MediumText>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className={`rounded-full border-2 flex items-center justify-center transition-all hover:scale-110 ${isMobile ? 'w-10 h-10' : 'w-12 h-12'}`}
+                    className={`rounded-full border flex items-center justify-center transition-all ${isMobile ? 'w-8 h-8' : 'w-9 h-9'}`}
                     style={{ borderColor: inputBorderColor }}
                   >
                     <Plus
-                      className={isMobile ? 'w-4 h-4' : 'w-5 h-5'}
+                      className={isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5'}
                       style={{ color: subtitleTextColor }}
                     />
                   </button>
-                  <BodySM
-                    className="text-sm"
+                  <Caption
                     style={{ color: subtitleTextColor }}
                     useThemeColor={false}
                   >
                     {product.stock} in stock
-                  </BodySM>
+                  </Caption>
                 </FlexboxLayout>
               </div>
 
-              {/* Add to Cart — Always visible */}
-              <div className="pt-4">
+              {/* Add to Cart */}
+              <div className="pt-2">
                 <Button
                   variant="primary"
                   size="lg"
-                  curvature="full"
+                  curvature="xl"
                   elevated={true}
                   leftIcon={
-                    <ShoppingBag className={isMobile ? 'w-5 h-5' : 'w-6 h-6'} />
+                    <ShoppingBag className={isMobile ? 'w-4 h-4' : 'w-4 h-4'} />
                   }
                   onClick={handleAddToCart}
                   disabled={!selectedSize || !selectedColor}
-                  className={`w-full font-bold transition-all hover:scale-105 shadow-2xl ${isMobile ? 'py-3.5 text-base' : 'py-5 text-lg'}`}
+                  className={`w-full transition-all ${isMobile ? 'py-2 text-sm' : 'py-2.5 text-sm'}`}
                   style={{
                     backgroundColor: buttonBackground,
                     color: buttonTextColor,
                   }}
-                  onMouseEnter={(e: any) =>
-                    (e.currentTarget.style.backgroundColor =
-                      colorScheme.primaryLight)
-                  }
-                  onMouseLeave={(e: any) =>
-                    (e.currentTarget.style.backgroundColor = buttonBackground)
-                  }
                 >
-                  <SemiBoldText
-                    className={isMobile ? 'text-base' : 'text-lg'}
-                    style={{ color: buttonTextColor }}
-                    useThemeColor={false}
-                  >
+                  <MediumText className="text-sm" useThemeColor={false}>
                     Add to Cart • {product.price}
-                  </SemiBoldText>
+                  </MediumText>
                 </Button>
               </div>
             </div>

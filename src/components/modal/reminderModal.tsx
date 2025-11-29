@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// components/modals/ReminderModal.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -8,7 +6,7 @@ import { gsap } from 'gsap';
 import { ReminderFormData } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2 } from 'lucide-react';
-import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
+import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
 import { Button } from '@/components/ui/button';
 
 interface ReminderModalProps {
@@ -63,13 +61,13 @@ export const ReminderModal = ({
         tl.fromTo(
           modalRef.current,
           { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
         );
       } else {
         tl.fromTo(
           modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, scale: 0.95, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
         );
       }
     }
@@ -85,7 +83,7 @@ export const ReminderModal = ({
         gsap.to(modalRef.current, {
           y: '100%',
           opacity: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
@@ -93,8 +91,8 @@ export const ReminderModal = ({
         gsap.to(modalRef.current, {
           opacity: 0,
           scale: 0.95,
-          y: 30,
-          duration: 0.4,
+          y: 20,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
@@ -114,7 +112,7 @@ export const ReminderModal = ({
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${
         isMobile ? 'pb-0' : ''
       }`}
       onClick={handleBackdropClick}
@@ -122,11 +120,11 @@ export const ReminderModal = ({
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-2xl
+          w-full mx-auto overflow-hidden border shadow-xl
           ${
             isMobile
-              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
-              : 'rounded-3xl max-w-md max-h-[90vh]'
+              ? 'rounded-t-2xl rounded-b-none max-h-[85vh]'
+              : 'rounded-2xl max-w-md max-h-[85vh]'
           }
         `}
         style={{
@@ -137,9 +135,9 @@ export const ReminderModal = ({
       >
         {/* Mobile Drag Handle */}
         {isMobile && (
-          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
             <div
-              className="w-12 h-1 rounded-full"
+              className="w-10 h-1 rounded-full"
               style={{ backgroundColor: colorScheme.primary }}
             />
           </div>
@@ -151,32 +149,24 @@ export const ReminderModal = ({
           size="icon"
           onClick={handleClose}
           className={`absolute rounded-full transform hover:scale-110 transition-all duration-200 ${
-            isMobile ? 'top-2 right-2 p-1.5' : 'top-3 right-3 p-2'
+            isMobile ? 'top-1 right-1 p-1' : 'top-2 right-2 p-1'
           }`}
           style={{
             backgroundColor: colorScheme.opacity.primary10,
             color: textColor,
           }}
-          onMouseEnter={(e: any) => {
-            e.currentTarget.style.backgroundColor =
-              colorScheme.opacity.primary20;
-          }}
-          onMouseLeave={(e: any) => {
-            e.currentTarget.style.backgroundColor =
-              colorScheme.opacity.primary10;
-          }}
         >
-          <X className="w-4 h-4" />
+          <X className="w-3 h-3" />
         </Button>
 
         <div
-          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
+          className={`overflow-y-auto ${isMobile ? 'p-3 max-h-[calc(85vh-40px)]' : 'p-4 max-h-[calc(85vh-40px)]'}`}
         >
           {/* Header */}
-          <div className={`text-center ${isMobile ? 'mb-6' : 'mb-8'}`}>
+          <div className={`text-center ${isMobile ? 'mb-4' : 'mb-5'}`}>
             <div
-              className={`rounded-full flex items-center justify-center mx-auto border-4 ${
-                isMobile ? 'w-16 h-16 mb-3' : 'w-20 h-20 mb-4'
+              className={`rounded-full flex items-center justify-center mx-auto border-2 ${
+                isMobile ? 'w-12 h-12 mb-2' : 'w-14 h-14 mb-3'
               }`}
               style={{
                 backgroundColor: `${colorScheme.primary}20`,
@@ -184,26 +174,25 @@ export const ReminderModal = ({
               }}
             >
               <span
-                className={isMobile ? 'text-xl' : 'text-2xl'}
+                className={isMobile ? 'text-lg' : 'text-xl'}
                 style={{ color: colorScheme.primary }}
               >
                 ⏰
               </span>
             </div>
 
-            <BaseText
-              weight="black"
-              className={`mb-2 tracking-tight ${
-                isMobile ? 'text-xl' : 'text-2xl lg:text-3xl'
-              }`}
+            <H4
+              fontFamily="bricolage"
+              className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
               style={{ color: textColor }}
               useThemeColor={false}
+              weight="bold"
             >
               Set Reminder
-            </BaseText>
+            </H4>
 
             <BodyMD
-              className="opacity-90 leading-relaxed text-sm"
+              className="text-xs leading-relaxed"
               style={{ color: subtitleTextColor }}
               useThemeColor={false}
             >
@@ -214,22 +203,22 @@ export const ReminderModal = ({
             </BodyMD>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={onSubmit} className="space-y-3">
             {/* Email Input */}
             <div>
-              <SemiBoldText
-                className="block mb-2 text-sm"
+              <MediumText
+                className="block mb-1 text-xs"
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
                 Email Address *
-              </SemiBoldText>
+              </MediumText>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={onInputChange}
-                className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                 style={{
                   borderColor: formErrors.email
                     ? colorScheme.error
@@ -241,7 +230,7 @@ export const ReminderModal = ({
               />
               {formErrors.email && (
                 <BodySM
-                  className="mt-1 text-xs"
+                  className="mt-0.5 text-xs"
                   style={{ color: colorScheme.error }}
                   useThemeColor={false}
                 >
@@ -252,18 +241,18 @@ export const ReminderModal = ({
 
             {/* Frequency Select */}
             <div>
-              <SemiBoldText
-                className="block mb-2 text-sm"
+              <MediumText
+                className="block mb-1 text-xs"
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
                 Reminder Frequency
-              </SemiBoldText>
+              </MediumText>
               <select
                 name="frequency"
                 value={formData.frequency}
                 onChange={onInputChange}
-                className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                 style={{
                   borderColor: inputBorderColor,
                   backgroundColor: surfaceBackground,
@@ -278,18 +267,18 @@ export const ReminderModal = ({
 
             {/* Event Type Select */}
             <div>
-              <SemiBoldText
-                className="block mb-2 text-sm"
+              <MediumText
+                className="block mb-1 text-xs"
                 style={{ color: textColor }}
                 useThemeColor={false}
               >
                 Event Type
-              </SemiBoldText>
+              </MediumText>
               <select
                 name="eventType"
                 value={formData.eventType}
                 onChange={onInputChange}
-                className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                 style={{
                   borderColor: inputBorderColor,
                   backgroundColor: surfaceBackground,
@@ -303,29 +292,29 @@ export const ReminderModal = ({
 
             {/* Information Section */}
             <div
-              className="rounded-xl p-3 border text-sm"
+              className="rounded-lg p-2 border"
               style={{
                 backgroundColor: colorScheme.opacity.primary10,
                 borderColor: colorScheme.opacity.primary20,
               }}
             >
-              <div className="flex items-start gap-2">
-                <span className="text-sm mt-0.5 flex-shrink-0">💡</span>
-                <BodySM
+              <div className="flex items-start gap-1">
+                <span className="text-xs mt-0.5 flex-shrink-0">💡</span>
+                <Caption
                   className="leading-relaxed"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
-                  <SemiBoldText
+                  <MediumText
                     style={{ color: textColor }}
                     useThemeColor={false}
                   >
                     How it works:
-                  </SemiBoldText>{' '}
+                  </MediumText>{' '}
                   We'll send you periodic updates about the event, including
                   important dates, speaker announcements, and registration
                   reminders.
-                </BodySM>
+                </Caption>
               </div>
             </div>
 
@@ -333,41 +322,32 @@ export const ReminderModal = ({
             <Button
               type="submit"
               disabled={isSettingReminder}
-              className={`w-full rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                isMobile ? 'py-3 text-base' : 'py-4 text-lg'
+              className={`w-full rounded-lg hover:shadow-lg transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
+                isMobile ? 'py-2 text-sm' : 'py-2.5 text-sm'
               }`}
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
               }}
-              onMouseEnter={(e: any) => {
-                if (!isSettingReminder) {
-                  e.currentTarget.style.backgroundColor =
-                    colorScheme.primaryLight;
-                }
-              }}
-              onMouseLeave={(e: any) => {
-                if (!isSettingReminder) {
-                  e.currentTarget.style.backgroundColor = buttonBackground;
-                }
-              }}
             >
               {isSettingReminder ? (
                 <span className="flex items-center justify-center">
                   <Loader2
-                    className="animate-spin -ml-1 mr-3 h-5 w-5"
+                    className="animate-spin mr-2 h-3 w-3"
                     style={{ color: buttonTextColor }}
                   />
-                  Setting Reminder...
+                  <MediumText
+                    className="text-sm"
+                    style={{ color: buttonTextColor }}
+                    useThemeColor={false}
+                  >
+                    Setting Reminder...
+                  </MediumText>
                 </span>
               ) : (
-                <SemiBoldText
-                  className={isMobile ? 'text-base' : 'text-lg'}
-                  style={{ color: buttonTextColor }}
-                  useThemeColor={false}
-                >
+                <MediumText className="text-sm" useThemeColor={false}>
                   Set Reminder
-                </SemiBoldText>
+                </MediumText>
               )}
             </Button>
           </form>

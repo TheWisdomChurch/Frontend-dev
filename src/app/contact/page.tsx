@@ -3,7 +3,7 @@
 
 import React from 'react';
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2, BaseText, LightText } from '@/components/text';
+import { H2, H3, BodyMD, SmallText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import {
@@ -13,6 +13,14 @@ import {
   FlexboxLayout,
 } from '@/components/layout';
 import Button from '@/components/utils/CustomButton';
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Instagram,
+  Facebook,
+  Youtube,
+} from 'lucide-react';
 
 const ContactPage = () => {
   const { colorScheme } = useTheme();
@@ -44,80 +52,47 @@ const ContactPage = () => {
       title: 'Visit Us',
       description: 'Come worship with us in person',
       details: [
-        'Adress will be here',
-        'XXX-XXXX',
-        'Sunday Services: 8:00 AM & 10:30 AM',
+        'Honors gardens, opposite Dominion Church Headquarters',
+        'Alasia bus stop, Lekki Epe expressway',
+        'Lagos, Nigeria',
+        'Sunday Services: 9:00 AM',
       ],
-      icon: '📍',
+      icon: MapPin,
     },
     {
       title: 'Call Us',
       description: 'Speak with our church office',
-      details: [
-        'Main Office: (XXX) 123-XXXX',
-        'Pastoral Care: (XXX) 123-XXXX',
-        'Office Hours: Mon-Fri 9AM-5PM',
-      ],
-      icon: '📞',
+      details: ['Phone: +234 706 999 5333'],
+      icon: Phone,
+      link: 'https://wa.me/2347069995333',
     },
     {
       title: 'Email Us',
       description: 'Send us a message anytime',
-      details: [
-        'General Inquiries: info@church.org',
-        'Pastoral Care: care@church.org',
-        'Events: events@church.org',
-      ],
-      icon: '✉️',
-    },
-    {
-      title: 'Follow Us',
-      description: 'Stay connected on social media',
-      details: [
-        'Facebook: @OurChurch',
-        'Instagram: @OurChurch',
-        'YouTube: Our Church Live',
-      ],
-      icon: '📱',
+      details: ['wisdomhousehq@gmail.com'],
+      icon: Mail,
+      link: 'mailto:wisdomhousehq@gmail.com',
     },
   ];
 
-  const ministryContacts = [
+  const socialMedia = [
     {
-      department: 'Pastoral Care',
-      contact: 'Deacon. Adeyemi',
-      email: 'PastoralCare@Wisdomchurch.org',
-      phone: '080-XXX-XXXX-X',
+      platform: 'Instagram',
+      handle: '@wisdomhousehq',
+      url: 'https://instagram.com/wisdomhousehq',
+      icon: Instagram,
     },
     {
-      department: 'Youth Ministry',
-      contact: 'Pastor Kenny Ayilara',
-      email: 'youthTeens@Wisdomchurch.org',
-      phone: '080-XXX-XXXX-X',
+      platform: 'Facebook',
+      handle: '@wisdomhousehq',
+      url: 'https://facebook.com/wisdomhousehq',
+      icon: Facebook,
     },
     {
-      department: "Children's Ministry",
-      contact: 'Mrs. Bamidele',
-      email: 'children@Wisdomchurch.org',
-      phone: '080-XXX-XXXX-X',
-    },
-    {
-      department: 'Worship & Music',
-      contact: 'Mr. Aduragbemi',
-      email: 'worship@wiadomHousechurch.org',
-      phone: '080-XXX-XXXX-X',
-    },
-    {
-      department: 'Outreach & Missions',
-      contact: 'Rev. Victor Jimba',
-      email: 'missions@Wisdomchurch.org',
-      phone: '080-XXX-XXXX-X',
-    },
-    {
-      department: 'Facilities & Events',
-      contact: 'Deacon. Adeyemi',
-      email: 'facilities@Wisdomchurch.org',
-      phone: '080-XXX-XXXX-X',
+      platform: 'YouTube',
+      handle: 'Wisdom House',
+      url: 'https://youtube.com/@wisdomhousehq',
+      icon: Youtube,
     },
   ];
 
@@ -128,7 +103,7 @@ const ContactPage = () => {
         subtitle="We'd Love to Hear From You"
         description="Whether you're new to our church family or have been with us for years, we're here to help you connect, grow, and serve. Reach out to us through any of the following ways."
         backgroundImage={hero_bg_1.src}
-        showButtons={true}
+        showButtons={false}
         primaryButtonText="Get Directions"
         secondaryButtonText="Send Message"
         showScrollIndicator={true}
@@ -146,62 +121,84 @@ const ContactPage = () => {
             justify="center"
             align="center"
             gap="md"
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
-            <H2 style={{ color: textColor }}>Get In Touch</H2>
-            <LightText
-              className="text-xl mt-4 max-w-2xl mx-auto"
+            <H2
+              style={{ color: textColor }}
+              className="text-2xl sm:text-3xl font-bold"
+            >
+              Get In Touch
+            </H2>
+            <BodyMD
+              className="max-w-2xl mx-auto"
               style={{ color: secondaryTextColor }}
             >
               Multiple ways to connect with our church family and leadership
-            </LightText>
+            </BodyMD>
           </FlexboxLayout>
 
           <div className="max-w-6xl mx-auto">
-            <GridboxLayout columns={1} responsive={{ md: 2, lg: 4 }} gap="lg">
-              {contactMethods.map((method, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl p-6 text-center hover:shadow-lg transition-shadow duration-300"
-                  style={{
-                    backgroundColor: cardBackground,
-                    border: `1px solid ${borderColor}`,
-                  }}
-                >
-                  <div className="text-4xl mb-4">{method.icon}</div>
-                  <BaseText
-                    fontFamily="bricolage"
-                    weight="bold"
-                    className="text-xl mb-2"
-                    style={{ color: cardTextColor }}
+            <GridboxLayout columns={1} responsive={{ md: 2, lg: 3 }} gap="md">
+              {contactMethods.map((method, index) => {
+                const IconComponent = method.icon;
+                return (
+                  <div
+                    key={index}
+                    className="rounded-xl p-5 text-center border transition-all duration-300 hover:translate-y-1"
+                    style={{
+                      backgroundColor: cardBackground,
+                      border: `1px solid ${borderColor}`,
+                    }}
                   >
-                    {method.title}
-                  </BaseText>
-                  <LightText
-                    className="mb-4"
-                    style={{ color: secondaryTextColor }}
-                  >
-                    {method.description}
-                  </LightText>
-                  <div className="space-y-2">
-                    {method.details.map((detail, idx) => (
-                      <LightText
-                        key={idx}
-                        className="text-sm"
-                        style={{ color: secondaryTextColor }}
+                    <div className="flex justify-center mb-3">
+                      <IconComponent
+                        className="w-8 h-8"
+                        style={{ color: colorScheme.primary }}
+                      />
+                    </div>
+                    <H3
+                      className="text-lg font-semibold mb-2"
+                      style={{ color: cardTextColor }}
+                    >
+                      {method.title}
+                    </H3>
+                    <BodyMD
+                      className="mb-3 text-sm"
+                      style={{ color: secondaryTextColor }}
+                    >
+                      {method.description}
+                    </BodyMD>
+                    <div className="space-y-1">
+                      {method.details.map((detail, idx) => (
+                        <SmallText
+                          key={idx}
+                          className="text-xs"
+                          style={{ color: secondaryTextColor }}
+                        >
+                          {detail}
+                        </SmallText>
+                      ))}
+                    </div>
+                    {method.link && (
+                      <a
+                        href={method.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block mt-3 text-sm font-medium hover:underline"
+                        style={{ color: colorScheme.primary }}
                       >
-                        {detail}
-                      </LightText>
-                    ))}
+                        Contact Now →
+                      </a>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </GridboxLayout>
           </div>
         </Container>
       </Section>
 
-      {/* Ministry Contacts Section */}
+      {/* Social Media Section */}
       <Section
         padding="lg"
         fullHeight={false}
@@ -212,64 +209,72 @@ const ContactPage = () => {
         }}
       >
         <Container size="xl">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <FlexboxLayout
               direction="column"
               justify="center"
               align="center"
               gap="md"
-              className="text-center mb-12"
+              className="text-center mb-8"
             >
-              <H2 style={{ color: textColor }}>Ministry Contacts</H2>
-              <LightText
-                className="text-xl mt-4 max-w-2xl mx-auto"
+              <H2
+                style={{ color: textColor }}
+                className="text-2xl sm:text-3xl font-bold"
+              >
+                Follow Us
+              </H2>
+              <BodyMD
+                className="max-w-2xl mx-auto"
                 style={{ color: secondaryTextColor }}
               >
-                Connect directly with our ministry leaders and staff
-              </LightText>
+                Stay connected with us on social media for updates, events, and
+                inspirational content
+              </BodyMD>
             </FlexboxLayout>
 
-            <GridboxLayout columns={1} responsive={{ md: 2, lg: 3 }} gap="lg">
-              {ministryContacts.map((contact, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
-                  style={{
-                    backgroundColor: cardBackground,
-                    border: `1px solid ${borderColor}`,
-                  }}
-                >
-                  <BaseText
-                    fontFamily="bricolage"
-                    weight="bold"
-                    className="text-lg mb-2"
-                    style={{ color: cardTextColor }}
+            <GridboxLayout columns={1} responsive={{ sm: 3 }} gap="md">
+              {socialMedia.map((social, index) => {
+                const IconComponent = social.icon;
+                return (
+                  <a
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl p-5 text-center border transition-all duration-300 hover:translate-y-1 hover:shadow-md"
+                    style={{
+                      backgroundColor: cardBackground,
+                      border: `1px solid ${borderColor}`,
+                      textDecoration: 'none',
+                    }}
                   >
-                    {contact.department}
-                  </BaseText>
-                  <BaseText
-                    weight="semibold"
-                    className="mb-3"
-                    style={{ color: cardTextColor }}
-                  >
-                    {contact.contact}
-                  </BaseText>
-                  <div className="space-y-2">
-                    <LightText
-                      className="text-sm"
+                    <div className="flex justify-center mb-3">
+                      <IconComponent
+                        className="w-8 h-8"
+                        style={{ color: colorScheme.primary }}
+                      />
+                    </div>
+                    <H3
+                      className="text-lg font-semibold mb-1"
+                      style={{ color: cardTextColor }}
+                    >
+                      {social.platform}
+                    </H3>
+                    <BodyMD
+                      className="text-sm mb-2"
                       style={{ color: secondaryTextColor }}
                     >
-                      📧 {contact.email}
-                    </LightText>
-                    <LightText
-                      className="text-sm"
-                      style={{ color: secondaryTextColor }}
+                      {social.handle}
+                    </BodyMD>
+                    <SmallText
+                      className="text-xs font-medium hover:underline"
+                      style={{ color: colorScheme.primary }}
                     >
-                      📞 {contact.phone}
-                    </LightText>
-                  </div>
-                </div>
-              ))}
+                      Follow Us →
+                    </SmallText>
+                  </a>
+                );
+              })}
             </GridboxLayout>
           </div>
         </Container>
@@ -279,7 +284,11 @@ const ContactPage = () => {
       <Section
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: sectionBackground }}
+        style={{
+          backgroundColor: isDarkMode
+            ? colorScheme.surface
+            : colorScheme.backgroundSecondary,
+        }}
       >
         <Container size="xl">
           <div className="max-w-4xl mx-auto">
@@ -288,36 +297,38 @@ const ContactPage = () => {
               justify="center"
               align="center"
               gap="md"
-              className="text-center mb-12"
+              className="text-center mb-8"
             >
-              <H2 style={{ color: textColor }}>Send Us a Message</H2>
-              <LightText
-                className="text-xl mt-4"
-                style={{ color: secondaryTextColor }}
+              <H2
+                style={{ color: textColor }}
+                className="text-2xl sm:text-3xl font-bold"
               >
+                Send Us a Message
+              </H2>
+              <BodyMD style={{ color: secondaryTextColor }}>
                 Have a question or prayer request? We're here to help.
-              </LightText>
+              </BodyMD>
             </FlexboxLayout>
 
             <div
-              className="rounded-2xl p-8"
+              className="rounded-xl p-6 border"
               style={{
                 backgroundColor: formBackground,
                 border: `1px solid ${borderColor}`,
               }}
             >
-              <form className="space-y-6">
-                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="lg">
+              <form className="space-y-5">
+                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="md">
                   <div>
                     <label
-                      className="block font-semibold mb-2"
+                      className="block font-medium mb-2 text-sm"
                       style={{ color: textColor }}
                     >
                       First Name
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
                       placeholder="Your first name"
                       style={{
                         backgroundColor: inputBackground,
@@ -328,14 +339,14 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <label
-                      className="block font-semibold mb-2"
+                      className="block font-medium mb-2 text-sm"
                       style={{ color: textColor }}
                     >
                       Last Name
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
                       placeholder="Your last name"
                       style={{
                         backgroundColor: inputBackground,
@@ -346,17 +357,17 @@ const ContactPage = () => {
                   </div>
                 </GridboxLayout>
 
-                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="lg">
+                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="md">
                   <div>
                     <label
-                      className="block font-semibold mb-2"
+                      className="block font-medium mb-2 text-sm"
                       style={{ color: textColor }}
                     >
                       Email Address
                     </label>
                     <input
                       type="email"
-                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
                       placeholder="your.email@example.com"
                       style={{
                         backgroundColor: inputBackground,
@@ -367,14 +378,14 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <label
-                      className="block font-semibold mb-2"
+                      className="block font-medium mb-2 text-sm"
                       style={{ color: textColor }}
                     >
                       Phone Number
                     </label>
                     <input
                       type="tel"
-                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
                       placeholder="(555) 123-4567"
                       style={{
                         backgroundColor: inputBackground,
@@ -387,17 +398,17 @@ const ContactPage = () => {
 
                 <div>
                   <label
-                    className="block font-semibold mb-2"
+                    className="block font-medium mb-2 text-sm"
                     style={{ color: textColor }}
                   >
                     Department
                   </label>
                   <select
-                    className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
                     style={{
-                      backgroundColor: colorScheme.white, // Always white for dropdowns
+                      backgroundColor: colorScheme.white,
                       borderColor: inputBorderColor,
-                      color: colorScheme.black, // Always black for dropdown text
+                      color: colorScheme.black,
                     }}
                   >
                     <option value="">Select a department...</option>
@@ -413,14 +424,14 @@ const ContactPage = () => {
 
                 <div>
                   <label
-                    className="block font-semibold mb-2"
+                    className="block font-medium mb-2 text-sm"
                     style={{ color: textColor }}
                   >
                     Message
                   </label>
                   <textarea
-                    rows={6}
-                    className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    rows={5}
+                    className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
                     placeholder="Tell us how we can help you..."
                     style={{
                       backgroundColor: inputBackground,
@@ -434,9 +445,9 @@ const ContactPage = () => {
                   <Button
                     type="submit"
                     variant="primary"
-                    size="lg"
+                    size="md"
                     curvature="full"
-                    className="px-8 py-3 font-semibold transition-colors"
+                    className="px-6 py-2 font-medium text-sm transition-colors"
                     style={{
                       backgroundColor: colorScheme.primary,
                       color: colorScheme.black,

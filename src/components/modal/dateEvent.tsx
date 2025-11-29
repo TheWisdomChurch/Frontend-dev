@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/modals/DateEventsModal.tsx
 'use client';
 
@@ -8,7 +7,7 @@ import { gsap } from 'gsap';
 import { CalendarEvent } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X } from 'lucide-react';
-import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
+import { H4, BodyMD, MediumText, Caption } from '@/components/text';
 
 interface DateEventsModalProps {
   dateEvents: {
@@ -58,13 +57,13 @@ export const DateEventsModal = ({
         tl.fromTo(
           modalRef.current,
           { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
         );
       } else {
         tl.fromTo(
           modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, scale: 0.95, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
         );
       }
     }
@@ -80,7 +79,7 @@ export const DateEventsModal = ({
         gsap.to(modalRef.current, {
           y: '100%',
           opacity: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
@@ -88,8 +87,8 @@ export const DateEventsModal = ({
         gsap.to(modalRef.current, {
           opacity: 0,
           scale: 0.95,
-          y: 30,
-          duration: 0.4,
+          y: 20,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
@@ -109,7 +108,7 @@ export const DateEventsModal = ({
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${
         isMobile ? 'pb-0' : ''
       }`}
       onClick={handleBackdropClick}
@@ -117,11 +116,11 @@ export const DateEventsModal = ({
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-2xl
+          w-full mx-auto overflow-hidden border shadow-xl
           ${
             isMobile
-              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
-              : 'rounded-3xl max-w-md max-h-[90vh]'
+              ? 'rounded-t-2xl rounded-b-none max-h-[85vh]'
+              : 'rounded-2xl max-w-md max-h-[85vh]'
           }
         `}
         style={{
@@ -132,27 +131,26 @@ export const DateEventsModal = ({
       >
         {/* Mobile Drag Handle */}
         {isMobile && (
-          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
             <div
-              className="w-12 h-1 rounded-full"
+              className="w-10 h-1 rounded-full"
               style={{ backgroundColor: colorScheme.primary }}
             />
           </div>
         )}
 
         <div
-          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
+          className={`overflow-y-auto ${isMobile ? 'p-3 max-h-[calc(85vh-40px)]' : 'p-4 max-h-[calc(85vh-40px)]'}`}
         >
           {/* Header */}
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <BaseText
-                weight="black"
-                className={`mb-2 tracking-tight ${
-                  isMobile ? 'text-lg' : 'text-xl lg:text-2xl'
-                }`}
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex-1">
+              <H4
+                fontFamily="bricolage"
+                className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
                 style={{ color: textColor }}
                 useThemeColor={false}
+                weight="bold"
               >
                 {dateEvents.date.toLocaleDateString('en-US', {
                   weekday: 'long',
@@ -160,9 +158,9 @@ export const DateEventsModal = ({
                   day: 'numeric',
                   year: 'numeric',
                 })}
-              </BaseText>
+              </H4>
               <BodyMD
-                className="text-sm"
+                className="text-xs"
                 style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
@@ -172,54 +170,35 @@ export const DateEventsModal = ({
             </div>
             <button
               onClick={handleClose}
-              className={`rounded-xl transition-colors duration-300 flex-shrink-0 ${
-                isMobile ? 'p-1.5' : 'p-2'
-              }`}
+              className="rounded-lg transition-colors duration-200 flex-shrink-0 p-1.5 ml-2"
               style={{
                 color: textColor,
                 backgroundColor: colorScheme.opacity.primary10,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary20;
-              }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary10;
-              }}
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3" />
             </button>
           </div>
 
           {/* Events List */}
-          <div className="space-y-3 mb-6">
+          <div className="space-y-2 mb-4">
             {dateEvents.events.map(event => (
               <div
                 key={event.id}
-                className="rounded-xl p-3 border-l-4 cursor-pointer transition-colors duration-300"
+                className="rounded-lg p-2 border-l-4 cursor-pointer transition-colors duration-300"
                 style={{
                   backgroundColor: surfaceBackground,
                   borderLeftColor: colorScheme.primary,
-                }}
-                onMouseEnter={(e: any) => {
-                  e.currentTarget.style.backgroundColor =
-                    colorScheme.opacity.primary10;
-                }}
-                onMouseLeave={(e: any) => {
-                  e.currentTarget.style.backgroundColor = surfaceBackground;
                 }}
                 onClick={() => {
                   handleClose();
                   onEventClick(event);
                 }}
               >
-                <div className="flex items-center gap-2 mb-2">
-                  {event.logo && <span className="text-lg">{event.logo}</span>}
+                <div className="flex items-center gap-2 mb-1">
+                  {event.logo && <span className="text-sm">{event.logo}</span>}
                   <span
-                    className={`inline-block rounded text-xs font-bold ${
-                      isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'
-                    }`}
+                    className="inline-block rounded text-xs font-bold px-1.5 py-0.5"
                     style={{
                       backgroundColor: colorScheme.opacity.primary20,
                       color: colorScheme.primary,
@@ -228,27 +207,19 @@ export const DateEventsModal = ({
                     {event.type}
                   </span>
                 </div>
-                <SemiBoldText
-                  className="mb-1 text-sm"
+                <MediumText
+                  className="mb-0.5 text-sm"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   {event.title}
-                </SemiBoldText>
-                <BodySM
-                  className="text-xs"
+                </MediumText>
+                <Caption
                   style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
-                  {event.time}
-                </BodySM>
-                <BodySM
-                  className="text-xs"
-                  style={{ color: subtitleTextColor }}
-                  useThemeColor={false}
-                >
-                  {event.location}
-                </BodySM>
+                  {event.time} • {event.location}
+                </Caption>
               </div>
             ))}
           </div>
@@ -257,54 +228,32 @@ export const DateEventsModal = ({
           <div className="flex gap-2">
             <button
               onClick={onViewEvents}
-              className={`flex-1 rounded-xl transition-all duration-300 shadow-lg hover:scale-105 ${
-                isMobile ? 'py-2.5' : 'py-3'
+              className={`flex-1 rounded-lg transition-all duration-200 shadow-md hover:scale-105 ${
+                isMobile ? 'py-2' : 'py-2.5'
               }`}
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.primaryLight;
-              }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = buttonBackground;
-              }}
             >
-              <SemiBoldText
-                className={isMobile ? 'text-sm' : 'text-base'}
-                style={{ color: buttonTextColor }}
-                useThemeColor={false}
-              >
+              <MediumText className="text-sm" useThemeColor={false}>
                 View All Events
-              </SemiBoldText>
+              </MediumText>
             </button>
             <button
               onClick={handleClose}
-              className={`flex-1 border-2 rounded-xl transition-colors duration-300 ${
-                isMobile ? 'py-2.5' : 'py-3'
+              className={`flex-1 border rounded-lg transition-colors duration-200 ${
+                isMobile ? 'py-2' : 'py-2.5'
               }`}
               style={{
                 borderColor: borderColor,
                 color: textColor,
                 backgroundColor: modalBackground,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary10;
-              }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = modalBackground;
-              }}
             >
-              <SemiBoldText
-                className={isMobile ? 'text-sm' : 'text-base'}
-                style={{ color: textColor }}
-                useThemeColor={false}
-              >
+              <MediumText className="text-sm" useThemeColor={false}>
                 Close
-              </SemiBoldText>
+              </MediumText>
             </button>
           </div>
         </div>

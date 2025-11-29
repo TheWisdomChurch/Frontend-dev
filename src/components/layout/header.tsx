@@ -9,7 +9,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/Sheet';
 import {
   Menu,
   Church,
-  ChevronDown,
   Home,
   Users,
   Calendar,
@@ -36,18 +35,12 @@ const iconMap = {
 export default function Header() {
   const {
     isHeaderScrolled,
-    activeDropdown,
-    mobileOpenDropdown,
     isSheetOpen,
     isCommunityModalOpen,
     isQRDisplayOpen,
-    dropdownRef,
     colorScheme,
     setSheetOpen,
-    setActiveDropdown,
     handleLinkClick,
-    handleDropdownItemClick,
-    toggleMobileDropdown,
     openCommunityModal,
     closeCommunityModal,
     closeQRDisplay,
@@ -118,26 +111,19 @@ export default function Header() {
           </div>
 
           {/* Center: Navigation - Smaller Text */}
-          <nav
-            className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            ref={dropdownRef}
-          >
+          <nav className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <div className="flex items-center gap-0">
               {extendedNavLinks.map(link => {
                 const isActive = isLinkActive(link.href);
-                const hasDropdown = !!link.dropdown;
                 const Icon = iconMap[link.icon as keyof typeof iconMap];
 
                 return (
                   <div key={link.label} className="relative">
                     <Link
                       href={link.href}
-                      onClick={e => handleLinkClick(link.href, hasDropdown, e)}
-                      onMouseEnter={() =>
-                        hasDropdown && setActiveDropdown(link.label)
-                      }
+                      onClick={e => handleLinkClick(link.href, false, e)}
                       className={cn(
-                        'flex items-center gap-1 px-2 py-1.5 rounded-full text-[11px] font-medium transition-all duration-300 mx-0.5',
+                        'flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all duration-300 mx-0.5',
                         'hover:bg-white/10'
                       )}
                       style={{
@@ -154,50 +140,7 @@ export default function Header() {
                         />
                       )}
                       <span className="text-[11px]">{link.label}</span>
-                      {hasDropdown && (
-                        <ChevronDown
-                          className={cn(
-                            'w-2.5 h-2.5 transition-transform duration-300',
-                            activeDropdown === link.label && 'rotate-180'
-                          )}
-                          style={{ color: colorScheme.white }}
-                        />
-                      )}
                     </Link>
-
-                    {/* Dropdown - Dark background with white text */}
-                    {hasDropdown && activeDropdown === link.label && (
-                      <div
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 rounded-2xl bg-black/95 backdrop-blur-xl border shadow-xl overflow-hidden"
-                        style={{
-                          backgroundColor: '#000000ee', // Dark background
-                          borderColor: colorScheme.primary + '40',
-                          borderWidth: '1px',
-                        }}
-                        onMouseLeave={() => setActiveDropdown(null)}
-                      >
-                        <div className="p-2">
-                          {link.dropdown?.map((item, index) => (
-                            <Link
-                              key={item.label}
-                              href={item.href}
-                              onClick={handleDropdownItemClick}
-                              className={cn(
-                                'block px-4 py-3 text-sm transition-all duration-300 rounded-xl hover:bg-primary hover:text-black',
-                                index === 0 && 'rounded-t-xl',
-                                index === (link.dropdown?.length || 0) - 1 &&
-                                  'rounded-b-xl'
-                              )}
-                              style={{
-                                color: colorScheme.white, // White text
-                              }}
-                            >
-                              {item.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 );
               })}
@@ -206,16 +149,16 @@ export default function Header() {
 
           {/* Right: CTA + Mobile Menu - More Compact */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Desktop Join Us Button - Smaller */}
+            {/* Desktop Join Us Button - Stretched */}
             <Button
               onClick={openCommunityModal}
-              className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all duration-300 hover:scale-105"
+              className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 min-w-[100px] justify-center"
               style={{
                 backgroundColor: colorScheme.primary,
                 color: colorScheme.black || '#000',
               }}
             >
-              <Church className="w-3 h-3" />
+              <Church className="w-3.5 h-3.5" />
               Join Us
             </Button>
 
@@ -241,8 +184,6 @@ export default function Header() {
                 <MobileNavigation
                   colorScheme={colorScheme}
                   isLinkActive={isLinkActive}
-                  mobileOpenDropdown={mobileOpenDropdown}
-                  toggleMobileDropdown={toggleMobileDropdown}
                   setSheetOpen={setSheetOpen}
                   openCommunityModal={openCommunityModal}
                 />
@@ -261,53 +202,13 @@ export default function Header() {
   );
 }
 
-// Enhanced Mobile Navigation with Better UX
+// Enhanced Mobile Navigation without Dropdowns
 const MobileNavigation: React.FC<{
   colorScheme: any;
   isLinkActive: (href: string) => boolean;
-  mobileOpenDropdown: string | null;
-  toggleMobileDropdown: (label: string, e: React.MouseEvent) => void;
   setSheetOpen: (open: boolean) => void;
   openCommunityModal: () => void;
-}> = ({
-  colorScheme,
-  isLinkActive,
-  mobileOpenDropdown,
-  toggleMobileDropdown,
-  setSheetOpen,
-  openCommunityModal,
-}) => {
-  // Fixed dropdown item click handler
-  const handleMobileDropdownItemClick = () => {
-    setSheetOpen(false); // Close sheet when dropdown item is clicked
-  };
-
-  // Fixed main dropdown link click handler - NOW NAVIGATES TO PAGE
-  const handleMobileMainLinkClick = (
-    label: string,
-    href: string,
-    hasDropdown: boolean,
-    e: React.MouseEvent
-  ) => {
-    // If clicking the chevron icon, toggle dropdown
-    const isChevronClick =
-      (e.target as HTMLElement).closest('svg') ||
-      (e.target as HTMLElement).tagName === 'svg';
-
-    if (hasDropdown && isChevronClick) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleMobileDropdown(label, e);
-    } else if (hasDropdown && !isChevronClick) {
-      // Clicking the main link area (not chevron) - navigate to page
-      setSheetOpen(false);
-      // Navigation will happen automatically via the Link component
-    } else {
-      // Regular link - close sheet and navigate
-      setSheetOpen(false);
-    }
-  };
-
+}> = ({ colorScheme, isLinkActive, setSheetOpen, openCommunityModal }) => {
   return (
     <div
       className="flex flex-col h-full"
@@ -361,28 +262,19 @@ const MobileNavigation: React.FC<{
         </button>
       </div>
 
-      {/* Enhanced Navigation Links with Better Spacing */}
+      {/* Enhanced Navigation Links with Better Spacing - No Dropdowns */}
       <nav className="flex-1 px-4 py-6 space-y-2">
         {extendedNavLinks.map(link => {
           const isActive = isLinkActive(link.href);
           const Icon = iconMap[link.icon as keyof typeof iconMap];
-          const isOpen = mobileOpenDropdown === link.label;
-          const hasDropdown = !!link.dropdown;
 
           return (
             <div key={link.label} className="space-y-1">
-              {/* Main Navigation Item - FIXED: All items use Link for navigation */}
+              {/* Main Navigation Item - Simple Link */}
               <div className="flex flex-col">
                 <Link
                   href={link.href}
-                  onClick={e =>
-                    handleMobileMainLinkClick(
-                      link.label,
-                      link.href,
-                      hasDropdown,
-                      e
-                    )
-                  }
+                  onClick={() => setSheetOpen(false)}
                   className={cn(
                     'w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group relative',
                     isActive ? 'bg-primary/20' : 'hover:bg-white/10'
@@ -417,56 +309,7 @@ const MobileNavigation: React.FC<{
                       {link.label}
                     </span>
                   </div>
-                  {hasDropdown && (
-                    <div
-                      className="flex-shrink-0 ml-2 p-1 rounded-lg hover:bg-white/10 transition-colors"
-                      onClick={e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleMobileDropdown(link.label, e);
-                      }}
-                    >
-                      <ChevronDown
-                        className={cn(
-                          'w-4 h-4 transition-transform duration-300',
-                          isOpen && 'rotate-180'
-                        )}
-                        style={{ color: colorScheme.primary }} // Primary color for chevron
-                      />
-                    </div>
-                  )}
                 </Link>
-
-                {/* Enhanced Dropdown with Dark background */}
-                {hasDropdown && isOpen && link.dropdown && (
-                  <div
-                    className="mt-2 ml-4 space-y-1 rounded-2xl overflow-hidden"
-                    style={{
-                      backgroundColor: colorScheme.primary + '10',
-                      border: `1px solid ${colorScheme.primary}20`,
-                    }}
-                  >
-                    {link.dropdown.map((item, index) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        onClick={handleMobileDropdownItemClick}
-                        className={cn(
-                          'block px-4 py-3 text-sm transition-all duration-300 hover:bg-primary hover:text-black border-l-4',
-                          index === 0 && 'rounded-t-2xl',
-                          index === link.dropdown!.length - 1 && 'rounded-b-2xl'
-                        )}
-                        style={{
-                          color: colorScheme.white, // White text
-                          borderLeftColor: colorScheme.primary,
-                          backgroundColor: 'transparent',
-                        }}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
           );
