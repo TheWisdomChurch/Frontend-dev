@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// components/modals/EventRegistrationModal.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -8,7 +6,14 @@ import { gsap } from 'gsap';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { SpecialEvent, RegistrationFormData } from '../utils/hooks/useSpecial';
 import { X, Loader2 } from 'lucide-react';
-import { BaseText, BodySM, BodyMD, SemiBoldText } from '@/components/text';
+import {
+  H4,
+  BodyMD,
+  BodySM,
+  RegularText,
+  MediumText,
+  Caption,
+} from '@/components/text';
 
 interface EventRegistrationModalProps {
   event: SpecialEvent;
@@ -64,13 +69,13 @@ export const EventRegistrationModal = ({
         tl.fromTo(
           modalRef.current,
           { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
         );
       } else {
         tl.fromTo(
           modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, scale: 0.95, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
         );
       }
     }
@@ -86,7 +91,7 @@ export const EventRegistrationModal = ({
         gsap.to(modalRef.current, {
           y: '100%',
           opacity: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
@@ -94,8 +99,8 @@ export const EventRegistrationModal = ({
         gsap.to(modalRef.current, {
           opacity: 0,
           scale: 0.95,
-          y: 30,
-          duration: 0.4,
+          y: 20,
+          duration: 0.3,
           ease: 'power2.in',
           onComplete: onClose,
         });
@@ -115,7 +120,7 @@ export const EventRegistrationModal = ({
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${
         isMobile ? 'pb-0' : ''
       }`}
       onClick={handleBackdropClick}
@@ -123,11 +128,11 @@ export const EventRegistrationModal = ({
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-2xl
+          w-full mx-auto overflow-hidden border shadow-xl
           ${
             isMobile
-              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
-              : 'rounded-3xl max-w-2xl max-h-[90vh]'
+              ? 'rounded-t-2xl rounded-b-none max-h-[85vh]'
+              : 'rounded-2xl max-w-md max-h-[85vh]'
           }
         `}
         style={{
@@ -138,31 +143,30 @@ export const EventRegistrationModal = ({
       >
         {/* Mobile Drag Handle */}
         {isMobile && (
-          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
             <div
-              className="w-12 h-1 rounded-full"
+              className="w-10 h-1 rounded-full"
               style={{ backgroundColor: colorScheme.primary }}
             />
           </div>
         )}
 
         <div
-          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
+          className={`overflow-y-auto ${isMobile ? 'p-3 max-h-[calc(85vh-40px)]' : 'p-4 max-h-[calc(85vh-40px)]'}`}
         >
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <BaseText
-                weight="black"
-                className={`mb-2 tracking-tight ${
-                  isMobile ? 'text-xl' : 'text-2xl lg:text-3xl'
-                }`}
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex-1">
+              <H4
+                fontFamily="bricolage"
+                className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
                 style={{ color: textColor }}
                 useThemeColor={false}
+                weight="bold"
               >
                 Register for {event.title}
-              </BaseText>
+              </H4>
               <BodyMD
-                className="text-sm"
+                className="text-xs"
                 style={{ color: subtitleTextColor }}
                 useThemeColor={false}
               >
@@ -171,42 +175,33 @@ export const EventRegistrationModal = ({
             </div>
             <button
               onClick={handleClose}
-              className={`rounded-xl transition-colors duration-300 flex-shrink-0 ${
-                isMobile ? 'p-1.5' : 'p-2'
-              }`}
+              className="rounded-lg transition-colors duration-200 flex-shrink-0 p-1.5 ml-2"
               style={{
                 color: textColor,
                 backgroundColor: colorScheme.opacity.primary10,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary20;
-              }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
-                  colorScheme.opacity.primary10;
-              }}
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3" />
             </button>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <form onSubmit={onSubmit} className="space-y-3">
+            {/* Name Fields */}
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <SemiBoldText
-                  className="block mb-2 text-sm"
+                <MediumText
+                  className="block mb-1 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   First Name *
-                </SemiBoldText>
+                </MediumText>
                 <input
                   type="text"
                   name="firstName"
                   value={formData.firstName}
                   onChange={onInputChange}
-                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                  className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                   style={{
                     borderColor: formErrors.firstName
                       ? colorScheme.error
@@ -214,11 +209,11 @@ export const EventRegistrationModal = ({
                     backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
-                  placeholder="Enter your first name"
+                  placeholder="First name"
                 />
                 {formErrors.firstName && (
                   <BodySM
-                    className="mt-1 text-xs"
+                    className="mt-0.5 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -228,19 +223,19 @@ export const EventRegistrationModal = ({
               </div>
 
               <div>
-                <SemiBoldText
-                  className="block mb-2 text-sm"
+                <MediumText
+                  className="block mb-1 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   Last Name *
-                </SemiBoldText>
+                </MediumText>
                 <input
                   type="text"
                   name="lastName"
                   value={formData.lastName}
                   onChange={onInputChange}
-                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                  className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                   style={{
                     borderColor: formErrors.lastName
                       ? colorScheme.error
@@ -248,11 +243,11 @@ export const EventRegistrationModal = ({
                     backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
-                  placeholder="Enter your last name"
+                  placeholder="Last name"
                 />
                 {formErrors.lastName && (
                   <BodySM
-                    className="mt-1 text-xs"
+                    className="mt-0.5 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -262,21 +257,22 @@ export const EventRegistrationModal = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Contact Fields */}
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <SemiBoldText
-                  className="block mb-2 text-sm"
+                <MediumText
+                  className="block mb-1 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
-                  Email Address *
-                </SemiBoldText>
+                  Email *
+                </MediumText>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={onInputChange}
-                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                  className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                   style={{
                     borderColor: formErrors.email
                       ? colorScheme.error
@@ -284,11 +280,11 @@ export const EventRegistrationModal = ({
                     backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
-                  placeholder="Enter your email"
+                  placeholder="Email address"
                 />
                 {formErrors.email && (
                   <BodySM
-                    className="mt-1 text-xs"
+                    className="mt-0.5 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -298,19 +294,19 @@ export const EventRegistrationModal = ({
               </div>
 
               <div>
-                <SemiBoldText
-                  className="block mb-2 text-sm"
+                <MediumText
+                  className="block mb-1 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
-                  Phone Number *
-                </SemiBoldText>
+                  Phone *
+                </MediumText>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={onInputChange}
-                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                  className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                   style={{
                     borderColor: formErrors.phone
                       ? colorScheme.error
@@ -318,11 +314,11 @@ export const EventRegistrationModal = ({
                     backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
-                  placeholder="Enter your phone number"
+                  placeholder="Phone number"
                 />
                 {formErrors.phone && (
                   <BodySM
-                    className="mt-1 text-xs"
+                    className="mt-0.5 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -332,20 +328,21 @@ export const EventRegistrationModal = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Location Fields */}
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <SemiBoldText
-                  className="block mb-2 text-sm"
+                <MediumText
+                  className="block mb-1 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
                   Country *
-                </SemiBoldText>
+                </MediumText>
                 <select
                   name="country"
                   value={formData.country}
                   onChange={onInputChange}
-                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                  className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                   style={{
                     borderColor: formErrors.country
                       ? colorScheme.error
@@ -354,7 +351,7 @@ export const EventRegistrationModal = ({
                     color: textColor,
                   }}
                 >
-                  <option value="">Select your country</option>
+                  <option value="">Select country</option>
                   <option value="US">United States</option>
                   <option value="UK">United Kingdom</option>
                   <option value="CA">Canada</option>
@@ -365,7 +362,7 @@ export const EventRegistrationModal = ({
                 </select>
                 {formErrors.country && (
                   <BodySM
-                    className="mt-1 text-xs"
+                    className="mt-0.5 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -375,19 +372,19 @@ export const EventRegistrationModal = ({
               </div>
 
               <div>
-                <SemiBoldText
-                  className="block mb-2 text-sm"
+                <MediumText
+                  className="block mb-1 text-xs"
                   style={{ color: textColor }}
                   useThemeColor={false}
                 >
-                  Location/City *
-                </SemiBoldText>
+                  City *
+                </MediumText>
                 <input
                   type="text"
                   name="location"
                   value={formData.location}
                   onChange={onInputChange}
-                  className="w-full px-3 py-2 rounded-xl border-2 focus:outline-none transition-all duration-300 text-sm"
+                  className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
                   style={{
                     borderColor: formErrors.location
                       ? colorScheme.error
@@ -395,11 +392,11 @@ export const EventRegistrationModal = ({
                     backgroundColor: surfaceBackground,
                     color: textColor,
                   }}
-                  placeholder="Enter your city"
+                  placeholder="Your city"
                 />
                 {formErrors.location && (
                   <BodySM
-                    className="mt-1 text-xs"
+                    className="mt-0.5 text-xs"
                     style={{ color: colorScheme.error }}
                     useThemeColor={false}
                   >
@@ -409,75 +406,51 @@ export const EventRegistrationModal = ({
               </div>
             </div>
 
+            {/* Note Section */}
             <div
-              className="rounded-xl p-3 border text-sm"
+              className="rounded-lg p-2 border"
               style={{
                 backgroundColor: colorScheme.opacity.primary10,
                 borderColor: colorScheme.opacity.primary20,
               }}
             >
-              <BodySM
-                weight="medium"
+              <Caption
                 style={{ color: colorScheme.primary }}
                 useThemeColor={false}
               >
-                <SemiBoldText
+                <MediumText
                   style={{ color: colorScheme.primary }}
                   useThemeColor={false}
                 >
                   Note:
-                </SemiBoldText>{' '}
-                After registration, you will receive a confirmation email with
-                event details and next steps. For group registrations, please
-                contact our events team directly.
-              </BodySM>
+                </MediumText>{' '}
+                Confirmation email will be sent after registration.
+              </Caption>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                isMobile ? 'py-3 text-base' : 'py-4 text-lg'
+              className={`w-full rounded-lg hover:shadow-lg transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
+                isMobile ? 'py-2 text-sm' : 'py-2.5 text-sm'
               }`}
               style={{
                 backgroundColor: buttonBackground,
                 color: buttonTextColor,
               }}
-              onMouseEnter={(e: any) => {
-                if (!isSubmitting) {
-                  e.currentTarget.style.backgroundColor =
-                    colorScheme.primaryLight;
-                }
-              }}
-              onMouseLeave={(e: any) => {
-                if (!isSubmitting) {
-                  e.currentTarget.style.backgroundColor = buttonBackground;
-                }
-              }}
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
-                  <Loader2
-                    className="animate-spin -ml-1 mr-3 h-5 w-5"
-                    style={{ color: buttonTextColor }}
-                  />
-                  <BodyMD
-                    weight="bold"
-                    className="text-sm"
-                    style={{ color: buttonTextColor }}
-                    useThemeColor={false}
-                  >
-                    Processing Registration...
-                  </BodyMD>
+                  <Loader2 className="animate-spin mr-2 h-3 w-3" />
+                  <RegularText className="text-xs" useThemeColor={false}>
+                    Processing...
+                  </RegularText>
                 </span>
               ) : (
-                <SemiBoldText
-                  className={isMobile ? 'text-base' : 'text-lg'}
-                  style={{ color: buttonTextColor }}
-                  useThemeColor={false}
-                >
+                <MediumText className="text-sm" useThemeColor={false}>
                   Complete Registration
-                </SemiBoldText>
+                </MediumText>
               )}
             </button>
           </form>

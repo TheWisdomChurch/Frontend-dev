@@ -152,7 +152,7 @@ export default function Footer() {
                   text: 'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway, Lagos',
                 },
                 { Icon: Phone, title: 'Phone', text: '0706 999 5333' },
-                { Icon: Mail, title: 'Email', text: 'info@wisdomhouse.com' },
+                { Icon: Mail, title: 'Email', text: 'Wisdomhousehq@gmail.com' },
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
                   <div className="p-3 rounded-lg bg-primary/10 flex-shrink-0">
