@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import type { MouseEvent } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useAppDispatch, useAppSelector } from '@/components/utils/hooks/redux';
@@ -300,7 +301,6 @@ const CartSidebar: React.FC = () => {
                 ₦{total.toLocaleString()}
               </BaseText>
             </FlexboxLayout>
-
             <Button
               variant="primary"
               size="lg"
@@ -312,16 +312,15 @@ const CartSidebar: React.FC = () => {
                 backgroundColor: colorScheme.primary,
                 color: colorScheme.black,
               }}
-              onMouseEnter={(e: any) => {
+              onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
                 e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
               }}
-              onMouseLeave={(e: any) => {
+              onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
                 e.currentTarget.style.backgroundColor = colorScheme.primary;
               }}
             >
               Proceed to Checkout
             </Button>
-
             <Button
               variant="outline"
               size="md"
@@ -332,10 +331,10 @@ const CartSidebar: React.FC = () => {
                 borderColor: borderColor,
                 color: textColor,
               }}
-              onMouseEnter={(e: any) => {
+              onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
                 e.currentTarget.style.backgroundColor = hoverBackground;
               }}
-              onMouseLeave={(e: any) => {
+              onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
               }}
             >
