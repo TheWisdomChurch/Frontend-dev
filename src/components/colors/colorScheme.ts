@@ -26,6 +26,7 @@ interface BorderRadius {
 }
 
 interface OpacityColors {
+  [x: string]: string;
   warning10: string;
   warning20: string;
   primary10: string;

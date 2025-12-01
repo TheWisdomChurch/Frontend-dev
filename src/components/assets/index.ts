@@ -37,10 +37,12 @@ import KeystoneBank from './Keystone.webp';
 import ProvidusBank from './Providus.jpg';
 
 // store
-import wisdomShirt_1 from './WisdomShirt (1).jpeg';
-import WisdomShirt_2 from './WisdomShirt (2).jpeg';
-import Cap_1 from './cap.webp';
-import Cap_2 from './cap1.webp';
+import wisdomShirt_1 from './WisdomShirt__1_.png';
+import WisdomShirt_2 from './WisdomShirt__2_-.png';
+import Cap_1 from './cap.png';
+import Mug_1 from './mug.png';
+import Mug_2 from './mug2.png';
+import Tote from './tote.png';
 
 // images
 import Img_1 from './img (2).jpg';
@@ -57,10 +59,12 @@ export {
   Banner_1,
   WisdomShirt_2,
   wisdomShirt_1,
+  Tote,
+  Mug_1,
+  Mug_2,
   Bishop,
   NL,
   Cap_1,
-  Cap_2,
   Img_1,
   Img_2,
   Img_3,
