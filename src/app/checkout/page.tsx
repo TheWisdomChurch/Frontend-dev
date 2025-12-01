@@ -8,6 +8,7 @@ import { gsap } from 'gsap';
 import { Section, Container, FlexboxLayout } from '@/components/layout';
 import { H2, LightText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { ShoppingBag } from 'lucide-react';
 
 const CheckoutPage = () => {
   const router = useRouter();
@@ -25,12 +26,6 @@ const CheckoutPage = () => {
     : colorScheme.textTertiary;
 
   useEffect(() => {
-    if (items.length === 0) {
-      router.push('/store');
-    }
-  }, [items, router]);
-
-  useEffect(() => {
     gsap.fromTo(
       '.checkout-section',
       { opacity: 0, y: 30 },
@@ -38,13 +33,62 @@ const CheckoutPage = () => {
     );
   }, []);
 
+  // If cart is empty, show empty cart message
   if (items.length === 0) {
-    return null;
+    return (
+      <div
+        className="min-h-screen py-8"
+        style={{ backgroundColor: sectionBackground }}
+      >
+        <Section
+          padding="xl"
+          fullHeight={false}
+          style={{ backgroundColor: sectionBackground }}
+        >
+          <Container size="xl">
+            <FlexboxLayout
+              direction="column"
+              justify="center"
+              align="center"
+              gap="md"
+              className="text-center min-h-[60vh] checkout-section"
+            >
+              <ShoppingBag
+                className="w-16 h-16 mb-4"
+                style={{ color: secondaryTextColor }}
+              />
+              <H2
+                className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
+                style={{ color: textColor }}
+              >
+                Your cart is empty
+              </H2>
+              <LightText
+                className="text-xl mb-6"
+                style={{ color: secondaryTextColor }}
+              >
+                Add some items to get started
+              </LightText>
+              <button
+                onClick={() => router.push('/resources/store')}
+                className="px-6 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105"
+                style={{
+                  backgroundColor: colorScheme.primary,
+                  color: colorScheme.black,
+                }}
+              >
+                Back to Store
+              </button>
+            </FlexboxLayout>
+          </Container>
+        </Section>
+      </div>
+    );
   }
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen py-8"
       style={{ backgroundColor: sectionBackground }}
     >
       <Section
