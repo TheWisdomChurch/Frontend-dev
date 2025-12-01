@@ -24,9 +24,7 @@ const AboutUsPage = () => {
   const isDarkMode = colorScheme.background === '#000000';
   const textColor = isDarkMode ? colorScheme.text : colorScheme.text;
   const headingColor = isDarkMode ? colorScheme.heading : colorScheme.heading;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
+
   const cardBackground = isDarkMode ? colorScheme.surface : colorScheme.white;
   const borderColor = isDarkMode ? colorScheme.border : colorScheme.border;
   const primaryLightOpacity = isDarkMode
