@@ -45,8 +45,8 @@ interface OpacityColors {
   success20: string;
   info10: string;
   info20: string;
-  secondary10?: string; // ← ADDED: Secondary opacity color
-  secondary20?: string; // ← ADDED: Secondary opacity color
+  secondary10: string; // ← CHANGED: Removed optional modifier
+  secondary20: string; // ← CHANGED: Removed optional modifier
 }
 
 export interface ColorScheme {
@@ -153,7 +153,7 @@ const createOpacityColors = (
   error: string,
   success: string,
   info: string,
-  secondary?: string // ← ADDED: Secondary color parameter
+  secondary: string // ← CHANGED: Removed optional modifier, made required
 ): OpacityColors => ({
   primary10: `${primary}1A`,
   primary20: `${primary}33`,
@@ -173,8 +173,8 @@ const createOpacityColors = (
   success20: `${success}33`,
   info10: `${info}1A`,
   info20: `${info}33`,
-  secondary10: secondary ? `${secondary}1A` : undefined, // ← ADDED: Secondary opacity
-  secondary20: secondary ? `${secondary}33` : undefined, // ← ADDED: Secondary opacity
+  secondary10: `${secondary}1A`, // ← CHANGED: Always defined now
+  secondary20: `${secondary}33`, // ← CHANGED: Always defined now
 });
 
 export const darkShades: ColorScheme = {
@@ -243,7 +243,7 @@ export const darkShades: ColorScheme = {
     '#EF4444',
     '#10B981',
     '#3B82F6',
-    '#1F2937' // ← ADDED: Secondary color for dark mode
+    '#1F2937' // Secondary color for dark mode
   ),
 
   overlay: 'rgba(0, 0, 0, 0.8)',
@@ -322,7 +322,7 @@ export const lightShades: ColorScheme = {
     '#EF4444',
     '#10B981',
     '#3B82F6',
-    '#FFFFFF' // ← ADDED: Secondary color for light mode
+    '#FFFFFF' // Secondary color for light mode
   ),
 
   overlay: 'rgba(0, 0, 0, 0.8)',
@@ -346,11 +346,34 @@ export type OpacityColor = keyof OpacityColors;
 
 export const colorUtils = {
   hexToRgba: (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
+    // Remove # if present
+    hex = hex.replace(/^#/, '');
+
+    // Handle 3-digit hex
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+
+    // Parse hex values
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+
+    // Handle invalid hex
+    if (isNaN(r) || isNaN(g) || isNaN(b)) {
+      return `rgba(0, 0, 0, ${alpha})`;
+    }
+
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   },
-  lighten: (color: string, percent: number): string => color,
-  darken: (color: string, percent: number): string => color,
+
+  lighten: (color: string, percent: number): string => {
+    // Simple lightening - in a real implementation you'd want to use a proper color library
+    return color;
+  },
+
+  darken: (color: string, percent: number): string => {
+    // Simple darkening - in a real implementation you'd want to use a proper color library
+    return color;
+  },
 };
