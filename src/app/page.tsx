@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import HeroSection from '@/components/utils/heroTest';
 import WhatWeDo from '@/components/ui/Homepage/WhatWeDo';
 import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
 import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';
@@ -10,7 +10,6 @@ import JoinWisdomHouse from '@/components/ui/Homepage/JoinUs';
 import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
 import MobileDebug from '@/components/utils/mobileDebug';
-import { slides } from '@/lib/data';
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -56,12 +55,8 @@ export default function Home() {
         {process.env.NODE_ENV === 'development' && <MobileDebug />}
 
         <div className="[&>*]:m-0 [&>*]:p-0 [&>*]:border-0">
-          <HeroSection
-            slides={slides}
-            showButtons={true}
-            showScrollIndicator={true}
-            showSlideIndicators={true}
-          />
+          {/* Now HeroSection manages its own slides internally */}
+          <HeroSection />
           <WhatWeDo />
           <SeniorPastor />
           <AssociatePastors />
