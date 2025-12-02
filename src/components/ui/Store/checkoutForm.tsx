@@ -1337,7 +1337,7 @@ const CheckoutForm = () => {
             </FlexboxLayout>
           </div>
         )}
-        // In your CheckoutForm component, update the submit button:
+
         <Button
           type="submit"
           variant="primary"
