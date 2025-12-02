@@ -1,17 +1,19 @@
+// C:\Users\Admin\Desktop\WisdomHouse\WisdomHouse-frontendDev\src\app\order-confirmation\page.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { gsap } from 'gsap';
 import { CheckCircle, ShoppingBag, Home } from 'lucide-react';
 import { Section, Container, FlexboxLayout } from '@/components/layout';
 import { H2, BaseText, LightText } from '@/components/text';
 import Button from '@/components/utils/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import OrderConfirmation from '@/components/ui/Store/orderDetails';
 
-const OrderConfirmationPage = () => {
-  const router = useRouter();
+// Simple confirmation page component
+const SimpleConfirmation = () => {
   const { colorScheme } = useTheme();
 
   const isDarkMode = colorScheme.background === '#000000';
@@ -81,7 +83,7 @@ const OrderConfirmationPage = () => {
                 size="lg"
                 curvature="full"
                 leftIcon={<ShoppingBag className="w-5 h-5" />}
-                onClick={() => router.push('/resources/store')}
+                onClick={() => (window.location.href = '/resources/store')}
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: colorScheme.black,
@@ -102,7 +104,7 @@ const OrderConfirmationPage = () => {
                 size="lg"
                 curvature="full"
                 leftIcon={<Home className="w-5 h-5" />}
-                onClick={() => router.push('/')}
+                onClick={() => (window.location.href = '/')}
                 style={{
                   borderColor: colorScheme.primary,
                   color: colorScheme.primary,
@@ -123,6 +125,24 @@ const OrderConfirmationPage = () => {
         </Container>
       </Section>
     </div>
+  );
+};
+
+// Main Order Confirmation Page Component
+const OrderConfirmationContent = () => {
+  const searchParams = useSearchParams();
+
+  // Check if we have order details in URL (coming from checkout)
+  const hasOrderDetails = searchParams.has('orderId');
+
+  return hasOrderDetails ? <OrderConfirmation /> : <SimpleConfirmation />;
+};
+
+const OrderConfirmationPage = () => {
+  return (
+    <Suspense fallback={<SimpleConfirmation />}>
+      <OrderConfirmationContent />
+    </Suspense>
   );
 };
 
