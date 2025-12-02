@@ -803,7 +803,7 @@ const StorePage = () => {
               }}
               useThemeColor={false}
             >
-              Never Miss a Blessing
+              Never Miss our offers
             </H3>
 
             {/* Subtitle */}
