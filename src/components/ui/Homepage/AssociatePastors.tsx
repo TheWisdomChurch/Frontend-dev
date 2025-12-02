@@ -1,3 +1,4 @@
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -21,20 +22,19 @@ import {
 } from '@/components/layout';
 
 /* --------------------------------------------
-   REUSABLE CARD COMPONENT — Clean & Professional
+   REUSABLE CARD COMPONENT — Optimized & Responsive
 --------------------------------------------- */
 function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (cardRef.current) {
+    if (cardRef.current && addToRefs) {
       addToRefs(cardRef.current);
     }
   }, [addToRefs]);
 
   return (
     <div ref={cardRef} className="group w-full">
-      {/* Clean Professional Card */}
       <div className="bg-white rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 border border-gray-200 relative overflow-hidden flex flex-col h-full">
         {/* Subtle Background on Hover */}
         <div
@@ -44,24 +44,27 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
           }}
         />
 
-        {/* Centered Circular Image */}
+        {/* Centered Circular Image with Optimization */}
         <div className="flex justify-center mb-4 flex-shrink-0">
           <div className="relative">
-            {/* Image Container */}
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden ring-2 ring-gray-100 transform group-hover:scale-105 transition-transform duration-300">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden ring-2 ring-gray-100 transform group-hover:scale-105 transition-transform duration-300">
               <Image
                 src={item.image}
-                alt={item.name}
-                width={128}
-                height={128}
+                alt={`${item.name} - ${item.role}`}
+                width={112}
+                height={112}
+                sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, 112px"
                 className="object-cover transition-all duration-300 group-hover:scale-110"
-                priority
+                loading="lazy"
+                quality={85}
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEyIiBoZWlnaHQ9IjExMiIgdmlld0JveD0iMCAwIDExMiAxMTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjExMiIgaGVpZ2h0PSIxMTIiIGZpbGw9IiNGRjVGODUiIHJ4PSI1NiIvPjwvc3ZnPg=="
               />
             </div>
 
             {/* Role Badge */}
             <div
-              className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold whitespace-nowrap z-10 transition-all duration-300 group-hover:-translate-y-1"
+              className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap z-10 transition-all duration-300 group-hover:-translate-y-1 min-w-[80px] text-center"
               style={{
                 backgroundColor: colorScheme.primary,
                 color: '#000000',
@@ -72,20 +75,20 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
           </div>
         </div>
 
-        {/* Name & Description - Uniform Height Section */}
+        {/* Name & Description */}
         <div className="text-center pt-6 relative z-10 flex flex-col flex-grow justify-start">
           <SmallText
             weight="semibold"
             smWeight="bold"
             style={{ color: mainAccentColor }}
             useThemeColor={false}
-            className="text-sm sm:text-base mb-2 transition-colors duration-300"
+            className="text-sm sm:text-base mb-2 transition-colors duration-300 line-clamp-1"
           >
             {item.name}
           </SmallText>
           {item.description && (
             <Caption
-              className="text-gray-600 px-1 transition-all duration-300 line-clamp-3 leading-tight min-h-[3rem] flex items-center justify-center"
+              className="text-gray-600 px-1 transition-all duration-300 line-clamp-3 leading-tight min-h-[3.5rem] flex items-center justify-center text-xs sm:text-sm"
               useThemeColor={false}
             >
               {item.description}
@@ -98,7 +101,7 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
 }
 
 /* --------------------------------------------
-   MAIN COMPONENT - Clean Professional Design
+   MAIN COMPONENT - Optimized & Responsive
 --------------------------------------------- */
 export default function AssociatePastors() {
   const { colorScheme } = useTheme();
@@ -115,10 +118,14 @@ export default function AssociatePastors() {
   const isDarkMode = colorScheme.pageBackground === '#000000';
   const mainAccentColor = isDarkMode ? colorScheme.primary : '#000000';
 
+  // Get only first 4 items for preview
+  const previewPastors = pastorsData.slice(0, 4);
+  const previewMinistryLeaders = ministryLeadersData.slice(0, 4);
+
   return (
     <Section
       ref={sectionRef}
-      padding="xl"
+      padding="lg"
       fullHeight={false}
       style={{ backgroundColor: '#FFFFFF' }}
       className="relative overflow-hidden bg-white"
@@ -129,14 +136,13 @@ export default function AssociatePastors() {
           direction="column"
           justify="center"
           align="center"
-          gap="lg"
-          className="text-center pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16"
+          gap="md"
+          className="text-center pt-12 sm:pt-16 lg:pt-20 pb-6 sm:pb-8 lg:pb-12"
         >
-          {/* Main Title */}
           <div className="relative">
             <H3
               ref={headingRef}
-              className="leading-tight relative"
+              className="leading-tight relative text-2xl sm:text-3xl lg:text-4xl"
               style={{ color: mainAccentColor }}
               useThemeColor={false}
               weight="black"
@@ -145,11 +151,9 @@ export default function AssociatePastors() {
               {associatePastorsContent.mainHeader}
             </H3>
           </div>
-
-          {/* Description */}
           <Caption
             ref={descriptionRef}
-            className="max-w-3xl mx-auto leading-relaxed text-gray-600 mt-4 px-4 sm:px-6 lg:px-0 text-lg sm:text-xl font-light"
+            className="max-w-2xl sm:max-w-3xl mx-auto leading-relaxed text-gray-600 mt-2 sm:mt-4 px-4 text-base sm:text-lg font-light"
             useThemeColor={false}
           >
             {associatePastorsContent.mainDescription}
@@ -157,34 +161,37 @@ export default function AssociatePastors() {
         </FlexboxLayout>
 
         <div ref={contentRef}>
-          {/* Pastoral Team Section */}
-          <div className="w-full mb-16 lg:mb-20">
-            <div className="relative flex justify-center mb-10">
+          {/* Pastoral Team Section - Only first 4 */}
+          <div className="w-full mb-12 lg:mb-16">
+            <div className="relative flex justify-center mb-8 sm:mb-10">
               <H4
                 ref={addSectionHeaderRef}
-                className="text-center relative inline-block"
+                className="text-center relative inline-block text-lg sm:text-xl lg:text-2xl"
                 style={{ color: mainAccentColor }}
                 useThemeColor={false}
                 weight="bold"
                 smWeight="extrabold"
               >
                 {associatePastorsContent.pastoralSection.title}
-                {/* Simple Underline */}
                 <div
-                  className="absolute -bottom-2 left-0 w-full h-0.5 transition-all duration-500"
+                  className="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-0.5 transition-all duration-500"
                   style={{ backgroundColor: colorScheme.primary }}
                 />
               </H4>
             </div>
             <GridboxLayout
-              columns={3}
-              gap="xl"
-              responsive={{ sm: 1, md: 2, lg: 3 }}
+              columns={4}
+              gap="lg"
+              responsive={{
+                sm: 1, // Mobile: 1 column
+                md: 2, // Tablet: 2 columns
+                lg: 4, // Desktop: 4 columns
+              }}
               className="w-full items-stretch"
             >
-              {pastorsData.slice(0, 3).map(item => (
+              {previewPastors.map(item => (
                 <PersonCard
-                  key={item.name}
+                  key={`pastor-${item.name}`}
                   item={item}
                   colorScheme={colorScheme}
                   mainAccentColor={mainAccentColor}
@@ -194,34 +201,39 @@ export default function AssociatePastors() {
             </GridboxLayout>
           </div>
 
-          {/* Ministry Leaders Section */}
-          <div className="w-full mb-12 lg:mb-16">
-            <div className="relative flex justify-center mb-10">
+          {/* Ministry Leaders Section - Only first 4 */}
+          <div className="w-full mb-10 lg:mb-14">
+            <div className="relative flex justify-center mb-8 sm:mb-10">
               <H4
                 ref={addSectionHeaderRef}
-                className="text-center relative inline-block"
+                className="text-center relative inline-block text-lg sm:text-xl lg:text-2xl"
                 style={{ color: mainAccentColor }}
                 useThemeColor={false}
                 weight="bold"
                 smWeight="extrabold"
               >
                 {associatePastorsContent.ministrySection.title}
-                {/* Simple Underline */}
                 <div
-                  className="absolute -bottom-2 left-0 w-full h-0.5 transition-all duration-500"
+                  className="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-0.5 transition-all duration-500"
                   style={{ backgroundColor: colorScheme.primary }}
                 />
               </H4>
             </div>
+
+            {/* Show only first 4 ministry leaders */}
             <GridboxLayout
-              columns={3}
-              gap="xl"
-              responsive={{ sm: 1, md: 2, lg: 3 }}
+              columns={4}
+              gap="lg"
+              responsive={{
+                sm: 1, // Mobile: 1 column
+                md: 2, // Tablet: 2 columns
+                lg: 4, // Desktop: 4 columns
+              }}
               className="w-full items-stretch"
             >
-              {ministryLeadersData.slice(3, 6).map(item => (
+              {previewMinistryLeaders.map(item => (
                 <PersonCard
-                  key={item.name}
+                  key={`leader-${item.name}`}
                   item={item}
                   colorScheme={colorScheme}
                   mainAccentColor={mainAccentColor}
@@ -234,10 +246,9 @@ export default function AssociatePastors() {
           {/* Clean See More Button */}
           <FlexboxLayout
             justify="center"
-            className="pt-2 sm:pt-4 lg:pt-6 pb-8 sm:pb-10 lg:pb-12"
+            className="pt-4 sm:pt-6 lg:pt-8 pb-8 sm:pb-10 lg:pb-12"
           >
             <div className="relative group">
-              {/* Main Button */}
               <CustomButton
                 onClick={handleSeeMore}
                 variant="primary"
@@ -250,7 +261,7 @@ export default function AssociatePastors() {
                 rightIcon={
                   <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-2 sm:ml-3 transition-transform duration-300 group-hover:rotate-180" />
                 }
-                className="group relative px-6 sm:px-8 md:px-12 lg:px-16 py-3 sm:py-4 lg:py-6 text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 border border-gray-200 w-full sm:w-auto"
+                className="group relative px-5 sm:px-7 md:px-10 lg:px-12 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 border border-gray-200 w-full sm:w-auto"
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: '#000000',

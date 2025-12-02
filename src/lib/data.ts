@@ -17,7 +17,6 @@ import {
   ServiceBox,
   // GivingOption,
   Photo,
-  Slide,
   Product,
 } from './types';
 
@@ -49,27 +48,86 @@ import {
 } from '@/components/assets';
 import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 
-export const slides: Slide[] = [
+// export const slides: Slide[] = [
+//   {
+//     image: hero_bg_1,
+//     title: 'We Are Transformed',
+//     subtitle: "Experience God's Transforming Power",
+//     description:
+//       'Welcome to The Wisdom House Church where lives are transformed through faith, community, and divine guidance.',
+//   },
+//   {
+//     image: hero_bg_2,
+//     title: 'Growing In Faith',
+//     subtitle: 'Deepen Your Spiritual Journey',
+//     description:
+//       'Join our vibrant community as we grow together in faith, love, and service to others.',
+//   },
+//   {
+//     image: hero_bg_3,
+//     title: 'Building Community',
+//     subtitle: 'Connect With Believers',
+//     description:
+//       'Experience the warmth of genuine fellowship and build lasting relationships in Christ.',
+//   },
+// ];
+// data/hero-slides.ts
+
+export const slides = [
   {
     image: hero_bg_1,
     title: 'We Are Transformed',
     subtitle: "Experience God's Transforming Power",
-    description:
-      'Welcome to The Wisdom House Church where lives are transformed through faith, community, and divine guidance.',
+    description: 'The Wave of Greatness is Upon Us',
   },
   {
     image: hero_bg_2,
     title: 'Growing In Faith',
     subtitle: 'Deepen Your Spiritual Journey',
-    description:
-      'Join our vibrant community as we grow together in faith, love, and service to others.',
+    description: 'Riding the Wave of Divine Purpose',
   },
   {
     image: hero_bg_3,
     title: 'Building Community',
     subtitle: 'Connect With Believers',
-    description:
-      'Experience the warmth of genuine fellowship and build lasting relationships in Christ.',
+    description: 'Join the Great Wave of Transformation',
+  },
+];
+// data/heroSlides.ts
+export interface Slide {
+  title: string;
+  subtitle: string;
+  description?: string;
+  image: { src: string; alt?: string };
+}
+
+export const defaultSlides: Slide[] = [
+  {
+    title: "Welcome to The Wisdom House Church",
+    subtitle: "Experience God's Transforming Power",
+    description: "Where lives are transformed through faith, community, and divine guidance.",
+    image: { 
+      src: hero_bg_1,
+      alt: "Experience God's Transforming Power" 
+    },
+  },
+  {
+    title: "Join Our Vibrant Community",
+    subtitle: "Deepen Your Spiritual Journey",
+    description: "Grow together in faith, love, and service to others.",
+    image: { 
+      src: '/images/hero_bg_2.jpg',
+      alt: "Deepen Your Spiritual Journey" 
+    },
+  },
+  {
+    title: "Build Lasting Relationships",
+    subtitle: "Connect With Believers",
+    description: "Experience genuine fellowship and relationships in Christ.",
+    image: { 
+      src: '/images/hero_bg_3.jpg',
+      alt: "Connect With Believers" 
+    },
   },
 ];
 
@@ -279,10 +337,11 @@ export const pastorsData: Leader[] = [
   },
   {
     id: 2,
-    name: 'Deacon Bamidele',
-    role: 'Head Technical & Sound Unit',
+    name: 'Pastor Bamidele',
+    role: 'Assistant Pastor',
     image: Associate_1,
-    description: 'Oversees technical operations and sound systems',
+    description:
+      'engagement through discipleship, mentorship, and faith-building activities',
   },
   {
     id: 3,

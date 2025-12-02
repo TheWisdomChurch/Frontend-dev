@@ -5,6 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ColorScheme, darkShades, lightShades } from '../colors/colorScheme';
 
 interface ThemeContextType {
+  theme: string;
   colorScheme: ColorScheme;
   isDark: boolean;
   toggleTheme: () => void;
