@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 // components/qr/QRDisplayModal.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { QrCode, X, Share2, Scan } from 'lucide-react';
 import { worksans } from '../fonts/fonts';
-import { Button } from '../utils/buttons/button';
+import { Button } from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
 // Types for QR Display
@@ -267,7 +267,7 @@ export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
       value: 'https://wa.me/2347069995333',
       color: colorScheme.success,
       gradient: 'from-emerald-500 to-green-600',
-      icon: '👥',
+      icon: 'ðŸ‘¥',
       bgColor: colorScheme.background,
     },
   };
@@ -474,3 +474,4 @@ export const QRDisplayModal: React.FC<QRDisplayModalProps> = ({
     </div>
   );
 };
+
