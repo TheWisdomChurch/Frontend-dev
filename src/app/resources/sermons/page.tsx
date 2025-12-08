@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 // import Image from 'next/image';
@@ -10,7 +10,7 @@ import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, BaseText, BodyMD, SemiBoldText } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 import SermonUtil from '@/components/ui/Sermons';
-import Button from '@/components/utils/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import {
   Section,
   Container,
@@ -190,3 +190,4 @@ const SermonPage = () => {
 };
 
 export default SermonPage;
+

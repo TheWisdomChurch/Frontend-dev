@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -7,7 +7,7 @@ import { ReminderFormData } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2 } from 'lucide-react';
 import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
-import { Button } from '@/components/utils/buttons/button';
+import { Button } from '@/components/utils/buttons/CustomButton';
 
 interface ReminderModalProps {
   formData: ReminderFormData;
@@ -177,7 +177,7 @@ export const ReminderModal = ({
                 className={isMobile ? 'text-lg' : 'text-xl'}
                 style={{ color: colorScheme.primary }}
               >
-                ⏰
+                â°
               </span>
             </div>
 
@@ -299,7 +299,7 @@ export const ReminderModal = ({
               }}
             >
               <div className="flex items-start gap-1">
-                <span className="text-xs mt-0.5 flex-shrink-0">💡</span>
+                <span className="text-xs mt-0.5 flex-shrink-0">ðŸ’¡</span>
                 <Caption
                   className="leading-relaxed"
                   style={{ color: textColor }}
@@ -357,3 +357,4 @@ export const ReminderModal = ({
     document.body
   );
 };
+

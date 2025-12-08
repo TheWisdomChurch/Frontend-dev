@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useState, useEffect } from 'react';
 import { H2, BaseText, LightText, H1 } from '@/components/text';
@@ -12,7 +12,7 @@ import {
   GroupedSeriesData,
   UngroupedSeriesData,
 } from '@/lib/types';
-import Button from '@/components/utils/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import {
   Section,
   Container,
@@ -183,7 +183,7 @@ const SeriesCard = ({
           className="transform group-hover:translate-x-1 transition-transform"
           style={{ color: colorScheme.primary }}
         >
-          →
+          â†’
         </span>
       </div>
     </div>
@@ -365,7 +365,7 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
                     : colorScheme.opacity.white10;
                 }}
               >
-                <span className="text-2xl leading-none">×</span>
+                <span className="text-2xl leading-none">Ã—</span>
               </button>
             </FlexboxLayout>
 
@@ -387,13 +387,13 @@ const SermonCardComponent = ({ video }: { video: YouTubeVideo }) => {
                   className="text-base font-semibold"
                   style={{ color: modalTextColor }}
                 >
-                  {video.series} • {video.preacher}
+                  {video.series} â€¢ {video.preacher}
                 </BaseText>
                 <LightText
                   className="text-sm"
                   style={{ color: secondaryTextColor }}
                 >
-                  Published on {formatDate(video.publishedAt)} •{' '}
+                  Published on {formatDate(video.publishedAt)} â€¢{' '}
                   {formatViewCount(video.viewCount)} views
                 </LightText>
               </FlexboxLayout>
@@ -796,7 +796,7 @@ const FeaturedSection = () => {
                                 className="text-xs"
                                 style={{ color: borderColor }}
                               >
-                                •
+                                â€¢
                               </span>
                               <LightText
                                 className="text-xs"
@@ -1086,7 +1086,7 @@ const SermonUtil = () => {
           className="text-sm md:text-base"
           style={{ color: textColor }}
         >
-          ← Scroll horizontally →
+          â† Scroll horizontally â†’
         </LightText>
       </div>
     </div>
@@ -1128,7 +1128,7 @@ const SermonUtil = () => {
             className="text-sm md:text-base"
             style={{ color: textColor }}
           >
-            ← Scroll horizontally →
+            â† Scroll horizontally â†’
           </LightText>
         </div>
       )}
@@ -1240,7 +1240,7 @@ const SermonUtil = () => {
                         className="text-sm md:text-base"
                         style={{ color: secondaryTextColor }}
                       >
-                        ← Scroll horizontally →
+                        â† Scroll horizontally â†’
                       </LightText>
                     </div>
                   </div>
@@ -1380,3 +1380,4 @@ const SermonUtil = () => {
 };
 
 export default SermonUtil;
+

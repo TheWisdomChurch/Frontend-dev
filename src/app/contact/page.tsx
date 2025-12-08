@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React from 'react';
@@ -12,7 +12,7 @@ import {
   GridboxLayout,
   FlexboxLayout,
 } from '@/components/layout';
-import Button from '@/components/utils/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import {
   MapPin,
   Phone,
@@ -187,7 +187,7 @@ const ContactPage = () => {
                         className="inline-block mt-3 text-sm font-medium hover:underline"
                         style={{ color: colorScheme.primary }}
                       >
-                        Contact Now →
+                        Contact Now â†’
                       </a>
                     )}
                   </div>
@@ -270,7 +270,7 @@ const ContactPage = () => {
                       className="text-xs font-medium hover:underline"
                       style={{ color: colorScheme.primary }}
                     >
-                      Follow Us →
+                      Follow Us â†’
                     </SmallText>
                   </a>
                 );
@@ -474,3 +474,4 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+

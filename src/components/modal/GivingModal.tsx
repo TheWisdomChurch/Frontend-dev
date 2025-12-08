@@ -1,10 +1,10 @@
-// components/modals/GivingModal.tsx
+﻿// components/modals/GivingModal.tsx
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import Image from 'next/image';
-import { Button } from '@/components/utils/buttons/button';
+import { Button } from '@/components/utils/buttons/CustomButton';
 import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ChevronDown, Copy, Check, Info, X } from 'lucide-react';
@@ -238,7 +238,7 @@ export default function GivingModal({
           <X className="w-3 h-3" />
         </Button>
 
-        {/* SCROLLABLE CONTENT — HIDDEN SCROLLBAR, NO BACKGROUND SCROLL */}
+        {/* SCROLLABLE CONTENT â€” HIDDEN SCROLLBAR, NO BACKGROUND SCROLL */}
         <div
           ref={contentRef}
           className={`
@@ -544,9 +544,9 @@ export default function GivingModal({
                   style={{ color: subtitleTextColor }}
                   useThemeColor={false}
                 >
-                  • Include your name in narration
-                  <br />• Keep transaction receipts
-                  <br />• Contact for inquiries
+                  â€¢ Include your name in narration
+                  <br />â€¢ Keep transaction receipts
+                  <br />â€¢ Contact for inquiries
                 </Caption>
               </div>
               <div
@@ -568,9 +568,9 @@ export default function GivingModal({
                   useThemeColor={false}
                 >
                   Contact finance team for:
-                  <br />• Transaction issues
-                  <br />• Giving receipts
-                  <br />• Other inquiries
+                  <br />â€¢ Transaction issues
+                  <br />â€¢ Giving receipts
+                  <br />â€¢ Other inquiries
                 </Caption>
               </div>
             </div>
@@ -611,3 +611,4 @@ export default function GivingModal({
     document.body
   );
 }
+
