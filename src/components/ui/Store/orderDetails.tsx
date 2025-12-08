@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useAppSelector } from '@/components/utils/hooks/redux';
 import { FlexboxLayout } from '@/components/layout';
 import { H2, H3, H4, BaseText, Caption } from '@/components/text';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import {
   CheckCircle,

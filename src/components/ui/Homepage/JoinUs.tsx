@@ -2,7 +2,7 @@
 
 import { WisdomeHouseLogo, Workforce_bg } from '@/components/assets';
 import { H2, BaseText, BodySM, Caption } from '@/components/text';
-import Button from '@/components/utils/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { FormModal } from '@/components/modal/FormModal';
 import { useJoinWisdomHouse } from '@/components/utils/hooks/useJoin';

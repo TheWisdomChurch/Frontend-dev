@@ -3,7 +3,7 @@
 'use client';
 
 import React from 'react';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '@/components/contexts/ThemeContext';
 
 export type ButtonVariant =
   | 'primary'

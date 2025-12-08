@@ -12,9 +12,10 @@ import {
   ExtendedNavLink,
   Leader,
   MinistryLeader,
-  Sermon,
+  Slide,
   Ministry,
   ServiceBox,
+  Testimonial,
   // GivingOption,
   Photo,
   Product,
@@ -45,92 +46,89 @@ import {
   Mug_1,
   Tote,
   wisdomShirt_1,
+  Deacon_1,
+  Deacon_2,
 } from '@/components/assets';
 import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 
-// export const slides: Slide[] = [
-//   {
-//     image: hero_bg_1,
-//     title: 'We Are Transformed',
-//     subtitle: "Experience God's Transforming Power",
-//     description:
-//       'Welcome to The Wisdom House Church where lives are transformed through faith, community, and divine guidance.',
-//   },
-//   {
-//     image: hero_bg_2,
-//     title: 'Growing In Faith',
-//     subtitle: 'Deepen Your Spiritual Journey',
-//     description:
-//       'Join our vibrant community as we grow together in faith, love, and service to others.',
-//   },
-//   {
-//     image: hero_bg_3,
-//     title: 'Building Community',
-//     subtitle: 'Connect With Believers',
-//     description:
-//       'Experience the warmth of genuine fellowship and build lasting relationships in Christ.',
-//   },
-// ];
-// data/hero-slides.ts
-
-export const slides = [
-  {
-    image: hero_bg_1,
-    title: 'We Are Transformed',
-    subtitle: "Experience God's Transforming Power",
-    description: 'The Wave of Greatness is Upon Us',
-  },
-  {
-    image: hero_bg_2,
-    title: 'Growing In Faith',
-    subtitle: 'Deepen Your Spiritual Journey',
-    description: 'Riding the Wave of Divine Purpose',
-  },
-  {
-    image: hero_bg_3,
-    title: 'Building Community',
-    subtitle: 'Connect With Believers',
-    description: 'Join the Great Wave of Transformation',
-  },
-];
-// data/heroSlides.ts
-export interface Slide {
-  title: string;
-  subtitle: string;
-  description?: string;
-  image: { src: string; alt?: string };
-}
-
 export const defaultSlides: Slide[] = [
   {
-    title: "Welcome to The Wisdom House Church",
+    title: 'Welcome to The Wisdom House Church',
     subtitle: "Experience God's Transforming Power",
-    description: "Where lives are transformed through faith, community, and divine guidance.",
-    image: { 
-      src: hero_bg_1,
-      alt: "Experience God's Transforming Power" 
+    description:
+      'Where lives are transformed through faith, community, and divine guidance.',
+    image: {
+      src: hero_bg_1.src,
+      alt: "Experience God's Transforming Power",
     },
   },
   {
-    title: "Join Our Vibrant Community",
-    subtitle: "Deepen Your Spiritual Journey",
-    description: "Grow together in faith, love, and service to others.",
-    image: { 
-      src: '/images/hero_bg_2.jpg',
-      alt: "Deepen Your Spiritual Journey" 
+    title: 'Join Our Vibrant Community',
+    subtitle: 'Deepen Your Spiritual Journey',
+    description: 'Grow together in faith, love, and service to others.',
+    image: {
+      src: hero_bg_2.src,
+      alt: 'Deepen Your Spiritual Journey',
     },
   },
   {
-    title: "Build Lasting Relationships",
-    subtitle: "Connect With Believers",
-    description: "Experience genuine fellowship and relationships in Christ.",
-    image: { 
-      src: '/images/hero_bg_3.jpg',
-      alt: "Connect With Believers" 
+    title: 'Build Lasting Relationships',
+    subtitle: 'Connect With Believers',
+    description: 'Experience genuine fellowship and relationships in Christ.',
+    image: {
+      src: hero_bg_3.src,
+      alt: 'Connect With Believers',
     },
   },
 ];
 
+export const testimonialsData: Testimonial[] = [
+  {
+    id: 1,
+    firstName: 'Michael',
+    lastName: 'Johnson',
+    fullName: 'Michael Johnson',
+    role: 'Church Member',
+    image: '/images/testimonials/michael.jpg',
+    testimony:
+      'This church has transformed my life. The community here is unlike any other - supportive, loving, and genuinely committed to helping each other grow in faith. The teachings are biblically sound and practically applicable to everyday life.',
+    rating: 5,
+    date: '2024-01-15',
+    anonymous: false,
+  },
+  {
+    id: 2,
+    firstName: 'Sarah',
+    lastName: 'Williams',
+    fullName: 'Sarah Williams',
+    role: 'Youth Leader',
+    image: '/images/testimonials/sarah.jpg',
+    testimony:
+      'As a young professional, finding a church that speaks to my generation while maintaining biblical truth was challenging. This church does it perfectly! The youth programs are engaging and the community is welcoming.',
+    rating: 5,
+    date: '2024-02-20',
+    anonymous: false,
+  },
+  {
+    id: 3,
+    firstName: 'Robert',
+    lastName: 'Chen',
+    fullName: 'Robert Chen',
+    role: 'Volunteer',
+    image: '/images/testimonials/robert.jpg',
+    testimony:
+      "The outreach programs have allowed me to serve my community in meaningful ways. I've found purpose and fulfillment through serving here. The leadership is supportive and empowering.",
+    rating: 5,
+    date: '2024-03-10',
+    anonymous: false,
+  },
+];
+
+export const testimonialFormFields = {
+  maxImageSize: 5 * 1024 * 1024, // 5MB
+  maxTestimonyLength: 1000,
+  allowedImageTypes: ['image/jpeg', 'image/png', 'image/webp'],
+};
 // Extended navigation links with icons and dropdowns
 export const extendedNavLinks: ExtendedNavLink[] = [
   {
@@ -143,34 +141,17 @@ export const extendedNavLinks: ExtendedNavLink[] = [
     label: 'About',
     href: '/about',
     icon: 'Users',
-    dropdown: [
-      // { label: 'Our Story', href: '/about/story' },
-      // { label: 'Our Beliefs', href: '/about/beliefs' },
-      { label: 'Leadership', href: '/about/leadership' },
-      { label: 'Mission & Vision', href: '/about/mission' },
-    ],
+    dropdown: [{ label: 'Leadership', href: '/about/leadership' }],
   },
   {
     label: 'Ministries',
     href: '/ministries',
     icon: 'Users',
-    // dropdown: [
-    //   { label: 'Children Ministry', href: '/ministries/children' },
-    //   { label: 'Youth Ministry', href: '/ministries/youth' },
-    //   { label: 'Women Ministry', href: '/ministries/women' },
-    //   { label: 'Men Ministry', href: '/ministries/men' },
-    //   { label: 'Outreach', href: '/ministries/outreach' },
-    // ],
   },
   {
     label: 'Events',
     href: '/events',
     icon: 'Calendar',
-    dropdown: [
-      // { label: 'Upcoming Events', href: '/events/upcoming' },
-      // { label: 'Weekly Services', href: '/events/weekly' },
-      // { label: 'Special Events', href: '/events/special' },
-    ],
   },
   {
     label: 'Resources',
@@ -211,7 +192,7 @@ export const leaders: Leader[] = [
   {
     id: 2,
     name: 'Pastor Kenny Ayilara',
-    role: 'Assistant Pastor',
+    role: 'Associate Pastor',
     image: PstKenny,
     description: 'Supports the senior pastor in ministry and pastoral care.',
   },
@@ -228,30 +209,6 @@ export const leaders: Leader[] = [
     role: 'Head Technical',
     image: Associate_1,
     description: 'Manages technical operations and equipment.',
-  },
-];
-
-export const sermons: Sermon[] = [
-  {
-    title: 'Faith Over Fear',
-    preacher: 'Pastor John Doe',
-    date: 'July 14, 2024',
-    imageId: 'sermon-1',
-    videoId: 'dQw4w9WgXcQ',
-  },
-  {
-    title: 'The Power of Grace',
-    preacher: 'Pastor John Doe',
-    date: 'July 7, 2024',
-    imageId: 'sermon-2',
-    videoId: '3tmd-ClafbY',
-  },
-  {
-    title: 'Living a Purpose-Driven Life',
-    preacher: 'Guest Speaker',
-    date: 'June 30, 2024',
-    imageId: 'sermon-3',
-    videoId: '6-x1g_c1g4o',
   },
 ];
 
@@ -323,8 +280,8 @@ export const whatWeDoData: ServiceBox[] = [
   },
 ];
 
-export const missionStatement =
-  'At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit. Our mission is to create a community where faith thrives and transformation is possible.';
+export const missionStatement = `At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit.
+   Our mission is to create a community where faith thrives and transformation is possible.`;
 
 export const pastorsData: Leader[] = [
   {
@@ -337,18 +294,53 @@ export const pastorsData: Leader[] = [
   },
   {
     id: 2,
-    name: 'Pastor Bamidele',
-    role: 'Assistant Pastor',
-    image: Associate_1,
+    name: 'Pst. Mrs Kehinder Ayilara',
+    role: 'Associate Pastor',
+    image: PstKenny,
     description:
-      'engagement through discipleship, mentorship, and faith-building activities',
+      'Assist in discipleship, mentorship, and faith-building activities',
   },
   {
     id: 3,
-    name: 'Deacon Adeyemi',
-    role: 'Head Service Preparatory Unit',
+    name: 'Pastor Bamidele',
+    role: 'Associate Pastor',
     image: Associate_1,
-    description: 'Manages service preparation and logistics.',
+    description:
+      'Assist in discipleship, mentorship, and faith-building activities',
+  },
+];
+export const deaconsData: Leader[] = [
+  {
+    id: 1,
+    name: 'Deacon Adeyemi',
+    role: 'Deacon',
+    image: Associate_1, // You'll need to import this image
+    description:
+      'Oversees deacon board activities, church administration, and member care ministries.',
+  },
+  {
+    id: 2,
+    name: 'Deaconess Toyosi Jimba',
+    role: 'Deaconess ',
+    image: Deacon_2, // You'll need to import this image
+    description:
+      "Leads women's fellowship, coordinates hospitality, and supports new member integration.",
+  },
+  {
+    id: 3,
+    name: 'Deaconess Temisan Adeniran',
+    role: 'Deacon - Finance & Stewardship',
+    image: Deacon_1, // You'll need to import this image
+    description:
+      'Manages church finances, oversees giving records, and leads financial stewardship teachings.',
+  },
+  {
+    id: 4,
+    name: 'Deaconess Abimbola Ademola',
+    role: 'Deacon',
+    image: WhatWeDo_3, // You'll need to import this image
+    description:
+      'Coordinates youth programs, community outreach initiatives, and evangelism activities.',
   },
 ];
 // Add this to your data.ts file

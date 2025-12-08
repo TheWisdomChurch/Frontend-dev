@@ -1,4 +1,3 @@
- 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -10,7 +9,7 @@ import {
   associatePastorsContent,
 } from '@/lib/data';
 import { H3, H4, SmallText, Caption } from '@/components/text';
-import CustomButton from '@/components/utils/CustomButton';
+import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useAssociatePastors } from '@/components/utils/hooks/useAssociate';
 import { ArrowRight, Sparkles, Users } from 'lucide-react';

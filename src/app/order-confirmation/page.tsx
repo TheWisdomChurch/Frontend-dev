@@ -8,7 +8,7 @@ import { gsap } from 'gsap';
 import { CheckCircle, ShoppingBag, Home } from 'lucide-react';
 import { Section, Container, FlexboxLayout } from '@/components/layout';
 import { H2, BaseText, LightText } from '@/components/text';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons/';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import OrderConfirmation from '@/components/ui/Store/orderDetails';
 

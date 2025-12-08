@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { Button } from '../utils';
+import { Button } from '../utils/buttons';
 
 export interface CalendarProps {
   className?: string;

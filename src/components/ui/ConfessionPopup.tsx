@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import Image from 'next/image';
-import { Button } from '../utils';
+import CustomButton from '@/components/utils/buttons/CustomButton';
 import { BaseText, BricolageText, H2, P } from '@/components/text';
 import { PlayfairText } from '../text/FontText';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -156,7 +156,7 @@ export default function ProfessionalPopup({
       }}
       onClick={handleBackdropClick}
     >
-      {/* Wider Responsive Modal Container - Using CSS classes for responsive width */}
+      {/* Wider Responsive Modal Container */}
       <div
         ref={modalRef}
         className="relative rounded-xl w-full mx-auto overflow-hidden popup-modal-container"
@@ -188,7 +188,7 @@ export default function ProfessionalPopup({
         {/* Responsive Close Button */}
         <div className="relative w-full">
           <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 md:-top-4 md:-right-4 z-50">
-            <Button
+            <CustomButton
               variant="ghost"
               size="icon"
               onClick={handleClose}
@@ -214,7 +214,7 @@ export default function ProfessionalPopup({
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </Button>
+            </CustomButton>
           </div>
         </div>
 
@@ -349,7 +349,7 @@ export default function ProfessionalPopup({
 
               {/* Navigation - Wider buttons for desktop */}
               <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2">
-                <Button
+                <CustomButton
                   variant="outline"
                   size="sm"
                   onClick={showConfession}
@@ -362,9 +362,9 @@ export default function ProfessionalPopup({
                   }}
                 >
                   Our Confession
-                </Button>
+                </CustomButton>
 
-                <Button
+                <CustomButton
                   variant="primary"
                   size="sm"
                   onClick={handleClose}
@@ -376,7 +376,7 @@ export default function ProfessionalPopup({
                   }}
                 >
                   Explore Site
-                </Button>
+                </CustomButton>
               </div>
 
               <BricolageText
@@ -509,7 +509,7 @@ export default function ProfessionalPopup({
 
               {/* Navigation - Wider buttons for desktop */}
               <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2">
-                <Button
+                <CustomButton
                   variant="outline"
                   size="sm"
                   onClick={showWelcome}
@@ -537,9 +537,9 @@ export default function ProfessionalPopup({
                   }}
                 >
                   Back
-                </Button>
+                </CustomButton>
 
-                <Button
+                <CustomButton
                   variant="primary"
                   size="sm"
                   onClick={handleClose}
@@ -551,7 +551,7 @@ export default function ProfessionalPopup({
                   }}
                 >
                   Explore Site
-                </Button>
+                </CustomButton>
               </div>
             </div>
           )}

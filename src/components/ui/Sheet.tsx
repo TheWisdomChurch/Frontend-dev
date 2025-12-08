@@ -75,8 +75,7 @@ const Sheet: React.FC<SheetProps> = ({
 /* ========================================== */
 /*               Trigger                     */
 /* ========================================== */
-interface SheetTriggerProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface SheetTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
   children: React.ReactNode;
 }

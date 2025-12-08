@@ -12,7 +12,7 @@ import {
   useIntersectionObserver,
 } from '@/components/utils/functionUtils/contactUtils';
 import { H2, BaseText, BodySM, Caption, H3 } from '@/components/text';
-import Button from '@/components/utils/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import {
   Section,
   Container,

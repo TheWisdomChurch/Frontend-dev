@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { ChevronDown, X } from 'lucide-react';
-import Button from '../utils/CustomButton';
+import Button from '../utils/buttons/CustomButton';
 import { communityLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '../assets';
 import Image from 'next/image';

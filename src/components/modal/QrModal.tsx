@@ -5,7 +5,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { QrCode, X, Share2, Scan } from 'lucide-react';
 import { worksans } from '../fonts/fonts';
-import { Button } from '../ui/button';
+import { Button } from '../utils/buttons/button';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
 // Types for QR Display

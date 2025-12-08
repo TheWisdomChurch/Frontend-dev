@@ -2,12 +2,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import HeroSection from '@/components/utils/heroTest';
+import HeroSection from '@/components/utils/heromain';
 import WhatWeDo from '@/components/ui/Homepage/WhatWeDo';
 import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
 import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';
 import JoinWisdomHouse from '@/components/ui/Homepage/JoinUs';
 import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
+import Testimonial from '@/components/ui/Homepage/Testimonials';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
 import MobileDebug from '@/components/utils/mobileDebug';
 
@@ -61,6 +62,7 @@ export default function Home() {
           <SeniorPastor />
           <AssociatePastors />
           <JoinWisdomHouse />
+          <Testimonial />
           <OnlineGiving />
         </div>
 

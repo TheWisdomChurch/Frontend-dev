@@ -1,65 +1,88 @@
-// eslint.config.mjs
-import js from '@eslint/js';
-import typescript from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
+﻿// eslint.config.mjs
+import { defineConfig } from "eslint/config";
+import globals from "globals";
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import prettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
 
-export default [
+export default defineConfig([
+  // Base config
   js.configs.recommended,
+  
+  // TypeScript
+  ...tseslint.configs.recommended,
+  
+  // React
   {
-    files: ['**/*.ts', '**/*.tsx'],
     plugins: {
-      '@typescript-eslint': typescript,
-      react,
-      'react-hooks': reactHooks,
-    },
-    languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
-        project: './tsconfig.json',
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      globals: {
-        React: 'readonly',
-        process: 'readonly',
-        module: 'readonly',
-      },
+      "react": react,
+      "react-hooks": reactHooks,
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-empty-object-type': 'error',
-      '@typescript-eslint/ban-ts-comment': 'error',
-      '@typescript-eslint/triple-slash-reference': 'off', // optional: disable completely
-      'prefer-const': 'error',
-      'no-unused-vars': 'off',
-      'react-hooks/set-state-in-effect': 'off',
-      'react/react-in-jsx-scope': 'off',
-      'no-undef': 'off',
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
   },
+  
+  // Prettier integration
+  prettierConfig,
+  {
+    plugins: {
+      prettier,
+    },
+    rules: {
+      "prettier/prettier": "error",
+    },
+  },
+  
+  // Global variables
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
+  
+  // Custom rules
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": ["error", { 
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_" 
+      }],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "prefer-const": "error",
+    },
+  },
+  
+  // Ignore patterns
   {
     ignores: [
-      'node_modules/**',
-      '.next/**',
-      'dist/**',
-      'build/**',
-      'out/**',
-      '*.js',
-      '*.mjs',
-      '*.cjs',
-      '*.config.js',
-      '*.config.mjs',
-      'scripts/**',
-      'commitlint.config.js',
-      'postcss.config.mjs',
-      'tailwind.config.js',
-      'eslint.config.mjs',
-      'next-env.d.ts', // ✅ CRITICAL LINE — FIXES THE ERROR
-      '.next/types/**', // optional extra safety
+      "node_modules/",
+      ".next/",
+      "out/",
+      "dist/",
+      "build/",
+      "*.config.js",
+      "*.config.mjs",
+      "*.config.ts",
+      "scripts/",
+      "commitlint.config.js",
+      "postcss.config.mjs",
+      "tailwind.config.js",
+      "eslint.config.mjs",
     ],
   },
-];
+]);

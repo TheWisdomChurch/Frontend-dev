@@ -4,7 +4,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/utils/buttons/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/Sheet';
 import {
   Menu,

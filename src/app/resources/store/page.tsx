@@ -26,7 +26,7 @@ import {
   Tag,
   Bell,
 } from 'lucide-react';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons/';
 import {
   Section,
   Container,
