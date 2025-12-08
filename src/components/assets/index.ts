@@ -14,7 +14,6 @@ import Whatwedo_1 from './Whatwedo (1).jpg';
 import Whatwedo_2 from './Whatwedo (2).jpg';
 import WhatWeDo_3 from './Whatwedo (3).jpg';
 import Whatwedo_4 from './Whatwedo.jpg';
-import WhatweDo_4 from './Whatwedo_4.jpg';
 
 // Logo
 import WisdomeHouseLogo from './OIP.webp';
@@ -24,6 +23,10 @@ import Associate_1 from './Asso (1).jpg';
 import Associate_2 from './Asso (2).jpg';
 import PstKenny from './pstKenny1.jpeg';
 import PstKenny_1 from './PstKenny2.jpeg';
+
+// Deacons
+import Deacon_1 from './Deacon1.jpg';
+import Deacon_2 from './Deacon2.jpg';
 
 // JoinUs
 import Workforce_bg from './workForce.jpg';
@@ -48,7 +51,7 @@ import Tote from './tote.png';
 import Img_1 from './img (2).jpg';
 import Img_2 from './img (3).jpg';
 import Img_3 from './img (4).jpg';
-import Img_4 from './img (5).jpg';
+// import Img_4 from './img (5).jpg';
 import Children_head from './Moji.jpeg';
 import Min_Adura from './Aduragbemi.jpg';
 
@@ -68,7 +71,9 @@ export {
   Img_1,
   Img_2,
   Img_3,
-  Img_4,
+  // Img_4,
+  Deacon_1,
+  Deacon_2,
   Children_head,
   Min_Adura,
   Banner_2,
@@ -79,7 +84,6 @@ export {
   hero_bg_1,
   hero_bg_2,
   hero_bg_3,
-  WhatweDo_4,
   Associate_1,
   Associate_2,
   hero_bg_4,

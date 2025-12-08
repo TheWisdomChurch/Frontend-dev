@@ -7,7 +7,7 @@ import { ReminderFormData } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2 } from 'lucide-react';
 import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/utils/buttons/button';
 
 interface ReminderModalProps {
   formData: ReminderFormData;

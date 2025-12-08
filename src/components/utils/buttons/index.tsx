@@ -1,9 +1,6 @@
-// components/ui/buttons/index.tsx
-'use client';
-
 import React from 'react';
 
-import Button, { ButtonProps } from '../CustomButton';
+import Button, { ButtonProps } from './CustomButton';
 
 // Primary Buttons
 export const PrimaryButton: React.FC<ButtonProps> = props => (

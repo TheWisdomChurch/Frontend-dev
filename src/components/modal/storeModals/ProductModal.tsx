@@ -9,7 +9,7 @@ import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useAppDispatch } from '@/components/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Product } from '@/lib/types';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons/';
 import {
   H4,
   BodyMD,

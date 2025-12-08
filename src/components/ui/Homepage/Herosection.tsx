@@ -2,9 +2,11 @@
 'use client';
 
 import { H1, H2, BodyXL } from '@/components/text';
-import { Button } from '@/components/utils';
+import CustomButton from '@/components/utils/buttons/CustomButton';
 import { ChevronDown } from 'lucide-react';
 import { useHeroSection } from '@/components/utils/hooks/useHeroSection';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 interface Slide {
   title: string;
@@ -60,6 +62,12 @@ const HeroSection = ({
     addToIndicatorsRef,
   } = useHeroSection();
 
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const isMultiSlide = Boolean(slides && slides.length > 0);
   const isDarkMode = colorScheme.pageBackground === '#000000';
 
@@ -77,6 +85,11 @@ const HeroSection = ({
   const subtitleColor = isDarkMode ? colorScheme.primary : '#FFFFFF'; // Yellow (dark) / White (light)
   const descriptionColor = '#FFFFFF'; // Always pure white (your "twirk")
 
+  // Generate blur placeholder for Image component
+  const generateBlurDataURL = () => {
+    return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTI4MCA3MjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEyODAiIGhlaWdodD0iNzIwIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0iTTAgMGgxMjgwdjcyMEgweiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzBfODQ3KSIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8wXzg0NyIgeDE9IjAiIHkxPSIwIiB4Mj0iMTI4MCIgeTI9IjcyMCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiMwMDAwMDAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=';
+  };
+
   return (
     <section
       ref={heroRef}
@@ -93,10 +106,21 @@ const HeroSection = ({
             }`}
           >
             <div className="relative w-full h-full">
-              <img
+              {/* Next.js Image component with optimization */}
+              <Image
                 src={slide.image.src}
                 alt={slide.image.alt || slide.title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="100vw"
+                priority={index === 0} // Only prioritize first image
+                quality={85}
+                placeholder="blur"
+                blurDataURL={generateBlurDataURL()}
+                className="object-cover"
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                }}
               />
 
               {/* Enhanced gradient overlay for better text readability */}
@@ -118,10 +142,21 @@ const HeroSection = ({
       ) : (
         <div className="absolute inset-0">
           <div className="relative w-full h-full">
-            <img
-              src={backgroundImage}
-              alt={title}
-              className="w-full h-full object-cover"
+            {/* Single background Image component */}
+            <Image
+              src={backgroundImage!}
+              alt={title || 'Hero background'}
+              fill
+              sizes="100vw"
+              priority={true}
+              quality={90}
+              placeholder="blur"
+              blurDataURL={generateBlurDataURL()}
+              className="object-cover"
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center',
+              }}
             />
             {/* Enhanced gradient overlay for better text readability */}
             <div
@@ -209,7 +244,7 @@ const HeroSection = ({
               ref={buttonsRef}
               className="flex flex-col sm:flex-row gap-4 sm:gap-5 md:gap-6 justify-center items-center"
             >
-              <Button
+              <CustomButton
                 variant="primary"
                 size="lg"
                 elevated={true}
@@ -218,9 +253,9 @@ const HeroSection = ({
                 onClick={onPrimaryButtonClick}
               >
                 {primaryButtonText}
-              </Button>
+              </CustomButton>
 
-              <Button
+              <CustomButton
                 variant="outline"
                 size="lg"
                 curvature="lg"
@@ -231,17 +266,21 @@ const HeroSection = ({
                   backgroundColor: 'transparent',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.backgroundColor = colorScheme.primary;
-                  e.currentTarget.style.color = '#000000';
+                  if (isClient) {
+                    e.currentTarget.style.backgroundColor = colorScheme.primary;
+                    e.currentTarget.style.color = '#000000';
+                  }
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FFFFFF';
+                  if (isClient) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#FFFFFF';
+                  }
                 }}
                 onClick={onSecondaryButtonClick}
               >
                 {secondaryButtonText}
-              </Button>
+              </CustomButton>
             </div>
           )}
         </div>

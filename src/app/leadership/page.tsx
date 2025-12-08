@@ -5,7 +5,7 @@ import { useRef, useEffect, useState } from 'react';
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, H3, H4, P, SmallText, Caption } from '@/components/text';
 import { hero_bg_2 } from '@/components/assets';
-import { leaders, ministryLeadersData } from '@/lib/data';
+import { leaders, ministryLeadersData, deaconsData } from '@/lib/data';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -16,9 +16,26 @@ import {
   GridboxLayout,
   FlexboxLayout,
 } from '@/components/layout';
-import { Heart, Calendar, X, Loader2, MapPin, Phone } from 'lucide-react';
-import CustomButton from '@/components/utils/CustomButton';
+import {
+  Heart,
+  Calendar,
+  X,
+  Loader2,
+  MapPin,
+  Phone,
+  ChevronRight,
+  User,
+} from 'lucide-react';
+import CustomButton from '@/components/utils/buttons/CustomButton';
 import { createPortal } from 'react-dom';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import {
+  ColorScheme,
+  darkShades,
+  lightShades,
+} from '@/components/colors/colorScheme';
+
+// import { ColorScheme, darkShades, lightShades } from '@/components/ui/fonts/color/colorScheme'; // Import your color scheme
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -26,32 +43,38 @@ if (typeof window !== 'undefined') {
 }
 
 /* --------------------------------------------
-   VISIT CHURCH MODAL COMPONENT
+   DETAIL MODAL COMPONENT - Shows detailed info
 --------------------------------------------- */
-interface VisitChurchModalProps {
+interface DetailModalProps {
   isOpen: boolean;
   onClose: () => void;
+  data: Leader | null;
+  type: 'pastor' | 'deacon' | 'ministry';
+  colorScheme: ColorScheme;
 }
 
-const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
+const DetailModal = ({
+  isOpen,
+  onClose,
+  data,
+  type,
+  colorScheme,
+}: DetailModalProps) => {
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Updated color scheme to match your theme
-  const colorScheme = {
-    primary: '#F7DE12',
-    primaryLight: '#F9E755',
-    primaryDark: '#D4BC0F',
-    black: '#000000',
-    white: '#ffffff',
-    surface: '#1a1a1a',
-    border: '#333333',
-    error: '#EF4444',
-    opacity: {
-      primary10: 'rgba(247, 222, 18, 0.1)',
-      primary20: 'rgba(247, 222, 18, 0.2)',
-    },
+  const getTypeColor = () => {
+    switch (type) {
+      case 'pastor':
+        return colorScheme.primary; // Use primary yellow for pastors
+      case 'deacon':
+        return colorScheme.success; // Use success green for deacons
+      case 'ministry':
+        return colorScheme.info; // Use info blue for ministry leaders
+      default:
+        return colorScheme.primary;
+    }
   };
 
   useEffect(() => {
@@ -65,7 +88,268 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
   useEffect(() => {
     if (isOpen && modalRef.current) {
       document.body.style.overflow = 'hidden';
+      const tl = gsap.timeline();
 
+      if (isMobile) {
+        tl.fromTo(
+          modalRef.current,
+          { y: '100%', opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+        );
+      } else {
+        tl.fromTo(
+          modalRef.current,
+          { opacity: 0, scale: 0.95, y: 30 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+        );
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, isMobile]);
+
+  const handleClose = () => {
+    if (modalRef.current) {
+      if (isMobile) {
+        gsap.to(modalRef.current, {
+          y: '100%',
+          opacity: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      } else {
+        gsap.to(modalRef.current, {
+          opacity: 0,
+          scale: 0.95,
+          y: 30,
+          duration: 0.4,
+          ease: 'power2.in',
+          onComplete: onClose,
+        });
+      }
+    } else {
+      onClose();
+    }
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
+  };
+
+  if (!mounted || !isOpen || !data) return null;
+
+  const typeColor = getTypeColor();
+
+  return createPortal(
+    <div
+      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 ${
+        isMobile ? 'pb-0' : ''
+      }`}
+      onClick={handleBackdropClick}
+    >
+      <div
+        ref={modalRef}
+        className={`
+          w-full mx-auto overflow-hidden border
+          ${
+            isMobile
+              ? 'rounded-t-3xl rounded-b-none max-h-[90vh]'
+              : 'rounded-3xl max-w-3xl max-h-[90vh]'
+          }
+        `}
+        style={{
+          backgroundColor: colorScheme.surface,
+          borderColor: typeColor,
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        {isMobile && (
+          <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+            <div
+              className="w-12 h-1 rounded-full"
+              style={{ backgroundColor: typeColor }}
+            />
+          </div>
+        )}
+
+        <div
+          className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
+        >
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h2
+                className={`mb-2 tracking-tight font-black font-bricolage ${
+                  isMobile ? 'text-xl' : 'text-2xl lg:text-3xl'
+                }`}
+                style={{ color: typeColor }}
+              >
+                {data.name}
+              </h2>
+              <div className="flex items-center gap-2">
+                <div
+                  className="px-3 py-1 rounded-full text-xs font-bold"
+                  style={{
+                    backgroundColor: `${typeColor}1A`, // Using opacity format
+                    color: typeColor,
+                  }}
+                >
+                  {data.role}
+                </div>
+                <div
+                  className="px-3 py-1 rounded-full text-xs font-bold"
+                  style={{
+                    backgroundColor: `${typeColor}0D`, // Lighter opacity
+                    color: typeColor,
+                  }}
+                >
+                  {type === 'pastor'
+                    ? 'Pastoral Team'
+                    : type === 'deacon'
+                      ? 'Deacons Board'
+                      : 'Ministry Leader'}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleClose}
+              className={`rounded-xl transition-colors duration-300 flex-shrink-0 ${
+                isMobile ? 'p-1.5' : 'p-2'
+              }`}
+              style={{
+                color: typeColor,
+                backgroundColor: `${typeColor}1A`,
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.backgroundColor = `${typeColor}33`;
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.backgroundColor = `${typeColor}1A`;
+              }}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Image Section */}
+            <div className="flex-shrink-0">
+              <div className="relative w-full lg:w-64">
+                <div className="relative w-40 h-40 lg:w-64 lg:h-64 rounded-2xl overflow-hidden mx-auto lg:mx-0">
+                  <Image
+                    src={data.image}
+                    alt={data.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 160px, 256px"
+                  />
+                </div>
+                <div
+                  className="absolute -inset-4 rounded-2xl blur-xl opacity-30 -z-10"
+                  style={{ backgroundColor: typeColor }}
+                />
+              </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="flex-1">
+              <div className="mb-6">
+                <h3
+                  className="text-lg font-semibold mb-3"
+                  style={{ color: typeColor }}
+                >
+                  About {data.name.split(' ')[0]}
+                </h3>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: colorScheme.text }}
+                >
+                  {data.description}
+                </p>
+              </div>
+
+              {/* Additional Details Section */}
+              <div
+                className="rounded-xl p-4 mb-6"
+                style={{
+                  backgroundColor: `${typeColor}08`,
+                  border: `1px solid ${typeColor}20`,
+                }}
+              >
+                <h4
+                  className="text-sm font-semibold mb-2"
+                  style={{ color: typeColor }}
+                >
+                  Ministry Focus
+                </h4>
+                <p className="text-sm" style={{ color: colorScheme.text }}>
+                  {data.description.includes('oversees') ||
+                  data.description.includes('coordinates')
+                    ? data.description
+                    : `Dedicated to serving through ${data.role.toLowerCase()} with a focus on excellence and faithfulness.`}
+                </p>
+              </div>
+
+              {/* Contact Info */}
+              <div className="flex flex-wrap gap-3">
+                <div
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg"
+                  style={{
+                    backgroundColor: `${typeColor}1A`,
+                  }}
+                >
+                  <User className="w-4 h-4" style={{ color: typeColor }} />
+                  <span className="text-xs" style={{ color: colorScheme.text }}>
+                    {type === 'pastor'
+                      ? 'Pastoral Care'
+                      : type === 'deacon'
+                        ? 'Member Support'
+                        : 'Ministry Leadership'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+/* --------------------------------------------
+   VISIT CHURCH MODAL COMPONENT
+--------------------------------------------- */
+interface VisitChurchModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  colorScheme: ColorScheme;
+}
+
+const VisitChurchModal = ({
+  isOpen,
+  onClose,
+  colorScheme,
+}: VisitChurchModalProps) => {
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      document.body.style.overflow = 'hidden';
       const tl = gsap.timeline();
 
       if (isMobile) {
@@ -139,12 +423,11 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
           }
         `}
         style={{
-          backgroundColor: colorScheme.black,
+          backgroundColor: colorScheme.surface,
           borderColor: colorScheme.primary,
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Mobile Drag Handle */}
         {isMobile && (
           <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
             <div
@@ -157,7 +440,6 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
         <div
           className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
         >
-          {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div>
               <h2
@@ -168,7 +450,7 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
               >
                 Visit Our Church
               </h2>
-              <p className="text-sm" style={{ color: colorScheme.white }}>
+              <p className="text-sm" style={{ color: colorScheme.text }}>
                 You can worship with us either onsite or online but we will love
                 to meet you in person
               </p>
@@ -195,9 +477,7 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
             </button>
           </div>
 
-          {/* Content */}
           <div className="space-y-6">
-            {/* Address Section */}
             <div className="flex items-start gap-4">
               <div
                 className="rounded-xl p-3 flex-shrink-0"
@@ -219,7 +499,7 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
                 </h3>
                 <p
                   className="text-sm leading-relaxed"
-                  style={{ color: colorScheme.white }}
+                  style={{ color: colorScheme.text }}
                 >
                   Honors gardens, opposite dominion headquarters lagos,
                   <br />
@@ -230,7 +510,6 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
               </div>
             </div>
 
-            {/* Contact Section */}
             <div className="flex items-start gap-4">
               <div
                 className="rounded-xl p-3 flex-shrink-0"
@@ -250,13 +529,12 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
                 >
                   For More Information
                 </h3>
-                <p className="text-sm" style={{ color: colorScheme.white }}>
+                <p className="text-sm" style={{ color: colorScheme.text }}>
                   Contact us: 07069995333
                 </p>
               </div>
             </div>
 
-            {/* Note Section */}
             <div
               className="rounded-xl p-4 border text-sm"
               style={{
@@ -285,9 +563,10 @@ const VisitChurchModal = ({ isOpen, onClose }: VisitChurchModalProps) => {
 interface PrayerModalProps {
   isOpen: boolean;
   onClose: () => void;
+  colorScheme: ColorScheme;
 }
 
-const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
+const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -305,22 +584,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
     prayerRequest: '',
   });
 
-  // Updated color scheme to match your theme
-  const colorScheme = {
-    primary: '#F7DE12',
-    primaryLight: '#F9E755',
-    primaryDark: '#D4BC0F',
-    black: '#000000',
-    white: '#ffffff',
-    surface: '#1a1a1a',
-    border: '#333333',
-    error: '#EF4444',
-    opacity: {
-      primary10: 'rgba(247, 222, 18, 0.1)',
-      primary20: 'rgba(247, 222, 18, 0.2)',
-    },
-  };
-
   useEffect(() => {
     setMounted(true);
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -332,7 +595,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
   useEffect(() => {
     if (isOpen && modalRef.current) {
       document.body.style.overflow = 'hidden';
-
       const tl = gsap.timeline();
 
       if (isMobile) {
@@ -394,7 +656,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (formErrors[name as keyof typeof formErrors]) {
       setFormErrors(prev => ({
         ...prev,
@@ -438,14 +699,11 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
       console.log('Prayer request submitted:', formData);
-      // Reset form
       setFormData({ name: '', email: '', prayerRequest: '' });
       handleClose();
-      // Here you would typically show a success message
     } catch (error) {
       console.error('Error submitting prayer request:', error);
     } finally {
@@ -473,12 +731,11 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
           }
         `}
         style={{
-          backgroundColor: colorScheme.black,
+          backgroundColor: colorScheme.surface,
           borderColor: colorScheme.primary,
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Mobile Drag Handle */}
         {isMobile && (
           <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
             <div
@@ -491,7 +748,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
         <div
           className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(90vh-60px)]' : 'p-6 lg:p-8 max-h-[calc(90vh-80px)]'}`}
         >
-          {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div>
               <h2
@@ -502,7 +758,7 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
               >
                 Prayer Request
               </h2>
-              <p className="text-sm" style={{ color: colorScheme.white }}>
+              <p className="text-sm" style={{ color: colorScheme.text }}>
                 Share your prayer needs with our leadership team
               </p>
             </div>
@@ -529,7 +785,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name */}
             <div>
               <label
                 className="block mb-2 text-sm font-semibold"
@@ -547,8 +802,8 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
                   borderColor: formErrors.name
                     ? colorScheme.error
                     : colorScheme.border,
-                  backgroundColor: colorScheme.surface,
-                  color: colorScheme.primary,
+                  backgroundColor: colorScheme.surfaceVariant,
+                  color: colorScheme.text,
                 }}
                 placeholder="Enter your full name"
               />
@@ -562,7 +817,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
               )}
             </div>
 
-            {/* Email */}
             <div>
               <label
                 className="block mb-2 text-sm font-semibold"
@@ -580,8 +834,8 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
                   borderColor: formErrors.email
                     ? colorScheme.error
                     : colorScheme.border,
-                  backgroundColor: colorScheme.surface,
-                  color: colorScheme.primary,
+                  backgroundColor: colorScheme.surfaceVariant,
+                  color: colorScheme.text,
                 }}
                 placeholder="Enter your email address"
               />
@@ -595,7 +849,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
               )}
             </div>
 
-            {/* Prayer Request */}
             <div>
               <label
                 className="block mb-2 text-sm font-semibold"
@@ -613,8 +866,8 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
                   borderColor: formErrors.prayerRequest
                     ? colorScheme.error
                     : colorScheme.border,
-                  backgroundColor: colorScheme.surface,
-                  color: colorScheme.primary,
+                  backgroundColor: colorScheme.surfaceVariant,
+                  color: colorScheme.text,
                 }}
                 placeholder="Please share your prayer request in detail..."
               />
@@ -628,7 +881,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
               )}
             </div>
 
-            {/* Note Section */}
             <div
               className="rounded-xl p-3 border text-sm"
               style={{
@@ -643,7 +895,6 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
               </p>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -652,12 +903,12 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
               }`}
               style={{
                 backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                color: colorScheme.buttonText,
               }}
               onMouseEnter={(e: any) => {
                 if (!isSubmitting) {
                   e.currentTarget.style.backgroundColor =
-                    colorScheme.primaryLight;
+                    colorScheme.buttonHover;
                 }
               }}
               onMouseLeave={(e: any) => {
@@ -670,7 +921,7 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
                 <span className="flex items-center justify-center">
                   <Loader2
                     className="animate-spin -ml-1 mr-3 h-5 w-5"
-                    style={{ color: colorScheme.black }}
+                    style={{ color: colorScheme.buttonText }}
                   />
                   <span className="font-bold text-sm">
                     Submitting Prayer Request...
@@ -689,9 +940,9 @@ const PrayerModal = ({ isOpen, onClose }: PrayerModalProps) => {
 };
 
 /* --------------------------------------------
-   REUSABLE CARD COMPONENT — Futuristic & Professional
+   IMPROVED CARD COMPONENT with Read More button
 --------------------------------------------- */
-function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
+function PersonCard({ item, colorScheme, addToRefs, type, onReadMore }: any) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -700,36 +951,55 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
     }
   }, [addToRefs]);
 
+  const getTypeColor = () => {
+    switch (type) {
+      case 'pastor':
+        return colorScheme.primary; // Primary yellow
+      case 'deacon':
+        return colorScheme.success; // Success green
+      case 'ministry':
+        return colorScheme.info; // Info blue
+      default:
+        return colorScheme.primary;
+    }
+  };
+
+  const typeColor = getTypeColor();
+
   return (
-    <div ref={cardRef} className="group w-full perspective-1000">
-      {/* Futuristic Glass Card - Removed shadow, added border for mobile */}
-      <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 transition-all duration-700 hover:-translate-y-3 border border-white/20 relative overflow-hidden flex flex-col h-full sm:border-0">
-        {/* Animated Background Gradient */}
+    <div ref={cardRef} className="group w-full">
+      <div
+        className="bg-card/95 backdrop-blur-sm rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 border border-border/20 relative overflow-hidden flex flex-col h-full shadow-lg hover:shadow-2xl"
+        style={{
+          backgroundColor: colorScheme.card,
+          borderColor: `${colorScheme.border}33`,
+        }}
+      >
+        {/* Background gradient based on type */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"
           style={{
-            background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}05)`,
+            background: `linear-gradient(135deg, ${typeColor}08, ${typeColor}05)`,
           }}
         />
 
-        {/* Floating Particles */}
-        <div className="absolute top-4 right-4 w-1 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
-        <div className="absolute bottom-4 left-4 w-1.5 h-1.5 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-ping" />
-
-        {/* Centered Circular Image with Glow */}
+        {/* Centered Image with Type-based Border */}
         <div className="flex justify-center mb-4 flex-shrink-0">
           <div className="relative">
-            {/* Outer Glow Ring */}
             <div
-              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"
+              className="absolute -inset-2 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500"
               style={{
-                background: `radial-gradient(circle, ${colorScheme.primary}30 0%, transparent 70%)`,
-                transform: 'scale(1.1)',
+                background: `radial-gradient(circle, ${typeColor} 0%, transparent 70%)`,
               }}
             />
 
-            {/* Image Container */}
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden ring-4 ring-white/80 transform group-hover:scale-105 transition-transform duration-500">
+            <div
+              className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden ring-4 ring-white/90 transform group-hover:scale-105 transition-transform duration-500"
+              style={{
+                borderColor: typeColor,
+                backgroundColor: colorScheme.surface,
+              }}
+            >
               <Image
                 src={item.image}
                 alt={item.name}
@@ -740,12 +1010,12 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
               />
             </div>
 
-            {/* Animated Role Badge */}
+            {/* Role Badge */}
             <div
-              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap z-10 border border-white/20 backdrop-blur-sm transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-1"
+              className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap z-10 border border-white/20 backdrop-blur-sm"
               style={{
-                background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                color: '#000000',
+                backgroundColor: typeColor,
+                color: colorScheme.buttonText,
               }}
             >
               {item.role}
@@ -753,61 +1023,93 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs }: any) {
           </div>
         </div>
 
-        {/* Name & Description - Uniform Height Section */}
-        <div className="text-center pt-6 relative z-10 flex flex-col flex-grow justify-start">
+        {/* Content Section - Fixed Height */}
+        <div className="text-center pt-6 relative z-10 flex flex-col flex-grow">
+          {/* Name */}
           <SmallText
             weight="semibold"
             smWeight="bold"
-            style={{ color: mainAccentColor }}
+            style={{ color: colorScheme.heading }}
             useThemeColor={false}
-            className="text-sm sm:text-base mb-2 transform group-hover:scale-105 transition-transform duration-300"
+            className="text-base sm:text-lg mb-2 transform group-hover:scale-105 transition-transform duration-300 line-clamp-1"
           >
             {item.name}
           </SmallText>
-          {item.description && (
-            <Caption
-              className="text-gray-600 opacity-90 px-1 transition-all duration-500 group-hover:opacity-100 line-clamp-3 leading-tight min-h-[3rem] flex items-center justify-center"
-              useThemeColor={false}
-            >
-              {item.description}
-            </Caption>
-          )}
+
+          {/* Description - Fixed Height with proper padding */}
+          <Caption
+            className="px-1 transition-all duration-500 group-hover:opacity-100 line-clamp-3 leading-relaxed mb-4 flex-grow min-h-[4.5rem] flex items-center justify-center"
+            style={{ color: colorScheme.textSecondary }}
+            useThemeColor={false}
+          >
+            {item.description}
+          </Caption>
+
+          {/* Read More Button */}
+          <button
+            onClick={() => onReadMore(item)}
+            className="mt-auto w-full rounded-xl py-2.5 px-4 text-sm font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-md group/btn flex items-center justify-center gap-2"
+            style={{
+              backgroundColor: `${typeColor}1A`,
+              color: typeColor,
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = `${typeColor}33`;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = `${typeColor}1A`;
+            }}
+          >
+            <span>Read More</span>
+            <ChevronRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform duration-300" />
+          </button>
         </div>
 
-        {/* Hover Effect Overlay */}
+        {/* Subtle hover effect */}
         <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
     </div>
   );
 }
 
+/* --------------------------------------------
+   MAIN LEADERS PAGE COMPONENT
+--------------------------------------------- */
 const LeadersPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const descriptionRef = useRef<HTMLDivElement>(null);
-  const pastoralHeaderRef = useRef<HTMLDivElement>(null);
-  const ministryHeaderRef = useRef<HTMLDivElement>(null);
-  const philosophyRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const pastoralHeaderRef = useRef<HTMLHeadingElement>(null);
+  const deaconsHeaderRef = useRef<HTMLHeadingElement>(null);
+  const ministryHeaderRef = useRef<HTMLHeadingElement>(null);
+  const philosophyRef = useRef<HTMLHeadingElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
 
-  // Modal states - Removed Join Ministry modal
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVisitChurchModalOpen, setIsVisitChurchModalOpen] = useState(false);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedLeader, setSelectedLeader] = useState<Leader | null>(null);
+  const [selectedType, setSelectedType] = useState<
+    'pastor' | 'deacon' | 'ministry'
+  >('pastor');
 
-  // Updated color scheme to match your theme
-  const colorScheme = {
-    primary: '#F7DE12', // Your primary yellow
-    primaryLight: '#F9E755', // Lighter yellow
-    primaryDark: '#D4BC0F', // Darker yellow
-    pageBackground: '#FFFFFF',
+  // Use your theme context
+  const themeContext = useTheme();
+  const theme = (themeContext as any)?.theme ?? 'light';
+  const colorScheme = theme === 'dark' ? darkShades : lightShades;
+
+  const handleReadMore = (
+    leader: Leader,
+    type: 'pastor' | 'deacon' | 'ministry'
+  ) => {
+    setSelectedLeader(leader);
+    setSelectedType(type);
+    setDetailModalOpen(true);
   };
-
-  const mainAccentColor = '#000000';
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate main header
       if (headingRef.current) {
         gsap.fromTo(
           headingRef.current,
@@ -826,7 +1128,6 @@ const LeadersPage = () => {
         );
       }
 
-      // Animate description
       if (descriptionRef.current) {
         gsap.fromTo(
           descriptionRef.current,
@@ -845,8 +1146,12 @@ const LeadersPage = () => {
         );
       }
 
-      // Animate section headers
-      [pastoralHeaderRef, ministryHeaderRef, philosophyRef].forEach(ref => {
+      [
+        pastoralHeaderRef,
+        deaconsHeaderRef,
+        ministryHeaderRef,
+        philosophyRef,
+      ].forEach(ref => {
         if (ref.current) {
           gsap.fromTo(
             ref.current,
@@ -866,7 +1171,6 @@ const LeadersPage = () => {
         }
       });
 
-      // Filter out null refs and animate cards
       const validCards = cardsRef.current.filter(Boolean);
       if (validCards.length > 0) {
         gsap.fromTo(
@@ -891,7 +1195,6 @@ const LeadersPage = () => {
           }
         );
 
-        // Hover animations for cards
         validCards.forEach(card => {
           card.addEventListener('mouseenter', () => {
             gsap.to(card, {
@@ -915,7 +1218,6 @@ const LeadersPage = () => {
     return () => ctx.revert();
   }, []);
 
-  // Add card to ref array
   const addToRefs = (el: HTMLDivElement) => {
     if (el && !cardsRef.current.includes(el)) {
       cardsRef.current.push(el);
@@ -931,26 +1233,28 @@ const LeadersPage = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div
+      className="min-h-screen transition-colors duration-300"
+      style={{ backgroundColor: colorScheme.pageBackground }}
+    >
       {/* Hero Section */}
       <HeroSection
         title="Our Leadership"
         subtitle="Guided by Servant Leaders"
-        description="Meet the dedicated team of pastors and leaders who serve our church family with wisdom, compassion, and commitment to God's calling."
+        description="Meet the dedicated team of pastors, deacons, and leaders who serve our church family with wisdom, compassion, and commitment to God's calling."
         backgroundImage={hero_bg_2.src}
         showButtons={false}
         showScrollIndicator={true}
       />
 
-      {/* Main Leadership Section - Reduced padding */}
+      {/* Main Leadership Section */}
       <Section
         ref={sectionRef}
-        padding="lg" // Changed from "xl" to "lg"
+        padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: '#FFFFFF' }}
-        className="relative overflow-hidden bg-gradient-to-br from-white via-gray-50/30 to-white"
+        style={{ backgroundColor: colorScheme.pageBackground }}
+        className="relative overflow-hidden"
       >
-        {/* Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div
             className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl opacity-20 animate-pulse"
@@ -963,15 +1267,13 @@ const LeadersPage = () => {
         </div>
 
         <Container size="xl" className="relative z-10">
-          {/* Header Section - Reduced padding */}
           <FlexboxLayout
             direction="column"
             justify="center"
             align="center"
-            gap="md" // Reduced from "lg" to "md"
-            className="text-center pt-8 sm:pt-12 lg:pt-16 pb-4 sm:pb-6 lg:pb-8" // Reduced padding
+            gap="md"
+            className="text-center pt-8 sm:pt-12 lg:pt-16 pb-4 sm:pb-6 lg:pb-8"
           >
-            {/* Main Title with Gradient Text */}
             <div className="relative">
               <div
                 className="absolute -inset-1 rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-1000"
@@ -982,7 +1284,7 @@ const LeadersPage = () => {
               <H2
                 ref={headingRef}
                 className="leading-tight relative"
-                style={{ color: mainAccentColor }}
+                style={{ color: colorScheme.heading }}
                 useThemeColor={false}
                 weight="black"
                 smWeight="black"
@@ -991,10 +1293,10 @@ const LeadersPage = () => {
               </H2>
             </div>
 
-            {/* Description with Reduced Margin */}
             <Caption
               ref={descriptionRef}
-              className="max-w-3xl mx-auto leading-relaxed text-gray-600 mt-2 px-4 sm:px-6 lg:px-0 text-base sm:text-lg font-light" // Reduced margin and font size
+              className="max-w-3xl mx-auto leading-relaxed mt-2 px-4 sm:px-6 lg:px-0 text-base sm:text-lg font-light"
+              style={{ color: colorScheme.textSecondary }}
               useThemeColor={false}
             >
               God has blessed us with faithful leaders who shepherd our
@@ -1003,23 +1305,18 @@ const LeadersPage = () => {
           </FlexboxLayout>
 
           <div ref={contentRef}>
-            {/* Pastoral Team Section - Reduced margins */}
+            {/* Pastoral Team Section */}
             <div className="w-full mb-8 lg:mb-12">
-              {' '}
-              {/* Reduced margin */}
               <div className="relative flex justify-center mb-6">
-                {' '}
-                {/* Reduced margin */}
                 <H4
                   ref={pastoralHeaderRef}
                   className="text-center relative inline-block"
-                  style={{ color: mainAccentColor }}
+                  style={{ color: colorScheme.heading }}
                   useThemeColor={false}
                   weight="bold"
                   smWeight="extrabold"
                 >
                   Pastoral Team
-                  {/* Underline Animation */}
                   <div
                     className="absolute -bottom-2 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-500"
                     style={{ backgroundColor: colorScheme.primary }}
@@ -1028,7 +1325,7 @@ const LeadersPage = () => {
               </div>
               <GridboxLayout
                 columns={3}
-                gap="lg" // Reduced from "xl" to "lg"
+                gap="lg"
                 responsive={{ sm: 1, md: 2, lg: 3 }}
                 className="w-full items-stretch"
               >
@@ -1037,39 +1334,86 @@ const LeadersPage = () => {
                     key={`pastoral-${leader.id}`}
                     item={leader}
                     colorScheme={colorScheme}
-                    mainAccentColor={mainAccentColor}
                     addToRefs={addToRefs}
+                    type="pastor"
+                    onReadMore={(item: Leader) =>
+                      handleReadMore(item, 'pastor')
+                    }
                   />
                 ))}
               </GridboxLayout>
             </div>
 
-            {/* Ministry Leaders Section - Reduced margins */}
+            {/* Deacons Section - FIXED OVERLAPPING */}
             <div className="w-full mb-8 lg:mb-12">
-              {' '}
-              {/* Reduced margin */}
               <div className="relative flex justify-center mb-6">
-                {' '}
-                {/* Reduced margin */}
+                <H4
+                  ref={deaconsHeaderRef}
+                  className="text-center relative inline-block"
+                  style={{ color: colorScheme.heading }}
+                  useThemeColor={false}
+                  weight="bold"
+                  smWeight="extrabold"
+                >
+                  Deacons & Deaconesses
+                  <div
+                    className="absolute -bottom-2 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-500"
+                    style={{ backgroundColor: colorScheme.success }}
+                  />
+                </H4>
+              </div>
+              {/* FIXED: Added proper padding-bottom and centered text */}
+              <Caption
+                className="text-center max-w-3xl mx-auto mb-6 text-base pb-8" // Added pb-8 for bottom padding
+                style={{ color: colorScheme.textSecondary }}
+                useThemeColor={false}
+              >
+                Our dedicated deacons and deaconesses serve in various
+                ministries, supporting the pastoral team and meeting the
+                practical needs of our church family.
+              </Caption>
+              <GridboxLayout
+                columns={4}
+                gap="lg"
+                responsive={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+                className="w-full items-stretch"
+              >
+                {deaconsData.map((deacon: Leader) => (
+                  <PersonCard
+                    key={`deacon-${deacon.id}`}
+                    item={deacon}
+                    colorScheme={colorScheme}
+                    addToRefs={addToRefs}
+                    type="deacon"
+                    onReadMore={(item: Leader) =>
+                      handleReadMore(item, 'deacon')
+                    }
+                  />
+                ))}
+              </GridboxLayout>
+            </div>
+
+            {/* Ministry Leaders Section */}
+            <div className="w-full mb-8 lg:mb-12">
+              <div className="relative flex justify-center mb-6">
                 <H4
                   ref={ministryHeaderRef}
                   className="text-center relative inline-block"
-                  style={{ color: mainAccentColor }}
+                  style={{ color: colorScheme.heading }}
                   useThemeColor={false}
                   weight="bold"
                   smWeight="extrabold"
                 >
                   Ministry Department Leaders
-                  {/* Underline Animation */}
                   <div
                     className="absolute -bottom-2 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-500"
-                    style={{ backgroundColor: colorScheme.primary }}
+                    style={{ backgroundColor: colorScheme.info }}
                   />
                 </H4>
               </div>
               <GridboxLayout
                 columns={3}
-                gap="lg" // Reduced from "xl" to "lg"
+                gap="lg"
                 responsive={{ sm: 1, md: 2, lg: 3 }}
                 className="w-full items-stretch"
               >
@@ -1078,30 +1422,34 @@ const LeadersPage = () => {
                     key={`ministry-${leader.id}`}
                     item={leader}
                     colorScheme={colorScheme}
-                    mainAccentColor={mainAccentColor}
                     addToRefs={addToRefs}
+                    type="ministry"
+                    onReadMore={(item: Leader) =>
+                      handleReadMore(item, 'ministry')
+                    }
                   />
                 ))}
               </GridboxLayout>
             </div>
 
-            {/* Action Call Section - Significantly reduced padding */}
+            {/* Action Call Section */}
             <FlexboxLayout
               direction="column"
               justify="center"
               align="center"
-              gap="md" // Reduced from "lg" to "md"
-              className="pt-0 pb-4 text-center" // Drastically reduced padding
+              gap="md"
+              className="pt-0 pb-4 text-center"
             >
               <H3
-                className="text-xl sm:text-2xl font-bold" // Reduced font size
-                style={{ color: mainAccentColor }}
+                className="text-xl sm:text-2xl font-bold"
+                style={{ color: colorScheme.heading }}
                 useThemeColor={false}
               >
                 Connect With Our Church Family
               </H3>
               <Caption
-                className="max-w-2xl mx-auto text-gray-600 text-base" // Reduced font size
+                className="max-w-2xl mx-auto text-base"
+                style={{ color: colorScheme.textSecondary }}
                 useThemeColor={false}
               >
                 Our leaders are here to walk with you in your faith journey.
@@ -1111,13 +1459,13 @@ const LeadersPage = () => {
               <FlexboxLayout
                 justify="center"
                 gap="md"
-                className="flex-wrap mt-4" // Reduced margin
+                className="flex-wrap mt-4"
               >
                 <div className="relative group">
                   <CustomButton
                     onClick={handleVisitChurch}
                     variant="primary"
-                    size="md" // Reduced from "lg" to "md"
+                    size="md"
                     curvature="xl"
                     elevated
                     leftIcon={
@@ -1126,7 +1474,7 @@ const LeadersPage = () => {
                     className="group relative px-4 sm:px-6 py-2 sm:py-3 text-sm font-bold hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-2 border-white/20 backdrop-blur-sm"
                     style={{
                       background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                      color: '#000000',
+                      color: colorScheme.buttonText,
                     }}
                   >
                     Visit Our Church
@@ -1137,7 +1485,7 @@ const LeadersPage = () => {
                   <CustomButton
                     onClick={handleConnect}
                     variant="outline"
-                    size="md" // Reduced from "lg" to "md"
+                    size="md"
                     curvature="xl"
                     leftIcon={
                       <Heart className="w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform duration-300 group-hover:scale-110" />
@@ -1145,7 +1493,8 @@ const LeadersPage = () => {
                     className="group relative px-4 sm:px-6 py-2 sm:py-3 text-sm font-bold border-2 backdrop-blur-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300"
                     style={{
                       borderColor: colorScheme.primary,
-                      color: mainAccentColor,
+                      color: colorScheme.heading,
+                      backgroundColor: `${colorScheme.primary}0A`,
                     }}
                   >
                     Get Prayer
@@ -1157,81 +1506,90 @@ const LeadersPage = () => {
         </Container>
       </Section>
 
-      {/* Leadership Philosophy Section - Reduced padding */}
+      {/* Leadership Philosophy Section */}
       <Section
         ref={philosophyRef}
-        padding="lg" // Changed from "xl" to "lg"
+        padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: '#FFFFFF' }}
+        style={{ backgroundColor: colorScheme.backgroundSecondary }}
       >
         <Container size="lg">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-gradient-to-br from-gray-50 to-yellow-50 rounded-2xl p-6 lg:p-8">
-              {' '}
-              {/* Reduced padding */}
-              <H3 className="text-center mb-8 text-2xl font-bold text-gray-900">
-                {' '}
-                {/* Reduced margin and font size */}
+            <div
+              className="rounded-2xl p-6 lg:p-8"
+              style={{
+                background: `linear-gradient(135deg, ${colorScheme.surfaceVariant}, ${colorScheme.surface})`,
+                border: `1px solid ${colorScheme.border}33`,
+              }}
+            >
+              <H3
+                className="text-center mb-8 text-2xl font-bold"
+                style={{ color: colorScheme.heading }}
+              >
                 Our Leadership Philosophy
               </H3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {' '}
-                {/* Reduced gap */}
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 bg-yellow-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    {' '}
-                    {/* Reduced size */}
-                    <Calendar className="w-6 h-6 text-gray-900" />{' '}
-                    {/* Reduced icon size */}
+                  <div
+                    className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                    style={{ backgroundColor: colorScheme.primary }}
+                  >
+                    <Calendar
+                      className="w-6 h-6"
+                      style={{ color: colorScheme.buttonText }}
+                    />
                   </div>
-                  <H4 className="text-lg font-bold mb-3 text-gray-900">
-                    {' '}
-                    {/* Reduced font size and margin */}
+                  <H4
+                    className="text-lg font-bold mb-3"
+                    style={{ color: colorScheme.heading }}
+                  >
                     Servant Leadership
                   </H4>
-                  <P className="text-gray-700 text-sm">
-                    {' '}
-                    {/* Reduced font size */}
+                  <P style={{ color: colorScheme.text }}>
                     We believe leadership is about serving others, following the
                     example of Jesus Christ who came not to be served, but to
                     serve.
                   </P>
                 </div>
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 bg-yellow-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    {' '}
-                    {/* Reduced size */}
-                    <Heart className="w-6 h-6 text-gray-900" />{' '}
-                    {/* Reduced icon size */}
+                  <div
+                    className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                    style={{ backgroundColor: colorScheme.primary }}
+                  >
+                    <Heart
+                      className="w-6 h-6"
+                      style={{ color: colorScheme.buttonText }}
+                    />
                   </div>
-                  <H4 className="text-lg font-bold mb-3 text-gray-900">
-                    {' '}
-                    {/* Reduced font size and margin */}
+                  <H4
+                    className="text-lg font-bold mb-3"
+                    style={{ color: colorScheme.heading }}
+                  >
                     Biblical Foundation
                   </H4>
-                  <P className="text-gray-700 text-sm">
-                    {' '}
-                    {/* Reduced font size */}
+                  <P style={{ color: colorScheme.text }}>
                     Our leaders are committed to teaching and living according
                     to God's Word, providing spiritual guidance rooted in
                     Scripture.
                   </P>
                 </div>
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 bg-yellow-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    {' '}
-                    {/* Reduced size */}
-                    <Calendar className="w-6 h-6 text-gray-900" />{' '}
-                    {/* Reduced icon size */}
+                  <div
+                    className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                    style={{ backgroundColor: colorScheme.primary }}
+                  >
+                    <Calendar
+                      className="w-6 h-6"
+                      style={{ color: colorScheme.buttonText }}
+                    />
                   </div>
-                  <H4 className="text-lg font-bold mb-3 text-gray-900">
-                    {' '}
-                    {/* Reduced font size and margin */}
+                  <H4
+                    className="text-lg font-bold mb-3"
+                    style={{ color: colorScheme.heading }}
+                  >
                     Team Ministry
                   </H4>
-                  <P className="text-gray-700 text-sm">
-                    {' '}
-                    {/* Reduced font size */}
+                  <P style={{ color: colorScheme.text }}>
                     We work together as a team, recognizing that each leader
                     brings unique gifts to serve the body of Christ effectively.
                   </P>
@@ -1242,15 +1600,28 @@ const LeadersPage = () => {
         </Container>
       </Section>
 
-      {/* Modals - Removed Join Ministry modal */}
+      {/* Modals with colorScheme prop */}
+      <DetailModal
+        isOpen={detailModalOpen}
+        onClose={() => {
+          setDetailModalOpen(false);
+          setSelectedLeader(null);
+        }}
+        data={selectedLeader}
+        type={selectedType}
+        colorScheme={colorScheme}
+      />
+
       <PrayerModal
         isOpen={isPrayerModalOpen}
         onClose={() => setIsPrayerModalOpen(false)}
+        colorScheme={colorScheme}
       />
 
       <VisitChurchModal
         isOpen={isVisitChurchModalOpen}
         onClose={() => setIsVisitChurchModalOpen(false)}
+        colorScheme={colorScheme}
       />
     </div>
   );

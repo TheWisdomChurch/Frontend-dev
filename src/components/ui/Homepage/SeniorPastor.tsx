@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Bishop } from '@/components/assets';
 import { H1, P } from '@/components/text';
-import Button from '@/components/utils/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import { useSeniorPastor } from '@/components/utils/hooks/useSeniorPastor';
 import { seniorPastorData } from '@/lib/data';
 import { Section, Container, FlexboxLayout } from '@/components/layout';

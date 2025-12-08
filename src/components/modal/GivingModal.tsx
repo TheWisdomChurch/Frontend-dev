@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/utils/buttons/button';
 import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ChevronDown, Copy, Check, Info, X } from 'lucide-react';

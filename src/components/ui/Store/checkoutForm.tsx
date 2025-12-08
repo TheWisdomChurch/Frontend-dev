@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 import { useAppSelector, useAppDispatch } from '@/components/utils/hooks/redux';
 import { clearCart } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons';
 import { FlexboxLayout } from '@/components/layout';
 import { H3, H4, BaseText, SmallText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';

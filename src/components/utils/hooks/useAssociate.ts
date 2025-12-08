@@ -18,7 +18,7 @@ export const useAssociatePastors = () => {
   const cardsRef = useRef<HTMLDivElement[]>([]);
 
   const handleSeeMore = () => {
-    router.push('/about/leadership');
+    router.push('/leadership');
   };
 
   // Add section header to ref array

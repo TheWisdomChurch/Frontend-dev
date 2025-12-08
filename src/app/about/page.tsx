@@ -5,7 +5,6 @@
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import { Banner_1, hero_bg_3, WisdomeHouseLogo } from '@/components/assets';
 import { H2, H3, H4, P, Caption, BodyMD } from '@/components/text';
-import CustomButton from '@/components/utils/CustomButton';
 import Image from 'next/image';
 import {
   Section,
