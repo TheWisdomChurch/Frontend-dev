@@ -181,7 +181,7 @@ export const navLinks: NavLink[] = [
 ];
 
 export const leaders: Leader[] = [
-  {
+    {
     id: 1,
     name: 'Rev. Victor Jimba',
     role: 'Resident Pastor',
@@ -191,13 +191,21 @@ export const leaders: Leader[] = [
   },
   {
     id: 2,
+    name: 'Rev. Victor Jimba',
+    role: 'Resident Pastor',
+    image: Associate_2,
+    description:
+      'Provides overall spiritual leadership and vision for the church.',
+  },
+  {
+    id: 3,
     name: 'Pastor Kenny Ayilara',
     role: 'Associate Pastor',
     image: PstKenny,
     description: 'Supports the senior pastor in ministry and pastoral care.',
   },
   {
-    id: 3,
+    id: 4 ,
     name: 'Deacon Adeyemi ',
     role: 'Head Service Preparatory Unit',
     image: Associate_1,
