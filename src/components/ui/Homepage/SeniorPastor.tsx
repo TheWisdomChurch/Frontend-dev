@@ -236,9 +236,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     sizes="(max-width: 768px) 56px, (max-width: 1024px) 64px, 72px"
                   />
                 </div>
-                <div className="absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-black whitespace-nowrap">
+                {/* <div className="absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-black whitespace-nowrap">
                   Senior Pastor
-                </div>
+                </div> */}
               </div>
             </div>
           )}
