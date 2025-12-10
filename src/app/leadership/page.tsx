@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, H3, H4, P, SmallText, Caption } from '@/components/text';
 import { hero_bg_2 } from '@/components/assets';
@@ -35,8 +35,6 @@ import {
   lightShades,
 } from '@/components/colors/colorScheme';
 
-// import { ColorScheme, darkShades, lightShades } from '@/components/ui/fonts/color/colorScheme'; // Import your color scheme
-
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -60,57 +58,49 @@ const DetailModal = ({
   type,
   colorScheme,
 }: DetailModalProps) => {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const getTypeColor = () => {
-    switch (type) {
-      case 'pastor':
-        return colorScheme.primary; // Use primary yellow for pastors
-      case 'deacon':
-        return colorScheme.success; // Use success green for deacons
-      case 'ministry':
-        return colorScheme.info; // Use info blue for ministry leaders
-      default:
-        return colorScheme.primary;
-    }
-  };
-
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+  // Use callback to avoid recreating function on every render
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 768);
   }, []);
 
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      document.body.style.overflow = 'hidden';
-      const tl = gsap.timeline();
+  // Initialize mobile state once
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth < 768);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  });
 
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-        );
+  const handleRef = useCallback((element: HTMLDivElement | null) => {
+    if (element) {
+      modalRef.current = element;
+      
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+        const tl = gsap.timeline();
+
+        if (isMobile) {
+          tl.fromTo(
+            modalRef.current,
+            { y: '100%', opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          );
+        } else {
+          tl.fromTo(
+            modalRef.current,
+            { opacity: 0, scale: 0.95, y: 30 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          );
+        }
       }
     }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen, isMobile]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (modalRef.current) {
       if (isMobile) {
         gsap.to(modalRef.current, {
@@ -118,7 +108,10 @@ const DetailModal = ({
           opacity: 0,
           duration: 0.4,
           ease: 'power2.in',
-          onComplete: onClose,
+          onComplete: () => {
+            onClose();
+            document.body.style.overflow = 'unset';
+          },
         });
       } else {
         gsap.to(modalRef.current, {
@@ -127,21 +120,38 @@ const DetailModal = ({
           y: 30,
           duration: 0.4,
           ease: 'power2.in',
-          onComplete: onClose,
+          onComplete: () => {
+            onClose();
+            document.body.style.overflow = 'unset';
+          },
         });
       }
     } else {
       onClose();
+      document.body.style.overflow = 'unset';
     }
-  };
+  }, [isMobile, onClose]);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
       handleClose();
     }
-  };
+  }, [handleClose]);
 
-  if (!mounted || !isOpen || !data) return null;
+  if (!isOpen || !data) return null;
+
+  const getTypeColor = () => {
+    switch (type) {
+      case 'pastor':
+        return colorScheme.primary;
+      case 'deacon':
+        return colorScheme.success;
+      case 'ministry':
+        return colorScheme.info;
+      default:
+        return colorScheme.primary;
+    }
+  };
 
   const typeColor = getTypeColor();
 
@@ -153,7 +163,7 @@ const DetailModal = ({
       onClick={handleBackdropClick}
     >
       <div
-        ref={modalRef}
+        ref={handleRef}
         className={`
           w-full mx-auto overflow-hidden border
           ${
@@ -166,7 +176,7 @@ const DetailModal = ({
           backgroundColor: colorScheme.surface,
           borderColor: typeColor,
         }}
-        onClick={e => e.stopPropagation()}
+        onClick={event => event.stopPropagation()}
       >
         {isMobile && (
           <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
@@ -194,7 +204,7 @@ const DetailModal = ({
                 <div
                   className="px-3 py-1 rounded-full text-xs font-bold"
                   style={{
-                    backgroundColor: `${typeColor}1A`, // Using opacity format
+                    backgroundColor: `${typeColor}1A`,
                     color: typeColor,
                   }}
                 >
@@ -203,15 +213,15 @@ const DetailModal = ({
                 <div
                   className="px-3 py-1 rounded-full text-xs font-bold"
                   style={{
-                    backgroundColor: `${typeColor}0D`, // Lighter opacity
+                    backgroundColor: `${typeColor}0D`,
                     color: typeColor,
                   }}
                 >
                   {type === 'pastor'
                     ? 'Pastoral Team'
                     : type === 'deacon'
-                      ? 'Deacons Board'
-                      : 'Ministry Leader'}
+                    ? 'Deacons Board'
+                    : 'Ministry Leader'}
                 </div>
               </div>
             </div>
@@ -224,11 +234,11 @@ const DetailModal = ({
                 color: typeColor,
                 backgroundColor: `${typeColor}1A`,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor = `${typeColor}33`;
+              onMouseEnter={(event) => {
+                (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}33`;
               }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor = `${typeColor}1A`;
+              onMouseLeave={(event) => {
+                (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}1A`;
               }}
             >
               <X className="w-4 h-4" />
@@ -246,6 +256,7 @@ const DetailModal = ({
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 160px, 256px"
+                    quality={85}
                   />
                 </div>
                 <div
@@ -307,8 +318,8 @@ const DetailModal = ({
                     {type === 'pastor'
                       ? 'Pastoral Care'
                       : type === 'deacon'
-                        ? 'Member Support'
-                        : 'Ministry Leadership'}
+                      ? 'Member Support'
+                      : 'Ministry Leadership'}
                   </span>
                 </div>
               </div>
@@ -335,44 +346,49 @@ const VisitChurchModal = ({
   onClose,
   colorScheme,
 }: VisitChurchModalProps) => {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+  // Use useCallback to avoid recreating function
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 768);
   }, []);
 
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      document.body.style.overflow = 'hidden';
-      const tl = gsap.timeline();
+  // Initialize once
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth < 768);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  });
 
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-        );
+  const handleRef = useCallback((element: HTMLDivElement | null) => {
+    if (element) {
+      modalRef.current = element;
+      
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+        const tl = gsap.timeline();
+
+        if (isMobile) {
+          tl.fromTo(
+            modalRef.current,
+            { y: '100%', opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          );
+        } else {
+          tl.fromTo(
+            modalRef.current,
+            { opacity: 0, scale: 0.95, y: 30 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          );
+        }
       }
     }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen, isMobile]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (modalRef.current) {
       if (isMobile) {
         gsap.to(modalRef.current, {
@@ -380,7 +396,10 @@ const VisitChurchModal = ({
           opacity: 0,
           duration: 0.4,
           ease: 'power2.in',
-          onComplete: onClose,
+          onComplete: () => {
+            onClose();
+            document.body.style.overflow = 'unset';
+          },
         });
       } else {
         gsap.to(modalRef.current, {
@@ -389,21 +408,25 @@ const VisitChurchModal = ({
           y: 30,
           duration: 0.4,
           ease: 'power2.in',
-          onComplete: onClose,
+          onComplete: () => {
+            onClose();
+            document.body.style.overflow = 'unset';
+          },
         });
       }
     } else {
       onClose();
+      document.body.style.overflow = 'unset';
     }
-  };
+  }, [isMobile, onClose]);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
       handleClose();
     }
-  };
+  }, [handleClose]);
 
-  if (!mounted || !isOpen) return null;
+  if (!isOpen) return null;
 
   return createPortal(
     <div
@@ -413,7 +436,7 @@ const VisitChurchModal = ({
       onClick={handleBackdropClick}
     >
       <div
-        ref={modalRef}
+        ref={handleRef}
         className={`
           w-full mx-auto overflow-hidden border
           ${
@@ -426,7 +449,7 @@ const VisitChurchModal = ({
           backgroundColor: colorScheme.surface,
           borderColor: colorScheme.primary,
         }}
-        onClick={e => e.stopPropagation()}
+        onClick={event => event.stopPropagation()}
       >
         {isMobile && (
           <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
@@ -464,12 +487,12 @@ const VisitChurchModal = ({
                 color: colorScheme.primary,
                 backgroundColor: colorScheme.opacity.primary10,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
+              onMouseEnter={(event) => {
+                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
                   colorScheme.opacity.primary20;
               }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
+              onMouseLeave={(event) => {
+                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
                   colorScheme.opacity.primary10;
               }}
             >
@@ -567,11 +590,10 @@ interface PrayerModalProps {
 }
 
 const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
-  const [mounted, setMounted] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -584,40 +606,46 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
     prayerRequest: '',
   });
 
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+  // Use useCallback for resize handler
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 768);
   }, []);
 
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      document.body.style.overflow = 'hidden';
-      const tl = gsap.timeline();
+  // Initialize once
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth < 768);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  });
 
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-        );
+  const handleRef = useCallback((element: HTMLDivElement | null) => {
+    if (element) {
+      modalRef.current = element;
+      
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+        const tl = gsap.timeline();
+
+        if (isMobile) {
+          tl.fromTo(
+            modalRef.current,
+            { y: '100%', opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          );
+        } else {
+          tl.fromTo(
+            modalRef.current,
+            { opacity: 0, scale: 0.95, y: 30 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          );
+        }
       }
     }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen, isMobile]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (modalRef.current) {
       if (isMobile) {
         gsap.to(modalRef.current, {
@@ -625,7 +653,10 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
           opacity: 0,
           duration: 0.4,
           ease: 'power2.in',
-          onComplete: onClose,
+          onComplete: () => {
+            onClose();
+            document.body.style.overflow = 'unset';
+          },
         });
       } else {
         gsap.to(modalRef.current, {
@@ -634,24 +665,28 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
           y: 30,
           duration: 0.4,
           ease: 'power2.in',
-          onComplete: onClose,
+          onComplete: () => {
+            onClose();
+            document.body.style.overflow = 'unset';
+          },
         });
       }
     } else {
       onClose();
+      document.body.style.overflow = 'unset';
     }
-  };
+  }, [isMobile, onClose]);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
       handleClose();
     }
-  };
+  }, [handleClose]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  const handleInputChange = useCallback((
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = event.target;
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -662,9 +697,9 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
         [name]: '',
       }));
     }
-  };
+  }, [formErrors]);
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     const errors = {
       name: '',
       email: '',
@@ -690,10 +725,10 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
 
     setFormErrors(errors);
     return !Object.values(errors).some(error => error !== '');
-  };
+  }, [formData]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(async (event: React.FormEvent) => {
+    event.preventDefault();
 
     if (!validateForm()) return;
 
@@ -709,9 +744,9 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [validateForm, formData, handleClose]);
 
-  if (!mounted || !isOpen) return null;
+  if (!isOpen) return null;
 
   return createPortal(
     <div
@@ -721,7 +756,7 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
       onClick={handleBackdropClick}
     >
       <div
-        ref={modalRef}
+        ref={handleRef}
         className={`
           w-full mx-auto overflow-hidden border
           ${
@@ -734,7 +769,7 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
           backgroundColor: colorScheme.surface,
           borderColor: colorScheme.primary,
         }}
-        onClick={e => e.stopPropagation()}
+        onClick={event => event.stopPropagation()}
       >
         {isMobile && (
           <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
@@ -771,12 +806,12 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
                 color: colorScheme.primary,
                 backgroundColor: colorScheme.opacity.primary10,
               }}
-              onMouseEnter={(e: any) => {
-                e.currentTarget.style.backgroundColor =
+              onMouseEnter={(event) => {
+                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
                   colorScheme.opacity.primary20;
               }}
-              onMouseLeave={(e: any) => {
-                e.currentTarget.style.backgroundColor =
+              onMouseLeave={(event) => {
+                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
                   colorScheme.opacity.primary10;
               }}
             >
@@ -905,15 +940,15 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
                 backgroundColor: colorScheme.primary,
                 color: colorScheme.buttonText,
               }}
-              onMouseEnter={(e: any) => {
+              onMouseEnter={(event) => {
                 if (!isSubmitting) {
-                  e.currentTarget.style.backgroundColor =
+                  (event.currentTarget as HTMLButtonElement).style.backgroundColor =
                     colorScheme.buttonHover;
                 }
               }}
-              onMouseLeave={(e: any) => {
+              onMouseLeave={(event) => {
                 if (!isSubmitting) {
-                  e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  (event.currentTarget as HTMLButtonElement).style.backgroundColor = colorScheme.primary;
                 }
               }}
             >
@@ -943,22 +978,14 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
    IMPROVED CARD COMPONENT with Read More button
 --------------------------------------------- */
 function PersonCard({ item, colorScheme, addToRefs, type, onReadMore }: any) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (cardRef.current) {
-      addToRefs(cardRef.current);
-    }
-  }, [addToRefs]);
-
   const getTypeColor = () => {
     switch (type) {
       case 'pastor':
-        return colorScheme.primary; // Primary yellow
+        return colorScheme.primary;
       case 'deacon':
-        return colorScheme.success; // Success green
+        return colorScheme.success;
       case 'ministry':
-        return colorScheme.info; // Info blue
+        return colorScheme.info;
       default:
         return colorScheme.primary;
     }
@@ -966,8 +993,19 @@ function PersonCard({ item, colorScheme, addToRefs, type, onReadMore }: any) {
 
   const typeColor = getTypeColor();
 
+  const handleClick = () => {
+    onReadMore(item);
+  };
+
   return (
-    <div ref={cardRef} className="group w-full">
+    <div 
+      ref={(element) => {
+        if (element && addToRefs) {
+          addToRefs(element);
+        }
+      }} 
+      className="group w-full"
+    >
       <div
         className="bg-card/95 backdrop-blur-sm rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 border border-border/20 relative overflow-hidden flex flex-col h-full shadow-lg hover:shadow-2xl"
         style={{
@@ -1007,6 +1045,7 @@ function PersonCard({ item, colorScheme, addToRefs, type, onReadMore }: any) {
                 height={128}
                 className="object-cover transition-all duration-700 group-hover:scale-110"
                 priority
+                quality={85}
               />
             </div>
 
@@ -1047,17 +1086,17 @@ function PersonCard({ item, colorScheme, addToRefs, type, onReadMore }: any) {
 
           {/* Read More Button */}
           <button
-            onClick={() => onReadMore(item)}
+            onClick={handleClick}
             className="mt-auto w-full rounded-xl py-2.5 px-4 text-sm font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-md group/btn flex items-center justify-center gap-2"
             style={{
               backgroundColor: `${typeColor}1A`,
               color: typeColor,
             }}
-            onMouseEnter={e => {
-              e.currentTarget.style.backgroundColor = `${typeColor}33`;
+            onMouseEnter={event => {
+              (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}33`;
             }}
-            onMouseLeave={e => {
-              e.currentTarget.style.backgroundColor = `${typeColor}1A`;
+            onMouseLeave={event => {
+              (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}1A`;
             }}
           >
             <span>Read More</span>
@@ -1099,138 +1138,28 @@ const LeadersPage = () => {
   const theme = (themeContext as any)?.theme ?? 'light';
   const colorScheme = theme === 'dark' ? darkShades : lightShades;
 
-  const handleReadMore = (
+  const handleReadMore = useCallback((
     leader: Leader,
     type: 'pastor' | 'deacon' | 'ministry'
   ) => {
     setSelectedLeader(leader);
     setSelectedType(type);
     setDetailModalOpen(true);
-  };
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (headingRef.current) {
-        gsap.fromTo(
-          headingRef.current,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: headingRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
-
-      if (descriptionRef.current) {
-        gsap.fromTo(
-          descriptionRef.current,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: descriptionRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
-
-      [
-        pastoralHeaderRef,
-        deaconsHeaderRef,
-        ministryHeaderRef,
-        philosophyRef,
-      ].forEach(ref => {
-        if (ref.current) {
-          gsap.fromTo(
-            ref.current,
-            { y: 30, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.8,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: ref.current,
-                start: 'top 85%',
-                toggleActions: 'play none none reverse',
-              },
-            }
-          );
-        }
-      });
-
-      const validCards = cardsRef.current.filter(Boolean);
-      if (validCards.length > 0) {
-        gsap.fromTo(
-          validCards,
-          {
-            y: 60,
-            opacity: 0,
-            scale: 0.9,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'back.out(1.2)',
-            scrollTrigger: {
-              trigger: validCards[0],
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
-        validCards.forEach(card => {
-          card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-              y: -5,
-              duration: 0.3,
-              ease: 'power2.out',
-            });
-          });
-
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-              y: 0,
-              duration: 0.3,
-              ease: 'power2.out',
-            });
-          });
-        });
-      }
-    });
-
-    return () => ctx.revert();
   }, []);
 
-  const addToRefs = (el: HTMLDivElement) => {
-    if (el && !cardsRef.current.includes(el)) {
-      cardsRef.current.push(el);
-    }
-  };
-
-  const handleVisitChurch = () => {
+  const handleVisitChurch = useCallback(() => {
     setIsVisitChurchModalOpen(true);
-  };
+  }, []);
 
-  const handleConnect = () => {
+  const handleConnect = useCallback(() => {
     setIsPrayerModalOpen(true);
-  };
+  }, []);
+
+  const addToRefs = useCallback((element: HTMLDivElement) => {
+    if (element && !cardsRef.current.includes(element)) {
+      cardsRef.current.push(element);
+    }
+  }, []);
 
   return (
     <div
@@ -1344,7 +1273,7 @@ const LeadersPage = () => {
               </GridboxLayout>
             </div>
 
-            {/* Deacons Section - FIXED OVERLAPPING */}
+            {/* Deacons Section */}
             <div className="w-full mb-8 lg:mb-12">
               <div className="relative flex justify-center mb-6">
                 <H4
@@ -1362,9 +1291,8 @@ const LeadersPage = () => {
                   />
                 </H4>
               </div>
-              {/* FIXED: Added proper padding-bottom and centered text */}
               <Caption
-                className="text-center max-w-3xl mx-auto mb-6 text-base pb-8" // Added pb-8 for bottom padding
+                className="text-center max-w-3xl mx-auto mb-6 text-base pb-8"
                 style={{ color: colorScheme.textSecondary }}
                 useThemeColor={false}
               >

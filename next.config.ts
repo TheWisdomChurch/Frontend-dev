@@ -32,8 +32,8 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    // ✅ Add qualities configuration to fix the warnings
-    qualities: [75, 85, 100],
+    // ✅ FIXED: Updated qualities array to include 90
+    qualities: [75, 85, 90, 100],
     // ✅ You might also want to add formats configuration
     formats: ['image/webp', 'image/avif'],
     // ✅ Optional: Add device sizes for better optimization
