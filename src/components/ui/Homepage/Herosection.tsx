@@ -1,4 +1,3 @@
-// components/ui/Homepage/Herosection.tsx
 'use client';
 
 import { H1, H2, BodyXL } from '@/components/text';

@@ -64,7 +64,7 @@ const nextConfig: NextConfig = {
 
   // ✅ Reduce preloading for development
   poweredByHeader: false,
-  
+
   // ✅ Add headers to handle CORS if needed
   async headers() {
     return [

@@ -117,9 +117,9 @@ export default function JoinWisdomHouse() {
               className="max-w-3xl text-base sm:text-lg lg:text-xl leading-relaxed text-gray-200 px-2"
               style={{ color: '#E5E7EB' }}
             >
-              "Each of you should use whatever gift you have received to serve
-              others, as faithful stewards of God's grace in its various forms."
-              – 1 Peter 4:10
+              &quot;Each of you should use whatever gift you have received to
+              serve others, as faithful stewards of God&apos;s grace in its
+              various forms.&quot; – 1 Peter 4:10
             </BodySM>
           </FlexboxLayout>
 

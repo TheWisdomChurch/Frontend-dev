@@ -13,7 +13,14 @@ import { H3, H4, SmallText, Caption } from '@/components/text';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useAssociatePastors } from '@/components/utils/hooks/useAssociate';
-import { ArrowRight, Sparkles, Users, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import {
+  ArrowRight,
+  Sparkles,
+  Users,
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+} from 'lucide-react';
 import {
   Section,
   Container,
@@ -36,14 +43,24 @@ interface PersonCardProps {
 /* --------------------------------------------
    REUSABLE CARD COMPONENT — COMPACT FOR DESKTOP
 --------------------------------------------- */
-function PersonCard({ item, colorScheme, mainAccentColor, addToRefs, isMobileOrTablet = false, isActive = false }: PersonCardProps) {
+function PersonCard({
+  item,
+  colorScheme,
+  mainAccentColor,
+  addToRefs,
+  isMobileOrTablet = false,
+  isActive = false,
+}: PersonCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const handleRef = useCallback((element: HTMLDivElement | null) => {
-    if (element && addToRefs) {
-      addToRefs(element);
-    }
-  }, [addToRefs]);
+  const handleRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (element && addToRefs) {
+        addToRefs(element);
+      }
+    },
+    [addToRefs]
+  );
 
   // Adjust sizes based on screen - COMPACT for desktop
   const cardWidth = isMobileOrTablet ? '280px' : '100%';
@@ -53,29 +70,40 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs, isMobileOrT
   const descriptionSize = isMobileOrTablet ? 'text-13px' : 'text-xs';
 
   return (
-    <div 
-      ref={(element) => {
+    <div
+      ref={element => {
         cardRef.current = element;
         handleRef(element);
-      }} 
+      }}
       className={`group ${isMobileOrTablet ? 'flex-shrink-0' : 'w-full h-full'} transition-all duration-500`}
-      style={isMobileOrTablet ? { 
-        width: cardWidth,
-        transform: isActive ? 'scale(1) translateY(0)' : 'scale(0.85) translateY(5px)',
-        opacity: isActive ? 1 : 0.4,
-        zIndex: isActive ? 20 : 1,
-        margin: '0 8px',
-      } : {}}
+      style={
+        isMobileOrTablet
+          ? {
+              width: cardWidth,
+              transform: isActive
+                ? 'scale(1) translateY(0)'
+                : 'scale(0.85) translateY(5px)',
+              opacity: isActive ? 1 : 0.4,
+              zIndex: isActive ? 20 : 1,
+              margin: '0 8px',
+            }
+          : {}
+      }
     >
-      <div className={`bg-white rounded-xl p-4 transition-all duration-500 hover:-translate-y-1 border relative overflow-hidden flex flex-col h-full ${cardHeight} ${isActive ? 'shadow-lg border-gray-300' : 'shadow-sm border-gray-200'}`}
-        style={isActive && isMobileOrTablet ? {
-          boxShadow: `0 15px 35px -5px ${colorScheme.primary}15, 0 10px 20px -10px ${colorScheme.primary}10`,
-          background: 'linear-gradient(135deg, #FFFFFF, #FAFBFC)'
-        } : {}}
+      <div
+        className={`bg-white rounded-xl p-4 transition-all duration-500 hover:-translate-y-1 border relative overflow-hidden flex flex-col h-full ${cardHeight} ${isActive ? 'shadow-lg border-gray-300' : 'shadow-sm border-gray-200'}`}
+        style={
+          isActive && isMobileOrTablet
+            ? {
+                boxShadow: `0 15px 35px -5px ${colorScheme.primary}15, 0 10px 20px -10px ${colorScheme.primary}10`,
+                background: 'linear-gradient(135deg, #FFFFFF, #FAFBFC)',
+              }
+            : {}
+        }
       >
         {/* Active Card Gradient Background */}
         {isMobileOrTablet && isActive && (
-          <div 
+          <div
             className="absolute inset-0 opacity-100 rounded-xl transition-all duration-500"
             style={{
               background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}03)`,
@@ -94,11 +122,13 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs, isMobileOrT
         {/* Centered Circular Image - More compact for desktop */}
         <div className="flex justify-center mb-4 flex-shrink-0 relative z-10">
           <div className="relative">
-            <div className={`relative ${imageSize} rounded-full overflow-hidden transform transition-all duration-500 ${isActive ? 'group-hover:scale-105' : ''}`}
+            <div
+              className={`relative ${imageSize} rounded-full overflow-hidden transform transition-all duration-500 ${isActive ? 'group-hover:scale-105' : ''}`}
               style={{
-                boxShadow: isActive && isMobileOrTablet 
-                  ? `0 0 0 2px ${colorScheme.primary}, 0 0 0 4px white, 0 8px 25px ${colorScheme.primary}20`
-                  : `0 0 0 2px ${isMobileOrTablet ? '#F3F4F6' : colorScheme.primary + '1A'}, 0 0 0 4px white`,
+                boxShadow:
+                  isActive && isMobileOrTablet
+                    ? `0 0 0 2px ${colorScheme.primary}, 0 0 0 4px white, 0 8px 25px ${colorScheme.primary}20`
+                    : `0 0 0 2px ${isMobileOrTablet ? '#F3F4F6' : colorScheme.primary + '1A'}, 0 0 0 4px white`,
               }}
             >
               <Image
@@ -106,13 +136,15 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs, isMobileOrT
                 alt={`${item.name} - ${item.role}`}
                 width={isMobileOrTablet ? 96 : 80}
                 height={isMobileOrTablet ? 96 : 80}
-                sizes={isMobileOrTablet ? "(max-width: 1024px) 96px, 80px" : "80px"}
+                sizes={
+                  isMobileOrTablet ? '(max-width: 1024px) 96px, 80px' : '80px'
+                }
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
                 loading="lazy"
                 quality={90}
                 placeholder="blur"
                 blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IiNGRjVGODUiIHJ4PSI0MCIvPjwvc3ZnPg=="
-                onError={(e) => {
+                onError={e => {
                   const target = e.currentTarget;
                   target.style.display = 'none';
                   console.warn(`Image failed to load: ${item.image}`);
@@ -126,10 +158,12 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs, isMobileOrT
               style={{
                 backgroundColor: isActive ? colorScheme.primary : '#F1F5F9',
                 color: isActive ? '#000000' : '#64748B',
-                border: isActive ? `1px solid ${colorScheme.primary}30` : '1px solid #E2E8F0',
+                border: isActive
+                  ? `1px solid ${colorScheme.primary}30`
+                  : '1px solid #E2E8F0',
                 minWidth: isMobileOrTablet ? '100px' : '90px',
                 fontSize: isMobileOrTablet ? '11px' : '10px',
-                letterSpacing: '0.2px'
+                letterSpacing: '0.2px',
               }}
             >
               {item.role}
@@ -152,25 +186,25 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs, isMobileOrT
               <Caption
                 className="text-gray-500 font-medium transition-all duration-300 mb-1"
                 useThemeColor={false}
-                style={{ 
+                style={{
                   fontSize: isMobileOrTablet ? '11px' : '10px',
-                  letterSpacing: '0.3px'
+                  letterSpacing: '0.3px',
                 }}
               >
                 {item.title}
               </Caption>
             )}
           </div>
-          
+
           {item.description && (
             <div className="px-1">
               <Caption
                 className="transition-all duration-300 line-clamp-3 leading-snug flex items-center justify-center"
                 useThemeColor={false}
-                style={{ 
+                style={{
                   color: isActive ? '#475569' : '#64748B',
                   fontSize: descriptionSize,
-                  lineHeight: '1.4'
+                  lineHeight: '1.4',
                 }}
               >
                 {item.description}
@@ -186,8 +220,13 @@ function PersonCard({ item, colorScheme, mainAccentColor, addToRefs, isMobileOrT
 /* --------------------------------------------
    SEE MORE CARD (Mobile & Tablet Only)
 --------------------------------------------- */
-function SeeMoreCard({ colorScheme, onClick, isActive = false, isMobileOrTablet = true }: { 
-  colorScheme: any; 
+function SeeMoreCard({
+  colorScheme,
+  onClick,
+  isActive = false,
+  isMobileOrTablet = true,
+}: {
+  colorScheme: any;
   onClick: () => void;
   isActive?: boolean;
   isMobileOrTablet?: boolean;
@@ -198,43 +237,50 @@ function SeeMoreCard({ colorScheme, onClick, isActive = false, isMobileOrTablet 
   const cardHeight = isMobileOrTablet ? 'min-h-[320px]' : 'min-h-[300px]';
 
   return (
-    <div 
+    <div
       className={`flex-shrink-0 cursor-pointer transition-all duration-500 ${isActive ? 'scale-100 opacity-100 z-20' : 'scale-85 opacity-40'}`}
-      style={{ 
+      style={{
         width: cardWidth,
-        margin: isMobileOrTablet ? '0 8px' : '0'
+        margin: isMobileOrTablet ? '0 8px' : '0',
       }}
       onClick={onClick}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClick()}
+      onKeyDown={e => e.key === 'Enter' && onClick()}
     >
-      <div className={`bg-gradient-to-br from-white to-gray-50 rounded-xl p-4 transition-all duration-500 hover:-translate-y-1 border-2 border-dashed relative overflow-hidden flex flex-col h-full items-center justify-center ${cardHeight}`}
-        style={isActive ? {
-          borderColor: colorScheme.primary,
-          background: `linear-gradient(135deg, ${colorScheme.primary}10, #FFFFFF)`,
-          boxShadow: `0 15px 35px -5px ${colorScheme.primary}15`
-        } : {
-          borderColor: '#CBD5E1',
-          background: 'linear-gradient(135deg, #F8FAFC, #FFFFFF)'
-        }}
+      <div
+        className={`bg-gradient-to-br from-white to-gray-50 rounded-xl p-4 transition-all duration-500 hover:-translate-y-1 border-2 border-dashed relative overflow-hidden flex flex-col h-full items-center justify-center ${cardHeight}`}
+        style={
+          isActive
+            ? {
+                borderColor: colorScheme.primary,
+                background: `linear-gradient(135deg, ${colorScheme.primary}10, #FFFFFF)`,
+                boxShadow: `0 15px 35px -5px ${colorScheme.primary}15`,
+              }
+            : {
+                borderColor: '#CBD5E1',
+                background: 'linear-gradient(135deg, #F8FAFC, #FFFFFF)',
+              }
+        }
       >
         {/* Animated background */}
-        <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl"
+        <div
+          className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl"
           style={{
             background: `linear-gradient(135deg, ${colorScheme.primary}15, ${colorScheme.primaryDark}08)`,
           }}
         />
-        
+
         {/* Icon */}
         <div className="relative mb-4">
-          <div className={`${iconSize} rounded-full flex items-center justify-center transform transition-all duration-300 group-hover:scale-110`}
+          <div
+            className={`${iconSize} rounded-full flex items-center justify-center transform transition-all duration-300 group-hover:scale-110`}
             style={{
               backgroundColor: `${colorScheme.primary}20`,
-              border: `2px solid ${colorScheme.primary}30`
+              border: `2px solid ${colorScheme.primary}30`,
             }}
           >
-            <MoreHorizontal 
+            <MoreHorizontal
               className={iconInnerSize}
               style={{ color: colorScheme.primary }}
             />
@@ -254,19 +300,20 @@ function SeeMoreCard({ colorScheme, onClick, isActive = false, isMobileOrTablet 
           <Caption
             className="text-gray-600 mb-4 text-sm leading-relaxed text-center"
             useThemeColor={false}
-            style={{ 
+            style={{
               lineHeight: '1.4',
-              fontSize: isMobileOrTablet ? '13px' : '12px'
+              fontSize: isMobileOrTablet ? '13px' : '12px',
             }}
           >
             Explore complete leadership team
           </Caption>
-          
-          <div className="px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm"
+
+          <div
+            className="px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm"
             style={{
               backgroundColor: colorScheme.primary,
               color: '#000000',
-              boxShadow: `0 2px 8px ${colorScheme.primary}30`
+              boxShadow: `0 2px 8px ${colorScheme.primary}30`,
             }}
           >
             View All
@@ -293,7 +340,9 @@ export default function AssociatePastors() {
     addToRefs,
   } = useAssociatePastors();
 
-  const [activeTab, setActiveTab] = useState<'pastoral' | 'ministry'>('pastoral');
+  const [activeTab, setActiveTab] = useState<'pastoral' | 'ministry'>(
+    'pastoral'
+  );
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
@@ -302,20 +351,20 @@ export default function AssociatePastors() {
   // Card dimensions for calculation
   const CARD_WIDTH = 280;
   const CARD_MARGIN = 8;
-  const CARD_TOTAL_WIDTH = CARD_WIDTH + (CARD_MARGIN * 2);
+  const CARD_TOTAL_WIDTH = CARD_WIDTH + CARD_MARGIN * 2;
 
   // Check for mobile & tablet (up to 1024px)
   useEffect(() => {
     const checkViewport = () => {
       const isTabletOrMobile = window.innerWidth < 1024;
       setIsMobileOrTablet(isTabletOrMobile);
-      
+
       if (isTabletOrMobile && sliderContainerRef.current) {
         const width = sliderContainerRef.current.offsetWidth;
         setSliderWidth(width);
       }
     };
-    
+
     checkViewport();
     window.addEventListener('resize', checkViewport);
     return () => window.removeEventListener('resize', checkViewport);
@@ -333,10 +382,12 @@ export default function AssociatePastors() {
   const mainAccentColor = isDarkMode ? colorScheme.primary : '#000000';
 
   // Get data based on active tab
-  const currentData = activeTab === 'pastoral' ? pastorsData : ministryLeadersData;
-  const currentContent = activeTab === 'pastoral' 
-    ? associatePastorsContent.pastoralSection 
-    : associatePastorsContent.ministrySection;
+  const currentData =
+    activeTab === 'pastoral' ? pastorsData : ministryLeadersData;
+  const currentContent =
+    activeTab === 'pastoral'
+      ? associatePastorsContent.pastoralSection
+      : associatePastorsContent.ministrySection;
 
   // For mobile & tablet: show 2 cards + "See More" card
   const sliderCards = currentData.slice(0, 2);
@@ -349,19 +400,22 @@ export default function AssociatePastors() {
   // Calculate translateX for centering
   const calculateTranslateX = useCallback(() => {
     if (!isMobileOrTablet || !sliderWidth) return 'translateX(0px)';
-    
+
     const slidePosition = currentSlide * CARD_TOTAL_WIDTH;
     const offset = (sliderWidth - CARD_WIDTH) / 2;
     const translateX = -slidePosition + offset;
-    
+
     return `translateX(${translateX}px)`;
   }, [currentSlide, isMobileOrTablet, sliderWidth]);
 
   // Handle routing
-  const handleSeeMore = useCallback((event: React.MouseEvent) => {
-    event.preventDefault();
-    router.push('/leadership');
-  }, [router]);
+  const handleSeeMore = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault();
+      router.push('/leadership');
+    },
+    [router]
+  );
 
   const handleMobileSeeMore = useCallback(() => {
     router.push('/leadership');
@@ -369,14 +423,14 @@ export default function AssociatePastors() {
 
   // Navigation for slider
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => {
+    setCurrentSlide(prev => {
       const next = prev + 1;
       return next >= totalSliderSlides ? 0 : next;
     });
   }, [totalSliderSlides]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => {
+    setCurrentSlide(prev => {
       const next = prev - 1;
       return next < 0 ? totalSliderSlides - 1 : next;
     });
@@ -393,11 +447,8 @@ export default function AssociatePastors() {
     setCurrentSlide(index);
   }, []);
 
-  const { 
-    mainHeader, 
-    mainDescription,
-    seeMoreButton 
-  } = associatePastorsContent;
+  const { mainHeader, mainDescription, seeMoreButton } =
+    associatePastorsContent;
 
   return (
     <Section
@@ -446,12 +497,15 @@ export default function AssociatePastors() {
                   <button
                     onClick={() => handleTabChange('pastoral')}
                     className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                      activeTab === 'pastoral' 
-                        ? 'shadow-sm' 
+                      activeTab === 'pastoral'
+                        ? 'shadow-sm'
                         : 'hover:opacity-90'
                     }`}
                     style={{
-                      backgroundColor: activeTab === 'pastoral' ? colorScheme.primary : 'transparent',
+                      backgroundColor:
+                        activeTab === 'pastoral'
+                          ? colorScheme.primary
+                          : 'transparent',
                       color: activeTab === 'pastoral' ? '#000000' : '#6B7280',
                     }}
                   >
@@ -460,12 +514,15 @@ export default function AssociatePastors() {
                   <button
                     onClick={() => handleTabChange('ministry')}
                     className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                      activeTab === 'ministry' 
-                        ? 'shadow-sm' 
+                      activeTab === 'ministry'
+                        ? 'shadow-sm'
                         : 'hover:opacity-90'
                     }`}
                     style={{
-                      backgroundColor: activeTab === 'ministry' ? colorScheme.primary : 'transparent',
+                      backgroundColor:
+                        activeTab === 'ministry'
+                          ? colorScheme.primary
+                          : 'transparent',
                       color: activeTab === 'ministry' ? '#000000' : '#6B7280',
                     }}
                   >
@@ -487,9 +544,9 @@ export default function AssociatePastors() {
                   {currentContent.title}
                   <div
                     className="absolute -bottom-2 left-0 w-full h-1 transition-all duration-500 rounded-full"
-                    style={{ 
+                    style={{
                       backgroundColor: colorScheme.primary,
-                      boxShadow: `0 2px 8px ${colorScheme.primary}30`
+                      boxShadow: `0 2px 8px ${colorScheme.primary}30`,
                     }}
                   />
                 </H4>
@@ -501,21 +558,21 @@ export default function AssociatePastors() {
                 <button
                   onClick={prevSlide}
                   className="absolute left-2 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border border-gray-300 hover:shadow-2xl transition-all duration-300 active:scale-95"
-                  style={{ 
+                  style={{
                     color: colorScheme.primary,
-                    boxShadow: `0 8px 25px rgba(0,0,0,0.15)`
+                    boxShadow: `0 8px 25px rgba(0,0,0,0.15)`,
                   }}
                   aria-label="Previous slide"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
-                
+
                 <button
                   onClick={nextSlide}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border border-gray-300 hover:shadow-2xl transition-all duration-300 active:scale-95"
-                  style={{ 
+                  style={{
                     color: colorScheme.primary,
-                    boxShadow: `0 8px 25px rgba(0,0,0,0.15)`
+                    boxShadow: `0 8px 25px rgba(0,0,0,0.15)`,
                   }}
                   aria-label="Next slide"
                 >
@@ -523,16 +580,13 @@ export default function AssociatePastors() {
                 </button>
 
                 {/* Slider Container */}
-                <div 
-                  ref={sliderContainerRef}
-                  className="overflow-hidden"
-                >
-                  <div 
+                <div ref={sliderContainerRef} className="overflow-hidden">
+                  <div
                     className="flex transition-transform duration-500 ease-out"
-                    style={{ 
+                    style={{
                       transform: calculateTranslateX(),
                       width: 'fit-content',
-                      willChange: 'transform'
+                      willChange: 'transform',
                     }}
                   >
                     {/* Display cards */}
@@ -547,9 +601,9 @@ export default function AssociatePastors() {
                         isActive={index === currentSlide}
                       />
                     ))}
-                    
+
                     {/* "See More" Card */}
-                    <SeeMoreCard 
+                    <SeeMoreCard
                       colorScheme={colorScheme}
                       onClick={handleMobileSeeMore}
                       isActive={currentSlide === sliderCards.length}
@@ -565,17 +619,19 @@ export default function AssociatePastors() {
                       key={index}
                       onClick={() => handleSlideClick(index)}
                       className={`h-2 rounded-full transition-all duration-300 hover:scale-125 active:scale-95 ${
-                        index === currentSlide 
-                          ? 'w-10 scale-125' 
+                        index === currentSlide
+                          ? 'w-10 scale-125'
                           : 'w-3 bg-gray-300 hover:bg-gray-400'
                       }`}
                       style={{
-                        backgroundColor: index === currentSlide 
-                          ? colorScheme.primary 
-                          : '#D1D5DB',
-                        boxShadow: index === currentSlide 
-                          ? `0 3px 10px ${colorScheme.primary}40` 
-                          : 'none'
+                        backgroundColor:
+                          index === currentSlide
+                            ? colorScheme.primary
+                            : '#D1D5DB',
+                        boxShadow:
+                          index === currentSlide
+                            ? `0 3px 10px ${colorScheme.primary}40`
+                            : 'none',
                       }}
                       aria-label={`Go to slide ${index + 1}`}
                     />
@@ -602,14 +658,14 @@ export default function AssociatePastors() {
                     {associatePastorsContent.pastoralSection.title}
                     <div
                       className="absolute -bottom-2 left-0 w-full h-1 transition-all duration-500 rounded-full"
-                      style={{ 
+                      style={{
                         backgroundColor: colorScheme.primary,
-                        boxShadow: `0 2px 8px ${colorScheme.primary}30`
+                        boxShadow: `0 2px 8px ${colorScheme.primary}30`,
                       }}
                     />
                   </H4>
                 </div>
-                
+
                 {/* Grid with 4 columns - properly centered */}
                 <div className="w-full">
                   <GridboxLayout
@@ -624,7 +680,10 @@ export default function AssociatePastors() {
                     className="w-full items-stretch"
                   >
                     {desktopPastors.map((item, index) => (
-                      <div key={`desktop-pastor-${item.name}-${index}`} className="h-full">
+                      <div
+                        key={`desktop-pastor-${item.name}-${index}`}
+                        className="h-full"
+                      >
                         <PersonCard
                           item={item}
                           colorScheme={colorScheme}
@@ -652,9 +711,9 @@ export default function AssociatePastors() {
                     {associatePastorsContent.ministrySection.title}
                     <div
                       className="absolute -bottom-2 left-0 w-full h-1 transition-all duration-500 rounded-full"
-                      style={{ 
+                      style={{
                         backgroundColor: colorScheme.primary,
-                        boxShadow: `0 2px 8px ${colorScheme.primary}30`
+                        boxShadow: `0 2px 8px ${colorScheme.primary}30`,
                       }}
                     />
                   </H4>
@@ -673,7 +732,10 @@ export default function AssociatePastors() {
                     className="w-full items-stretch"
                   >
                     {desktopLeaders.map((item, index) => (
-                      <div key={`desktop-leader-${item.name}-${index}`} className="h-full">
+                      <div
+                        key={`desktop-leader-${item.name}-${index}`}
+                        className="h-full"
+                      >
                         <PersonCard
                           item={item}
                           colorScheme={colorScheme}
@@ -712,14 +774,15 @@ export default function AssociatePastors() {
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark || colorScheme.primary})`,
                     color: '#000000',
-                    boxShadow: `0 6px 20px ${colorScheme.primary}30`
+                    boxShadow: `0 6px 20px ${colorScheme.primary}30`,
                   }}
                 >
                   <span className="relative z-10 flex items-center justify-center">
                     {seeMoreButton}
                     <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 lg:ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  <div
+                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
                       background: `linear-gradient(135deg, ${colorScheme.primary}90, ${colorScheme.primaryDark || colorScheme.primary}90)`,
                     }}

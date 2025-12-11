@@ -1,10 +1,10 @@
-﻿// components/modals/GivingModal.tsx
-'use client';
-import { useEffect, useRef, useState } from 'react';
+﻿'use client';
+
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import Image from 'next/image';
-import { Button } from '@/components/utils/buttons/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ChevronDown, Copy, Check, Info, X } from 'lucide-react';
@@ -33,7 +33,6 @@ export default function GivingModal({
   givingOption,
 }: GivingModalProps) {
   const { colorScheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [openAccountIndex, setOpenAccountIndex] = useState<number | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -42,150 +41,186 @@ export default function GivingModal({
   const accountRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Theme-based styles - Always dark theme
-  const modalBackground = colorScheme.black;
-  const textColor = colorScheme.primary;
-  const subtitleTextColor = colorScheme.white;
-  const buttonBackground = colorScheme.primary;
-  const buttonTextColor = colorScheme.black;
-  const surfaceBackground = colorScheme.surface;
+  const themeStyles = useMemo(
+    () => ({
+      modalBackground: colorScheme.black,
+      textColor: colorScheme.primary,
+      subtitleTextColor: colorScheme.white,
+      buttonBackground: colorScheme.primary,
+      buttonTextColor: colorScheme.black,
+      surfaceBackground: colorScheme.surface,
+      opacityPrimary10: colorScheme.opacity.primary10,
+      borderColor: colorScheme.border,
+    }),
+    [colorScheme]
+  );
 
+  // Check if mounted and handle mobile detection
   useEffect(() => {
-    setMounted(true);
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
+
+    // Initial check
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+
+    const handleResize = () => {
+      requestAnimationFrame(checkMobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // FULLY LOCK BACKGROUND SCROLL + PREVENT PULL-TO-REFRESH
+  // Handle body scroll locking
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.touchAction = 'none';
-    } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
-    }
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalPosition = document.body.style.position;
+    const originalWidth = document.body.style.width;
+    const originalTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.touchAction = 'none';
+
     return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
+      document.body.style.overflow = originalOverflow;
+      document.body.style.position = originalPosition;
+      document.body.style.width = originalWidth;
+      document.body.style.touchAction = originalTouchAction;
     };
   }, [isOpen]);
 
+  // Animation effect
   useEffect(() => {
-    if (isOpen && modalRef.current) {
-      const tl = gsap.timeline();
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 20 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-        );
-      }
-    }
-  }, [isOpen, isMobile]);
+    if (!isOpen || !modalRef.current) return;
 
-  const handleClose = () => {
-    if (modalRef.current) {
-      if (isMobile) {
-        gsap.to(modalRef.current, {
-          y: '100%',
-          opacity: 0,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: () => {
-            onClose();
-            setOpenAccountIndex(null);
-          },
-        });
-      } else {
-        gsap.to(modalRef.current, {
-          opacity: 0,
-          scale: 0.95,
-          y: 20,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: () => {
-            onClose();
-            setOpenAccountIndex(null);
-          },
-        });
-      }
+    const modalElement = modalRef.current;
+    const tl = gsap.timeline();
+
+    if (isMobile) {
+      tl.fromTo(
+        modalElement,
+        { y: '100%', opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
+      );
     } else {
-      onClose();
-      setOpenAccountIndex(null);
-    }
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      handleClose();
-    }
-  };
-
-  const toggleAccount = (index: number) => {
-    const accountRef = accountRefs.current[index];
-    if (!accountRef) return;
-
-    if (openAccountIndex === index) {
-      gsap.to(accountRef, {
-        height: 0,
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power2.inOut',
-        onComplete: () => setOpenAccountIndex(null),
-      });
-    } else {
-      if (openAccountIndex !== null) {
-        const prev = accountRefs.current[openAccountIndex];
-        if (prev) {
-          gsap.to(prev, {
-            height: 0,
-            opacity: 0,
-            duration: 0.3,
-            ease: 'power2.inOut',
-          });
-        }
-      }
-      setOpenAccountIndex(index);
-      gsap.fromTo(
-        accountRef,
-        { height: 0, opacity: 0 },
-        {
-          height: 'auto',
-          opacity: 1,
-          duration: 0.4,
-          ease: 'power2.out',
-          delay: 0.1,
-        }
+      tl.fromTo(
+        modalElement,
+        { opacity: 0, scale: 0.95, y: 20 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
       );
     }
-  };
 
-  const copyToClipboard = async (text: string, index: number) => {
+    return () => {
+      tl.kill();
+    };
+  }, [isOpen, isMobile]);
+
+  const handleClose = useCallback(() => {
+    if (!modalRef.current) {
+      onClose();
+      setOpenAccountIndex(null);
+      return;
+    }
+
+    const modalElement = modalRef.current;
+
+    if (isMobile) {
+      gsap.to(modalElement, {
+        y: '100%',
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+          onClose();
+          setOpenAccountIndex(null);
+        },
+      });
+    } else {
+      gsap.to(modalElement, {
+        opacity: 0,
+        scale: 0.95,
+        y: 20,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+          onClose();
+          setOpenAccountIndex(null);
+        },
+      });
+    }
+  }, [isMobile, onClose]);
+
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
+
+  const toggleAccount = useCallback(
+    (index: number) => {
+      const accountRef = accountRefs.current[index];
+      if (!accountRef) return;
+
+      if (openAccountIndex === index) {
+        gsap.to(accountRef, {
+          height: 0,
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.inOut',
+          onComplete: () => setOpenAccountIndex(null),
+        });
+      } else {
+        if (openAccountIndex !== null) {
+          const prev = accountRefs.current[openAccountIndex];
+          if (prev) {
+            gsap.to(prev, {
+              height: 0,
+              opacity: 0,
+              duration: 0.3,
+              ease: 'power2.inOut',
+            });
+          }
+        }
+        setOpenAccountIndex(index);
+        gsap.fromTo(
+          accountRef,
+          { height: 0, opacity: 0 },
+          {
+            height: 'auto',
+            opacity: 1,
+            duration: 0.4,
+            ease: 'power2.out',
+            delay: 0.1,
+          }
+        );
+      }
+    },
+    [openAccountIndex]
+  );
+
+  const copyToClipboard = useCallback(async (text: string, index: number) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 2000);
-      if (navigator.vibrate) navigator.vibrate(50);
+      const timer = setTimeout(() => setCopiedIndex(null), 2000);
+
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+
+      return () => clearTimeout(timer);
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
-  };
+  }, []);
 
-  if (!mounted || !isOpen || !givingOption) return null;
+  if (!isOpen || !givingOption) return null;
 
   const accounts = givingOption.accounts || [];
 
@@ -195,6 +230,9 @@ export default function GivingModal({
         isMobile ? 'pb-0' : ''
       }`}
       onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${givingOption.title} - Giving Information`}
     >
       <div
         ref={modalRef}
@@ -207,14 +245,17 @@ export default function GivingModal({
           }
         `}
         style={{
-          backgroundColor: modalBackground,
+          backgroundColor: themeStyles.modalBackground,
           borderColor: colorScheme.primary,
         }}
         onClick={e => e.stopPropagation()}
       >
         {/* Mobile Drag Handle */}
         {isMobile && (
-          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
+          <div
+            className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing"
+            aria-hidden="true"
+          >
             <div
               className="w-10 h-1 rounded-full"
               style={{ backgroundColor: colorScheme.primary }}
@@ -231,18 +272,19 @@ export default function GivingModal({
             isMobile ? 'top-1 right-1' : 'top-2 right-2'
           }`}
           style={{
-            backgroundColor: colorScheme.opacity.primary10,
+            backgroundColor: themeStyles.opacityPrimary10,
             color: colorScheme.primary,
           }}
+          aria-label="Close modal"
         >
           <X className="w-3 h-3" />
         </Button>
 
-        {/* SCROLLABLE CONTENT â€” HIDDEN SCROLLBAR, NO BACKGROUND SCROLL */}
+        {/* Scrollable Content */}
         <div
           ref={contentRef}
           className={`
-            overflow-y-auto scrollbar-hide
+            overflow-y-auto
             ${isMobile ? 'p-3 max-h-[calc(85vh-40px)]' : 'p-4 max-h-[calc(85vh-40px)]'}
           `}
           style={
@@ -252,9 +294,9 @@ export default function GivingModal({
             } as React.CSSProperties
           }
         >
-          {/* THIS HIDES SCROLLBAR ON WEBKIT BROWSERS (Chrome, Safari, Edge) */}
-          <style jsx>{`
-            .scrollbar-hide::-webkit-scrollbar {
+          {/* Custom scrollbar hiding */}
+          <style>{`
+            .overflow-y-auto::-webkit-scrollbar {
               display: none;
             }
           `}</style>
@@ -266,7 +308,7 @@ export default function GivingModal({
                 isMobile ? 'w-10 h-10 mb-2' : 'w-12 h-12 mb-2'
               }`}
               style={{
-                backgroundColor: colorScheme.opacity.primary10,
+                backgroundColor: themeStyles.opacityPrimary10,
                 borderColor: colorScheme.primary,
               }}
             >
@@ -276,12 +318,13 @@ export default function GivingModal({
                 width={isMobile ? 20 : 24}
                 height={isMobile ? 20 : 24}
                 className="object-contain"
+                priority
               />
             </div>
             <H4
               fontFamily="bricolage"
               className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
-              style={{ color: textColor }}
+              style={{ color: themeStyles.textColor }}
               useThemeColor={false}
               weight="bold"
             >
@@ -289,7 +332,7 @@ export default function GivingModal({
             </H4>
             <BodyMD
               className="text-xs leading-relaxed mb-2"
-              style={{ color: subtitleTextColor }}
+              style={{ color: themeStyles.subtitleTextColor }}
               useThemeColor={false}
             >
               {givingOption.description}
@@ -297,23 +340,23 @@ export default function GivingModal({
             <div
               className={`rounded-lg border mb-3 ${isMobile ? 'p-2' : 'p-2'}`}
               style={{
-                backgroundColor: colorScheme.opacity.primary10,
+                backgroundColor: themeStyles.opacityPrimary10,
                 borderColor: colorScheme.primary,
               }}
             >
               <Caption
                 fontFamily="playfair"
                 className="italic text-center leading-relaxed"
-                style={{ color: subtitleTextColor }}
+                style={{ color: themeStyles.subtitleTextColor }}
                 useThemeColor={false}
               >
-                "Each of you should give what you have decided in your heart to
-                give, not reluctantly or under compulsion, for God loves a
-                cheerful giver."
+                &quot;Each of you should give what you have decided in your
+                heart to give, not reluctantly or under compulsion, for God
+                loves a cheerful giver.&quot;
               </Caption>
               <BodySM
                 className="mt-1 text-center"
-                style={{ color: subtitleTextColor }}
+                style={{ color: themeStyles.subtitleTextColor }}
                 useThemeColor={false}
               >
                 2 Corinthians 9:7
@@ -324,7 +367,7 @@ export default function GivingModal({
           <div className={isMobile ? 'mb-3' : 'mb-4'}>
             <MediumText
               className={`text-center mb-2 ${isMobile ? 'text-sm' : 'text-base'}`}
-              style={{ color: textColor }}
+              style={{ color: themeStyles.textColor }}
               useThemeColor={false}
             >
               Pay Into Our Accounts
@@ -332,7 +375,7 @@ export default function GivingModal({
             {accounts.length === 0 ? (
               <div className="text-center py-2">
                 <BodyMD
-                  style={{ color: subtitleTextColor }}
+                  style={{ color: themeStyles.subtitleTextColor }}
                   useThemeColor={false}
                 >
                   No accounts available at the moment.
@@ -352,7 +395,7 @@ export default function GivingModal({
               >
                 {accounts.map((account, index) => (
                   <div
-                    key={index}
+                    key={account.accountNumber}
                     className={accounts.length === 1 ? 'w-full max-w-xs' : ''}
                   >
                     <div
@@ -362,13 +405,23 @@ export default function GivingModal({
                         ${isMobile ? 'w-12 h-12' : 'w-14 h-14'}
                       `}
                       style={{
-                        backgroundColor: surfaceBackground,
+                        backgroundColor: themeStyles.surfaceBackground,
                         borderColor:
                           openAccountIndex === index
                             ? colorScheme.primary
-                            : colorScheme.border,
+                            : themeStyles.borderColor,
                       }}
                       onClick={() => toggleAccount(index)}
+                      role="button"
+                      tabIndex={0}
+                      aria-expanded={openAccountIndex === index}
+                      aria-controls={`account-details-${index}`}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleAccount(index);
+                        }
+                      }}
                     >
                       {account.image ? (
                         <Image
@@ -376,6 +429,7 @@ export default function GivingModal({
                           alt={account.bank}
                           fill
                           className="rounded-full object-cover"
+                          sizes="(max-width: 768px) 48px, 56px"
                         />
                       ) : (
                         <div className="w-full h-full rounded-full flex items-center justify-center">
@@ -393,7 +447,7 @@ export default function GivingModal({
                           ${isMobile ? '-bottom-1 w-4 h-4' : '-bottom-1 w-4 h-4'}
                         `}
                         style={{
-                          backgroundColor: modalBackground,
+                          backgroundColor: themeStyles.modalBackground,
                           borderColor: colorScheme.primary,
                         }}
                       >
@@ -409,22 +463,24 @@ export default function GivingModal({
                       className={`text-center mb-0.5 line-clamp-2 ${
                         isMobile ? 'text-xs' : 'text-sm'
                       }`}
-                      style={{ color: textColor }}
+                      style={{ color: themeStyles.textColor }}
                       useThemeColor={false}
                     >
                       {account.bank}
                     </MediumText>
                     <div
                       ref={el => {
-                        if (el) accountRefs.current[index] = el;
+                        accountRefs.current[index] = el;
                       }}
                       className="overflow-hidden"
                       style={{ height: 0, opacity: 0 }}
+                      id={`account-details-${index}`}
+                      aria-hidden={openAccountIndex !== index}
                     >
                       <div
                         className={`rounded-lg border mt-1 ${isMobile ? 'p-2' : 'p-2'}`}
                         style={{
-                          backgroundColor: surfaceBackground,
+                          backgroundColor: themeStyles.surfaceBackground,
                           borderColor: colorScheme.primary,
                         }}
                       >
@@ -432,7 +488,7 @@ export default function GivingModal({
                           <div>
                             <BodySM
                               className="mb-0.5 text-xs"
-                              style={{ color: subtitleTextColor }}
+                              style={{ color: themeStyles.subtitleTextColor }}
                               useThemeColor={false}
                             >
                               Account Number
@@ -440,7 +496,7 @@ export default function GivingModal({
                             <div className="flex items-center justify-between gap-1">
                               <code
                                 className={`font-mono font-bold break-all text-xs`}
-                                style={{ color: textColor }}
+                                style={{ color: themeStyles.textColor }}
                               >
                                 {account.accountNumber}
                               </code>
@@ -455,12 +511,17 @@ export default function GivingModal({
                                   backgroundColor:
                                     copiedIndex === index
                                       ? colorScheme.primary
-                                      : colorScheme.opacity.primary10,
+                                      : themeStyles.opacityPrimary10,
                                   color:
                                     copiedIndex === index
-                                      ? colorScheme.black
+                                      ? themeStyles.buttonTextColor
                                       : colorScheme.primary,
                                 }}
+                                aria-label={
+                                  copiedIndex === index
+                                    ? 'Copied to clipboard'
+                                    : `Copy account number ${account.accountNumber}`
+                                }
                               >
                                 {copiedIndex === index ? (
                                   <Check className="w-2.5 h-2.5" />
@@ -473,14 +534,14 @@ export default function GivingModal({
                           <div>
                             <BodySM
                               className="mb-0.5 text-xs"
-                              style={{ color: subtitleTextColor }}
+                              style={{ color: themeStyles.subtitleTextColor }}
                               useThemeColor={false}
                             >
                               Account Name
                             </BodySM>
                             <MediumText
                               className={`break-words text-xs`}
-                              style={{ color: textColor }}
+                              style={{ color: themeStyles.textColor }}
                               useThemeColor={false}
                             >
                               {account.accountName}
@@ -489,7 +550,7 @@ export default function GivingModal({
                           <div
                             className={`rounded-lg border ${isMobile ? 'p-1.5' : 'p-1.5'}`}
                             style={{
-                              backgroundColor: colorScheme.opacity.primary10,
+                              backgroundColor: themeStyles.opacityPrimary10,
                               borderColor: colorScheme.primary,
                             }}
                           >
@@ -500,11 +561,13 @@ export default function GivingModal({
                               />
                               <Caption
                                 className="leading-relaxed"
-                                style={{ color: subtitleTextColor }}
+                                style={{ color: themeStyles.subtitleTextColor }}
                                 useThemeColor={false}
                               >
                                 <MediumText
-                                  style={{ color: subtitleTextColor }}
+                                  style={{
+                                    color: themeStyles.subtitleTextColor,
+                                  }}
                                   useThemeColor={false}
                                 >
                                   Please add narration
@@ -529,48 +592,51 @@ export default function GivingModal({
               <div
                 className="rounded-lg p-2 border"
                 style={{
-                  backgroundColor: colorScheme.opacity.primary10,
+                  backgroundColor: themeStyles.opacityPrimary10,
                   borderColor: colorScheme.primary,
                 }}
               >
                 <MediumText
                   className="mb-0.5 text-xs"
-                  style={{ color: textColor }}
+                  style={{ color: themeStyles.textColor }}
                   useThemeColor={false}
                 >
                   Giving Tips
                 </MediumText>
                 <Caption
-                  style={{ color: subtitleTextColor }}
+                  style={{ color: themeStyles.subtitleTextColor }}
                   useThemeColor={false}
                 >
-                  â€¢ Include your name in narration
-                  <br />â€¢ Keep transaction receipts
-                  <br />â€¢ Contact for inquiries
+                  • Include your name in narration
+                  <br />
+                  • Keep transaction receipts
+                  <br />• Contact for inquiries
                 </Caption>
               </div>
               <div
                 className="rounded-lg p-2 border"
                 style={{
-                  backgroundColor: colorScheme.opacity.primary10,
+                  backgroundColor: themeStyles.opacityPrimary10,
                   borderColor: colorScheme.primary,
                 }}
               >
                 <MediumText
                   className="mb-0.5 text-xs"
-                  style={{ color: textColor }}
+                  style={{ color: themeStyles.textColor }}
                   useThemeColor={false}
                 >
                   Need Help?
                 </MediumText>
                 <Caption
-                  style={{ color: subtitleTextColor }}
+                  style={{ color: themeStyles.subtitleTextColor }}
                   useThemeColor={false}
                 >
                   Contact finance team for:
-                  <br />â€¢ Transaction issues
-                  <br />â€¢ Giving receipts
-                  <br />â€¢ Other inquiries
+                  <br />
+                  • Transaction issues
+                  <br />
+                  • Giving receipts
+                  <br />• Other inquiries
                 </Caption>
               </div>
             </div>
@@ -582,7 +648,7 @@ export default function GivingModal({
           >
             <Caption
               className="mb-1"
-              style={{ color: subtitleTextColor }}
+              style={{ color: themeStyles.subtitleTextColor }}
               useThemeColor={false}
             >
               Thank you for your generous giving. May God bless you abundantly.
@@ -593,12 +659,12 @@ export default function GivingModal({
                 isMobile ? 'py-1.5 px-4 text-sm' : 'py-2 px-6 text-sm'
               }`}
               style={{
-                backgroundColor: buttonBackground,
-                color: buttonTextColor,
+                backgroundColor: themeStyles.buttonBackground,
+                color: themeStyles.buttonTextColor,
               }}
             >
               <MediumText
-                style={{ color: buttonTextColor }}
+                style={{ color: themeStyles.buttonTextColor }}
                 useThemeColor={false}
               >
                 Close
@@ -611,4 +677,3 @@ export default function GivingModal({
     document.body
   );
 }
-

@@ -75,30 +75,33 @@ const DetailModal = ({
     }
   });
 
-  const handleRef = useCallback((element: HTMLDivElement | null) => {
-    if (element) {
-      modalRef.current = element;
-      
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-        const tl = gsap.timeline();
+  const handleRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (element) {
+        modalRef.current = element;
 
-        if (isMobile) {
-          tl.fromTo(
-            modalRef.current,
-            { y: '100%', opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-          );
-        } else {
-          tl.fromTo(
-            modalRef.current,
-            { opacity: 0, scale: 0.95, y: 30 },
-            { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-          );
+        if (isOpen) {
+          document.body.style.overflow = 'hidden';
+          const tl = gsap.timeline();
+
+          if (isMobile) {
+            tl.fromTo(
+              modalRef.current,
+              { y: '100%', opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+            );
+          } else {
+            tl.fromTo(
+              modalRef.current,
+              { opacity: 0, scale: 0.95, y: 30 },
+              { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+            );
+          }
         }
       }
-    }
-  }, [isOpen, isMobile]);
+    },
+    [isOpen, isMobile]
+  );
 
   const handleClose = useCallback(() => {
     if (modalRef.current) {
@@ -132,11 +135,14 @@ const DetailModal = ({
     }
   }, [isMobile, onClose]);
 
-  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      handleClose();
-    }
-  }, [handleClose]);
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.target === event.currentTarget) {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
 
   if (!isOpen || !data) return null;
 
@@ -220,8 +226,8 @@ const DetailModal = ({
                   {type === 'pastor'
                     ? 'Pastoral Team'
                     : type === 'deacon'
-                    ? 'Deacons Board'
-                    : 'Ministry Leader'}
+                      ? 'Deacons Board'
+                      : 'Ministry Leader'}
                 </div>
               </div>
             </div>
@@ -234,11 +240,15 @@ const DetailModal = ({
                 color: typeColor,
                 backgroundColor: `${typeColor}1A`,
               }}
-              onMouseEnter={(event) => {
-                (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}33`;
+              onMouseEnter={event => {
+                (
+                  event.currentTarget as HTMLButtonElement
+                ).style.backgroundColor = `${typeColor}33`;
               }}
-              onMouseLeave={(event) => {
-                (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}1A`;
+              onMouseLeave={event => {
+                (
+                  event.currentTarget as HTMLButtonElement
+                ).style.backgroundColor = `${typeColor}1A`;
               }}
             >
               <X className="w-4 h-4" />
@@ -318,8 +328,8 @@ const DetailModal = ({
                     {type === 'pastor'
                       ? 'Pastoral Care'
                       : type === 'deacon'
-                      ? 'Member Support'
-                      : 'Ministry Leadership'}
+                        ? 'Member Support'
+                        : 'Ministry Leadership'}
                   </span>
                 </div>
               </div>
@@ -363,30 +373,33 @@ const VisitChurchModal = ({
     }
   });
 
-  const handleRef = useCallback((element: HTMLDivElement | null) => {
-    if (element) {
-      modalRef.current = element;
-      
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-        const tl = gsap.timeline();
+  const handleRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (element) {
+        modalRef.current = element;
 
-        if (isMobile) {
-          tl.fromTo(
-            modalRef.current,
-            { y: '100%', opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-          );
-        } else {
-          tl.fromTo(
-            modalRef.current,
-            { opacity: 0, scale: 0.95, y: 30 },
-            { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-          );
+        if (isOpen) {
+          document.body.style.overflow = 'hidden';
+          const tl = gsap.timeline();
+
+          if (isMobile) {
+            tl.fromTo(
+              modalRef.current,
+              { y: '100%', opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+            );
+          } else {
+            tl.fromTo(
+              modalRef.current,
+              { opacity: 0, scale: 0.95, y: 30 },
+              { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+            );
+          }
         }
       }
-    }
-  }, [isOpen, isMobile]);
+    },
+    [isOpen, isMobile]
+  );
 
   const handleClose = useCallback(() => {
     if (modalRef.current) {
@@ -420,11 +433,14 @@ const VisitChurchModal = ({
     }
   }, [isMobile, onClose]);
 
-  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      handleClose();
-    }
-  }, [handleClose]);
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.target === event.currentTarget) {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
 
   if (!isOpen) return null;
 
@@ -487,13 +503,15 @@ const VisitChurchModal = ({
                 color: colorScheme.primary,
                 backgroundColor: colorScheme.opacity.primary10,
               }}
-              onMouseEnter={(event) => {
-                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
-                  colorScheme.opacity.primary20;
+              onMouseEnter={event => {
+                (
+                  event.currentTarget as HTMLButtonElement
+                ).style.backgroundColor = colorScheme.opacity.primary20;
               }}
-              onMouseLeave={(event) => {
-                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
-                  colorScheme.opacity.primary10;
+              onMouseLeave={event => {
+                (
+                  event.currentTarget as HTMLButtonElement
+                ).style.backgroundColor = colorScheme.opacity.primary10;
               }}
             >
               <X className="w-4 h-4" />
@@ -568,8 +586,8 @@ const VisitChurchModal = ({
               <p style={{ color: colorScheme.primary }}>
                 <span className="font-semibold">Note:</span> We welcome you to
                 join our worship services and experience the warmth of our
-                church family. Whether you're visiting for the first time or
-                looking for a spiritual home, we're excited to meet you!
+                church family. Whether you&apos;re visiting for the first time
+                or looking for a spiritual home, we&apos;re excited to meet you!
               </p>
             </div>
           </div>
@@ -593,7 +611,7 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -620,30 +638,33 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
     }
   });
 
-  const handleRef = useCallback((element: HTMLDivElement | null) => {
-    if (element) {
-      modalRef.current = element;
-      
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-        const tl = gsap.timeline();
+  const handleRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (element) {
+        modalRef.current = element;
 
-        if (isMobile) {
-          tl.fromTo(
-            modalRef.current,
-            { y: '100%', opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-          );
-        } else {
-          tl.fromTo(
-            modalRef.current,
-            { opacity: 0, scale: 0.95, y: 30 },
-            { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-          );
+        if (isOpen) {
+          document.body.style.overflow = 'hidden';
+          const tl = gsap.timeline();
+
+          if (isMobile) {
+            tl.fromTo(
+              modalRef.current,
+              { y: '100%', opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+            );
+          } else {
+            tl.fromTo(
+              modalRef.current,
+              { opacity: 0, scale: 0.95, y: 30 },
+              { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+            );
+          }
         }
       }
-    }
-  }, [isOpen, isMobile]);
+    },
+    [isOpen, isMobile]
+  );
 
   const handleClose = useCallback(() => {
     if (modalRef.current) {
@@ -677,27 +698,31 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
     }
   }, [isMobile, onClose]);
 
-  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      handleClose();
-    }
-  }, [handleClose]);
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.target === event.currentTarget) {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
 
-  const handleInputChange = useCallback((
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = event.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    if (formErrors[name as keyof typeof formErrors]) {
-      setFormErrors(prev => ({
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = event.target;
+      setFormData(prev => ({
         ...prev,
-        [name]: '',
+        [name]: value,
       }));
-    }
-  }, [formErrors]);
+      if (formErrors[name as keyof typeof formErrors]) {
+        setFormErrors(prev => ({
+          ...prev,
+          [name]: '',
+        }));
+      }
+    },
+    [formErrors]
+  );
 
   const validateForm = useCallback(() => {
     const errors = {
@@ -727,24 +752,27 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
     return !Object.values(errors).some(error => error !== '');
   }, [formData]);
 
-  const handleSubmit = useCallback(async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
 
-    if (!validateForm()) return;
+      if (!validateForm()) return;
 
-    setIsSubmitting(true);
+      setIsSubmitting(true);
 
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Prayer request submitted:', formData);
-      setFormData({ name: '', email: '', prayerRequest: '' });
-      handleClose();
-    } catch (error) {
-      console.error('Error submitting prayer request:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [validateForm, formData, handleClose]);
+      try {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log('Prayer request submitted:', formData);
+        setFormData({ name: '', email: '', prayerRequest: '' });
+        handleClose();
+      } catch (error) {
+        console.error('Error submitting prayer request:', error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [validateForm, formData, handleClose]
+  );
 
   if (!isOpen) return null;
 
@@ -806,13 +834,15 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
                 color: colorScheme.primary,
                 backgroundColor: colorScheme.opacity.primary10,
               }}
-              onMouseEnter={(event) => {
-                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
-                  colorScheme.opacity.primary20;
+              onMouseEnter={event => {
+                (
+                  event.currentTarget as HTMLButtonElement
+                ).style.backgroundColor = colorScheme.opacity.primary20;
               }}
-              onMouseLeave={(event) => {
-                (event.currentTarget as HTMLButtonElement).style.backgroundColor =
-                  colorScheme.opacity.primary10;
+              onMouseLeave={event => {
+                (
+                  event.currentTarget as HTMLButtonElement
+                ).style.backgroundColor = colorScheme.opacity.primary10;
               }}
             >
               <X className="w-4 h-4" />
@@ -940,15 +970,18 @@ const PrayerModal = ({ isOpen, onClose, colorScheme }: PrayerModalProps) => {
                 backgroundColor: colorScheme.primary,
                 color: colorScheme.buttonText,
               }}
-              onMouseEnter={(event) => {
+              onMouseEnter={event => {
                 if (!isSubmitting) {
-                  (event.currentTarget as HTMLButtonElement).style.backgroundColor =
-                    colorScheme.buttonHover;
+                  (
+                    event.currentTarget as HTMLButtonElement
+                  ).style.backgroundColor = colorScheme.buttonHover;
                 }
               }}
-              onMouseLeave={(event) => {
+              onMouseLeave={event => {
                 if (!isSubmitting) {
-                  (event.currentTarget as HTMLButtonElement).style.backgroundColor = colorScheme.primary;
+                  (
+                    event.currentTarget as HTMLButtonElement
+                  ).style.backgroundColor = colorScheme.primary;
                 }
               }}
             >
@@ -998,12 +1031,12 @@ function PersonCard({ item, colorScheme, addToRefs, type, onReadMore }: any) {
   };
 
   return (
-    <div 
-      ref={(element) => {
+    <div
+      ref={element => {
         if (element && addToRefs) {
           addToRefs(element);
         }
-      }} 
+      }}
       className="group w-full"
     >
       <div
@@ -1093,10 +1126,12 @@ function PersonCard({ item, colorScheme, addToRefs, type, onReadMore }: any) {
               color: typeColor,
             }}
             onMouseEnter={event => {
-              (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}33`;
+              (event.currentTarget as HTMLButtonElement).style.backgroundColor =
+                `${typeColor}33`;
             }}
             onMouseLeave={event => {
-              (event.currentTarget as HTMLButtonElement).style.backgroundColor = `${typeColor}1A`;
+              (event.currentTarget as HTMLButtonElement).style.backgroundColor =
+                `${typeColor}1A`;
             }}
           >
             <span>Read More</span>
@@ -1138,14 +1173,14 @@ const LeadersPage = () => {
   const theme = (themeContext as any)?.theme ?? 'light';
   const colorScheme = theme === 'dark' ? darkShades : lightShades;
 
-  const handleReadMore = useCallback((
-    leader: Leader,
-    type: 'pastor' | 'deacon' | 'ministry'
-  ) => {
-    setSelectedLeader(leader);
-    setSelectedType(type);
-    setDetailModalOpen(true);
-  }, []);
+  const handleReadMore = useCallback(
+    (leader: Leader, type: 'pastor' | 'deacon' | 'ministry') => {
+      setSelectedLeader(leader);
+      setSelectedType(type);
+      setDetailModalOpen(true);
+    },
+    []
+  );
 
   const handleVisitChurch = useCallback(() => {
     setIsVisitChurchModalOpen(true);
@@ -1229,7 +1264,7 @@ const LeadersPage = () => {
               useThemeColor={false}
             >
               God has blessed us with faithful leaders who shepherd our
-              congregation with love and dedication to God's Word.
+              congregation with love and dedication to God&apos;s Word.
             </Caption>
           </FlexboxLayout>
 
@@ -1497,7 +1532,7 @@ const LeadersPage = () => {
                   </H4>
                   <P style={{ color: colorScheme.text }}>
                     Our leaders are committed to teaching and living according
-                    to God's Word, providing spiritual guidance rooted in
+                    to God&apos;s Word, providing spiritual guidance rooted in
                     Scripture.
                   </P>
                 </div>

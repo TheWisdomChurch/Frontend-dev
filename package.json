@@ -6,20 +6,18 @@
     "dev": "next dev --port 2000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --max-warnings 0",
-    "lint:fix": "eslint . --fix --max-warnings 0",
+    "lint": "eslint . --max-warnings 0 --no-warn-ignored",
+    "lint:fix": "eslint . --fix --max-warnings 0 --no-warn-ignored",
     "type-check": "tsc --noEmit",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "validate": "npm run type-check && npm run lint && npm run prettier",
-    
-
-    "prepare": "node -e \"if (require('fs').existsSync('.githooks/setup-hooks')) { require('child_process').execSync('chmod +x .githooks/setup-hooks && .githooks/setup-hooks', { stdio: 'inherit' }) }\"",
-    "postinstall": "node -e \"if (require('fs').existsSync('.githooks/setup-hooks')) { require('child_process').execSync('chmod +x .githooks/setup-hooks && .githooks/setup-hooks', { stdio: 'inherit' }) }\"",
-    "hooks:setup": "./.githooks/setup-hooks || (echo 'Run: chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks' && chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks)",
-    "hooks:test": "./.githooks/pre-commit || (echo 'Run: chmod +x .githooks/pre-commit && ./.githooks/pre-commit' && chmod +x .githooks/pre-commit && ./.githooks/pre-commit)",
-    
-
+    "prepare": "node -e \"const fs = require('fs'); if (fs.existsSync('.githooks/setup-hooks')) require('child_process').execSync('chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks', { stdio: 'inherit' })\"",
+    "postinstall": "npm run hooks:setup || echo 'Note: Run npm run hooks:setup to configure Git hooks'",
+    "hooks:setup": "./.githooks/setup-hooks || (echo 'Making setup executable...' && chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks)",
+    "hooks:test": "echo 'Creating test commit...' && touch .hook-test && git add .hook-test && git commit -m 'Testing git hooks' && rm .hook-test || echo 'Commit failed (hooks working!)'",
+    "hooks:dry-run": "./.githooks/pre-commit",
+    "ci:validate": "npm run type-check && npm run lint && npm run build",
     "docker:dev": "docker-compose up app-dev",
     "docker:prod": "docker-compose up app-prod",
     "docker:build": "docker build -t wisdom-house .",
@@ -62,7 +60,6 @@
     "three": "^0.181.2"
   },
   "devDependencies": {
-  
     "@types/node": "^24.10.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -79,13 +76,11 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^15.15.0",
+    "lint-staged": "^16.2.4",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5",
-    
-
-    "lint-staged": "^16.2.4"
+    "typescript": "^5"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
