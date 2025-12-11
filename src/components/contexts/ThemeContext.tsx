@@ -16,7 +16,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Safe default values for build time
 const defaultTheme: ThemeContextType = {
-  theme: "light",
+  theme: 'light',
   colorScheme: lightShades,
   isDark: false,
   toggleTheme: () => {},
@@ -121,7 +121,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider
-      value={{ theme: "light", colorScheme, isDark, toggleTheme, mounted }}
+      value={{ theme: 'light', colorScheme, isDark, toggleTheme, mounted }}
     >
       {children}
     </ThemeContext.Provider>
@@ -140,4 +140,3 @@ export function useTheme() {
 
   return context;
 }
-

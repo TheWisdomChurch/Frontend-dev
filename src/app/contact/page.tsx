@@ -1,5 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+﻿'use client';
 
 import React from 'react';
 import HeroSection from '@/components/ui/Homepage/Herosection';
@@ -20,7 +19,24 @@ import {
   Instagram,
   Facebook,
   Youtube,
+  LucideIcon,
 } from 'lucide-react';
+
+// Define types for our data structures
+interface ContactMethod {
+  title: string;
+  description: string;
+  details: string[];
+  icon: LucideIcon;
+  link?: string;
+}
+
+interface SocialMedia {
+  platform: string;
+  handle: string;
+  url: string;
+  icon: LucideIcon;
+}
 
 const ContactPage = () => {
   const { colorScheme } = useTheme();
@@ -41,13 +57,13 @@ const ContactPage = () => {
     : colorScheme.backgroundSecondary;
   const borderColor = isDarkMode
     ? colorScheme.border
-    : colorScheme.primary + '40';
+    : `${colorScheme.primary}40`;
   const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
   const inputBorderColor = isDarkMode
     ? colorScheme.borderLight
     : colorScheme.border;
 
-  const contactMethods = [
+  const contactMethods: ContactMethod[] = [
     {
       title: 'Visit Us',
       description: 'Come worship with us in person',
@@ -75,7 +91,7 @@ const ContactPage = () => {
     },
   ];
 
-  const socialMedia = [
+  const socialMedia: SocialMedia[] = [
     {
       platform: 'Instagram',
       handle: '@wisdomhousehq',
@@ -95,6 +111,15 @@ const ContactPage = () => {
       icon: Youtube,
     },
   ];
+
+  // Handle button hover effects
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = colorScheme.primary;
+  };
 
   return (
     <div>
@@ -139,11 +164,11 @@ const ContactPage = () => {
 
           <div className="max-w-6xl mx-auto">
             <GridboxLayout columns={1} responsive={{ md: 2, lg: 3 }} gap="md">
-              {contactMethods.map((method, index) => {
+              {contactMethods.map(method => {
                 const IconComponent = method.icon;
                 return (
                   <div
-                    key={index}
+                    key={method.title}
                     className="rounded-xl p-5 text-center border transition-all duration-300 hover:translate-y-1"
                     style={{
                       backgroundColor: cardBackground,
@@ -169,9 +194,9 @@ const ContactPage = () => {
                       {method.description}
                     </BodyMD>
                     <div className="space-y-1">
-                      {method.details.map((detail, idx) => (
+                      {method.details.map(detail => (
                         <SmallText
-                          key={idx}
+                          key={detail}
                           className="text-xs"
                           style={{ color: secondaryTextColor }}
                         >
@@ -187,7 +212,7 @@ const ContactPage = () => {
                         className="inline-block mt-3 text-sm font-medium hover:underline"
                         style={{ color: colorScheme.primary }}
                       >
-                        Contact Now â†’
+                        Contact Now →
                       </a>
                     )}
                   </div>
@@ -233,11 +258,11 @@ const ContactPage = () => {
             </FlexboxLayout>
 
             <GridboxLayout columns={1} responsive={{ sm: 3 }} gap="md">
-              {socialMedia.map((social, index) => {
+              {socialMedia.map(social => {
                 const IconComponent = social.icon;
                 return (
                   <a
-                    key={index}
+                    key={social.platform}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -270,7 +295,7 @@ const ContactPage = () => {
                       className="text-xs font-medium hover:underline"
                       style={{ color: colorScheme.primary }}
                     >
-                      Follow Us â†’
+                      Follow Us →
                     </SmallText>
                   </a>
                 );
@@ -306,7 +331,7 @@ const ContactPage = () => {
                 Send Us a Message
               </H2>
               <BodyMD style={{ color: secondaryTextColor }}>
-                Have a question or prayer request? We're here to help.
+                Have a question or prayer request? We&apos;re here to help.
               </BodyMD>
             </FlexboxLayout>
 
@@ -415,7 +440,7 @@ const ContactPage = () => {
                     <option value="general">General Inquiry</option>
                     <option value="pastoral">Pastoral Care</option>
                     <option value="youth">Youth Ministry</option>
-                    <option value="children">Children's Ministry</option>
+                    <option value="children">Children&apos;s Ministry</option>
                     <option value="worship">Worship & Music</option>
                     <option value="missions">Missions & Outreach</option>
                     <option value="facilities">Facilities & Events</option>
@@ -452,14 +477,8 @@ const ContactPage = () => {
                       backgroundColor: colorScheme.primary,
                       color: colorScheme.black,
                     }}
-                    onMouseEnter={(e: any) => {
-                      e.currentTarget.style.backgroundColor =
-                        colorScheme.primaryDark;
-                    }}
-                    onMouseLeave={(e: any) => {
-                      e.currentTarget.style.backgroundColor =
-                        colorScheme.primary;
-                    }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                   >
                     Send Message
                   </Button>
@@ -474,4 +493,3 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
-

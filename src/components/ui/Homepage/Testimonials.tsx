@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { H3, Caption } from '@/components/text';
@@ -28,7 +28,7 @@ const churchTestimonials = [
     role: 'Church Member',
     image: '/images/testimonials/michael.jpg',
     testimony:
-      "I was lost in addiction for 15 years. Through the prayer ministry of this church and God's grace, I've been sober for 3 years now. The support I received here changed my life completely.",
+      "I was lost in addiction for 15 years. Through the prayer ministry of this church and God&apos;s grace, I've been sober for 3 years now. The support I received here changed my life completely.",
     rating: 5,
     date: '2024-01-15',
     anonymous: false,
@@ -41,7 +41,7 @@ const churchTestimonials = [
     role: 'Youth Leader',
     image: '/images/testimonials/sarah.jpg',
     testimony:
-      "My family was going through a difficult financial season. Through the church's benevolence ministry and the prayers of the saints, God miraculously provided for all our needs. To God be the glory!",
+      'My family was going through a difficult financial season. Through the church&apos;s benevolence ministry and the prayers of the saints, God miraculously provided for all our needs. To God be the glory!',
     rating: 5,
     date: '2024-02-20',
     anonymous: false,
@@ -54,7 +54,7 @@ const churchTestimonials = [
     role: 'Volunteer',
     image: '/images/testimonials/robert.jpg',
     testimony:
-      "After losing my job, I fell into depression. The counseling ministry and Bible study groups helped me find hope in God's promises. Today, I have a better job and a stronger faith.",
+      'After losing my job, I fell into depression. The counseling ministry and Bible study groups helped me find hope in God&apos;s promises. Today, I have a better job and a stronger faith.',
     rating: 5,
     date: '2024-03-10',
     anonymous: false,
@@ -67,14 +67,24 @@ const churchTestimonials = [
     role: 'Prayer Warrior',
     image: '/images/testimonials/grace.jpg',
     testimony:
-      "God healed me from a terminal illness after the church prayed for me. The doctors called it a miracle. I'm here today as a living testimony of God's healing power.",
+      'God healed me from a terminal illness after the church prayed for me. The doctors called it a miracle. I&apos;m here today as a living testimony of God&apos;s healing power.',
     rating: 5,
     date: '2024-03-25',
     anonymous: false,
   },
 ];
 
-function TestimonialCard({ testimonial, isActive, colorScheme }: any) {
+interface TestimonialCardProps {
+  testimonial: any;
+  isActive: boolean;
+  colorScheme: any;
+}
+
+function TestimonialCard({
+  testimonial,
+  isActive,
+  colorScheme,
+}: TestimonialCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -129,7 +139,7 @@ function TestimonialCard({ testimonial, isActive, colorScheme }: any) {
         {/* Testimonial Content */}
         <div className="flex-grow">
           <p className="text-gray-700 text-base leading-relaxed mb-4 line-clamp-4">
-            "{testimonial.testimony}"
+            &quot;{testimonial.testimony}&quot;
           </p>
 
           <div className="flex items-center justify-between mb-3">
@@ -212,23 +222,23 @@ export default function Testimonial() {
     return () => ctx.revert();
   }, []);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setActiveIndex(prev =>
       prev === 0 ? churchTestimonials.length - 1 : prev - 1
     );
-  };
+  }, []);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setActiveIndex(prev => (prev + 1) % churchTestimonials.length);
-  };
+  }, []);
 
   // Function to handle button click
-  const handleShareTestimony = (e: React.MouseEvent) => {
+  const handleShareTestimony = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     // You can add any additional logic here before navigation
     console.log('Navigating to testimonies page');
     // The Link will handle the navigation
-  };
+  }, []);
 
   return (
     <Section
@@ -252,7 +262,7 @@ export default function Testimonial() {
             useThemeColor={false}
             weight="bold"
           >
-            Testimonies of God's Faithfulness
+            Testimonies of God&apos;s Faithfulness
           </H3>
           <Caption
             className="section-description max-w-2xl mx-auto text-gray-600 mt-2"
@@ -268,16 +278,16 @@ export default function Testimonial() {
           <div className="text-center mb-8">
             <div className="inline-block bg-white px-6 py-3 rounded-lg shadow-sm border border-gray-100">
               <p className="text-gray-700 italic">
-                "They triumphed by the blood of the Lamb and by the word of
-                their testimony."
+                &quot;They triumphed by the blood of the Lamb and by the word of
+                their testimony.&quot;
               </p>
               <p className="text-gray-500 text-sm mt-1">— Revelation 12:11</p>
             </div>
           </div>
 
-          {/* Testimonial Slider */}
+          {/* Testimonial Slider - IMPROVED SPACING */}
           <div className="max-w-3xl mx-auto">
-            <div className="relative h-[350px]">
+            <div className="relative h-[350px] mb-8">
               {churchTestimonials.map((testimonial, index) => (
                 <div
                   key={testimonial.id}
@@ -292,12 +302,12 @@ export default function Testimonial() {
               ))}
             </div>
 
-            {/* Slider Controls */}
+            {/* Slider Controls - IMPROVED SPACING */}
             <FlexboxLayout
               justify="center"
               align="center"
               gap="lg"
-              className="mt-6"
+              className="mt-8"
             >
               <button
                 onClick={handlePrev}
@@ -341,13 +351,13 @@ export default function Testimonial() {
           </div>
         </div>
 
-        {/* Share Testimony CTA - FIXED LINK */}
-        <div className="text-center">
+        {/* Share Testimony CTA - IMPROVED SPACING */}
+        <div className="text-center pt-8">
           <div className="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-sm border border-gray-100 max-w-2xl mx-auto">
-            <h3 className="text-xl font-bold text-gray-900 mb-3">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
               Share Your Testimony
             </h3>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
               Your story can inspire others and bring glory to God. Share what
               He has done in your life.
             </p>

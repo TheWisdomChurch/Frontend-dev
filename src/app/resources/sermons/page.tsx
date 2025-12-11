@@ -1,8 +1,6 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+﻿'use client';
 
-// import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
@@ -23,44 +21,43 @@ import { Youtube } from 'lucide-react';
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { colorScheme } = useTheme();
-  const [isClient, setIsClient] = useState(false);
 
   // Determine if we're in dark mode based on background color
   const isDarkMode = colorScheme.background === '#000000';
 
-  // Theme-based styles using colorScheme
-  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.black;
-  const textColor = isDarkMode ? colorScheme.black : colorScheme.white;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const cardBackground = isDarkMode ? colorScheme.black : colorScheme.white;
-  const cardTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (isClient) {
-      dispatch(fetchSermons());
-    }
-  }, [dispatch, isClient]);
-
-  const handleYouTubeRedirect = () => {
-    window.open('https://www.youtube.com/@wisdomhousehq', '_blank');
+  // Memoize theme-based styles to prevent recalculation on each render
+  const themeStyles = {
+    sectionBackground: isDarkMode ? colorScheme.white : colorScheme.black,
+    textColor: isDarkMode ? colorScheme.black : colorScheme.white,
+    secondaryTextColor: isDarkMode
+      ? colorScheme.textSecondary
+      : colorScheme.textTertiary,
+    cardBackground: isDarkMode ? colorScheme.black : colorScheme.white,
+    cardTextColor: isDarkMode ? colorScheme.white : colorScheme.black,
+    borderColor: isDarkMode ? colorScheme.border : `${colorScheme.primary}40`,
   };
 
-  if (!isClient) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Loading sermons...</div>
-      </div>
+  // Single useEffect for data fetching
+  useEffect(() => {
+    dispatch(fetchSermons());
+  }, [dispatch]);
+
+  const handleYouTubeRedirect = () => {
+    window.open(
+      'https://www.youtube.com/@wisdomhousehq',
+      '_blank',
+      'noopener,noreferrer'
     );
-  }
+  };
+
+  const youtubeOptions = [
+    {
+      platform: 'YouTube' as const,
+      description: 'Full video messages with interactive features',
+      action: 'Subscribe to Channel',
+      icon: <Youtube className="w-12 h-12" style={{ color: '#FF0000' }} />,
+    },
+  ];
 
   return (
     <div className="min-h-screen">
@@ -79,7 +76,7 @@ const SermonPage = () => {
       <Section
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: sectionBackground }}
+        style={{ backgroundColor: themeStyles.sectionBackground }}
       >
         <Container size="xl">
           <FlexboxLayout
@@ -91,7 +88,7 @@ const SermonPage = () => {
           >
             <H2
               className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center mb-8"
-              style={{ color: textColor }}
+              style={{ color: themeStyles.textColor }}
             >
               Watch & Listen Anywhere
             </H2>
@@ -102,25 +99,13 @@ const SermonPage = () => {
               responsive={{ sm: 1, md: 1, lg: 1 }}
               className="max-w-4xl mx-auto"
             >
-              {[
-                {
-                  platform: 'YouTube',
-                  description: 'Full video messages with interactive features',
-                  action: 'Subscribe to Channel',
-                  icon: (
-                    <Youtube
-                      className="w-12 h-12"
-                      style={{ color: '#FF0000' }}
-                    />
-                  ),
-                },
-              ].map((option, index) => (
+              {youtubeOptions.map((option, index) => (
                 <div
                   key={index}
                   className="rounded-2xl p-6 sm:p-8 shadow-2xl hover:shadow-2xl transition-all duration-300 border max-w-md mx-auto"
                   style={{
-                    backgroundColor: cardBackground,
-                    borderColor: borderColor,
+                    backgroundColor: themeStyles.cardBackground,
+                    borderColor: themeStyles.borderColor,
                   }}
                 >
                   <FlexboxLayout
@@ -138,14 +123,14 @@ const SermonPage = () => {
                       fontFamily="bricolage"
                       weight="bold"
                       className="text-xl sm:text-2xl mb-3"
-                      style={{ color: cardTextColor }}
+                      style={{ color: themeStyles.cardTextColor }}
                     >
                       {option.platform}
                     </BaseText>
 
                     <BodyMD
                       className="mb-6"
-                      style={{ color: secondaryTextColor }}
+                      style={{ color: themeStyles.secondaryTextColor }}
                     >
                       {option.description}
                     </BodyMD>
@@ -167,11 +152,13 @@ const SermonPage = () => {
                         backgroundColor: '#FF0000',
                         color: 'white',
                       }}
-                      onMouseEnter={(e: any) => {
-                        e.currentTarget.style.backgroundColor = '#CC0000';
+                      onMouseEnter={e => {
+                        const target = e.currentTarget;
+                        target.style.backgroundColor = '#CC0000';
                       }}
-                      onMouseLeave={(e: any) => {
-                        e.currentTarget.style.backgroundColor = '#FF0000';
+                      onMouseLeave={e => {
+                        const target = e.currentTarget;
+                        target.style.backgroundColor = '#FF0000';
                       }}
                     >
                       <SemiBoldText style={{ color: 'white' }}>
@@ -190,4 +177,3 @@ const SermonPage = () => {
 };
 
 export default SermonPage;
-

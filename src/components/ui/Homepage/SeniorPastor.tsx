@@ -31,7 +31,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       setIsMobile(width < 768);
       setIsTablet(width >= 768 && width < 1024);
     };
-    
+
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
@@ -40,7 +40,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   // Check if content overflows (to show Read More button)
   useEffect(() => {
     if (!isMobile && !isTablet) return;
-    
+
     const checkOverflow = () => {
       const element = contentRef.current;
       if (element) {
@@ -57,13 +57,13 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   }, [isMobile, isTablet]);
 
   const descriptionText = seniorPastorData.description[0];
-  
+
   const handleToggle = useCallback(() => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
     setIsExpanded(prev => !prev);
-    
+
     // Reset animation state after transition
     setTimeout(() => {
       setIsAnimating(false);
@@ -82,7 +82,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       padding="lg"
       fullHeight={false}
       className={cn(
-        "relative w-full overflow-hidden min-h-[500px] md:min-h-[550px] flex items-center",
+        'relative w-full overflow-hidden min-h-[500px] md:min-h-[550px] flex items-center',
         className
       )}
     >
@@ -111,10 +111,14 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
         >
           {/* Content Container */}
           <div className="w-full max-w-3xl mx-auto">
-            <div className={cn(
-              "transition-all duration-500",
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            )}>
+            <div
+              className={cn(
+                'transition-all duration-500',
+                isVisible
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-4'
+              )}
+            >
               {/* Title */}
               <div className="text-center mb-6 md:mb-8">
                 <H1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
@@ -124,21 +128,23 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
 
               {/* Content Box */}
               <div className="bg-black/70 backdrop-blur-sm rounded-lg md:rounded-xl p-5 md:p-8 lg:p-10 border border-white/10">
-                
                 {/* Content with smooth expand/collapse */}
-                <div 
+                <div
                   ref={contentRef}
                   className={cn(
-                    "mb-4 md:mb-6 relative transition-all duration-300 ease-in-out",
+                    'mb-4 md:mb-6 relative transition-all duration-300 ease-in-out',
                     // On mobile/tablet: limit height when not expanded
-                    !isDesktop && !isExpanded && showReadMore && "max-h-[180px] overflow-hidden",
-                    !isDesktop && isExpanded && showReadMore && "max-h-[1000px]"
+                    !isDesktop &&
+                      !isExpanded &&
+                      showReadMore &&
+                      'max-h-[180px] overflow-hidden',
+                    !isDesktop && isExpanded && showReadMore && 'max-h-[1000px]'
                   )}
                 >
                   <P className="text-sm md:text-base lg:text-lg text-gray-100 text-center leading-relaxed">
                     {descriptionText}
                   </P>
-                  
+
                   {/* Gradient fade for truncated content */}
                   {!isDesktop && !isExpanded && showReadMore && (
                     <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
@@ -185,7 +191,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                           </span>
                         </Button>
                       ) : null}
-                      
+
                       {/* Show Connect button when expanded OR if content doesn't overflow */}
                       {(isExpanded || !showReadMore) && (
                         <div className="flex flex-col items-center justify-center space-y-1.5 w-full">
@@ -203,7 +209,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                           >
                             Connect with Pastor
                           </Button>
-                          
+
                           {/* Show Less button */}
                           {isExpanded && showReadMore && (
                             <button
@@ -236,9 +242,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     sizes="(max-width: 768px) 56px, (max-width: 1024px) 64px, 72px"
                   />
                 </div>
-                {/* <div className="absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-black whitespace-nowrap">
+                <div className="absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-black whitespace-nowrap">
                   Senior Pastor
-                </div> */}
+                </div>
               </div>
             </div>
           )}
