@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -782,7 +782,7 @@ const CheckoutForm = () => {
                       className="text-sm"
                       style={{ color: method.color }}
                     >
-                      + ₦{method.fee.toLocaleString()} fee
+                      + â‚¦{method.fee.toLocaleString()} fee
                     </Caption>
                   )}
                 </button>
@@ -880,7 +880,7 @@ const CheckoutForm = () => {
                         />
                         <span>
                           Transfer the exact amount:{' '}
-                          <strong>₦{grandTotal.toLocaleString()}</strong>
+                          <strong>â‚¦{grandTotal.toLocaleString()}</strong>
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
@@ -1135,7 +1135,7 @@ const CheckoutForm = () => {
                       weight="semibold"
                       style={{ color: colorScheme.warning }}
                     >
-                      Delivery Fee: ₦{deliveryFee.toLocaleString()} added to
+                      Delivery Fee: â‚¦{deliveryFee.toLocaleString()} added to
                       your total
                     </Caption>
                   </FlexboxLayout>
@@ -1265,12 +1265,12 @@ const CheckoutForm = () => {
                     {item.name}
                   </BaseText>
                   <Caption className="text-sm" style={{ color: labelColor }}>
-                    {item.selectedSize} • {item.selectedColor} • Qty:{' '}
+                    {item.selectedSize} â€¢ {item.selectedColor} â€¢ Qty:{' '}
                     {item.quantity}
                   </Caption>
                 </div>
                 <BaseText weight="bold" style={{ color: textColor }}>
-                  ₦
+                  â‚¦
                   {(
                     parseFloat(item.price.replace(/[^\d.]/g, '')) *
                     item.quantity
@@ -1285,14 +1285,14 @@ const CheckoutForm = () => {
             >
               <FlexboxLayout justify="between">
                 <Caption style={{ color: labelColor }}>Subtotal</Caption>
-                <BaseText weight="semibold">₦{total.toLocaleString()}</BaseText>
+                <BaseText weight="semibold">â‚¦{total.toLocaleString()}</BaseText>
               </FlexboxLayout>
 
               {formData.paymentMethod === 'delivery' && (
                 <FlexboxLayout justify="between">
                   <Caption style={{ color: labelColor }}>Delivery Fee</Caption>
                   <BaseText weight="semibold">
-                    ₦{deliveryFee.toLocaleString()}
+                    â‚¦{deliveryFee.toLocaleString()}
                   </BaseText>
                 </FlexboxLayout>
               )}
@@ -1311,14 +1311,14 @@ const CheckoutForm = () => {
                     className="text-2xl"
                     style={{ color: colorScheme.primary }}
                   >
-                    ₦{grandTotal.toLocaleString()}
+                    â‚¦{grandTotal.toLocaleString()}
                   </BaseText>
                   {formData.paymentMethod === 'delivery' && (
                     <Caption
                       className="text-sm mt-1"
                       style={{ color: labelColor }}
                     >
-                      Includes ₦{deliveryFee.toLocaleString()} delivery fee
+                      Includes â‚¦{deliveryFee.toLocaleString()} delivery fee
                     </Caption>
                   )}
                 </div>
@@ -1360,7 +1360,7 @@ const CheckoutForm = () => {
               Confirming Your Order...
             </FlexboxLayout>
           ) : (
-            `Confirm Order - ₦${grandTotal.toLocaleString()}`
+            `Confirm Order - â‚¦${grandTotal.toLocaleString()}`
           )}
         </Button>
         {/* Form validation notice */}
@@ -1378,3 +1378,4 @@ const CheckoutForm = () => {
 };
 
 export default CheckoutForm;
+

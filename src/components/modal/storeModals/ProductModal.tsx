@@ -1,4 +1,4 @@
-// components/modals/ProductModal.tsx
+﻿// components/modals/ProductModal.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -9,7 +9,7 @@ import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useAppDispatch } from '@/components/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Product } from '@/lib/types';
-import { Button } from '@/components/utils/buttons/';
+import { Button } from '@/components/utils/buttons';
 import {
   H4,
   BodyMD,
@@ -176,7 +176,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
         )}
 
         <div className="flex flex-col h-full">
-          {/* Product Image — Reduced height */}
+          {/* Product Image â€” Reduced height */}
           <div
             className={`relative ${isMobile ? 'h-32' : 'h-40'} overflow-hidden`}
           >
@@ -385,7 +385,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   }}
                 >
                   <MediumText className="text-sm" useThemeColor={false}>
-                    Add to Cart • {product.price}
+                    Add to Cart â€¢ {product.price}
                   </MediumText>
                 </Button>
               </div>
@@ -399,3 +399,4 @@ const ProductModal: React.FC<ProductModalProps> = ({
 };
 
 export default ProductModal;
+
