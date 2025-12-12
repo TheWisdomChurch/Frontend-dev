@@ -70,10 +70,10 @@ export interface Photo {
 }
 
 export interface Slide {
-  image: StaticImageData;
+  image: StaticImageData | { src: string; alt?: string };
   title: string;
   subtitle: string;
-  description: string;
+  description?: string; // Make optional to handle both cases
 }
 
 export interface YouTubeVideo {
@@ -203,6 +203,18 @@ export type mainResourceLink = {
   isLiveService?: boolean;
 };
 
+export interface Testimonial {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  role: string;
+  image: string;
+  testimony: string;
+  rating: number;
+  date: string;
+  anonymous: boolean;
+}
 export interface CartItem {
   id: string;
   productId: number;

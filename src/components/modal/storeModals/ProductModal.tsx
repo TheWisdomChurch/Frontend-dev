@@ -1,15 +1,21 @@
-// components/modals/ProductModal.tsx
-'use client';
+﻿'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { 
+  useEffect, 
+  useRef, 
+  useState, 
+  useCallback,
+  useLayoutEffect,
+  useMemo
+} from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import Image from 'next/image';
-import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, ChevronRight } from 'lucide-react';
 import { useAppDispatch } from '@/components/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Product } from '@/lib/types';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons';
 import {
   H4,
   BodyMD,
@@ -19,12 +25,16 @@ import {
 } from '@/components/text';
 import { FlexboxLayout } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { useWindowSize } from '@/components/utils/hooks/useWindowSize';
+import { responsive } from '@/lib/responsivee';
 
 interface ProductModalProps {
   product: Product | null;
   isOpen: boolean;
   onClose: () => void;
 }
+
+type ViewportSize = 'mobile' | 'tablet' | 'desktop';
 
 const ProductModal: React.FC<ProductModalProps> = ({
   product,
@@ -34,27 +44,48 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const { colorScheme } = useTheme();
   const dispatch = useAppDispatch();
   const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const windowSize = useWindowSize();
 
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
 
-  const modalBackground = colorScheme.black;
-  const textColor = colorScheme.primary;
-  const subtitleTextColor = colorScheme.white;
-  const buttonBackground = colorScheme.primary;
-  const buttonTextColor = colorScheme.black;
-  const borderColor = colorScheme.primary;
-  const inputBorderColor = colorScheme.border;
+  const viewport: ViewportSize = useMemo(() => {
+    if (!windowSize.width) return 'mobile';
+    if (windowSize.width < 640) return 'mobile';
+    if (windowSize.width < 1024) return 'tablet';
+    return 'desktop';
+  }, [windowSize.width]);
+
+
+
+  const colors = useMemo(() => ({
+    background: colorScheme.black,
+    text: {
+      primary: colorScheme.primary,
+      secondary: colorScheme.white,
+      muted: 'rgba(255, 255, 255, 0.7)'
+    },
+    button: {
+      background: colorScheme.primary,
+      text: colorScheme.black,
+      hover: colorScheme.opacity || colorScheme.primary
+    },
+    border: {
+      default: colorScheme.border,
+      active: colorScheme.primary,
+      input: colorScheme.border
+    },
+    imageBg: '#ffffff',
+    overlay: 'rgba(0, 0, 0, 0.2)',
+    backdrop: 'rgba(0, 0, 0, 0.7)'
+  }), [colorScheme]);
 
   useEffect(() => {
     setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
@@ -65,77 +96,130 @@ const ProductModal: React.FC<ProductModalProps> = ({
     }
   }, [product]);
 
-  // FULL SCROLL LOCK
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.touchAction = 'none';
-    } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
+  useLayoutEffect(() => {
+    if (isOpen && mounted) {
+      const scrollY = window.scrollY;
+      const body = document.body;
+      
+      const originalStyles = {
+        overflow: body.style.overflow,
+        position: body.style.position,
+        top: body.style.top,
+        width: body.style.width,
+        height: body.style.height,
+        touchAction: body.style.touchAction
+      };
+
+      body.style.overflow = 'hidden';
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollY}px`;
+      body.style.width = '100%';
+      body.style.height = '100%';
+      body.style.touchAction = 'none';
+
+      document.documentElement.dataset.scrollY = scrollY.toString();
+
+      return () => {
+        Object.entries(originalStyles).forEach(([key, value]) => {
+          body.style[key as any] = value;
+        });
+
+        const scrollYValue = parseInt(document.documentElement.dataset.scrollY || '0');
+        window.scrollTo(0, scrollYValue);
+        delete document.documentElement.dataset.scrollY;
+      };
     }
+  }, [isOpen, mounted]);
+
+  useEffect(() => {
+    if (!isOpen || !product || !modalRef.current || !backdropRef.current) return;
+
+    const modal = modalRef.current;
+    const backdrop = backdropRef.current;
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.out', duration: 0.4 }
+    });
+
+    if (viewport === 'mobile') {
+      tl.fromTo(backdrop, 
+        { opacity: 0 },
+        { opacity: 1 }
+      )
+      .fromTo(modal,
+        { y: '100%', opacity: 0 },
+        { y: 0, opacity: 1 },
+        '<'
+      );
+    } else {
+      tl.fromTo(backdrop,
+        { opacity: 0 },
+        { opacity: 1 }
+      )
+      .fromTo(modal,
+        { 
+          scale: 0.9, 
+          opacity: 0,
+          y: 20 
+        },
+        { 
+          scale: 1, 
+          opacity: 1,
+          y: 0 
+        },
+        '<'
+      );
+    }
+
     return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
+      tl.kill();
     };
-  }, [isOpen]);
+  }, [isOpen, product, viewport]);
+
+  const handleClose = useCallback(() => {
+    if (!modalRef.current || !backdropRef.current || isClosing) return;
+    
+    setIsClosing(true);
+    const modal = modalRef.current;
+    const backdrop = backdropRef.current;
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.in', duration: 0.3 },
+      onComplete: () => {
+        setIsClosing(false);
+        onClose();
+      }
+    });
+
+    if (viewport === 'mobile') {
+      tl.to(modal, { y: '100%', opacity: 0 })
+        .to(backdrop, { opacity: 0 }, '<');
+    } else {
+      tl.to(modal, { scale: 0.95, opacity: 0, y: 20 })
+        .to(backdrop, { opacity: 0 }, '<');
+    }
+  }, [onClose, viewport, isClosing]);
 
   useEffect(() => {
-    if (isOpen && modalRef.current && product) {
-      const tl = gsap.timeline();
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 20 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-        );
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
       }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, handleClose]);
+
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleClose();
     }
-  }, [isOpen, isMobile, product]);
+  }, [handleClose]);
 
-  const handleClose = () => {
-    if (modalRef.current) {
-      if (isMobile) {
-        gsap.to(modalRef.current, {
-          y: '100%',
-          opacity: 0,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
-      } else {
-        gsap.to(modalRef.current, {
-          opacity: 0,
-          scale: 0.95,
-          y: 20,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
-      }
-    } else {
-      onClose();
-    }
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) handleClose();
-  };
-
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     if (!product || !selectedSize || !selectedColor) return;
+    
     dispatch(
       addToCart({
         productId: product.id,
@@ -147,100 +231,139 @@ const ProductModal: React.FC<ProductModalProps> = ({
         quantity,
       })
     );
+    
     handleClose();
-  };
+  }, [product, selectedSize, selectedColor, quantity, dispatch, handleClose]);
+
+  const handleIncrement = useCallback(() => {
+    setQuantity(prev => prev + 1);
+  }, []);
+
+  const handleDecrement = useCallback(() => {
+    setQuantity(prev => Math.max(1, prev - 1));
+  }, []);
 
   if (!mounted || !isOpen || !product) return null;
 
   return createPortal(
-    <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${isMobile ? 'pb-0' : ''}`}
+    <div 
+      ref={backdropRef}
+      className="fixed inset-0 z-[9999] flex items-end justify-center sm:items-center sm:p-4"
       onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      style={{ 
+        backgroundColor: colors.backdrop,
+        backdropFilter: 'blur(8px)'
+      }}
     >
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-xl
-          ${isMobile ? 'rounded-t-2xl rounded-b-none max-h-[85vh]' : 'rounded-2xl max-w-md max-h-[85vh]'}
+          w-full overflow-hidden border shadow-2xl
+          ${responsive.modal[viewport]}
+          ${viewport === 'mobile' ? 'pb-0' : ''}
         `}
-        style={{ backgroundColor: modalBackground, borderColor: borderColor }}
+        style={{ 
+          backgroundColor: colors.background, 
+          borderColor: colors.border.default 
+        }}
+        onClick={e => e.stopPropagation()}
       >
-        {/* Mobile Drag Handle */}
-        {isMobile && (
-          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
-            <div
-              className="w-10 h-1 rounded-full"
-              style={{ backgroundColor: colorScheme.primary }}
+        {viewport === 'mobile' && (
+          <div 
+            className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
+            aria-hidden="true"
+          >
+            <div 
+              className="w-12 h-1.5 rounded-full"
+              style={{ backgroundColor: colors.text.primary }}
             />
           </div>
         )}
 
         <div className="flex flex-col h-full">
-          {/* Product Image — Reduced height */}
-          <div
-            className={`relative ${isMobile ? 'h-32' : 'h-40'} overflow-hidden`}
-          >
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/60" />
+          <div className={`relative ${responsive.image[viewport]}`}>
+            <div 
+              className="relative w-full h-full overflow-hidden"
+              style={{ backgroundColor: colors.imageBg }}
+            >
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                className="object-contain p-4"
+                priority
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 60vw"
+              />
+              <div 
+                className="absolute inset-0"
+                style={{ 
+                  background: `linear-gradient(to bottom, transparent 70%, ${colors.overlay})`,
+                  pointerEvents: 'none'
+                }}
+              />
+            </div>
 
             <button
               onClick={handleClose}
-              className={`absolute z-20 rounded-lg transition-all ${isMobile ? 'top-1 right-1 p-1' : 'top-2 right-2 p-1.5'}`}
-              style={{ backgroundColor: colorScheme.opacity.primary10 }}
+              className={`
+                absolute top-3 right-3 z-20 rounded-full p-2
+                transition-all duration-200 hover:scale-110
+                active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2
+                shadow-md
+                ${viewport === 'mobile' ? 'p-1.5' : 'p-2'}
+              `}
+              style={{ 
+                backgroundColor: colors.background,
+                borderColor: colors.border.default,
+                borderWidth: '1px'
+              }}
+              aria-label="Close modal"
             >
-              <X
-                className={isMobile ? 'w-3 h-3' : 'w-4 h-4'}
-                style={{ color: textColor }}
+              <X 
+                className={viewport === 'mobile' ? 'w-4 h-4' : 'w-5 h-5'}
+                style={{ color: colors.text.primary }}
               />
             </button>
           </div>
 
-          {/* Product Details */}
-          <div
-            className={`overflow-y-auto ${isMobile ? 'p-3 max-h-[calc(85vh-10rem)]' : 'p-4 max-h-[calc(85vh-12rem)]'}`}
+          <div 
+            className={`
+              overflow-y-auto flex-1
+              ${responsive.padding[viewport]}
+              ${responsive.gap[viewport]}
+            `}
           >
-            <div className="space-y-4">
+            <div className={`flex flex-col ${responsive.gap[viewport]}`}>
               <div>
-                <H4
-                  fontFamily="bricolage"
-                  className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
-                  style={{ color: textColor }}
-                  useThemeColor={false}
-                  weight="bold"
+                <div
+                  className={`mb-2 ${responsive.heading[viewport]} font-bold leading-tight`}
+                  style={{ color: colors.text.primary }}
                 >
                   {product.name}
-                </H4>
+                </div>
                 <BodyMD
-                  className="text-xs"
-                  style={{ color: subtitleTextColor }}
+                  className={`${responsive.body[viewport]} leading-relaxed`}
+                  style={{ color: colors.text.muted }}
                   useThemeColor={false}
                 >
                   {product.description}
                 </BodyMD>
               </div>
 
-              <FlexboxLayout align="center" gap="md">
+              <FlexboxLayout align="center" gap="sm" wrap="wrap">
                 <MediumText
-                  className={isMobile ? 'text-xl' : 'text-2xl'}
-                  style={{ color: colorScheme.primary }}
+                  className={`font-bold ${responsive.price[viewport]}`}
+                  style={{ color: colors.text.primary }}
                   useThemeColor={false}
                 >
                   {product.price}
                 </MediumText>
                 {product.originalPrice && (
                   <RegularText
-                    className={
-                      isMobile
-                        ? 'text-sm line-through'
-                        : 'text-base line-through'
-                    }
-                    style={{ color: subtitleTextColor }}
+                    className={`${responsive.body[viewport]} line-through`}
+                    style={{ color: colors.text.muted }}
                     useThemeColor={false}
                   >
                     {product.originalPrice}
@@ -248,11 +371,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 )}
               </FlexboxLayout>
 
-              {/* Size */}
               <div>
                 <MediumText
-                  className="block mb-2 text-xs"
-                  style={{ color: textColor }}
+                  className={`block mb-3 ${responsive.body[viewport]} font-medium`}
+                  style={{ color: colors.text.primary }}
                   useThemeColor={false}
                 >
                   Select Size
@@ -262,21 +384,29 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`rounded-lg border transition-all px-3 py-1.5 text-xs ${
-                        selectedSize === size
-                          ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
-                          : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
-                      }`}
+                      className={`
+                        rounded-lg border transition-all px-4 py-2
+                        hover:scale-[1.02] active:scale-[0.98]
+                        focus:outline-none focus:ring-2 focus:ring-offset-1
+                        ${viewport === 'mobile' ? 'text-xs px-3 py-1.5' : 'text-sm'}
+                        ${selectedSize === size 
+                          ? 'ring-2 ring-offset-1' 
+                          : 'hover:border-opacity-70'
+                        }
+                      `}
                       style={{
-                        borderColor:
-                          selectedSize === size
-                            ? colorScheme.primary
-                            : inputBorderColor,
-                        color:
-                          selectedSize === size
-                            ? colorScheme.primary
-                            : subtitleTextColor,
+                        backgroundColor: selectedSize === size 
+                          ? `${colors.button.background}20` 
+                          : 'transparent',
+                        borderColor: selectedSize === size
+                          ? colors.border.active
+                          : colors.border.input,
+                        color: selectedSize === size
+                          ? colors.text.primary
+                          : colors.text.secondary,
+                        borderWidth: '1px'
                       }}
+                      aria-pressed={selectedSize === size}
                     >
                       {size}
                     </button>
@@ -284,11 +414,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 </FlexboxLayout>
               </div>
 
-              {/* Color */}
               <div>
                 <MediumText
-                  className="block mb-2 text-xs"
-                  style={{ color: textColor }}
+                  className={`block mb-3 ${responsive.body[viewport]} font-medium`}
+                  style={{ color: colors.text.primary }}
                   useThemeColor={false}
                 >
                   Select Color
@@ -298,21 +427,29 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
-                      className={`rounded-lg border transition-all px-3 py-1.5 text-xs ${
-                        selectedColor === color
-                          ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
-                          : 'border-gray-600 hover:border-yellow-500/50 text-gray-300'
-                      }`}
+                      className={`
+                        rounded-lg border transition-all px-4 py-2
+                        hover:scale-[1.02] active:scale-[0.98]
+                        focus:outline-none focus:ring-2 focus:ring-offset-1
+                        ${viewport === 'mobile' ? 'text-xs px-3 py-1.5' : 'text-sm'}
+                        ${selectedColor === color 
+                          ? 'ring-2 ring-offset-1' 
+                          : 'hover:border-opacity-70'
+                        }
+                      `}
                       style={{
-                        borderColor:
-                          selectedColor === color
-                            ? colorScheme.primary
-                            : inputBorderColor,
-                        color:
-                          selectedColor === color
-                            ? colorScheme.primary
-                            : subtitleTextColor,
+                        backgroundColor: selectedColor === color 
+                          ? `${colors.button.background}20` 
+                          : 'transparent',
+                        borderColor: selectedColor === color
+                          ? colors.border.active
+                          : colors.border.input,
+                        color: selectedColor === color
+                          ? colors.text.primary
+                          : colors.text.secondary,
+                        borderWidth: '1px'
                       }}
+                      aria-pressed={selectedColor === color}
                     >
                       {color}
                     </button>
@@ -320,71 +457,104 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 </FlexboxLayout>
               </div>
 
-              {/* Quantity */}
               <div>
                 <MediumText
-                  className="block mb-2 text-xs"
-                  style={{ color: textColor }}
+                  className={`block mb-3 ${responsive.body[viewport]} font-medium`}
+                  style={{ color: colors.text.primary }}
                   useThemeColor={false}
                 >
                   Quantity
                 </MediumText>
-                <FlexboxLayout align="center" gap="md">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className={`rounded-full border flex items-center justify-center transition-all ${isMobile ? 'w-8 h-8' : 'w-9 h-9'}`}
-                    style={{ borderColor: inputBorderColor }}
-                  >
-                    <Minus
-                      className={isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5'}
-                      style={{ color: subtitleTextColor }}
-                    />
-                  </button>
-                  <MediumText
-                    className={`text-center ${isMobile ? 'text-lg w-8' : 'text-xl w-10'}`}
-                    style={{ color: textColor }}
-                    useThemeColor={false}
-                  >
-                    {quantity}
-                  </MediumText>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className={`rounded-full border flex items-center justify-center transition-all ${isMobile ? 'w-8 h-8' : 'w-9 h-9'}`}
-                    style={{ borderColor: inputBorderColor }}
-                  >
-                    <Plus
-                      className={isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5'}
-                      style={{ color: subtitleTextColor }}
-                    />
-                  </button>
+                <FlexboxLayout align="center" gap="lg" className="flex-wrap">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleDecrement}
+                      className={`
+                        rounded-full border flex items-center justify-center
+                        transition-all hover:scale-105 active:scale-95
+                        focus:outline-none focus:ring-2 focus:ring-offset-1
+                        ${viewport === 'mobile' ? 'w-8 h-8' : 'w-9 h-9'}
+                      `}
+                      style={{ 
+                        borderColor: colors.border.input,
+                        borderWidth: '1px'
+                      }}
+                      aria-label="Decrease quantity"
+                    >
+                      <Minus
+                        className={viewport === 'mobile' ? 'w-3 h-3' : 'w-3.5 h-3.5'}
+                        style={{ color: colors.text.secondary }}
+                      />
+                    </button>
+                    <MediumText
+                      className={`
+                        text-center font-semibold min-w-[2rem]
+                        ${viewport === 'mobile' ? 'text-lg' : 'text-xl'}
+                      `}
+                      style={{ color: colors.text.primary }}
+                      useThemeColor={false}
+                    >
+                      {quantity}
+                    </MediumText>
+                    <button
+                      onClick={handleIncrement}
+                      className={`
+                        rounded-full border flex items-center justify-center
+                        transition-all hover:scale-105 active:scale-95
+                        focus:outline-none focus:ring-2 focus:ring-offset-1
+                        ${viewport === 'mobile' ? 'w-8 h-8' : 'w-9 h-9'}
+                      `}
+                      style={{ 
+                        borderColor: colors.border.input,
+                        borderWidth: '1px'
+                      }}
+                      aria-label="Increase quantity"
+                    >
+                      <Plus
+                        className={viewport === 'mobile' ? 'w-3 h-3' : 'w-3.5 h-3.5'}
+                        style={{ color: colors.text.secondary }}
+                      />
+                    </button>
+                  </div>
                   <Caption
-                    style={{ color: subtitleTextColor }}
+                    className={`${viewport === 'mobile' ? 'text-xs' : 'text-sm'}`}
+                    style={{ color: colors.text.muted }}
                     useThemeColor={false}
                   >
-                    {product.stock} in stock
+                    <span className="font-medium">{product.stock}</span> in stock
                   </Caption>
                 </FlexboxLayout>
               </div>
 
-              {/* Add to Cart */}
               <div className="pt-2">
                 <Button
                   variant="primary"
-                  size="lg"
+                  size={viewport === 'mobile' ? 'md' : 'lg'}
                   curvature="xl"
                   elevated={true}
                   leftIcon={
-                    <ShoppingBag className={isMobile ? 'w-4 h-4' : 'w-4 h-4'} />
+                    <ShoppingBag 
+                      className={viewport === 'mobile' ? 'w-4 h-4' : 'w-5 h-5'} 
+                    />
                   }
+                  rightIcon={<ChevronRight className="ml-1 w-4 h-4" />}
                   onClick={handleAddToCart}
                   disabled={!selectedSize || !selectedColor}
-                  className={`w-full transition-all ${isMobile ? 'py-2 text-sm' : 'py-2.5 text-sm'}`}
+                  className={`
+                    w-full transition-all
+                    hover:scale-[1.02] active:scale-[0.98]
+                    ${responsive.button[viewport]}
+                    ${(!selectedSize || !selectedColor) ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
                   style={{
-                    backgroundColor: buttonBackground,
-                    color: buttonTextColor,
+                    backgroundColor: colors.button.background,
+                    color: colors.button.text,
                   }}
                 >
-                  <MediumText className="text-sm" useThemeColor={false}>
+                  <MediumText 
+                    className={`font-semibold ${viewport === 'mobile' ? 'text-sm' : 'text-base'}`}
+                    useThemeColor={false}
+                  >
                     Add to Cart • {product.price}
                   </MediumText>
                 </Button>

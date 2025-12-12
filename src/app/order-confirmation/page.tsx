@@ -1,4 +1,4 @@
-// C:\Users\Admin\Desktop\WisdomHouse\WisdomHouse-frontendDev\src\app\order-confirmation\page.tsx
+﻿// C:\Users\Admin\Desktop\WisdomHouse\WisdomHouse-frontendDev\src\app\order-confirmation\page.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -8,7 +8,7 @@ import { gsap } from 'gsap';
 import { CheckCircle, ShoppingBag, Home } from 'lucide-react';
 import { Section, Container, FlexboxLayout } from '@/components/layout';
 import { H2, BaseText, LightText } from '@/components/text';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import OrderConfirmation from '@/components/ui/Store/orderDetails';
 
@@ -147,3 +147,4 @@ const OrderConfirmationPage = () => {
 };
 
 export default OrderConfirmationPage;
+

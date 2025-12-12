@@ -1,10 +1,11 @@
-// contexts/ThemeContext.tsx
+﻿// contexts/ThemeContext.tsx
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ColorScheme, darkShades, lightShades } from '../colors/colorScheme';
 
 interface ThemeContextType {
+  theme: string;
   colorScheme: ColorScheme;
   isDark: boolean;
   toggleTheme: () => void;
@@ -15,6 +16,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Safe default values for build time
 const defaultTheme: ThemeContextType = {
+  theme: 'light',
   colorScheme: lightShades,
   isDark: false,
   toggleTheme: () => {},
@@ -119,7 +121,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider
-      value={{ colorScheme, isDark, toggleTheme, mounted }}
+      value={{ theme: 'light', colorScheme, isDark, toggleTheme, mounted }}
     >
       {children}
     </ThemeContext.Provider>

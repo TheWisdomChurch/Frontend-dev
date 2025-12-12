@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // components/ui/Sheet.tsx
 'use client';
 
@@ -75,8 +75,7 @@ const Sheet: React.FC<SheetProps> = ({
 /* ========================================== */
 /*               Trigger                     */
 /* ========================================== */
-interface SheetTriggerProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface SheetTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
   children: React.ReactNode;
 }

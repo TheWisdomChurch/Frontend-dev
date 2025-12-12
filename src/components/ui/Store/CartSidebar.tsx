@@ -12,7 +12,7 @@ import {
   clearCart,
 } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
-import Button from '@/components/utils/CustomButton';
+import Button from '@/components/utils/buttons/CustomButton';
 import { BaseText, LightText } from '@/components/text';
 import { FlexboxLayout } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
