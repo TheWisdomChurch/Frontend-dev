@@ -2,7 +2,9 @@ import type { NextConfig } from 'next';
 import path from 'path';
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: path.join(__dirname, './'),
+  // ❌ REMOVE THIS LINE - It's causing the path resolution issue
+  // outputFileTracingRoot: path.join(__dirname, './'),
+  
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -32,11 +34,8 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    // ✅ FIXED: Updated qualities array to include 90
     qualities: [75, 85, 90, 100],
-    // ✅ You might also want to add formats configuration
     formats: ['image/webp', 'image/avif'],
-    // ✅ Optional: Add device sizes for better optimization
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
