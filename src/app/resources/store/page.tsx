@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '@/components/utils/hooks/redux';
@@ -26,7 +26,7 @@ import {
   Tag,
   Bell,
 } from 'lucide-react';
-import Button from '@/components/utils/CustomButton';
+import { Button } from '@/components/utils/buttons';
 import {
   Section,
   Container,
@@ -815,7 +815,7 @@ const StorePage = () => {
               Get exclusive discounts, new arrivals, and faith-inspired deals in
               your inbox.
               <strong className="block mt-1.5">
-                Join now — get 10% off instantly.
+                Join now â€” get 10% off instantly.
               </strong>
             </Caption>
 
@@ -874,7 +874,7 @@ const StorePage = () => {
                     />
                   </div>
 
-                  {/* Perfectly Sized Button — Mobile & Desktop */}
+                  {/* Perfectly Sized Button â€” Mobile & Desktop */}
                   <Button
                     type="submit"
                     variant="primary"
@@ -916,7 +916,7 @@ const StorePage = () => {
                 style={{ color: secondaryTextColor }}
                 useThemeColor={false}
               >
-                No spam • Unsubscribe anytime • 100% private
+                No spam â€¢ Unsubscribe anytime â€¢ 100% private
               </Caption>
             </div>
           </div>
@@ -937,3 +937,4 @@ const StorePage = () => {
 };
 
 export default StorePage;
+

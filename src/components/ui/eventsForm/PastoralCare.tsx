@@ -1,7 +1,6 @@
-// components/ui/Events/PastoralCareUnit.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Calendar,
   User,
@@ -74,32 +73,35 @@ const PastoralCareUnit = () => {
 
   const titles = ['Mr.', 'Mrs.', 'Ms.', 'Miss', 'Dr.', 'Pastor'];
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // Clear error when user starts typing
-    if (errors[name as keyof PastoralCareFormData]) {
-      setErrors(prev => ({
+  const handleInputChange = useCallback(
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({
         ...prev,
-        [name]: undefined,
+        [name]: value,
       }));
-    }
 
-    // Show custom role input if "Custom Role" is selected
-    if (name === 'churchRole') {
-      setShowCustomRole(value === 'Custom Role');
-    }
-  };
+      // Clear error when user starts typing
+      if (errors[name as keyof PastoralCareFormData]) {
+        setErrors(prev => ({
+          ...prev,
+          [name]: undefined,
+        }));
+      }
 
-  const validateForm = (): boolean => {
+      // Show custom role input if "Custom Role" is selected
+      if (name === 'churchRole') {
+        setShowCustomRole(value === 'Custom Role');
+      }
+    },
+    [errors]
+  );
+
+  const validateForm = useCallback((): boolean => {
     const newErrors: Partial<PastoralCareFormData> = {};
 
     if (!formData.title) newErrors.title = 'Title is required';
@@ -135,62 +137,65 @@ const PastoralCareUnit = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [formData]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+      if (!validateForm()) {
+        return;
+      }
 
-    setIsSubmitting(true);
+      setIsSubmitting(true);
 
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Here you would typically send the data to your backend
-      console.log('Form submitted:', formData);
+        // Here you would typically send the data to your backend
+        console.log('Form submitted:', formData);
 
-      // Reset form
-      setFormData({
-        title: '',
-        firstName: '',
-        lastName: '',
-        contactNumber: '',
-        email: '',
-        contactAddress: '',
-        eventDate: '',
-        eventType: '',
-        churchRole: '',
-        customRole: '',
-        comments: '',
-      });
-      setShowCustomRole(false);
+        // Reset form
+        setFormData({
+          title: '',
+          firstName: '',
+          lastName: '',
+          contactNumber: '',
+          email: '',
+          contactAddress: '',
+          eventDate: '',
+          eventType: '',
+          churchRole: '',
+          customRole: '',
+          comments: '',
+        });
+        setShowCustomRole(false);
 
-      // Show success message (you can replace this with a toast)
-      alert(
-        'Thank you! Your pastoral care request has been submitted successfully. We will contact you shortly.'
-      );
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('There was an error submitting your request. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        // Show success message (you can replace this with a toast)
+        alert(
+          'Thank you! Your pastoral care request has been submitted successfully. We will contact you shortly.'
+        );
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('There was an error submitting your request. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [formData, validateForm]
+  );
 
-  const getMinDate = () => {
+  const getMinDate = useCallback(() => {
     const today = new Date();
     return today.toISOString().split('T')[0];
-  };
+  }, []);
 
-  const getMaxDate = () => {
+  const getMaxDate = useCallback(() => {
     const oneYearFromNow = new Date();
     oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
     return oneYearFromNow.toISOString().split('T')[0];
-  };
+  }, []);
 
   return (
     <Section
@@ -725,8 +730,8 @@ const PastoralCareUnit = () => {
                         : colorScheme.textTertiary,
                     }}
                   >
-                    We'll contact you within 24-48 hours to discuss your event
-                    details and confirm arrangements.
+                    We&apos;ll contact you within 24-48 hours to discuss your
+                    event details and confirm arrangements.
                   </BodyMD>
                 </div>
               </form>

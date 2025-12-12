@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/Header.tsx
 'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import Button from '@/components/utils/buttons/CustomButton';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/Sheet';
 import {
   Menu,
@@ -21,7 +21,7 @@ import { WisdomeHouseLogo } from '@/components/assets';
 import { cn } from '@/lib/cn';
 import { bricolageGrotesque, worksans } from '../fonts/fonts';
 import JoinCommunityModal from '../modal/joinUsModal';
-import { QRDisplayModal } from '../modal/QrModal';
+
 import { useHeader } from '../utils/hooks/header';
 
 const iconMap = {
@@ -37,13 +37,11 @@ export default function Header() {
     isHeaderScrolled,
     isSheetOpen,
     isCommunityModalOpen,
-    isQRDisplayOpen,
     colorScheme,
     setSheetOpen,
     handleLinkClick,
     openCommunityModal,
     closeCommunityModal,
-    closeQRDisplay,
     isLinkActive,
     closeAllDropdowns,
   } = useHeader();
@@ -197,7 +195,6 @@ export default function Header() {
         isOpen={isCommunityModalOpen}
         onClose={closeCommunityModal}
       />
-      <QRDisplayModal isOpen={isQRDisplayOpen} onClose={closeQRDisplay} />
     </>
   );
 }

@@ -1,13 +1,21 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { 
+  useEffect, 
+  useRef, 
+  useState, 
+  useCallback,
+  useLayoutEffect,
+  useMemo
+} from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { ReminderFormData } from '@/lib/types';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { X, Loader2 } from 'lucide-react';
+import { useWindowSize } from '@/components/utils/hooks/useWindowSize';
+import { responsive } from '@/lib/responsivee';
 import { H4, BodyMD, BodySM, MediumText, Caption } from '@/components/text';
-import { Button } from '@/components/ui/button';
 
 interface ReminderModalProps {
   formData: ReminderFormData;
@@ -20,6 +28,8 @@ interface ReminderModalProps {
   onClose: () => void;
 }
 
+type ViewportSize = 'mobile' | 'tablet' | 'desktop';
+
 export const ReminderModal = ({
   formData,
   formErrors,
@@ -30,327 +40,410 @@ export const ReminderModal = ({
 }: ReminderModalProps) => {
   const { colorScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const windowSize = useWindowSize();
 
-  // Theme-based styles - Always dark theme
-  const modalBackground = colorScheme.black;
-  const textColor = colorScheme.primary;
-  const subtitleTextColor = colorScheme.white;
-  const buttonBackground = colorScheme.primary;
-  const buttonTextColor = colorScheme.black;
-  const surfaceBackground = colorScheme.surface;
-  const borderColor = colorScheme.primary;
-  const inputBorderColor = colorScheme.border;
+  const viewport: ViewportSize = useMemo(() => {
+    if (!windowSize.width) return 'mobile';
+    if (windowSize.width < 640) return 'mobile';
+    if (windowSize.width < 1024) return 'tablet';
+    return 'desktop';
+  }, [windowSize.width]);
+
+
+  const colors = useMemo(() => ({
+    background: colorScheme.black,
+    text: {
+      primary: colorScheme.primary,
+      secondary: colorScheme.white,
+      muted: 'rgba(255, 255, 255, 0.7)'
+    },
+    button: {
+      background: colorScheme.primary,
+      text: colorScheme.black,
+      hover: colorScheme.opacity || colorScheme.primary
+    },
+    border: {
+      default: colorScheme.border,
+      active: colorScheme.primary,
+      input: colorScheme.border
+    },
+    overlay: 'rgba(0, 0, 0, 0.85)',
+    backdrop: 'rgba(0, 0, 0, 0.7)'
+  }), [colorScheme]);
 
   useEffect(() => {
     setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useLayoutEffect(() => {
+    if (mounted) {
+      const scrollY = window.scrollY;
+      const body = document.body;
+      
+      const originalStyles = {
+        overflow: body.style.overflow,
+        position: body.style.position,
+        top: body.style.top,
+        width: body.style.width,
+        height: body.style.height,
+        touchAction: body.style.touchAction
+      };
+
+      body.style.overflow = 'hidden';
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollY}px`;
+      body.style.width = '100%';
+      body.style.height = '100%';
+      body.style.touchAction = 'none';
+
+      document.documentElement.dataset.scrollY = scrollY.toString();
+
+      return () => {
+        Object.entries(originalStyles).forEach(([key, value]) => {
+          body.style[key as any] = value;
+        });
+
+        const scrollYValue = parseInt(document.documentElement.dataset.scrollY || '0');
+        window.scrollTo(0, scrollYValue);
+        delete document.documentElement.dataset.scrollY;
+      };
+    }
+  }, [mounted]);
+
   useEffect(() => {
-    if (modalRef.current) {
-      document.body.style.overflow = 'hidden';
+    if (!modalRef.current || !backdropRef.current) return;
 
-      const tl = gsap.timeline();
+    const modal = modalRef.current;
+    const backdrop = backdropRef.current;
 
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 20 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-        );
-      }
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.out', duration: 0.4 }
+    });
+
+    if (viewport === 'mobile') {
+      tl.fromTo(backdrop, 
+        { opacity: 0 },
+        { opacity: 1 }
+      )
+      .fromTo(modal,
+        { y: '100%', opacity: 0 },
+        { y: 0, opacity: 1 },
+        '<'
+      );
+    } else {
+      tl.fromTo(backdrop,
+        { opacity: 0 },
+        { opacity: 1 }
+      )
+      .fromTo(modal,
+        { 
+          scale: 0.9, 
+          opacity: 0,
+          y: 20 
+        },
+        { 
+          scale: 1, 
+          opacity: 1,
+          y: 0 
+        },
+        '<'
+      );
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      tl.kill();
     };
-  }, [isMobile]);
+  }, [viewport]);
 
-  const handleClose = () => {
-    if (modalRef.current) {
-      if (isMobile) {
-        gsap.to(modalRef.current, {
-          y: '100%',
-          opacity: 0,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
-      } else {
-        gsap.to(modalRef.current, {
-          opacity: 0,
-          scale: 0.95,
-          y: 20,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
+  const handleClose = useCallback(() => {
+    if (!modalRef.current || !backdropRef.current || isClosing) return;
+    
+    setIsClosing(true);
+    const modal = modalRef.current;
+    const backdrop = backdropRef.current;
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.in', duration: 0.3 },
+      onComplete: () => {
+        setIsClosing(false);
+        onClose();
       }
-    } else {
-      onClose();
-    }
-  };
+    });
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (viewport === 'mobile') {
+      tl.to(modal, { y: '100%', opacity: 0 })
+        .to(backdrop, { opacity: 0 }, '<');
+    } else {
+      tl.to(modal, { scale: 0.95, opacity: 0, y: 20 })
+        .to(backdrop, { opacity: 0 }, '<');
+    }
+  }, [onClose, viewport, isClosing]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [handleClose]);
+
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
-  };
+  }, [handleClose]);
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(e);
+  }, [onSubmit]);
 
   if (!mounted) return null;
 
   return createPortal(
-    <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${
-        isMobile ? 'pb-0' : ''
-      }`}
+    <div 
+      ref={backdropRef}
+      className="fixed inset-0 z-[9999] flex items-end justify-center sm:items-center sm:p-4"
       onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      style={{ 
+        backgroundColor: colors.backdrop,
+        backdropFilter: 'blur(8px)'
+      }}
     >
       <div
         ref={modalRef}
         className={`
-          w-full mx-auto overflow-hidden border shadow-xl
-          ${
-            isMobile
-              ? 'rounded-t-2xl rounded-b-none max-h-[85vh]'
-              : 'rounded-2xl max-w-md max-h-[85vh]'
-          }
+          w-full overflow-hidden border shadow-2xl
+          ${responsive.modal[viewport]}
+          ${viewport === 'mobile' ? 'pb-0' : ''}
         `}
-        style={{
-          backgroundColor: modalBackground,
-          borderColor: borderColor,
+        style={{ 
+          backgroundColor: colors.background, 
+          borderColor: colors.border.default 
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Mobile Drag Handle */}
-        {isMobile && (
-          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
-            <div
-              className="w-10 h-1 rounded-full"
-              style={{ backgroundColor: colorScheme.primary }}
+        {viewport === 'mobile' && (
+          <div 
+            className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
+            aria-hidden="true"
+          >
+            <div 
+              className="w-12 h-1.5 rounded-full"
+              style={{ backgroundColor: colors.text.primary }}
             />
           </div>
         )}
 
-        {/* Close Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleClose}
-          className={`absolute rounded-full transform hover:scale-110 transition-all duration-200 ${
-            isMobile ? 'top-1 right-1 p-1' : 'top-2 right-2 p-1'
-          }`}
-          style={{
-            backgroundColor: colorScheme.opacity.primary10,
-            color: textColor,
-          }}
-        >
-          <X className="w-3 h-3" />
-        </Button>
-
-        <div
-          className={`overflow-y-auto ${isMobile ? 'p-3 max-h-[calc(85vh-40px)]' : 'p-4 max-h-[calc(85vh-40px)]'}`}
-        >
-          {/* Header */}
-          <div className={`text-center ${isMobile ? 'mb-4' : 'mb-5'}`}>
-            <div
-              className={`rounded-full flex items-center justify-center mx-auto border-2 ${
-                isMobile ? 'w-12 h-12 mb-2' : 'w-14 h-14 mb-3'
-              }`}
-              style={{
-                backgroundColor: `${colorScheme.primary}20`,
-                borderColor: colorScheme.primary,
-              }}
-            >
-              <span
-                className={isMobile ? 'text-lg' : 'text-xl'}
-                style={{ color: colorScheme.primary }}
-              >
-                ⏰
-              </span>
-            </div>
-
-            <H4
-              fontFamily="bricolage"
-              className={`mb-1 ${isMobile ? 'text-lg' : 'text-xl'}`}
-              style={{ color: textColor }}
-              useThemeColor={false}
-              weight="bold"
-            >
-              Set Reminder
-            </H4>
-
-            <BodyMD
-              className="text-xs leading-relaxed"
-              style={{ color: subtitleTextColor }}
-              useThemeColor={false}
-            >
-              Get notified about the{' '}
-              {formData.eventType === 'conference'
-                ? 'Wisdom Power Conference 2026'
-                : '7 Nights of Lifting'}
-            </BodyMD>
-          </div>
-
-          <form onSubmit={onSubmit} className="space-y-3">
-            {/* Email Input */}
-            <div>
-              <MediumText
-                className="block mb-1 text-xs"
-                style={{ color: textColor }}
-                useThemeColor={false}
-              >
-                Email Address *
-              </MediumText>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={onInputChange}
-                className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
-                style={{
-                  borderColor: formErrors.email
-                    ? colorScheme.error
-                    : inputBorderColor,
-                  backgroundColor: surfaceBackground,
-                  color: textColor,
-                }}
-                placeholder="Enter your email"
-              />
-              {formErrors.email && (
-                <BodySM
-                  className="mt-0.5 text-xs"
-                  style={{ color: colorScheme.error }}
-                  useThemeColor={false}
+        <div className="flex flex-col h-full">
+          <div 
+            className={`
+              overflow-y-auto flex-1
+              ${responsive.padding[viewport]}
+              ${responsive.gap[viewport]}
+            `}
+          >
+            <div className={`flex flex-col ${responsive.gap[viewport]}`}>
+              <div className={`text-center ${responsive.gap[viewport]}`}>
+                <div
+                  className={`rounded-full flex items-center justify-center mx-auto border-2 ${
+                    viewport === 'mobile' ? 'w-12 h-12 mb-2' : 'w-14 h-14 mb-3'
+                  }`}
+                  style={{
+                    backgroundColor: `${colors.button.background}20`,
+                    borderColor: colors.text.primary,
+                  }}
                 >
-                  {formErrors.email}
-                </BodySM>
-              )}
-            </div>
+                  <span
+                    className={viewport === 'mobile' ? 'text-lg' : 'text-xl'}
+                    style={{ color: colors.text.primary }}
+                  >
+                    ⏰
+                  </span>
+                </div>
 
-            {/* Frequency Select */}
-            <div>
-              <MediumText
-                className="block mb-1 text-xs"
-                style={{ color: textColor }}
-                useThemeColor={false}
-              >
-                Reminder Frequency
-              </MediumText>
-              <select
-                name="frequency"
-                value={formData.frequency}
-                onChange={onInputChange}
-                className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
-                style={{
-                  borderColor: inputBorderColor,
-                  backgroundColor: surfaceBackground,
-                  color: textColor,
-                }}
-              >
-                <option value="daily">Daily Updates</option>
-                <option value="weekly">Weekly Updates</option>
-                <option value="monthly">Monthly Updates</option>
-              </select>
-            </div>
-
-            {/* Event Type Select */}
-            <div>
-              <MediumText
-                className="block mb-1 text-xs"
-                style={{ color: textColor }}
-                useThemeColor={false}
-              >
-                Event Type
-              </MediumText>
-              <select
-                name="eventType"
-                value={formData.eventType}
-                onChange={onInputChange}
-                className="w-full px-2 py-1.5 rounded-lg border focus:outline-none text-xs"
-                style={{
-                  borderColor: inputBorderColor,
-                  backgroundColor: surfaceBackground,
-                  color: textColor,
-                }}
-              >
-                <option value="conference">Wisdom Power Conference 2026</option>
-                <option value="lifting">7 Nights of Lifting</option>
-              </select>
-            </div>
-
-            {/* Information Section */}
-            <div
-              className="rounded-lg p-2 border"
-              style={{
-                backgroundColor: colorScheme.opacity.primary10,
-                borderColor: colorScheme.opacity.primary20,
-              }}
-            >
-              <div className="flex items-start gap-1">
-                <span className="text-xs mt-0.5 flex-shrink-0">💡</span>
-                <Caption
-                  className="leading-relaxed"
-                  style={{ color: textColor }}
-                  useThemeColor={false}
+                <div
+                  className={`mb-2 ${responsive.heading[viewport]} font-bold leading-tight`}
+                  style={{ color: colors.text.primary }}
                 >
-                  <MediumText
-                    style={{ color: textColor }}
-                    useThemeColor={false}
-                  >
-                    How it works:
-                  </MediumText>{' '}
-                  We'll send you periodic updates about the event, including
-                  important dates, speaker announcements, and registration
-                  reminders.
-                </Caption>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={isSettingReminder}
-              className={`w-full rounded-lg hover:shadow-lg transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
-                isMobile ? 'py-2 text-sm' : 'py-2.5 text-sm'
-              }`}
-              style={{
-                backgroundColor: buttonBackground,
-                color: buttonTextColor,
-              }}
-            >
-              {isSettingReminder ? (
-                <span className="flex items-center justify-center">
-                  <Loader2
-                    className="animate-spin mr-2 h-3 w-3"
-                    style={{ color: buttonTextColor }}
-                  />
-                  <MediumText
-                    className="text-sm"
-                    style={{ color: buttonTextColor }}
-                    useThemeColor={false}
-                  >
-                    Setting Reminder...
-                  </MediumText>
-                </span>
-              ) : (
-                <MediumText className="text-sm" useThemeColor={false}>
                   Set Reminder
-                </MediumText>
-              )}
-            </Button>
-          </form>
+                </div>
+
+                <BodyMD
+                  className={`${responsive.body[viewport]} leading-relaxed`}
+                  style={{ color: colors.text.muted }}
+                  useThemeColor={false}
+                >
+                  Get notified about the{' '}
+                  {formData.eventType === 'conference'
+                    ? 'Wisdom Power Conference 2026'
+                    : '7 Nights of Lifting'}
+                </BodyMD>
+              </div>
+
+              <form onSubmit={handleSubmit} className={`space-y-3`}>
+                <div>
+                  <MediumText
+                    className={`block mb-2 ${responsive.body[viewport]} font-medium`}
+                    style={{ color: colors.text.primary }}
+                    useThemeColor={false}
+                  >
+                    Email Address *
+                  </MediumText>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={onInputChange}
+                    className={`w-full px-3 py-2 rounded-lg border focus:outline-none ${responsive.body[viewport]}`}
+                    style={{
+                      borderColor: formErrors.email
+                        ? colorScheme.error
+                        : colors.border.input,
+                      backgroundColor: colors.background,
+                      color: colors.text.primary,
+                      borderWidth: '1px'
+                    }}
+                    placeholder="Enter your email"
+                    required
+                  />
+                  {formErrors.email && (
+                    <BodySM
+                      className="mt-1 text-xs"
+                      style={{ color: colorScheme.error }}
+                      useThemeColor={false}
+                    >
+                      {formErrors.email}
+                    </BodySM>
+                  )}
+                </div>
+
+                <div>
+                  <MediumText
+                    className={`block mb-2 ${responsive.body[viewport]} font-medium`}
+                    style={{ color: colors.text.primary }}
+                    useThemeColor={false}
+                  >
+                    Reminder Frequency
+                  </MediumText>
+                  <select
+                    name="frequency"
+                    value={formData.frequency}
+                    onChange={onInputChange}
+                    className={`w-full px-3 py-2 rounded-lg border focus:outline-none ${responsive.body[viewport]}`}
+                    style={{
+                      borderColor: colors.border.input,
+                      backgroundColor: colors.background,
+                      color: colors.text.primary,
+                      borderWidth: '1px'
+                    }}
+                  >
+                    <option value="daily">Daily Updates</option>
+                    <option value="weekly">Weekly Updates</option>
+                    <option value="monthly">Monthly Updates</option>
+                  </select>
+                </div>
+
+                <div>
+                  <MediumText
+                    className={`block mb-2 ${responsive.body[viewport]} font-medium`}
+                    style={{ color: colors.text.primary }}
+                    useThemeColor={false}
+                  >
+                    Event Type
+                  </MediumText>
+                  <select
+                    name="eventType"
+                    value={formData.eventType}
+                    onChange={onInputChange}
+                    className={`w-full px-3 py-2 rounded-lg border focus:outline-none ${responsive.body[viewport]}`}
+                    style={{
+                      borderColor: colors.border.input,
+                      backgroundColor: colors.background,
+                      color: colors.text.primary,
+                      borderWidth: '1px'
+                    }}
+                  >
+                    <option value="conference">Wisdom Power Conference 2026</option>
+                    <option value="lifting">7 Nights of Lifting</option>
+                  </select>
+                </div>
+
+                <div
+                  className="rounded-lg p-3 border"
+                  style={{
+                    backgroundColor: `${colors.button.background}20`,
+                    borderColor: colors.border.active,
+                  }}
+                >
+                  <div className="flex items-start gap-1">
+                    <span className={`mt-0.5 flex-shrink-0 ${responsive.body[viewport]}`}>💡</span>
+                    <Caption
+                      className={`leading-relaxed ${responsive.body[viewport]}`}
+                      style={{ color: colors.text.primary }}
+                      useThemeColor={false}
+                    >
+                      <MediumText
+                        style={{ color: colors.text.primary }}
+                        useThemeColor={false}
+                      >
+                        How it works:
+                      </MediumText>{' '}
+                      We'll send you periodic updates about the event,
+                      including important dates, speaker announcements, and
+                      registration reminders.
+                    </Caption>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSettingReminder}
+                  className={`
+                    w-full rounded-lg transition-all
+                    hover:scale-[1.02] active:scale-[0.98]
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    ${responsive.button[viewport]}
+                  `}
+                  style={{
+                    backgroundColor: colors.button.background,
+                    color: colors.button.text,
+                  }}
+                >
+                  {isSettingReminder ? (
+                    <span className="flex items-center justify-center">
+                      <Loader2
+                        className="animate-spin mr-2 h-3 w-3"
+                        style={{ color: colors.button.text }}
+                      />
+                      <MediumText
+                        className={`font-semibold ${viewport === 'mobile' ? 'text-sm' : 'text-base'}`}
+                        style={{ color: colors.button.text }}
+                        useThemeColor={false}
+                      >
+                        Setting Reminder...
+                      </MediumText>
+                    </span>
+                  ) : (
+                    <MediumText 
+                      className={`font-semibold ${viewport === 'mobile' ? 'text-sm' : 'text-base'}`}
+                      useThemeColor={false}
+                    >
+                      Set Reminder
+                    </MediumText>
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>,

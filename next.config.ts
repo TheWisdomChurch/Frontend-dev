@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 import path from 'path';
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: path.join(__dirname, './'),
+  // ✅ Keep typescript and eslint config
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -32,6 +32,10 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    qualities: [75, 85, 90, 100],
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
   // ✅ Webpack configuration
@@ -57,6 +61,21 @@ const nextConfig: NextConfig = {
 
   // ✅ Reduce preloading for development
   poweredByHeader: false,
+
+  // ✅ Add headers to handle CORS if needed
+  async headers() {
+    return [
+      {
+        source: '/_next/static/media/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

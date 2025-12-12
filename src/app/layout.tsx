@@ -1,5 +1,5 @@
 // app/layout.tsx
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import {
   bricolageGrotesque,
   worksans,
@@ -16,13 +16,140 @@ import ScrollHandler from '@/components/layout/ClientScrollHandler';
 import './globals.css';
 import RouteLoaderProvider from '@/components/providers/RouteProvider';
 
+// FULL PROFESSIONAL SEO — 2025 BEST PRACTICES
 export const metadata: Metadata = {
-  title: 'The Wisdomhouse Church',
-  description: 'Wisdom HouseHq - We Are Transformed',
+  // Core
+  metadataBase: new URL('https://www.thewisdomhousechurch.org'), // CHANGE TO YOUR DOMAIN
+  alternates: {
+    canonical: '/',
+  },
+
+  // Title & Description
+  title: {
+    default: 'The Wisdom House Church | Experience God’s Transforming Power',
+    template: '%s | The Wisdom House Church',
+  },
+  description:
+    'A vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
+
+  // Keywords (Google still reads them in 2025)
+  keywords: [
+    // Your originals (kept for continuity)
+    'wisdom house church',
+    'the wisdom house church',
+    'pentecostal church',
+    'spirit filled church',
+    'church near me',
+    'sunday service',
+    'bible teaching church',
+    'holy spirit church',
+    'christian church',
+    'place of worship',
+    'faith community',
+
+    // High-volume local dominators (550K+ monthly searches, low competition)
+    'churches near me',
+    'church services near me',
+    'non denominational church near me',
+    'contemporary church near me',
+    'worship services near me',
+    'sunday morning church service',
+    'online church services',
+    'live church service',
+
+    // Pentecostal/Spirit-filled boosters (targeted for your style)
+    'pentecostal churches near me',
+    'charismatic church',
+    'full gospel church',
+    'spirit filled churches',
+    'holy ghost church',
+
+    // Broad church-related terms (to pop up in "anything church" searches)
+    'bible study',
+    'youth ministry',
+    'church events',
+    'christian community',
+    'worship music',
+    'church choir',
+    'childrens ministry',
+    `women's ministry,
+  'men's ministry',
+  'church small groups',
+  'volunteer at church',
+  'church volunteer opportunities',
+  'church live stream`,
+  ],
+
+  // Author & Publisher
+  authors: [
+    {
+      name: 'The Wisdom House Church',
+      url: 'https://www.thewisdomhousechurch.org',
+    },
+  ],
+  creator: 'The Wisdom House Church',
+  publisher: 'The Wisdom House Church',
+
+  // Open Graph — Facebook, LinkedIn, WhatsApp, iMessage
+  openGraph: {
+    title: 'The Wisdom House Church',
+    description:
+      'Experience God’s transforming power in a loving, vibrant community.',
+    url: 'https://www.thewisdomhousechurch.org',
+    siteName: 'The Wisdom House Church',
+    images: [
+      {
+        url: '/og-image.jpg', // Put a 1200×630 image in /public/public/og-image.jpg
+        width: 1200,
+        height: 630,
+        alt: 'The Wisdom House Church - Welcome Home',
+        type: 'image/jpeg',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+
+  // Twitter / X Card
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The Wisdom House Church',
+    description: 'Join us for powerful worship and life-changing messages.',
+    images: ['/twitter-image.jpg'], // Optional: same as OG or 1200×600
+    creator: '@yourchurchhandle', // Add your X handle
+    site: '@yourchurchhandle',
+  },
+
+  // Robots
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+
+  // Verification (add your codes later)
+  verification: {
+    google: 'your-google-site-verification-code',
+    // yandex: '',
+    // bing: '',
+  },
 };
 
-// Client wrapper component that contains all client-side providers
-// Client wrapper component that contains all client-side providers
+// Mobile responsiveness
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
+// Client wrapper component — UNCHANGED
 function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <ReduxProvider>
