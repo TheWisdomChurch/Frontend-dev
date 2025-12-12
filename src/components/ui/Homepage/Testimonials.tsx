@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { H3, Caption } from '@/components/text';
@@ -14,11 +12,12 @@ import {
   MessageSquare,
   Star,
   ArrowRight,
+  Quote,
 } from 'lucide-react';
 import { gsap } from 'gsap';
 import Link from 'next/link';
 
-// Demo testimonials data
+// Demo testimonials data with responsive images
 const churchTestimonials = [
   {
     id: 1,
@@ -28,7 +27,7 @@ const churchTestimonials = [
     role: 'Church Member',
     image: '/images/testimonials/michael.jpg',
     testimony:
-      "I was lost in addiction for 15 years. Through the prayer ministry of this church and God&apos;s grace, I've been sober for 3 years now. The support I received here changed my life completely.",
+      "I was lost in addiction for 15 years. Through the prayer ministry of this church and God's grace, I've been sober for 3 years now. The support I received here changed my life completely.",
     rating: 5,
     date: '2024-01-15',
     anonymous: false,
@@ -41,7 +40,7 @@ const churchTestimonials = [
     role: 'Youth Leader',
     image: '/images/testimonials/sarah.jpg',
     testimony:
-      'My family was going through a difficult financial season. Through the church&apos;s benevolence ministry and the prayers of the saints, God miraculously provided for all our needs. To God be the glory!',
+      "My family was going through a difficult financial season. Through the church's benevolence ministry and the prayers of the saints, God miraculously provided for all our needs. To God be the glory!",
     rating: 5,
     date: '2024-02-20',
     anonymous: false,
@@ -75,76 +74,84 @@ const churchTestimonials = [
 ];
 
 interface TestimonialCardProps {
-  testimonial: any;
+  testimonial: (typeof churchTestimonials)[0];
   isActive: boolean;
   colorScheme: any;
+  index: number;
 }
 
-function TestimonialCard({
-  testimonial,
-  isActive,
-  colorScheme,
-}: TestimonialCardProps) {
+function TestimonialCard({ testimonial, isActive, colorScheme, index }: TestimonialCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || !isActive) return;
 
-    if (isActive) {
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, scale: 0.9, y: 30 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'back.out(1.2)',
-        }
-      );
-    }
-  }, [isActive]);
+    gsap.fromTo(
+      cardRef.current,
+      { opacity: 0, scale: 0.95, y: 20 },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        delay: index * 0.1,
+      }
+    );
+  }, [isActive, index]);
 
-  const renderStars = () => {
+  const renderStars = useMemo(() => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
-        className={`w-4 h-4 ${i < testimonial.rating ? 'fill-current' : ''}`}
+        className="w-3 h-3 sm:w-4 sm:h-4"
         style={{
-          color: i < testimonial.rating ? colorScheme.primary : '#d1d5db',
+          color: i < testimonial.rating ? colorScheme.primary : colorScheme.gray[300],
+          fill: i < testimonial.rating ? colorScheme.primary : 'none',
         }}
       />
     ));
-  };
+  }, [testimonial.rating, colorScheme]);
 
   return (
     <div
       ref={cardRef}
-      className={`w-full transition-all duration-300 ${isActive ? 'opacity-100 z-10' : 'opacity-0 absolute pointer-events-none'}`}
+      className={`w-full transition-all duration-300 ${isActive ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}
     >
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 h-full">
+      <div 
+        className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm sm:shadow-lg border border-gray-100 dark:border-gray-700 h-full hover:shadow-md transition-shadow"
+        style={{
+          backgroundColor: colorScheme.surface,
+          borderColor: colorScheme.border,
+        }}
+      >
         {/* Quote Icon */}
-        <div className="mb-4">
+        <div className="mb-3 sm:mb-4">
           <div
-            className="w-10 h-10 rounded-full flex items-center justify-center"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
             style={{ backgroundColor: `${colorScheme.primary}15` }}
           >
-            <MessageSquare
-              className="w-5 h-5"
-              style={{ color: colorScheme.primary }}
-            />
+            <Quote className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colorScheme.primary }} />
           </div>
         </div>
 
         {/* Testimonial Content */}
         <div className="flex-grow">
-          <p className="text-gray-700 text-base leading-relaxed mb-4 line-clamp-4">
+          <p 
+            className="text-gray-700 dark:text-gray-200 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 line-clamp-4 sm:line-clamp-5"
+            style={{ color: colorScheme.textSecondary }}
+          >
             &quot;{testimonial.testimony}&quot;
           </p>
 
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-1">{renderStars()}</div>
-            <span className="text-sm text-gray-500">
+            <div className="flex items-center space-x-0.5 sm:space-x-1">
+              {renderStars}
+            </div>
+            <span 
+              className="text-xs sm:text-sm"
+              style={{ color: colorScheme.textTertiary }}
+            >
               {new Date(testimonial.date).toLocaleDateString('en-US', {
                 month: 'short',
                 year: 'numeric',
@@ -154,8 +161,9 @@ function TestimonialCard({
         </div>
 
         {/* Author Info */}
-        <div className="flex items-center pt-4 border-t border-gray-100">
-          <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+        <div className="flex items-center pt-3 sm:pt-4 border-t" style={{ borderColor: colorScheme.border }}>
+          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2" 
+            style={{ borderColor: colorScheme.white }}>
             <Image
               src={testimonial.image || '/images/avatar-placeholder.jpg'}
               alt={testimonial.fullName}
@@ -163,14 +171,16 @@ function TestimonialCard({
               height={48}
               className="object-cover"
               loading="lazy"
-              sizes="48px"
+              sizes="(max-width: 640px) 40px, 48px"
             />
           </div>
-          <div className="ml-3">
-            <p className="font-semibold text-gray-900 text-sm">
+          <div className="ml-2 sm:ml-3">
+            <p className="font-semibold text-sm sm:text-base" style={{ color: colorScheme.text }}>
               {testimonial.fullName}
             </p>
-            <p className="text-gray-600 text-xs">{testimonial.role}</p>
+            <p className="text-xs sm:text-sm" style={{ color: colorScheme.textTertiary }}>
+              {testimonial.role}
+            </p>
           </div>
         </div>
       </div>
@@ -181,223 +191,335 @@ function TestimonialCard({
 export default function Testimonial() {
   const { colorScheme } = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [autoPlay] = useState(true);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  // Auto-rotate testimonials
+  // Detect mobile screen
   useEffect(() => {
-    if (!autoPlay) return;
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Auto-rotation with pause on hover
+  useEffect(() => {
+    if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
       setActiveIndex(prev => (prev + 1) % churchTestimonials.length);
-    }, 6000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [autoPlay]);
+  }, [isAutoPlaying]);
 
-  // GSAP Animations
+  // GSAP animations
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        '.section-title',
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.8 }
+        sectionRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5 }
       );
 
-      gsap.fromTo(
-        '.section-description',
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.8, delay: 0.2 }
-      );
-
-      gsap.fromTo(
-        '.testimonial-card',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, stagger: 0.1, duration: 0.6, delay: 0.4 }
-      );
+      const tl = gsap.timeline();
+      tl.from('.section-title', {
+        y: -20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+      })
+      .from('.section-description', {
+        y: 10,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+      }, '-=0.3')
+      .from('.testimonial-card', {
+        y: 30,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'back.out(1.2)',
+      }, '-=0.2');
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
+  // Navigation handlers
   const handlePrev = useCallback(() => {
-    setActiveIndex(prev =>
+    setActiveIndex(prev => 
       prev === 0 ? churchTestimonials.length - 1 : prev - 1
     );
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 3000);
   }, []);
 
   const handleNext = useCallback(() => {
     setActiveIndex(prev => (prev + 1) % churchTestimonials.length);
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 3000);
   }, []);
 
-  // Function to handle button click
-  const handleShareTestimony = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    // You can add any additional logic here before navigation
+  const handleShareTestimony = useCallback(() => {
+    // Additional logic can be added here
     console.log('Navigating to testimonies page');
-    // The Link will handle the navigation
   }, []);
+
+  // Responsive layout config
+  const containerConfig = useMemo(() => ({
+    padding: isMobile ? 'px-4' : 'px-6',
+    gap: isMobile ? 'gap-4' : 'gap-8',
+    textSize: {
+      title: isMobile ? 'text-xl' : 'text-3xl lg:text-4xl',
+      description: isMobile ? 'text-xs' : 'text-sm lg:text-base',
+    },
+  }), [isMobile]);
 
   return (
     <Section
       ref={sectionRef}
-      padding="lg"
+      padding={isMobile ? "md" : "lg"}
       fullHeight={false}
-      className="relative overflow-hidden bg-gray-50"
+      className="relative overflow-hidden"
+      style={{ 
+        // Darker background
+        backgroundColor: colorScheme.backgroundSecondary,
+      }}
     >
-      <Container size="lg" className="relative z-10">
-        {/* Header */}
+      {/* Darker overlay for background */}
+      <div 
+        className="absolute inset-0"
+        style={{ 
+          backgroundColor: 'rgba(0, 0, 0, 0.03)',
+          backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%)'
+        }}
+      />
+      
+      {/* Background decorative elements with darker opacity */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div 
+          className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 rounded-full"
+          style={{ 
+            backgroundColor: colorScheme.primary,
+            opacity: 0.08, // Increased opacity for darker effect
+          }}
+        />
+        <div 
+          className="absolute bottom-0 left-0 w-40 h-40 sm:w-64 sm:h-64 rounded-full"
+          style={{ 
+            backgroundColor: colorScheme.primary,
+            opacity: 0.08, // Increased opacity for darker effect
+          }}
+        />
+      </div>
+
+      <Container size="lg" className={`relative z-10 ${containerConfig.padding}`}>
+        {/* Header - ONLY the H3 text is pushed down */}
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
-          gap="md"
-          className="text-center mb-12"
+          gap="sm"
+          className={`text-center mb-6 sm:mb-10 ${containerConfig.gap}`}
         >
-          <H3
-            className="section-title text-2xl sm:text-3xl lg:text-4xl"
-            style={{ color: colorScheme.primary }}
-            useThemeColor={false}
-            weight="bold"
-          >
-            Testimonies of God&apos;s Faithfulness
-          </H3>
+          {/* Add a wrapper div around H3 with margin-top */}
+          <div className={isMobile ? 'mt-6' : 'mt-10'}>
+            <H3
+              className={`section-title font-bold ${containerConfig.textSize.title} leading-tight`}
+              style={{ 
+                color: colorScheme.heading,
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                // REMOVED padding-top from H3
+              }}
+            >
+              Testimonies of{' '}
+              <span style={{ 
+                color: colorScheme.primary,
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}>
+                God&apos;s Faithfulness
+              </span>
+            </H3>
+          </div>
           <Caption
-            className="section-description max-w-2xl mx-auto text-gray-600 mt-2"
-            useThemeColor={false}
+            className={`section-description ${containerConfig.textSize.description} max-w-xl mx-auto`}
+            style={{ 
+              color: colorScheme.textSecondary,
+              opacity: 0.9
+            }}
           >
             Hear how God is transforming lives in our community
           </Caption>
         </FlexboxLayout>
 
-        {/* Slider Section */}
-        <div className="mb-12">
-          {/* Bible Verse */}
-          <div className="text-center mb-8">
-            <div className="inline-block bg-white px-6 py-3 rounded-lg shadow-sm border border-gray-100">
-              <p className="text-gray-700 italic">
-                &quot;They triumphed by the blood of the Lamb and by the word of
-                their testimony.&quot;
-              </p>
-              <p className="text-gray-500 text-sm mt-1">— Revelation 12:11</p>
-            </div>
-          </div>
-
-          {/* Testimonial Slider - IMPROVED SPACING */}
-          <div className="max-w-3xl mx-auto">
-            <div className="relative h-[350px] mb-8">
-              {churchTestimonials.map((testimonial, index) => (
-                <div
-                  key={testimonial.id}
-                  className="testimonial-card absolute inset-0"
-                >
-                  <TestimonialCard
-                    testimonial={testimonial}
-                    isActive={index === activeIndex}
-                    colorScheme={colorScheme}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Slider Controls - IMPROVED SPACING */}
-            <FlexboxLayout
-              justify="center"
-              align="center"
-              gap="lg"
-              className="mt-8"
+        {/* Bible Verse */}
+        <div className="text-center mb-6 sm:mb-8">
+          <div 
+            className="inline-block px-4 py-2 sm:px-6 sm:py-3 rounded-lg shadow-sm border"
+            style={{ 
+              backgroundColor: colorScheme.surface,
+              borderColor: colorScheme.border,
+              borderWidth: '1px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+            }}
+          >
+            <p 
+              className="italic text-sm sm:text-base"
+              style={{ color: colorScheme.textSecondary }}
             >
-              <button
-                onClick={handlePrev}
-                className="w-10 h-10 rounded-full border-2 transition-all duration-300 hover:scale-110 flex items-center justify-center"
-                style={{
-                  borderColor: colorScheme.primary,
-                  color: colorScheme.primary,
-                }}
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              {/* Indicators */}
-              <div className="flex gap-2 px-4">
-                {churchTestimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveIndex(index)}
-                    className="w-2 h-2 rounded-full transition-all duration-300"
-                    style={{
-                      backgroundColor:
-                        index === activeIndex ? colorScheme.primary : '#d1d5db',
-                      transform:
-                        index === activeIndex ? 'scale(1.5)' : 'scale(1)',
-                    }}
-                  />
-                ))}
-              </div>
-
-              <button
-                onClick={handleNext}
-                className="w-10 h-10 rounded-full border-2 transition-all duration-300 hover:scale-110 flex items-center justify-center"
-                style={{
-                  borderColor: colorScheme.primary,
-                  color: colorScheme.primary,
-                }}
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </FlexboxLayout>
+              &quot;They triumphed by the blood of the Lamb and by the word of their testimony.&quot;
+            </p>
+            <p 
+              className="text-xs sm:text-sm mt-1"
+              style={{ color: colorScheme.textTertiary }}
+            >
+              — Revelation 12:11
+            </p>
           </div>
         </div>
 
-        {/* Share Testimony CTA - IMPROVED SPACING */}
-        <div className="text-center pt-8">
-          <div className="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-sm border border-gray-100 max-w-2xl mx-auto">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+        {/* Testimonial Slider */}
+        <div className="max-w-4xl mx-auto">
+          {/* Cards Container */}
+          <div 
+            ref={sliderRef}
+            className={`relative ${isMobile ? 'h-[280px]' : 'h-[320px]'} mb-6 sm:mb-8`}
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
+          >
+            {churchTestimonials.map((testimonial, index) => (
+              <div
+                key={testimonial.id}
+                className={`testimonial-card absolute inset-0 ${isMobile ? 'px-2' : 'px-4'}`}
+              >
+                <TestimonialCard
+                  testimonial={testimonial}
+                  isActive={index === activeIndex}
+                  colorScheme={colorScheme}
+                  index={index}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Slider Controls */}
+          <FlexboxLayout
+            justify="center"
+            align="center"
+            gap="sm"
+            className="sm:gap-6"
+          >
+            <button
+              onClick={handlePrev}
+              className={`flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${isMobile ? 'w-8 h-8' : 'w-10 h-10'}`}
+              style={{
+                color: colorScheme.primary,
+                backgroundColor: colorScheme.opacity.primary10,
+                borderRadius: colorScheme.borderRadius.full,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              }}
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className={isMobile ? 'w-4 h-4' : 'w-5 h-5'} />
+            </button>
+
+            {/* Indicators */}
+            <div className="flex gap-1.5 sm:gap-2 px-2 sm:px-4">
+              {churchTestimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setActiveIndex(index);
+                    setIsAutoPlaying(false);
+                    setTimeout(() => setIsAutoPlaying(true), 3000);
+                  }}
+                  className="transition-all duration-300"
+                  aria-label={`Go to testimonial ${index + 1}`}
+                >
+                  <div
+                    className={`rounded-full transition-all duration-300 ${index === activeIndex ? (isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5') : (isMobile ? 'w-1.5 h-1.5' : 'w-2 h-2')}`}
+                    style={{
+                      backgroundColor: index === activeIndex 
+                        ? colorScheme.primary 
+                        : colorScheme.gray[300],
+                      boxShadow: index === activeIndex ? '0 0 8px rgba(0,0,0,0.2)' : 'none'
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={handleNext}
+              className={`flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${isMobile ? 'w-8 h-8' : 'w-10 h-10'}`}
+              style={{
+                color: colorScheme.primary,
+                backgroundColor: colorScheme.opacity.primary10,
+                borderRadius: colorScheme.borderRadius.full,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              }}
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className={isMobile ? 'w-4 h-4' : 'w-5 h-5'} />
+            </button>
+          </FlexboxLayout>
+        </div>
+
+        {/* Share Testimony CTA */}
+        <div className={`text-center pt-8 sm:pt-10 ${containerConfig.padding}`}>
+          <div 
+            className={`rounded-xl sm:rounded-2xl ${isMobile ? 'p-4' : 'p-6 sm:p-8'} shadow-sm max-w-2xl mx-auto border`}
+            style={{ 
+              backgroundColor: colorScheme.surface,
+              borderColor: colorScheme.border,
+              borderWidth: '1px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+            }}
+          >
+            <h3 
+              className={`font-bold ${isMobile ? 'text-lg' : 'text-xl sm:text-2xl'} mb-2 sm:mb-4`}
+              style={{ color: colorScheme.heading }}
+            >
               Share Your Testimony
             </h3>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Your story can inspire others and bring glory to God. Share what
-              He has done in your life.
+            <p 
+              className={`${isMobile ? 'text-xs' : 'text-sm sm:text-base'} mb-4 sm:mb-6 max-w-md mx-auto`}
+              style={{ color: colorScheme.textSecondary }}
+            >
+              Your story can inspire others and bring glory to God. Share what He has done in your life.
             </p>
 
-            {/* Option 1: Use Link as a wrapper (Recommended) */}
             <Link href="/testimonies" className="inline-block">
               <Button
                 variant="primary"
-                size="md"
+                size={isMobile ? "sm" : "md"}
                 curvature="xl"
-                className="px-8 py-3 font-semibold transition-all duration-300 hover:scale-105 cursor-pointer"
+                className="font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
                 style={{
                   backgroundColor: colorScheme.primary,
-                  color: '#000000',
+                  color: colorScheme.buttonText,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
                 }}
-                rightIcon={<ArrowRight className="w-5 h-5 ml-2" />}
+                rightIcon={<ArrowRight className={isMobile ? 'w-4 h-4' : 'w-5 h-5'} />}
                 onClick={handleShareTestimony}
               >
-                Share Your Testimony
+                <span className={isMobile ? 'text-sm' : 'text-base'}>
+                  Share Your Testimony
+                </span>
               </Button>
             </Link>
           </div>
         </div>
-      </Container>
 
-      {/* Background Elements */}
-      <div
-        className="absolute top-0 right-0 w-48 h-48 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${colorScheme.primary}05 0%, transparent 70%)`,
-          transform: 'translate(30%, -30%)',
-        }}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-64 h-64 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${colorScheme.primary}05 0%, transparent 70%)`,
-          transform: 'translate(-30%, 30%)',
-        }}
-      />
+        {/* Empty space at the bottom */}
+        <div className="h-12 sm:h-16 lg:h-20"></div>
+      </Container>
     </Section>
   );
 }
