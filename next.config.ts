@@ -2,9 +2,7 @@ import type { NextConfig } from 'next';
 import path from 'path';
 
 const nextConfig: NextConfig = {
-  // ❌ REMOVE THIS LINE - It's causing the path resolution issue
-  // outputFileTracingRoot: path.join(__dirname, './'),
-  
+  // ✅ Keep typescript and eslint config
   typescript: {
     ignoreBuildErrors: true,
   },
