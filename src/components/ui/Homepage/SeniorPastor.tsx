@@ -10,6 +10,7 @@ import { seniorPastorData } from '@/lib/data';
 import { Section, Container, FlexboxLayout } from '@/components/layout';
 import { Instagram, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { gsap } from 'gsap';
 
 interface SeniorPastorProps {
   className?: string;
@@ -23,6 +24,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   const [showReadMore, setShowReadMore] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const contentBoxRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
 
   // Detect screen size
   useEffect(() => {
@@ -37,24 +41,135 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
+  // Derived values (React 19 pattern)
+  const isDesktop = !isMobile && !isTablet;
+  const isResponsive = isMobile || isTablet;
+
   // Check if content overflows (to show Read More button)
   useEffect(() => {
-    if (!isMobile && !isTablet) return;
+    if (!isResponsive) return;
 
     const checkOverflow = () => {
       const element = contentRef.current;
       if (element) {
-        // Check if content is taller than ~10 lines (~200px)
         const isOverflowing = element.scrollHeight > 200;
         setShowReadMore(isOverflowing);
       }
     };
 
-    // Check after a small delay to ensure DOM is rendered
     setTimeout(checkOverflow, 100);
     window.addEventListener('resize', checkOverflow);
     return () => window.removeEventListener('resize', checkOverflow);
-  }, [isMobile, isTablet]);
+  }, [isResponsive]);
+
+  // GSAP animations on component mount
+  useEffect(() => {
+    if (!contentBoxRef.current || !titleRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Initial entrance animation
+      gsap.fromTo(
+        titleRef.current,
+        { y: -30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
+      );
+
+      gsap.fromTo(
+        contentBoxRef.current,
+        { y: 40, opacity: 0, scale: 0.95 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          scale: 1, 
+          duration: 0.8, 
+          ease: 'back.out(1.2)', 
+          delay: 0.2 
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  // Animation for expanding/collapsing accordion
+  useEffect(() => {
+    if (!isResponsive || !contentRef.current || !showReadMore) return;
+
+    const contentElement = contentRef.current;
+    const contentHeight = contentElement.scrollHeight;
+    const collapsedHeight = 180; // matches max-h-[180px]
+    const expandedHeight = Math.min(contentHeight, 350); // Max expanded height
+
+    if (isExpanded) {
+      // Expand animation
+      gsap.to(contentElement, {
+        maxHeight: expandedHeight,
+        duration: 0.5,
+        ease: 'power2.out',
+        onStart: () => {
+          contentElement.style.overflow = 'hidden';
+        },
+        onComplete: () => {
+          contentElement.style.overflowY = 'auto';
+        }
+      });
+      
+      // Fade out the gradient
+      const fadeElement = contentElement.querySelector('.gradient-fade');
+      if (fadeElement) {
+        gsap.to(fadeElement, {
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.in'
+        });
+      }
+    } else {
+      // Collapse animation
+      gsap.to(contentElement, {
+        maxHeight: collapsedHeight,
+        duration: 0.4,
+        ease: 'power2.in',
+        onStart: () => {
+          contentElement.style.overflow = 'hidden';
+        }
+      });
+      
+      // Fade in the gradient
+      const fadeElement = contentElement.querySelector('.gradient-fade');
+      if (fadeElement) {
+        gsap.to(fadeElement, {
+          opacity: 1,
+          duration: 0.3,
+          ease: 'power2.out',
+          delay: 0.1
+        });
+      }
+    }
+  }, [isExpanded, showReadMore, isResponsive]);
+
+  // Button animation on toggle
+  useEffect(() => {
+    if (!isResponsive || !buttonRef.current || !showReadMore) return;
+
+    const buttonElement = buttonRef.current;
+    
+    // Button scale animation
+    gsap.to(buttonElement, {
+      scale: isAnimating ? 0.95 : 1,
+      duration: 0.2,
+      ease: 'power2.out'
+    });
+
+    // Button content swap animation
+    const buttons = buttonElement.querySelectorAll('button, [role="button"]');
+    buttons.forEach((btn, index) => {
+      gsap.fromTo(
+        btn,
+        { opacity: 0, y: index === 0 ? -10 : 10 },
+        { opacity: 1, y: 0, duration: 0.3, delay: 0.1 }
+      );
+    });
+  }, [isExpanded, isAnimating, showReadMore, isResponsive]);
 
   const descriptionText = seniorPastorData.description[0];
 
@@ -64,17 +179,38 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
     setIsAnimating(true);
     setIsExpanded(prev => !prev);
 
-    // Reset animation state after transition
+    // Add a subtle click animation
+    if (buttonRef.current) {
+      gsap.to(buttonRef.current, {
+        scale: 0.95,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1
+      });
+    }
+
     setTimeout(() => {
       setIsAnimating(false);
     }, 400);
   }, [isAnimating]);
 
   const handleInstagramClick = useCallback(() => {
-    window.open(seniorPastorData.instagramUrl, '_blank', 'noopener,noreferrer');
+    // Add click animation before redirecting
+    const button = document.querySelector('[data-instagram-button]');
+    if (button) {
+      gsap.to(button, {
+        scale: 0.95,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1,
+        onComplete: () => {
+          window.open(seniorPastorData.instagramUrl, '_blank', 'noopener,noreferrer');
+        }
+      });
+    } else {
+      window.open(seniorPastorData.instagramUrl, '_blank', 'noopener,noreferrer');
+    }
   }, []);
-
-  const isDesktop = !isMobile && !isTablet;
 
   return (
     <Section
@@ -119,112 +255,156 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                   : 'opacity-0 translate-y-4'
               )}
             >
-              {/* Title */}
-              <div className="text-center mb-6 md:mb-8">
+              {/* Title with ref for animation */}
+              <div ref={titleRef} className="text-center mb-6 md:mb-8">
                 <H1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
                   {seniorPastorData.title}
                 </H1>
               </div>
 
-              {/* Content Box */}
-              <div className="bg-black/70 backdrop-blur-sm rounded-lg md:rounded-xl p-5 md:p-8 lg:p-10 border border-white/10">
-                {/* Content with smooth expand/collapse */}
-                <div
-                  ref={contentRef}
-                  className={cn(
-                    'mb-4 md:mb-6 relative transition-all duration-300 ease-in-out',
-                    // On mobile/tablet: limit height when not expanded
-                    !isDesktop &&
-                      !isExpanded &&
-                      showReadMore &&
-                      'max-h-[180px] overflow-hidden',
-                    !isDesktop && isExpanded && showReadMore && 'max-h-[1000px]'
-                  )}
-                >
-                  <P className="text-sm md:text-base lg:text-lg text-gray-100 text-center leading-relaxed">
-                    {descriptionText}
-                  </P>
+              {/* Content Box with ref for animation */}
+              <div 
+                ref={contentBoxRef}
+                className="bg-black/70 backdrop-blur-sm rounded-lg md:rounded-xl p-5 md:p-8 lg:p-10 border border-white/10"
+              >
+                {/* Desktop Layout */}
+                {isDesktop ? (
+                  <>
+                    {/* Content */}
+                    <div className="mb-4 md:mb-6">
+                      <P className="text-sm md:text-base lg:text-lg text-gray-100 text-center leading-relaxed">
+                        {descriptionText}
+                      </P>
+                    </div>
 
-                  {/* Gradient fade for truncated content */}
-                  {!isDesktop && !isExpanded && showReadMore && (
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
-                  )}
-                </div>
-
-                {/* Buttons Section - FIXED CENTERING */}
-                <div className="flex flex-col items-center justify-center">
-                  {/* Desktop: Always show Connect button */}
-                  {isDesktop ? (
-                    <Button
-                      onClick={handleInstagramClick}
-                      variant="primary"
-                      size="sm"
-                      curvature="full"
-                      leftIcon={<Instagram className="w-3.5 h-3.5" />}
-                      className="px-6 py-2 text-sm font-medium"
+                    {/* Connect Button */}
+                    <div className="flex flex-col items-center justify-center">
+                      <Button
+                        onClick={handleInstagramClick}
+                        variant="primary"
+                        size="sm"
+                        curvature="full"
+                        leftIcon={<Instagram className="w-3.5 h-3.5" />}
+                        className="px-6 py-2 text-sm font-medium transition-transform duration-200 hover:scale-105"
+                        style={{
+                          background: `linear-gradient(135deg, #E4405F, #C13584)`,
+                          color: '#FFFFFF',
+                        }}
+                        data-instagram-button
+                      >
+                        Connect with Pastor
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  /* Mobile/Tablet Accordion Layout */
+                  <div className="w-full">
+                    {/* Content Area with Accordion Behavior */}
+                    <div
+                      ref={contentRef}
+                      className={cn(
+                        'transition-all duration-300 ease-in-out mb-4',
+                        // Base styles for both states
+                        showReadMore && 'overflow-hidden',
+                        // Initial collapsed state managed by GSAP
+                        !isExpanded && showReadMore && 'max-h-[180px] relative',
+                        // Expanded state managed by GSAP
+                        isExpanded && showReadMore && 'overflow-y-auto pr-2',
+                        // If no overflow
+                        !showReadMore && 'max-h-none'
+                      )}
                       style={{
-                        background: `linear-gradient(135deg, #E4405F, #C13584)`,
-                        color: '#FFFFFF',
+                        maxHeight: !showReadMore ? 'none' : isExpanded ? '350px' : '180px'
                       }}
                     >
-                      Connect with Pastor
-                    </Button>
-                  ) : (
-                    /* Mobile/Tablet: Conditional buttons */
-                    <div className="w-full flex flex-col items-center justify-center space-y-2">
-                      {/* Show Read More button only when content overflows and not expanded */}
-                      {showReadMore && !isExpanded ? (
+                      <P className="text-sm md:text-base lg:text-lg text-gray-100 text-center leading-relaxed">
+                        {descriptionText}
+                      </P>
+
+                      {/* Gradient fade for truncated content in collapsed state */}
+                      {!isExpanded && showReadMore && (
+                        <div className="gradient-fade absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+                      )}
+                    </div>
+
+                    {/* Accordion Controls */}
+                    <div 
+                      ref={buttonRef}
+                      className="flex flex-col items-center justify-center space-y-3"
+                    >
+                      {/* Main Action Button - Changes based on state */}
+                      {showReadMore ? (
+                        <>
+                          {!isExpanded ? (
+                            // COLLAPSED STATE: Show "Read More" button
+                            <Button
+                              onClick={handleToggle}
+                              variant="primary"
+                              size="sm"
+                              curvature="full"
+                              className="px-5 py-1.5 text-xs font-medium w-full max-w-[200px] transition-transform duration-200 hover:scale-105"
+                              style={{
+                                background: `linear-gradient(135deg, #F7DE12, #D4BC0F)`,
+                                color: '#000000',
+                              }}
+                            >
+                              <span className="flex items-center justify-center gap-1">
+                                Read More
+                                <ChevronDown className="w-3 h-3 transition-transform duration-300" />
+                              </span>
+                            </Button>
+                          ) : (
+                            // EXPANDED STATE: Show "Connect with Pastor" button
+                            <div className="w-full max-w-[200px] space-y-2">
+                              {/* "Show Less" text link */}
+                              <button
+                                onClick={handleToggle}
+                                className="text-xs text-gray-300 hover:text-white transition-all duration-200 flex items-center justify-center gap-0.5 w-full"
+                              >
+                                <span className="underline">Show Less</span>
+                                <ChevronUp className="w-3 h-3 transition-transform duration-300" />
+                              </button>
+                              
+                              {/* "Connect with Pastor" button */}
+                              <Button
+                                onClick={handleInstagramClick}
+                                variant="primary"
+                                size="sm"
+                                curvature="full"
+                                leftIcon={<Instagram className="w-3.5 h-3.5" />}
+                                className="px-5 py-1.5 text-xs font-medium w-full transition-transform duration-200 hover:scale-105"
+                                style={{
+                                  background: `linear-gradient(135deg, #E4405F, #C13584)`,
+                                  color: '#FFFFFF',
+                                }}
+                                data-instagram-button
+                              >
+                                Connect with Pastor
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        // If content doesn't overflow, just show "Connect with Pastor"
                         <Button
-                          onClick={handleToggle}
+                          onClick={handleInstagramClick}
                           variant="primary"
                           size="sm"
                           curvature="full"
-                          className="px-5 py-1.5 text-xs font-medium"
+                          leftIcon={<Instagram className="w-3.5 h-3.5" />}
+                          className="px-5 py-1.5 text-xs font-medium w-full max-w-[200px] transition-transform duration-200 hover:scale-105"
                           style={{
-                            background: `linear-gradient(135deg, #F7DE12, #D4BC0F)`,
-                            color: '#000000',
+                            background: `linear-gradient(135deg, #E4405F, #C13584)`,
+                            color: '#FFFFFF',
                           }}
+                          data-instagram-button
                         >
-                          <span className="flex items-center justify-center gap-1">
-                            Read More
-                            <ChevronDown className="w-3 h-3" />
-                          </span>
+                          Connect with Pastor
                         </Button>
-                      ) : null}
-
-                      {/* Show Connect button when expanded OR if content doesn't overflow */}
-                      {(isExpanded || !showReadMore) && (
-                        <div className="flex flex-col items-center justify-center space-y-1.5 w-full">
-                          <Button
-                            onClick={handleInstagramClick}
-                            variant="primary"
-                            size="sm"
-                            curvature="full"
-                            leftIcon={<Instagram className="w-3.5 h-3.5" />}
-                            className="px-5 py-1.5 text-xs font-medium"
-                            style={{
-                              background: `linear-gradient(135deg, #E4405F, #C13584)`,
-                              color: '#FFFFFF',
-                            }}
-                          >
-                            Connect with Pastor
-                          </Button>
-
-                          {/* Show Less button */}
-                          {isExpanded && showReadMore && (
-                            <button
-                              onClick={handleToggle}
-                              className="text-xs text-gray-300 hover:text-white transition-colors duration-200 flex items-center justify-center gap-0.5"
-                            >
-                              <span className="underline">Show Less</span>
-                              <ChevronUp className="w-3 h-3" />
-                            </button>
-                          )}
-                        </div>
                       )}
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
