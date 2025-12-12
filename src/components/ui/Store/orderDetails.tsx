@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -253,11 +253,11 @@ const OrderConfirmation = () => {
         Payment Status: ${orderDetails?.paymentStatus.toUpperCase()}
         
         Items:
-        ${orderDetails?.items.map(item => `${item.name} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - ₦${(parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity).toLocaleString()}`).join('\n')}
+        ${orderDetails?.items.map(item => `${item.name} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - â‚¦${(parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity).toLocaleString()}`).join('\n')}
         
-        Subtotal: ₦${orderDetails?.subtotal.toLocaleString()}
-        ${orderDetails?.deliveryFee ? `Delivery Fee: ₦${orderDetails.deliveryFee.toLocaleString()}` : ''}
-        Total: ₦${orderDetails?.total.toLocaleString()}
+        Subtotal: â‚¦${orderDetails?.subtotal.toLocaleString()}
+        ${orderDetails?.deliveryFee ? `Delivery Fee: â‚¦${orderDetails.deliveryFee.toLocaleString()}` : ''}
+        Total: â‚¦${orderDetails?.total.toLocaleString()}
         
         Thank you for your order!
         =====================
@@ -582,7 +582,7 @@ const OrderConfirmation = () => {
                       </div>
                     </div>
                     <BaseText weight="bold" style={{ color: textColor }}>
-                      ₦
+                      â‚¦
                       {(
                         parseFloat(item.price.replace(/[^\d.]/g, '')) *
                         item.quantity
@@ -596,7 +596,7 @@ const OrderConfirmation = () => {
                 <FlexboxLayout justify="between">
                   <Caption style={{ color: labelColor }}>Subtotal</Caption>
                   <BaseText weight="semibold">
-                    ₦{orderDetails.subtotal.toLocaleString()}
+                    â‚¦{orderDetails.subtotal.toLocaleString()}
                   </BaseText>
                 </FlexboxLayout>
 
@@ -606,7 +606,7 @@ const OrderConfirmation = () => {
                       Delivery Fee
                     </Caption>
                     <BaseText weight="semibold">
-                      ₦{orderDetails.deliveryFee.toLocaleString()}
+                      â‚¦{orderDetails.deliveryFee.toLocaleString()}
                     </BaseText>
                   </FlexboxLayout>
                 )}
@@ -625,14 +625,14 @@ const OrderConfirmation = () => {
                         className="text-2xl"
                         style={{ color: colorScheme.primary }}
                       >
-                        ₦{orderDetails.total.toLocaleString()}
+                        â‚¦{orderDetails.total.toLocaleString()}
                       </BaseText>
                       {orderDetails.deliveryFee > 0 && (
                         <Caption
                           className="text-sm mt-1"
                           style={{ color: labelColor }}
                         >
-                          Includes ₦{orderDetails.deliveryFee.toLocaleString()}{' '}
+                          Includes â‚¦{orderDetails.deliveryFee.toLocaleString()}{' '}
                           delivery fee
                         </Caption>
                       )}
@@ -1026,3 +1026,4 @@ const OrderConfirmation = () => {
 };
 
 export default OrderConfirmation;
+
