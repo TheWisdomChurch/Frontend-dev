@@ -10,6 +10,7 @@ interface ContainerProps {
   customBackground?: string;
   className?: string;
   centered?: boolean;
+  style?: React.CSSProperties; 
 }
 
 const Container: React.FC<ContainerProps> = ({
@@ -20,6 +21,7 @@ const Container: React.FC<ContainerProps> = ({
   customBackground,
   className = '',
   centered = true,
+  style = {}, 
 }) => {
   const { colorScheme } = useTheme();
 
@@ -64,7 +66,10 @@ const Container: React.FC<ContainerProps> = ({
   return (
     <div
       className={containerClasses}
-      style={background !== 'none' ? backgroundStyles[background] : undefined}
+      style={{
+        ...(background !== 'none' ? backgroundStyles[background] : {}),
+        ...style, 
+      }}
     >
       {children}
     </div>
