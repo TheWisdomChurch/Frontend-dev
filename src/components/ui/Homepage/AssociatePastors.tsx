@@ -4,11 +4,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import {
-  pastorsData,
-  ministryLeadersData,
-  associatePastorsContent,
-} from '@/lib/data';
+import { pastorsData } from '@/lib/data';
 import { H3, H4, SmallText, Caption } from '@/components/text';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -340,9 +336,6 @@ export default function AssociatePastors() {
     addToRefs,
   } = useAssociatePastors();
 
-  const [activeTab, setActiveTab] = useState<'pastoral' | 'ministry'>(
-    'pastoral'
-  );
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
@@ -381,21 +374,15 @@ export default function AssociatePastors() {
   const isDarkMode = colorScheme.pageBackground === '#000000';
   const mainAccentColor = isDarkMode ? colorScheme.primary : '#000000';
 
-  // Get data based on active tab
-  const currentData =
-    activeTab === 'pastoral' ? pastorsData : ministryLeadersData;
-  const currentContent =
-    activeTab === 'pastoral'
-      ? associatePastorsContent.pastoralSection
-      : associatePastorsContent.ministrySection;
+  // Get pastoral leaders data only
+  const currentData = pastorsData;
 
   // For mobile & tablet: show 2 cards + "See More" card
   const sliderCards = currentData.slice(0, 2);
   const totalSliderSlides = sliderCards.length + 1;
 
-  // For desktop: show first 4 cards from each section
+  // For desktop: show first 4 cards
   const desktopPastors = pastorsData.slice(0, 4);
-  const desktopLeaders = ministryLeadersData.slice(0, 4);
 
   // Calculate translateX for centering
   const calculateTranslateX = useCallback(() => {
@@ -436,19 +423,10 @@ export default function AssociatePastors() {
     });
   }, [totalSliderSlides]);
 
-  // Handle tab change
-  const handleTabChange = useCallback((tab: 'pastoral' | 'ministry') => {
-    setActiveTab(tab);
-    setCurrentSlide(0);
-  }, []);
-
   // Handle slide indicator click
   const handleSlideClick = useCallback((index: number) => {
     setCurrentSlide(index);
   }, []);
-
-  const { mainHeader, mainDescription, seeMoreButton } =
-    associatePastorsContent;
 
   return (
     <Section
@@ -476,7 +454,7 @@ export default function AssociatePastors() {
               weight="black"
               smWeight="black"
             >
-              {mainHeader}
+              Church Leadership
             </H3>
           </div>
           <Caption
@@ -484,54 +462,15 @@ export default function AssociatePastors() {
             className="max-w-2xl sm:max-w-3xl mx-auto leading-relaxed text-gray-600 mt-2 sm:mt-4 px-4 text-sm sm:text-lg font-light"
             useThemeColor={false}
           >
-            {mainDescription}
+            Meet our dedicated pastoral team guiding our community with wisdom, compassion, and spiritual direction.
           </Caption>
         </FlexboxLayout>
 
         <div ref={contentRef}>
-          {/* Mobile & Tablet Navigation */}
-          {isMobileOrTablet && (
+          {/* Mobile & Tablet View */}
+          {isMobileOrTablet ? (
             <div className="mb-8">
-              <div className="flex justify-center mb-6">
-                <div className="relative inline-flex rounded-full p-1 border border-gray-300 bg-gray-100 shadow-sm">
-                  <button
-                    onClick={() => handleTabChange('pastoral')}
-                    className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                      activeTab === 'pastoral'
-                        ? 'shadow-sm'
-                        : 'hover:opacity-90'
-                    }`}
-                    style={{
-                      backgroundColor:
-                        activeTab === 'pastoral'
-                          ? colorScheme.primary
-                          : 'transparent',
-                      color: activeTab === 'pastoral' ? '#000000' : '#6B7280',
-                    }}
-                  >
-                    Pastoral
-                  </button>
-                  <button
-                    onClick={() => handleTabChange('ministry')}
-                    className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                      activeTab === 'ministry'
-                        ? 'shadow-sm'
-                        : 'hover:opacity-90'
-                    }`}
-                    style={{
-                      backgroundColor:
-                        activeTab === 'ministry'
-                          ? colorScheme.primary
-                          : 'transparent',
-                      color: activeTab === 'ministry' ? '#000000' : '#6B7280',
-                    }}
-                  >
-                    Ministry
-                  </button>
-                </div>
-              </div>
-
-              {/* Active Tab Title */}
+              {/* Active Section Title */}
               <div className="relative flex justify-center mb-8">
                 <H4
                   ref={addSectionHeaderRef}
@@ -541,7 +480,7 @@ export default function AssociatePastors() {
                   weight="bold"
                   smWeight="extrabold"
                 >
-                  {currentContent.title}
+                  Pastoral Team
                   <div
                     className="absolute -bottom-2 left-0 w-full h-1 transition-all duration-500 rounded-full"
                     style={{
@@ -592,7 +531,7 @@ export default function AssociatePastors() {
                     {/* Display cards */}
                     {sliderCards.map((item, index) => (
                       <PersonCard
-                        key={`slider-${activeTab}-${item.name}-${index}`}
+                        key={`slider-${item.name}-${index}`}
                         item={item}
                         colorScheme={colorScheme}
                         mainAccentColor={mainAccentColor}
@@ -639,157 +578,108 @@ export default function AssociatePastors() {
                 </div>
               </div>
             </div>
-          )}
-
-          {/* Desktop Layout (1024px and above) - SHOWING 4 CARDS */}
-          {!isMobileOrTablet && (
-            <>
-              {/* Pastoral Team Section - 4 Cards */}
+          ) : (
+            /* Desktop View */
+            <div className="w-full">
+              {/* Pastoral Leaders Section - 4 Cards */}
               <div className="w-full mb-12 lg:mb-16">
-                <div className="relative flex justify-center mb-6 lg:mb-8">
-                  <H4
-                    ref={addSectionHeaderRef}
-                    className="text-center relative inline-block text-xl lg:text-2xl font-bold"
-                    style={{ color: mainAccentColor }}
-                    useThemeColor={false}
-                    weight="bold"
-                    smWeight="extrabold"
-                  >
-                    {associatePastorsContent.pastoralSection.title}
-                    <div
-                      className="absolute -bottom-2 left-0 w-full h-1 transition-all duration-500 rounded-full"
-                      style={{
-                        backgroundColor: colorScheme.primary,
-                        boxShadow: `0 2px 8px ${colorScheme.primary}30`,
-                      }}
-                    />
-                  </H4>
-                </div>
-
-                {/* Grid with 4 columns - properly centered */}
-                <div className="w-full">
-                  <GridboxLayout
-                    columns={4}
-                    gap="md"
-                    responsive={{
-                      sm: 1,
-                      md: 2,
-                      lg: 4,
-                      xl: 4,
-                    }}
-                    className="w-full items-stretch"
-                  >
-                    {desktopPastors.map((item, index) => (
-                      <div
-                        key={`desktop-pastor-${item.name}-${index}`}
-                        className="h-full"
-                      >
-                        <PersonCard
-                          item={item}
-                          colorScheme={colorScheme}
-                          mainAccentColor={mainAccentColor}
-                          addToRefs={addToRefs}
-                          isMobileOrTablet={false}
-                        />
-                      </div>
-                    ))}
-                  </GridboxLayout>
-                </div>
-              </div>
-
-              {/* Ministry Leaders Section - 4 Cards */}
-              <div className="w-full mb-10 lg:mb-12">
-                <div className="relative flex justify-center mb-6 lg:mb-8">
-                  <H4
-                    ref={addSectionHeaderRef}
-                    className="text-center relative inline-block text-xl lg:text-2xl font-bold"
-                    style={{ color: mainAccentColor }}
-                    useThemeColor={false}
-                    weight="bold"
-                    smWeight="extrabold"
-                  >
-                    {associatePastorsContent.ministrySection.title}
-                    <div
-                      className="absolute -bottom-2 left-0 w-full h-1 transition-all duration-500 rounded-full"
-                      style={{
-                        backgroundColor: colorScheme.primary,
-                        boxShadow: `0 2px 8px ${colorScheme.primary}30`,
-                      }}
-                    />
-                  </H4>
-                </div>
-
-                <div className="w-full">
-                  <GridboxLayout
-                    columns={4}
-                    gap="md"
-                    responsive={{
-                      sm: 1,
-                      md: 2,
-                      lg: 4,
-                      xl: 4,
-                    }}
-                    className="w-full items-stretch"
-                  >
-                    {desktopLeaders.map((item, index) => (
-                      <div
-                        key={`desktop-leader-${item.name}-${index}`}
-                        className="h-full"
-                      >
-                        <PersonCard
-                          item={item}
-                          colorScheme={colorScheme}
-                          mainAccentColor={mainAccentColor}
-                          addToRefs={addToRefs}
-                          isMobileOrTablet={false}
-                        />
-                      </div>
-                    ))}
-                  </GridboxLayout>
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Desktop See More Button */}
-          {!isMobileOrTablet && (
-            <FlexboxLayout
-              justify="center"
-              className="pt-2 lg:pt-6 pb-8 lg:pb-12"
-            >
-              <div className="relative group">
-                <CustomButton
-                  onClick={handleSeeMore}
-                  variant="primary"
-                  size="lg"
-                  curvature="xl"
-                  elevated={false}
-                  leftIcon={
-                    <Users className="w-4 h-4 lg:w-5 lg:h-5 mr-2 lg:mr-3 transition-transform duration-300 group-hover:scale-110" />
-                  }
-                  rightIcon={
-                    <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 ml-2 lg:ml-3 transition-transform duration-300 group-hover:rotate-180" />
-                  }
-                  className="group relative px-6 lg:px-8 py-2 lg:py-3 text-sm lg:text-base font-bold transition-all duration-300 border-0 hover:-translate-y-1 active:translate-y-0 shadow-lg hover:shadow-xl"
-                  style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark || colorScheme.primary})`,
-                    color: '#000000',
-                    boxShadow: `0 6px 20px ${colorScheme.primary}30`,
-                  }}
+                {/* Section Title - Centered */}
+                <FlexboxLayout
+                  direction="column"
+                  align="center"
+                  className="mb-8 lg:mb-12"
                 >
-                  <span className="relative z-10 flex items-center justify-center">
-                    {seeMoreButton}
-                    <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 lg:ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-                  </span>
+                  <H4
+                    ref={addSectionHeaderRef}
+                    className="text-center text-2xl lg:text-3xl font-bold mb-4"
+                    style={{ color: mainAccentColor }}
+                    useThemeColor={false}
+                    weight="bold"
+                    smWeight="extrabold"
+                  >
+                    Pastoral Team
+                  </H4>
                   <div
-                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="w-24 h-1 rounded-full"
                     style={{
-                      background: `linear-gradient(135deg, ${colorScheme.primary}90, ${colorScheme.primaryDark || colorScheme.primary}90)`,
+                      backgroundColor: colorScheme.primary,
+                      boxShadow: `0 2px 8px ${colorScheme.primary}30`,
                     }}
                   />
-                </CustomButton>
+                </FlexboxLayout>
+
+                {/* Grid with 4 cards - Centered layout */}
+                <div className="w-full flex justify-center">
+                  <div className="w-full max-w-6xl">
+                    <GridboxLayout
+                      columns={4}
+                      gap="lg"
+                      responsive={{
+                        sm: 1,
+                        md: 2,
+                        lg: 4,
+                        xl: 4,
+                      }}
+                      className="w-full"
+                    >
+                      {desktopPastors.map((item, index) => (
+                        <div
+                          key={`desktop-pastor-${item.name}-${index}`}
+                          className="h-full"
+                        >
+                          <PersonCard
+                            item={item}
+                            colorScheme={colorScheme}
+                            mainAccentColor={mainAccentColor}
+                            addToRefs={addToRefs}
+                            isMobileOrTablet={false}
+                          />
+                        </div>
+                      ))}
+                    </GridboxLayout>
+                  </div>
+                </div>
               </div>
-            </FlexboxLayout>
+
+              {/* Desktop See More Button - Centered */}
+              <FlexboxLayout
+                justify="center"
+                className="pt-4 lg:pt-8 pb-8 lg:pb-16"
+              >
+                <div className="relative group">
+                  <CustomButton
+                    onClick={handleSeeMore}
+                    variant="primary"
+                    size="lg"
+                    curvature="xl"
+                    elevated={false}
+                    leftIcon={
+                      <Users className="w-5 h-5 mr-3 transition-transform duration-300 group-hover:scale-110" />
+                    }
+                    rightIcon={
+                      <Sparkles className="w-5 h-5 ml-3 transition-transform duration-300 group-hover:rotate-180" />
+                    }
+                    className="group relative px-8 py-3 text-base font-bold transition-all duration-300 border-0 hover:-translate-y-1 active:translate-y-0 shadow-lg hover:shadow-xl"
+                    style={{
+                      background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark || colorScheme.primary})`,
+                      color: '#000000',
+                      boxShadow: `0 6px 20px ${colorScheme.primary}30`,
+                    }}
+                  >
+                    <span className="relative z-10 flex items-center justify-center">
+                      Meet All Leaders
+                      <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+                    </span>
+                    <div
+                      className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background: `linear-gradient(135deg, ${colorScheme.primary}90, ${colorScheme.primaryDark || colorScheme.primary}90)`,
+                      }}
+                    />
+                  </CustomButton>
+                </div>
+              </FlexboxLayout>
+            </div>
           )}
         </div>
       </Container>

@@ -125,7 +125,7 @@ export default function Footer() {
                   className={`${bricolageGrotesque.className} text-2xl font-bold`}
                   style={{ color: '#FFFFFF' }}
                 >
-                  The Wisdom House Church
+                  The Wisdom Church
                 </h3>
                 <BodySM
                   style={{ color: colorScheme.primary }}
