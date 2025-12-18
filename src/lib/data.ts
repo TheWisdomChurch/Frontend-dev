@@ -48,15 +48,16 @@ import {
   wisdomShirt_1,
   Deacon_1,
   Deacon_2,
+  Bishop,
 } from '@/components/assets';
 import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 
 export const defaultSlides: Slide[] = [
   {
-    title: 'Welcome to The Wisdom House Church',
+    title: 'Welcome to The Wisdom Church',
     subtitle: "Experience God's Transforming Power",
     description:
-      'Where lives are transformed through faith, community, and divine guidance.',
+      'Where lives are transformed through faith.',
     image: {
       src: hero_bg_1.src,
       alt: "Experience God's Transforming Power",
@@ -294,6 +295,14 @@ export const missionStatement = `At The Wisdom Church, we are committed to sprea
 export const pastorsData: Leader[] = [
   {
     id: 1,
+    name: 'Bishop Gabriel Ayilara',
+    role: 'Senior Pastor',
+    image: Bishop,
+    description:
+      'Provides overall spiritual leadership and vision for the church.',
+  },
+    {
+    id: 2,
     name: 'Rev. Victor Jimba',
     role: 'Resident Pastor',
     image: Associate_2,
@@ -301,7 +310,7 @@ export const pastorsData: Leader[] = [
       'Provides overall spiritual leadership and vision for the church.',
   },
   {
-    id: 2,
+    id: 3,
     name: 'Pst. Mrs Kehinder Ayilara',
     role: 'Associate Pastor',
     image: PstKenny,
@@ -309,13 +318,13 @@ export const pastorsData: Leader[] = [
       'Assist in discipleship, mentorship, and faith-building activities',
   },
   {
-    id: 3,
+    id: 4,
     name: 'Pastor Bamidele',
     role: 'Associate Pastor',
     image: Associate_1,
     description:
       'Assist in discipleship, mentorship, and faith-building activities',
-  },
+  }
 ];
 export const deaconsData: Leader[] = [
   {

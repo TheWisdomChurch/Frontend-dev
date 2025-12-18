@@ -14,17 +14,286 @@ import {
   FlexboxLayout,
 } from '@/components/layout';
 import Image from 'next/image';
+import { RefObject } from 'react';
 
-// Remove departmentIcons mapping since we're using the same logo for all
-const departmentColors = {
-  Ushers: 'from-purple-500 to-pink-500',
-  'Media Team': 'from-blue-500 to-cyan-500',
-  Choir: 'from-amber-500 to-orange-500',
-  'Children Ministry': 'from-green-500 to-emerald-500',
-  'Youth Ministry': 'from-indigo-500 to-purple-500',
-  'Technical Team': 'from-slate-600 to-zinc-800',
-};
+// Department data
+const departments = [
+  {
+    title: 'Ushers',
+    description: 'Welcome and guide attendees with warmth and excellence',
+    gradient: 'from-purple-500 to-pink-500',
+  },
+  {
+    title: 'Media Team',
+    description: 'Capture and broadcast the move of God through visuals and sound',
+    gradient: 'from-blue-500 to-cyan-500',
+  },
+  {
+    title: 'Choir',
+    description: 'Lead powerful worship and create heavenly atmospheres',
+    gradient: 'from-amber-500 to-orange-500',
+  },
+  {
+    title: 'Children Ministry',
+    description: 'Nurture young hearts and teach them the ways of God',
+    gradient: 'from-green-500 to-emerald-500',
+  },
+  {
+    title: 'Youth Ministry',
+    description: 'Empower the next generation to walk in purpose and power',
+    gradient: 'from-indigo-500 to-purple-500',
+  },
+  {
+    title: 'Technical Team',
+    description: 'Ensure seamless operations behind the scenes with excellence',
+    gradient: 'from-slate-600 to-zinc-800',
+  },
+];
 
+/* --------------------------------------------
+   DEPARTMENT CARD COMPONENT
+--------------------------------------------- */
+interface DepartmentCardProps {
+  dept: typeof departments[0];
+  colorScheme: any;
+  onLearnMore: (title: string) => void;
+  isMobile?: boolean;
+  addToRefs?: (el: HTMLDivElement | null, index: number) => void;
+  index?: number;
+  handleCardEnter?: (index: number, e: React.MouseEvent) => void;
+  handleCardLeave?: (index: number, e: React.MouseEvent) => void;
+}
+
+function DepartmentCard({
+  dept,
+  colorScheme,
+  onLearnMore,
+  isMobile = false,
+  addToRefs,
+  index,
+  handleCardEnter,
+  handleCardLeave,
+}: DepartmentCardProps) {
+  const cardClasses = `bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 relative overflow-hidden flex flex-col h-full ${
+    !isMobile ? 'p-5 hover:-translate-y-2 transition-all duration-500 hover:shadow-2xl' : 'p-4'
+  }`;
+
+  // Handle ref assignment properly
+  const handleRef = (el: HTMLDivElement | null) => {
+    if (addToRefs && index !== undefined) {
+      addToRefs(el, index);
+    }
+  };
+
+  return (
+    <div
+      ref={handleRef}
+      onMouseEnter={e => handleCardEnter && index !== undefined && handleCardEnter(index, e)}
+      onMouseLeave={e => handleCardLeave && index !== undefined && handleCardLeave(index, e)}
+      className={isMobile ? 'flex-shrink-0 w-64' : 'group w-full'}
+    >
+      <div className={cardClasses}>
+        {/* Animated Background Gradient */}
+        {!isMobile && (
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
+            style={{
+              background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}05)`,
+            }}
+          />
+        )}
+
+        {/* Logo Section */}
+        <div className="flex justify-center mb-4">
+          <div className="relative">
+            {/* Outer Glow Ring - Desktop only */}
+            {!isMobile && (
+              <div
+                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"
+                style={{
+                  background: `radial-gradient(circle, ${colorScheme.primary}30 0%, transparent 70%)`,
+                  transform: 'scale(1.1)',
+                }}
+              />
+            )}
+
+            {/* Logo Container */}
+            <div
+              className={`relative rounded-full bg-gradient-to-br ${dept.gradient} shadow-xl flex items-center justify-center ${
+                isMobile 
+                  ? 'w-14 h-14 p-2' 
+                  : 'w-16 h-16 p-3 group-hover:scale-105 transition-transform duration-300'
+              }`}
+            >
+              <Image
+                src={WisdomeHouseLogo}
+                alt="WisdomHouse Logo"
+                width={isMobile ? 28 : 32}
+                height={isMobile ? 28 : 32}
+                className="w-full h-full object-contain rounded-full"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="text-center flex flex-col flex-grow justify-start">
+          <BaseText
+            fontFamily="bricolage"
+            weight="bold"
+            className={`${isMobile ? 'text-lg' : 'text-xl group-hover:scale-105 transition-transform duration-200'} mb-2`}
+            style={{ color: '#FFFFFF' }}
+          >
+            {dept.title}
+          </BaseText>
+
+          <Caption
+            className="text-gray-300 opacity-90 px-1 line-clamp-2 leading-tight flex items-center justify-center"
+            useThemeColor={false}
+            style={{
+              fontSize: isMobile ? '0.75rem' : '0.875rem',
+              minHeight: isMobile ? '2.5rem' : '3rem',
+            }}
+          >
+            {dept.description}
+          </Caption>
+        </div>
+
+        {/* Button Section */}
+        <div className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
+          <Button
+            variant="primary"
+            size={isMobile ? "sm" : "md"}
+            curvature="xl"
+            className="w-full font-semibold shadow-lg border border-white/20 backdrop-blur-sm"
+            style={{
+              background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+              color: '#000000',
+            }}
+            onClick={() => onLearnMore(dept.title)}
+          >
+            {isMobile ? 'Join Team' : `Join ${dept.title}`}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --------------------------------------------
+   MOBILE SCROLL SECTION
+--------------------------------------------- */
+interface MobileScrollProps {
+  departments: typeof departments;
+  colorScheme: any;
+  onLearnMore: (title: string) => void;
+  scrollLeft: () => void;
+  scrollRight: () => void;
+  scrollContainerRef: RefObject<HTMLDivElement | null>;
+}
+
+function MobileScrollSection({
+  departments,
+  colorScheme,
+  onLearnMore,
+  scrollLeft,
+  scrollRight,
+  scrollContainerRef,
+}: MobileScrollProps) {
+  return (
+    <div className="sm:hidden px-4">
+      <FlexboxLayout direction="column" gap="md">
+        <FlexboxLayout justify="between" align="center" className="mb-4">
+          <button
+            onClick={scrollLeft}
+            className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-5 h-5 text-white" />
+          </button>
+
+          <BodySM className="font-bold text-base text-white">
+            Choose Department
+          </BodySM>
+
+          <button
+            onClick={scrollRight}
+            className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-5 h-5 text-white" />
+          </button>
+        </FlexboxLayout>
+
+        <div
+          ref={scrollContainerRef}
+          className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
+        >
+          {departments.map((dept, index) => (
+            <DepartmentCard
+              key={dept.title}
+              dept={dept}
+              colorScheme={colorScheme}
+              onLearnMore={onLearnMore}
+              isMobile={true}
+              index={index}
+            />
+          ))}
+          <div className="flex-shrink-0 w-4" />
+        </div>
+      </FlexboxLayout>
+    </div>
+  );
+}
+
+/* --------------------------------------------
+   DESKTOP/TABLET GRID SECTION
+--------------------------------------------- */
+interface DesktopGridProps {
+  departments: typeof departments;
+  colorScheme: any;
+  onLearnMore: (title: string) => void;
+  addToRefs: (el: HTMLDivElement | null, index: number) => void;
+  handleCardEnter: (index: number, e: React.MouseEvent) => void;
+  handleCardLeave: (index: number, e: React.MouseEvent) => void;
+}
+
+function DesktopGridSection({
+  departments,
+  colorScheme,
+  onLearnMore,
+  addToRefs,
+  handleCardEnter,
+  handleCardLeave,
+}: DesktopGridProps) {
+  return (
+    <div className="hidden sm:block">
+      <GridboxLayout
+        columns={3}
+        gap="lg"
+        responsive={{ sm: 1, md: 2, lg: 3 }}
+        className="max-w-6xl mx-auto"
+      >
+        {departments.map((dept, index) => (
+          <DepartmentCard
+            key={dept.title}
+            dept={dept}
+            colorScheme={colorScheme}
+            onLearnMore={onLearnMore}
+            addToRefs={addToRefs}
+            index={index}
+            handleCardEnter={handleCardEnter}
+            handleCardLeave={handleCardLeave}
+          />
+        ))}
+      </GridboxLayout>
+    </div>
+  );
+}
+
+/* --------------------------------------------
+   MAIN COMPONENT
+--------------------------------------------- */
 export default function JoinWisdomHouse() {
   const { colorScheme } = useTheme();
 
@@ -42,35 +311,6 @@ export default function JoinWisdomHouse() {
     setShowForm,
   } = useJoinWisdomHouse();
 
-  const departments = [
-    {
-      title: 'Ushers',
-      description: 'Welcome and guide attendees with warmth and excellence',
-    },
-    {
-      title: 'Media Team',
-      description:
-        'Capture and broadcast the move of God through visuals and sound',
-    },
-    {
-      title: 'Choir',
-      description: 'Lead powerful worship and create heavenly atmospheres',
-    },
-    {
-      title: 'Children Ministry',
-      description: 'Nurture young hearts and teach them the ways of God',
-    },
-    {
-      title: 'Youth Ministry',
-      description: 'Empower the next generation to walk in purpose and power',
-    },
-    {
-      title: 'Technical Team',
-      description:
-        'Ensure seamless operations behind the scenes with excellence',
-    },
-  ];
-
   return (
     <>
       <Section
@@ -80,25 +320,22 @@ export default function JoinWisdomHouse() {
         overlay={true}
         overlayOpacity={70}
         fullHeight={false}
-        className="overflow-hidden min-h-screen"
+        className="overflow-hidden"
         padding="none"
       >
-        {/* Beautiful dark overlay */}
+        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/60 z-0" />
 
-        <Container size="xl" className="relative z-10 py-16 lg:py-28">
-          {/* Hero Header - Mobile Responsive */}
+        <Container size="xl" className="relative z-10 py-12 lg:py-20">
+          {/* Hero Header */}
           <FlexboxLayout
             direction="column"
             justify="center"
             align="center"
             gap="md"
-            className="text-center mb-12 lg:mb-20 px-4"
+            className="text-center mb-10 lg:mb-16 px-4"
           >
-            <H2
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight"
-              style={{ color: '#FFFFFF' }}
-            >
+            <H2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-white">
               Join Our{' '}
               <BaseText
                 fontFamily="playfair"
@@ -113,225 +350,31 @@ export default function JoinWisdomHouse() {
               </BaseText>
             </H2>
 
-            <BodySM
-              className="max-w-3xl text-base sm:text-lg lg:text-xl leading-relaxed text-gray-200 px-2"
-              style={{ color: '#E5E7EB' }}
-            >
+            <BodySM className="max-w-2xl text-base sm:text-lg lg:text-xl leading-relaxed text-gray-200">
               &quot;Each of you should use whatever gift you have received to
               serve others, as faithful stewards of God&apos;s grace in its
               various forms.&quot; – 1 Peter 4:10
             </BodySM>
           </FlexboxLayout>
 
-          {/* Desktop & Tablet Grid */}
-          <div className="hidden sm:block">
-            <GridboxLayout
-              columns={3}
-              gap="lg"
-              responsive={{ sm: 1, md: 2, lg: 3 }}
-              className="max-w-6xl mx-auto items-stretch"
-            >
-              {departments.map((dept, index) => {
-                const gradient =
-                  departmentColors[
-                    dept.title as keyof typeof departmentColors
-                  ] || 'from-gray-600 to-gray-800';
+          {/* Departments Section */}
+          <DesktopGridSection
+            departments={departments}
+            colorScheme={colorScheme}
+            onLearnMore={handleLearnMore}
+            addToRefs={addToRefs}
+            handleCardEnter={handleCardEnter}
+            handleCardLeave={handleCardLeave}
+          />
 
-                return (
-                  <div
-                    key={dept.title}
-                    ref={el => addToRefs(el, index)}
-                    onMouseEnter={e => handleCardEnter(index, e)}
-                    onMouseLeave={e => handleCardLeave(index, e)}
-                    className="group w-full perspective-1000"
-                  >
-                    {/* Compact Futuristic Glass Card */}
-                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/20 relative overflow-hidden flex flex-col h-full">
-                      {/* Animated Background Gradient */}
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
-                        style={{
-                          background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}05)`,
-                        }}
-                      />
-
-                      {/* Floating Particles */}
-                      <div className="absolute top-3 right-3 w-1 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
-                      <div className="absolute bottom-3 left-3 w-1 h-1 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-ping" />
-
-                      {/* Centered WisdomHouse Logo - ROUND SHAPE */}
-                      <div className="flex justify-center mb-3 flex-shrink-0">
-                        <div className="relative">
-                          {/* Outer Glow Ring */}
-                          <div
-                            className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"
-                            style={{
-                              background: `radial-gradient(circle, ${colorScheme.primary}30 0%, transparent 70%)`,
-                              transform: 'scale(1.1)',
-                            }}
-                          />
-
-                          {/* Logo Container - CHANGED TO ROUND */}
-                          <div
-                            className={`relative w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-gradient-to-br ${gradient} p-3 shadow-xl transform group-hover:scale-105 transition-transform duration-300 flex items-center justify-center`}
-                          >
-                            <Image
-                              src={WisdomeHouseLogo}
-                              alt="WisdomHouse Logo"
-                              width={32}
-                              height={32}
-                              className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-500 rounded-full"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Title & Description - Compact Section */}
-                      <div className="text-center pt-4 relative z-10 flex flex-col flex-grow justify-start">
-                        <BaseText
-                          fontFamily="bricolage"
-                          weight="bold"
-                          className="text-lg sm:text-xl mb-2 transform group-hover:scale-105 transition-transform duration-200"
-                          style={{ color: '#FFFFFF' }}
-                        >
-                          {dept.title}
-                        </BaseText>
-
-                        <Caption
-                          className="text-gray-300 opacity-90 px-1 transition-all duration-300 group-hover:opacity-100 line-clamp-2 leading-tight min-h-[2.5rem] flex items-center justify-center text-xs sm:text-sm"
-                          useThemeColor={false}
-                        >
-                          {dept.description}
-                        </Caption>
-                      </div>
-
-                      {/* Button Section */}
-                      <div className="mt-4 flex-shrink-0">
-                        <Button
-                          variant="primary"
-                          size="md"
-                          curvature="xl"
-                          className="w-full py-3 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-white/20 backdrop-blur-sm"
-                          style={{
-                            background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                            color: '#000000',
-                          }}
-                          onClick={() => handleLearnMore(dept.title)}
-                        >
-                          Join {dept.title}
-                        </Button>
-                      </div>
-
-                      {/* Hover Effect Overlay */}
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                  </div>
-                );
-              })}
-            </GridboxLayout>
-          </div>
-
-          {/* Mobile Horizontal Scroll */}
-          <div className="sm:hidden px-4">
-            <FlexboxLayout direction="column" gap="md">
-              <FlexboxLayout justify="between" align="center" className="mb-6">
-                <button
-                  onClick={scrollLeft}
-                  className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
-                >
-                  <ChevronLeft className="w-5 h-5 text-white" />
-                </button>
-
-                <BodySM
-                  className="font-bold text-base"
-                  style={{ color: '#FFFFFF' }}
-                >
-                  Choose Department
-                </BodySM>
-
-                <button
-                  onClick={scrollRight}
-                  className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
-                >
-                  <ChevronRight className="w-5 h-5 text-white" />
-                </button>
-              </FlexboxLayout>
-
-              <div
-                ref={scrollContainerRef}
-                className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
-              >
-                {departments.map(dept => {
-                  const gradient =
-                    departmentColors[
-                      dept.title as keyof typeof departmentColors
-                    ] || 'from-gray-600 to-gray-800';
-
-                  return (
-                    <div
-                      key={dept.title}
-                      className="flex-shrink-0 w-64 snap-center"
-                    >
-                      {/* Mobile Card - More Compact */}
-                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-white/20 relative overflow-hidden flex flex-col h-full">
-                        {/* Centered WisdomHouse Logo - ROUND SHAPE & FIXED SOURCE */}
-                        <div className="flex justify-center mb-3">
-                          <div
-                            className={`relative w-14 h-14 rounded-full bg-gradient-to-br ${gradient} p-2 shadow-xl flex items-center justify-center`}
-                          >
-                            <Image
-                              src={WisdomeHouseLogo} // FIXED: Using the imported variable
-                              alt="WisdomHouse Logo"
-                              width={28}
-                              height={28}
-                              className="w-full h-full object-contain rounded-full"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Title & Description */}
-                        <div className="text-center pt-4 flex flex-col flex-grow justify-start">
-                          <BaseText
-                            fontFamily="bricolage"
-                            weight="bold"
-                            className="text-lg mb-2"
-                            style={{ color: '#FFFFFF' }}
-                          >
-                            {dept.title}
-                          </BaseText>
-
-                          <Caption
-                            className="text-gray-300 opacity-90 px-1 line-clamp-2 leading-tight min-h-[2.5rem] flex items-center justify-center text-xs"
-                            useThemeColor={false}
-                          >
-                            {dept.description}
-                          </Caption>
-                        </div>
-
-                        {/* Button */}
-                        <div className="mt-4">
-                          <Button
-                            variant="primary"
-                            size="md"
-                            curvature="xl"
-                            className="w-full py-3 font-semibold text-sm"
-                            style={{
-                              background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                              color: '#000000',
-                            }}
-                            onClick={() => handleLearnMore(dept.title)}
-                          >
-                            Join Team
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div className="flex-shrink-0 w-4" />
-              </div>
-            </FlexboxLayout>
-          </div>
+          <MobileScrollSection
+            departments={departments}
+            colorScheme={colorScheme}
+            onLearnMore={handleLearnMore}
+            scrollLeft={scrollLeft}
+            scrollRight={scrollRight}
+            scrollContainerRef={scrollContainerRef}
+          />
         </Container>
       </Section>
 
