@@ -15,13 +15,13 @@ import {
   BookOpen,
   Phone,
   X,
+  ChevronRight,
 } from 'lucide-react';
 import { extendedNavLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/components/assets';
 import { cn } from '@/lib/cn';
-import { bricolageGrotesque, worksans } from '../fonts/fonts';
+import { BricolageText, Caption, SmallText } from '../text'; 
 import JoinCommunityModal from '../modal/joinUsModal';
-
 import { useHeader } from '../utils/hooks/header';
 
 const iconMap = {
@@ -40,153 +40,160 @@ export default function Header() {
     colorScheme,
     setSheetOpen,
     handleLinkClick,
+    handleNavHover,
+    handleNavMouseDown,
+    handleNavMouseUp,
     openCommunityModal,
     closeCommunityModal,
     isLinkActive,
     closeAllDropdowns,
+    hoveredNav,
+    setNavItemRef,
   } = useHeader();
 
   return (
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out',
+          'fixed inset-x-0 top-0 z-50 w-full transition-all duration-300',
           isHeaderScrolled
-            ? 'h-12 bg-black/90 backdrop-blur-xl border-b border-primary/30' // Always dark background when scrolled
-            : 'h-14 top-2 left-1/2 -translate-x-1/2 w-[96%] max-w-4xl rounded-xl bg-black/80 backdrop-blur-xl border border-primary/30 shadow-sm' // Always dark background
+            ? 'h-14 bg-black/95 backdrop-blur-lg border-b border-white/10 shadow-lg'
+            : 'h-16 bg-black/95 backdrop-blur-lg'
         )}
-        style={{
-          backgroundColor: isHeaderScrolled
-            ? '#000000cc' // Always black background
-            : '#000000cc', // Always black background
-          borderColor: colorScheme.primary + '40',
-        }}
       >
-        <div className="h-full flex items-center justify-between px-4 sm:px-6">
-          {/* Left: Logo - More Compact */}
-          <div className="flex items-center gap-4 flex-shrink-0">
+        <div className="h-full mx-auto px-4 sm:px-5 lg:px-8 max-w-7xl">
+          <div className="h-full flex items-center justify-between">
+            {/* Logo on Left */}
             <Link
               href="/"
               onClick={closeAllDropdowns}
-              className="flex items-center gap-2 group"
+              className="flex items-center gap-2 group relative z-10"
             >
               <div className="relative">
-                <Image
-                  src={WisdomeHouseLogo}
-                  alt="The Wisdom House"
-                  width={isHeaderScrolled ? 28 : 32}
-                  height={isHeaderScrolled ? 28 : 32}
-                  className="rounded-full ring-1 ring-primary/20 transition-all duration-300 group-hover:ring-primary/40"
-                />
+                <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
+                  <div className="absolute inset-0 rounded-full border border-white/20" />
+                  <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+                    <Image
+                      src={WisdomeHouseLogo}
+                      alt="The Wisdom House"
+                      width={24}
+                      height={24}
+                      className="rounded-full object-cover scale-90 group-hover:scale-95 transition-transform duration-300"
+                    />
+                  </div>
+                </div>
               </div>
 
-              {/* Text - Smaller & More Compact */}
-              <div className="flex items-center gap-2">
-                {/* Vertical Demarcation Line */}
-                <div
-                  className="h-3 w-px opacity-40"
-                  style={{ backgroundColor: colorScheme.primary }}
-                />
+              {/* White Divider */}
+              <div className="hidden md:block h-4 w-px bg-white/20 mx-1" />
 
-                <span
-                  className={`${bricolageGrotesque.className} text-xs font-medium tracking-tight hidden sm:flex flex-col`}
+              {/* Ultra Compact Stacked Logo Text */}
+              <div className="hidden md:flex flex-col leading-[0.8] -space-y-0.5">
+                <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[8px]">
+                  The
+                </Caption>
+                <Caption
+                  weight="semibold"
+                  className="text-[10px] tracking-tight leading-none"
+                  style={{ color: colorScheme.primary }}
                 >
-                  <span
-                    className="leading-[0.9]"
-                    style={{ color: colorScheme.white }} // Always white text
-                  >
-                    The
-                  </span>
-                  <span
-                    className="leading-[0.9]"
-                    style={{ color: colorScheme.primary }} // Primary color for emphasis
-                  >
-                    Wisdom House
-                  </span>
-                </span>
+                  Wisdom
+                </Caption>
+                <Caption
+                  weight="semibold"
+                  className="text-[10px] tracking-tight leading-none"
+                  style={{ color: colorScheme.primary }}
+                >
+                  Church
+                </Caption>
               </div>
             </Link>
-          </div>
 
-          {/* Center: Navigation - Smaller Text */}
-          <nav className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className="flex items-center gap-0">
-              {extendedNavLinks.map(link => {
-                const isActive = isLinkActive(link.href);
-                const Icon = iconMap[link.icon as keyof typeof iconMap];
+            {/* Desktop Navigation - Only on xl screens */}
+            <nav className="hidden xl:flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2 z-10">
+              <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
+                {extendedNavLinks.map(link => {
+                  const isActive = isLinkActive(link.href);
+                  const Icon = iconMap[link.icon as keyof typeof iconMap];
 
-                return (
-                  <div key={link.label} className="relative">
+                  return (
                     <Link
+                      key={link.label}
                       href={link.href}
+                      ref={(el) => setNavItemRef(link.href, el)}
                       onClick={e => handleLinkClick(link.href, false, e)}
+                      onMouseEnter={() => handleNavHover(link.href, true)}
+                      onMouseLeave={() => handleNavHover(link.href, false)}
+                      onMouseDown={handleNavMouseDown}
+                      onMouseUp={handleNavMouseUp}
                       className={cn(
-                        'flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all duration-300 mx-0.5',
-                        'hover:bg-white/10'
+                        'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all duration-300 rounded-full group relative',
+                        isActive
+                          ? 'text-white bg-primary shadow-md'
+                          : 'text-gray-300 hover:text-white hover:bg-white/5'
                       )}
                       style={{
-                        backgroundColor: isActive
-                          ? colorScheme.primary + '20'
-                          : 'transparent',
-                        color: colorScheme.white, // Always white text
+                        transform: hoveredNav === link.href ? 'scale(1.05)' : 'scale(1)',
                       }}
                     >
                       {Icon && (
-                        <Icon
-                          className="w-3 h-3"
-                          style={{ color: colorScheme.white }}
-                        />
+                        <Icon className="w-3 h-3 transition-transform group-hover:scale-110" />
                       )}
-                      <span className="text-[11px]">{link.label}</span>
+                      <span className="text-xs">{link.label}</span>
+                      
+                      {/* Active indicator */}
+                      {isActive && (
+                        <div className="absolute -bottom-0.5 left-3 right-3 h-[1px] bg-white/80 rounded-full" />
+                      )}
                     </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </nav>
+                  );
+                })}
+              </div>
+            </nav>
 
-          {/* Right: CTA + Mobile Menu - More Compact */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Desktop Join Us Button - Stretched */}
-            <Button
-              onClick={openCommunityModal}
-              className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 min-w-[100px] justify-center"
-              style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black || '#000',
-              }}
-            >
-              <Church className="w-3.5 h-3.5" />
-              Join Us
-            </Button>
+            {/* Right Section */}
+            <div className="flex items-center gap-2">
+              {/* Desktop Join Us Button */}
+           <Button
+  onClick={openCommunityModal}
+  className="hidden xl:flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-full transition-all duration-300 hover:scale-105"
+  style={{
+    backgroundColor: colorScheme.primary,
+    color: '#000000',
+  }}
+>
+  <div className="flex items-center gap-1.5">
+    <Church className="w-3.5 h-3.5" />
+    <span>Join Us</span>
+  </div>
+</Button>
 
-            {/* Mobile Menu Trigger - Smaller */}
-            <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="lg:hidden rounded-full p-1 hover:bg-white/10 transition-colors"
-                  style={{ color: colorScheme.white }} // White icon
+            
+
+              {/* Mobile/Tablet Menu */}
+              <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
+                <SheetTrigger asChild>
+                  <button
+                    className="xl:hidden flex items-center justify-center p-2 hover:bg-white/10 rounded-lg transition-all duration-300 hover:scale-105"
+                    aria-label="Open menu"
+                  >
+                    <Menu className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                  
+                  </button>
+                </SheetTrigger>
+                <SheetContent
+                  side="right"
+                  className="sheet-content w-full max-w-[260px] sm:max-w-[280px] p-0 border-l border-white/20 bg-black/95 backdrop-blur-xl"
                 >
-                  <Menu className="h-3.5 w-3.5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="left"
-                className="w-full max-w-sm p-0 border-0 overflow-y-auto"
-                style={{
-                  backgroundColor: '#000000', // Dark background for mobile menu
-                }}
-              >
-                <MobileNavigation
-                  colorScheme={colorScheme}
-                  isLinkActive={isLinkActive}
-                  setSheetOpen={setSheetOpen}
-                  openCommunityModal={openCommunityModal}
-                />
-              </SheetContent>
-            </Sheet>
+                  <MobileNavigation
+                    colorScheme={colorScheme}
+                    isLinkActive={isLinkActive}
+                    setSheetOpen={setSheetOpen}
+                    openCommunityModal={openCommunityModal}
+                  />
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </header>
@@ -199,150 +206,160 @@ export default function Header() {
   );
 }
 
-// Enhanced Mobile Navigation without Dropdowns
+// Compact Mobile & Tablet Navigation
 const MobileNavigation: React.FC<{
   colorScheme: any;
   isLinkActive: (href: string) => boolean;
   setSheetOpen: (open: boolean) => void;
   openCommunityModal: () => void;
 }> = ({ colorScheme, isLinkActive, setSheetOpen, openCommunityModal }) => {
+  const { animateClick } = useHeader();
+
+  const handleMobileLinkClick = (e: React.MouseEvent) => {
+    const target = e.currentTarget as HTMLElement;
+    animateClick(target);
+    setTimeout(() => setSheetOpen(false), 200);
+  };
+
+  const handleMobileButtonClick = () => {
+    setSheetOpen(false);
+    setTimeout(openCommunityModal, 200);
+  };
+
   return (
-    <div
-      className="flex flex-col h-full"
-      style={{
-        backgroundColor: '#000000', // Dark background for mobile menu
-      }}
-    >
-      {/* Enhanced Header with better spacing */}
-      <div
-        className="flex items-center justify-between p-6 border-b"
-        style={{ borderColor: colorScheme.primary + '30' }}
-      >
-        <Link
-          href="/"
-          onClick={() => setSheetOpen(false)}
-          className="flex items-center gap-3"
-        >
-          <Image
-            src={WisdomeHouseLogo}
-            alt="Logo"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-          {/* Enhanced Mobile Logo Text */}
-          <div className="flex items-center gap-3">
-            <div
-              className="h-6 w-px opacity-40"
-              style={{ backgroundColor: colorScheme.primary }}
-            />
-            <span
-              className={`${bricolageGrotesque.className} text-base font-semibold flex flex-col`}
-              style={{ color: colorScheme.white }} // White text
-            >
-              <span className="leading-none">The</span>
-              <span
-                className="leading-none"
-                style={{ color: colorScheme.primary }} // Primary color for emphasis
-              >
-                Wisdom House
-              </span>
-            </span>
+    <div className="h-full flex flex-col overflow-hidden">
+      {/* Compact Header */}
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-white/10">
+        <div className="flex items-center gap-2">
+          <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
+            <div className="absolute inset-0 rounded-full border border-white/20" />
+            <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+              <Image
+                src={WisdomeHouseLogo}
+                alt="Logo"
+                width={32}
+                height={32}
+                className="rounded-full object-cover"
+              />
+            </div>
           </div>
-        </Link>
+          
+          {/* White Divider */}
+          <div className="h-5 w-px bg-white/20 mx-1" />
+
+          {/* Compact Stacked Text */}
+          <div className="flex flex-col leading-[0.8] -space-y-0.5">
+            <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[9px] sm:text-[10px]">
+              The
+            </Caption>
+            <BricolageText
+              weight="semibold"
+              className="text-[11px] sm:text-[12px] tracking-tight leading-none"
+              style={{ color: colorScheme.primary }}
+            >
+              Wisdom
+            </BricolageText>
+            <BricolageText
+              weight="semibold"
+              className="text-[11px] sm:text-[12px] tracking-tight leading-none"
+              style={{ color: colorScheme.primary }}
+            >
+              Church
+            </BricolageText>
+          </div>
+        </div>
+        
         <button
           onClick={() => setSheetOpen(false)}
-          className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+          aria-label="Close menu"
         >
-          <X className="w-5 h-5" style={{ color: colorScheme.white }} />{' '}
-          {/* White icon */}
+          <X className="w-4 h-4 text-white" />
         </button>
       </div>
 
-      {/* Enhanced Navigation Links with Better Spacing - No Dropdowns */}
-      <nav className="flex-1 px-4 py-6 space-y-2">
+      {/* Compact Navigation */}
+      <div className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
         {extendedNavLinks.map(link => {
           const isActive = isLinkActive(link.href);
           const Icon = iconMap[link.icon as keyof typeof iconMap];
 
           return (
-            <div key={link.label} className="space-y-1">
-              {/* Main Navigation Item - Simple Link */}
-              <div className="flex flex-col">
-                <Link
-                  href={link.href}
-                  onClick={() => setSheetOpen(false)}
-                  className={cn(
-                    'w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group relative',
-                    isActive ? 'bg-primary/20' : 'hover:bg-white/10'
-                  )}
-                  style={{
-                    color: colorScheme.white, // White text
-                    border: isActive
-                      ? `1px solid ${colorScheme.primary}40`
-                      : '1px solid transparent',
-                  }}
-                >
-                  <div className="flex items-center gap-3 flex-1">
-                    {Icon && (
-                      <div
-                        className="p-2 rounded-xl transition-all duration-300 group-hover:scale-110"
-                        style={{
-                          backgroundColor: isActive
-                            ? colorScheme.primary + '30'
-                            : colorScheme.primary + '15',
-                        }}
-                      >
-                        <Icon
-                          className="w-4 h-4"
-                          style={{ color: colorScheme.primary }}
-                        />
-                      </div>
-                    )}
-                    <span
-                      className={`${worksans.className} font-semibold text-sm flex-1`}
-                      style={{ color: colorScheme.white }} // White text
-                    >
-                      {link.label}
-                    </span>
-                  </div>
-                </Link>
+            <Link
+              key={link.label}
+              href={link.href}
+              onClick={handleMobileLinkClick}
+              className={cn(
+                'flex items-center gap-2 p-2.5 sm:p-3 rounded-lg transition-all duration-200 group',
+                isActive
+                  ? 'bg-primary/15 border-l border-primary'
+                  : 'hover:bg-white/5'
+              )}
+            >
+              <div className={cn(
+                'p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0',
+                isActive
+                  ? 'bg-primary text-white'
+                  : 'bg-white/10 text-gray-300 group-hover:text-white group-hover:bg-primary/20'
+              )}>
+                {Icon && <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
               </div>
-            </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-white text-xs mb-0.5 truncate">
+                  {link.label}
+                </div>
+                <div className="text-[10px] text-gray-400 truncate">
+                  {link.href === '/' && 'Homepage'}
+                  {link.href === '/leadership' && 'Leadership team'}
+                  {link.href === '/events' && 'Events & schedules'}
+                  {link.href === '/teachings' && 'Teachings & resources'}
+                  {link.href === '/contact' && 'Contact & location'}
+                </div>
+              </div>
+
+              <ChevronRight className={cn(
+                'w-3 h-3 flex-shrink-0',
+                isActive 
+                  ? 'text-primary' 
+                  : 'text-gray-500 group-hover:text-white'
+              )} />
+            </Link>
           );
         })}
-      </nav>
+      </div>
 
-      {/* Enhanced Mobile Footer CTA */}
-      <div
-        className="p-6 border-t"
-        style={{ borderColor: colorScheme.primary + '30' }}
-      >
-        <div className="space-y-3">
-          <div className="text-center">
-            <p
-              className={`${worksans.className} text-xs opacity-70 mb-2`}
-              style={{ color: colorScheme.white }} // White text
-            >
-              Ready to join our community?
-            </p>
+      {/* Compact Footer */}
+      <div className="p-3 sm:p-4 border-t border-white/10">
+        <div className="mb-2">
+          <div className="text-xs text-gray-300 mb-0.5">Ready to join?</div>
+          <div className="text-[10px] text-gray-400">Become part of our community</div>
+        </div>
+        
+        <Button
+          onClick={handleMobileButtonClick}
+          className="w-full py-2 text-xs font-medium rounded-lg transition-all duration-300"
+          style={{
+            backgroundColor: colorScheme.primary,
+            color: '#000000',
+          }}
+        >
+          <div className="flex items-center justify-center gap-1">
+            <Church className="w-3 h-3" />
+            <span>Join Community</span>
           </div>
-          <Button
-            onClick={() => {
-              setSheetOpen(false);
-              openCommunityModal();
-            }}
-            className="w-full py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 text-sm shadow-lg"
-            style={{
-              backgroundColor: colorScheme.primary,
-              color: colorScheme.black || '#000',
-            }}
+        </Button>
+
+        <div className="mt-2 pt-2 border-t border-white/5">
+          <Link
+            href="/about"
+            onClick={() => setSheetOpen(false)}
+            className="text-[10px] text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-1"
           >
-            <Church className="w-4 h-4 mr-2" />
-            Join Community
-          </Button>
+            Learn more <ChevronRight className="w-2.5 h-2.5" />
+          </Link>
         </div>
       </div>
     </div>
-  );
+  ); 
 };
