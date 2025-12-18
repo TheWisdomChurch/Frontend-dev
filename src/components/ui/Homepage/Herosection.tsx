@@ -64,8 +64,7 @@ const HeroSection = ({
   } = useHeroSection();
 
   const [isClient, setIsClient] = useState(false);
-  const { hero, getHeroClasses } = useResponsive(); // Use the hook
-
+  const { hero, getHeroClasses } = useResponsive(); 
   useEffect(() => {
     setIsClient(true);
   }, []);
