@@ -57,7 +57,7 @@ export const defaultSlides: Slide[] = [
     title: 'Welcome to The Wisdom Church',
     subtitle: "Experience God's Transforming Power",
     description:
-      'Where lives are transformed through faith, community, and divine guidance.',
+      'Where lives are transformed through faith.',
     image: {
       src: hero_bg_1.src,
       alt: "Experience God's Transforming Power",
