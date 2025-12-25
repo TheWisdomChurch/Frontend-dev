@@ -9,26 +9,34 @@ import { Section, Container, FlexboxLayout } from '@/components/layout';
 import {
   ChevronLeft,
   ChevronRight,
-  MessageSquare,
-  Star,
   ArrowRight,
   Quote,
 } from 'lucide-react';
 import { gsap } from 'gsap';
 import Link from 'next/link';
 
-// Demo testimonials data with responsive images
-const churchTestimonials = [
+// Type definition WITHOUT role and rating
+interface TestimonialType {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  image: string;
+  testimony: string;
+  date: string;
+  anonymous: boolean;
+}
+
+// Demo testimonials data WITHOUT role and rating
+const churchTestimonials: TestimonialType[] = [
   {
     id: 1,
     firstName: 'Michael',
     lastName: 'Johnson',
     fullName: 'Michael Johnson',
-    role: 'Church Member',
     image: '/images/testimonials/michael.jpg',
     testimony:
       "I was lost in addiction for 15 years. Through the prayer ministry of this church and God's grace, I've been sober for 3 years now. The support I received here changed my life completely.",
-    rating: 5,
     date: '2024-01-15',
     anonymous: false,
   },
@@ -37,11 +45,9 @@ const churchTestimonials = [
     firstName: 'Sarah',
     lastName: 'Williams',
     fullName: 'Sarah Williams',
-    role: 'Youth Leader',
     image: '/images/testimonials/sarah.jpg',
     testimony:
       "My family was going through a difficult financial season. Through the church's benevolence ministry and the prayers of the saints, God miraculously provided for all our needs. To God be the glory!",
-    rating: 5,
     date: '2024-02-20',
     anonymous: false,
   },
@@ -50,11 +56,9 @@ const churchTestimonials = [
     firstName: 'Robert',
     lastName: 'Chen',
     fullName: 'Robert Chen',
-    role: 'Volunteer',
     image: '/images/testimonials/robert.jpg',
     testimony:
       'After losing my job, I fell into depression. The counseling ministry and Bible study groups helped me find hope in God&apos;s promises. Today, I have a better job and a stronger faith.',
-    rating: 5,
     date: '2024-03-10',
     anonymous: false,
   },
@@ -63,18 +67,16 @@ const churchTestimonials = [
     firstName: 'Grace',
     lastName: 'Okon',
     fullName: 'Grace Okon',
-    role: 'Prayer Warrior',
     image: '/images/testimonials/grace.jpg',
     testimony:
       'God healed me from a terminal illness after the church prayed for me. The doctors called it a miracle. I&apos;m here today as a living testimony of God&apos;s healing power.',
-    rating: 5,
     date: '2024-03-25',
     anonymous: false,
   },
 ];
 
 interface TestimonialCardProps {
-  testimonial: (typeof churchTestimonials)[0];
+  testimonial: TestimonialType;
   isActive: boolean;
   colorScheme: any;
   index: number;
@@ -99,19 +101,6 @@ function TestimonialCard({ testimonial, isActive, colorScheme, index }: Testimon
       }
     );
   }, [isActive, index]);
-
-  const renderStars = useMemo(() => {
-    return Array.from({ length: 5 }).map((_, i) => (
-      <Star
-        key={i}
-        className="w-3 h-3 sm:w-4 sm:h-4"
-        style={{
-          color: i < testimonial.rating ? colorScheme.primary : colorScheme.gray[300],
-          fill: i < testimonial.rating ? colorScheme.primary : 'none',
-        }}
-      />
-    ));
-  }, [testimonial.rating, colorScheme]);
 
   return (
     <div
@@ -138,50 +127,46 @@ function TestimonialCard({ testimonial, isActive, colorScheme, index }: Testimon
         {/* Testimonial Content */}
         <div className="flex-grow">
           <p 
-            className="text-gray-700 dark:text-gray-200 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 line-clamp-4 sm:line-clamp-5"
+            className="text-gray-700 dark:text-gray-200 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 line-clamp-4 sm:line-clamp-5"
             style={{ color: colorScheme.textSecondary }}
           >
             &quot;{testimonial.testimony}&quot;
           </p>
-
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-0.5 sm:space-x-1">
-              {renderStars}
-            </div>
-            <span 
-              className="text-xs sm:text-sm"
-              style={{ color: colorScheme.textTertiary }}
-            >
-              {new Date(testimonial.date).toLocaleDateString('en-US', {
-                month: 'short',
-                year: 'numeric',
-              })}
-            </span>
-          </div>
         </div>
 
-        {/* Author Info */}
-        <div className="flex items-center pt-3 sm:pt-4 border-t" style={{ borderColor: colorScheme.border }}>
-          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2" 
-            style={{ borderColor: colorScheme.white }}>
-            <Image
-              src={testimonial.image || '/images/avatar-placeholder.jpg'}
-              alt={testimonial.fullName}
-              width={48}
-              height={48}
-              className="object-cover"
-              loading="lazy"
-              sizes="(max-width: 640px) 40px, 48px"
-            />
+        {/* Author Info with Date - NO ROLE */}
+        <div className="flex items-center justify-between pt-4 border-t" style={{ borderColor: colorScheme.border }}>
+          <div className="flex items-center">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2" 
+              style={{ borderColor: colorScheme.white }}>
+              <Image
+                src={testimonial.image || '/images/avatar-placeholder.jpg'}
+                alt={testimonial.fullName}
+                width={48}
+                height={48}
+                className="object-cover"
+                loading="lazy"
+                sizes="(max-width: 640px) 40px, 48px"
+              />
+            </div>
+            <div className="ml-2 sm:ml-3">
+              <p className="font-semibold text-sm sm:text-base" style={{ color: colorScheme.text }}>
+                {testimonial.fullName}
+              </p>
+              {/* ROLE LINE REMOVED - Only shows name */}
+            </div>
           </div>
-          <div className="ml-2 sm:ml-3">
-            <p className="font-semibold text-sm sm:text-base" style={{ color: colorScheme.text }}>
-              {testimonial.fullName}
-            </p>
-            <p className="text-xs sm:text-sm" style={{ color: colorScheme.textTertiary }}>
-              {testimonial.role}
-            </p>
-          </div>
+          
+          {/* Date */}
+          <span 
+            className="text-xs sm:text-sm italic"
+            style={{ color: colorScheme.textTertiary }}
+          >
+            {new Date(testimonial.date).toLocaleDateString('en-US', {
+              month: 'short',
+              year: 'numeric',
+            })}
+          </span>
         </div>
       </div>
     </div>
@@ -266,11 +251,6 @@ export default function Testimonial() {
     setTimeout(() => setIsAutoPlaying(true), 3000);
   }, []);
 
-  const handleShareTestimony = useCallback(() => {
-    // Additional logic can be added here
-    console.log('Navigating to testimonies page');
-  }, []);
-
   // Responsive layout config
   const containerConfig = useMemo(() => ({
     padding: isMobile ? 'px-4' : 'px-6',
@@ -288,39 +268,29 @@ export default function Testimonial() {
       fullHeight={false}
       className="relative overflow-hidden"
       style={{ 
-        // Darker background
         backgroundColor: colorScheme.backgroundSecondary,
       }}
     >
-      {/* Darker overlay for background */}
-      <div 
-        className="absolute inset-0"
-        style={{ 
-          backgroundColor: 'rgba(0, 0, 0, 0.03)',
-          backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%)'
-        }}
-      />
-      
-      {/* Background decorative elements with darker opacity */}
+      {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div 
           className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 rounded-full"
           style={{ 
             backgroundColor: colorScheme.primary,
-            opacity: 0.08, // Increased opacity for darker effect
+            opacity: 0.08,
           }}
         />
         <div 
           className="absolute bottom-0 left-0 w-40 h-40 sm:w-64 sm:h-64 rounded-full"
           style={{ 
             backgroundColor: colorScheme.primary,
-            opacity: 0.08, // Increased opacity for darker effect
+            opacity: 0.08,
           }}
         />
       </div>
 
       <Container size="lg" className={`relative z-10 ${containerConfig.padding}`}>
-        {/* Header - ONLY the H3 text is pushed down */}
+        {/* Header */}
         <FlexboxLayout
           direction="column"
           justify="center"
@@ -328,14 +298,12 @@ export default function Testimonial() {
           gap="sm"
           className={`text-center mb-6 sm:mb-10 ${containerConfig.gap}`}
         >
-          {/* Add a wrapper div around H3 with margin-top */}
           <div className={isMobile ? 'mt-6' : 'mt-10'}>
             <H3
               className={`section-title font-bold ${containerConfig.textSize.title} leading-tight`}
               style={{ 
                 color: colorScheme.heading,
                 textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                // REMOVED padding-top from H3
               }}
             >
               Testimonies of{' '}
@@ -366,7 +334,6 @@ export default function Testimonial() {
               backgroundColor: colorScheme.surface,
               borderColor: colorScheme.border,
               borderWidth: '1px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
             }}
           >
             <p 
@@ -421,8 +388,7 @@ export default function Testimonial() {
               style={{
                 color: colorScheme.primary,
                 backgroundColor: colorScheme.opacity.primary10,
-                borderRadius: colorScheme.borderRadius.full,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                borderRadius: '50%',
               }}
               aria-label="Previous testimonial"
             >
@@ -448,7 +414,6 @@ export default function Testimonial() {
                       backgroundColor: index === activeIndex 
                         ? colorScheme.primary 
                         : colorScheme.gray[300],
-                      boxShadow: index === activeIndex ? '0 0 8px rgba(0,0,0,0.2)' : 'none'
                     }}
                   />
                 </button>
@@ -461,8 +426,7 @@ export default function Testimonial() {
               style={{
                 color: colorScheme.primary,
                 backgroundColor: colorScheme.opacity.primary10,
-                borderRadius: colorScheme.borderRadius.full,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                borderRadius: '50%',
               }}
               aria-label="Next testimonial"
             >
@@ -479,7 +443,6 @@ export default function Testimonial() {
               backgroundColor: colorScheme.surface,
               borderColor: colorScheme.border,
               borderWidth: '1px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
             }}
           >
             <h3 
@@ -504,10 +467,8 @@ export default function Testimonial() {
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: colorScheme.buttonText,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
                 }}
                 rightIcon={<ArrowRight className={isMobile ? 'w-4 h-4' : 'w-5 h-5'} />}
-                onClick={handleShareTestimony}
               >
                 <span className={isMobile ? 'text-sm' : 'text-base'}>
                   Share Your Testimony
