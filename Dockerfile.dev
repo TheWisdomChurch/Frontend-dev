@@ -1,14 +1,40 @@
-# Dockerfile.dev - development build with hot reload
-FROM node:18-alpine
+# Multi-stage build for production
+FROM node:18-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
 
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+# Generate a proper production build
+ENV NODE_ENV=production
+RUN npm run build
+
+# Production runner
+FROM node:18-alpine AS runner
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-COPY . .
+# Copy necessary files
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-# Expose the same port your Next app uses
+# Set proper permissions
+RUN chown -R nextjs:nodejs /app
+
+# Switch to non-root user
+USER nextjs
+
 EXPOSE 2000
 
-CMD ["npm", "run", "dev"]
+ENV PORT=2000
+ENV HOSTNAME="0.0.0.0"
+ENV NODE_ENV=production
+
+CMD ["node", "server.js"]
