@@ -9,6 +9,7 @@ import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';
 import JoinWisdomHouse from '@/components/ui/Homepage/JoinUs';
 import OnlineGiving from '@/components/ui/Homepage/OnlineGiving';
 import Testimonial from '@/components/ui/Homepage/Testimonials';
+import ResourceSection from '@/components/ui/Homepage/Resource';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
 import MobileDebug from '@/components/utils/mobileDebug';
 
@@ -64,6 +65,7 @@ export default function Home() {
           <JoinWisdomHouse />
           <Testimonial />
           <OnlineGiving />
+          <ResourceSection />
         </div>
 
         {showModal && (
