@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-
 import Image from 'next/image';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import GivingModal from '@/components/modal/GivingModal';
-import { ChevronLeft, ChevronRight, Phone } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Phone, Sparkles, Gift } from 'lucide-react';
 import { useOnlineGiving } from '@/components/utils/hooks/Onlinegiving';
 import {
   handleContactCall,
@@ -20,168 +19,363 @@ import {
   FlexboxLayout,
 } from '@/components/layout';
 import { WisdomeHouseLogo } from '@/components/assets';
-
 export default function OnlineGiving() {
   const { colorScheme } = useTheme();
-
   const {
     isVisible,
     setIsVisible,
     selectedGivingOption,
     isModalOpen,
+    isHovered,
+    mousePosition,
+    isMobile,
     sectionRef,
     scrollContainerRef,
+    cardsRef,
     handleGiveNow,
     closeModal,
     scrollLeft,
     scrollRight,
+    handleMouseMove,
+    handleMouseLeave,
+    handleCardHover,
+    handleCardLeave,
+    currentIndex,
+    previousCard,
+    nextCard,
   } = useOnlineGiving();
-
   useIntersectionObserver(setIsVisible, sectionRef);
-
+  // Add ref to card
+  const addCardRef = (el: HTMLDivElement | null, index: number) => {
+    cardsRef.current[index] = el;
+  };
   return (
     <>
+      <style jsx global>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+       
+        @keyframes glow {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.6; }
+        }
+       
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+       
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+       
+        .preserve-3d {
+          transform-style: preserve-3d;
+        }
+       
+        .backface-hidden {
+          backface-visibility: hidden;
+        }
+      `}</style>
       <Section
         ref={sectionRef}
         padding="none"
         fullHeight={false}
-        className="overflow-hidden"
-        style={{ backgroundColor: '#FFFFFF' }}
+        className="overflow-hidden relative"
+        style={{
+          backgroundColor: '#000000',
+          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 40, 100, 0.1) 0%, transparent 50%)',
+        }}
       >
-        <Container size="xl" className="relative z-10 py-12 sm:py-16 lg:py-20">
-          {/* Header */}
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+          {/* Floating particles */}
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full animate-float"
+              style={{
+                background: `radial-gradient(circle, ${colorScheme.primary}30, transparent 70%)`,
+                width: `${Math.random() * 100 + 50}px`,
+                height: `${Math.random() * 100 + 50}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${i * 0.5}s`,
+                animationDuration: `${Math.random() * 10 + 15}s`,
+                filter: 'blur(20px)',
+                opacity: 0.1,
+              }}
+            />
+          ))}
+        </div>
+        {/* Dynamic spotlight effect */}
+        {!isMobile && (
+          <div
+            className="absolute pointer-events-none transition-opacity duration-300"
+            style={{
+              left: `${mousePosition.x}px`,
+              top: `${mousePosition.y}px`,
+              width: '400px',
+              height: '400px',
+              background: `radial-gradient(circle, ${colorScheme.primary}15 0%, transparent 70%)`,
+              transform: 'translate(-50%, -50%)',
+              opacity: isHovered !== null ? 0.3 : 0.1,
+              filter: 'blur(40px)',
+            }}
+          />
+        )}
+        <Container size="xl" className="relative z-10 py-10 sm:py-14 lg:py-16">
+          {/* Header - Not too big but bold */}
           <FlexboxLayout
             direction="column"
             justify="center"
             align="center"
             gap="sm"
-            className="text-center mb-10 sm:mb-12 lg:mb-16 px-4"
+            className="text-center mb-10 sm:mb-12 px-4"
           >
-            <div className="mb-4">
-              <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-gray-100 shadow-lg mx-auto">
+            {/* Logo with subtle animation */}
+            <div className="mb-4 relative">
+              <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-white/20 shadow-xl mx-auto">
                 <Image
                   src={WisdomeHouseLogo}
                   alt="Wisdom House Church Logo"
-                  width={64}
-                  height={64}
+                  width={56}
+                  height={56}
                   className="object-cover w-full h-full"
                 />
               </div>
+              <div className="absolute -inset-3 rounded-full border-2 border-primary/20 animate-ping opacity-20" />
             </div>
-
+            {/* Title with gradient */}
             <H2
-              className="leading-tight"
-              style={{ color: '#000000' }}
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight tracking-tight"
+              style={{
+                color: '#FFFFFF',
+                textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+              }}
               useThemeColor={false}
             >
-              Online Giving
+              <span className="bg-gradient-to-r from-white via-white/90 to-white bg-clip-text text-transparent">
+                Online Giving
+              </span>
             </H2>
-
+            {/* Subtitle */}
             <BodySM
-              className="max-w-2xl text-center leading-relaxed mt-4 px-4 opacity-90 text-sm sm:text-base"
-              style={{ color: '#1a1a1a' }}
+              className="max-w-lg text-center leading-relaxed mt-3 px-4 opacity-90 text-sm sm:text-base"
+              style={{ color: '#a0a0a0' }}
               useThemeColor={false}
             >
-              Your generosity helps us continue to spread the Gospel and serve
-              your community. Choose how you would like to give today.
+              “As each has purposed in his heart, let him give—not grudgingly or under compulsion—for God loves a cheerful giver.”
+— 2 Corinthians 9:7
+              <Gift className="w-4 h-4 inline-block ml-2 opacity-70" />
             </BodySM>
           </FlexboxLayout>
-
-          {/* Desktop Grid - Black Cards */}
+          {/* Desktop - Movie Premiere 3D Layout (Coverflow-style with zoom effect) */}
           <div className="hidden lg:block">
+            <FlexboxLayout justify="between" align="center" className="mb-6 px-4">
+              <button
+                onClick={previousCard}
+                className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition"
+              >
+                <ChevronLeft className="w-5 h-5 text-white" />
+              </button>
+              <BodySM
+                className="font-medium text-sm"
+                style={{ color: '#9ca3af' }}
+                useThemeColor={false}
+              >
+                Slide to explore
+              </BodySM>
+              <button
+                onClick={nextCard}
+                className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition"
+              >
+                <ChevronRight className="w-5 h-5 text-white" />
+              </button>
+            </FlexboxLayout>
+            <div className="relative h-[400px] w-full overflow-hidden perspective-1000">
+              <div className="w-full h-full flex items-center justify-center preserve-3d relative">
+                {OnlinegivingOptions.map((option, index) => {
+                  const offset = index - currentIndex;
+                  const absOffset = Math.abs(offset);
+                  const translateX = offset * 240;
+                  const rotateY = offset * -40;
+                  const translateZ = -absOffset * 150;
+                  const scale = 1 - absOffset * 0.2;
+                  if (absOffset > 3) return null; // Limit visible cards for performance
+                  return (
+                    <div
+                      key={option.title}
+                      ref={(el) => addCardRef(el, index)}
+                      className={`absolute transition-all duration-500 ease-out preserve-3d backface-hidden ${
+                        isVisible ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      style={{
+                        transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                        zIndex: 10 - absOffset,
+                        opacity: scale > 0.4 ? 1 : 0,
+                        width: '280px',
+                        transitionDelay: `${index * 150}ms`,
+                      }}
+                      onMouseEnter={() => handleCardHover(index)}
+                      onMouseLeave={() => handleCardLeave(index)}
+                      onClick={() => handleGiveNow(option)}
+                    >
+                      {/* 3D Card */}
+                      <div className="w-full h-80 relative preserve-3d cursor-pointer group">
+                        {/* Card front */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-2xl p-6 shadow-2xl border border-white/10 preserve-3d backface-hidden">
+                          {/* Glow effect */}
+                          <div className="absolute inset-0 rounded-2xl"
+                            style={{
+                              background: `linear-gradient(45deg, transparent 40%, ${colorScheme.primary}20 50%, transparent 60%)`,
+                              opacity: 0.3,
+                              filter: 'blur(20px)',
+                            }}
+                          />
+                          {/* Content */}
+                          <div className="relative z-10 h-full flex flex-col">
+                            {/* Title with gradient */}
+                            <div className="mb-4">
+                              <div
+                                className="inline-block px-4 py-2 rounded-full mb-3"
+                                style={{
+                                  background: `linear-gradient(135deg, ${colorScheme.primary}20, ${colorScheme.secondary}15)`,
+                                  backdropFilter: 'blur(10px)',
+                                }}
+                              >
+                                <Sparkles className="w-4 h-4" style={{ color: colorScheme.primary }} />
+                              </div>
+                              <BaseText
+                                fontFamily="bricolage"
+                                weight="semibold"
+                                className="text-lg text-white mb-2 group-hover:text-primary transition-colors duration-300"
+                                useThemeColor={false}
+                              >
+                                {option.title}
+                              </BaseText>
+                            </div>
+                            {/* Description */}
+                            <div className="flex-grow">
+                              <Caption
+                                className="text-gray-300 text-sm leading-relaxed line-clamp-3 group-hover:text-gray-200 transition-colors duration-300"
+                                useThemeColor={false}
+                              >
+                                {option.description}
+                              </Caption>
+                            </div>
+                            {/* Button - Not too big */}
+                            <div className="mt-4">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                curvature="lg"
+                                className="w-full py-2 text-sm font-medium backdrop-blur-sm border border-white/20 hover:border-primary/40 transition-all duration-300 hover:scale-[1.02]"
+                                style={{
+                                  color: '#FFFFFF',
+                                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                }}
+                              >
+                                <span className="group-hover:text-primary transition-colors duration-300">
+                                  Give Now
+                                </span>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Card back glow */}
+                        <div className="absolute inset-0 rounded-2xl transform rotate-y-180 backface-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                          style={{
+                            background: `linear-gradient(45deg, ${colorScheme.primary}15, ${colorScheme.secondary}10)`,
+                            filter: 'blur(20px)',
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          {/* Tablet (768px - 1023px) - Modified Grid Layout */}
+          <div className="hidden md:block lg:hidden">
             <GridboxLayout
-              columns={3}
-              gap="xl"
-              className="w-full mb-16 items-stretch"
+              columns={2}
+              gap="lg"
+              className="w-full mb-12"
             >
               {OnlinegivingOptions.map((option, index) => (
                 <div
                   key={option.title}
+                  ref={(el) => addCardRef(el, index)}
                   className={`transition-all duration-700 ${
                     isVisible
                       ? 'opacity-100 translate-y-0'
                       : 'opacity-0 translate-y-12'
                   }`}
                   style={{ transitionDelay: `${index * 150}ms` }}
+                  onMouseEnter={() => handleCardHover(index)}
+                  onMouseLeave={() => handleCardLeave(index)}
                 >
-                  <div className="bg-black backdrop-blur-sm rounded-2xl p-6 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-2 border border-gray-800 relative overflow-hidden flex flex-col h-full">
-                    {/* Animated Background Gradient */}
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
-                      style={{
-                        background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}05)`,
-                      }}
-                    />
-
-                    {/* Floating Particles */}
-                    <div className="absolute top-3 right-3 w-1 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
-                    <div className="absolute bottom-3 left-3 w-1 h-1 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-ping" />
-
-                    {/* Title Section */}
-                    <div
-                      className="text-center rounded-t-2xl p-6 mb-4 flex-shrink-0"
-                      style={{
-                        backgroundColor: colorScheme.primary,
-                        color: '#000000',
-                      }}
-                    >
+                  <div className="bg-gradient-to-br from-gray-900 to-black rounded-xl p-5 shadow-xl border border-white/10 hover:border-primary/30 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
+                    {/* Title */}
+                    <div className="mb-4">
                       <BaseText
                         fontFamily="bricolage"
-                        weight="bold"
-                        className="text-lg mb-2 transform group-hover:scale-105 transition-transform duration-200"
-                        style={{ color: '#000000' }}
+                        weight="semibold"
+                        className="text-base text-white mb-2"
                         useThemeColor={false}
                       >
                         {option.title}
                       </BaseText>
                     </div>
-
-                    {/* Description Section */}
-                    <div className="text-center pt-2 relative z-10 flex flex-col flex-grow justify-start px-4">
+                    {/* Description */}
+                    <div className="flex-grow mb-4">
                       <Caption
-                        className="text-gray-300 opacity-90 px-1 transition-all duration-300 group-hover:opacity-100 line-clamp-3 leading-tight min-h-[3rem] flex items-center justify-center text-sm"
+                        className="text-gray-300 text-sm leading-relaxed line-clamp-3"
                         useThemeColor={false}
                       >
                         {option.description}
                       </Caption>
                     </div>
-
-                    {/* Button Section */}
-                    <div className="mt-6 flex-shrink-0 px-4">
-                      <Button
-                        onClick={() => handleGiveNow(option)}
-                        variant="primary"
-                        size="md"
-                        curvature="xl"
-                        className="w-full py-3 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-white/20 backdrop-blur-sm"
-                        style={{
-                          background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                          color: '#000000',
-                        }}
-                      >
-                        Give Now
-                      </Button>
-                    </div>
-
-                    {/* Hover Effect Overlay */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Button */}
+                    <Button
+                      onClick={() => handleGiveNow(option)}
+                      variant="ghost"
+                      size="sm"
+                      curvature="lg"
+                      className="w-full py-2 text-sm font-medium"
+                      style={{
+                        color: '#FFFFFF',
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                      }}
+                    >
+                      Give Now
+                    </Button>
                   </div>
                 </div>
               ))}
             </GridboxLayout>
           </div>
-
-          {/* Mobile & Tablet - Black Cards */}
-          <div className="lg:hidden px-4">
+          {/* Mobile - Keep original but refined */}
+          <div className="md:hidden px-4">
             <FlexboxLayout direction="column" gap="md">
               <FlexboxLayout justify="between" align="center" className="mb-6">
                 <button
                   onClick={scrollLeft}
-                  className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-gray-600 hover:bg-white/30 transition"
+                  className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
                 </button>
-
                 <BodySM
                   className="font-medium text-sm"
                   style={{ color: '#9ca3af' }}
@@ -189,15 +383,13 @@ export default function OnlineGiving() {
                 >
                   Scroll to explore
                 </BodySM>
-
                 <button
                   onClick={scrollRight}
-                  className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-gray-600 hover:bg-white/30 transition"
+                  className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
                 </button>
               </FlexboxLayout>
-
               <div
                 ref={scrollContainerRef}
                 className="flex gap-5 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
@@ -207,52 +399,42 @@ export default function OnlineGiving() {
                     key={option.title}
                     className="flex-shrink-0 w-72 snap-center"
                   >
-                    <div className="bg-black backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-gray-800 relative overflow-hidden flex flex-col h-full">
-                      {/* Title Section */}
-                      <div
-                        className="text-center rounded-t-2xl p-5 mb-3"
-                        style={{
-                          backgroundColor: colorScheme.primary,
-                          color: '#000000',
-                        }}
-                      >
+                    <div className="bg-gradient-to-br from-gray-900 to-black rounded-xl p-5 shadow-xl border border-white/10 flex flex-col h-full">
+                      {/* Title */}
+                      <div className="mb-4">
                         <BaseText
                           fontFamily="bricolage"
-                          weight="bold"
-                          className="text-base mb-2"
-                          style={{ color: '#000000' }}
+                          weight="semibold"
+                          className="text-base text-white mb-2"
                           useThemeColor={false}
                         >
                           {option.title}
                         </BaseText>
                       </div>
-
-                      {/* Description Section */}
-                      <div className="text-center pt-2 flex flex-col flex-grow justify-start px-3">
+                      {/* Description */}
+                      <div className="flex-grow mb-4">
                         <Caption
-                          className="text-gray-300 opacity-90 px-1 line-clamp-3 leading-tight min-h-[3rem] flex items-center justify-center text-xs"
+                          className="text-gray-300 text-sm leading-relaxed line-clamp-3"
                           useThemeColor={false}
                         >
                           {option.description}
                         </Caption>
                       </div>
-
-                      {/* Button Section */}
-                      <div className="mt-4 px-3">
-                        <Button
-                          onClick={() => handleGiveNow(option)}
-                          variant="primary"
-                          size="md"
-                          curvature="xl"
-                          className="w-full py-3 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-white/20 backdrop-blur-sm"
-                          style={{
-                            background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                            color: '#000000',
-                          }}
-                        >
-                          Give Now
-                        </Button>
-                      </div>
+                      {/* Button */}
+                      <Button
+                        onClick={() => handleGiveNow(option)}
+                        variant="ghost"
+                        size="sm"
+                        curvature="lg"
+                        className="w-full py-2 text-sm font-medium"
+                        style={{
+                          color: '#FFFFFF',
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                        }}
+                      >
+                        Give Now
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -260,51 +442,41 @@ export default function OnlineGiving() {
               </div>
             </FlexboxLayout>
           </div>
-
-          {/* Other Ways to Give - Black Background */}
+          {/* Other Ways to Give - Refined */}
           <div
-            className={`mt-12 lg:mt-16 transition-all duration-1000 delay-300 px-4 ${
+            className={`mt-10 sm:mt-12 transition-all duration-1000 delay-300 px-4 ${
               isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-12'
             }`}
           >
-            <div className="max-w-2xl mx-auto bg-black rounded-xl p-6 lg:p-8 border border-gray-800 text-center">
+            <div className="max-w-lg mx-auto bg-gradient-to-br from-gray-900/50 to-black/50 rounded-xl p-6 border border-white/10 text-center backdrop-blur-sm">
               <H3
-                className="text-center mb-4"
+                className="text-center mb-4 text-lg font-semibold"
                 style={{ color: '#ffffff' }}
                 useThemeColor={false}
-                weight="bold"
-                smWeight="extrabold"
               >
                 Other Ways to Give
               </H3>
-
-              {/** 🔥 Reduced line-height and tightened spacing */}
               <Caption
-                className="mb-6 max-w-xl mx-auto text-gray-300 px-2"
-                style={{ lineHeight: '1.3' }}
+                className="mb-6 text-gray-300 text-sm leading-relaxed"
                 useThemeColor={false}
               >
-                You can also give by mail, in person during our services, or set
-                up recurring donations. For more information about giving
-                options, please contact our Admin.
+                Give by mail, in person during services, or set up recurring donations.
+                Contact our Admin for more options.
               </Caption>
-
-              {/** 🔥 Push all buttons downward by adding margin-top */}
               <FlexboxLayout
                 justify="center"
                 gap="md"
-                className="flex-wrap mt-4"
+                className="flex-wrap"
               >
                 <Button
                   onClick={handleContactCall}
                   variant="primary"
-                  size="md"
+                  size="sm"
                   curvature="full"
-                  elevated={true}
                   leftIcon={<Phone className="w-4 h-4" />}
-                  className="px-5 py-2.5 font-semibold hover:scale-105 transition text-sm"
+                  className="px-4 py-2 font-medium hover:scale-105 transition text-sm"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: '#000000',
@@ -312,23 +484,14 @@ export default function OnlineGiving() {
                 >
                   Contact Us
                 </Button>
-
                 <Button
                   variant="outline"
-                  size="md"
+                  size="sm"
                   curvature="full"
-                  className="px-5 py-2.5 border text-sm"
+                  className="px-4 py-2 font-medium border text-sm hover:bg-white/10 transition"
                   style={{
                     borderColor: colorScheme.primary,
                     color: '#FFFFFF',
-                  }}
-                  onMouseEnter={(e: any) => {
-                    e.currentTarget.style.backgroundColor = colorScheme.primary;
-                    e.currentTarget.style.color = '#000000';
-                  }}
-                  onMouseLeave={(e: any) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '#FFFFFF';
                   }}
                 >
                   Learn More
@@ -338,7 +501,6 @@ export default function OnlineGiving() {
           </div>
         </Container>
       </Section>
-
       {selectedGivingOption && (
         <GivingModal
           isOpen={isModalOpen}

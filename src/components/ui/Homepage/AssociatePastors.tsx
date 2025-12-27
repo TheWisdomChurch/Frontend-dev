@@ -34,10 +34,12 @@ interface PersonCardProps {
   addToRefs?: (ref: HTMLDivElement) => void;
   isMobileOrTablet?: boolean;
   isActive?: boolean;
+  layoutType?: 'staggered' | 'centered' | 'mobile';
+  index?: number;
 }
 
 /* --------------------------------------------
-   REUSABLE CARD COMPONENT — COMPACT FOR DESKTOP
+   REUSABLE CARD COMPONENT - OPTIMIZED FOR STAGGERED LAYOUT
 --------------------------------------------- */
 function PersonCard({
   item,
@@ -46,6 +48,8 @@ function PersonCard({
   addToRefs,
   isMobileOrTablet = false,
   isActive = false,
+  layoutType = 'centered',
+  index = 0,
 }: PersonCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -58,12 +62,74 @@ function PersonCard({
     [addToRefs]
   );
 
-  // Adjust sizes based on screen - COMPACT for desktop
-  const cardWidth = isMobileOrTablet ? '280px' : '100%';
-  const imageSize = isMobileOrTablet ? 'w-24 h-24' : 'w-20 h-20'; // Smaller on desktop
-  const cardHeight = isMobileOrTablet ? 'min-h-[320px]' : 'min-h-[300px]'; // Shorter on desktop
-  const textSize = isMobileOrTablet ? 'text-lg' : 'text-base';
-  const descriptionSize = isMobileOrTablet ? 'text-13px' : 'text-xs';
+  // Get sizes based on layout type
+  const getSizes = () => {
+    switch (layoutType) {
+      case 'staggered':
+        return {
+          imageSize: 'w-20 h-20', // Slightly larger for staggered
+          cardHeight: 'min-h-[280px]',
+          titleSize: 'text-base',
+          roleSize: 'text-xs',
+          descriptionSize: 'text-xs',
+          padding: 'p-5',
+        };
+      case 'mobile':
+        return {
+          imageSize: 'w-20 h-20',
+          cardHeight: 'min-h-[280px]',
+          titleSize: 'text-base',
+          roleSize: 'text-sm',
+          descriptionSize: 'text-xs',
+          padding: 'p-4',
+        };
+      default: // centered
+        return {
+          imageSize: 'w-16 h-16',
+          cardHeight: 'min-h-[260px]',
+          titleSize: 'text-sm',
+          roleSize: 'text-xs',
+          descriptionSize: 'text-xs',
+          padding: 'p-4',
+        };
+    }
+  };
+
+  const sizes = getSizes();
+
+  // Calculate stagger offset for desktop/tablet
+  const getStaggerOffset = () => {
+    if (layoutType !== 'staggered') return {};
+    
+    // Create a zigzag pattern: every 3 cards repeat pattern
+    const patternIndex = index % 3;
+    let staggerStyle = {};
+    
+    switch (patternIndex) {
+      case 0: // First in group - normal
+        staggerStyle = {
+          marginTop: '0',
+          marginLeft: '0',
+        };
+        break;
+      case 1: // Second in group - offset down
+        staggerStyle = {
+          marginTop: '1.5rem',
+          marginLeft: '-0.5rem',
+        };
+        break;
+      case 2: // Third in group - offset up
+        staggerStyle = {
+          marginTop: '-1rem',
+          marginLeft: '0.5rem',
+        };
+        break;
+    }
+    
+    return staggerStyle;
+  };
+
+  const staggerOffset = getStaggerOffset();
 
   return (
     <div
@@ -71,95 +137,110 @@ function PersonCard({
         cardRef.current = element;
         handleRef(element);
       }}
-      className={`group ${isMobileOrTablet ? 'flex-shrink-0' : 'w-full h-full'} transition-all duration-500`}
+      className={`group transition-all duration-300 hover:-translate-y-1 ${
+        layoutType === 'mobile' ? 'flex-shrink-0' : 'w-full h-full'
+      } ${layoutType === 'staggered' ? 'relative z-10' : ''}`}
       style={
-        isMobileOrTablet
+        layoutType === 'mobile'
           ? {
-              width: cardWidth,
+              width: '280px',
               transform: isActive
                 ? 'scale(1) translateY(0)'
-                : 'scale(0.85) translateY(5px)',
-              opacity: isActive ? 1 : 0.4,
+                : 'scale(0.9) translateY(5px)',
+              opacity: isActive ? 1 : 0.5,
               zIndex: isActive ? 20 : 1,
               margin: '0 8px',
+            }
+          : layoutType === 'staggered'
+          ? {
+              ...staggerOffset,
+              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
             }
           : {}
       }
     >
       <div
-        className={`bg-white rounded-xl p-4 transition-all duration-500 hover:-translate-y-1 border relative overflow-hidden flex flex-col h-full ${cardHeight} ${isActive ? 'shadow-lg border-gray-300' : 'shadow-sm border-gray-200'}`}
+        className={`bg-white rounded-xl ${sizes.padding} transition-all duration-300 border relative overflow-hidden flex flex-col h-full ${sizes.cardHeight} ${
+          isActive ? 'shadow-lg border-gray-300' : 'shadow-md border-gray-200'
+        } ${
+          layoutType === 'staggered'
+            ? 'hover:shadow-xl hover:border-gray-300 hover:scale-[1.02]'
+            : ''
+        }`}
         style={
-          isActive && isMobileOrTablet
+          layoutType === 'staggered'
             ? {
-                boxShadow: `0 15px 35px -5px ${colorScheme.primary}15, 0 10px 20px -10px ${colorScheme.primary}10`,
-                background: 'linear-gradient(135deg, #FFFFFF, #FAFBFC)',
+                background: 'linear-gradient(135deg, #FFFFFF, #F8FAFC)',
+                boxShadow: `0 8px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px ${colorScheme.primary}10`,
               }
             : {}
         }
       >
-        {/* Active Card Gradient Background */}
-        {isMobileOrTablet && isActive && (
+        {/* Gradient border effect on hover */}
+        {layoutType === 'staggered' && (
           <div
-            className="absolute inset-0 opacity-100 rounded-xl transition-all duration-500"
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl -z-10"
             style={{
-              background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}03)`,
+              background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark || colorScheme.primary})`,
+              transform: 'scale(1.02)',
             }}
           />
         )}
 
-        {/* Subtle Background on Hover */}
+        {/* Hover background */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"
           style={{
-            background: `linear-gradient(135deg, ${colorScheme.primary}10, ${colorScheme.primaryDark}05)`,
+            background: `linear-gradient(135deg, ${colorScheme.primary}05, ${colorScheme.primaryDark}02)`,
           }}
         />
 
-        {/* Centered Circular Image - More compact for desktop */}
-        <div className="flex justify-center mb-4 flex-shrink-0 relative z-10">
+        {/* Image container */}
+        <div className={`flex justify-center mb-4 flex-shrink-0 relative z-10`}>
           <div className="relative">
             <div
-              className={`relative ${imageSize} rounded-full overflow-hidden transform transition-all duration-500 ${isActive ? 'group-hover:scale-105' : ''}`}
+              className={`relative ${sizes.imageSize} rounded-full overflow-hidden transform transition-all duration-300 group-hover:scale-105`}
               style={{
-                boxShadow:
-                  isActive && isMobileOrTablet
-                    ? `0 0 0 2px ${colorScheme.primary}, 0 0 0 4px white, 0 8px 25px ${colorScheme.primary}20`
-                    : `0 0 0 2px ${isMobileOrTablet ? '#F3F4F6' : colorScheme.primary + '1A'}, 0 0 0 4px white`,
+                boxShadow: `0 0 0 2px ${colorScheme.primary}1A, 0 0 0 4px white, 0 8px 25px ${colorScheme.primary}15`,
               }}
             >
               <Image
                 src={item.image}
                 alt={`${item.name} - ${item.role}`}
-                width={isMobileOrTablet ? 96 : 80}
-                height={isMobileOrTablet ? 96 : 80}
+                width={layoutType === 'staggered' ? 80 : layoutType === 'mobile' ? 80 : 64}
+                height={layoutType === 'staggered' ? 80 : layoutType === 'mobile' ? 80 : 64}
                 sizes={
-                  isMobileOrTablet ? '(max-width: 1024px) 96px, 80px' : '80px'
+                  layoutType === 'staggered'
+                    ? '80px'
+                    : layoutType === 'mobile'
+                    ? '(max-width: 1024px) 80px, 64px'
+                    : '64px'
                 }
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                className="object-cover transition-transform duration-300 group-hover:scale-110"
                 loading="lazy"
-                quality={90}
+                quality={85}
                 placeholder="blur"
                 blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IiNGRjVGODUiIHJ4PSI0MCIvPjwvc3ZnPg=="
                 onError={e => {
                   const target = e.currentTarget;
                   target.style.display = 'none';
-                  console.warn(`Image failed to load: ${item.image}`);
                 }}
               />
             </div>
 
-            {/* Role Badge - More compact */}
+            {/* Role badge */}
             <div
-              className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 px-2 py-1 rounded-full font-semibold whitespace-nowrap z-10 transition-all duration-500 ${isActive ? 'shadow-sm' : ''}`}
+              className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full font-semibold whitespace-nowrap z-10 transition-all duration-300`}
               style={{
                 backgroundColor: isActive ? colorScheme.primary : '#F1F5F9',
                 color: isActive ? '#000000' : '#64748B',
                 border: isActive
                   ? `1px solid ${colorScheme.primary}30`
                   : '1px solid #E2E8F0',
-                minWidth: isMobileOrTablet ? '100px' : '90px',
-                fontSize: isMobileOrTablet ? '11px' : '10px',
+                minWidth: '90px',
+                fontSize: sizes.roleSize,
                 letterSpacing: '0.2px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
               }}
             >
               {item.role}
@@ -167,24 +248,25 @@ function PersonCard({
           </div>
         </div>
 
-        {/* Name & Description - More compact spacing */}
-        <div className="text-center pt-2 relative z-10 flex flex-col flex-grow justify-start">
-          <div className="mb-2">
+        {/* Content */}
+        <div className={`flex flex-col flex-grow justify-start relative z-10 text-center`}>
+          <div className="mb-3">
             <SmallText
               weight="bold"
-              style={{ color: isActive ? mainAccentColor : '#1E293B' }}
+              style={{ color: mainAccentColor }}
               useThemeColor={false}
-              className={`${textSize} mb-1 transition-colors duration-300 line-clamp-1`}
+              className={`${sizes.titleSize} mb-1 line-clamp-1`}
             >
               {item.name}
             </SmallText>
             {item.title && (
               <Caption
-                className="text-gray-500 font-medium transition-all duration-300 mb-1"
+                className="text-gray-500 font-medium mb-2"
                 useThemeColor={false}
                 style={{
-                  fontSize: isMobileOrTablet ? '11px' : '10px',
+                  fontSize: '0.75rem',
                   letterSpacing: '0.3px',
+                  lineHeight: '1.2',
                 }}
               >
                 {item.title}
@@ -193,13 +275,12 @@ function PersonCard({
           </div>
 
           {item.description && (
-            <div className="px-1">
+            <div>
               <Caption
-                className="transition-all duration-300 line-clamp-3 leading-snug flex items-center justify-center"
+                className="text-gray-600 line-clamp-3 leading-relaxed"
                 useThemeColor={false}
                 style={{
-                  color: isActive ? '#475569' : '#64748B',
-                  fontSize: descriptionSize,
+                  fontSize: sizes.descriptionSize,
                   lineHeight: '1.4',
                 }}
               >
@@ -208,58 +289,75 @@ function PersonCard({
             </div>
           )}
         </div>
+
+        {/* Floating accent on staggered cards */}
+        {layoutType === 'staggered' && (
+          <div
+            className="absolute top-0 right-0 w-12 h-12 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(circle, ${colorScheme.primary}20, transparent 70%)`,
+              transform: 'translate(25%, -25%)',
+            }}
+          />
+        )}
       </div>
     </div>
   );
 }
 
 /* --------------------------------------------
-   SEE MORE CARD (Mobile & Tablet Only)
+   SEE MORE CARD - OPTIMIZED
 --------------------------------------------- */
 function SeeMoreCard({
   colorScheme,
   onClick,
   isActive = false,
-  isMobileOrTablet = true,
+  layoutType = 'mobile',
 }: {
   colorScheme: any;
   onClick: () => void;
   isActive?: boolean;
-  isMobileOrTablet?: boolean;
+  layoutType?: 'staggered' | 'mobile';
 }) {
-  const cardWidth = isMobileOrTablet ? '280px' : 'auto';
-  const iconSize = isMobileOrTablet ? 'w-20 h-20' : 'w-16 h-16';
-  const iconInnerSize = isMobileOrTablet ? 'w-10 h-10' : 'w-8 h-8';
-  const cardHeight = isMobileOrTablet ? 'min-h-[320px]' : 'min-h-[300px]';
+  const iconSize = layoutType === 'staggered' ? 'w-20 h-20' : 'w-16 h-16';
+  const iconInnerSize = layoutType === 'staggered' ? 'w-10 h-10' : 'w-8 h-8';
 
   return (
     <div
-      className={`flex-shrink-0 cursor-pointer transition-all duration-500 ${isActive ? 'scale-100 opacity-100 z-20' : 'scale-85 opacity-40'}`}
-      style={{
-        width: cardWidth,
-        margin: isMobileOrTablet ? '0 8px' : '0',
-      }}
+      className={`cursor-pointer transition-all duration-300 ${
+        layoutType === 'mobile'
+          ? `flex-shrink-0 ${isActive ? 'scale-100 opacity-100 z-20' : 'scale-90 opacity-50'}`
+          : 'w-full h-full'
+      }`}
+      style={
+        layoutType === 'mobile'
+          ? {
+              width: '280px',
+              margin: '0 8px',
+            }
+          : {}
+      }
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={e => e.key === 'Enter' && onClick()}
     >
       <div
-        className={`bg-gradient-to-br from-white to-gray-50 rounded-xl p-4 transition-all duration-500 hover:-translate-y-1 border-2 border-dashed relative overflow-hidden flex flex-col h-full items-center justify-center ${cardHeight}`}
+        className={`bg-gradient-to-br from-white to-gray-50 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 border-2 border-dashed relative overflow-hidden flex flex-col h-full items-center justify-center min-h-[280px]`}
         style={
-          isActive
+          isActive || layoutType === 'staggered'
             ? {
                 borderColor: colorScheme.primary,
-                background: `linear-gradient(135deg, ${colorScheme.primary}10, #FFFFFF)`,
-                boxShadow: `0 15px 35px -5px ${colorScheme.primary}15`,
+                background: `linear-gradient(135deg, ${colorScheme.primary}08, #FFFFFF)`,
+                boxShadow: `0 8px 30px ${colorScheme.primary}15, 0 0 0 1px ${colorScheme.primary}20`,
               }
             : {
                 borderColor: '#CBD5E1',
-                background: 'linear-gradient(135deg, #F8FAFC, #FFFFFF)',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.05)',
               }
         }
       >
-        {/* Animated background */}
+        {/* Hover background */}
         <div
           className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl"
           style={{
@@ -270,10 +368,10 @@ function SeeMoreCard({
         {/* Icon */}
         <div className="relative mb-4">
           <div
-            className={`${iconSize} rounded-full flex items-center justify-center transform transition-all duration-300 group-hover:scale-110`}
+            className={`${iconSize} rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110`}
             style={{
-              backgroundColor: `${colorScheme.primary}20`,
-              border: `2px solid ${colorScheme.primary}30`,
+              backgroundColor: `${colorScheme.primary}15`,
+              border: `2px dashed ${colorScheme.primary}30`,
             }}
           >
             <MoreHorizontal
@@ -289,31 +387,31 @@ function SeeMoreCard({
             weight="bold"
             style={{ color: colorScheme.primary }}
             useThemeColor={false}
-            className={`${isMobileOrTablet ? 'text-lg' : 'text-base'} mb-2`}
+            className={`${layoutType === 'staggered' ? 'text-lg' : 'text-base'} mb-2`}
           >
             View All Members
           </SmallText>
           <Caption
-            className="text-gray-600 mb-4 text-sm leading-relaxed text-center"
+            className="text-gray-600 mb-4"
             useThemeColor={false}
             style={{
-              lineHeight: '1.4',
-              fontSize: isMobileOrTablet ? '13px' : '12px',
+              fontSize: '0.75rem',
+              lineHeight: '1.3',
             }}
           >
             Explore complete leadership team
           </Caption>
 
           <div
-            className="px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm"
+            className="px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-md"
             style={{
               backgroundColor: colorScheme.primary,
               color: '#000000',
-              boxShadow: `0 2px 8px ${colorScheme.primary}30`,
+              boxShadow: `0 4px 12px ${colorScheme.primary}30`,
             }}
           >
             View All
-            <ArrowRight className="w-3 h-3 ml-1.5 inline-block" />
+            <ArrowRight className="w-3 h-3 ml-2 inline-block" />
           </div>
         </div>
       </div>
@@ -322,7 +420,7 @@ function SeeMoreCard({
 }
 
 /* --------------------------------------------
-   MAIN COMPONENT - Fixed Desktop Layout (4 cards)
+   MAIN COMPONENT - STAGGERED LAYOUT
 --------------------------------------------- */
 export default function AssociatePastors() {
   const { colorScheme } = useTheme();
@@ -346,15 +444,14 @@ export default function AssociatePastors() {
   const CARD_MARGIN = 8;
   const CARD_TOTAL_WIDTH = CARD_WIDTH + CARD_MARGIN * 2;
 
-  // Check for mobile & tablet (up to 1024px)
+  // Viewport detection
   useEffect(() => {
     const checkViewport = () => {
       const isTabletOrMobile = window.innerWidth < 1024;
       setIsMobileOrTablet(isTabletOrMobile);
 
       if (isTabletOrMobile && sliderContainerRef.current) {
-        const width = sliderContainerRef.current.offsetWidth;
-        setSliderWidth(width);
+        setSliderWidth(sliderContainerRef.current.offsetWidth);
       }
     };
 
@@ -366,23 +463,22 @@ export default function AssociatePastors() {
   // Update slider width
   useEffect(() => {
     if (isMobileOrTablet && sliderContainerRef.current) {
-      const width = sliderContainerRef.current.offsetWidth;
-      setSliderWidth(width);
+      setSliderWidth(sliderContainerRef.current.offsetWidth);
     }
   }, [isMobileOrTablet]);
 
   const isDarkMode = colorScheme.pageBackground === '#000000';
   const mainAccentColor = isDarkMode ? colorScheme.primary : '#000000';
 
-  // Get pastoral leaders data only
+  // Get data
   const currentData = pastorsData;
 
-  // For mobile & tablet: show 2 cards + "See More" card
+  // For mobile: show 2 cards + "See More" card
   const sliderCards = currentData.slice(0, 2);
   const totalSliderSlides = sliderCards.length + 1;
 
-  // For desktop: show first 4 cards
-  const desktopPastors = pastorsData.slice(0, 4);
+  // For tablet & desktop: show first 4 cards in staggered layout
+  const tabletDesktopPastors = pastorsData.slice(0, 4);
 
   // Calculate translateX for centering
   const calculateTranslateX = useCallback(() => {
@@ -423,7 +519,6 @@ export default function AssociatePastors() {
     });
   }, [totalSliderSlides]);
 
-  // Handle slide indicator click
   const handleSlideClick = useCallback((index: number) => {
     setCurrentSlide(index);
   }, []);
@@ -436,19 +531,25 @@ export default function AssociatePastors() {
       style={{ backgroundColor: '#FFFFFF' }}
       className="relative overflow-hidden bg-white"
     >
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-blue-50 to-transparent rounded-full blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-purple-50 to-transparent rounded-full blur-3xl opacity-30"></div>
+      </div>
+
       <Container size="xl" className="relative z-10">
-        {/* Header Section */}
+        {/* Optimized Header Section */}
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
-          gap="md"
-          className="text-center pt-8 sm:pt-12 lg:pt-16 pb-4 sm:pb-6 lg:pb-8"
+          gap="sm"
+          className="text-center pt-8 sm:pt-12 lg:pt-16 pb-6 sm:pb-8"
         >
           <div className="relative">
             <H3
               ref={headingRef}
-              className="leading-tight relative text-xl sm:text-2xl lg:text-4xl"
+              className="leading-tight relative text-2xl sm:text-3xl lg:text-4xl"
               style={{ color: mainAccentColor }}
               useThemeColor={false}
               weight="black"
@@ -456,10 +557,17 @@ export default function AssociatePastors() {
             >
               Church Leadership
             </H3>
+            <div
+              className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 rounded-full"
+              style={{
+                backgroundColor: colorScheme.primary,
+                boxShadow: `0 2px 8px ${colorScheme.primary}30`,
+              }}
+            />
           </div>
           <Caption
             ref={descriptionRef}
-            className="max-w-2xl sm:max-w-3xl mx-auto leading-relaxed text-gray-600 mt-2 sm:mt-4 px-4 text-sm sm:text-lg font-light"
+            className="max-w-xl sm:max-w-2xl mx-auto leading-relaxed text-gray-600 mt-4 px-4 text-sm sm:text-base font-light"
             useThemeColor={false}
           >
             Meet our dedicated pastoral team guiding our community with wisdom, compassion, and spiritual direction.
@@ -467,7 +575,7 @@ export default function AssociatePastors() {
         </FlexboxLayout>
 
         <div ref={contentRef}>
-          {/* Mobile & Tablet View */}
+          {/* Mobile View */}
           {isMobileOrTablet ? (
             <div className="mb-8">
               {/* Active Section Title */}
@@ -481,22 +589,15 @@ export default function AssociatePastors() {
                   smWeight="extrabold"
                 >
                   Pastoral Team
-                  <div
-                    className="absolute -bottom-2 left-0 w-full h-1 transition-all duration-500 rounded-full"
-                    style={{
-                      backgroundColor: colorScheme.primary,
-                      boxShadow: `0 2px 8px ${colorScheme.primary}30`,
-                    }}
-                  />
                 </H4>
               </div>
 
-              {/* Mobile & Tablet Card Slider */}
+              {/* Mobile Card Slider */}
               <div className="relative mb-8">
                 {/* Navigation Arrows */}
                 <button
                   onClick={prevSlide}
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border border-gray-300 hover:shadow-2xl transition-all duration-300 active:scale-95"
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border border-gray-200 hover:shadow-2xl transition-all duration-300 active:scale-95"
                   style={{
                     color: colorScheme.primary,
                     boxShadow: `0 8px 25px rgba(0,0,0,0.15)`,
@@ -508,7 +609,7 @@ export default function AssociatePastors() {
 
                 <button
                   onClick={nextSlide}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border border-gray-300 hover:shadow-2xl transition-all duration-300 active:scale-95"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border border-gray-200 hover:shadow-2xl transition-all duration-300 active:scale-95"
                   style={{
                     color: colorScheme.primary,
                     boxShadow: `0 8px 25px rgba(0,0,0,0.15)`,
@@ -538,6 +639,7 @@ export default function AssociatePastors() {
                         addToRefs={addToRefs}
                         isMobileOrTablet={true}
                         isActive={index === currentSlide}
+                        layoutType="mobile"
                       />
                     ))}
 
@@ -546,12 +648,12 @@ export default function AssociatePastors() {
                       colorScheme={colorScheme}
                       onClick={handleMobileSeeMore}
                       isActive={currentSlide === sliderCards.length}
-                      isMobileOrTablet={true}
+                      layoutType="mobile"
                     />
                   </div>
                 </div>
 
-                {/* Enhanced Slide Indicators */}
+                {/* Slide Indicators */}
                 <div className="flex justify-center mt-10 gap-3">
                   {Array.from({ length: totalSliderSlides }).map((_, index) => (
                     <button
@@ -579,15 +681,15 @@ export default function AssociatePastors() {
               </div>
             </div>
           ) : (
-            /* Desktop View */
+            /* Tablet & Desktop View with STAGGERED Layout */
             <div className="w-full">
-              {/* Pastoral Leaders Section - 4 Cards */}
+              {/* Pastoral Leaders Section */}
               <div className="w-full mb-12 lg:mb-16">
-                {/* Section Title - Centered */}
+                {/* Section Title */}
                 <FlexboxLayout
                   direction="column"
                   align="center"
-                  className="mb-8 lg:mb-12"
+                  className="mb-10 lg:mb-12"
                 >
                   <H4
                     ref={addSectionHeaderRef}
@@ -600,7 +702,7 @@ export default function AssociatePastors() {
                     Pastoral Team
                   </H4>
                   <div
-                    className="w-24 h-1 rounded-full"
+                    className="w-32 h-1 rounded-full"
                     style={{
                       backgroundColor: colorScheme.primary,
                       boxShadow: `0 2px 8px ${colorScheme.primary}30`,
@@ -608,35 +710,76 @@ export default function AssociatePastors() {
                   />
                 </FlexboxLayout>
 
-                {/* Grid with 4 cards - Centered layout */}
-                <div className="w-full flex justify-center">
-                  <div className="w-full max-w-6xl">
-                    <GridboxLayout
-                      columns={4}
-                      gap="lg"
-                      responsive={{
-                        sm: 1,
-                        md: 2,
-                        lg: 4,
-                        xl: 4,
-                      }}
-                      className="w-full"
-                    >
-                      {desktopPastors.map((item, index) => (
-                        <div
-                          key={`desktop-pastor-${item.name}-${index}`}
-                          className="h-full"
-                        >
-                          <PersonCard
-                            item={item}
-                            colorScheme={colorScheme}
-                            mainAccentColor={mainAccentColor}
-                            addToRefs={addToRefs}
-                            isMobileOrTablet={false}
-                          />
+                {/* Staggered Cards Layout - 4 cards in a unique arrangement */}
+                <div className="relative w-full">
+                  <div className="relative max-w-6xl mx-auto">
+                    {/* Row 1: 3 cards staggered */}
+                    <div className="flex flex-col lg:flex-row items-start justify-center gap-6 lg:gap-8 mb-6 lg:mb-8">
+                      {/* Card 1 - Left aligned, normal position */}
+                      <div className="w-full lg:w-1/3">
+                        <PersonCard
+                          item={tabletDesktopPastors[0]}
+                          colorScheme={colorScheme}
+                          mainAccentColor={mainAccentColor}
+                          addToRefs={addToRefs}
+                          layoutType="staggered"
+                          index={0}
+                        />
+                      </div>
+                      
+                      {/* Card 2 - Center, slightly offset down */}
+                      <div className="w-full lg:w-1/3 lg:mt-8">
+                        <PersonCard
+                          item={tabletDesktopPastors[1]}
+                          colorScheme={colorScheme}
+                          mainAccentColor={mainAccentColor}
+                          addToRefs={addToRefs}
+                          layoutType="staggered"
+                          index={1}
+                        />
+                      </div>
+                      
+                      {/* Card 3 - Right aligned, slightly offset up */}
+                      <div className="w-full lg:w-1/3 lg:-mt-4">
+                        <PersonCard
+                          item={tabletDesktopPastors[2]}
+                          colorScheme={colorScheme}
+                          mainAccentColor={mainAccentColor}
+                          addToRefs={addToRefs}
+                          layoutType="staggered"
+                          index={2}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Row 2: 2 cards centered with See More */}
+                    <div className="flex flex-col lg:flex-row items-start justify-center gap-6 lg:gap-8">
+                      {/* Card 4 - Left aligned, See More next to it */}
+                      <div className="w-full lg:w-2/3">
+                        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                          {/* Card 4 */}
+                          <div className="w-full lg:w-1/2">
+                            <PersonCard
+                              item={tabletDesktopPastors[3]}
+                              colorScheme={colorScheme}
+                              mainAccentColor={mainAccentColor}
+                              addToRefs={addToRefs}
+                              layoutType="staggered"
+                              index={3}
+                            />
+                          </div>
+                          
+                          {/* See More Card */}
+                          {/* <div className="w-full lg:w-1/2 lg:mt-6">
+                            <SeeMoreCard
+                              colorScheme={colorScheme}
+                              onClick={handleSeeMore}
+                              layoutType="staggered"
+                            />
+                          </div> */}
                         </div>
-                      ))}
-                    </GridboxLayout>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -644,7 +787,7 @@ export default function AssociatePastors() {
               {/* Desktop See More Button - Centered */}
               <FlexboxLayout
                 justify="center"
-                className="pt-4 lg:pt-8 pb-8 lg:pb-16"
+                className="pt-6 lg:pt-8 pb-8 lg:pb-12"
               >
                 <div className="relative group">
                   <CustomButton
