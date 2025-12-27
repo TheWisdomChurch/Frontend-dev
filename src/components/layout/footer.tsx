@@ -1,14 +1,15 @@
 'use client';
 
-import { memo, useRef, useEffect, useMemo, useCallback } from 'react'; // Added memoization hooks
+import { memo, useRef, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, MapPin, Mail, Facebook, Youtube, Instagram, Twitter, ArrowRight } from 'lucide-react';
 import { bricolageGrotesque } from '@/components/fonts/fonts';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { H4, BodySM, BodyMD, Caption, BodyLG } from '@/components/text';
+import { BodySM, BodyMD, Caption, BodyLG } from '@/components/text';
+import { WisdomeHouseLogo } from '../assets';
 
-// 1. MEMOIZE STATIC DATA & COMPONENTS OUTSIDE
+// MEMOIZE STATIC DATA & COMPONENTS OUTSIDE
 const currentYear = new Date().getFullYear();
 const socialLinks = [
   { Icon: Facebook, href: 'https://web.facebook.com/search/top?q=wisdom%20house%20hq', label: 'Facebook' },
@@ -33,7 +34,7 @@ const serviceTimes = [
   { day: 'Midweek Service', time: 'Thursday • 6:00 PM', highlight: false },
 ];
 
-// 2. LAZY LOAD HEAVY LIBRARIES
+// LAZY LOAD HEAVY LIBRARIES
 let gsapPromise: Promise<{ gsap: any; ScrollTrigger: any }> | undefined;
 const getGsap = () => {
   if (!gsapPromise) {
@@ -49,23 +50,13 @@ const getGsap = () => {
   return gsapPromise;
 };
 
-// 3. OPTIMIZED IMAGE CONFIGURATION (Update path if needed)
-const logoConfig = {
-  src: '/images/wisdom-house-logo.webp', // Consider converting to WebP and using public folder
-  width: 48,
-  height: 48,
-  alt: 'The Wisdom House Church',
-  priority: false, // Keep false for footer
-  loading: 'lazy' as const, // Lazy load the footer logo
-};
-
-// 4. MAIN COMPONENT WITH MEMOIZATION
+// MAIN COMPONENT WITH MEMOIZATION
 function Footer() {
   const { colorScheme } = useTheme();
   const footerRef = useRef<HTMLElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null); // For Intersection Observer
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // 5. MEMOIZE VALUES THAT DEPEND ON colorScheme
+  // MEMOIZE VALUES THAT DEPEND ON colorScheme
   const gradientStyle = useMemo(() => ({
     background: `radial-gradient(circle at 20% 80%, ${colorScheme.primary}40 0%, transparent 60%)`
   }), [colorScheme.primary]);
@@ -74,29 +65,27 @@ function Footer() {
     borderColor: colorScheme.primary + '40'
   }), [colorScheme.primary]);
 
-  // 6. DELAYED ANIMATION INITIALIZATION (Only when footer is visible)
+  // DELAYED ANIMATION INITIALIZATION
   useEffect(() => {
     const currentRef = footerRef.current;
     if (!currentRef) return;
 
-    // Use Intersection Observer to delay GSAP until footer is near viewport
     observerRef.current = new IntersectionObserver((entries) => {
       const [entry] = entries;
       if (entry.isIntersecting) {
-        // Lazy load and initialize GSAP only when needed
         getGsap().then(({ gsap, ScrollTrigger }) => {
           gsap.fromTo(currentRef,
-            { y: 30, opacity: 0 }, // Reduced initial movement for speed
+            { y: 30, opacity: 0 },
             {
               y: 0,
               opacity: 1,
-              duration: 0.6, // Faster duration
+              duration: 0.6,
               ease: 'power2.out',
               scrollTrigger: {
                 trigger: currentRef,
                 start: 'top 90%',
-                toggleActions: 'play none none reverse', // Cleaner trigger actions
-                markers: false // Disable in production
+                toggleActions: 'play none none reverse',
+                markers: false
               }
             }
           );
@@ -105,7 +94,7 @@ function Footer() {
           observerRef.current.unobserve(currentRef);
         }
       }
-    }, { threshold: 0.1, rootMargin: '50px' }); // Start earlier but with minimal load
+    }, { threshold: 0.1, rootMargin: '50px' });
 
     observerRef.current.observe(currentRef);
 
@@ -114,22 +103,20 @@ function Footer() {
         observerRef.current.disconnect();
       }
     };
-  }, []); // Empty deps since we only need to run once
+  }, []);
 
-  // 7. MEMOIZE EVENT HANDLERS (if you had any)
-  const handleSubscribe = useCallback((e: { preventDefault: () => void; }) => {
+  // MEMOIZE EVENT HANDLERS
+  const handleSubscribe = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    // Handle subscription logic
     console.log('Subscribe handler');
   }, []);
 
-  // 8. RENDER LOGIC
+  // RENDER LOGIC
   return (
     <footer
       ref={footerRef}
       className="relative overflow-hidden bg-black"
     >
-      {/* Background gradient with memoized style */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={gradientStyle} />
       </div>
@@ -141,15 +128,20 @@ function Footer() {
           <div className="space-y-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="relative w-12 h-12 rounded-xl overflow-hidden ring-2 ring-primary/20">
+                {/* FIXED: Properly pass the imported image */}
                 <Image
-                  {...logoConfig}
+                  src={WisdomeHouseLogo}
+                  alt="The Wisdom House Church"
+                  width={48}
+                  height={48}
                   className="object-cover"
+                  loading="lazy"
                 />
               </div>
               <div>
-                <h3 className={`${bricolageGrotesque.className} text-lg font-semibold mb-1 text-white`}>
+                <BodySM className={`${bricolageGrotesque.className} text-lg font-semibold  text-white`}>
                   The Wisdom Church
-                </h3>
+                </BodySM>
                 <Caption style={{ color: colorScheme.primary }} useThemeColor={false}>
                   Equipping & Empowering for greatness
                 </Caption>
@@ -176,9 +168,9 @@ function Footer() {
 
           {/* Column 2 - Quick Links */}
           <div className="space-y-6">
-            <BodyLG className="font-semibold mb-6 text-white" useThemeColor={false}>
+            <BodySM className="font-semibold mb-6 text-white" useThemeColor={false}>
               Quick Links
-            </BodyLG>
+            </BodySM>
             <ul className="space-y-3">
               {quickLinks.map(link => (
                 <li key={link.href}>
@@ -193,9 +185,9 @@ function Footer() {
 
           {/* Column 3 - Service Times */}
           <div className="space-y-6">
-            <BodyLG className="font-semibold mb-6 text-white" useThemeColor={false}>
+            <BodySM className="font-semibold mb-6 text-white" useThemeColor={false}>
               Service Times
-            </BodyLG>
+            </BodySM>
             <div className="space-y-4">
               {serviceTimes.map(s => (
                 <div key={s.day} className={`p-3.5 rounded-lg ${s.highlight ? 'border border-primary bg-primary/10' : 'border border-gray-700'}`}>
@@ -242,7 +234,6 @@ function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar with memoized border style */}
         <div className="pt-10 border-t" style={borderStyle}>
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <Caption className="text-gray-400 text-center md:text-left" useThemeColor={false}>
@@ -263,5 +254,4 @@ function Footer() {
   );
 }
 
-// 9. EXPORT MEMOIZED COMPONENT
 export default memo(Footer);
