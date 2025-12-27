@@ -2,18 +2,18 @@
 
 import { H1, H2, BodyXL } from '@/components/text';
 import CustomButton from '@/components/utils/buttons/CustomButton';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Play, Calendar, Users, Sparkles } from 'lucide-react';
 import { useHeroSection } from '@/components/utils/hooks/useHeroSection';
 import Image from 'next/image';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useResponsive } from '@/components/utils/hooks/useResponsive';
-
 
 interface Slide {
   title: string;
   subtitle?: string;
   description?: string;
   image: { src: string; alt?: string };
+  stats?: { label: string; value: string }[];
 }
 
 interface HeroSectionProps {
@@ -29,6 +29,7 @@ interface HeroSectionProps {
   onSecondaryButtonClick?: () => void;
   showScrollIndicator?: boolean;
   showSlideIndicators?: boolean;
+  showStats?: boolean;
 }
 
 const HeroSection = ({
@@ -44,6 +45,7 @@ const HeroSection = ({
   onSecondaryButtonClick,
   showScrollIndicator = true,
   showSlideIndicators = true,
+  showStats = true,
 }: HeroSectionProps) => {
   const {
     currentSlide,
@@ -64,7 +66,8 @@ const HeroSection = ({
   } = useHeroSection();
 
   const [isClient, setIsClient] = useState(false);
-  const { hero, getHeroClasses } = useResponsive(); 
+  const { hero, getHeroClasses } = useResponsive();
+  
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -80,27 +83,38 @@ const HeroSection = ({
           subtitle,
           description,
           image: { src: backgroundImage!, alt: title },
+          stats: [
+            { label: 'Service Times', value: 'Sundays 9AM & 11AM' },
+            { label: 'Live Stream', value: 'Watch Online' },
+            { label: 'Community', value: 'All Are Welcome' }
+          ]
         };
   }, [isMultiSlide, slides, currentSlide, title, subtitle, description, backgroundImage]);
 
-  // Smart colors based on your exact request
+  // Enhanced color scheme with gradients
   const titleColor = isDarkMode ? '#FFFFFF' : colorScheme.primary;
   const subtitleColor = isDarkMode ? colorScheme.primary : '#FFFFFF';
   const descriptionColor = '#FFFFFF';
 
-  // Get combined classes
-  const heroClasses = useMemo(() => getHeroClasses(), [getHeroClasses]);
+  // DRAMATICALLY INCREASED HEIGHTS for maximum image visibility
+  const heroClasses = useMemo(() => {
+    const base = getHeroClasses();
+    return {
+      ...base,
+      container: `${base.container} min-h-[90vh] md:min-h-[100vh] lg:min-h-[110vh] xl:min-h-[120vh]`,
+    };
+  }, [getHeroClasses]);
 
   // Generate blur placeholder for Image component
   const generateBlurDataURL = useMemo(() => {
     return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTI4MCA3MjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEyODAiIGhlaWdodD0iNzIwIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0iTTAgMGgxMjgwdjcyMEgweiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzBfODQ3KSIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8wXzg0NyIgeDE9IjAiIHkxPSIwIiB4Mj0iMTI4MCIgeTI9IjcyMCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiMwMDAwMDAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=';
   }, []);
 
-  // Optimized Image props
+  // Optimized Image props with subtle parallax effect
   const imageProps = useMemo(() => ({
     fill: true,
     sizes: "100vw",
-    quality: 85,
+    quality: 95, // Higher quality for larger display
     placeholder: "blur" as const,
     blurDataURL: generateBlurDataURL,
     className: "object-cover",
@@ -110,32 +124,42 @@ const HeroSection = ({
     }
   }), [generateBlurDataURL]);
 
-  // Handle button hover with client check
+  // Handle button hover with enhanced effects
   const handleButtonHover = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isClient) return;
-    e.currentTarget.style.backgroundColor = colorScheme.primary;
-    e.currentTarget.style.color = '#000000';
+    e.currentTarget.style.transform = 'translateY(-3px) scale(1.03)';
+    e.currentTarget.style.boxShadow = `0 25px 50px rgba(${parseInt(colorScheme.primary.slice(1, 3), 16)}, ${parseInt(colorScheme.primary.slice(3, 5), 16)}, ${parseInt(colorScheme.primary.slice(5, 7), 16)}, 0.4)`;
   }, [isClient, colorScheme.primary]);
 
   const handleButtonLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isClient) return;
-    e.currentTarget.style.backgroundColor = 'transparent';
-    e.currentTarget.style.color = '#FFFFFF';
+    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+    e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.25)';
   }, [isClient]);
+
+  // Enhanced stats for the hero
+  const defaultStats = useMemo(() => [
+    { label: 'Service Times', value: 'Sundays 9AM & 11AM', icon: Calendar },
+    { label: 'Live Stream', value: 'Watch Online', icon: Play },
+    { label: 'Community', value: 'All Are Welcome', icon: Users },
+    { label: 'Experience', value: 'Life Changing', icon: Sparkles }
+  ], []);
 
   return (
     <section
       ref={heroRef}
-      className="relative w-full overflow-hidden hero-section min-h-[50vh] xs:min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh]"
+      className="relative w-full overflow-hidden hero-section"
     >
-      {/* Background Slides */}
+      {/* Enhanced Background */}
       {isMultiSlide ? (
         slides!.map((slide, index) => (
           <div
             key={index}
             ref={el => addToSlidesRef(el, index)}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            className={`absolute inset-0 transition-all duration-1500 ease-out ${
+              index === currentSlide 
+                ? 'opacity-100 z-10' 
+                : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
             <div className="relative w-full h-full">
@@ -146,9 +170,29 @@ const HeroSection = ({
                 {...imageProps}
               />
 
-              {/* Optimized gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+              {/* Enhanced gradient overlay - optimized for taller heights */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/97 via-black/40 to-black/10" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/90 to-transparent" />
+              
+              {/* Subtle animated particles overlay */}
+              <div className="absolute inset-0 opacity-[0.12]">
+                {Array.from({ length: 30 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute rounded-full animate-float"
+                    style={{
+                      width: `${Math.random() * 6 + 2}px`,
+                      height: `${Math.random() * 6 + 2}px`,
+                      background: colorScheme.primary,
+                      top: `${Math.random() * 100}%`,
+                      left: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 5}s`,
+                      animationDuration: `${Math.random() * 10 + 10}s`
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         ))
@@ -162,88 +206,180 @@ const HeroSection = ({
               {...imageProps}
             />
             
-            {/* Optimized gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+            {/* Enhanced gradient overlay for taller layout */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/97 via-black/40 to-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/90 to-transparent" />
+            
+            {/* Subtle animated particles */}
+            <div className="absolute inset-0 opacity-[0.12]">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute rounded-full animate-float"
+                  style={{
+                    width: `${Math.random() * 6 + 2}px`,
+                    height: `${Math.random() * 6 + 2}px`,
+                    background: colorScheme.primary,
+                    top: `${Math.random() * 100}%`,
+                    left: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 5}s`,
+                    animationDuration: `${Math.random() * 10 + 10}s`
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Hero Content */}
+      {/* Hero Content with EXTREME height for maximum impact */}
       <div
         ref={contentRef}
-        className={`relative z-20 h-full flex items-center justify-center ${heroClasses.container}`}
+        className={`relative z-20 h-full flex flex-col justify-center ${heroClasses.container} pt-16 md:pt-24 lg:pt-32 xl:pt-40`}
       >
-        <div className="w-full max-w-4xl mx-auto text-center">
-          {/* Main Title - Mobile-first responsive */}
-          <H1
-            ref={titleRef}
-            className={`${hero.spacing.titleBottom} leading-tight tracking-tight`}
-            style={{
-              color: titleColor,
-              textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)',
-            }}
-            useThemeColor={false}
-          >
-            <span className={`${heroClasses.title} block`}>
-              {currentSlideData.title}
-            </span>
-          </H1>
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Decorative elements - spaced for taller layout */}
+          <div className="flex justify-center mb-8 md:mb-12 lg:mb-16 xl:mb-20">
+            <div className="flex items-center gap-4">
+              <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: colorScheme.primary }} />
+              <div className="w-12 h-1 rounded-full" style={{ background: `linear-gradient(90deg, ${colorScheme.primary}00, ${colorScheme.primary}, ${colorScheme.primary}00)` }} />
+              <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: colorScheme.primary, animationDelay: '0.5s' }} />
+            </div>
+          </div>
 
-          {/* Divider */}
-          {currentSlideData.subtitle && (
-            <div
-              className="h-0.5 w-12 xs:w-14 sm:w-16 md:w-20 mx-auto mb-3 xs:mb-4 sm:mb-5 rounded-full"
-              style={{ backgroundColor: colorScheme.primary }}
-            />
-          )}
-
-          {/* Subtitle */}
-          {currentSlideData.subtitle && (
-            <H2
-              ref={subtitleRef}
-              className={`${hero.spacing.subtitleBottom}`}
+          {/* Main Title - Dramatic and centered */}
+          <div className="mb-10 md:mb-14 lg:mb-18 xl:mb-24">
+            <H1
+              ref={titleRef}
+              className={`${hero.spacing.titleBottom} leading-none tracking-tighter text-center`}
               style={{
-                color: subtitleColor,
-                textShadow: '0 1px 8px rgba(0, 0, 0, 0.8)',
+                background: `linear-gradient(135deg, ${titleColor} 0%, ${isDarkMode ? colorScheme.white : colorScheme.primary}cc 100%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 8px 40px rgba(0, 0, 0, 0.8)',
+                filter: 'drop-shadow(0 8px 24px rgba(0, 0, 0, 0.8))',
+                letterSpacing: '-0.02em',
               }}
               useThemeColor={false}
             >
-              <span className={`${heroClasses.subtitle} block`}>
-                {currentSlideData.subtitle}
+              <span className={`${heroClasses.title} block`}>
+                {currentSlideData.title}
               </span>
-            </H2>
+            </H1>
+          </div>
+
+          {/* Enhanced Divider with glow effect */}
+          {currentSlideData.subtitle && (
+            <div className="flex flex-col items-center mb-12 md:mb-16 lg:mb-20 xl:mb-24">
+              <div
+                className="h-1 w-24 md:w-32 lg:w-40 mb-6 rounded-full"
+                style={{ 
+                  background: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
+                  boxShadow: `0 0 40px ${colorScheme.primary}80`
+                }}
+              />
+            </div>
           )}
 
-          {/* Description */}
+          {/* Subtitle with enhanced styling for taller layout */}
+          {currentSlideData.subtitle && (
+            <div className="mb-12 md:mb-16 lg:mb-20 xl:mb-24">
+              <H2
+                ref={subtitleRef}
+                className={`${hero.spacing.subtitleBottom} text-center font-medium`}
+                style={{
+                  color: subtitleColor,
+                  textShadow: '0 4px 30px rgba(0, 0, 0, 0.9)',
+                  letterSpacing: '0.03em',
+                  fontWeight: 500,
+                }}
+                useThemeColor={false}
+              >
+                <span className={`${heroClasses.subtitle} block`}>
+                  {currentSlideData.subtitle}
+                </span>
+              </H2>
+            </div>
+          )}
+
+          {/* Description with enhanced layout for taller hero */}
           {currentSlideData.description && (
-            <BodyXL
-              ref={descriptionRef}
-              className={`max-w-xs xs:max-w-sm sm:max-w-md md:max-w-lg mx-auto ${hero.spacing.descriptionBottom} leading-relaxed`}
-              style={{
-                color: descriptionColor,
-                textShadow: '0 1px 6px rgba(0, 0, 0, 0.7)',
-              }}
-              useThemeColor={false}
-            >
-              <span className={`${heroClasses.description} block`}>
-                {currentSlideData.description}
-              </span>
-            </BodyXL>
+            <div className="mb-14 md:mb-18 lg:mb-22 xl:mb-28">
+              <BodyXL
+                ref={descriptionRef}
+                className={`max-w-3xl mx-auto ${hero.spacing.descriptionBottom} leading-relaxed text-center`}
+                style={{
+                  color: descriptionColor,
+                  textShadow: '0 2px 20px rgba(0, 0, 0, 0.8)',
+                  fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
+                  lineHeight: 1.8,
+                  fontWeight: 300,
+                }}
+                useThemeColor={false}
+              >
+                <span className={`${heroClasses.description} block`}>
+                  {currentSlideData.description}
+                </span>
+              </BodyXL>
+            </div>
           )}
 
-          {/* Buttons */}
+          {/* Stats Section - Spaced for taller layout */}
+          {showStats && (
+            <div className="mb-14 md:mb-18 lg:mb-22 xl:mb-28">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
+                {defaultStats.map((stat, index) => {
+                  const Icon = stat.icon;
+                  return (
+                    <div
+                      key={index}
+                      className="text-center p-6 rounded-3xl backdrop-blur-lg bg-gradient-to-b from-white/5 to-white/2 border border-white/15 hover:from-white/10 hover:to-white/5 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+                      style={{ 
+                        boxShadow: `0 20px 60px rgba(0, 0, 0, 0.3)`,
+                        borderColor: `${colorScheme.primary}30`
+                      }}
+                    >
+                      <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full mb-4" 
+                           style={{ 
+                             background: `radial-gradient(circle at center, ${colorScheme.primary}40, transparent 70%)`,
+                             border: `2px solid ${colorScheme.primary}50`
+                           }}>
+                        <Icon className="w-7 h-7 md:w-8 md:h-8" style={{ color: colorScheme.primary }} />
+                      </div>
+                      <div className="text-xl md:text-2xl font-bold text-white mb-2">
+                        {stat.value}
+                      </div>
+                      <div className="text-sm md:text-base opacity-90 font-medium" style={{ color: colorScheme.primary }}>
+                        {stat.label}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Enhanced Buttons with more dramatic spacing */}
           {showButtons && (
             <div
               ref={buttonsRef}
-              className={`flex flex-col xs:flex-row ${hero.spacing.buttonsGap} justify-center items-center`}
+              className={`flex flex-col lg:flex-row ${hero.spacing.buttonsGap} justify-center items-center gap-8 md:gap-10 lg:gap-12`}
             >
               <CustomButton
                 variant="primary"
-                size="lg"
+                size="xl"
                 elevated={true}
-                curvature="lg"
-                className={`${heroClasses.button} font-semibold hover:scale-105 transition-transform duration-200`}
+                curvature="full"
+                className={`${heroClasses.button} font-extrabold px-10 py-5 md:px-12 md:py-6 text-xl md:text-2xl hover:shadow-3xl transition-all duration-500`}
+                style={{
+                  background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primary}dd 100%)`,
+                  boxShadow: `0 25px 60px ${colorScheme.primary}60`,
+                  border: `2px solid ${colorScheme.primary}`
+                }}
+                onMouseEnter={handleButtonHover}
+                onMouseLeave={handleButtonLeave}
                 onClick={onPrimaryButtonClick}
               >
                 {primaryButtonText}
@@ -251,13 +387,14 @@ const HeroSection = ({
 
               <CustomButton
                 variant="outline"
-                size="lg"
-                curvature="lg"
-                className={`${heroClasses.button} font-semibold border transition-all duration-200`}
+                size="xl"
+                curvature="full"
+                className={`${heroClasses.button} font-extrabold px-10 py-5 md:px-12 md:py-6 text-xl md:text-2xl border-3 backdrop-blur-xl transition-all duration-500`}
                 style={{
                   borderColor: colorScheme.primary,
                   color: '#FFFFFF',
-                  backgroundColor: 'transparent',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  boxShadow: `0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 ${colorScheme.primary}30`,
                 }}
                 onMouseEnter={handleButtonHover}
                 onMouseLeave={handleButtonLeave}
@@ -270,41 +407,65 @@ const HeroSection = ({
         </div>
       </div>
 
-      {/* Slide Indicators */}
+      {/* Enhanced Slide Indicators - Positioned lower for taller layout */}
       {isMultiSlide && showSlideIndicators && (
-        <div className="absolute right-2 xs:right-3 sm:right-4 md:right-5 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1 xs:gap-1.5 sm:gap-2">
+        <div className="absolute bottom-12 md:bottom-16 lg:bottom-20 left-1/2 -translate-x-1/2 z-30 flex gap-4 md:gap-5">
           {slides!.map((_, index) => (
             <button
               key={index}
               ref={el => addToIndicatorsRef(el, index)}
               onClick={() => goToSlide(index)}
-              className="w-1 h-1 xs:w-1.5 xs:h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-200 hover:scale-125"
-              style={{
-                backgroundColor:
-                  index === currentSlide
-                    ? colorScheme.primary
-                    : `${colorScheme.white}50`,
-              }}
+              className="group relative"
               aria-label={`Go to slide ${index + 1}`}
-            />
+            >
+              <div className="w-4 h-4 md:w-5 md:h-5 rounded-full transition-all duration-500 group-hover:scale-150 backdrop-blur-md"
+                style={{
+                  backgroundColor:
+                    index === currentSlide
+                      ? colorScheme.primary
+                      : `${colorScheme.white}20`,
+                  border: `2px solid ${index === currentSlide ? colorScheme.primary : colorScheme.white}40`,
+                  boxShadow: index === currentSlide ? `0 0 25px ${colorScheme.primary}` : `0 0 10px ${colorScheme.white}20`
+                }}
+              />
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-top-12">
+                <div className="bg-gradient-to-b from-black/90 to-black/80 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap border border-white/10">
+                  Slide {index + 1}
+                </div>
+              </div>
+            </button>
           ))}
         </div>
       )}
 
-      {/* Scroll Indicator */}
+      {/* Enhanced Scroll Indicator - Positioned for tall layout */}
       {showScrollIndicator && (
         <div
           ref={scrollIndicatorRef}
-          className="absolute bottom-3 xs:bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 cursor-pointer"
+          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 cursor-pointer group"
           onClick={scrollToNextSection}
           onMouseEnter={handleHoverEnter}
           onMouseLeave={handleHoverLeave}
         >
-          <div className="flex flex-col items-center animate-bounce">
-            <ChevronDown
-              className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-primary drop-shadow-lg"
-              style={{ color: colorScheme.primary }}
-            />
+          <div className="flex flex-col items-center">
+            <div className="mb-3 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:mb-4 text-base text-white/90 font-medium tracking-wide">
+              Discover More
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 animate-ping opacity-30">
+                <ChevronDown
+                  className="w-8 h-8 md:w-10 md:h-10"
+                  style={{ color: colorScheme.primary }}
+                />
+              </div>
+              <ChevronDown
+                className="w-8 h-8 md:w-10 md:h-10 relative transition-all duration-700 group-hover:scale-125 group-hover:translate-y-3 animate-bounce-slow"
+                style={{ 
+                  color: colorScheme.primary,
+                  filter: `drop-shadow(0 6px 15px ${colorScheme.primary}60)`
+                }}
+              />
+            </div>
           </div>
         </div>
       )}

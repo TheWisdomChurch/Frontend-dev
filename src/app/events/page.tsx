@@ -15,11 +15,8 @@ import { hero_bg_2, NL } from '@/components/assets';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUpcomingEvents } from '@/components/utils/hooks/UpcomingHooks';
-import { EventModal } from '@/components/modal/EventModal';
-import { ConferenceModal } from '@/components/modal/conferenceModal';
-import { LiftingModal } from '@/components/modal/LiftingModal';
 import { ReminderModal } from '@/components/modal/reminderModal';
-import { DateEventsModal } from '@/components/modal/dateEvent';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Phone, Calendar, Clock, MapPin } from 'lucide-react';
@@ -625,53 +622,6 @@ const Events = () => {
           </div>
         </div>
       </section>
-
-      {/* Modals */}
-      {isModalOpen && selectedEvent && (
-        <EventModal event={selectedEvent} onClose={closeModal} />
-      )}
-
-      {isDateModalOpen && dateEvents && (
-        <DateEventsModal
-          dateEvents={dateEvents}
-          onClose={closeDateModal}
-          onViewEvents={scrollToEvents}
-          onEventClick={handleEventClick}
-        />
-      )}
-
-      {isConferenceModalOpen && (
-        <ConferenceModal
-          formData={formData}
-          formErrors={formErrors}
-          isSubmitting={isSubmitting}
-          onInputChange={handleInputChange}
-          onSubmit={e => handleSubmit(e, 'conference')}
-          onClose={closeConferenceModal}
-        />
-      )}
-
-      {isLiftingModalOpen && (
-        <LiftingModal
-          formData={formData}
-          formErrors={formErrors}
-          isSubmitting={isSubmitting}
-          onInputChange={handleInputChange}
-          onSubmit={e => handleSubmit(e, 'lifting')}
-          onClose={closeLiftingModal}
-        />
-      )}
-
-      {isReminderModalOpen && (
-        <ReminderModal
-          formData={reminderFormData}
-          formErrors={reminderFormErrors}
-          isSettingReminder={isSettingReminder}
-          onInputChange={handleReminderInputChange}
-          onSubmit={handleReminderSubmit}
-          onClose={closeReminderModal}
-        />
-      )}
     </div>
   );
 };
