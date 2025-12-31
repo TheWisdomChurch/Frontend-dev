@@ -83,11 +83,11 @@ const HeroSection = ({
           subtitle,
           description,
           image: { src: backgroundImage!, alt: title },
-          stats: [
-            { label: 'Service Times', value: 'Sundays 9AM' },
-            { label: 'Live Stream', value: 'Watch Online' },
-            { label: 'Community', value: 'All Are Welcome' }
-          ]
+          // stats: [
+          //   { label: 'Service Times', value: 'Sundays 9AM' },
+          //   { label: 'Live Stream', value: 'Watch Online' },
+          //   { label: 'Community', value: 'All Are Welcome' }
+          // ]
         };
   }, [isMultiSlide, slides, currentSlide, title, subtitle, description, backgroundImage]);
 
@@ -137,13 +137,7 @@ const HeroSection = ({
     e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.25)';
   }, [isClient]);
 
-  // Enhanced stats for the hero
-  const defaultStats = useMemo(() => [
-    { label: 'Service Times', value: 'Sundays 9AM ', icon: Calendar },
-    { label: 'Live Stream', value: 'Watch Online', icon: Play },
-    { label: 'Community', value: 'All Are Welcome', icon: Users },
-    { label: 'Experience', value: 'Life Changing', icon: Sparkles }
-  ], []);
+ 
 
   return (
     <section
@@ -327,83 +321,7 @@ const HeroSection = ({
           )}
 
           {/* Stats Section - Spaced for taller layout */}
-          {showStats && (
-            <div className="mb-14 md:mb-18 lg:mb-22 xl:mb-28">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
-                {defaultStats.map((stat, index) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div
-                      key={index}
-                      className="text-center p-6 rounded-3xl backdrop-blur-lg bg-gradient-to-b from-white/5 to-white/2 border border-white/15 hover:from-white/10 hover:to-white/5 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-                      style={{ 
-                        boxShadow: `0 20px 60px rgba(0, 0, 0, 0.3)`,
-                        borderColor: `${colorScheme.primary}30`
-                      }}
-                    >
-                      <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full mb-4" 
-                           style={{ 
-                             background: `radial-gradient(circle at center, ${colorScheme.primary}40, transparent 70%)`,
-                             border: `2px solid ${colorScheme.primary}50`
-                           }}>
-                        <Icon className="w-7 h-7 md:w-8 md:h-8" style={{ color: colorScheme.primary }} />
-                      </div>
-                      <div className="text-xl md:text-2xl font-bold text-white mb-2">
-                        {stat.value}
-                      </div>
-                      <div className="text-sm md:text-base opacity-90 font-medium" style={{ color: colorScheme.primary }}>
-                        {stat.label}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Enhanced Buttons with more dramatic spacing */}
-          {showButtons && (
-            <div
-              ref={buttonsRef}
-              className={`flex flex-col lg:flex-row ${hero.spacing.buttonsGap} justify-center items-center gap-8 md:gap-10 lg:gap-12`}
-            >
-              <CustomButton
-                variant="primary"
-                size="xl"
-                elevated={true}
-                curvature="full"
-                className={`${heroClasses.button} font-extrabold px-10 py-5 md:px-12 md:py-6 text-xl md:text-2xl hover:shadow-3xl transition-all duration-500`}
-                style={{
-                  background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primary}dd 100%)`,
-                  boxShadow: `0 25px 60px ${colorScheme.primary}60`,
-                  border: `2px solid ${colorScheme.primary}`
-                }}
-                onMouseEnter={handleButtonHover}
-                onMouseLeave={handleButtonLeave}
-                onClick={onPrimaryButtonClick}
-              >
-                {primaryButtonText}
-              </CustomButton>
-
-              <CustomButton
-                variant="outline"
-                size="xl"
-                curvature="full"
-                className={`${heroClasses.button} font-extrabold px-10 py-5 md:px-12 md:py-6 text-xl md:text-2xl border-3 backdrop-blur-xl transition-all duration-500`}
-                style={{
-                  borderColor: colorScheme.primary,
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  boxShadow: `0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 ${colorScheme.primary}30`,
-                }}
-                onMouseEnter={handleButtonHover}
-                onMouseLeave={handleButtonLeave}
-                onClick={onSecondaryButtonClick}
-              >
-                {secondaryButtonText}
-              </CustomButton>
-            </div>
-          )}
+       
         </div>
       </div>
 
