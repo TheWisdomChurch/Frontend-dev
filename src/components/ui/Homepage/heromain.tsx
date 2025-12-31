@@ -6,17 +6,17 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ChevronDown } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
-import { H1, H2, BodyMD } from '../text';
-import CustomButton from '../utils/buttons/CustomButton';
-import { Section, Container } from '../layout';
-import { darkShades, lightShades, ColorScheme } from '../colors/colorScheme';
+import { useTheme } from '../../contexts/ThemeContext';
+import { H1, H2, BodyMD } from '../../text';
+import CustomButton from '../../utils/buttons/CustomButton';
+import { Section, Container } from '../../layout';
+import { darkShades, lightShades, ColorScheme } from '../../colors/colorScheme';
 import { defaultSlides } from '@/lib/data';
-import { renderTitle, renderSubtitle } from './heroTextUtil';
-import { useAutoSlide } from './hooks/mainHeroHooks/useAutoSlide';
-import { useHeroAnimation } from './hooks/mainHeroHooks/useheroAnimation';
-import { useSlideAnimation } from './hooks/mainHeroHooks/useSlideAnimation';
-import { useWaveTextAnimation } from './hooks/mainHeroHooks/useWaveText';
+import { renderTitle,  renderSubtitle } from '@/components/utils/heroTextUtil';
+import { useAutoSlide } from '@/components/utils/hooks/mainHeroHooks/useAutoSlide';
+import { useHeroAnimation } from '@/components/utils/hooks/mainHeroHooks/useheroAnimation';
+import { useSlideAnimation } from '@/components/utils/hooks/mainHeroHooks/useSlideAnimation';
+import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
 
 // Type guard helper for image objects
 const isSimpleImage = (image: any): image is { src: string; alt?: string } => {
@@ -346,25 +346,7 @@ const HeroSection = ({
             </H2>
           )}
 
-          {/* Description */}
-          {currentSlideData.description && (
-            <BodyMD
-              ref={descriptionRef}
-              className="mb-6 sm:mb-7 md:mb-8 lg:mb-10 max-w-2xl lg:max-w-3xl mx-auto"
-              style={{
-                color: '#F8FAFC',
-                textShadow: '0 1px 5px rgba(0, 0, 0, 0.8)',
-                opacity: 0.95,
-              }}
-              useThemeColor={false}
-              weight="regular"
-              smWeight="medium"
-            >
-              <span className="text-base sm:text-lg md:text-xl lg:text-2xl block px-3">
-                {currentSlideData.description}
-              </span>
-            </BodyMD>
-          )}
+        
 
           {/* Buttons */}
           <div

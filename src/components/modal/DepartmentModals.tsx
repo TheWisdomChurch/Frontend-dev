@@ -1,8 +1,7 @@
 'use client';
 
-import { BaseModal } from './Base';
+import { useState, useCallback, useRef, useEffect, JSX } from 'react';
 import { useForm } from 'react-hook-form';
-import { useState, useMemo, JSX } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { 
@@ -35,11 +34,15 @@ import {
   Star,
   Home,
   Church,
-  Palette
+  Palette,
+  X,
+  ChevronRight,
+  Info
 } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import React from 'react';
 
-// Department types based on your UI
+// Department types
 export type DepartmentType = 
   | 'Ushers'
   | 'Media Team'
@@ -48,7 +51,7 @@ export type DepartmentType =
   | 'Youth Ministry'
   | 'Technical Team';
 
-// Department configuration - Updated with your color scheme
+// Department configuration
 const DEPARTMENT_CONFIG: Record<DepartmentType, {
   title: string;
   description: string;
@@ -58,46 +61,19 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     label: string;
     description: string;
     icon?: JSX.Element;
-    gradient?: string;
   }>;
   skills?: string[];
   commitment?: string;
-  gradient?: string;
 }> = {
   'Ushers': {
     title: 'Ushers Department',
     description: 'Welcome and guide attendees with warmth and excellence',
     icon: <DoorOpen className="w-5 h-5" />,
-    gradient: 'from-purple-500 to-pink-500',
     roles: [
-      { 
-        id: 'greeter', 
-        label: 'Greeter', 
-        description: 'Welcome people at the entrance', 
-        icon: <UserCheck className="w-4 h-4" />,
-        gradient: 'from-purple-400 to-pink-400'
-      },
-      { 
-        id: 'seating', 
-        label: 'Seating Assistant', 
-        description: 'Help people find seats', 
-        icon: <MapPin className="w-4 h-4" />,
-        gradient: 'from-purple-400 to-pink-400'
-      },
-      { 
-        id: 'information', 
-        label: 'Information Desk', 
-        description: 'Answer questions and provide guidance', 
-        icon: <Bell className="w-4 h-4" />,
-        gradient: 'from-purple-400 to-pink-400'
-      },
-      { 
-        id: 'special_assistance', 
-        label: 'Special Assistance', 
-        description: 'Help elderly and disabled attendees', 
-        icon: <Heart className="w-4 h-4" />,
-        gradient: 'from-purple-400 to-pink-400'
-      },
+      { id: 'greeter', label: 'Greeter', description: 'Welcome people at the entrance', icon: <UserCheck className="w-4 h-4" /> },
+      { id: 'seating', label: 'Seating Assistant', description: 'Help people find seats', icon: <MapPin className="w-4 h-4" /> },
+      { id: 'information', label: 'Information Desk', description: 'Answer questions and provide guidance', icon: <Bell className="w-4 h-4" /> },
+      { id: 'special_assistance', label: 'Special Assistance', description: 'Help elderly and disabled attendees', icon: <Heart className="w-4 h-4" /> },
     ],
     skills: ['Communication', 'Patience', 'Organization', 'Hospitality'],
     commitment: '2-4 hours per week',
@@ -106,36 +82,11 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     title: 'Media Department',
     description: 'Capture and broadcast the move of God through visuals and sound',
     icon: <Video className="w-5 h-5" />,
-    gradient: 'from-blue-500 to-cyan-500',
     roles: [
-      { 
-        id: 'camera', 
-        label: 'Camera Operator', 
-        description: 'Operate video cameras during services', 
-        icon: <Video className="w-4 h-4" />,
-        gradient: 'from-blue-400 to-cyan-400'
-      },
-      { 
-        id: 'sound', 
-        label: 'Sound Engineer', 
-        description: 'Manage audio equipment and mixing', 
-        icon: <Mic className="w-4 h-4" />,
-        gradient: 'from-blue-400 to-cyan-400'
-      },
-      { 
-        id: 'lighting', 
-        label: 'Lighting Technician', 
-        description: 'Control stage and venue lighting', 
-        icon: <Sparkles className="w-4 h-4" />,
-        gradient: 'from-blue-400 to-cyan-400'
-      },
-      { 
-        id: 'livestream', 
-        label: 'Livestream Operator', 
-        description: 'Manage online broadcasting', 
-        icon: <Globe className="w-4 h-4" />,
-        gradient: 'from-blue-400 to-cyan-400'
-      },
+      { id: 'camera', label: 'Camera Operator', description: 'Operate video cameras during services', icon: <Video className="w-4 h-4" /> },
+      { id: 'sound', label: 'Sound Engineer', description: 'Manage audio equipment and mixing', icon: <Mic className="w-4 h-4" /> },
+      { id: 'lighting', label: 'Lighting Technician', description: 'Control stage and venue lighting', icon: <Sparkles className="w-4 h-4" /> },
+      { id: 'livestream', label: 'Livestream Operator', description: 'Manage online broadcasting', icon: <Globe className="w-4 h-4" /> },
     ],
     skills: ['Technical Skills', 'Attention to Detail', 'Creativity', 'Teamwork'],
     commitment: '3-5 hours per week',
@@ -144,74 +95,24 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     title: 'Choir & Worship Team',
     description: 'Lead powerful worship and create heavenly atmospheres',
     icon: <Music className="w-5 h-5" />,
-    gradient: 'from-amber-500 to-orange-500',
     roles: [
-      { 
-        id: 'singer', 
-        label: 'Vocalist', 
-        description: 'Sing in the choir or worship team', 
-        icon: <Mic className="w-4 h-4" />,
-        gradient: 'from-amber-400 to-orange-400'
-      },
-      { 
-        id: 'instrumentalist', 
-        label: 'Instrumentalist', 
-        description: 'Play musical instruments', 
-        icon: <Music className="w-4 h-4" />,
-        gradient: 'from-amber-400 to-orange-400'
-      },
-      { 
-        id: 'worship_leader', 
-        label: 'Worship Leader', 
-        description: 'Lead worship sessions', 
-        icon: <Sparkles className="w-4 h-4" />,
-        gradient: 'from-amber-400 to-orange-400'
-      },
-      { 
-        id: 'choir_director', 
-        label: 'Choir Director', 
-        description: 'Direct and train choir members', 
-        icon: <Award className="w-4 h-4" />,
-        gradient: 'from-amber-400 to-orange-400'
-      },
+      { id: 'singer', label: 'Vocalist', description: 'Sing in the choir or worship team', icon: <Mic className="w-4 h-4" /> },
+      { id: 'instrumentalist', label: 'Instrumentalist', description: 'Play musical instruments', icon: <Music className="w-4 h-4" /> },
+      { id: 'worship_leader', label: 'Worship Leader', description: 'Lead worship sessions', icon: <Sparkles className="w-4 h-4" /> },
+      { id: 'choir_director', label: 'Choir Director', description: 'Direct and train choir members', icon: <Award className="w-4 h-4" /> },
     ],
     skills: ['Musical Talent', 'Worship Heart', 'Team Player', 'Commitment'],
-    commitment: '4-6 hours per week (including rehearsals)',
+    commitment: '4-6 hours per week',
   },
   'Children Ministry': {
     title: 'Children Ministry',
     description: 'Nurture young hearts and teach them the ways of God',
     icon: <School className="w-5 h-5" />,
-    gradient: 'from-green-500 to-emerald-500',
     roles: [
-      { 
-        id: 'teacher', 
-        label: 'Sunday School Teacher', 
-        description: 'Teach Bible lessons to children', 
-        icon: <BookOpen className="w-4 h-4" />,
-        gradient: 'from-green-400 to-emerald-400'
-      },
-      { 
-        id: 'assistant', 
-        label: 'Teacher\'s Assistant', 
-        description: 'Assist with classroom activities', 
-        icon: <Users className="w-4 h-4" />,
-        gradient: 'from-green-400 to-emerald-400'
-      },
-      { 
-        id: 'activity_leader', 
-        label: 'Activity Leader', 
-        description: 'Lead games and crafts', 
-        icon: <Sparkles className="w-4 h-4" />,
-        gradient: 'from-green-400 to-emerald-400'
-      },
-      { 
-        id: 'safety', 
-        label: 'Safety Monitor', 
-        description: 'Ensure child safety and security', 
-        icon: <Shield className="w-4 h-4" />,
-        gradient: 'from-green-400 to-emerald-400'
-      },
+      { id: 'teacher', label: 'Sunday School Teacher', description: 'Teach Bible lessons to children', icon: <BookOpen className="w-4 h-4" /> },
+      { id: 'assistant', label: 'Teacher\'s Assistant', description: 'Assist with classroom activities', icon: <Users className="w-4 h-4" /> },
+      { id: 'activity_leader', label: 'Activity Leader', description: 'Lead games and crafts', icon: <Sparkles className="w-4 h-4" /> },
+      { id: 'safety', label: 'Safety Monitor', description: 'Ensure child safety and security', icon: <Shield className="w-4 h-4" /> },
     ],
     skills: ['Patience', 'Creativity', 'Love for Children', 'Teaching Ability'],
     commitment: '2-3 hours per week',
@@ -220,36 +121,11 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     title: 'Youth Ministry',
     description: 'Empower the next generation to walk in purpose and power',
     icon: <Sparkles className="w-5 h-5" />,
-    gradient: 'from-indigo-500 to-purple-500',
     roles: [
-      { 
-        id: 'mentor', 
-        label: 'Youth Mentor', 
-        description: 'Mentor and guide young people', 
-        icon: <UserCheck className="w-4 h-4" />,
-        gradient: 'from-indigo-400 to-purple-400'
-      },
-      { 
-        id: 'activity_coordinator', 
-        label: 'Activity Coordinator', 
-        description: 'Plan youth events and activities', 
-        icon: <Calendar className="w-4 h-4" />,
-        gradient: 'from-indigo-400 to-purple-400'
-      },
-      { 
-        id: 'small_group_leader', 
-        label: 'Small Group Leader', 
-        description: 'Lead Bible study groups', 
-        icon: <Users className="w-4 h-4" />,
-        gradient: 'from-indigo-400 to-purple-400'
-      },
-      { 
-        id: 'outreach', 
-        label: 'Outreach Coordinator', 
-        description: 'Plan community outreach events', 
-        icon: <Globe className="w-4 h-4" />,
-        gradient: 'from-indigo-400 to-purple-400'
-      },
+      { id: 'mentor', label: 'Youth Mentor', description: 'Mentor and guide young people', icon: <UserCheck className="w-4 h-4" /> },
+      { id: 'activity_coordinator', label: 'Activity Coordinator', description: 'Plan youth events and activities', icon: <Calendar className="w-4 h-4" /> },
+      { id: 'small_group_leader', label: 'Small Group Leader', description: 'Lead Bible study groups', icon: <Users className="w-4 h-4" /> },
+      { id: 'outreach', label: 'Outreach Coordinator', description: 'Plan community outreach events', icon: <Globe className="w-4 h-4" /> },
     ],
     skills: ['Relatability', 'Leadership', 'Communication', 'Passion for Youth'],
     commitment: '3-5 hours per week',
@@ -258,42 +134,83 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     title: 'Technical Team',
     description: 'Ensure seamless operations behind the scenes with excellence',
     icon: <Target className="w-5 h-5" />,
-    gradient: 'from-slate-600 to-zinc-800',
     roles: [
-      { 
-        id: 'projection', 
-        label: 'Projection Operator', 
-        description: 'Manage slides and media presentation', 
-        icon: <Video className="w-4 h-4" />,
-        gradient: 'from-slate-500 to-zinc-700'
-      },
-      { 
-        id: 'it_support', 
-        label: 'IT Support', 
-        description: 'Maintain computers and network systems', 
-        icon: <Target className="w-4 h-4" />,
-        gradient: 'from-slate-500 to-zinc-700'
-      },
-      { 
-        id: 'equipment', 
-        label: 'Equipment Manager', 
-        description: 'Maintain and setup technical equipment', 
-        icon: <Briefcase className="w-4 h-4" />,
-        gradient: 'from-slate-500 to-zinc-700'
-      },
-      { 
-        id: 'broadcast', 
-        label: 'Broadcast Technician', 
-        description: 'Manage recording and broadcasting', 
-        icon: <Globe className="w-4 h-4" />,
-        gradient: 'from-slate-500 to-zinc-700'
-      },
+      { id: 'projection', label: 'Projection Operator', description: 'Manage slides and media presentation', icon: <Video className="w-4 h-4" /> },
+      { id: 'it_support', label: 'IT Support', description: 'Maintain computers and network systems', icon: <Target className="w-4 h-4" /> },
+      { id: 'equipment', label: 'Equipment Manager', description: 'Maintain and setup technical equipment', icon: <Briefcase className="w-4 h-4" /> },
+      { id: 'broadcast', label: 'Broadcast Technician', description: 'Manage recording and broadcasting', icon: <Globe className="w-4 h-4" /> },
     ],
     skills: ['Technical Skills', 'Problem Solving', 'Attention to Detail', 'Reliability'],
     commitment: '3-5 hours per week',
   },
 };
 
+// Modern Modal Component
+const ModernModal = ({ 
+  isOpen, 
+  onClose, 
+  title,
+  subtitle,
+  children,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && mounted) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [isOpen, mounted]);
+
+  if (!mounted || !isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div
+        ref={modalRef}
+        className="relative w-full sm:w-full sm:max-w-2xl bg-gradient-to-b from-slate-950 to-slate-900 border border-slate-800/50 shadow-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto rounded-none sm:rounded-3xl"
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-10 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/30 px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-center">
+          <div className="pr-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-white">{title}</h2>
+            {subtitle && (
+              <p className="text-slate-400 text-sm mt-1">{subtitle}</p>
+            )}
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-slate-400 hover:text-white transition p-2 flex-shrink-0"
+          >
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
+        </div>
+        
+        {/* Content */}
+        <div className="p-4 sm:p-8">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Experience levels
 const EXPERIENCE_LEVELS = [
@@ -312,7 +229,7 @@ const AVAILABILITY = [
   { id: 'full_time', label: 'Full-time Ministry', icon: <Heart className="w-4 h-4" /> },
 ];
 
-// Define validation schema with Zod - Simplified for Lagos
+// Define validation schema
 const joinFormSchema = z.object({
   // Personal Info
   firstName: z.string()
@@ -322,17 +239,12 @@ const joinFormSchema = z.object({
     .min(2, 'Last name must be at least 2 characters')
     .max(50, 'Last name too long'),
   email: z.string()
-    .email('Invalid email address')
-    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email format'),
+    .email('Invalid email address'),
   phone: z.string()
-    .regex(/^(\+234|0)[789][01]\d{8}$/, 'Enter a valid Nigerian phone number'),
-  
-  // Location Info
-  lga: z.string().min(1, 'Please select your LGA in Lagos'),
-  serviceLocation: z.string().min(1, 'Please select preferred service location'),
+    .min(10, 'Enter a valid phone number'),
   
   // Department Info
-  department: z.string().min(1, 'Please select a department'),
+  department: z.string(),
   role: z.string().min(1, 'Please select a role'),
   
   // Experience & Availability
@@ -381,6 +293,11 @@ export const JoinUsModal = ({
   const [selectedRole, setSelectedRole] = useState<string>('');
 
   const departmentConfig = DEPARTMENT_CONFIG[department];
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     register,
@@ -416,7 +333,6 @@ export const JoinUsModal = ({
   const handleFormSubmit = async (data: JoinFormData) => {
     setIsSubmitting(true);
     try {
-      // Add department info to data
       const submissionData = {
         ...data,
         department_name: departmentConfig.title,
@@ -425,10 +341,10 @@ export const JoinUsModal = ({
       };
 
       await onSubmit(submissionData);
-      // Reset form on success
       reset();
       setSelectedRole('');
       setStep('personal');
+      onClose();
     } catch (error) {
       console.error('Submission error:', error);
       throw error;
@@ -443,7 +359,7 @@ export const JoinUsModal = ({
     
     switch (step) {
       case 'personal':
-        isValid = await trigger(['firstName', 'lastName', 'email', 'phone', 'lga', 'serviceLocation']);
+        isValid = await trigger(['firstName', 'lastName', 'email', 'phone']);
         break;
       case 'department':
         isValid = await trigger(['role', 'experience']);
@@ -459,7 +375,6 @@ export const JoinUsModal = ({
       } else if (step === 'department') {
         setStep('availability');
       } else {
-        // Final step - submit
         await handleSubmit(handleFormSubmit)();
       }
     }
@@ -473,665 +388,529 @@ export const JoinUsModal = ({
     }
   };
 
-  // Format progress steps
+  // Progress steps
   const progressSteps = [
-    { 
-      id: 'personal', 
-      label: 'Personal', 
-      icon: <User className="w-4 h-4" />,
-      color: 'text-blue-500'
-    },
-    { 
-      id: 'department', 
-      label: 'Role', 
-      icon: departmentConfig.icon,
-      color: 'text-yellow-500'
-    },
-    { 
-      id: 'availability', 
-      label: 'Details', 
-      icon: <Calendar className="w-4 h-4" />,
-      color: 'text-green-500'
-    },
-    { 
-      id: 'review', 
-      label: 'Submit', 
-      icon: <Check className="w-4 h-4" />,
-      color: 'text-purple-500'
-    },
+    { id: 'personal', label: 'Personal', icon: <User className="w-4 h-4" /> },
+    { id: 'department', label: 'Role', icon: departmentConfig.icon },
+    { id: 'availability', label: 'Details', icon: <Calendar className="w-4 h-4" /> },
   ];
 
-  // Memoized role buttons with gradient backgrounds
-  const roleButtons = useMemo(() => 
-    departmentConfig.roles.map((role) => (
-      <button
-        key={role.id}
-        type="button"
-        onClick={() => {
-          setSelectedRole(role.id);
-          setValue('role', role.id);
-        }}
-        className={`p-4 rounded-xl text-left transition-all border-2 ${
-          selectedRole === role.id
-            ? 'border-yellow-500 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-gray-800 dark:to-gray-900 shadow-lg'
-            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-yellow-400 hover:shadow-md'
-        }`}
-      >
-        <div className="flex items-start gap-3">
-          <div className={`p-2 rounded-lg bg-gradient-to-br ${role.gradient || departmentConfig.gradient} shadow-sm`}>
-            {role.icon || departmentConfig.icon}
-          </div>
-          <div className="flex-1">
-            <div className={`font-semibold text-sm ${
-              selectedRole === role.id 
-                ? 'text-gray-900 dark:text-yellow-100' 
-                : 'text-gray-900 dark:text-gray-100'
-            }`}>
-              {role.label}
-            </div>
-            <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-              {role.description}
-            </div>
-          </div>
-          {selectedRole === role.id && (
-            <div className="bg-yellow-500 text-white p-1 rounded-full">
-              <Check className="w-3.5 h-3.5" />
-            </div>
-          )}
-        </div>
-      </button>
-    )), [departmentConfig, selectedRole, setValue]
-  );
-
-  // Input field styling using your color scheme
-  const inputClassName = `
-    w-full px-3 py-2.5 text-sm rounded-lg border 
-    focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all duration-200
-    bg-white dark:bg-gray-800 
-    text-gray-900 dark:text-gray-100
-    placeholder:text-gray-500 dark:placeholder:text-gray-400
-    border-gray-300 dark:border-gray-600
-    focus:border-yellow-500 dark:focus:border-yellow-500
-    focus:ring-yellow-500/20 dark:focus:ring-yellow-500/30
-    disabled:opacity-50 disabled:cursor-not-allowed
-  `;
-
-  const labelClassName = `
-    block text-xs font-medium mb-1.5 
-    text-gray-700 dark:text-gray-300
-    tracking-wide uppercase
-  `;
-
-  const errorClassName = `
-    mt-1.5 text-xs text-red-500 dark:text-red-400
-    flex items-center gap-1
-  `;
+  if (!mounted) return null;
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
+    <ModernModal 
+      isOpen={isOpen} 
+      onClose={onClose} 
       title={`Join ${departmentConfig.title}`}
       subtitle={departmentConfig.description}
-      maxWidth="max-w-4xl"
-      preventClose={isSubmitting}
-      isLoading={isSubmitting}
-      loadingText="Submitting your application..."
     >
-      {/* Progress Steps - Modern Design */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
-          {progressSteps.map((progressStep, index) => (
-            <div key={progressStep.id} className="flex items-center">
-              <div className="relative">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300 ${
-                    step === progressStep.id || 
-                    (step === 'department' && index === 1) ||
-                    (step === 'availability' && index === 2)
-                    ? `${progressStep.color} bg-yellow-500/10 border-2 border-yellow-500/30`
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-700'
-                  }`}
-                >
-                  {step === progressStep.id || 
-                   (step === 'department' && index === 1) ||
-                   (step === 'availability' && index === 2) ? (
-                    progressStep.icon
-                  ) : (
-                    <span>{index + 1}</span>
-                  )}
-                </div>
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  <span className={`text-xs font-medium hidden sm:block ${
-                    step === progressStep.id || 
-                    (step === 'department' && index === 1) ||
-                    (step === 'availability' && index === 2)
-                    ? 'text-gray-900 dark:text-gray-100'
-                    : 'text-gray-500 dark:text-gray-400'
-                  }`}>
-                    {progressStep.label}
-                  </span>
-                </div>
-              </div>
-              {index < progressSteps.length - 1 && (
-                <div className={`w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 rounded-full ${
-                  step === progressStep.id || 
-                  (index === 0 && step === 'department') ||
-                  (index === 0 && step === 'availability') ||
-                  (index === 1 && step === 'availability')
-                    ? 'bg-yellow-500' 
-                    : 'bg-gray-200 dark:bg-gray-700'
-                }`} />
-              )}
-            </div>
-          ))}
-        </div>
-        
-        {/* Progress Bar - Modern */}
-        <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-yellow-500 to-yellow-600 transition-all duration-500"
-            style={{ 
-              width: step === 'personal' ? '25%' : 
-                     step === 'department' ? '50%' : 
-                     step === 'availability' ? '75%' : '100%' 
-            }}
-          />
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
-        {/* Step 1: Personal Information */}
-        {step === 'personal' && (
-          <div className="space-y-6">
-            <div className="mb-6">
-              <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-gray-100 mb-2">
-                <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-500 to-yellow-600">
-                  <User className="w-5 h-5 text-white" />
-                </div>
-                Personal Information
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Tell us about yourself. All fields are required.
-              </p>
-            </div>
-            
-            {/* Name Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <div>
-                <label htmlFor="firstName" className={labelClassName}>
-                  First Name
-                </label>
-                <input
-                  id="firstName"
-                  type="text"
-                  {...register('firstName')}
-                  className={inputClassName}
-                  placeholder="John"
-                />
-                {errors.firstName && (
-                  <p className={errorClassName}>
-                    <span>⚠</span> {errors.firstName.message}
-                  </p>
-                )}
-              </div>
-              
-              <div>
-                <label htmlFor="lastName" className={labelClassName}>
-                  Last Name
-                </label>
-                <input
-                  id="lastName"
-                  type="text"
-                  {...register('lastName')}
-                  className={inputClassName}
-                  placeholder="Doe"
-                />
-                {errors.lastName && (
-                  <p className={errorClassName}>
-                    <span>⚠</span> {errors.lastName.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Contact Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <div>
-                <label htmlFor="email" className={labelClassName}>
-                  Email Address
-                </label>
+      <div className="space-y-6">
+        {/* Progress Steps */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            {progressSteps.map((progressStep, index) => (
+              <div key={progressStep.id} className="flex items-center">
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                    <Mail className="w-4 h-4 text-gray-400" />
-                  </div>
-                  <input
-                    id="email"
-                    type="email"
-                    {...register('email')}
-                    className={`${inputClassName} pl-10`}
-                    placeholder="john@example.com"
-                  />
-                </div>
-                {errors.email && (
-                  <p className={errorClassName}>
-                    <span>⚠</span> {errors.email.message}
-                  </p>
-                )}
-              </div>
-              
-              <div>
-                <label htmlFor="phone" className={labelClassName}>
-                  Phone Number
-                </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                    <Phone className="w-4 h-4 text-gray-400" />
-                  </div>
-                  <input
-                    id="phone"
-                    type="tel"
-                    {...register('phone')}
-                    className={`${inputClassName} pl-10`}
-                    placeholder="08012345678 or +2348012345678"
-                  />
-                </div>
-                {errors.phone && (
-                  <p className={errorClassName}>
-                    <span>⚠</span> {errors.phone.message}
-                  </p>
-                )}
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  Nigerian format: 080, 081, 090, 091, 070, 081
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: Department & Role Selection */}
-        {step === 'department' && (
-          <div className="space-y-8">
-            {/* Department Header */}
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${departmentConfig.gradient} shadow-lg`}>
-                  {departmentConfig.icon}
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                    {departmentConfig.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {departmentConfig.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Role Selection */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  Select Your Role
-                </h4>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {selectedRole ? '✓ Selected' : 'Choose one'}
-                </span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {roleButtons}
-              </div>
-              {errors.role && (
-                <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                  <p className="text-sm text-red-600 dark:text-red-400">
-                    ⚠ {errors.role.message}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Experience Level */}
-            <div>
-              <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                Ministry Experience Level
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {EXPERIENCE_LEVELS.map(level => (
-                  <button
-                    key={level.id}
-                    type="button"
-                    onClick={() => setValue('experience', level.id)}
-                    className={`p-4 rounded-xl text-center transition-all border-2 ${
-                      formData.experience === level.id
-                        ? 'border-yellow-500 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-gray-800 dark:to-gray-900'
-                        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-yellow-400'
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300 ${
+                      step === progressStep.id
+                        ? 'bg-amber-500 text-white border-2 border-amber-500/30'
+                        : 'bg-slate-800 text-slate-400 border border-slate-700'
                     }`}
                   >
-                    <div className="font-semibold text-sm text-gray-900 dark:text-gray-100 mb-1">
-                      {level.label}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                      {level.description}
-                    </div>
-                  </button>
-                ))}
-              </div>
-              {errors.experience && (
-                <p className={errorClassName}>
-                  <span>⚠</span> {errors.experience.message}
-                </p>
-              )}
-            </div>
-
-            {/* Department Requirements */}
-            <div className="bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-yellow-500/10">
-                  <Target className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                    {step === progressStep.id ? progressStep.icon : index + 1}
+                  </div>
                 </div>
+                {index < progressSteps.length - 1 && (
+                  <div className={`w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 rounded-full ${
+                    step === progressStep.id || 
+                    (index === 0 && step === 'department') ||
+                    (index === 0 && step === 'availability') ||
+                    (index === 1 && step === 'availability')
+                      ? 'bg-amber-500' 
+                      : 'bg-slate-700'
+                  }`} />
+                )}
+              </div>
+            ))}
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500"
+              style={{ 
+                width: step === 'personal' ? '33%' : 
+                       step === 'department' ? '66%' : '100%'
+              }}
+            />
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+          {/* Step 1: Personal Information */}
+          {step === 'personal' && (
+            <div className="space-y-4">
+              <div className="mb-4">
+                <h3 className="text-lg font-bold text-white mb-2">Personal Information</h3>
+                <p className="text-slate-400 text-sm">
+                  Tell us about yourself. All fields are required.
+                </p>
+              </div>
+              
+              {/* Name Fields */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Department Requirements
-                  </h4>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="text-xs text-gray-700 dark:text-gray-300 font-medium mb-1">
-                        Required Skills:
+                  <label htmlFor="firstName" className="block text-slate-400 text-sm font-medium mb-2">
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    {...register('firstName')}
+                    className="w-full px-4 py-3 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition"
+                    placeholder="John"
+                  />
+                  {errors.firstName && (
+                    <p className="mt-2 text-sm text-red-400">
+                      {errors.firstName.message}
+                    </p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="lastName" className="block text-slate-400 text-sm font-medium mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    type="text"
+                    {...register('lastName')}
+                    className="w-full px-4 py-3 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition"
+                    placeholder="Doe"
+                  />
+                  {errors.lastName && (
+                    <p className="mt-2 text-sm text-red-400">
+                      {errors.lastName.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Contact Fields */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="email" className="block text-slate-400 text-sm font-medium mb-2">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="email"
+                      type="email"
+                      {...register('email')}
+                      className="w-full px-4 py-3 pl-11 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition"
+                      placeholder="john@example.com"
+                    />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  </div>
+                  {errors.email && (
+                    <p className="mt-2 text-sm text-red-400">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-slate-400 text-sm font-medium mb-2">
+                    Phone Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="phone"
+                      type="tel"
+                      {...register('phone')}
+                      className="w-full px-4 py-3 pl-11 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition"
+                      placeholder="+234 801 234 5678"
+                    />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  </div>
+                  {errors.phone && (
+                    <p className="mt-2 text-sm text-red-400">
+                      {errors.phone.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Department & Role Selection */}
+          {step === 'department' && (
+            <div className="space-y-6">
+              {/* Department Header */}
+              <div className="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-4 sm:p-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20">
+                    {React.cloneElement(departmentConfig.icon, { className: "w-6 h-6 text-amber-400" })}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">{departmentConfig.title}</h3>
+                    <p className="text-slate-400 text-sm mt-1">{departmentConfig.description}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Role Selection */}
+              <div>
+                <h4 className="text-white font-medium mb-4">Select Your Role</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {departmentConfig.roles.map((role) => (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedRole(role.id);
+                        setValue('role', role.id);
+                      }}
+                      className={`p-4 rounded-xl text-left transition-all border ${
+                        selectedRole === role.id
+                          ? 'border-amber-500 bg-gradient-to-r from-amber-500/10 to-orange-500/5'
+                          : 'border-slate-700 bg-slate-900/30 hover:border-slate-600'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20">
+                          {role.icon || departmentConfig.icon}
+                        </div>
+                        <div className="flex-1">
+                          <div className={`font-semibold text-sm ${
+                            selectedRole === role.id ? 'text-amber-400' : 'text-white'
+                          }`}>
+                            {role.label}
+                          </div>
+                          <div className="text-xs text-slate-400 mt-1">
+                            {role.description}
+                          </div>
+                        </div>
+                        {selectedRole === role.id && (
+                          <div className="bg-amber-500 text-white p-1 rounded-full">
+                            <Check className="w-3.5 h-3.5" />
+                          </div>
+                        )}
                       </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {departmentConfig.skills?.map((skill, index) => (
-                          <span 
-                            key={index}
-                            className="px-2 py-1 text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-full"
-                          >
-                            {skill}
-                          </span>
-                        ))}
+                    </button>
+                  ))}
+                </div>
+                {errors.role && (
+                  <p className="mt-3 text-sm text-red-400">
+                    {errors.role.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Experience Level */}
+              <div>
+                <h4 className="text-white font-medium mb-4">Ministry Experience Level</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {EXPERIENCE_LEVELS.map(level => (
+                    <button
+                      key={level.id}
+                      type="button"
+                      onClick={() => setValue('experience', level.id)}
+                      className={`p-4 rounded-xl text-center transition-all border ${
+                        formData.experience === level.id
+                          ? 'border-amber-500 bg-gradient-to-r from-amber-500/10 to-orange-500/5'
+                          : 'border-slate-700 bg-slate-900/30 hover:border-slate-600'
+                      }`}
+                    >
+                      <div className="font-semibold text-sm text-white mb-1">
+                        {level.label}
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <Clock className="w-4 h-4" />
-                      <span>Time Commitment: {departmentConfig.commitment}</span>
+                      <div className="text-xs text-slate-400">
+                        {level.description}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                {errors.experience && (
+                  <p className="mt-3 text-sm text-red-400">
+                    {errors.experience.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Department Requirements */}
+              <div className="rounded-lg border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-4">
+                <div className="flex items-start gap-3">
+                  <Target className="w-5 h-5 text-amber-400 mt-0.5" />
+                  <div>
+                    <h4 className="text-white font-medium mb-2">Department Requirements</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="text-xs text-slate-400 mb-1">Required Skills:</div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {departmentConfig.skills?.map((skill, index) => (
+                            <span 
+                              key={index}
+                              className="px-2 py-1 text-xs bg-amber-500/20 text-amber-300 rounded-full"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-400">
+                        <Clock className="w-4 h-4" />
+                        <span>Time Commitment: {departmentConfig.commitment}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Step 3: Availability & Additional Info */}
-        {step === 'availability' && (
-          <div className="space-y-8">
-            <div className="mb-6">
-              <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-gray-100 mb-2">
-                <div className="p-2 rounded-lg bg-gradient-to-r from-green-500 to-green-600">
-                  <Calendar className="w-5 h-5 text-white" />
-                </div>
-                Availability & Details
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Tell us when you can serve and share more about yourself.
-              </p>
-            </div>
-
-            {/* Availability Selection */}
-            <div>
-              <h4 className={labelClassName}>
-                When can you serve? (Select all that apply)
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {AVAILABILITY.map(option => {
-                  const isSelected = selectedAvailability.includes(option.id);
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => toggleAvailability(option.id)}
-                      className={`p-4 rounded-xl text-center transition-all border-2 ${
-                        isSelected
-                          ? 'border-green-500 bg-gradient-to-r from-green-50 to-green-100 dark:from-gray-800 dark:to-gray-900'
-                          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-green-400'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-2">
-                        <div className={`p-2 rounded-lg ${
-                          isSelected 
-                            ? 'bg-green-500 text-white' 
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                        }`}>
-                          {option.icon}
-                        </div>
-                        <div className="font-medium text-sm text-gray-900 dark:text-gray-100">
-                          {option.label}
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-              {errors.availability && (
-                <p className={errorClassName}>
-                  <span>⚠</span> {errors.availability.message}
+          {/* Step 3: Availability & Additional Info */}
+          {step === 'availability' && (
+            <div className="space-y-6">
+              <div className="mb-4">
+                <h3 className="text-lg font-bold text-white mb-2">Availability & Details</h3>
+                <p className="text-slate-400 text-sm">
+                  Tell us when you can serve and share more about yourself.
                 </p>
+              </div>
+
+              {/* Availability Selection */}
+              <div>
+                <h4 className="text-slate-400 text-sm font-medium mb-3">
+                  When can you serve? (Select all that apply)
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {AVAILABILITY.map(option => {
+                    const isSelected = selectedAvailability.includes(option.id);
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => toggleAvailability(option.id)}
+                        className={`p-4 rounded-xl text-center transition-all border ${
+                          isSelected
+                            ? 'border-amber-500 bg-gradient-to-r from-amber-500/10 to-orange-500/5'
+                            : 'border-slate-700 bg-slate-900/30 hover:border-slate-600'
+                        }`}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <div className={`p-2 rounded-lg ${
+                            isSelected 
+                              ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white' 
+                              : 'bg-slate-800 text-slate-400'
+                          }`}>
+                            {option.icon}
+                          </div>
+                          <div className="font-medium text-sm text-white">
+                            {option.label}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                {errors.availability && (
+                  <p className="mt-3 text-sm text-red-400">
+                    {errors.availability.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Occupation & Spiritual Gifts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="occupation" className="block text-slate-400 text-sm font-medium mb-2">
+                    Occupation / Profession
+                  </label>
+                  <input
+                    id="occupation"
+                    type="text"
+                    {...register('occupation')}
+                    className="w-full px-4 py-3 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition"
+                    placeholder="e.g., Software Engineer, Teacher, Student"
+                  />
+                  {errors.occupation && (
+                    <p className="mt-2 text-sm text-red-400">
+                      {errors.occupation.message}
+                    </p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="spiritualGifts" className="block text-slate-400 text-sm font-medium mb-2">
+                    Spiritual Gifts (Optional)
+                  </label>
+                  <input
+                    id="spiritualGifts"
+                    type="text"
+                    {...register('spiritualGifts')}
+                    className="w-full px-4 py-3 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition"
+                    placeholder="e.g., Teaching, Mercy, Leadership"
+                  />
+                </div>
+              </div>
+
+              {/* Why Join */}
+              <div>
+                <label htmlFor="whyJoin" className="block text-slate-400 text-sm font-medium mb-2">
+                  Why do you want to join this ministry?
+                </label>
+                <textarea
+                  id="whyJoin"
+                  {...register('whyJoin')}
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition resize-none"
+                  placeholder="Share your calling, passion, and what you hope to contribute to this ministry..."
+                />
+                <div className="flex justify-between mt-2">
+                  {errors.whyJoin ? (
+                    <p className="text-sm text-red-400">
+                      {errors.whyJoin.message}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-slate-500">
+                      Minimum 20 characters
+                    </p>
+                  )}
+                  <p className="text-xs text-slate-500">
+                    {formData.whyJoin?.length || 0}/500
+                  </p>
+                </div>
+              </div>
+
+              {/* Previous Ministry */}
+              <div>
+                <label htmlFor="previousMinistry" className="block text-slate-400 text-sm font-medium mb-2">
+                  Previous Ministry Experience (Optional)
+                </label>
+                <textarea
+                  id="previousMinistry"
+                  {...register('previousMinistry')}
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-lg border border-slate-700 bg-slate-900/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition resize-none"
+                  placeholder="Share any previous church ministry experience..."
+                />
+              </div>
+
+              {/* Agreement Checkboxes */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-slate-700 bg-slate-900/30">
+                  <input
+                    type="checkbox"
+                    id="agreeToTerms"
+                    {...register('agreeToTerms')}
+                    className="w-4 h-4 mt-1 text-amber-500 focus:ring-amber-500 border-slate-600 rounded bg-slate-800"
+                  />
+                  <div>
+                    <label htmlFor="agreeToTerms" className="text-sm font-medium text-white">
+                      I agree to the terms and conditions *
+                    </label>
+                    <p className="text-xs text-slate-400 mt-1">
+                      By checking this box, I commit to serving faithfully, upholding church values, 
+                      and being accountable to ministry leadership.
+                    </p>
+                    {errors.agreeToTerms && (
+                      <p className="mt-2 text-xs text-red-400">
+                        {errors.agreeToTerms.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-slate-700 bg-slate-900/30">
+                  <input
+                    type="checkbox"
+                    id="agreeToTraining"
+                    {...register('agreeToTraining')}
+                    className="w-4 h-4 mt-1 text-amber-500 focus:ring-amber-500 border-slate-600 rounded bg-slate-800"
+                  />
+                  <div>
+                    <label htmlFor="agreeToTraining" className="text-sm font-medium text-white">
+                      I agree to attend required training *
+                    </label>
+                    <p className="text-xs text-slate-400 mt-1">
+                      I understand that ministry training is mandatory and commit to attending 
+                      all scheduled training sessions.
+                    </p>
+                    {errors.agreeToTraining && (
+                      <p className="mt-2 text-xs text-red-400">
+                        {errors.agreeToTraining.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Next Steps Info */}
+              <div className="rounded-lg border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-4">
+                <div className="flex items-start gap-3">
+                  <MessageSquare className="w-5 h-5 text-amber-400 mt-0.5" />
+                  <div>
+                    <h4 className="text-white font-medium mb-2">What happens after you apply?</h4>
+                    <ul className="space-y-1.5 text-sm text-slate-400">
+                      <li className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Application review within 3-5 business days</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Email notification with next steps</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Orientation & training session scheduling</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between pt-6 border-t border-slate-800">
+            <button
+              type="button"
+              onClick={handlePrevStep}
+              disabled={step === 'personal' || isSubmitting}
+              className="px-6 py-3 rounded-lg border border-slate-700 text-slate-300 hover:text-white hover:border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2 text-sm font-medium"
+            >
+              <ChevronRight className="w-4 h-4 rotate-180" />
+              Back
+            </button>
+            
+            <button
+              type="button"
+              onClick={handleNextStep}
+              disabled={isSubmitting}
+              className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-semibold shadow-lg transition-all hover:shadow-amber-500/20"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : step === 'availability' ? (
+                <>
+                  Submit Application
+                  <Check className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  Continue
+                  <ChevronRight className="w-4 h-4" />
+                </>
               )}
-            </div>
-
-            {/* Occupation & Spiritual Gifts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="occupation" className={labelClassName}>
-                  Occupation / Profession
-                </label>
-                <input
-                  id="occupation"
-                  type="text"
-                  {...register('occupation')}
-                  className={inputClassName}
-                  placeholder="e.g., Software Engineer, Teacher, Student"
-                />
-                {errors.occupation && (
-                  <p className={errorClassName}>
-                    <span>⚠</span> {errors.occupation.message}
-                  </p>
-                )}
-              </div>
-              
-              <div>
-                <label htmlFor="spiritualGifts" className={labelClassName}>
-                  Spiritual Gifts (Optional)
-                </label>
-                <input
-                  id="spiritualGifts"
-                  type="text"
-                  {...register('spiritualGifts')}
-                  className={inputClassName}
-                  placeholder="e.g., Teaching, Mercy, Leadership"
-                />
-              </div>
-            </div>
-
-            {/* Why Join */}
-            <div>
-              <label htmlFor="whyJoin" className={labelClassName}>
-                Why do you want to join this ministry?
-              </label>
-              <textarea
-                id="whyJoin"
-                {...register('whyJoin')}
-                rows={4}
-                className={`${inputClassName} resize-none`}
-                placeholder="Share your calling, passion, and what you hope to contribute to this ministry..."
-              />
-              <div className="flex justify-between mt-2">
-                {errors.whyJoin ? (
-                  <p className={errorClassName}>
-                    <span>⚠</span> {errors.whyJoin.message}
-                  </p>
-                ) : (
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Minimum 20 characters
-                  </p>
-                )}
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {formData.whyJoin?.length || 0}/500
-                </p>
-              </div>
-            </div>
-
-            {/* Previous Ministry */}
-            <div>
-              <label htmlFor="previousMinistry" className={labelClassName}>
-                Previous Ministry Experience (Optional)
-              </label>
-              <textarea
-                id="previousMinistry"
-                {...register('previousMinistry')}
-                rows={3}
-                className={`${inputClassName} resize-none`}
-                placeholder="Share any previous church ministry experience..."
-              />
-            </div>
-
-            {/* Agreement Checkboxes */}
-            <div className="space-y-4">
-              <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
-                <input
-                  type="checkbox"
-                  id="agreeToTerms"
-                  {...register('agreeToTerms')}
-                  className="w-4 h-4 mt-1 text-yellow-500 focus:ring-yellow-500 border-gray-300 rounded"
-                />
-                <div>
-                  <label htmlFor="agreeToTerms" className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    I agree to the terms and conditions *
-                  </label>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                    By checking this box, I commit to serving faithfully, upholding church values, 
-                    maintaining confidentiality, and being accountable to ministry leadership.
-                  </p>
-                  {errors.agreeToTerms && (
-                    <p className="mt-2 text-xs text-red-500 dark:text-red-400">
-                      ⚠ {errors.agreeToTerms.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
-                <input
-                  type="checkbox"
-                  id="agreeToTraining"
-                  {...register('agreeToTraining')}
-                  className="w-4 h-4 mt-1 text-yellow-500 focus:ring-yellow-500 border-gray-300 rounded"
-                />
-                <div>
-                  <label htmlFor="agreeToTraining" className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    I agree to attend required training *
-                  </label>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                    I understand that ministry training is mandatory and commit to attending 
-                    all scheduled training sessions for this department.
-                  </p>
-                  {errors.agreeToTraining && (
-                    <p className="mt-2 text-xs text-red-500 dark:text-red-400">
-                      ⚠ {errors.agreeToTraining.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Next Steps Info */}
-            <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 border border-blue-200 dark:border-blue-800/30 rounded-xl p-4">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-blue-500/20">
-                  <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-2">
-                    What happens after you apply?
-                  </h4>
-                  <ul className="space-y-1.5 text-sm text-blue-700 dark:text-blue-400">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Application review within 3-5 business days</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Email notification with next steps</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Orientation & training session scheduling</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Ministry placement and service commencement</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            </button>
           </div>
-        )}
-
-        {/* Navigation Buttons */}
-        <div className="flex justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
-          <button
-            type="button"
-            onClick={handlePrevStep}
-            disabled={step === 'personal' || isSubmitting}
-            className={`
-              px-6 py-3 rounded-lg border text-sm font-medium transition-all
-              flex items-center gap-2
-              ${step === 'personal' || isSubmitting
-                ? 'opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-700 text-gray-400'
-                : 'border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-600'
-              }
-            `}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </button>
-          
-          <button
-            type="button"
-            onClick={handleNextStep}
-            disabled={isSubmitting}
-            className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-semibold shadow-lg transition-all hover:shadow-xl"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Submitting...
-              </>
-            ) : step === 'availability' ? (
-              <>
-                Submit Application
-                <Check className="w-4 h-4" />
-              </>
-            ) : (
-              <>
-                Continue
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </>
-            )}
-          </button>
-        </div>
-      </form>
-    </BaseModal>
+        </form>
+      </div>
+    </ModernModal>
   );
 };
-
-// Helper Info component
-const Info = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
