@@ -84,7 +84,7 @@ const HeroSection = ({
           description,
           image: { src: backgroundImage!, alt: title },
           stats: [
-            { label: 'Service Times', value: 'Sundays 9AM & 11AM' },
+            { label: 'Service Times', value: 'Sundays 9AM' },
             { label: 'Live Stream', value: 'Watch Online' },
             { label: 'Community', value: 'All Are Welcome' }
           ]
@@ -139,7 +139,7 @@ const HeroSection = ({
 
   // Enhanced stats for the hero
   const defaultStats = useMemo(() => [
-    { label: 'Service Times', value: 'Sundays 9AM & 11AM', icon: Calendar },
+    { label: 'Service Times', value: 'Sundays 9AM ', icon: Calendar },
     { label: 'Live Stream', value: 'Watch Online', icon: Play },
     { label: 'Community', value: 'All Are Welcome', icon: Users },
     { label: 'Experience', value: 'Life Changing', icon: Sparkles }

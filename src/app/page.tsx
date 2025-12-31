@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import HeroSection from '@/components/utils/heromain';
+import HeroSection from '@/components/ui/Homepage/heromain';
 import WhatWeDo from '@/components/ui/Homepage/WhatWeDo';
 import SeniorPastor from '@/components/ui/Homepage/SeniorPastor';
 import AssociatePastors from '@/components/ui/Homepage/AssociatePastors';

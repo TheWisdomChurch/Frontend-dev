@@ -56,8 +56,8 @@ export const defaultSlides: Slide[] = [
   {
     title: 'Welcome to The Wisdom Church',
     subtitle: "Experience God's Transforming Power",
-    description:
-      'Where lives are transformed through faith.',
+    // description:
+    //   'Where lives are transformed through faith.',
     image: {
       src: hero_bg_1.src,
       alt: "Experience God's Transforming Power",
@@ -66,7 +66,7 @@ export const defaultSlides: Slide[] = [
   {
     title: 'Join Our Vibrant Community',
     subtitle: 'Deepen Your Spiritual Journey',
-    description: 'Grow together in faith, love, and service to others.',
+    // description: 'Grow together in faith, love, and service to others.',
     image: {
       src: hero_bg_2.src,
       alt: 'Deepen Your Spiritual Journey',
@@ -75,7 +75,7 @@ export const defaultSlides: Slide[] = [
   {
     title: 'Build Lasting Relationships',
     subtitle: 'Connect With Believers',
-    description: 'Experience genuine fellowship and relationships in Christ.',
+    // description: 'Experience genuine fellowship and relationships in Christ.',
     image: {
       src: hero_bg_3.src,
       alt: 'Connect With Believers',
@@ -182,16 +182,9 @@ export const navLinks: NavLink[] = [
 ];
 
 export const leaders: Leader[] = [
+ 
   {
     id: 1,
-    name: 'Rev. Victor Jimba',
-    role: 'Resident Pastor',
-    image: Associate_2,
-    description:
-      'Provides overall spiritual leadership and vision for the church.',
-  },
-  {
-    id: 2,
     name: 'Rev. Victor Jimba',
     role: 'Resident Pastor',
     image: Associate_2,
@@ -205,17 +198,11 @@ export const leaders: Leader[] = [
     image: PstKenny,
     description: 'Supports the senior pastor in ministry and pastoral care.',
   },
+
   {
     id: 4,
-    name: 'Deacon Adeyemi ',
-    role: 'Head Service Preparatory Unit',
-    image: Associate_1,
-    description: 'Oversees service preparation and logistics.',
-  },
-  {
-    id: 4,
-    name: 'Deacon Bamidele',
-    role: 'Head Technical',
+    name: 'Pastor Bamidele',
+    role: 'Associate Pastor',
     image: Associate_1,
     description: 'Manages technical operations and equipment.',
   },
