@@ -7,27 +7,52 @@ services:
       dockerfile: Dockerfile.dev
     container_name: wisdomhouse-dev
     ports:
-      - '2000:2000'
+      - '3000:3000' # Changed: Expose on 3000, Nginx will handle 2000
     environment:
       - NODE_ENV=development
-      - DOCKER_ENV=true  
+      - DOCKER_ENV=true
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
       - NEXT_WEBPACK_USEPOLLING=1
-      - NEXT_TELEMETRY_DISABLED=1
+      # Polling interval in milliseconds. 1000 is aggressive, good for WSL2.
       - CHOKIDAR_INTERVAL=1000
-      - WATCHPACK_POLLING=1000
+      - WATCHPACK_POLLING_INTERVAL=1000
       - HOST=0.0.0.0
-      - PORT=2000
+      - PORT=3000 # Changed: App runs internally on 3000
     volumes:
-      - .:/app:delegated,cached
-      - /app/node_modules
-      - /app/.next
-      - next-cache:/app/.next/cache
+      # 1. NAMED VOLUME for source code: Much faster than bind mount for WSL2
+      - app_source_code:/app:delegated,cached
+      # 2. REMOVE the anonymous volume for node_modules. Let it live in app_source_code.
+      # 3. Named volume for Next.js cache (better management)
+      - next_cache:/app/.next/cache
+    # Healthcheck prevents Nginx from routing to a crashed app
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     command: npm run dev
     stdin_open: true
     tty: true
     restart: unless-stopped
 
+  # NEW: Nginx Reverse Proxy Service
+  nginx:
+    image: nginx:alpine
+    container_name: wisdomhouse-nginx
+    ports:
+      - '2000:2000' # Your main dev port
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Mount config
+      - static_assets:/app/public:ro # Optional: For static files
+    depends_on:
+      app-dev:
+        condition: service_healthy # Waits for app to be ready
+    restart: unless-stopped
+
+# Define named volumes for performance and data persistence
 volumes:
-  next-cache:
+  app_source_code: # This will store your entire /app directory
+  next_cache: # For Next.js build cache
+  static_assets: # For static files served by Nginx
