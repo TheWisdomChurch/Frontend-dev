@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import Button from '@/components/utils/buttons/CustomButton';
@@ -26,7 +26,9 @@ import {
 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { animateButtonClick,animatePosterCard,
+import {
+  animateButtonClick,
+  animatePosterCard,
   animatePosterHover,
   animatePosterHoverReverse,
   animateReelCard,
@@ -37,7 +39,8 @@ import { animateButtonClick,animatePosterCard,
   animateFormExit,
   animateInputFocus,
   animateInputBlur,
-  animateSuccessMessage, } from '@/components/utils/hooks/Resource';
+  animateSuccessMessage,
+} from '@/components/utils/hooks/Resource';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -211,7 +214,537 @@ const sampleReels: ReelData[] = [
   },
 ];
 
-// Advertisement Poster Card
+// Modern Banner Slider Component
+function ModernBannerSlider({ events, colorScheme }: { events: EventData[]; colorScheme: any }) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+
+  // Filter featured events for the banner
+  const featuredEvents = events.filter(event => event.isFeatured && event.status === 'upcoming').slice(0, 3);
+
+  useEffect(() => {
+    if (!bannerRef.current || featuredEvents.length === 0) return;
+
+    // Animate banner entrance
+    gsap.fromTo(
+      bannerRef.current,
+      { y: 100, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: bannerRef.current,
+          start: 'top 90%',
+          toggleActions: 'play none none reverse',
+        },
+      }
+    );
+  }, [featuredEvents.length]);
+
+  useEffect(() => {
+    if (!isAutoPlaying || featuredEvents.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % featuredEvents.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, featuredEvents.length]);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % featuredEvents.length);
+  }, [featuredEvents.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + featuredEvents.length) % featuredEvents.length);
+  }, [featuredEvents.length]);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
+  const handleRegisterClick = (event: EventData) => {
+    setSelectedEvent(event);
+    setShowBannerModal(true);
+  };
+
+  if (featuredEvents.length === 0) return null;
+
+  const currentEvent = featuredEvents[currentSlide];
+  const categoryColors: Record<string, string> = {
+    'Outreach': '#FF6B6B',
+    'Conference': '#4ECDC4',
+    'Workshop': '#FFD93D',
+    'Prayer': '#A29BFE',
+    'Revival': '#FF6B9D',
+    'Summit': '#00D2D3',
+  };
+  const accentColor = categoryColors[currentEvent.category] || colorScheme.primary;
+
+  return (
+    <>
+      <div
+        ref={bannerRef}
+        className="relative mb-16 sm:mb-24 rounded-[2rem] sm:rounded-[3rem] overflow-hidden"
+        style={{
+          height: 'clamp(400px, 60vh, 600px)',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          border: `1px solid ${colorScheme.border}30`,
+        }}
+        onMouseEnter={() => setIsAutoPlaying(false)}
+        onMouseLeave={() => setIsAutoPlaying(true)}
+      >
+        {/* Banner Image with Gradient Overlay */}
+        <div className="absolute inset-0">
+          <Image
+            src={currentEvent.bannerImage || currentEvent.image || '/images/placeholder.jpg'}
+            alt={currentEvent.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+        </div>
+
+        {/* Content Container */}
+        <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16">
+          {/* Category Badge */}
+          <div className="mb-4 sm:mb-6">
+            <span
+              className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider backdrop-blur-md"
+              style={{
+                backgroundColor: `${accentColor}30`,
+                color: '#ffffff',
+                border: `1.5px solid ${accentColor}`,
+                boxShadow: `0 8px 32px ${accentColor}40`,
+              }}
+            >
+              <Flame className="w-3.5 h-3.5" />
+              {currentEvent.category}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 sm:mb-6 leading-tight"
+            style={{
+              color: '#ffffff',
+              textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)',
+            }}
+          >
+            {currentEvent.title}
+          </h1>
+
+          {/* Description */}
+          <p
+            className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-2xl text-white/90 leading-relaxed"
+            style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)' }}
+          >
+            {currentEvent.shortDescription}
+          </p>
+
+          {/* Event Details */}
+          <div className="flex flex-wrap gap-4 sm:gap-6 mb-8 sm:mb-10">
+            <div className="flex items-center gap-2 text-white/90">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-xs sm:text-sm font-medium">
+                {new Date(currentEvent.date).toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-white/90">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-xs sm:text-sm font-medium">{currentEvent.time}</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/90">
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-xs sm:text-sm font-medium">{currentEvent.location}</span>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={() => handleRegisterClick(currentEvent)}
+              className="group relative px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden"
+              style={{
+                backgroundColor: accentColor,
+                color: '#ffffff',
+                boxShadow: `0 12px 40px ${accentColor}50`,
+              }}
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Register for Event
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </span>
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: `linear-gradient(90deg, ${accentColor}80, ${accentColor})`,
+                }}
+              />
+            </button>
+
+            <button
+              className="group px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95 border backdrop-blur-sm"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
+                color: '#ffffff',
+              }}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                Share Event
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Navigation Dots */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3 z-20">
+          {featuredEvents.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                index === currentSlide ? 'scale-125' : ''
+              }`}
+              style={{
+                backgroundColor: index === currentSlide ? accentColor : 'rgba(255, 255, 255, 0.5)',
+                boxShadow: index === currentSlide ? `0 0 12px ${accentColor}` : 'none',
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Navigation Arrows - Smaller on mobile */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 z-20 backdrop-blur-md"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            color: '#ffffff',
+          }}
+        >
+          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 z-20 backdrop-blur-md"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            color: '#ffffff',
+          }}
+        >
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+      </div>
+
+      {/* Banner Registration Modal */}
+      {showBannerModal && selectedEvent && (
+        <BannerRegistrationModal
+          event={selectedEvent}
+          colorScheme={colorScheme}
+          onClose={() => setShowBannerModal(false)}
+        />
+      )}
+    </>
+  );
+}
+
+// Banner Registration Modal Component
+interface BannerRegistrationModalProps {
+  event: EventData;
+  colorScheme: any;
+  onClose: () => void;
+}
+
+function BannerRegistrationModal({ event, colorScheme, onClose }: BannerRegistrationModalProps) {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    prayerRequest: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Disable background scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    
+    // Animate modal entrance
+    if (modalRef.current) {
+      gsap.fromTo(
+        modalRef.current,
+        { scale: 0.8, opacity: 0, y: 50 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
+      );
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    setShowSuccess(true);
+    setTimeout(() => {
+      onClose();
+    }, 2000);
+    setIsSubmitting(false);
+  };
+
+  const categoryColors: Record<string, string> = {
+    'Outreach': '#FF6B6B',
+    'Conference': '#4ECDC4',
+    'Workshop': '#FFD93D',
+    'Prayer': '#A29BFE',
+    'Revival': '#FF6B9D',
+    'Summit': '#00D2D3',
+  };
+  const accentColor = categoryColors[event.category] || colorScheme.primary;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {/* Backdrop with blur */}
+      <div
+        className="absolute inset-0 cursor-pointer backdrop-blur-xl"
+        onClick={onClose}
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      />
+
+      {/* Modal Container */}
+      <div
+        ref={modalRef}
+        className="relative z-10 w-full max-w-md sm:max-w-lg rounded-[2rem] overflow-hidden"
+        style={{
+          background: `linear-gradient(145deg, ${colorScheme.surface} 0%, ${colorScheme.background} 100%)`,
+          border: `1.5px solid ${colorScheme.border}40`,
+          boxShadow: `0 30px 80px rgba(0, 0, 0, 0.6), 0 0 60px ${accentColor}20`,
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div
+          className="p-6 sm:p-8"
+          style={{
+            background: `linear-gradient(90deg, ${accentColor}20 0%, ${accentColor}10 100%)`,
+          }}
+        >
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-black mb-2" style={{ color: colorScheme.heading }}>
+                Register for Event
+              </h2>
+              <h3 className="text-lg sm:text-xl font-bold" style={{ color: accentColor }}>
+                {event.title}
+              </h3>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-full transition-all duration-300 hover:scale-110 active:scale-95"
+              style={{
+                backgroundColor: `${colorScheme.border}20`,
+                color: colorScheme.text,
+              }}
+            >
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+          </div>
+
+          {/* Event Details */}
+          <div className="space-y-3 text-sm" style={{ color: colorScheme.textSecondary }}>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" style={{ color: accentColor }} />
+              <span>
+                {new Date(event.date).toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" style={{ color: accentColor }} />
+              <span>{event.time}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPinIcon className="w-4 h-4" style={{ color: accentColor }} />
+              <span>{event.location}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6 sm:p-8">
+          {!showSuccess ? (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="form-input-group">
+                  <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    onFocus={(e) => animateInputFocus(e.target as HTMLInputElement)}
+                    onBlur={(e) => animateInputBlur(e.target as HTMLInputElement)}
+                    className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: `${colorScheme.surface}`,
+                      border: `1.5px solid ${colorScheme.border}40`,
+                      color: colorScheme.text,
+                    }}
+                    placeholder="Enter your first name"
+                  />
+                </div>
+
+                <div className="form-input-group">
+                  <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    onFocus={(e) => animateInputFocus(e.target as HTMLInputElement)}
+                    onBlur={(e) => animateInputBlur(e.target as HTMLInputElement)}
+                    className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: `${colorScheme.surface}`,
+                      border: `1.5px solid ${colorScheme.border}40`,
+                      color: colorScheme.text,
+                    }}
+                    placeholder="Enter your last name"
+                  />
+                </div>
+              </div>
+
+              <div className="form-input-group">
+                <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onFocus={(e) => animateInputFocus(e.target as HTMLInputElement)}
+                  onBlur={(e) => animateInputBlur(e.target as HTMLInputElement)}
+                  className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
+                  style={{
+                    backgroundColor: `${colorScheme.surface}`,
+                    border: `1.5px solid ${colorScheme.border}40`,
+                    color: colorScheme.text,
+                  }}
+                  placeholder="your@email.com"
+                />
+              </div>
+
+              <div className="form-input-group">
+                <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                  Prayer Request (Optional)
+                </label>
+                <textarea
+                  value={formData.prayerRequest}
+                  onChange={(e) => setFormData({ ...formData, prayerRequest: e.target.value })}
+                  onFocus={(e) => animateInputFocus(e.target as unknown as HTMLInputElement)}
+                  onBlur={(e) => animateInputBlur(e.target as unknown as HTMLInputElement)}
+                  className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300 resize-none"
+                  rows={4}
+                  style={{
+                    backgroundColor: `${colorScheme.surface}`,
+                    border: `1.5px solid ${colorScheme.border}40`,
+                    color: colorScheme.text,
+                  }}
+                  placeholder="Share any prayer requests or specific needs you'd like us to pray for..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 px-6 rounded-xl font-bold text-base transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 text-white"
+                style={{
+                  background: `linear-gradient(90deg, ${accentColor}, ${accentColor}80)`,
+                  boxShadow: `0 12px 32px ${accentColor}40`,
+                }}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Processing...
+                  </span>
+                ) : (
+                  'Submit Registration & Prayer Request'
+                )}
+              </button>
+            </form>
+          ) : (
+            <div className="text-center py-8">
+              <div className="flex justify-center mb-6">
+                <div
+                  className="p-4 rounded-full animate-pulse"
+                  style={{
+                    backgroundColor: `${accentColor}20`,
+                  }}
+                >
+                  <Check className="w-12 h-12" style={{ color: accentColor }} />
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold mb-3" style={{ color: colorScheme.heading }}>
+                Registration Confirmed!
+              </h3>
+              <p className="text-sm mb-2" style={{ color: colorScheme.textSecondary }}>
+                Thank you for registering for {event.title}.
+              </p>
+              <p className="text-sm" style={{ color: colorScheme.textSecondary }}>
+                We've received your prayer request and will be praying for you.
+              </p>
+              <p className="text-xs mt-4" style={{ color: colorScheme.textSecondary }}>
+                Check your email for confirmation details.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// Advertisement Poster Card - FIXED VERSION
 function PosterCard({ event, colorScheme, index }: { event: EventData; colorScheme: any; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -343,13 +876,13 @@ function PosterCard({ event, colorScheme, index }: { event: EventData; colorSche
             <span>{event.time.split(' - ')[0]}</span>
           </div>
 
-          {/* Hover Overlay - Only visible on hover */}
+          {/* Hover Overlay - Only visible on hover - FIXED VERSION */}
           <div
-            className="poster-overlay absolute bottom-0 left-0 right-0 p-4 sm:p-6 pt-8 opacity-0 transition-opacity duration-300"
+            className="poster-overlay absolute bottom-0 left-0 right-0 p-4 sm:p-6 pt-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             style={{
               background: `linear-gradient(180deg, transparent 0%, ${accentColor}80 100%)`,
               backdropFilter: 'blur(0px)',
-              pointerEvents: 'none',
+              // REMOVED: pointerEvents: 'none' ← This was blocking clicks
             }}
           >
             <p className="text-white/90 text-xs sm:text-sm line-clamp-2 mb-4">
@@ -358,7 +891,7 @@ function PosterCard({ event, colorScheme, index }: { event: EventData; colorSche
 
             <button
               onClick={() => setShowRegisterForm(true)}
-              className="w-full py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 active:scale-95 text-white"
+              className="w-full py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 active:scale-95 text-white hover:opacity-90"
               style={{
                 backgroundColor: accentColor,
                 boxShadow: `0 8px 20px ${accentColor}50`,
@@ -370,50 +903,68 @@ function PosterCard({ event, colorScheme, index }: { event: EventData; colorSche
         </div>
       </div>
 
-      <RegistrationForm
-        isOpen={showRegisterForm}
-        event={event}
-        colorScheme={colorScheme}
-        onClose={() => setShowRegisterForm(false)}
-      />
+      {/* Registration Form Modal for Poster Cards */}
+      {showRegisterForm && (
+        <PosterRegistrationModal
+          event={event}
+          colorScheme={colorScheme}
+          onClose={() => setShowRegisterForm(false)}
+        />
+      )}
     </>
   );
 }
 
-// Registration Form Modal
-interface RegistrationFormProps {
-  isOpen: boolean;
+// Poster Registration Modal Component - FIXED VERSION
+interface PosterRegistrationModalProps {
   event: EventData;
   colorScheme: any;
   onClose: () => void;
 }
 
-function RegistrationForm({ isOpen, event, colorScheme, onClose }: RegistrationFormProps) {
-  const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', guests: '1' });
+function PosterRegistrationModal({ event, colorScheme, onClose }: PosterRegistrationModalProps) {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    prayerRequest: '',
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const formRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen && formRef.current) {
-      animateFormEntry(formRef.current);
+    // Disable background scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    
+    // Animate modal entrance
+    if (modalRef.current) {
+      gsap.fromTo(
+        modalRef.current,
+        { scale: 0.8, opacity: 0, y: 50 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
+      );
     }
-  }, [isOpen]);
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1500));
+    
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
     setShowSuccess(true);
     setTimeout(() => {
-      setFormData({ fullName: '', email: '', phone: '', guests: '1' });
-      setShowSuccess(false);
+      setFormData({ firstName: '', lastName: '', email: '', prayerRequest: '' });
       onClose();
     }, 2000);
     setIsSubmitting(false);
   };
-
-  if (!isOpen) return null;
 
   const categoryColors: Record<string, string> = {
     'Outreach': '#FF6B6B',
@@ -423,90 +974,143 @@ function RegistrationForm({ isOpen, event, colorScheme, onClose }: RegistrationF
     'Revival': '#FF6B9D',
     'Summit': '#00D2D3',
   };
-
-  const accentColor = categoryColors[event.category] || '#3498db';
+  const accentColor = categoryColors[event.category] || colorScheme.primary;
 
   return (
-    <div
-      ref={formRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ perspective: '1000px' }}
-    >
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {/* Backdrop with blur */}
       <div
-        className="form-backdrop absolute inset-0 cursor-pointer"
+        className="absolute inset-0 cursor-pointer backdrop-blur-xl"
         onClick={onClose}
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          backdropFilter: 'blur(4px)',
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
         }}
       />
 
+      {/* Modal Container */}
       <div
-        className="form-container relative z-10 w-full max-w-md sm:max-w-lg rounded-3xl p-6 sm:p-8"
+        ref={modalRef}
+        className="relative z-10 w-full max-w-md sm:max-w-lg rounded-[2rem] overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, ${colorScheme.surface} 0%, ${colorScheme.background} 100%)`,
-          border: `2px solid ${accentColor}40`,
-          boxShadow: `0 25px 60px rgba(0, 0, 0, 0.4), 0 0 40px ${accentColor}30`,
+          background: `linear-gradient(145deg, ${colorScheme.surface} 0%, ${colorScheme.background} 100%)`,
+          border: `1.5px solid ${colorScheme.border}40`,
+          boxShadow: `0 30px 80px rgba(0, 0, 0, 0.6), 0 0 60px ${accentColor}20`,
         }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full transition-all duration-300 hover:scale-110 active:scale-95"
+        {/* Modal Header */}
+        <div
+          className="p-6 sm:p-8"
           style={{
-            backgroundColor: `${accentColor}20`,
-            color: accentColor,
+            background: `linear-gradient(90deg, ${accentColor}20 0%, ${accentColor}10 100%)`,
           }}
         >
-          <X className="w-5 h-5" />
-        </button>
-
-        {!showSuccess ? (
-          <>
-            <div className="mb-6">
+          <div className="flex justify-between items-start mb-6">
+            <div>
               <h2 className="text-2xl sm:text-3xl font-black mb-2" style={{ color: colorScheme.heading }}>
-                Register Now
+                Register for Event
               </h2>
-              <h3 className="text-base sm:text-lg font-bold mb-4" style={{ color: accentColor }}>
+              <h3 className="text-lg sm:text-xl font-bold" style={{ color: accentColor }}>
                 {event.title}
               </h3>
-              <p className="text-xs sm:text-sm" style={{ color: colorScheme.textSecondary }}>
-                Join us for an unforgettable experience. Fill in your details below.
-              </p>
             </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-full transition-all duration-300 hover:scale-110 active:scale-95"
+              style={{
+                backgroundColor: `${colorScheme.border}20`,
+                color: colorScheme.text,
+              }}
+            >
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="form-input-group">
-                <label className="block text-xs sm:text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  onFocus={(e) => animateInputFocus(e.target)}
-                  onBlur={(e) => animateInputBlur(e.target)}
-                  className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
-                  style={{
-                    backgroundColor: `${colorScheme.surface}`,
-                    border: `1.5px solid ${colorScheme.border}40`,
-                    color: colorScheme.text,
-                  }}
-                  placeholder="Your full name"
-                />
+          {/* Event Details */}
+          <div className="space-y-3 text-sm" style={{ color: colorScheme.textSecondary }}>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" style={{ color: accentColor }} />
+              <span>
+                {new Date(event.date).toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" style={{ color: accentColor }} />
+              <span>{event.time}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPinIcon className="w-4 h-4" style={{ color: accentColor }} />
+              <span>{event.location}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6 sm:p-8">
+          {!showSuccess ? (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="form-input-group">
+                  <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    onFocus={(e) => animateInputFocus(e.target as HTMLInputElement)}
+                    onBlur={(e) => animateInputBlur(e.target as HTMLInputElement)}
+                    className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: `${colorScheme.surface}`,
+                      border: `1.5px solid ${colorScheme.border}40`,
+                      color: colorScheme.text,
+                    }}
+                    placeholder="Enter your first name"
+                  />
+                </div>
+
+                <div className="form-input-group">
+                  <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    onFocus={(e) => animateInputFocus(e.target as HTMLInputElement)}
+                    onBlur={(e) => animateInputBlur(e.target as HTMLInputElement)}
+                    className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: `${colorScheme.surface}`,
+                      border: `1.5px solid ${colorScheme.border}40`,
+                      color: colorScheme.text,
+                    }}
+                    placeholder="Enter your last name"
+                  />
+                </div>
               </div>
 
               <div className="form-input-group">
-                <label className="block text-xs sm:text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
-                  Email Address
+                <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                  Email Address *
                 </label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  onFocus={(e) => animateInputFocus(e.target)}
-                  onBlur={(e) => animateInputBlur(e.target)}
+                  onFocus={(e) => animateInputFocus(e.target as HTMLInputElement)}
+                  onBlur={(e) => animateInputBlur(e.target as HTMLInputElement)}
                   className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
                   style={{
                     backgroundColor: `${colorScheme.surface}`,
@@ -518,104 +1122,71 @@ function RegistrationForm({ isOpen, event, colorScheme, onClose }: RegistrationF
               </div>
 
               <div className="form-input-group">
-                <label className="block text-xs sm:text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
-                  Phone Number
+                <label className="block text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
+                  Prayer Request (Optional)
                 </label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  onFocus={(e) => animateInputFocus(e.target)}
-                  onBlur={(e) => animateInputBlur(e.target)}
-                  className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300"
+                <textarea
+                  value={formData.prayerRequest}
+                  onChange={(e) => setFormData({ ...formData, prayerRequest: e.target.value })}
+                  onFocus={(e) => animateInputFocus(e.target as unknown as HTMLInputElement)}
+                  onBlur={(e) => animateInputBlur(e.target as unknown as HTMLInputElement)}
+                  className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all duration-300 resize-none"
+                  rows={4}
                   style={{
                     backgroundColor: `${colorScheme.surface}`,
                     border: `1.5px solid ${colorScheme.border}40`,
                     color: colorScheme.text,
                   }}
-                  placeholder="+1-234-567-8900"
+                  placeholder="Share any prayer requests or specific needs you'd like us to pray for..."
                 />
-              </div>
-
-              <div className="form-input-group">
-                <label className="block text-xs sm:text-sm font-bold mb-2" style={{ color: colorScheme.heading }}>
-                  Number of Guests
-                </label>
-                <select
-                  value={formData.guests}
-                  onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl outline-none text-sm"
-                  style={{
-                    backgroundColor: `${colorScheme.surface}`,
-                    border: `1.5px solid ${colorScheme.border}40`,
-                    color: colorScheme.text,
-                  }}
-                >
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>
-                      {num} {num === 1 ? 'Guest' : 'Guests'}
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="form-input-group w-full py-3 px-4 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 active:scale-95 disabled:opacity-50 text-white mt-6"
+                className="w-full py-4 px-6 rounded-xl font-bold text-base transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 text-white"
                 style={{
-                  backgroundColor: accentColor,
-                  boxShadow: `0 12px 30px ${accentColor}50`,
+                  background: `linear-gradient(90deg, ${accentColor}, ${accentColor}80)`,
+                  boxShadow: `0 12px 32px ${accentColor}40`,
                 }}
               >
-                {isSubmitting ? 'Registering...' : 'Complete Registration'}
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Processing...
+                  </span>
+                ) : (
+                  'Submit Registration & Prayer Request'
+                )}
               </button>
             </form>
-
-            <div className="mt-6 pt-6 border-t" style={{ borderColor: `${colorScheme.border}30` }}>
-              <div className="space-y-2 text-xs sm:text-sm" style={{ color: colorScheme.textSecondary }}>
-                <div className="flex items-center gap-2">
-                  <MapPinIcon className="w-4 h-4" style={{ color: accentColor }} />
-                  <span>{event.location}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" style={{ color: accentColor }} />
-                  <span>
-                    {new Date(event.date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" style={{ color: accentColor }} />
-                  <span>{event.time}</span>
+          ) : (
+            <div className="text-center py-8">
+              <div className="flex justify-center mb-6">
+                <div
+                  className="p-4 rounded-full animate-pulse"
+                  style={{
+                    backgroundColor: `${accentColor}20`,
+                  }}
+                >
+                  <Check className="w-12 h-12" style={{ color: accentColor }} />
                 </div>
               </div>
+              <h3 className="text-2xl font-bold mb-3" style={{ color: colorScheme.heading }}>
+                Registration Confirmed!
+              </h3>
+              <p className="text-sm mb-2" style={{ color: colorScheme.textSecondary }}>
+                Thank you for registering for {event.title}.
+              </p>
+              <p className="text-sm" style={{ color: colorScheme.textSecondary }}>
+                We've received your prayer request and will be praying for you.
+              </p>
+              <p className="text-xs mt-4" style={{ color: colorScheme.textSecondary }}>
+                Check your email for confirmation details.
+              </p>
             </div>
-          </>
-        ) : (
-          <div className="text-center py-8">
-            <div className="flex justify-center mb-4">
-              <div
-                className="p-4 rounded-full animate-pulse"
-                style={{
-                  backgroundColor: `${accentColor}20`,
-                }}
-              >
-                <Check className="w-8 h-8" style={{ color: accentColor }} />
-              </div>
-            </div>
-            <h3 className="text-2xl font-bold mb-2" style={{ color: colorScheme.heading }}>
-              Registration Confirmed!
-            </h3>
-            <p style={{ color: colorScheme.textSecondary }}>
-              Check your email for confirmation details. See you soon!
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
@@ -839,6 +1410,11 @@ export default function ResourceSection() {
       </div>
 
       <Container size="xl" className={`relative z-10 ${isMobile ? 'px-4 py-12' : 'px-6 py-16 lg:py-24'}`}>
+        {/* Modern Banner Slider Section */}
+        <div className="mb-16 sm:mb-24">
+          <ModernBannerSlider events={events} colorScheme={colorScheme} />
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
           <h2

@@ -1,10 +1,22 @@
 FROM node:20-alpine
 
+# Build arguments for NPM registry
+ARG NPM_REGISTRY=https://registry.npmjs.org/
+
 WORKDIR /app
+
+# Set NPM registry from build arg
+RUN npm config set registry ${NPM_REGISTRY} && \
+    npm config set fetch-retries 5 && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000
 
 # Install dependencies first (better caching)
 COPY package*.json ./
-RUN npm install
+
+# Clear npm cache and install with retry
+RUN npm cache clean --force
+RUN npm install --verbose --no-optional
 
 # Copy source code
 COPY . .
