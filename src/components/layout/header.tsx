@@ -57,12 +57,16 @@ export default function Header() {
         className={cn(
           'fixed inset-x-0 top-0 z-50 w-full transition-all duration-300',
           isHeaderScrolled
-            ? 'h-14 bg-black/95 backdrop-blur-lg border-b border-white/10 shadow-lg'
-            : 'h-16 bg-black/95 backdrop-blur-lg'
+            ? 'h-16 bg-[rgba(6,6,6,0.92)] backdrop-blur-2xl border-b border-white/10 shadow-xl'
+            : 'h-20 bg-[rgba(6,6,6,0.85)] backdrop-blur-2xl'
         )}
       >
+        <div
+          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"
+          aria-hidden
+        />
         <div className="h-full mx-auto px-4 sm:px-5 lg:px-8 max-w-7xl">
-          <div className="h-full flex items-center justify-between">
+          <div className="h-full flex items-center justify-between gap-3">
             {/* Logo on Left */}
             <Link
               href="/"
@@ -70,14 +74,14 @@ export default function Header() {
               className="flex items-center gap-2 group relative z-10"
             >
               <div className="relative">
-                <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
+                <div className="relative w-7 h-7 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
                   <div className="absolute inset-0 rounded-full border border-white/20" />
                   <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
                     <Image
                       src={WisdomeHouseLogo}
                       alt="The Wisdom House"
-                      width={24}
-                      height={24}
+                      width={22}
+                      height={22}
                       className="rounded-full object-cover scale-90 group-hover:scale-95 transition-transform duration-300"
                     />
                   </div>
@@ -89,19 +93,19 @@ export default function Header() {
 
               {/* Ultra Compact Stacked Logo Text */}
               <div className="hidden md:flex flex-col leading-[0.8] -space-y-0.5">
-                <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[8px]">
+                <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[7px]">
                   The
                 </Caption>
                 <Caption
                   weight="semibold"
-                  className="text-[10px] tracking-tight leading-none"
+                  className="text-[9px] tracking-tight leading-none"
                   style={{ color: colorScheme.primary }}
                 >
                   Wisdom
                 </Caption>
                 <Caption
                   weight="semibold"
-                  className="text-[10px] tracking-tight leading-none"
+                  className="text-[9px] tracking-tight leading-none"
                   style={{ color: colorScheme.primary }}
                 >
                   Church
@@ -111,7 +115,7 @@ export default function Header() {
 
             {/* Desktop Navigation - Only on xl screens */}
             <nav className="hidden xl:flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2 z-10">
-              <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
+              <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-1.5 py-1 border border-white/10">
                 {extendedNavLinks.map(link => {
                   const isActive = isLinkActive(link.href);
                   const Icon = iconMap[link.icon as keyof typeof iconMap];
@@ -127,7 +131,7 @@ export default function Header() {
                       onMouseDown={handleNavMouseDown}
                       onMouseUp={handleNavMouseUp}
                       className={cn(
-                        'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all duration-300 rounded-full group relative',
+                        'flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium transition-all duration-300 rounded-full group relative',
                         isActive
                           ? 'text-white bg-primary shadow-md'
                           : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -137,9 +141,9 @@ export default function Header() {
                       }}
                     >
                       {Icon && (
-                        <Icon className="w-3 h-3 transition-transform group-hover:scale-110" />
+                        <Icon className="w-2.5 h-2.5 transition-transform group-hover:scale-110" />
                       )}
-                      <span className="text-xs">{link.label}</span>
+                      <span className="text-[11px]">{link.label}</span>
                       
                       {/* Active indicator */}
                       {isActive && (
@@ -154,31 +158,29 @@ export default function Header() {
             {/* Right Section */}
             <div className="flex items-center gap-2">
               {/* Desktop Join Us Button */}
-           <Button
-  onClick={openCommunityModal}
-  className="hidden xl:flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-full transition-all duration-300 hover:scale-105"
-  style={{
-    backgroundColor: colorScheme.primary,
-    color: '#000000',
-  }}
->
-  <div className="flex items-center gap-1.5">
-    <Church className="w-3.5 h-3.5" />
-    <span>Join Us</span>
-  </div>
-</Button>
-
-            
+              <Button
+                onClick={openCommunityModal}
+                className="hidden xl:flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-medium rounded-full transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundImage: `linear-gradient(120deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
+                  color: '#000000',
+                  boxShadow: `0 10px 30px ${colorScheme.opacity.primary20}`,
+                }}
+              >
+                <div className="flex items-center gap-1.5">
+                  <Church className="w-3 h-3" />
+                  <span>Join Us</span>
+                </div>
+              </Button>
 
               {/* Mobile/Tablet Menu */}
               <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger asChild>
                   <button
-                    className="xl:hidden flex items-center justify-center p-2 hover:bg-white/10 rounded-lg transition-all duration-300 hover:scale-105"
+                    className="xl:hidden flex items-center justify-center p-1.5 hover:bg-white/10 rounded-lg transition-all duration-300 hover:scale-105"
                     aria-label="Open menu"
                   >
-                    <Menu className="w-4 h-4 md:w-5 md:h-5 text-white" />
-                  
+                    <Menu className="w-4 h-4 md:w-4 md:h-4 text-white" />
                   </button>
                 </SheetTrigger>
                 <SheetContent
@@ -231,14 +233,14 @@ const MobileNavigation: React.FC<{
       {/* Compact Header */}
       <div className="flex items-center justify-between p-3 sm:p-4 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
             <div className="absolute inset-0 rounded-full border border-white/20" />
             <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
               <Image
                 src={WisdomeHouseLogo}
                 alt="Logo"
-                width={32}
-                height={32}
+                width={28}
+                height={28}
                 className="rounded-full object-cover"
               />
             </div>
@@ -249,19 +251,19 @@ const MobileNavigation: React.FC<{
 
           {/* Compact Stacked Text */}
           <div className="flex flex-col leading-[0.8] -space-y-0.5">
-            <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[9px] sm:text-[10px]">
+            <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[8px] sm:text-[9px]">
               The
             </Caption>
             <BricolageText
               weight="semibold"
-              className="text-[11px] sm:text-[12px] tracking-tight leading-none"
+              className="text-[10px] sm:text-[11px] tracking-tight leading-none"
               style={{ color: colorScheme.primary }}
             >
               Wisdom
             </BricolageText>
             <BricolageText
               weight="semibold"
-              className="text-[11px] sm:text-[12px] tracking-tight leading-none"
+              className="text-[10px] sm:text-[11px] tracking-tight leading-none"
               style={{ color: colorScheme.primary }}
             >
               Church
@@ -290,26 +292,26 @@ const MobileNavigation: React.FC<{
               href={link.href}
               onClick={handleMobileLinkClick}
               className={cn(
-                'flex items-center gap-2 p-2.5 sm:p-3 rounded-lg transition-all duration-200 group',
+                'flex items-center gap-2 p-2 sm:p-2.5 rounded-lg transition-all duration-200 group',
                 isActive
                   ? 'bg-primary/15 border-l border-primary'
                   : 'hover:bg-white/5'
               )}
             >
               <div className={cn(
-                'p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0',
+                'p-1.5 rounded-lg transition-colors flex-shrink-0',
                 isActive
                   ? 'bg-primary text-white'
                   : 'bg-white/10 text-gray-300 group-hover:text-white group-hover:bg-primary/20'
               )}>
-                {Icon && <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+                {Icon && <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-white text-xs mb-0.5 truncate">
+                <div className="font-medium text-white text-[11px] mb-0.5 truncate">
                   {link.label}
                 </div>
-                <div className="text-[10px] text-gray-400 truncate">
+                <div className="text-[9px] text-gray-400 truncate">
                   {link.href === '/' && 'Homepage'}
                   {link.href === '/leadership' && 'Leadership team'}
                   {link.href === '/events' && 'Events & schedules'}
@@ -332,20 +334,20 @@ const MobileNavigation: React.FC<{
       {/* Compact Footer */}
       <div className="p-3 sm:p-4 border-t border-white/10">
         <div className="mb-2">
-          <div className="text-xs text-gray-300 mb-0.5">Ready to join?</div>
-          <div className="text-[10px] text-gray-400">Become part of our community</div>
+          <div className="text-[11px] text-gray-300 mb-0.5">Ready to join?</div>
+          <div className="text-[9px] text-gray-400">Become part of our community</div>
         </div>
         
         <Button
           onClick={handleMobileButtonClick}
-          className="w-full py-2 text-xs font-medium rounded-lg transition-all duration-300"
+          className="w-full py-2 text-[11px] font-medium rounded-lg transition-all duration-300"
           style={{
             backgroundColor: colorScheme.primary,
             color: '#000000',
           }}
         >
           <div className="flex items-center justify-center gap-1">
-            <Church className="w-3 h-3" />
+            <Church className="w-2.5 h-2.5" />
             <span>Join Community</span>
           </div>
         </Button>

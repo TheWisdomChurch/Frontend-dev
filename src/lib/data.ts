@@ -62,6 +62,15 @@ export const defaultSlides: Slide[] = [
       src: hero_bg_1.src,
       alt: "Experience God's Transforming Power",
     },
+    upcoming: {
+      label: 'Upcoming',
+      title: 'Wisdom Power Conference',
+      date: 'Mar 20 - 22',
+      time: 'Morning Session: 9:00 AM & Evening Session: 5:00 Pm',
+      location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
+      ctaLabel: 'Reserve a seat',
+      ctaTarget: '#programs',
+    },
   },
   {
     title: 'Join Our Vibrant Community',
@@ -71,6 +80,15 @@ export const defaultSlides: Slide[] = [
       src: hero_bg_2.src,
       alt: 'Deepen Your Spiritual Journey',
     },
+    upcoming: {
+      label: 'Past',
+      title: '7 Nights of Lifting',
+      date: 'Nov 20 - 27',
+      time: '6 PM',
+      location: 'Honors Garden Event Center',
+      ctaLabel: 'Plan a visit',
+      ctaTarget: '#programs',
+    },
   },
   {
     title: 'Build Lasting Relationships',
@@ -79,6 +97,15 @@ export const defaultSlides: Slide[] = [
     image: {
       src: hero_bg_3.src,
       alt: 'Connect With Believers',
+    },
+    upcoming: {
+      label: 'Midweek',
+      title: 'Bible Study ',
+      date: 'Thursday',
+      time: '6:00 PM WAT',
+      location: 'Livestream',
+      ctaLabel: 'Get directions',
+      ctaTarget: '#programs',
     },
   },
 ];
@@ -247,13 +274,13 @@ export const whatWeDoData: ServiceBox[] = [
     imageAlt: 'Worship service',
   },
   {
-    id: 2,
-    title: 'Expect the power of prayer',
+    id: 4,
+    title: 'Expect Transformative Messages',
     description:
-      "Through fervent prayer, we connect with God's divine power, witnessing miraculous transformations and spiritual breakthroughs in our lives and community.",
-    image: Whatwedo_2,
-    imageAlt: 'Prayer gathering',
-    gradient: 'from-purple-900 to-purple-700',
+      "We diligently study and receive God's Word, allowing scripture to guide our decisions, shape our character, and illuminate our path forward.",
+    image: WhatWeDo_3,
+    imageAlt: 'Youth gathering',
+    gradient: 'from-blue-900 to-blue-700',
     imageOpacity: 60,
   },
   {
@@ -265,13 +292,13 @@ export const whatWeDoData: ServiceBox[] = [
     imageAlt: 'Community service',
   },
   {
-    id: 4,
-    title: 'Expect Transformative Messages',
+    id: 2,
+    title: 'Expect the power of prayer',
     description:
-      "We diligently study and receive God's Word, allowing scripture to guide our decisions, shape our character, and illuminate our path forward.",
-    image: WhatWeDo_3,
-    imageAlt: 'Youth gathering',
-    gradient: 'from-blue-900 to-blue-700',
+      "Through fervent prayer, we connect with God's divine power, witnessing miraculous transformations and spiritual breakthroughs in our lives and community.",
+    image: Whatwedo_2,
+    imageAlt: 'Prayer gathering',
+    gradient: 'from-purple-900 to-purple-700',
     imageOpacity: 60,
   },
 ];

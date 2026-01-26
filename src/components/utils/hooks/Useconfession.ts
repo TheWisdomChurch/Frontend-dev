@@ -19,18 +19,11 @@ export function useWelcomeModal({ delay = 2000, onClose }: UseWelcomeModalProps)
   // Check if popup should be shown
   useEffect(() => {
     setMounted(true);
+    const showTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, delay);
 
-    const hasSeenPopup = localStorage.getItem('hasSeenPopup');
-    const lastSeenDate = localStorage.getItem('popupLastSeen');
-    const today = new Date().toDateString();
-
-    if (!hasSeenPopup || lastSeenDate !== today) {
-      const showTimer = setTimeout(() => {
-        setIsVisible(true);
-      }, delay);
-
-      return () => clearTimeout(showTimer);
-    }
+    return () => clearTimeout(showTimer);
   }, [delay]);
 
   // Handle modal animations and body scroll
@@ -81,8 +74,6 @@ export function useWelcomeModal({ delay = 2000, onClose }: UseWelcomeModalProps)
         ease: 'power2.in',
         onComplete: () => {
           setIsVisible(false);
-          localStorage.setItem('hasSeenPopup', 'true');
-          localStorage.setItem('popupLastSeen', new Date().toDateString());
           onClose?.();
         },
       });
