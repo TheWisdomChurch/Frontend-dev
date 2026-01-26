@@ -66,8 +66,8 @@ html {
 body {
   font-family: var(--font-bricolage-grotesque), system-ui, sans-serif;
   line-height: 1.6;
-  color: var(--color-charcoal);
-  background-color: var(--color-white);
+  color: var(--color-text, #111827);
+  background-color: var(--color-background, #ffffff);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -268,9 +268,28 @@ html.dark {
 body {
   background-color: var(--color-background);
   color: var(--color-text);
+  background-image:
+    radial-gradient(
+      1200px 1200px at 15% 20%,
+      color-mix(in srgb, var(--color-primary) 12%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 900px at 85% 0%,
+      color-mix(in srgb, var(--color-primaryDark, #d4bc0f) 10%, transparent),
+      transparent 52%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-background) 98%, transparent) 0%,
+      color-mix(in srgb, var(--color-background) 96%, transparent) 20%,
+      color-mix(in srgb, var(--color-background) 94%, transparent) 100%
+    );
+  background-attachment: fixed;
   transition:
-    background-color 0.1s ease,
-    color 0.1s ease;
+    background-color 0.35s ease,
+    color 0.35s ease,
+    background-image 0.45s ease;
 }
 
 /* Force immediate application */
@@ -282,6 +301,18 @@ html.dark body {
 html.light body {
   background-color: #ffffff;
   color: #000000;
+}
+
+:root.theme-transition *,
+:root.theme-transition *::before,
+:root.theme-transition *::after {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    fill 0.35s ease,
+    stroke 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 /* Professional Popup Responsive Widths */

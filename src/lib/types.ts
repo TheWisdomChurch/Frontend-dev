@@ -74,6 +74,15 @@ export interface Slide {
   title: string;
   subtitle: string;
   description?: string; // Make optional to handle both cases
+  upcoming?: {
+    label: string;
+    title: string;
+    date: string;
+    time: string;
+    location: string;
+    ctaLabel?: string;
+    ctaTarget?: string;
+  };
 }
 
 export interface YouTubeVideo {
@@ -109,6 +118,19 @@ export interface VideoFilters {
   category?: string;
 }
 
+export interface EventItem {
+  id: string;
+  title: string;
+  description?: string;
+  bannerUrl?: string;
+  startDate?: string;
+  endDate?: string;
+  location?: string;
+  status?: 'upcoming' | 'live' | 'recent' | 'past';
+  ctaLabel?: string;
+  ctaTarget?: string;
+}
+
 // export interface YouTubeVideo {
 //   id: string;
 //   title: string;
@@ -127,6 +149,27 @@ export interface SeriesGroup {
   searchTerms: string[];
   description: string;
   color: string;
+}
+
+export interface TestimonialPayload {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  testimony: string;
+  anonymous?: boolean;
+  allowSharing?: boolean;
+  image?: string; // base64
+}
+
+export interface SubscriberPayload {
+  name?: string;
+  email: string;
+}
+
+export interface NotificationPayload {
+  title: string;
+  message: string;
+  audience?: string;
 }
 
 export interface GroupedSeriesData {

@@ -5,12 +5,12 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { ChevronDown } from 'lucide-react';
+import { CalendarClock, MapPin, PlayCircle, Users, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { H1, H2, BodyMD } from '../../text';
 import CustomButton from '../../utils/buttons/CustomButton';
 import { Section, Container } from '../../layout';
-import { darkShades, lightShades, ColorScheme } from '../../colors/colorScheme';
+import { ColorScheme } from '../../colors/colorScheme';
 import { defaultSlides } from '@/lib/data';
 import { renderTitle,  renderSubtitle } from '@/components/utils/heroTextUtil';
 import { useAutoSlide } from '@/components/utils/hooks/mainHeroHooks/useAutoSlide';
@@ -49,10 +49,8 @@ const HeroSection = ({
   colorScheme: externalColorScheme,
   slides = defaultSlides,
 }: HeroSectionProps) => {
-  const themeContext = useTheme();
-  const theme = (themeContext as any)?.theme ?? 'light';
-  const colorScheme =
-    externalColorScheme || (theme === 'dark' ? darkShades : lightShades);
+  const { colorScheme: themeColors } = useTheme();
+  const colorScheme = externalColorScheme || themeColors;
 
   // Create refs
   const heroRef = useRef<HTMLDivElement>(null!);
@@ -72,6 +70,16 @@ const HeroSection = ({
   const slidesLength = slides.length;
   const isMultiSlide = slidesLength > 1;
   const currentSlideData = slides[currentSlide];
+  const fallbackUpcoming = {
+    label: 'Upcoming',
+    title: 'Wisdom Power Conference 26',
+    date: 'Mar 21 - 23',
+    time: 'Morning session 9:00 PM WAT & Evening Session 5:00 Pm',
+    location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
+    ctaLabel: 'Reserve a seat',
+    ctaTarget: '#programs',
+  };
+  const upcoming = currentSlideData.upcoming ?? fallbackUpcoming;
 
   // Animation functions
   const animateContentEntrance = useCallback((): gsap.core.Timeline => {
@@ -194,6 +202,18 @@ const HeroSection = ({
     [isAnimating, currentSlide, animateSlideTransition, isMultiSlide]
   );
 
+  const handleUpcomingCta = useCallback(() => {
+    if (!upcoming.ctaTarget) return;
+    if (upcoming.ctaTarget.startsWith('#')) {
+      const target = document.getElementById(upcoming.ctaTarget.slice(1));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+    window.location.href = upcoming.ctaTarget;
+  }, [upcoming.ctaTarget]);
+
   // Cleanup on unmount
   useEffect(() => {
     return cleanupAnimations;
@@ -212,8 +232,8 @@ const HeroSection = ({
     <Section
       ref={heroRef}
       padding="none"
-      fullHeight={true}
-      className="relative w-full min-h-screen overflow-hidden bg-black"
+      fullHeight={false}
+      className="relative w-full min-h-[80vh] md:min-h-[85vh] overflow-hidden bg-black"
     >
       {/* Background Slides - FIXED: Proper image handling */}
       {slides.map((slide, index) => (
@@ -230,20 +250,22 @@ const HeroSection = ({
               <img
                 src={slide.image.src}
                 alt={slide.image.alt || slide.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
+                loading={index === 0 ? 'eager' : 'lazy'}
               />
             ) : (
               <img
                 src={slide.image.src}
                 alt={slide.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
+                loading={index === 0 ? 'eager' : 'lazy'}
               />
             )}
 
             {/* Enhanced gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" />
           </div>
         </div>
       ))}
@@ -392,6 +414,45 @@ const HeroSection = ({
         </div>
       </Container>
 
+      {/* Floating info rail */}
+      <div className="absolute inset-x-0 bottom-12 sm:bottom-10 lg:bottom-12 z-30 px-4">
+        <div className="mx-auto max-w-5xl grid grid-cols-1 gap-3 items-center">
+          <div className="rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 shadow-2xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div
+                className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
+                style={{ background: colorScheme.primary }}
+              >
+                <CalendarClock className="w-5 h-5 text-black" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/70 font-semibold">
+                  {upcoming.label}
+                </p>
+                <p className="text-sm sm:text-base text-white font-semibold">
+                  {upcoming.title} - {upcoming.date} - {upcoming.time}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
+                <MapPin className="w-4 h-4" />
+                <span>{upcoming.location}</span>
+              </div>
+              <CustomButton
+                size="sm"
+                curvature="full"
+                elevated
+                onClick={handleUpcomingCta}
+                className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
+              >
+                {upcoming.ctaLabel ?? 'Reserve a seat'}
+              </CustomButton>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Slide Indicators */}
       {isMultiSlide && (
         <div className="absolute right-1.5 sm:right-2 md:right-2.5 lg:right-3 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1 sm:gap-1.5 md:gap-2">
@@ -442,7 +503,7 @@ const ScrollIndicators = ({
   <>
     <div
       ref={scrollIndicatorRef}
-      className="absolute bottom-4 sm:bottom-5 md:bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
+      className="absolute bottom-6 sm:bottom-7 md:bottom-8 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
     >
@@ -461,7 +522,7 @@ const ScrollIndicators = ({
     </div>
 
     <div
-      className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 sm:hidden cursor-pointer"
+      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 sm:hidden cursor-pointer"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
     >

@@ -160,7 +160,7 @@ const HeroSection = ({
               <Image
                 src={slide.image.src}
                 alt={slide.image.alt || slide.title}
-                priority={index === 0}
+                loading={index === 0 ? 'eager' : 'lazy'}
                 {...imageProps}
               />
 
@@ -196,7 +196,7 @@ const HeroSection = ({
             <Image
               src={backgroundImage!}
               alt={title || 'Hero background'}
-              priority={true}
+              loading="lazy"
               {...imageProps}
             />
             

@@ -2,7 +2,7 @@
 
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
-import { X, Church, Hand, TrendingUp, ArrowLeft } from 'lucide-react';
+import { X, Church, Hand, TrendingUp, Sparkles, ArrowLeft } from 'lucide-react';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { BaseText, BricolageText, H2, P } from '@/components/text';
 import { PlayfairText } from '../text/FontText';
@@ -10,7 +10,6 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { confessionContent } from '@/lib/data';
 import { WisdomeHouseLogo } from '../assets';
 import { useWelcomeModal } from '../utils/hooks/Useconfession';
-
 
 interface WelcomeModalProps {
   onClose: () => void;
@@ -40,30 +39,25 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
 
   return createPortal(
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500`}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500"
       style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        background:
+          'radial-gradient(circle at 20% 20%, rgba(247,222,18,0.12), transparent 40%), rgba(0,0,0,0.75)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
       }}
       onClick={handleBackdropClick}
     >
-      {/* Modal Container */}
       <div
         ref={modalRef}
-        className="relative rounded-2xl w-full max-w-lg mx-auto overflow-hidden shadow-2xl"
+        className="relative rounded-3xl w-full max-w-2xl mx-auto overflow-hidden shadow-2xl border border-white/10"
         style={{
-          backgroundColor: colorScheme.black,
-          border: `1px solid ${colorScheme.primary}20`,
+          background: 'linear-gradient(145deg, rgba(6,6,6,0.9), rgba(0,0,0,0.7))',
           maxHeight: '85vh',
         }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
-        {/* Progress Indicator */}
-        <div
-          className="absolute top-0 left-0 right-0 h-1 z-20"
-          style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-        >
+        <div className="absolute top-0 left-0 right-0 h-1 z-20 bg-white/10">
           <div
             className="h-full transition-all duration-500 ease-out"
             style={{
@@ -73,51 +67,36 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
           />
         </div>
 
-        {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-3 right-3 z-50 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            border: `1px solid ${colorScheme.primary}`,
-            color: colorScheme.primary,
-          }}
+          className="absolute top-4 right-4 z-50 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 border border-white/20 bg-white/5 text-white"
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* Content Area */}
         <div
           ref={contentRef}
           className="p-6 sm:p-8 overflow-y-auto"
           style={{ maxHeight: 'calc(85vh - 1rem)' }}
         >
-          {/* Welcome Step */}
           {currentStep === 'welcome' && (
             <div className="space-y-6">
-              {/* Logo & Title */}
-              <div className="text-center space-y-4">
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto border-2"
-                  style={{
-                    backgroundColor: `${colorScheme.primary}10`,
-                    borderColor: colorScheme.primary,
-                  }}
-                >
+              <div className="text-center space-y-5">
+                <div className="relative w-18 h-18 mx-auto rounded-full border border-white/20 bg-white/10 flex items-center justify-center">
                   <Image
                     src={WisdomeHouseLogo}
                     alt="The Wisdom House Church"
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 object-contain"
+                    width={56}
+                    height={56}
+                    className="object-contain"
                   />
+                  <Sparkles className="absolute -right-4 -top-3 h-8 w-8 text-amber-300/60" />
                 </div>
 
                 <div>
                   <H2
                     as="h2"
-                    className="text-2xl sm:text-3xl font-bold mb-2 leading-tight"
-                    style={{ color: colorScheme.white }}
+                    className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-white"
                   >
                     Welcome to{' '}
                     <BaseText
@@ -128,42 +107,16 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                         display: 'inline',
                       }}
                     >
-                      The Wisdom Church
+                      The Wisdom House
                     </BaseText>
                   </H2>
-
-                  <div
-                    className="w-16 h-0.5 mx-auto rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
-                    }}
-                  />
+                  <p className="text-white/70 text-sm sm:text-base max-w-xl mx-auto">
+                    You are stepping into a house of faith, worship, and
+                    miracles. Take a moment to speak life over your week.
+                  </p>
                 </div>
               </div>
 
-              {/* Description */}
-              <BricolageText
-                as="p"
-                className="text-sm sm:text-base leading-relaxed text-center opacity-90"
-                style={{ color: colorScheme.white }}
-                weight="light"
-              >
-                We're delighted to have you in our{' '}
-                <BaseText
-                  weight="medium"
-                  fontFamily="playfair"
-                  style={{
-                    fontStyle: 'italic',
-                    color: colorScheme.primary,
-                    display: 'inline',
-                  }}
-                >
-                  online community
-                </BaseText>
-                .
-              </BricolageText>
-
-              {/* Feature Cards */}
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { icon: Church, title: 'Worship' },
@@ -172,14 +125,15 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="text-center p-3 rounded-lg border transition-all duration-300 hover:scale-105"
+                    className="text-center p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-1"
                     style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      borderColor: `${colorScheme.primary}30`,
+                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                      borderColor: `${colorScheme.primary}25`,
+                      boxShadow: `0 10px 30px ${colorScheme.opacity.primary15}`,
                     }}
                   >
                     <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2"
+                      className="w-11 h-11 rounded-full flex items-center justify-center mx-auto mb-2"
                       style={{
                         background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                       }}
@@ -197,8 +151,7 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                 ))}
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <CustomButton
                   variant="outline"
                   size="sm"
@@ -229,7 +182,6 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                 </CustomButton>
               </div>
 
-              {/* Footer Text */}
               <BricolageText
                 as="p"
                 className="text-xs sm:text-sm text-center opacity-75 pt-2"
@@ -253,10 +205,8 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
             </div>
           )}
 
-          {/* Confession Step */}
           {currentStep === 'confession' && (
             <div className="space-y-6">
-              {/* Header */}
               <div className="text-center space-y-4">
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center mx-auto border-2"
@@ -296,7 +246,6 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                 </div>
               </div>
 
-              {/* Quote */}
               <PlayfairText
                 as="p"
                 className="text-sm sm:text-base leading-relaxed text-center italic"
@@ -318,14 +267,11 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                 , Until we become very prosperous."
               </PlayfairText>
 
-              {/* Confession Content */}
               <div
-                className="rounded-lg p-4 border max-h-48 overflow-y-auto"
-                style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                  borderColor: `${colorScheme.primary}20`,
-                }}
+                className="relative bg-black/50 border border-white/15 rounded-2xl p-5 sm:p-6 text-white text-sm sm:text-base leading-relaxed space-y-3 max-h-[320px] overflow-y-auto shadow-inner"
               >
+                <div className="absolute -left-2 -top-2 h-10 w-10 rounded-full bg-white/5 blur-xl" />
+                <div className="absolute -right-4 -bottom-4 h-12 w-12 rounded-full bg-amber-400/10 blur-2xl" />
                 <PlayfairText
                   as="div"
                   className="text-xs sm:text-sm leading-relaxed space-y-3 text-justify"
@@ -340,7 +286,6 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                 </PlayfairText>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <CustomButton
                   variant="outline"
