@@ -26,15 +26,14 @@ export const metadata: Metadata = {
 
   // Title & Description
   title: {
-    default: 'The Wisdom House Church | Experience God’s Transforming Power',
-    template: '%s | The Wisdom House Church',
+    default: 'The Wisdom  Church | Experience God’s Transforming Power',
+    template: '%s | The Wisdom Church',
   },
   description:
     'A vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
 
   // Keywords (Google still reads them in 2025)
   keywords: [
-    // Your originals (kept for continuity)
     'wisdom house church',
     'the wisdom house church',
     'pentecostal church',
@@ -46,8 +45,6 @@ export const metadata: Metadata = {
     'christian church',
     'place of worship',
     'faith community',
-
-    // High-volume local dominators (550K+ monthly searches, low competition)
     'churches near me',
     'church services near me',
     'non denominational church near me',
@@ -56,15 +53,11 @@ export const metadata: Metadata = {
     'sunday morning church service',
     'online church services',
     'live church service',
-
-    // Pentecostal/Spirit-filled boosters (targeted for your style)
     'pentecostal churches near me',
     'charismatic church',
     'full gospel church',
     'spirit filled churches',
     'holy ghost church',
-
-    // Broad church-related terms (to pop up in "anything church" searches)
     'bible study',
     'youth ministry',
     'church events',
@@ -72,12 +65,12 @@ export const metadata: Metadata = {
     'worship music',
     'church choir',
     'childrens ministry',
-    `women's ministry,
-  'men's ministry',
-  'church small groups',
-  'volunteer at church',
-  'church volunteer opportunities',
-  'church live stream`,
+    "women's ministry",
+    "men's ministry",
+    'church small groups',
+    'volunteer at church',
+    'church volunteer opportunities',
+    'church live stream',
   ],
 
   // Author & Publisher
@@ -87,7 +80,7 @@ export const metadata: Metadata = {
       url: 'https://www.thewisdomhousechurch.org',
     },
   ],
-  creator: 'The Wisdom House Church',
+  creator: 'The Wisdom Church',
   publisher: 'The Wisdom House Church',
 
   // Open Graph — Facebook, LinkedIn, WhatsApp, iMessage
@@ -116,8 +109,8 @@ export const metadata: Metadata = {
     title: 'The Wisdom House Church',
     description: 'Join us for powerful worship and life-changing messages.',
     images: ['/twitter-image.jpg'], // Optional: same as OG or 1200×600
-    creator: '@yourchurchhandle', // Add your X handle
-    site: '@yourchurchhandle',
+    creator: '@wisdomhousehq', // Update to your handle if different
+    site: '@wisdomhousehq',
   },
 
   // Robots
@@ -184,6 +177,28 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={bricolageGrotesque.className}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'The Wisdom House Church',
+              url: 'https://www.thewisdomhousechurch.org',
+              logo: 'https://www.thewisdomhousechurch.org/og-image.jpg',
+              sameAs: [
+                'https://www.youtube.com/@wisdomhousehq',
+                'https://www.facebook.com/wisdomhousehq',
+                'https://www.instagram.com/wisdomhousehq',
+              ],
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer service',
+                availableLanguage: ['English'],
+              },
+            }),
+          }}
+        />
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

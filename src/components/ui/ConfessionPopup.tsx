@@ -1,130 +1,35 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { gsap } from 'gsap';
 import Image from 'next/image';
+import { X, Church, Hand, TrendingUp, Sparkles, ArrowLeft } from 'lucide-react';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { BaseText, BricolageText, H2, P } from '@/components/text';
 import { PlayfairText } from '../text/FontText';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { confessionContent } from '@/lib/data';
 import { WisdomeHouseLogo } from '../assets';
-import { Church, Hand, TrendingUp } from 'lucide-react';
+import { useWelcomeModal } from '../utils/hooks/Useconfession';
 
-interface ProfessionalPopupProps {
+interface WelcomeModalProps {
   onClose: () => void;
   delay?: number;
 }
 
-type ModalStep = 'confession' | 'welcome';
-
-export default function ProfessionalPopup({
-  onClose,
-  delay = 2000,
-}: ProfessionalPopupProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [currentStep, setCurrentStep] = useState<ModalStep>('welcome');
-  const [mounted, setMounted] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProps) {
   const { colorScheme } = useTheme();
+  const {
+    isVisible,
+    currentStep,
+    mounted,
+    modalRef,
+    contentRef,
+    handleClose,
+    showConfession,
+    showWelcome,
+  } = useWelcomeModal({ delay, onClose });
 
-  useEffect(() => {
-    setMounted(true);
-
-    const hasSeenPopup = localStorage.getItem('hasSeenPopup');
-    const lastSeenDate = localStorage.getItem('popupLastSeen');
-    const today = new Date().toDateString();
-
-    if (!hasSeenPopup || lastSeenDate !== today) {
-      const showTimer = setTimeout(() => {
-        setIsVisible(true);
-      }, delay);
-
-      return () => clearTimeout(showTimer);
-    }
-  }, [delay]);
-
-  useEffect(() => {
-    if (isVisible && modalRef.current) {
-      document.body.style.overflow = 'hidden';
-
-      const tl = gsap.timeline();
-      tl.fromTo(
-        modalRef.current,
-        {
-          opacity: 0,
-          scale: 0.95,
-          y: 30,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-        }
-      );
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isVisible]);
-
-  const animateStepTransition = (newStep: ModalStep) => {
-    if (!contentRef.current) return;
-
-    const tl = gsap.timeline();
-
-    tl.to(contentRef.current, {
-      opacity: 0,
-      x: -30,
-      duration: 0.3,
-      ease: 'power2.inOut',
-    })
-      .add(() => {
-        setCurrentStep(newStep);
-      })
-      .fromTo(
-        contentRef.current,
-        { x: 30, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.4,
-          ease: 'power2.out',
-        }
-      );
-  };
-
-  const handleClose = () => {
-    if (modalRef.current) {
-      gsap.to(modalRef.current, {
-        opacity: 0,
-        scale: 0.95,
-        y: 30,
-        duration: 0.4,
-        ease: 'power2.in',
-        onComplete: () => {
-          setIsVisible(false);
-          localStorage.setItem('hasSeenPopup', 'true');
-          localStorage.setItem('popupLastSeen', new Date().toDateString());
-          setTimeout(() => {
-            onClose();
-          }, 300);
-        },
-      });
-    } else {
-      setIsVisible(false);
-      localStorage.setItem('hasSeenPopup', 'true');
-      localStorage.setItem('popupLastSeen', new Date().toDateString());
-      setTimeout(() => {
-        onClose();
-      }, 300);
-    }
-  };
+  if (!mounted || !isVisible) return null;
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -132,52 +37,29 @@ export default function ProfessionalPopup({
     }
   };
 
-  const showConfession = () => {
-    animateStepTransition('confession');
-  };
-
-  const showWelcome = () => {
-    animateStepTransition('welcome');
-  };
-
-  if (!mounted) return null;
-
   return createPortal(
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-3 md:p-4 lg:p-6 transition-all duration-500 ${
-        isVisible
-          ? 'opacity-100 pointer-events-auto'
-          : 'opacity-0 pointer-events-none'
-      }`}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500"
       style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: isVisible ? 'blur(20px)' : 'blur(0px)',
-        WebkitBackdropFilter: isVisible ? 'blur(20px)' : 'blur(0px)',
+        background:
+          'radial-gradient(circle at 20% 20%, rgba(247,222,18,0.12), transparent 40%), rgba(0,0,0,0.75)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
       }}
       onClick={handleBackdropClick}
     >
-      {/* Wider Responsive Modal Container */}
       <div
         ref={modalRef}
-        className="relative rounded-xl w-full mx-auto overflow-hidden popup-modal-container"
+        className="relative rounded-3xl w-full max-w-2xl mx-auto overflow-hidden shadow-2xl border border-white/10"
         style={{
-          backgroundColor: colorScheme.black,
-          border: `1px solid ${colorScheme.primary}30`,
-          boxShadow: `
-            0 25px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 1px rgba(247, 222, 18, 0.1)
-          `,
-          maxHeight: '90vh',
+          background: 'linear-gradient(145deg, rgba(6,6,6,0.9), rgba(0,0,0,0.7))',
+          maxHeight: '85vh',
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Progress Bar */}
-        <div
-          className="absolute top-0 left-0 right-0 h-1 rounded-t-xl z-20"
-          style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-        >
+        <div className="absolute top-0 left-0 right-0 h-1 z-20 bg-white/10">
           <div
-            className="h-full transition-all duration-700 ease-out rounded-t-xl"
+            className="h-full transition-all duration-500 ease-out"
             style={{
               width: currentStep === 'welcome' ? '50%' : '100%',
               background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
@@ -185,180 +67,101 @@ export default function ProfessionalPopup({
           />
         </div>
 
-        {/* Responsive Close Button */}
-        <div className="relative w-full">
-          <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 md:-top-4 md:-right-4 z-50">
-            <CustomButton
-              variant="ghost"
-              size="icon"
-              onClick={handleClose}
-              className="z-[100] rounded-full p-2 sm:p-3 md:p-4 transform hover:scale-110 transition-all duration-200 shadow-lg"
-              curvature="full"
-              style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                border: `2px solid ${colorScheme.primary}`,
-                color: colorScheme.primary,
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-              }}
-            >
-              <svg
-                className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </CustomButton>
-          </div>
-        </div>
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 z-50 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 border border-white/20 bg-white/5 text-white"
+        >
+          <X className="w-4 h-4" />
+        </button>
 
-        {/* Content Area with increased padding for wider screens */}
         <div
           ref={contentRef}
-          className="p-4 sm:p-5 md:p-6 lg:p-8 transition-all duration-300 h-full overflow-y-auto"
+          className="p-6 sm:p-8 overflow-y-auto"
+          style={{ maxHeight: 'calc(85vh - 1rem)' }}
         >
-          {/* Step 1: Welcome (First Step) */}
           {currentStep === 'welcome' && (
-            <div className="text-center h-full flex flex-col">
-              <div className="flex-shrink-0 mb-4 sm:mb-6 md:mb-8 mt-6 sm:mt-10 md:mt-12">
-                <div
-                  className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-5 border overflow-hidden"
-                  style={{
-                    backgroundColor: 'rgba(247, 222, 18, 0.1)',
-                    borderColor: colorScheme.primary,
-                  }}
-                >
+            <div className="space-y-6">
+              <div className="text-center space-y-5">
+                <div className="relative w-18 h-18 mx-auto rounded-full border border-white/20 bg-white/10 flex items-center justify-center">
                   <Image
                     src={WisdomeHouseLogo}
-                    alt="The Wisdom House Church Logo"
-                    width={40}
-                    height={40}
-                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 object-contain"
+                    alt="The Wisdom House Church"
+                    width={56}
+                    height={56}
+                    className="object-contain"
                   />
+                  <Sparkles className="absolute -right-4 -top-3 h-8 w-8 text-amber-300/60" />
                 </div>
 
-                <H2
-                  as="h2"
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-2 sm:mb-3 md:mb-4 tracking-tight leading-tight"
-                  style={{ color: colorScheme.white }}
-                >
-                  Welcome to{' '}
-                  <BaseText
-                    fontFamily="playfair"
-                    style={{
-                      fontStyle: 'italic',
-                      color: colorScheme.primary,
-                      display: 'inline',
-                      fontSize: 'inherit',
-                      lineHeight: 'inherit',
-                    }}
+                <div>
+                  <H2
+                    as="h2"
+                    className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-white"
                   >
-                    The Wisdom House Church
-                  </BaseText>
-                </H2>
-
-                <div
-                  className="w-12 sm:w-16 md:w-20 lg:w-24 h-0.5 mx-auto rounded-full mb-3 sm:mb-4 md:mb-5"
-                  style={{
-                    background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
-                  }}
-                />
-              </div>
-
-              <div className="flex-1 overflow-y-auto mb-4 sm:mb-6 md:mb-8">
-                <BricolageText
-                  as="p"
-                  className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-md md:max-w-lg mx-auto mb-4 sm:mb-6 md:mb-8 font-light opacity-90 text-center px-2"
-                  style={{ color: colorScheme.white }}
-                  weight="light"
-                >
-                  We're delighted to have you visit our{' '}
-                  <BaseText
-                    weight="regular"
-                    fontFamily="playfair"
-                    style={{
-                      fontStyle: 'italic',
-                      color: colorScheme.primary,
-                      display: 'inline',
-                      fontSize: 'inherit',
-                      lineHeight: 'inherit',
-                    }}
-                  >
-                    online Community
-                  </BaseText>
-                  .
-                </BricolageText>
-
-                {/* Wider Mini Boxes with Lucide Icons */}
-                <div className="flex justify-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 px-2">
-                  {[
-                    {
-                      icon: (
-                        <Church className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-black" />
-                      ),
-                      title: 'Worship',
-                    },
-                    {
-                      icon: (
-                        <Hand className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-black" />
-                      ),
-                      title: 'Pray',
-                    },
-                    {
-                      icon: (
-                        <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-black" />
-                      ),
-                      title: 'Grow',
-                    },
-                  ].map((item, index) => (
-                    <div
-                      key={index}
-                      className="text-center p-2 sm:p-3 md:p-4 rounded-lg border transition-all duration-300 hover:scale-105 flex-1 min-w-0 max-w-20 sm:max-w-24 md:max-w-28 lg:max-w-32"
+                    Welcome to{' '}
+                    <BaseText
+                      fontFamily="playfair"
                       style={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(247, 222, 18, 0.3)',
+                        fontStyle: 'italic',
+                        color: colorScheme.primary,
+                        display: 'inline',
                       }}
                     >
-                      <div
-                        className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2 md:mb-3 border"
-                        style={{
-                          background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                          borderColor: colorScheme.white,
-                        }}
-                      >
-                        {item.icon}
-                      </div>
-                      <BricolageText
-                        as="h3"
-                        className="font-bold text-xs sm:text-sm md:text-base truncate"
-                        weight="semibold"
-                        style={{ color: colorScheme.white }}
-                      >
-                        {item.title}
-                      </BricolageText>
-                    </div>
-                  ))}
+                      The Wisdom House
+                    </BaseText>
+                  </H2>
+                  <p className="text-white/70 text-sm sm:text-base max-w-xl mx-auto">
+                    You are stepping into a house of faith, worship, and
+                    miracles. Take a moment to speak life over your week.
+                  </p>
                 </div>
               </div>
 
-              {/* Navigation - Wider buttons for desktop */}
-              <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2">
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { icon: Church, title: 'Worship' },
+                  { icon: Hand, title: 'Pray' },
+                  { icon: TrendingUp, title: 'Grow' },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="text-center p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-1"
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                      borderColor: `${colorScheme.primary}25`,
+                      boxShadow: `0 10px 30px ${colorScheme.opacity.primary15}`,
+                    }}
+                  >
+                    <div
+                      className="w-11 h-11 rounded-full flex items-center justify-center mx-auto mb-2"
+                      style={{
+                        background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                      }}
+                    >
+                      <item.icon className="w-5 h-5 text-black" />
+                    </div>
+                    <BricolageText
+                      as="p"
+                      className="font-semibold text-xs"
+                      style={{ color: colorScheme.white }}
+                    >
+                      {item.title}
+                    </BricolageText>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <CustomButton
                   variant="outline"
                   size="sm"
                   onClick={showConfession}
-                  className="font-bold transition-all duration-300 transform hover:scale-105 border w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
-                  curvature="xl"
+                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
+                  curvature="lg"
                   style={{
                     borderColor: colorScheme.primary,
                     color: colorScheme.white,
-                    backgroundColor: 'rgba(247, 222, 18, 0.05)',
+                    backgroundColor: `${colorScheme.primary}05`,
                   }}
                 >
                   Our Confession
@@ -368,8 +171,8 @@ export default function ProfessionalPopup({
                   variant="primary"
                   size="sm"
                   onClick={handleClose}
-                  className="font-bold transition-all duration-300 transform hover:scale-105 w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
-                  curvature="xl"
+                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
+                  curvature="lg"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                     color: colorScheme.black,
@@ -381,159 +184,120 @@ export default function ProfessionalPopup({
 
               <BricolageText
                 as="p"
-                className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-md md:max-w-lg mx-auto pt-4 sm:pt-6 md:pt-8 mb-4 sm:mb-6 md:mb-8 font-light opacity-90 text-center px-2"
+                className="text-xs sm:text-sm text-center opacity-75 pt-2"
                 style={{ color: colorScheme.white }}
                 weight="light"
               >
                 Begin your journey{' '}
                 <BaseText
-                  weight="regular"
+                  weight="medium"
                   fontFamily="playfair"
                   style={{
                     fontStyle: 'italic',
                     color: colorScheme.primary,
                     display: 'inline',
-                    fontSize: 'inherit',
-                    lineHeight: 'inherit',
                   }}
                 >
-                  with us today.
+                  with us today
                 </BaseText>
+                .
               </BricolageText>
             </div>
           )}
 
-          {/* Step 2: Confession (Second Step) */}
           {currentStep === 'confession' && (
-            <div className="text-center h-full flex flex-col">
-              {/* Header */}
-              <div className="flex-shrink-0 mb-4 sm:mb-6 md:mb-8">
+            <div className="space-y-6">
+              <div className="text-center space-y-4">
                 <div
-                  className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-5 border"
+                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto border-2"
                   style={{
-                    backgroundColor: 'rgba(247, 222, 18, 0.1)',
+                    backgroundColor: `${colorScheme.primary}10`,
                     borderColor: colorScheme.primary,
                   }}
                 >
-                  <span
-                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl"
-                    style={{ color: colorScheme.primary }}
-                  >
-                    📖
-                  </span>
+                  <span className="text-3xl">📖</span>
                 </div>
 
-                <BricolageText
-                  as="p"
-                  className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-md md:max-w-lg mx-auto pt-4 sm:pt-6 md:pt-8 mb-4 sm:mb-6 md:mb-8 font-light opacity-90 text-center px-2"
-                  style={{ color: colorScheme.white }}
-                  weight="light"
-                >
-                  Our{' '}
-                  <BaseText
-                    weight="regular"
-                    fontFamily="playfair"
-                    style={{
-                      fontStyle: 'italic',
-                      color: colorScheme.primary,
-                      display: 'inline',
-                      fontSize: 'inherit',
-                      lineHeight: 'inherit',
-                    }}
-                  >
-                    Confession
-                  </BaseText>
-                </BricolageText>
-
-                <div
-                  className="w-12 sm:w-16 md:w-20 lg:w-24 h-0.5 mx-auto rounded-full mb-3 sm:mb-4 md:mb-5"
-                  style={{
-                    background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
-                  }}
-                />
-              </div>
-
-              {/* Content - Wider for desktop */}
-              <div className="flex-1 overflow-y-auto mb-4 sm:mb-6 md:mb-8 px-2">
-                <div className="max-w-md md:max-w-lg lg:max-w-xl mx-auto">
-                  <PlayfairText
-                    as="p"
-                    className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed mb-4 sm:mb-6 md:mb-8 italic text-center"
+                <div>
+                  <BricolageText
+                    as="h3"
+                    className="text-xl sm:text-2xl font-bold mb-2"
                     style={{ color: colorScheme.white }}
-                    weight="light"
                   >
-                    "We Begin to Prosper,
+                    Our{' '}
                     <BaseText
-                      weight="regular"
                       fontFamily="playfair"
                       style={{
                         fontStyle: 'italic',
                         color: colorScheme.primary,
                         display: 'inline',
-                        fontSize: 'inherit',
-                        lineHeight: 'inherit',
                       }}
                     >
-                      We continue to prosper,
+                      Confession
                     </BaseText>
-                    Until we become very prosperous."
-                  </PlayfairText>
+                  </BricolageText>
 
                   <div
-                    className="rounded-lg p-3 sm:p-4 md:p-6 border max-h-40 sm:max-h-56 md:max-h-64 overflow-y-auto"
+                    className="w-16 h-0.5 mx-auto rounded-full"
                     style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      borderColor: 'rgba(247, 222, 18, 0.3)',
+                      background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
                     }}
-                  >
-                    <PlayfairText
-                      as="div"
-                      className="leading-relaxed space-y-2 sm:space-y-3 md:space-y-4 text-justify text-xs sm:text-sm md:text-base"
-                      style={{ color: colorScheme.white }}
-                      weight="regular"
-                    >
-                      {confessionContent
-                        .split('\n\n')
-                        .map((paragraph, index) => (
-                          <P
-                            key={index}
-                            className="mb-2 sm:mb-3 md:mb-4 last:mb-0 opacity-90"
-                          >
-                            {paragraph}
-                          </P>
-                        ))}
-                    </PlayfairText>
-                  </div>
+                  />
                 </div>
               </div>
 
-              {/* Navigation - Wider buttons for desktop */}
-              <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2">
+              <PlayfairText
+                as="p"
+                className="text-sm sm:text-base leading-relaxed text-center italic"
+                style={{ color: colorScheme.white }}
+                weight="light"
+              >
+                "We Begin to Prosper,{' '}
+                <BaseText
+                  weight="medium"
+                  fontFamily="playfair"
+                  style={{
+                    fontStyle: 'italic',
+                    color: colorScheme.primary,
+                    display: 'inline',
+                  }}
+                >
+                  We continue to prosper
+                </BaseText>
+                , Until we become very prosperous."
+              </PlayfairText>
+
+              <div
+                className="relative bg-black/50 border border-white/15 rounded-2xl p-5 sm:p-6 text-white text-sm sm:text-base leading-relaxed space-y-3 max-h-[320px] overflow-y-auto shadow-inner"
+              >
+                <div className="absolute -left-2 -top-2 h-10 w-10 rounded-full bg-white/5 blur-xl" />
+                <div className="absolute -right-4 -bottom-4 h-12 w-12 rounded-full bg-amber-400/10 blur-2xl" />
+                <PlayfairText
+                  as="div"
+                  className="text-xs sm:text-sm leading-relaxed space-y-3 text-justify"
+                  style={{ color: colorScheme.white }}
+                  weight="regular"
+                >
+                  {confessionContent.split('\n\n').map((paragraph, index) => (
+                    <P key={index} className="opacity-90">
+                      {paragraph}
+                    </P>
+                  ))}
+                </PlayfairText>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <CustomButton
                   variant="outline"
                   size="sm"
                   onClick={showWelcome}
-                  leftIcon={
-                    <svg
-                      className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1 sm:mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                      />
-                    </svg>
-                  }
-                  className="font-bold transition-all duration-300 transform hover:scale-105 border w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
-                  curvature="xl"
+                  leftIcon={<ArrowLeft className="w-4 h-4" />}
+                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
+                  curvature="lg"
                   style={{
                     borderColor: colorScheme.primary,
                     color: colorScheme.white,
-                    backgroundColor: 'rgba(247, 222, 18, 0.05)',
+                    backgroundColor: `${colorScheme.primary}05`,
                   }}
                 >
                   Back
@@ -543,8 +307,8 @@ export default function ProfessionalPopup({
                   variant="primary"
                   size="sm"
                   onClick={handleClose}
-                  className="font-bold transition-all duration-300 transform hover:scale-105 w-full sm:w-auto md:min-w-[140px] text-sm sm:text-base md:text-lg"
-                  curvature="xl"
+                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
+                  curvature="lg"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
                     color: colorScheme.black,

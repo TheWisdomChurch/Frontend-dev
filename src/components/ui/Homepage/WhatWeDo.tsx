@@ -24,7 +24,7 @@ const useViewport = () => {
       const width = window.innerWidth;
       if (width < 768) {
         setViewport('mobile');
-      } else if (width < 1024) {
+      } else if (width < 1200) {
         setViewport('tablet');
       } else {
         setViewport('desktop');
@@ -62,31 +62,30 @@ export default function WhatWeDo() {
       <div
         key={box.id}
         ref={el => addToBoxesRef(el, index)}
-        className={`group relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] ${
+        className={`group relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-lg transition-all duration-700 hover:shadow-2xl hover:scale-[1.015] ${
           isLargeBox
             ? 'md:col-span-2 aspect-[4/3] md:aspect-[21/9]'
-            : 'aspect-[4/3]'
+            : 'aspect-[5/4]'
         }`}
       >
         {/* Image Container with fixed aspect ratio */}
-        <div className="relative w-full h-full">
-          <div className="absolute inset-0 z-0">
+        <div className="relative w-full h-full overflow-hidden">
+          <div className="absolute inset-0 z-0 parallax-layer">
             <Image
               src={box.image}
               alt={box.imageAlt}
               fill
               style={{
                 objectFit: 'cover',
-                objectPosition: 'center',
-                ...(box.imageOpacity ? { opacity: box.imageOpacity / 100 } : {})
+                objectPosition: 'center top',
+                ...(box.imageOpacity ? { opacity: box.imageOpacity / 100 } : {}),
               }}
-              className="transition-all duration-700 group-hover:scale-110"
+              className="transition-transform duration-700 ease-out group-hover:scale-110 md:group-hover:-translate-y-1"
               sizes={
                 isLargeBox
                   ? '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 66vw'
                   : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
               }
-              priority={index < 2}
               quality={90}
             />
           </div>
@@ -140,9 +139,11 @@ export default function WhatWeDo() {
     <Section
       id="what-we-do"
       ref={sectionRef}
-      padding="xl"
+      padding="lg"
       fullHeight={false}
-      style={{ backgroundColor: '#FFFFFF' }}
+      style={{
+        background: '#0b0b0b',
+      }}
       className="relative overflow-hidden"
     >
       <Container 
@@ -158,14 +159,24 @@ export default function WhatWeDo() {
           direction="column"
           justify="center"
           align="center"
-          gap="xl"
-          className="text-center pt-8 sm:pt-12 lg:pt-16 pb-6 sm:pb-8 lg:pb-12"
+          gap="md"
+          className="text-center pt-8 sm:pt-10 lg:pt-12 pb-4 sm:pb-6 lg:pb-8"
         >
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.18em]"
+            style={{
+              color: '#fff',
+              background: colorScheme.primary,
+              boxShadow: '0 8px 20px rgba(0,0,0,0.25)',
+            }}
+          >
+            What to expect
+          </div>
           <H2
             ref={headingRef}
             className="leading-tight text-center"
             style={{ 
-              color: accentTextColor,
+              color: '#FFFFFF',
               fontSize: headingSizes[viewport === 'mobile' ? 'sm' : 
                                    viewport === 'tablet' ? 'md' : 'lg']
             }}
@@ -173,23 +184,26 @@ export default function WhatWeDo() {
             weight="bold"
             smWeight="extrabold"
           >
-            What To Expect
+            Sundays that feel alive in every lane
           </H2>
         </FlexboxLayout>
 
         {/* Service Boxes - Responsive Grid */}
-        <GridboxLayout
-          columns={1}
-          gap="xl"
-          responsive={{ 
-            sm: 1, 
-            md: 2, 
-            lg: 2 
-          }}
-          className="w-full mb-12 sm:mb-16 lg:mb-20"
-        >
-          {whatWeDoData.map((box, index) => renderBox(box, index))}
-        </GridboxLayout>
+        <div className="relative">
+          <div className="absolute -inset-6 rounded-[32px] bg-white/60 blur-3xl opacity-50 pointer-events-none" />
+          <GridboxLayout
+            columns={1}
+            gap="xl"
+            responsive={{ 
+              sm: 1, 
+              md: 2, 
+              lg: 2 
+            }}
+            className="w-full mb-8 sm:mb-12 lg:mb-14 relative z-10"
+          >
+            {whatWeDoData.map((box, index) => renderBox(box, index))}
+          </GridboxLayout>
+        </div>
 
         {/* Mission Statement - Responsive Text */}
         <FlexboxLayout
@@ -197,13 +211,13 @@ export default function WhatWeDo() {
           direction="column"
           justify="center"
           align="center"
-          className="text-center pt-4 sm:pt-6 lg:pt-8 pb-6 sm:pb-8 lg:pb-10"
+          className="text-center pt-2 sm:pt-4 lg:pt-6 pb-4 sm:pb-6 lg:pb-8"
         >
           <div className="w-full max-w-3xl mx-auto">
             <BodySM
               className="leading-relaxed font-normal text-left"
               style={{ 
-                color: accentTextColor,
+                color: '#e5e7eb',
                 fontSize: bodySizes[viewport === 'mobile' ? 'base' : 
                                    viewport === 'tablet' ? 'sm' : 'md'],
                 padding: `0 ${viewport === 'mobile' ? '1rem' : 

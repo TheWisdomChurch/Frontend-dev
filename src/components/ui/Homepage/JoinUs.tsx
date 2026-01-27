@@ -1,388 +1,217 @@
+// components/ui/Homepage/JoinUs.tsx
 'use client';
 
-import { WisdomeHouseLogo, Workforce_bg } from '@/components/assets';
-import { H2, BaseText, BodySM, Caption } from '@/components/text';
-import Button from '@/components/utils/buttons/CustomButton';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import { FormModal } from '@/components/modal/FormModal';
-import { useJoinWisdomHouse } from '@/components/utils/hooks/useJoin';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import {
-  Section,
-  Container,
-  GridboxLayout,
-  FlexboxLayout,
-} from '@/components/layout';
+import { useState } from 'react';
 import Image from 'next/image';
-import { RefObject } from 'react';
+import {
+  Users,
+  Video,
+  Music,
+  Baby,
+  Cpu,
+  Users2,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react';
+import { Section, Container } from '@/components/layout';
+import CustomButton from '@/components/utils/buttons/CustomButton';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { H2, BodySM, SmallText, Caption } from '@/components/text';
+import { Workforce_bg } from '@/components/assets';
 
-// Department data
 const departments = [
   {
-    title: 'Ushers',
-    description: 'Welcome and guide attendees with warmth and excellence',
-    gradient: 'from-purple-500 to-pink-500',
+    title: 'Ushers & Protocol',
+    from: '#f59e0b',
+    to: '#f97316',
+    icon: Users,
+    description: 'First touch hospitality and service flow.',
   },
   {
-    title: 'Media Team',
-    description: 'Capture and broadcast the move of God through visuals and sound',
-    gradient: 'from-blue-500 to-cyan-500',
+    title: 'Media & Broadcast',
+    from: '#3b82f6',
+    to: '#06b6d4',
+    icon: Video,
+    description: 'Storytelling through cameras, lights, and sound.',
   },
   {
-    title: 'Choir',
-    description: 'Lead powerful worship and create heavenly atmospheres',
-    gradient: 'from-amber-500 to-orange-500',
+    title: 'Wave City Music',
+    from: '#f43f5e',
+    to: '#ec4899',
+    icon: Music,
+    description: 'Lead worship and craft the atmosphere.',
   },
   {
     title: 'Children Ministry',
-    description: 'Nurture young hearts and teach them the ways of God',
-    gradient: 'from-green-500 to-emerald-500',
+    from: '#10b981',
+    to: '#14b8a6',
+    icon: Baby,
+    description: 'Shepherd the next generation.',
   },
   {
-    title: 'Youth Ministry',
-    description: 'Empower the next generation to walk in purpose and power',
-    gradient: 'from-indigo-500 to-purple-500',
+    title: 'Youth & Campus',
+    from: '#6366f1',
+    to: '#a855f7',
+    icon: Users2,
+    description: 'Mentor teens and young adults.',
   },
   {
     title: 'Technical Team',
-    description: 'Ensure seamless operations behind the scenes with excellence',
-    gradient: 'from-slate-600 to-zinc-800',
+    from: '#475569',
+    to: '#0f172a',
+    icon: Cpu,
+    description: 'Keep every service running smoothly.',
   },
 ];
 
-/* --------------------------------------------
-   DEPARTMENT CARD COMPONENT
---------------------------------------------- */
-interface DepartmentCardProps {
-  dept: typeof departments[0];
-  colorScheme: any;
-  onLearnMore: (title: string) => void;
-  isMobile?: boolean;
-  addToRefs?: (el: HTMLDivElement | null, index: number) => void;
-  index?: number;
-  handleCardEnter?: (index: number, e: React.MouseEvent) => void;
-  handleCardLeave?: (index: number, e: React.MouseEvent) => void;
-}
+export default function JoinWisdomHouse() {
+  const { colorScheme } = useTheme();
+  const [form, setForm] = useState({ name: '', email: '', team: '' });
+  const [submitted, setSubmitted] = useState(false);
 
-function DepartmentCard({
-  dept,
-  colorScheme,
-  onLearnMore,
-  isMobile = false,
-  addToRefs,
-  index,
-  handleCardEnter,
-  handleCardLeave,
-}: DepartmentCardProps) {
-  const cardClasses = `bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 relative overflow-hidden flex flex-col h-full ${
-    !isMobile ? 'p-5 hover:-translate-y-2 transition-all duration-500 hover:shadow-2xl' : 'p-4'
-  }`;
-
-  // Handle ref assignment properly
-  const handleRef = (el: HTMLDivElement | null) => {
-    if (addToRefs && index !== undefined) {
-      addToRefs(el, index);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 2400);
   };
 
   return (
-    <div
-      ref={handleRef}
-      onMouseEnter={e => handleCardEnter && index !== undefined && handleCardEnter(index, e)}
-      onMouseLeave={e => handleCardLeave && index !== undefined && handleCardLeave(index, e)}
-      className={isMobile ? 'flex-shrink-0 w-64' : 'group w-full'}
+    <Section
+      id="join"
+      padding="xl"
+      background="custom"
+      className="relative overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(185deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.94) 50%, rgba(0,0,0,0.96) 100%), url(${Workforce_bg.src})`,
+        backgroundSize: 'cover, cover',
+        backgroundRepeat: 'no-repeat, no-repeat',
+        backgroundPosition: 'center center, center center',
+        backgroundBlendMode: 'overlay',
+        backgroundColor: '#050505',
+      }}
     >
-      <div className={cardClasses}>
-        {/* Animated Background Gradient */}
-        {!isMobile && (
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
-            style={{
-              background: `linear-gradient(135deg, ${colorScheme.primary}08, ${colorScheme.primaryDark}05)`,
-            }}
-          />
-        )}
-
-        {/* Logo Section */}
-        <div className="flex justify-center mb-4">
-          <div className="relative">
-            {/* Outer Glow Ring - Desktop only */}
-            {!isMobile && (
-              <div
-                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"
-                style={{
-                  background: `radial-gradient(circle, ${colorScheme.primary}30 0%, transparent 70%)`,
-                  transform: 'scale(1.1)',
-                }}
-              />
-            )}
-
-            {/* Logo Container */}
-            <div
-              className={`relative rounded-full bg-gradient-to-br ${dept.gradient} shadow-xl flex items-center justify-center ${
-                isMobile 
-                  ? 'w-14 h-14 p-2' 
-                  : 'w-16 h-16 p-3 group-hover:scale-105 transition-transform duration-300'
-              }`}
-            >
-              <Image
-                src={WisdomeHouseLogo}
-                alt="WisdomHouse Logo"
-                width={isMobile ? 28 : 32}
-                height={isMobile ? 28 : 32}
-                className="w-full h-full object-contain rounded-full"
-              />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/75 to-black/85 pointer-events-none" />
+      <Container size="xl" className="relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-start">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 text-white text-xs uppercase tracking-[0.18em]">
+              <Sparkles className="w-3.5 h-3.5" />
+              Serve with us
+            </div>
+            <H2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+              Join our <span style={{ color: colorScheme.primary }}>workforce</span> & move the house forward.
+            </H2>
+            <BodySM className="text-white/75 max-w-2xl">
+              Every service is a team story—hospitality, music, media, prayer, and tech.
+              Pick a lane, get trained, and serve with joy.
+            </BodySM>
+            <div className="flex items-center gap-4 text-white/70 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full" style={{ background: colorScheme.primary }} />
+                6 active departments
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full" style={{ background: colorScheme.primary }} />
+                New members onboard monthly
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Content Section */}
-        <div className="text-center flex flex-col flex-grow justify-start">
-          <BaseText
-            fontFamily="bricolage"
-            weight="bold"
-            className={`${isMobile ? 'text-lg' : 'text-xl group-hover:scale-105 transition-transform duration-200'} mb-2`}
-            style={{ color: '#FFFFFF' }}
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-4"
           >
-            {dept.title}
-          </BaseText>
-
-          <Caption
-            className="text-gray-300 opacity-90 px-1 line-clamp-2 leading-tight flex items-center justify-center"
-            useThemeColor={false}
-            style={{
-              fontSize: isMobile ? '0.75rem' : '0.875rem',
-              minHeight: isMobile ? '2.5rem' : '3rem',
-            }}
-          >
-            {dept.description}
-          </Caption>
-        </div>
-
-        {/* Button Section */}
-        <div className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
-          <Button
-            variant="primary"
-            size={isMobile ? "sm" : "md"}
-            curvature="xl"
-            className="w-full font-semibold shadow-lg border border-white/20 backdrop-blur-sm"
-            style={{
-              background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-              color: '#000000',
-            }}
-            onClick={() => onLearnMore(dept.title)}
-          >
-            {isMobile ? 'Join Team' : `Join ${dept.title}`}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* --------------------------------------------
-   MOBILE SCROLL SECTION
---------------------------------------------- */
-interface MobileScrollProps {
-  departments: typeof departments;
-  colorScheme: any;
-  onLearnMore: (title: string) => void;
-  scrollLeft: () => void;
-  scrollRight: () => void;
-  scrollContainerRef: RefObject<HTMLDivElement | null>;
-}
-
-function MobileScrollSection({
-  departments,
-  colorScheme,
-  onLearnMore,
-  scrollLeft,
-  scrollRight,
-  scrollContainerRef,
-}: MobileScrollProps) {
-  return (
-    <div className="sm:hidden px-4">
-      <FlexboxLayout direction="column" gap="md">
-        <FlexboxLayout justify="between" align="center" className="mb-4">
-          <button
-            onClick={scrollLeft}
-            className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="w-5 h-5 text-white" />
-          </button>
-
-          <BodySM className="font-bold text-base text-white">
-            Choose Department
-          </BodySM>
-
-          <button
-            onClick={scrollRight}
-            className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="w-5 h-5 text-white" />
-          </button>
-        </FlexboxLayout>
-
-        <div
-          ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
-        >
-          {departments.map((dept, index) => (
-            <DepartmentCard
-              key={dept.title}
-              dept={dept}
-              colorScheme={colorScheme}
-              onLearnMore={onLearnMore}
-              isMobile={true}
-              index={index}
-            />
-          ))}
-          <div className="flex-shrink-0 w-4" />
-        </div>
-      </FlexboxLayout>
-    </div>
-  );
-}
-
-/* --------------------------------------------
-   DESKTOP/TABLET GRID SECTION
---------------------------------------------- */
-interface DesktopGridProps {
-  departments: typeof departments;
-  colorScheme: any;
-  onLearnMore: (title: string) => void;
-  addToRefs: (el: HTMLDivElement | null, index: number) => void;
-  handleCardEnter: (index: number, e: React.MouseEvent) => void;
-  handleCardLeave: (index: number, e: React.MouseEvent) => void;
-}
-
-function DesktopGridSection({
-  departments,
-  colorScheme,
-  onLearnMore,
-  addToRefs,
-  handleCardEnter,
-  handleCardLeave,
-}: DesktopGridProps) {
-  return (
-    <div className="hidden sm:block">
-      <GridboxLayout
-        columns={3}
-        gap="lg"
-        responsive={{ sm: 1, md: 2, lg: 3 }}
-        className="max-w-6xl mx-auto"
-      >
-        {departments.map((dept, index) => (
-          <DepartmentCard
-            key={dept.title}
-            dept={dept}
-            colorScheme={colorScheme}
-            onLearnMore={onLearnMore}
-            addToRefs={addToRefs}
-            index={index}
-            handleCardEnter={handleCardEnter}
-            handleCardLeave={handleCardLeave}
-          />
-        ))}
-      </GridboxLayout>
-    </div>
-  );
-}
-
-/* --------------------------------------------
-   MAIN COMPONENT
---------------------------------------------- */
-export default function JoinWisdomHouse() {
-  const { colorScheme } = useTheme();
-
-  const {
-    selectedDepartment,
-    showForm,
-    sectionRef,
-    scrollContainerRef,
-    addToRefs,
-    handleLearnMore,
-    scrollLeft,
-    scrollRight,
-    handleCardEnter,
-    handleCardLeave,
-    setShowForm,
-  } = useJoinWisdomHouse();
-
-  return (
-    <>
-      <Section
-        ref={sectionRef}
-        background="image"
-        backgroundImage={Workforce_bg.src}
-        overlay={true}
-        overlayOpacity={70}
-        fullHeight={false}
-        className="overflow-hidden"
-        padding="none"
-      >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/60 z-0" />
-
-        <Container size="xl" className="relative z-10 py-12 lg:py-20">
-          {/* Hero Header */}
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="md"
-            className="text-center mb-10 lg:mb-16 px-4"
-          >
-            <H2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-white">
-              Join Our{' '}
-              <BaseText
-                fontFamily="playfair"
-                className="italic inline-block"
-                style={{
-                  color: colorScheme.primary,
-                  fontSize: 'inherit',
-                  lineHeight: 'inherit',
-                }}
+            <SmallText className="text-white/80">Quick signup</SmallText>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="text-sm text-white/80 space-y-1">
+                Full Name
+                <input
+                  required
+                  type="text"
+                  value={form.name}
+                  onChange={e => setForm({ ...form, name: e.target.value })}
+                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+                />
+              </label>
+              <label className="text-sm text-white/80 space-y-1">
+                Email
+                <input
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+                />
+              </label>
+            </div>
+            <label className="text-sm text-white/80 space-y-1">
+              Preferred Team
+              <select
+                required
+                value={form.team}
+                onChange={e => setForm({ ...form, team: e.target.value })}
+                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
               >
-                Workforce
-              </BaseText>
-            </H2>
+                <option value="">Select a team</option>
+                {departments.map(dept => (
+                  <option key={dept.title} value={dept.title}>
+                    {dept.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <CustomButton
+              type="submit"
+              variant="primary"
+              size="md"
+              curvature="xl"
+              elevated
+              className="w-full"
+            >
+              {submitted ? 'We will reach out!' : 'Join the workforce'}
+            </CustomButton>
+            <Caption className="text-white/60">
+              We respond within 24 hours. Training happens weekly after service.
+            </Caption>
+          </form>
+        </div>
 
-            <BodySM className="max-w-2xl text-base sm:text-lg lg:text-xl leading-relaxed text-gray-200">
-              &quot;Each of you should use whatever gift you have received to
-              serve others, as faithful stewards of God&apos;s grace in its
-              various forms.&quot; – 1 Peter 4:10
-            </BodySM>
-          </FlexboxLayout>
-
-          {/* Departments Section */}
-          <DesktopGridSection
-            departments={departments}
-            colorScheme={colorScheme}
-            onLearnMore={handleLearnMore}
-            addToRefs={addToRefs}
-            handleCardEnter={handleCardEnter}
-            handleCardLeave={handleCardLeave}
-          />
-
-          <MobileScrollSection
-            departments={departments}
-            colorScheme={colorScheme}
-            onLearnMore={handleLearnMore}
-            scrollLeft={scrollLeft}
-            scrollRight={scrollRight}
-            scrollContainerRef={scrollContainerRef}
-          />
-        </Container>
-      </Section>
-
-      <FormModal
-        isOpen={showForm}
-        onClose={() => setShowForm(false)}
-        department={selectedDepartment || ''}
-      />
-    </>
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {departments.map((dept, idx) => {
+            const Icon = dept.icon;
+            return (
+              <div
+                key={dept.title}
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col gap-3 shadow-xl transition-transform duration-300 hover:-translate-y-1"
+                style={{ boxShadow: `0 10px 30px ${colorScheme.opacity.primary10}` }}
+              >
+                <div
+                  className="absolute inset-0 opacity-20"
+                  style={{ backgroundImage: `linear-gradient(135deg, var(--tw-gradient-stops))` }}
+                />
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center text-white relative"
+                  style={{
+                    background: `linear-gradient(135deg, ${dept.from} 0%, ${dept.to} 100%)`,
+                  }}
+                >
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="relative z-10 space-y-1">
+                  <SmallText weight="bold" className="text-white">
+                    {dept.title}
+                  </SmallText>
+                  <Caption className="text-white/70">{dept.description}</Caption>
+                </div>
+                <div className="relative z-10 flex items-center justify-between pt-2">
+                  <Caption className="text-white/60">Tap to choose above</Caption>
+                  <ArrowRight className="w-4 h-4 text-white/70" />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Container>
+    </Section>
   );
 }
