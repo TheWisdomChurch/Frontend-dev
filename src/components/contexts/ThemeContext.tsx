@@ -1,14 +1,25 @@
 ﻿// contexts/ThemeContext.tsx
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+} from 'react';
 import { ColorScheme, darkShades, lightShades } from '../colors/colorScheme';
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+
 interface ThemeContextType {
-  theme: string;
+  theme: ThemeMode;
+  resolvedTheme: 'light' | 'dark';
   colorScheme: ColorScheme;
   isDark: boolean;
   toggleTheme: () => void;
+  setTheme: (mode: ThemeMode) => void;
   mounted: boolean;
 }
 
@@ -16,16 +27,40 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Safe default values for build time
 const defaultTheme: ThemeContextType = {
-  theme: 'light',
+  theme: 'system',
+  resolvedTheme: 'light',
   colorScheme: lightShades,
   isDark: false,
   toggleTheme: () => {},
+  setTheme: () => {},
   mounted: false,
 };
 
+const resolveTheme = (
+  mode: ThemeMode,
+  systemPrefersDark: boolean
+): 'light' | 'dark' => {
+  if (mode === 'system') {
+    return systemPrefersDark ? 'dark' : 'light';
+  }
+  return mode;
+};
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const getInitialTheme = (): ThemeMode => {
+    if (typeof window === 'undefined') return 'system';
+    const saved = window.localStorage.getItem('theme');
+    return saved === 'light' || saved === 'dark' || saved === 'system'
+      ? saved
+      : 'system';
+  };
+
+  const [theme, setThemeMode] = useState<ThemeMode>(getInitialTheme);
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const [isDark, setIsDark] = useState(false);
+  const [systemPrefersDark, setSystemPrefersDark] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const hasAnimated = useRef(false);
 
   // Apply theme to DOM immediately (synchronous)
   const applyThemeToDOM = (dark: boolean): void => {
@@ -46,7 +81,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const root = document.documentElement;
 
-    // Apply all color scheme variables
     Object.entries(scheme).forEach(([key, value]) => {
       if (typeof value === 'string') {
         root.style.setProperty(`--color-${key}`, value);
@@ -54,74 +88,87 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  // Ease the transition between modes
+  const animateThemeChange = () => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    root.classList.add('theme-transition');
+    window.setTimeout(() => root.classList.remove('theme-transition'), 450);
+  };
+
+  // Listen to system preference
   useEffect(() => {
-    const initializeTheme = (): void => {
-      try {
-        let theme = 'light';
+    if (typeof window === 'undefined') return;
 
-        if (typeof window !== 'undefined') {
-          // Check localStorage first
-          const saved = localStorage.getItem('theme');
-
-          // If no saved theme, check system preference
-          if (!saved) {
-            const systemDark = window.matchMedia(
-              '(prefers-color-scheme: dark)'
-            ).matches;
-            theme = systemDark ? 'dark' : 'light';
-          } else {
-            theme = saved;
-          }
-        }
-
-        const darkMode = theme === 'dark';
-
-        // Apply theme immediately before React state update
-        applyThemeToDOM(darkMode);
-        applyCSSVariables(darkMode ? darkShades : lightShades);
-
-        setIsDark(darkMode);
-      } catch (error) {
-        console.warn('Theme initialization failed:', error);
-        // Apply light theme as fallback
-        applyThemeToDOM(false);
-        applyCSSVariables(lightShades);
-      } finally {
-        setMounted(true);
-      }
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemChange = (event: MediaQueryListEvent) => {
+      setSystemPrefersDark(event.matches);
     };
 
-    initializeTheme();
-  }, []);
+    const resolved = resolveTheme(theme, media.matches);
+    const scheme = resolved === 'dark' ? darkShades : lightShades;
 
-  const toggleTheme = (): void => {
-    const newTheme = !isDark;
+    setResolvedTheme(resolved);
+    setIsDark(resolved === 'dark');
+    setSystemPrefersDark(media.matches);
+    applyThemeToDOM(resolved === 'dark');
+    applyCSSVariables(scheme);
+    setMounted(true);
+    media.addEventListener('change', handleSystemChange);
 
-    // Apply immediately
-    applyThemeToDOM(newTheme);
-    applyCSSVariables(newTheme ? darkShades : lightShades);
+    return () => media.removeEventListener('change', handleSystemChange);
+  }, [theme]);
 
-    setIsDark(newTheme);
+  // Re-apply theme when user switches or system preference changes
+  useEffect(() => {
+    if (!mounted) return;
+
+    const resolved = resolveTheme(theme, systemPrefersDark);
+    const scheme = resolved === 'dark' ? darkShades : lightShades;
+
+    setResolvedTheme(resolved);
+    setIsDark(resolved === 'dark');
+    if (hasAnimated.current) {
+      animateThemeChange();
+    } else {
+      hasAnimated.current = true;
+    }
+    applyThemeToDOM(resolved === 'dark');
+    applyCSSVariables(scheme);
 
     try {
-      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+      window.localStorage.setItem('theme', theme);
     } catch (error) {
       console.warn('Failed to save theme preference:', error);
     }
+  }, [theme, systemPrefersDark, mounted]);
+
+  const toggleTheme = (): void => {
+    setThemeMode(prev =>
+      prev === 'light' ? 'dark' : prev === 'dark' ? 'system' : 'light'
+    );
   };
 
-  const colorScheme = isDark ? darkShades : lightShades;
+  const setTheme = (mode: ThemeMode) => {
+    setThemeMode(mode);
+  };
 
-  // Apply CSS variables whenever color scheme changes
-  useEffect(() => {
-    if (mounted) {
-      applyCSSVariables(colorScheme);
-    }
-  }, [colorScheme, mounted]);
+  const colorScheme = useMemo(
+    () => (resolvedTheme === 'dark' ? darkShades : lightShades),
+    [resolvedTheme]
+  );
 
   return (
     <ThemeContext.Provider
-      value={{ theme: 'light', colorScheme, isDark, toggleTheme, mounted }}
+      value={{
+        theme: resolvedTheme,
+        resolvedTheme,
+        colorScheme,
+        isDark,
+        toggleTheme,
+        setTheme,
+        mounted,
+      }}
     >
       {children}
     </ThemeContext.Provider>

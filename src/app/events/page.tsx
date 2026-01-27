@@ -15,11 +15,8 @@ import { hero_bg_2, NL } from '@/components/assets';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUpcomingEvents } from '@/components/utils/hooks/UpcomingHooks';
-import { EventModal } from '@/components/modal/EventModal';
-import { ConferenceModal } from '@/components/modal/conferenceModal';
-import { LiftingModal } from '@/components/modal/LiftingModal';
 import { ReminderModal } from '@/components/modal/reminderModal';
-import { DateEventsModal } from '@/components/modal/dateEvent';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Phone, Calendar, Clock, MapPin } from 'lucide-react';
@@ -102,24 +99,20 @@ const Events = () => {
         description="Stay connected with all the activities, studies, and gatherings happening throughout the week. There's always something going on!"
         backgroundImage={hero_bg_2.src}
         showButtons={false}
-        showScrollIndicator={true}
+        showScrollIndicator={false}
       />
 
       {/* Featured Event Section - SLIM & MODERN */}
-      <section className="py-12 md:py-16 bg-white relative overflow-hidden">
-        {/* Subtle background elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-100 rounded-full -translate-y-16 translate-x-16 opacity-40"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-100 rounded-full -translate-x-12 translate-y-12 opacity-40"></div>
-
+      <section className="py-10 md:py-14 bg-[#0b0b0b] relative overflow-hidden text-white">
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
             {/* Header - Slimmer */}
             <div className="text-center mb-10 md:mb-12">
-              <H2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-3 tracking-normal">
-                Upcoming <span className="text-yellow-500">Events</span>
+              <H2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 tracking-normal">
+                Upcoming <span className="text-yellow-400">Events</span>
               </H2>
               <div className="w-16 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-400 mx-auto mb-4 rounded-full"></div>
-              <BodyMD className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-light">
+              <BodyMD className="text-base md:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed font-light">
                 Discover transformative experiences and spiritual gatherings
                 designed to uplift and inspire
               </BodyMD>
@@ -625,53 +618,6 @@ const Events = () => {
           </div>
         </div>
       </section>
-
-      {/* Modals */}
-      {isModalOpen && selectedEvent && (
-        <EventModal event={selectedEvent} onClose={closeModal} />
-      )}
-
-      {isDateModalOpen && dateEvents && (
-        <DateEventsModal
-          dateEvents={dateEvents}
-          onClose={closeDateModal}
-          onViewEvents={scrollToEvents}
-          onEventClick={handleEventClick}
-        />
-      )}
-
-      {isConferenceModalOpen && (
-        <ConferenceModal
-          formData={formData}
-          formErrors={formErrors}
-          isSubmitting={isSubmitting}
-          onInputChange={handleInputChange}
-          onSubmit={e => handleSubmit(e, 'conference')}
-          onClose={closeConferenceModal}
-        />
-      )}
-
-      {isLiftingModalOpen && (
-        <LiftingModal
-          formData={formData}
-          formErrors={formErrors}
-          isSubmitting={isSubmitting}
-          onInputChange={handleInputChange}
-          onSubmit={e => handleSubmit(e, 'lifting')}
-          onClose={closeLiftingModal}
-        />
-      )}
-
-      {isReminderModalOpen && (
-        <ReminderModal
-          formData={reminderFormData}
-          formErrors={reminderFormErrors}
-          isSettingReminder={isSettingReminder}
-          onInputChange={handleReminderInputChange}
-          onSubmit={handleReminderSubmit}
-          onClose={closeReminderModal}
-        />
-      )}
     </div>
   );
 };

@@ -1,524 +1,176 @@
+// components/ui/Homepage/Testimonials.tsx
 'use client';
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import { H3, Caption } from '@/components/text';
-import Button from '@/components/utils/buttons/CustomButton';
-import { Section, Container, FlexboxLayout } from '@/components/layout';
-import {
-  ChevronLeft,
-  ChevronRight,
-  MessageSquare,
-  Star,
-  ArrowRight,
-  Quote,
-} from 'lucide-react';
-import { gsap } from 'gsap';
 import Link from 'next/link';
+import { Section, Container } from '@/components/layout';
+import { Caption, H3, BodySM, SmallText } from '@/components/text';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { testimonialsData } from '@/lib/data';
+import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
-// Demo testimonials data with responsive images
-const churchTestimonials = [
-  {
-    id: 1,
-    firstName: 'Michael',
-    lastName: 'Johnson',
-    fullName: 'Michael Johnson',
-    role: 'Church Member',
-    image: '/images/testimonials/michael.jpg',
-    testimony:
-      "I was lost in addiction for 15 years. Through the prayer ministry of this church and God's grace, I've been sober for 3 years now. The support I received here changed my life completely.",
-    rating: 5,
-    date: '2024-01-15',
-    anonymous: false,
-  },
-  {
-    id: 2,
-    firstName: 'Sarah',
-    lastName: 'Williams',
-    fullName: 'Sarah Williams',
-    role: 'Youth Leader',
-    image: '/images/testimonials/sarah.jpg',
-    testimony:
-      "My family was going through a difficult financial season. Through the church's benevolence ministry and the prayers of the saints, God miraculously provided for all our needs. To God be the glory!",
-    rating: 5,
-    date: '2024-02-20',
-    anonymous: false,
-  },
-  {
-    id: 3,
-    firstName: 'Robert',
-    lastName: 'Chen',
-    fullName: 'Robert Chen',
-    role: 'Volunteer',
-    image: '/images/testimonials/robert.jpg',
-    testimony:
-      'After losing my job, I fell into depression. The counseling ministry and Bible study groups helped me find hope in God&apos;s promises. Today, I have a better job and a stronger faith.',
-    rating: 5,
-    date: '2024-03-10',
-    anonymous: false,
-  },
-  {
-    id: 4,
-    firstName: 'Grace',
-    lastName: 'Okon',
-    fullName: 'Grace Okon',
-    role: 'Prayer Warrior',
-    image: '/images/testimonials/grace.jpg',
-    testimony:
-      'God healed me from a terminal illness after the church prayed for me. The doctors called it a miracle. I&apos;m here today as a living testimony of God&apos;s healing power.',
-    rating: 5,
-    date: '2024-03-25',
-    anonymous: false,
-  },
-];
+const fallbackImage = '/images/avatar-placeholder.jpg';
 
-interface TestimonialCardProps {
-  testimonial: (typeof churchTestimonials)[0];
-  isActive: boolean;
-  colorScheme: any;
-  index: number;
-}
-
-function TestimonialCard({ testimonial, isActive, colorScheme, index }: TestimonialCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!cardRef.current || !isActive) return;
-
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, scale: 0.95, y: 20 },
-      {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.5,
-        ease: 'power2.out',
-        delay: index * 0.1,
-      }
-    );
-  }, [isActive, index]);
-
-  const renderStars = useMemo(() => {
-    return Array.from({ length: 5 }).map((_, i) => (
-      <Star
-        key={i}
-        className="w-3 h-3 sm:w-4 sm:h-4"
-        style={{
-          color: i < testimonial.rating ? colorScheme.primary : colorScheme.gray[300],
-          fill: i < testimonial.rating ? colorScheme.primary : 'none',
-        }}
-      />
-    ));
-  }, [testimonial.rating, colorScheme]);
-
-  return (
-    <div
-      ref={cardRef}
-      className={`w-full transition-all duration-300 ${isActive ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}
-    >
-      <div 
-        className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm sm:shadow-lg border border-gray-100 dark:border-gray-700 h-full hover:shadow-md transition-shadow"
-        style={{
-          backgroundColor: colorScheme.surface,
-          borderColor: colorScheme.border,
-        }}
-      >
-        {/* Quote Icon */}
-        <div className="mb-3 sm:mb-4">
-          <div
-            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: `${colorScheme.primary}15` }}
-          >
-            <Quote className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colorScheme.primary }} />
-          </div>
-        </div>
-
-        {/* Testimonial Content */}
-        <div className="flex-grow">
-          <p 
-            className="text-gray-700 dark:text-gray-200 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 line-clamp-4 sm:line-clamp-5"
-            style={{ color: colorScheme.textSecondary }}
-          >
-            &quot;{testimonial.testimony}&quot;
-          </p>
-
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-0.5 sm:space-x-1">
-              {renderStars}
-            </div>
-            <span 
-              className="text-xs sm:text-sm"
-              style={{ color: colorScheme.textTertiary }}
-            >
-              {new Date(testimonial.date).toLocaleDateString('en-US', {
-                month: 'short',
-                year: 'numeric',
-              })}
-            </span>
-          </div>
-        </div>
-
-        {/* Author Info */}
-        <div className="flex items-center pt-3 sm:pt-4 border-t" style={{ borderColor: colorScheme.border }}>
-          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2" 
-            style={{ borderColor: colorScheme.white }}>
-            <Image
-              src={testimonial.image || '/images/avatar-placeholder.jpg'}
-              alt={testimonial.fullName}
-              width={48}
-              height={48}
-              className="object-cover"
-              loading="lazy"
-              sizes="(max-width: 640px) 40px, 48px"
-            />
-          </div>
-          <div className="ml-2 sm:ml-3">
-            <p className="font-semibold text-sm sm:text-base" style={{ color: colorScheme.text }}>
-              {testimonial.fullName}
-            </p>
-            <p className="text-xs sm:text-sm" style={{ color: colorScheme.textTertiary }}>
-              {testimonial.role}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function Testimonial() {
+export default function Testimonials() {
   const { colorScheme } = useTheme();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
 
-  // Detect mobile screen
+  const items = useMemo(() => testimonialsData.slice(0, 6), []);
+
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    const timer = setInterval(() => {
+      setActive(prev => (prev + 1) % items.length);
+    }, 5200);
+    return () => clearInterval(timer);
+  }, [items.length]);
 
-  // Auto-rotation with pause on hover
-  useEffect(() => {
-    if (!isAutoPlaying) return;
+  if (items.length === 0) return null;
 
-    const interval = setInterval(() => {
-      setActiveIndex(prev => (prev + 1) % churchTestimonials.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying]);
-
-  // GSAP animations
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        sectionRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.5 }
-      );
-
-      const tl = gsap.timeline();
-      tl.from('.section-title', {
-        y: -20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-      })
-      .from('.section-description', {
-        y: 10,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-      }, '-=0.3')
-      .from('.testimonial-card', {
-        y: 30,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: 'back.out(1.2)',
-      }, '-=0.2');
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Navigation handlers
-  const handlePrev = useCallback(() => {
-    setActiveIndex(prev => 
-      prev === 0 ? churchTestimonials.length - 1 : prev - 1
-    );
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 3000);
-  }, []);
-
-  const handleNext = useCallback(() => {
-    setActiveIndex(prev => (prev + 1) % churchTestimonials.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 3000);
-  }, []);
-
-  const handleShareTestimony = useCallback(() => {
-    // Additional logic can be added here
-    console.log('Navigating to testimonies page');
-  }, []);
-
-  // Responsive layout config
-  const containerConfig = useMemo(() => ({
-    padding: isMobile ? 'px-4' : 'px-6',
-    gap: isMobile ? 'gap-4' : 'gap-8',
-    textSize: {
-      title: isMobile ? 'text-xl' : 'text-3xl lg:text-4xl',
-      description: isMobile ? 'text-xs' : 'text-sm lg:text-base',
-    },
-  }), [isMobile]);
+  const current = items[active];
+  const nextList = items
+    .map((item, idx) => ({ ...item, idx }))
+    .filter(i => i.idx !== active);
 
   return (
     <Section
-      ref={sectionRef}
-      padding={isMobile ? "md" : "lg"}
-      fullHeight={false}
+      id="stories"
+      padding="xl"
       className="relative overflow-hidden"
-      style={{ 
-        // Darker background
-        backgroundColor: colorScheme.backgroundSecondary,
+      style={{
+        background: '#0b0b0b',
       }}
     >
-      {/* Darker overlay for background */}
-      <div 
-        className="absolute inset-0"
-        style={{ 
-          backgroundColor: 'rgba(0, 0, 0, 0.03)',
-          backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%)'
-        }}
-      />
-      
-      {/* Background decorative elements with darker opacity */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div 
-          className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 rounded-full"
-          style={{ 
-            backgroundColor: colorScheme.primary,
-            opacity: 0.08, // Increased opacity for darker effect
-          }}
-        />
-        <div 
-          className="absolute bottom-0 left-0 w-40 h-40 sm:w-64 sm:h-64 rounded-full"
-          style={{ 
-            backgroundColor: colorScheme.primary,
-            opacity: 0.08, // Increased opacity for darker effect
-          }}
-        />
-      </div>
-
-      <Container size="lg" className={`relative z-10 ${containerConfig.padding}`}>
-        {/* Header - ONLY the H3 text is pushed down */}
-        <FlexboxLayout
-          direction="column"
-          justify="center"
-          align="center"
-          gap="sm"
-          className={`text-center mb-6 sm:mb-10 ${containerConfig.gap}`}
-        >
-          {/* Add a wrapper div around H3 with margin-top */}
-          <div className={isMobile ? 'mt-6' : 'mt-10'}>
-            <H3
-              className={`section-title font-bold ${containerConfig.textSize.title} leading-tight`}
-              style={{ 
-                color: colorScheme.heading,
-                textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                // REMOVED padding-top from H3
-              }}
-            >
-              Testimonies of{' '}
-              <span style={{ 
-                color: colorScheme.primary,
-                textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-              }}>
-                God&apos;s Faithfulness
-              </span>
+      <Container size="xl" className="relative z-10 space-y-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="space-y-2.5">
+            <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
+              Stories of transformation
+            </Caption>
+            <H3 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
+              God is moving in our house
             </H3>
+            <BodySM className="text-white/75 max-w-2xl">
+              Real moments of healing, provision, and restoration from the Wisdom House community.
+            </BodySM>
           </div>
-          <Caption
-            className={`section-description ${containerConfig.textSize.description} max-w-xl mx-auto`}
-            style={{ 
-              color: colorScheme.textSecondary,
-              opacity: 0.9
-            }}
-          >
-            Hear how God is transforming lives in our community
-          </Caption>
-        </FlexboxLayout>
-
-        {/* Bible Verse */}
-        <div className="text-center mb-6 sm:mb-8">
-          <div 
-            className="inline-block px-4 py-2 sm:px-6 sm:py-3 rounded-lg shadow-sm border"
-            style={{ 
-              backgroundColor: colorScheme.surface,
-              borderColor: colorScheme.border,
-              borderWidth: '1px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
-            }}
-          >
-            <p 
-              className="italic text-sm sm:text-base"
-              style={{ color: colorScheme.textSecondary }}
-            >
-              &quot;They triumphed by the blood of the Lamb and by the word of their testimony.&quot;
-            </p>
-            <p 
-              className="text-xs sm:text-sm mt-1"
-              style={{ color: colorScheme.textTertiary }}
-            >
-              — Revelation 12:11
-            </p>
-          </div>
-        </div>
-
-        {/* Testimonial Slider */}
-        <div className="max-w-4xl mx-auto">
-          {/* Cards Container */}
-          <div 
-            ref={sliderRef}
-            className={`relative ${isMobile ? 'h-[280px]' : 'h-[320px]'} mb-6 sm:mb-8`}
-            onMouseEnter={() => setIsAutoPlaying(false)}
-            onMouseLeave={() => setIsAutoPlaying(true)}
-          >
-            {churchTestimonials.map((testimonial, index) => (
-              <div
-                key={testimonial.id}
-                className={`testimonial-card absolute inset-0 ${isMobile ? 'px-2' : 'px-4'}`}
-              >
-                <TestimonialCard
-                  testimonial={testimonial}
-                  isActive={index === activeIndex}
-                  colorScheme={colorScheme}
-                  index={index}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Slider Controls */}
-          <FlexboxLayout
-            justify="center"
-            align="center"
-            gap="sm"
-            className="sm:gap-6"
-          >
+          <div className="flex items-center gap-2 flex-wrap">
             <button
-              onClick={handlePrev}
-              className={`flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${isMobile ? 'w-8 h-8' : 'w-10 h-10'}`}
-              style={{
-                color: colorScheme.primary,
-                backgroundColor: colorScheme.opacity.primary10,
-                borderRadius: colorScheme.borderRadius.full,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-              }}
+              onClick={() => setActive(prev => (prev - 1 + items.length) % items.length)}
+              className="p-2 rounded-full border border-white/15 hover:border-white/40 transition-all duration-200"
               aria-label="Previous testimonial"
             >
-              <ChevronLeft className={isMobile ? 'w-4 h-4' : 'w-5 h-5'} />
+              <ChevronLeft className="w-4 h-4 text-white" />
             </button>
-
-            {/* Indicators */}
-            <div className="flex gap-1.5 sm:gap-2 px-2 sm:px-4">
-              {churchTestimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setActiveIndex(index);
-                    setIsAutoPlaying(false);
-                    setTimeout(() => setIsAutoPlaying(true), 3000);
-                  }}
-                  className="transition-all duration-300"
-                  aria-label={`Go to testimonial ${index + 1}`}
-                >
-                  <div
-                    className={`rounded-full transition-all duration-300 ${index === activeIndex ? (isMobile ? 'w-3 h-3' : 'w-3.5 h-3.5') : (isMobile ? 'w-1.5 h-1.5' : 'w-2 h-2')}`}
-                    style={{
-                      backgroundColor: index === activeIndex 
-                        ? colorScheme.primary 
-                        : colorScheme.gray[300],
-                      boxShadow: index === activeIndex ? '0 0 8px rgba(0,0,0,0.2)' : 'none'
-                    }}
-                  />
-                </button>
-              ))}
-            </div>
-
             <button
-              onClick={handleNext}
-              className={`flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${isMobile ? 'w-8 h-8' : 'w-10 h-10'}`}
-              style={{
-                color: colorScheme.primary,
-                backgroundColor: colorScheme.opacity.primary10,
-                borderRadius: colorScheme.borderRadius.full,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-              }}
+              onClick={() => setActive(prev => (prev + 1) % items.length)}
+              className="p-2 rounded-full border border-white/15 hover:border-white/40 transition-all duration-200"
               aria-label="Next testimonial"
             >
-              <ChevronRight className={isMobile ? 'w-4 h-4' : 'w-5 h-5'} />
+              <ChevronRight className="w-4 h-4 text-white" />
             </button>
-          </FlexboxLayout>
-        </div>
-
-        {/* Share Testimony CTA */}
-        <div className={`text-center pt-8 sm:pt-10 ${containerConfig.padding}`}>
-          <div 
-            className={`rounded-xl sm:rounded-2xl ${isMobile ? 'p-4' : 'p-6 sm:p-8'} shadow-sm max-w-2xl mx-auto border`}
-            style={{ 
-              backgroundColor: colorScheme.surface,
-              borderColor: colorScheme.border,
-              borderWidth: '1px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-            }}
-          >
-            <h3 
-              className={`font-bold ${isMobile ? 'text-lg' : 'text-xl sm:text-2xl'} mb-2 sm:mb-4`}
-              style={{ color: colorScheme.heading }}
+            <Link
+              href="/testimonies"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
             >
-              Share Your Testimony
-            </h3>
-            <p 
-              className={`${isMobile ? 'text-xs' : 'text-sm sm:text-base'} mb-4 sm:mb-6 max-w-md mx-auto`}
-              style={{ color: colorScheme.textSecondary }}
-            >
-              Your story can inspire others and bring glory to God. Share what He has done in your life.
-            </p>
-
-            <Link href="/testimonies" className="inline-block">
-              <Button
-                variant="primary"
-                size={isMobile ? "sm" : "md"}
-                curvature="xl"
-                className="font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
-                style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.buttonText,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-                }}
-                rightIcon={<ArrowRight className={isMobile ? 'w-4 h-4' : 'w-5 h-5'} />}
-                onClick={handleShareTestimony}
-              >
-                <span className={isMobile ? 'text-sm' : 'text-base'}>
-                  Share Your Testimony
-                </span>
-              </Button>
+              Share your testimony <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
 
-        {/* Empty space at the bottom */}
-        <div className="h-12 sm:h-16 lg:h-20"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-5 items-start">
+          <article className="relative overflow-hidden rounded-3xl border border-white/12 bg-[#101010] p-6 sm:p-7 shadow-2xl min-h-[340px]">
+            <Quote className="absolute -top-4 -right-4 h-16 w-16 text-white/10" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative h-14 w-14 rounded-full overflow-hidden border border-white/15 shadow-inner">
+                <Image
+                  src={current.image || fallbackImage}
+                  alt={current.fullName}
+                  fill
+                  sizes="56px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="text-left">
+                <SmallText weight="semibold" className="text-white text-base">
+                  {current.fullName}
+                </SmallText>
+                <Caption className="text-white/60">{current.role}</Caption>
+                <Caption className="text-white/50">
+                  {new Date(current.date).toLocaleDateString()}
+                </Caption>
+              </div>
+            </div>
+            <p className="text-white/85 text-base leading-relaxed mb-4">
+              “{current.testimony}”
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {(current.tags || current.testimony.split(' ').slice(0, 4)).map((tag: string, i: number) => (
+                <span
+                  key={`${tag}-${i}`}
+                  className="px-2.5 py-1 rounded-full text-[11px] font-medium"
+                  style={{
+                    backgroundColor: colorScheme.opacity.primary10,
+                    color: colorScheme.primary,
+                  }}
+                >
+                  {tag.replace(/[^a-zA-Z]/g, '') || 'Grace'}
+                </span>
+              ))}
+            </div>
+            <div className="mt-5 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-white/70 text-sm">
+                <span className="h-2 w-2 rounded-full" style={{ background: colorScheme.primary }} />
+                <span>Fresh every week</span>
+              </div>
+              <Link href="/testimonies" className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+                View all <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </article>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+            {nextList.slice(0, 4).map(item => (
+              <button
+                key={item.id}
+                onClick={() => setActive(item.idx)}
+                className="text-left relative overflow-hidden rounded-2xl border border-white/12 bg-[#0f0f0f] p-4 flex items-start gap-3 shadow-lg hover:-translate-y-1 transition-transform"
+              >
+                <div className="relative h-12 w-12 rounded-full overflow-hidden border border-white/15">
+                  <Image
+                    src={item.image || fallbackImage}
+                    alt={item.fullName}
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1">
+                  <SmallText weight="semibold" className="text-white">
+                    {item.fullName}
+                  </SmallText>
+                  <Caption className="text-white/65 line-clamp-2">
+                    “{item.testimony}”
+                  </Caption>
+                </div>
+                <ArrowRight className="w-4 h-4 text-white/50" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center gap-2">
+          {items.map((item, idx) => (
+            <button
+              key={item.id}
+              onClick={() => setActive(idx)}
+                className={`h-2.5 rounded-full transition-all duration-200 ${
+                idx === active ? 'w-8 bg-white' : 'w-2.5 bg-white/30'
+              }`}
+              aria-label={`Go to testimonial ${idx + 1}`}
+            />
+          ))}
+        </div>
       </Container>
     </Section>
   );

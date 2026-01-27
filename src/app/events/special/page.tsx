@@ -5,7 +5,6 @@
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H1, H2, H3, SmallText } from '@/components/text';
 import { hero_bg_1, WisdomeHouseLogo } from '@/components/assets'; // Fixed: removed extra 'e'
-import { EventRegistrationModal } from '@/components/modal/EventRegistrationModal';
 import { useSpecialEvents } from '@/components/utils/hooks/useSpecial';
 import {
   Section,
@@ -560,18 +559,7 @@ const SpecialPage = () => {
         </Container>
       </Section>
 
-      {/* Modal */}
-      {isModalOpen && selectedEvent && (
-        <EventRegistrationModal
-          event={selectedEvent}
-          formData={formData}
-          formErrors={formErrors}
-          isSubmitting={isSubmitting}
-          onInputChange={handleInputChange}
-          onSubmit={handleSubmit}
-          onClose={closeModal}
-        />
-      )}
+
     </div>
   );
 };

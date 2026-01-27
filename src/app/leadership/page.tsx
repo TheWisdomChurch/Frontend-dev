@@ -29,11 +29,7 @@ import {
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { createPortal } from 'react-dom';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import {
-  ColorScheme,
-  darkShades,
-  lightShades,
-} from '@/components/colors/colorScheme';
+import { ColorScheme } from '@/components/colors/colorScheme';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -1169,9 +1165,7 @@ const LeadersPage = () => {
   >('pastor');
 
   // Use your theme context
-  const themeContext = useTheme();
-  const theme = (themeContext as any)?.theme ?? 'light';
-  const colorScheme = theme === 'dark' ? darkShades : lightShades;
+  const { colorScheme } = useTheme();
 
   const handleReadMore = useCallback(
     (leader: Leader, type: 'pastor' | 'deacon' | 'ministry') => {
