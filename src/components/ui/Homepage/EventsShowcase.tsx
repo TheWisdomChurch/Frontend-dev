@@ -9,10 +9,10 @@ import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
-import { NL, hero_bg_1, hero_bg_2, hero_bg_3 } from '@/components/assets';
+import { hero_bg_1, hero_bg_3 } from '@/components/assets';
 import HeaderAlt from '../../../../public/HEADER 2.jpg.jpeg';
 import { apiClient } from '@/lib/api';
-import type { EventItem } from '@/lib/types';
+import type { EventPublic } from '@/lib/apiTypes';
 
 type Slide = {
   title: string;
@@ -32,10 +32,9 @@ type Slide = {
 
 export default function EventsShowcase() {
   const { colorScheme = lightShades } = useTheme();
+
   const slides: Slide[] = useMemo(
     () => [
-
-
       {
         title: 'Wisdom Power Conference 26',
         subtitle: 'Upcoming',
@@ -48,8 +47,8 @@ export default function EventsShowcase() {
         href: '/events',
         badge: 'Upcoming',
         category: 'program',
-        start: '2025-03-10T18:00:00.000Z',
-        end: '2025-03-10T21:00:00.000Z',
+        start: '2026-03-10T18:00:00.000Z',
+        end: '2026-03-10T21:00:00.000Z',
       },
       {
         title: 'Highlights & Reels',
@@ -77,19 +76,18 @@ export default function EventsShowcase() {
         href: '/resources',
         badge: 'Media',
         category: 'media',
-        start: '2025-02-01T10:00:00.000Z',
-        end: '2025-02-01T12:00:00.000Z',
+        start: '2026-02-01T10:00:00.000Z',
+        end: '2026-02-01T12:00:00.000Z',
       },
     ],
     []
   );
 
   const [active, setActive] = useState(0);
-  const [category, setCategory] = useState<'program' | 'media' | 'reel'>(
-    'program'
-  );
+  const [category, setCategory] = useState<'program' | 'media' | 'reel'>('program');
   const [reelModal, setReelModal] = useState<Slide | null>(null);
-  const [events, setEvents] = useState<EventItem[]>([]);
+
+  const [events, setEvents] = useState<EventPublic[]>([]);
   const [eventsLoaded, setEventsLoaded] = useState(false);
 
   const filteredSlides = slides.filter(slide => slide.category === category);
@@ -106,9 +104,7 @@ export default function EventsShowcase() {
   };
 
   useEffect(() => {
-    if (active >= filteredSlides.length) {
-      setActive(0);
-    }
+    if (active >= filteredSlides.length) setActive(0);
   }, [category, filteredSlides.length, active]);
 
   useEffect(() => {
@@ -122,10 +118,8 @@ export default function EventsShowcase() {
     let mounted = true;
     const loadEvents = async () => {
       try {
-        const data = await apiClient.getEvents({ limit: 5 });
-        if (mounted && Array.isArray(data) && data.length) {
-          setEvents(data);
-        }
+        const data = await apiClient.listEvents();
+        if (mounted && Array.isArray(data) && data.length) setEvents(data);
       } catch (err) {
         console.warn('Failed to load events', err);
       } finally {
@@ -138,46 +132,59 @@ export default function EventsShowcase() {
     };
   }, []);
 
-  const programList =
+  const programList: Slide[] =
     eventsLoaded && events.length && category === 'program'
-      ? events.map(evt => ({
-          title: evt.title,
-          subtitle: evt.status || 'Upcoming',
-          description: evt.description || '',
-          date:
-            evt.startDate || evt.endDate
-              ? new Date(evt.startDate || evt.endDate || '').toLocaleString()
-              : '',
-          location: evt.location || '',
-          image: evt.bannerUrl || HeaderAlt,
-          cta: evt.ctaLabel || 'Save a seat',
-          href: evt.ctaTarget || '/events',
-          badge: evt.status || 'Upcoming',
-          category: 'program' as const,
-        }))
+      ? events.map(evt => {
+          const start = evt.startAt;
+          const end = evt.endAt;
+          const badge = (() => {
+            if (!start || !end) return 'Upcoming';
+            const now = new Date();
+            const s = new Date(start);
+            const e = new Date(end);
+            if (now >= s && now <= e) return 'Happening now';
+            if (now < s) return 'Upcoming';
+            const daysAgo = (now.getTime() - e.getTime()) / (1000 * 60 * 60 * 24);
+            return daysAgo <= 90 ? 'Recent' : 'Past';
+          })();
+          return {
+            title: evt.title,
+            subtitle: badge,
+            description: evt.description || '',
+            date: start ? new Date(start).toLocaleString() : '',
+            location: evt.location || '',
+            image: evt.bannerUrl || evt.imageUrl || HeaderAlt,
+            cta: 'Save a seat',
+            href: evt.formSlug ? `/forms/${evt.formSlug}` : '/events',
+            badge,
+            category: 'program' as const,
+            start,
+            end,
+          };
+        })
       : filteredSlides;
 
   const current = programList[active];
 
   return (
-    <Section
-      padding="lg"
-      className="relative overflow-hidden"
-      style={{
-        background: '#0a0a0a',
-      }}
-    >
-      <Container size="xl" className="relative z-10 space-y-6">
-        <div className="flex flex-col gap-2">
-          <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
+    <Section padding="md" className="relative overflow-hidden" style={{ background: '#0a0a0a' }}>
+      <Container size="xl" className="relative z-10 space-y-5">
+        <div className="flex flex-col gap-1.5">
+          <Caption
+            className="uppercase tracking-[0.2em] text-xs"
+            style={{ color: colorScheme.primary }}
+          >
             Programs & Media
           </Caption>
-          <H3 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+
+          <H3 className="text-2xl sm:text-3xl font-black text-white leading-tight">
             What’s happening now
           </H3>
-          <BodySM className="text-white/75 max-w-3xl">
+
+          <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
             Announcements, events, and reels in one place—swipe through the highlights.
           </BodySM>
+
           <div className="flex flex-wrap items-center gap-2 pt-1">
             {(['program', 'media', 'reel'] as const).map(cat => (
               <button
@@ -195,18 +202,26 @@ export default function EventsShowcase() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-4 items-stretch">
-          <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#111] shadow-2xl min-h-[300px]">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-3 sm:gap-4 items-stretch">
+          {/* HERO */}
+          <div
+            className="
+              relative overflow-hidden rounded-3xl border border-white/15 bg-[#111] shadow-2xl
+              h-[420px] sm:h-[480px] lg:h-auto
+              lg:aspect-[16/9] lg:min-h-[340px]
+            "
+          >
             {current ? (
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={current.title}
-                  initial={{ opacity: 0, scale: 0.98 }}
+                  key={`${current.title}-${category}-${active}`}
+                  initial={{ opacity: 0, scale: 0.985 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.4 }}
+                  exit={{ opacity: 0, scale: 0.985 }}
+                  transition={{ duration: 0.35 }}
                   className="absolute inset-0"
                 >
+                  {/* Image layer */}
                   <div className="absolute inset-0">
                     {current.category === 'reel' ? (
                       <div className="w-full h-full relative">
@@ -214,7 +229,11 @@ export default function EventsShowcase() {
                           src={current.image}
                           alt={current.title}
                           fill
-                          className="object-cover object-center"
+                          sizes="(max-width: 1024px) 100vw, 60vw"
+                          className="object-cover"
+                          // Mobile-friendly composition
+                          style={{ objectPosition: 'center 35%' }}
+                          priority
                         />
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                           <button
@@ -230,44 +249,78 @@ export default function EventsShowcase() {
                         src={current.image}
                         alt={current.title}
                         fill
-                        className="object-cover object-center"
+                        sizes="(max-width: 1024px) 100vw, 60vw"
+                        className="object-cover"
+                        style={{ objectPosition: 'center 35%' }}
+                        priority
                       />
                     )}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/40" />
-                  <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8 lg:px-10 gap-3 max-w-2xl">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-black" style={{ background: colorScheme.primary }}>
+
+                  {/* Dark overlays */}
+                  <div className="absolute inset-0 bg-black/25" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 lg:bg-gradient-to-r lg:from-black/88 lg:via-black/68 lg:to-black/45" />
+
+                  {/* Content */}
+                  <div
+                    className="
+                      absolute inset-0 flex flex-col justify-end lg:justify-center
+                      px-4 py-5 sm:px-7 sm:py-6 lg:px-10
+                      gap-2.5 sm:gap-3
+                      max-w-none lg:max-w-2xl
+                    "
+                  >
+                    <div
+                      className="inline-flex w-fit items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-white"
+                      style={{
+                        background: 'rgba(255,255,255,0.14)',
+                        border: '1px solid rgba(255,255,255,0.18)',
+                      }}
+                    >
                       {statusOf(current)}
                     </div>
-                    <SmallText className="text-white/70">{current.subtitle}</SmallText>
-                    <H3 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+
+                    <SmallText className="text-white/70 text-sm line-clamp-1">
+                      {current.subtitle}
+                    </SmallText>
+
+                    <H3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">
                       {current.title}
                     </H3>
-                    <BodySM className="text-white/80">{current.description}</BodySM>
-                    <div className="flex flex-wrap gap-3 text-white/80 text-sm">
+
+                    <BodySM className="text-white/80 text-sm sm:text-base line-clamp-3 sm:line-clamp-4">
+                      {current.description}
+                    </BodySM>
+
+                    <div className="flex flex-wrap gap-2.5 text-white/80 text-xs sm:text-sm">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-amber-300" />
-                        <span>{current.date}</span>
+                        <span className="line-clamp-1">{current.date}</span>
                       </div>
+
                       {current.location && (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-amber-300" />
-                          <span>{current.location}</span>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <MapPin className="w-4 h-4 text-amber-300 shrink-0" />
+                          <span className="truncate">{current.location}</span>
                         </div>
                       )}
                     </div>
-                    <div className="flex gap-3 pt-2">
+
+                    <div className="flex gap-2.5 sm:gap-3 pt-1.5 flex-wrap">
                       {current.href && (
                         <a
                           href={current.href}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
+                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
                         >
                           {current.cta || 'Open'} <ArrowRight className="w-4 h-4" />
                         </a>
                       )}
+
                       <button
-                        onClick={() => setActive(prev => (prev + 1) % Math.max(filteredSlides.length, 1))}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
+                        onClick={() =>
+                          setActive(prev => (prev + 1) % Math.max(programList.length, 1))
+                        }
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
                       >
                         Next <ArrowRight className="w-4 h-4" />
                       </button>
@@ -282,35 +335,57 @@ export default function EventsShowcase() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-3">
+          {/* LIST: horizontal scroll on mobile, vertical stack on lg */}
+          <div
+            className="
+              flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1
+              lg:grid lg:grid-cols-1 lg:gap-2.5 lg:overflow-visible lg:pb-0 lg:mx-0 lg:px-0
+              scroll-smooth
+            "
+          >
             {programList.map((slide, idx) => (
               <button
                 key={`${slide.title}-${idx}`}
                 onClick={() => setActive(idx)}
-                className={`relative overflow-hidden rounded-2xl border border-white/15 p-4 text-left transition-transform duration-200 ${
-                  idx === active ? 'bg-[#161616] shadow-xl' : 'bg-[#0f0f0f]'
-                }`}
+                className={`
+                  relative overflow-hidden rounded-2xl border border-white/15 p-3.5 sm:p-4 text-left
+                  transition-transform duration-200
+                  ${idx === active ? 'bg-[#161616] shadow-xl' : 'bg-[#0f0f0f]'}
+                  min-w-[280px] sm:min-w-[340px] lg:min-w-0
+                `}
               >
-                <div className="flex items-center gap-3">
-                  <div className="relative h-16 w-16 rounded-xl overflow-hidden border border-white/15">
+                <div className="flex items-center gap-3 sm:gap-3.5">
+                  <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
                     <Image
                       src={slide.image}
                       alt={slide.title}
                       fill
-                      className="object-cover object-center"
+                      sizes="(max-width: 1024px) 70vw, 25vw"
+                      className="object-cover"
+                      style={{ objectPosition: 'center 35%' }}
                     />
                     <div className="absolute inset-0 bg-black/30" />
-                    <div className="absolute bottom-1 left-1 px-2 py-0.5 rounded-full text-[10px] font-semibold text-black" style={{ background: colorScheme.primary }}>
+                    <div
+                      className="absolute bottom-1 left-1 px-2 py-0.5 rounded-full text-[10px] font-semibold text-white"
+                      style={{
+                        background: 'rgba(255,255,255,0.16)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                      }}
+                    >
                       {slide.badge}
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <SmallText weight="bold" className="text-white">
+
+                  <div className="flex-1 min-w-0">
+                    <SmallText weight="bold" className="text-white truncate">
                       {slide.title}
                     </SmallText>
-                    <Caption className="text-white/60 line-clamp-2">{slide.description}</Caption>
+                    <Caption className="text-white/60 line-clamp-2">
+                      {slide.description}
+                    </Caption>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-white/50" />
+
+                  <ArrowRight className="w-4 h-4 text-white/50 shrink-0" />
                 </div>
               </button>
             ))}
@@ -342,11 +417,13 @@ export default function EventsShowcase() {
               >
                 <X className="w-5 h-5" />
               </button>
+
               <div className="space-y-2 pr-8">
                 <p className="text-xs uppercase tracking-[0.18em] text-white/60">Reel</p>
                 <h3 className="text-2xl font-black">{reelModal.title}</h3>
                 <p className="text-white/70 text-sm leading-relaxed">{reelModal.description}</p>
               </div>
+
               <div className="mt-4">
                 {reelModal.videoUrl ? (
                   <video

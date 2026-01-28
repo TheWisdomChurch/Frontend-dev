@@ -1,7 +1,7 @@
 import Banner_1 from './banner1.webp';
 import Banner_2 from './banner2.webp';
 import Banner_3 from './banner3.webp';
-import Bishop from './bishop.webp';
+import Bishop from './bishopp.png';
 
 // test
 import hero_bg_1 from './hero_img (1).jpg';
@@ -18,9 +18,10 @@ import Whatwedo_4 from './Whatwedo.jpg';
 // Logo
 import WisdomeHouseLogo from './OIP.webp';
 
+
 // Associate Pastors
-import Associate_1 from './Asso (1).jpg';
-import Associate_2 from './Asso (2).jpg';
+import Associate_1 from './Pst.Bamidele.png';
+import Associate_2 from './Rev..png';
 import PstKenny from './pstKenny1.jpeg';
 import PstKenny_1 from './PstKenny2.jpeg';
 
