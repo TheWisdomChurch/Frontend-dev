@@ -151,26 +151,7 @@ export interface SeriesGroup {
   color: string;
 }
 
-export interface TestimonialPayload {
-  firstName: string;
-  lastName: string;
-  email?: string;
-  testimony: string;
-  anonymous?: boolean;
-  allowSharing?: boolean;
-  image?: string; // base64
-}
 
-export interface SubscriberPayload {
-  name?: string;
-  email: string;
-}
-
-export interface NotificationPayload {
-  title: string;
-  message: string;
-  audience?: string;
-}
 
 export interface GroupedSeriesData {
   name: string;

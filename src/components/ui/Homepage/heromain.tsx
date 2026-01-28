@@ -233,7 +233,7 @@ const HeroSection = ({
       ref={heroRef}
       padding="none"
       fullHeight={false}
-      className="relative w-full min-h-[80vh] md:min-h-[85vh] overflow-hidden bg-black"
+      className="relative w-full min-h-[110vh] md:min-h-[118vh] overflow-hidden bg-black"
     >
       {/* Background Slides - FIXED: Proper image handling */}
       {slides.map((slide, index) => (
@@ -257,8 +257,9 @@ const HeroSection = ({
               <img
                 src={slide.image.src}
                 alt={slide.title}
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover"
                 loading={index === 0 ? 'eager' : 'lazy'}
+                style={{ objectPosition: 'center 28%' }}
               />
             )}
 
@@ -373,29 +374,29 @@ const HeroSection = ({
           {/* Buttons */}
           <div
             ref={buttonsRef}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6 justify-center items-center"
+            className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 md:gap-5 lg:gap-6 justify-center items-center px-3 sm:px-0"
           >
             <CustomButton
               variant="primary"
-              size="lg"
+              size="md"
               curvature="xl"
               elevated={true}
               onClick={onPrimaryButtonClick}
-              className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto"
+              className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
               style={{
                 background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                 color: colorScheme.buttonText || '#000000',
                 boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
               }}
             >
-              <span className="text-sm sm:text-base md:text-lg font-medium px-6 sm:px-8">
+              <span className="text-sm sm:text-base md:text-lg font-medium">
                 {primaryButtonText}
               </span>
             </CustomButton>
 
             <CustomButton
               variant="outline"
-              size="lg"
+              size="md"
               curvature="xl"
               onClick={onSecondaryButtonClick}
               style={{
@@ -404,9 +405,9 @@ const HeroSection = ({
                 color: '#FFFFFF',
                 backgroundColor: 'rgba(255, 255, 255, 0.08)',
               }}
-              className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto"
+              className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
             >
-              <span className="text-sm sm:text-base md:text-lg font-medium px-6 sm:px-8">
+              <span className="text-sm sm:text-base md:text-lg font-medium">
                 {secondaryButtonText}
               </span>
             </CustomButton>
@@ -415,8 +416,8 @@ const HeroSection = ({
       </Container>
 
       {/* Floating info rail */}
-      <div className="absolute inset-x-0 bottom-12 sm:bottom-10 lg:bottom-12 z-30 px-4">
-        <div className="mx-auto max-w-5xl grid grid-cols-1 gap-3 items-center">
+      <div className="absolute inset-x-0 bottom-3 sm:bottom-4 lg:bottom-5 z-30 px-4">
+        <div className="mx-auto max-w-5xl grid grid-cols-1 gap-2.5 items-center">
           <div className="rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 shadow-2xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3">
               <div
@@ -501,9 +502,9 @@ const ScrollIndicators = ({
   colorScheme,
 }: ScrollIndicatorsProps) => (
   <>
-    <div
-      ref={scrollIndicatorRef}
-      className="absolute bottom-6 sm:bottom-7 md:bottom-8 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
+      <div
+        ref={scrollIndicatorRef}
+        className="absolute bottom-0 sm:bottom-1.5 md:bottom-2 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
     >
@@ -522,7 +523,7 @@ const ScrollIndicators = ({
     </div>
 
     <div
-      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 sm:hidden cursor-pointer"
+      className="absolute bottom-0 left-1/2 -translate-x-1/2 z-30 sm:hidden cursor-pointer pb-1"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
     >

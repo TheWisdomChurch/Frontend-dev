@@ -1,9 +1,12 @@
 'use client';
 
-import type { Testimonial, TestimonialPayload } from './types';
+
+import { EventPublic, PublicFormPayload, PublicFormSubmissionRequest,
+  Testimonial, TestimonialPayload,CreateTestimonialRequest
+ } from './apiTypes';
 
 /* ============================================================================
-   API CLIENT CONFIG (Public Frontend)
+   API ORIGIN
 ============================================================================ */
 
 function normalizeOrigin(raw?: string | null): string {
@@ -50,15 +53,13 @@ async function safeParseJson(res: Response): Promise<any | null> {
   }
 }
 
-function unwrapData<T>(res: any, errorMessage: string): T {
-  // supports both:
-  // 1) { data: ... }
-  // 2) raw payload
-  if (res && typeof res === 'object' && 'data' in res) {
-    const data = res.data;
-    if (data === undefined || data === null) throw createApiError(errorMessage, 400, res);
-    return data as T;
-  }
+/**
+ * Supports both:
+ * 1) { data: ... }
+ * 2) raw payload
+ */
+function unwrapData<T>(res: any): T {
+  if (res && typeof res === 'object' && 'data' in res) return res.data as T;
   return res as T;
 }
 
@@ -88,16 +89,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const res = await fetch(url, {
       ...options,
       headers,
-      // Public frontend can be cookie-less, but keep include for consistency
-      // (it won't hurt, and allows future auth-gated calls if needed).
       credentials: 'include',
       cache: 'no-store',
     });
 
     const json = await safeParseJson(res);
     const payload =
-      json ??
-      ({ message: await res.text().catch(() => '') } as Record<string, any>);
+      json ?? ({ message: await res.text().catch(() => '') } as Record<string, any>);
 
     if (!res.ok) {
       throw createApiError(
@@ -115,30 +113,83 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 /* ============================================================================
-   PUBLIC API (Testimonials Only)
+   Public API Client (Frontend)
 ============================================================================ */
 
 export const apiClient = {
+  /* -----------------------------
+     EVENTS (public read)
+     ----------------------------- */
+
   /**
-   * Public display: ALWAYS fetch approved testimonials.
-   * Your backend should filter with approved=true.
+   * Recommended public endpoints:
+   *   GET /api/v1/public/events
+   *   GET /api/v1/public/events/:id
+   *
+   * Note: Your current /api/v1/events is admin-protected.
+   */
+  async listEvents(): Promise<EventPublic[]> {
+    const res = await request<any>('/public/events', { method: 'GET' });
+    return unwrapData<EventPublic[]>(res);
+  },
+
+  async getEvent(id: string): Promise<EventPublic> {
+    const res = await request<any>(`/public/events/${encodeURIComponent(id)}`, { method: 'GET' });
+    return unwrapData<EventPublic>(res);
+  },
+
+  /* -----------------------------
+     FORMS (public)
+     ----------------------------- */
+
+  /**
+   * User opens: /forms/:slug on the website
+   * Frontend calls backend: GET /api/v1/forms/:slug
+   */
+  async getPublicForm(slug: string): Promise<PublicFormPayload> {
+    const res = await request<any>(`/forms/${encodeURIComponent(slug)}`, { method: 'GET' });
+    return unwrapData<PublicFormPayload>(res);
+  },
+
+  /**
+   * User submits: POST /api/v1/forms/:slug/submissions
+   * Backend stores + notifies admin portal
+   */
+  async submitPublicForm(slug: string, body: PublicFormSubmissionRequest): Promise<any> {
+    const res = await request<any>(`/forms/${encodeURIComponent(slug)}/submissions`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return unwrapData<any>(res);
+  },
+
+  /* -----------------------------
+     TESTIMONIALS (public submit + public list approved)
+     ----------------------------- */
+
+  /**
+   * Public display: ONLY approved testimonials should render on the website.
+   * Flow:
+   *   Frontend submits -> backend stores as approved=false -> super admin approves ->
+   *   admin publishes (or approval itself marks it approved) -> frontend lists approved=true.
    */
   async listApprovedTestimonials(): Promise<Testimonial[]> {
     const qs = toQueryString({ approved: true });
     const res = await request<any>(`/testimonials${qs}`, { method: 'GET' });
-    return unwrapData<Testimonial[]>(res, 'Invalid testimonials payload');
+    return unwrapData<Testimonial[]>(res);
   },
 
   /**
-   * Public submit: creates a testimonial (should default to approved=false on backend).
+   * Public submit: creates testimonial as pending (approved=false).
+   * Backend handles super admin + admin workflow.
    */
-  async submitTestimonial(payload: TestimonialPayload): Promise<Testimonial> {
-    const res = await request<any>('/testimonials', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
-    return unwrapData<Testimonial>(res, 'Invalid testimonial payload');
-  },
+async submitTestimonial(payload: CreateTestimonialRequest): Promise<Testimonial> {
+  const res = await request<any>('/testimonials', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return unwrapData<Testimonial>(res);
+}
 };
 
 export default apiClient;
