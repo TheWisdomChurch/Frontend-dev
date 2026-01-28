@@ -56,7 +56,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       padding="none"
       className={cn(
         'relative w-full overflow-hidden bg-slate-950 text-white',
-        'min-h-[440px] md:min-h-[500px]',
+        'min-h-[420px] md:min-h-[480px]',
         className
       )}
     >
@@ -71,23 +71,23 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black/85" />
 
-      <Container size="xl" className="relative z-10 py-8 md:py-10">
+      <Container size="xl" className="relative z-10 py-6 md:py-8">
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
           className="w-full h-full"
         >
-          <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-10 md:gap-12 items-center w-full">
+          <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-8 md:gap-10 items-center w-full">
             {/* Text column */}
-            <div ref={textRef} className="space-y-3 md:space-y-5 order-2 md:order-1">
-              <P className="text-xs md:text-sm uppercase tracking-[0.18em] text-white/70">
+            <div ref={textRef} className="space-y-2.5 md:space-y-4 order-2 md:order-1">
+              <P className="text-[11px] md:text-xs uppercase tracking-[0.18em] text-white/70">
                 Meet our Senior Pastor
               </P>
-              <H1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
+              <H1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
                 Bishop Gabriel Ayilara
               </H1>
-              <P className="text-base md:text-lg text-white/80">
+              <P className="text-sm md:text-base text-white/80">
                 Senior Pastor, The Wisdom House Church
               </P>
               <div
@@ -98,7 +98,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                 {summary}
               </P>
 
-              <div className="flex flex-wrap gap-3 pt-2">
+              <div className="flex flex-wrap gap-2.5 pt-1">
                 <Button
                   onClick={() =>
                     window.open(
@@ -108,10 +108,10 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     )
                   }
                   variant="primary"
-                  size="sm"
+                  size="xs"
                   curvature="full"
                   leftIcon={<Instagram className="w-4 h-4" />}
-                  className="px-6 py-2 text-sm font-semibold shadow-lg"
+                  className="px-5 py-2 text-[13px] font-semibold shadow-lg"
                   style={{
                     background: 'linear-gradient(135deg, #E4405F, #C13584)',
                     color: '#fff',
@@ -124,10 +124,10 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     window.open('https://facebook.com', '_blank', 'noopener,noreferrer')
                   }
                   variant="outline"
-                  size="sm"
+                  size="xs"
                   curvature="full"
                   leftIcon={<Facebook className="w-4 h-4" />}
-                  className="px-5 py-2 text-sm font-semibold"
+                  className="px-4 py-2 text-[13px] font-semibold"
                   style={{
                     backgroundColor: 'rgba(255,255,255,0.08)',
                     color: '#fff',
@@ -141,10 +141,10 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     window.open('https://twitter.com', '_blank', 'noopener,noreferrer')
                   }
                   variant="outline"
-                  size="sm"
+                  size="xs"
                   curvature="full"
                   leftIcon={<Twitter className="w-4 h-4" />}
-                  className="px-5 py-2 text-sm font-semibold"
+                  className="px-4 py-2 text-[13px] font-semibold"
                   style={{
                     backgroundColor: 'rgba(255,255,255,0.08)',
                     color: '#fff',
@@ -158,13 +158,14 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
 
             {/* Portrait column */}
             <div ref={imageRef} className="flex justify-center md:justify-end order-1 md:order-2">
-              <div className="relative w-full max-w-[220px] sm:max-w-[260px] md:max-w-[320px] aspect-[3/4] md:aspect-[3/4] rounded-full md:rounded-3xl overflow-hidden border border-white/12 shadow-2xl">
+              <div className="relative w-full max-w-[200px] sm:max-w-[230px] md:max-w-[300px] aspect-[3/4] md:aspect-[3/4] rounded-full md:rounded-3xl overflow-hidden border border-white/12 shadow-2xl">
                 <Image
                   src={Bishop}
                   alt="Bishop Gabriel Ayilara"
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 480px"
-                  className="object-cover object-center"
+                  className="object-cover"
+                  style={{ objectPosition: 'center 20%' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
                 {/** Hide badge on mobile for cleaner circle */}

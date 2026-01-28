@@ -16,26 +16,21 @@ import {
   HeartHandshake,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
+import { CreateTestimonialRequest } from '@/lib/apiTypes';
 
-const BREAKPOINTS = {
-  md: 768,
-} as const;
+
+const BREAKPOINTS = { md: 768 } as const;
 
 interface TestimonialFormData {
   firstName: string;
   lastName: string;
-  image: string; // base64
+  image: string; // base64 data URL
   testimony: string;
   anonymous: boolean;
   allowSharing: boolean;
   agreeToTerms: boolean;
   email?: string;
 }
-
-/**
- * NOTE: Your Button already supports ref in most setups if it is forwardRef.
- * If not, don't pass ref. Here we avoid the custom wrapper that used `{ ref }` incorrectly.
- */
 
 export default function TestimoniesPage() {
   const { colorScheme } = useTheme();
@@ -137,42 +132,7 @@ export default function TestimoniesPage() {
     if (file && file.type.startsWith('image/')) handleImageChange(file);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.agreeToTerms) {
-      alert('Please agree to the terms and conditions');
-      return;
-    }
-
-    setSubmitting(true);
-
-    const payload = {
-      id: 0,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      fullName: formData.anonymous
-        ? 'Anonymous'
-        : `${formData.firstName} ${formData.lastName}`.trim(),
-      image: formData.anonymous ? '' : formData.image,
-      testimony: formData.testimony,
-      date: new Date().toISOString().split('T')[0],
-      anonymous: formData.anonymous,
-    };
-
-    try {
-      await apiClient.submitTestimonial(payload);
-    } catch (err: any) {
-      alert(err?.message || 'Failed to submit testimony');
-      setSubmitting(false);
-      return;
-    }
-
-    setSubmitting(false);
-    alert(
-      'Thank you for sharing your testimony. It has been received and will be prayerfully reviewed.'
-    );
-
+  const resetForm = () => {
     setFormData({
       firstName: '',
       lastName: '',
@@ -187,6 +147,90 @@ export default function TestimoniesPage() {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
+
+  const validate = (): string | null => {
+    if (!formData.agreeToTerms) return 'Please agree to the terms and conditions.';
+    if (!formData.testimony.trim()) return 'Please enter your testimony.';
+
+    if (!formData.anonymous) {
+      if (!formData.firstName.trim()) return 'Please enter your first name (or choose Anonymous).';
+      if (!formData.lastName.trim()) return 'Please enter your last name (or choose Anonymous).';
+    }
+
+    // Optional email: basic sanity check when provided
+    const email = (formData.email || '').trim();
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) return 'Please enter a valid email address.';
+
+    return null;
+  };
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!formData.agreeToTerms) {
+    alert('Please agree to the terms and conditions');
+    return;
+  }
+
+  if (!formData.testimony.trim()) {
+    alert('Please enter your testimony');
+    return;
+  }
+
+  // Because backend requires firstName + lastName (binding:"required")
+  // we must provide values even when anonymous.
+  const firstName = formData.anonymous ? 'Anonymous' : formData.firstName.trim();
+  const lastName = formData.anonymous ? 'Anonymous' : formData.lastName.trim();
+
+  if (!formData.anonymous) {
+    if (!firstName) {
+      alert('Please enter your first name (or select Anonymous).');
+      return;
+    }
+    if (!lastName) {
+      alert('Please enter your last name (or select Anonymous).');
+      return;
+    }
+  }
+
+  setSubmitting(true);
+
+  // ✅ Matches backend CreateTestimonialRequest exactly
+  const payload = {
+    firstName,
+    lastName,
+    testimony: formData.testimony.trim(),
+    isAnonymous: formData.anonymous,
+    // Backend expects a URL. Do NOT send base64 here.
+    // imageUrl: "https://..." // later when you implement upload
+  };
+
+  try {
+    await apiClient.submitTestimonial(payload);
+  } catch (err: any) {
+    alert(err?.message || 'Failed to submit testimony');
+    setSubmitting(false);
+    return;
+  }
+
+  setSubmitting(false);
+  alert('Thank you! Your testimony was received and will be reviewed before publishing.');
+
+  setFormData({
+    firstName: '',
+    lastName: '',
+    image: '',
+    testimony: '',
+    anonymous: false,
+    allowSharing: true,
+    agreeToTerms: false,
+    email: '',
+  });
+  setCharacterCount(0);
+  setImagePreview(null);
+  if (fileInputRef.current) fileInputRef.current.value = '';
+};
+
 
   return (
     <Section
@@ -203,7 +247,11 @@ export default function TestimoniesPage() {
             <div className="max-w-3xl">
               <div
                 className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-normal"
-                style={{ borderColor: styles.border, color: styles.muted, background: styles.surface }}
+                style={{
+                  borderColor: styles.border,
+                  color: styles.muted,
+                  background: styles.surface,
+                }}
               >
                 <HeartHandshake className="h-4 w-4" style={{ color: styles.primary }} />
                 Encouragement • Faith • Transformation
@@ -211,9 +259,7 @@ export default function TestimoniesPage() {
 
               <H1
                 className="mt-3 font-medium tracking-tight text-white text-2xl sm:text-3xl lg:text-[2.25rem]"
-                style={{
-                  color: styles.text,
-                }}
+                style={{ color: styles.text }}
               >
                 Share Your Testimony
               </H1>
@@ -243,17 +289,9 @@ export default function TestimoniesPage() {
           </div>
 
           {/* MAIN GRID */}
-          <GridboxLayout
-            columns={2}
-            gap="xl"
-            responsive={{ xs: 1, md: 2, lg: 2 }}
-            className="items-start"
-          >
+          <GridboxLayout columns={2} gap="xl" responsive={{ xs: 1, md: 2, lg: 2 }} className="items-start">
             {/* FORM CARD */}
-            <div
-              className="rounded-2xl border shadow-sm"
-              style={{ borderColor: styles.border, background: styles.surface }}
-            >
+            <div className="rounded-2xl border shadow-sm" style={{ borderColor: styles.border, background: styles.surface }}>
               <div
                 className="border-b p-6 lg:p-7"
                 style={{
@@ -302,11 +340,7 @@ export default function TestimoniesPage() {
                           >
                             {imagePreview ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={imagePreview}
-                                alt="Preview"
-                                className="h-full w-full object-cover"
-                              />
+                              <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
                             ) : (
                               <div className="flex h-full w-full items-center justify-center">
                                 <Camera className="h-5 w-5" style={{ color: styles.muted }} />
@@ -428,7 +462,7 @@ export default function TestimoniesPage() {
                       rows={isMobile ? 6 : 7}
                       maxLength={1000}
                       placeholder="Share your story—what happened, what changed, and what you learned…"
-                    className="w-full resize-none rounded-xl border px-4 py-3 text-sm leading-relaxed outline-none ring-offset-2 transition focus:ring-2"
+                      className="w-full resize-none rounded-xl border px-4 py-3 text-sm leading-relaxed outline-none ring-offset-2 transition focus:ring-2"
                       style={{
                         borderColor: styles.border,
                         background: styles.bg,
@@ -446,7 +480,7 @@ export default function TestimoniesPage() {
                     <CheckboxRow
                       name="anonymous"
                       checked={formData.anonymous}
-                      onChange={handleChange}
+                      onChange={handleChange as any}
                       title="Share anonymously"
                       description="Your name and photo will not be displayed."
                       icon={<Eye className="h-4 w-4" />}
@@ -455,7 +489,7 @@ export default function TestimoniesPage() {
                     <CheckboxRow
                       name="allowSharing"
                       checked={formData.allowSharing}
-                      onChange={handleChange}
+                      onChange={handleChange as any}
                       title="Allow sharing on church platforms"
                       description="May be shared during services or online."
                       icon={<Globe className="h-4 w-4" />}
@@ -464,7 +498,7 @@ export default function TestimoniesPage() {
                     <CheckboxRow
                       name="agreeToTerms"
                       checked={formData.agreeToTerms}
-                      onChange={handleChange}
+                      onChange={handleChange as any}
                       title="I agree to the terms and conditions"
                       description="Required to submit."
                       icon={<Shield className="h-4 w-4" />}
@@ -503,46 +537,24 @@ export default function TestimoniesPage() {
 
             {/* RIGHT PANEL */}
             <div className="space-y-6">
-              <div
-                className="rounded-2xl border p-6 lg:p-7 shadow-sm"
-                style={{ borderColor: styles.border, background: styles.surface }}
-              >
+              <div className="rounded-2xl border p-6 lg:p-7 shadow-sm" style={{ borderColor: styles.border, background: styles.surface }}>
                 <H3 className="mb-2 font-medium text-lg" style={{ color: styles.text }}>
                   Why share your story?
                 </H3>
                 <BodyMD className="leading-relaxed text-sm sm:text-base" style={{ color: styles.muted }}>
-                  Testimonies encourage believers, strengthen faith, and give glory to God. Your
-                  story may be exactly what someone needs to hear today.
+                  Testimonies encourage believers, strengthen faith, and give glory to God. Your story may be exactly what someone needs to hear today.
                 </BodyMD>
 
                 <div className="mt-6 grid gap-3">
-                  <InfoPill
-                    title="Glorifies God"
-                    description="Highlights His faithfulness and power."
-                    styles={styles}
-                  />
-                  <InfoPill
-                    title="Encourages others"
-                    description="Builds faith through real stories."
-                    styles={styles}
-                  />
-                  <InfoPill
-                    title="Strengthens you"
-                    description="Remembering grows gratitude and trust."
-                    styles={styles}
-                  />
+                  <InfoPill title="Glorifies God" description="Highlights His faithfulness and power." styles={styles} />
+                  <InfoPill title="Encourages others" description="Builds faith through real stories." styles={styles} />
+                  <InfoPill title="Strengthens you" description="Remembering grows gratitude and trust." styles={styles} />
                 </div>
               </div>
 
-              <div
-                className="rounded-2xl border p-6 lg:p-7 shadow-sm"
-                style={{ borderColor: styles.border, background: styles.surface }}
-              >
+              <div className="rounded-2xl border p-6 lg:p-7 shadow-sm" style={{ borderColor: styles.border, background: styles.surface }}>
                 <div className="flex items-start gap-3">
-                  <div
-                    className="rounded-xl border p-2"
-                    style={{ borderColor: styles.border, background: styles.bg }}
-                  >
+                  <div className="rounded-xl border p-2" style={{ borderColor: styles.border, background: styles.bg }}>
                     <Quote className="h-5 w-5" style={{ color: styles.primary }} />
                   </div>
                   <div>
@@ -555,13 +567,9 @@ export default function TestimoniesPage() {
                   </div>
                 </div>
 
-                <div
-                  className="mt-6 rounded-xl border p-4"
-                  style={{ borderColor: styles.border, background: styles.bg }}
-                >
+                <div className="mt-6 rounded-xl border p-4" style={{ borderColor: styles.border, background: styles.bg }}>
                   <BodySM style={{ color: styles.muted }}>
-                    Privacy note: If you submit anonymously, your name and photo will be hidden. Email
-                    is collected for verification only.
+                    Privacy note: If you submit anonymously, your name and photo will be hidden. Email is collected for verification only.
                   </BodySM>
                 </div>
               </div>
@@ -593,10 +601,7 @@ function CheckboxRow({
   styles: { border: string; bg: string; surface: string; text: string; muted: string; primary: string };
 }) {
   return (
-    <label
-      className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition hover:opacity-95"
-      style={{ borderColor: styles.border, background: styles.bg }}
-    >
+    <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition hover:opacity-95" style={{ borderColor: styles.border, background: styles.bg }}>
       <span
         className="mt-0.5 flex h-5 w-5 items-center justify-center rounded border"
         style={{
@@ -607,14 +612,7 @@ function CheckboxRow({
         {checked ? <Check className="h-3.5 w-3.5" style={{ color: '#fff' }} /> : null}
       </span>
 
-      <input
-        type="checkbox"
-        name={name}
-        checked={checked}
-        onChange={onChange}
-        required={required}
-        className="sr-only"
-      />
+      <input type="checkbox" name={name} checked={checked} onChange={onChange} required={required} className="sr-only" />
 
       <div className="flex-1">
         <div className="flex items-center gap-2">
@@ -640,21 +638,17 @@ function InfoPill({
   styles: { border: string; bg: string; text: string; muted: string; primary: string };
 }) {
   return (
-    <div
-      className="rounded-xl border p-4"
-      style={{ borderColor: styles.border, background: styles.bg }}
-    >
+    <div className="rounded-xl border p-4" style={{ borderColor: styles.border, background: styles.bg }}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <BodyMD className="font-medium text-sm sm:text-base" style={{ color: styles.text }}>
             {title}
           </BodyMD>
-          <BodySM className="text-xs sm:text-sm" style={{ color: styles.muted }}>{description}</BodySM>
+          <BodySM className="text-xs sm:text-sm" style={{ color: styles.muted }}>
+            {description}
+          </BodySM>
         </div>
-        <div
-          className="rounded-lg border px-2 py-1 text-xs font-semibold"
-          style={{ borderColor: styles.border, color: styles.primary, background: '#ffffff00' }}
-        >
+        <div className="rounded-lg border px-2 py-1 text-xs font-semibold" style={{ borderColor: styles.border, color: styles.primary, background: '#ffffff00' }}>
           Impact
         </div>
       </div>

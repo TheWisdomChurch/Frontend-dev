@@ -115,7 +115,7 @@ export default function Header() {
 
             {/* Desktop Navigation - Only on xl screens */}
             <nav className="hidden xl:flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2 z-10">
-              <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-1.5 py-1 border border-white/10">
+              <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10">
                 {extendedNavLinks.map(link => {
                   const isActive = isLinkActive(link.href);
                   const Icon = iconMap[link.icon as keyof typeof iconMap];
@@ -131,7 +131,7 @@ export default function Header() {
                       onMouseDown={handleNavMouseDown}
                       onMouseUp={handleNavMouseUp}
                       className={cn(
-                        'flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium transition-all duration-300 rounded-full group relative',
+                        'flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold transition-all duration-300 rounded-full group relative',
                         isActive
                           ? 'text-white bg-primary shadow-md'
                           : 'text-gray-300 hover:text-white hover:bg-white/5'

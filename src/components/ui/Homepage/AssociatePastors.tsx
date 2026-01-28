@@ -60,13 +60,13 @@ export default function AssociatePastors() {
   return (
     <Section
       id="leadership"
-      padding="xl"
+      padding="lg"
       className="relative overflow-hidden"
       style={{
         background: '#0b0b0b',
       }}
     >
-      <Container size="xl" className="relative z-10 space-y-10">
+      <Container size="xl" className="relative z-10 space-y-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="max-w-3xl space-y-3">
             <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: primary }}>
@@ -75,7 +75,7 @@ export default function AssociatePastors() {
             <H3 className="text-3xl sm:text-4xl font-black text-white leading-tight">
               Meet our associate pastors
             </H3>
-            <BodySM className="text-white/75 max-w-2xl">
+            <BodySM className="text-white/75 max-w-2xl text-sm sm:text-base">
               Trusted voices helping steward the vision. Each carries a unique grace for the house.
             </BodySM>
           </div>
@@ -83,7 +83,7 @@ export default function AssociatePastors() {
             variant="primary"
             size="sm"
             curvature="full"
-            className="text-black font-semibold"
+            className="text-black font-semibold px-5 py-2 sm:px-6 sm:py-2.5"
             rightIcon={<ArrowRight className="w-4 h-4" />}
             style={{ backgroundColor: primary }}
             onClick={() => router.push('/leadership')}
@@ -98,23 +98,24 @@ export default function AssociatePastors() {
               key={item.id}
               className="rounded-2xl border border-white/15 bg-[#111] p-4 space-y-3 shadow-xl"
             >
-              <div className="relative h-48 w-full rounded-xl overflow-hidden border border-white/10">
+              <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10">
                 <Image
                   src={item.image}
                   alt={item.name}
                   fill
-                  className="object-cover object-top"
+                  className="object-cover"
+                  style={{ objectPosition: 'center 18%' }}
                   sizes="(max-width: 768px) 100vw, 25vw"
                 />
               </div>
               <div className="space-y-1">
-                <SmallText weight="bold" className="text-white text-lg">
+                <SmallText weight="semibold" className="text-white text-[15px] sm:text-base">
                   {item.name}
                 </SmallText>
-                <Caption className="text-white/60">{item.role}</Caption>
+                <Caption className="text-white/65 text-sm">{item.role}</Caption>
               </div>
               {item.description && (
-                <Caption className="text-white/60 line-clamp-3">{item.description}</Caption>
+                <Caption className="text-white/60 text-sm line-clamp-3">{item.description}</Caption>
               )}
             </div>
           ))}
