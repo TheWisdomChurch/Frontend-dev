@@ -1,7 +1,7 @@
 // components/ui/Homepage/Resource.tsx
 'use client';
 
-import React, { type ElementType, useEffect, useState } from 'react';
+import React, { type ElementType, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Section, Container } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
@@ -17,16 +17,31 @@ export default function ResourceSection() {
   const [recentVideo, setRecentVideo] = useState<YouTubeVideo | null>(null);
   const [subscriber, setSubscriber] = useState({ name: '', email: '' });
   const [submitting, setSubmitting] = useState(false);
+  const fetchedOnce = useRef(false);
 
   useEffect(() => {
+    if (fetchedOnce.current) return;
     let mounted = true;
+    const cached = sessionStorage.getItem('recent_video');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached) as YouTubeVideo;
+        setRecentVideo(parsed);
+        fetchedOnce.current = true;
+        return;
+      } catch {
+        // fallback to network
+      }
+    }
     const fetchRecent = async () => {
       try {
-        const res = await fetch('/api/sermons?sort=newest');
+        const res = await fetch('/api/sermons?sort=newest', { cache: 'force-cache' });
         if (!res.ok) return;
         const data: YouTubeVideo[] = await res.json();
         if (mounted && data.length > 0) {
           setRecentVideo(data[0]);
+          sessionStorage.setItem('recent_video', JSON.stringify(data[0]));
+          fetchedOnce.current = true;
         }
       } catch (err) {
         console.warn('Failed to fetch recent YouTube video', err);
