@@ -1,8 +1,9 @@
 'use client';
 
 import { createPortal } from 'react-dom';
+import { useEffect } from 'react';
 import Image from 'next/image';
-import { X, Church, Hand, TrendingUp, Sparkles, ArrowLeft } from 'lucide-react';
+import { X, Church, Hand, TrendingUp, ArrowLeft } from 'lucide-react';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { BaseText, BricolageText, H2, P } from '@/components/text';
 import { PlayfairText } from '../text/FontText';
@@ -28,6 +29,16 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
     showConfession,
     showWelcome,
   } = useWelcomeModal({ delay, onClose });
+
+  // Lock body scroll when modal is visible
+  useEffect(() => {
+    if (!mounted || !isVisible) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [mounted, isVisible]);
 
   if (!mounted || !isVisible) return null;
 
@@ -76,21 +87,20 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
 
         <div
           ref={contentRef}
-          className="p-6 sm:p-8 overflow-y-auto"
+          className="p-5 sm:p-8 overflow-y-auto"
           style={{ maxHeight: 'calc(85vh - 1rem)' }}
         >
           {currentStep === 'welcome' && (
             <div className="space-y-6">
               <div className="text-center space-y-5">
-                <div className="relative w-18 h-18 mx-auto rounded-full border border-white/20 bg-white/10 flex items-center justify-center">
+                <div className="relative w-18 h-18 mx-auto rounded-full border border-white/20 bg-white/8 flex items-center justify-center overflow-hidden">
                   <Image
                     src={WisdomeHouseLogo}
                     alt="The Wisdom House Church"
-                    width={56}
-                    height={56}
-                    className="object-contain"
+                    width={64}
+                    height={64}
+                    className="object-contain w-14 h-14 sm:w-16 sm:h-16"
                   />
-                  <Sparkles className="absolute -right-4 -top-3 h-8 w-8 text-amber-300/60" />
                 </div>
 
                 <div>
@@ -107,7 +117,7 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                         display: 'inline',
                       }}
                     >
-                      The Wisdom House
+                      The Wisdom Church Online Community
                     </BaseText>
                   </H2>
                   <p className="text-white/70 text-sm sm:text-base max-w-xl mx-auto">

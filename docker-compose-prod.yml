@@ -1,18 +1,102 @@
 version: "3.8"
 
+networks:
+  edge:
+    name: wisdom_edge
+  internal:
+    name: wisdom_internal
+    internal: true
+
+volumes:
+  caddy_data:
+  caddy_config:
+
 services:
+  caddy:
+    image: caddy:2.8-alpine
+    container_name: wisdom_caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - edge
+      - internal
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      # Set this to a real email for ACME/Let's Encrypt expiry notices
+      - ACME_EMAIL=admin@wisdomchurchhq.org
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:2019/metrics >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         - NPM_REGISTRY=https://registry.npmmirror.com
-    container_name: wisdomChurch-frontend
+    container_name: wisdom_frontend
+    restart: unless-stopped
     environment:
       - NODE_ENV=production
       - PORT=3000
-      # change to your real API domain:
-      - NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com
+      # IMPORTANT: set this to your real API domain (your API site below)
+      - NEXT_PUBLIC_API_BASE_URL=https://api.wisdomchurchhq.org
     expose:
       - "3000"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000 >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Admin portal (separate container) — adjust build context/dockerfile as needed
+  admin:
+    build:
+      context: ./AdminPanel/admin-panel
+      dockerfile: Dockerfile
+      args:
+        - NPM_REGISTRY=https://registry.npmmirror.com
+    container_name: wisdom_admin
     restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - NEXT_PUBLIC_API_BASE_URL=https://api.wisdomchurchhq.org
+    expose:
+      - "3000"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000 >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # API backend (Go) — adjust image/build and port to match your project
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wisdom_api
+    restart: unless-stopped
+    environment:
+      - ENV=production
+      - PORT=2000
+    expose:
+      - "2000"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:2000/healthz >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
