@@ -2,12 +2,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllChannelVideos } from '@/lib/youtube';
 import { YouTubeVideo } from '@/lib/types';
+import { promises as fs } from 'fs';
+
+export const runtime = 'nodejs';
 
 // Cache for better performance
 let cachedVideos: YouTubeVideo[] | null = null;
 let cacheTimestamp: number = 0;
-const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+const CACHE_DURATION = 1000 * 60 * 60; // 1 hour in-memory
+const DISK_CACHE_PATH = '/tmp/sermons-cache.json';
+const DISK_CACHE_MAX_AGE = 1000 * 60 * 60 * 24; // 24h
+const MAX_FETCH = 200;
 let fetchPromise: Promise<YouTubeVideo[]> | null = null;
+
+async function readDiskCache(): Promise<YouTubeVideo[] | null> {
+  try {
+    const raw = await fs.readFile(DISK_CACHE_PATH, 'utf-8');
+    const parsed = JSON.parse(raw) as { ts: number; data: YouTubeVideo[] };
+    if (Date.now() - parsed.ts < DISK_CACHE_MAX_AGE) {
+      cacheTimestamp = parsed.ts;
+      return parsed.data;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function writeDiskCache(data: YouTubeVideo[]) {
+  try {
+    const payload = { ts: Date.now(), data };
+    await fs.writeFile(DISK_CACHE_PATH, JSON.stringify(payload), 'utf-8');
+  } catch {
+    // ignore disk write errors
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,37 +46,38 @@ export async function GET(request: NextRequest) {
     const preacher = searchParams.get('preacher') || 'all';
     const sort = searchParams.get('sort') || 'newest';
 
-    console.log('Fetching sermons with filters:', {
-      search,
-      series,
-      preacher,
-      sort,
-    });
-
     const now = Date.now();
     let videos: YouTubeVideo[];
 
     if (cachedVideos && now - cacheTimestamp <= CACHE_DURATION) {
-      console.log('Using cached videos');
       videos = cachedVideos;
     } else {
-      if (!fetchPromise) {
-        console.log('Starting new fetch');
-        fetchPromise = getAllChannelVideos(600)
-          .then(v => {
-            cacheTimestamp = Date.now();
-            fetchPromise = null;
-            return v;
-          })
-          .catch(error => {
-            fetchPromise = null;
-            throw error;
-          });
-      } else {
-        console.log('Waiting for ongoing fetch');
+      if (!cachedVideos) {
+        const disk = await readDiskCache();
+        if (disk) {
+          cachedVideos = disk;
+        }
       }
-      videos = await fetchPromise;
-      cachedVideos = videos;
+
+      if (cachedVideos && now - cacheTimestamp <= CACHE_DURATION) {
+        videos = cachedVideos;
+      } else {
+        if (!fetchPromise) {
+          fetchPromise = getAllChannelVideos(MAX_FETCH)
+            .then(v => {
+              cacheTimestamp = Date.now();
+              cachedVideos = v;
+              writeDiskCache(v);
+              fetchPromise = null;
+              return v;
+            })
+            .catch(error => {
+              fetchPromise = null;
+              throw error;
+            });
+        }
+        videos = await fetchPromise;
+      }
     }
 
     let filteredVideos = [...videos];
@@ -98,8 +128,6 @@ export async function GET(request: NextRequest) {
         break;
     }
 
-    console.log(`Returning ${filteredVideos.length} filtered videos`);
-
     // Create response with headers
     const response = NextResponse.json(filteredVideos);
 
@@ -117,7 +145,7 @@ export async function GET(request: NextRequest) {
     // Set cache headers
     response.headers.set(
       'Cache-Control',
-      'public, s-maxage=300, stale-while-revalidate=600'
+      'public, s-maxage=1800, stale-while-revalidate=3600'
     );
 
     return response;

@@ -183,13 +183,23 @@ export const apiClient = {
    * Public submit: creates testimonial as pending (approved=false).
    * Backend handles super admin + admin workflow.
    */
-async submitTestimonial(payload: CreateTestimonialRequest): Promise<Testimonial> {
-  const res = await request<any>('/testimonials', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
-  return unwrapData<Testimonial>(res);
-}
+  async submitTestimonial(payload: CreateTestimonialRequest): Promise<Testimonial> {
+    const res = await request<any>('/testimonials', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return unwrapData<Testimonial>(res);
+  },
+
+  /* -----------------------------
+     SUBSCRIBERS
+     ----------------------------- */
+  async subscribe(payload: { name?: string; email: string }) {
+    return request<any>('/subscribers', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
 };
 
 export default apiClient;
