@@ -4,16 +4,16 @@ import Banner_3 from './banner3.webp';
 import Bishop from './bishopp.png';
 
 // test
-import hero_bg_1 from './hero_img (1).jpg';
-import hero_bg_2 from './hero_img (2).jpg';
-import hero_bg_3 from './hero_img (3).jpg';
+import hero_bg_1 from './hero1.png';
+import hero_bg_2 from './hero2.png';
+import hero_bg_3 from './hero3.png';
 import hero_bg_4 from './hero_img (4).jpg';
 
 // WhatWedo
-import Whatwedo_1 from './Whatwedo (1).jpg';
-import Whatwedo_2 from './Whatwedo (2).jpg';
-import WhatWeDo_3 from './Whatwedo (3).jpg';
-import Whatwedo_4 from './Whatwedo.jpg';
+import WhatWedo_1 from './Worship_service.svg';
+import WhatWedo_2 from './Community_service.svg';
+import WhatWeDo_3 from './Youth_gathering.svg';
+import WhatWedo_4 from './prayer_gathering.svg';
 
 // Logo
 import WisdomeHouseLogo from './OIP.webp';
@@ -89,9 +89,9 @@ export {
   Associate_2,
   hero_bg_4,
   WhatWeDo_3,
-  Whatwedo_1,
-  Whatwedo_2,
-  Whatwedo_4,
+  WhatWedo_1,
+  WhatWedo_2,
+  WhatWedo_4,
   Workforce_bg,
   Dept_1,
   Dept_2,

@@ -22,21 +22,25 @@ import {
 } from './types';
 
 import {
-  WhatWeDo_3,
+ 
   hero_bg_1,
   hero_bg_2,
   hero_bg_3,
-  Whatwedo_1,
+
+
   Associate_1,
   Associate_2,
-  Whatwedo_2,
   ProvidusBank,
   KeystoneBank,
   Dept_1,
   Dept_2,
   Dept_3,
   // Dept_4,
-  Whatwedo_4,
+  // What_to_expect_images
+  WhatWedo_1,
+   WhatWeDo_3,
+WhatWedo_2,
+  WhatWedo_4,
   Img_1,
   Children_head,
   PstKenny,
@@ -270,8 +274,26 @@ export const whatWeDoData: ServiceBox[] = [
     title: ' Expect the word to work  ',
     description:
       "We actively apply God's Word in our daily lives, transforming biblical teachings into practical actions that impact our community and deepen our faith journey.",
-    image: Whatwedo_4,
+    image: WhatWedo_1,
     imageAlt: 'Worship service',
+  },
+    {
+    id: 2,
+    title: 'Expect the power of prayer',
+    description:
+      "Through fervent prayer, we connect with God's divine power, witnessing miraculous transformations and spiritual breakthroughs in our lives and community.",
+    image: WhatWedo_4,
+    imageAlt: 'Prayer gathering',
+    gradient: 'from-purple-900 to-purple-700',
+    imageOpacity: 60,
+  },
+   {
+    id: 3,
+    title: 'Expect Powerful Worship',
+    description:
+      'In heartfelt worship, we glorify God through song, praise, and devotion, creating an atmosphere where His presence transforms hearts and renews spirits.',
+    image: WhatWedo_2,
+    imageAlt: 'Community service',
   },
   {
     id: 4,
@@ -283,24 +305,8 @@ export const whatWeDoData: ServiceBox[] = [
     gradient: 'from-blue-900 to-blue-700',
     imageOpacity: 60,
   },
-  {
-    id: 3,
-    title: 'Expect Powerful Worship',
-    description:
-      'In heartfelt worship, we glorify God through song, praise, and devotion, creating an atmosphere where His presence transforms hearts and renews spirits.',
-    image: Whatwedo_1,
-    imageAlt: 'Community service',
-  },
-  {
-    id: 2,
-    title: 'Expect the power of prayer',
-    description:
-      "Through fervent prayer, we connect with God's divine power, witnessing miraculous transformations and spiritual breakthroughs in our lives and community.",
-    image: Whatwedo_2,
-    imageAlt: 'Prayer gathering',
-    gradient: 'from-purple-900 to-purple-700',
-    imageOpacity: 60,
-  },
+ 
+
 ];
 
 export const missionStatement = `At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit.
@@ -470,7 +476,7 @@ export const photos: Photo[] = [
   },
   {
     title: 'Prayer/Intercessory Unit',
-    image: Whatwedo_2,
+    image: WhatWedo_2,
     link: '#',
   },
   {
