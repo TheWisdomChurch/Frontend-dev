@@ -19,7 +19,7 @@ import RouteLoaderProvider from '@/components/providers/RouteProvider';
 // FULL PROFESSIONAL SEO — 2025 BEST PRACTICES
 export const metadata: Metadata = {
   // Core
-  metadataBase: new URL('https://www.thewisdomhousechurch.org'), // CHANGE TO YOUR DOMAIN
+  metadataBase: new URL('https://wisdomchurchhq.org/'), 
   alternates: {
     canonical: '/',
   },

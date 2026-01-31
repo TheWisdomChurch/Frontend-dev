@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import withPWA from 'next-pwa';
 
 const nextConfig: NextConfig = {
   // ✅ CRITICAL: Add this for Docker production build
@@ -30,6 +31,19 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
+      },
+      // Add your own domain for logos/OG images if needed
+      {
+        protocol: 'https',
+        hostname: 'wisdomchurchhq.org',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.thewisdomhousechurch.org',
         port: '',
         pathname: '/**',
       },
@@ -92,4 +106,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Wrap with PWA config (disable in dev to avoid issues)
+const isDev = process.env.NODE_ENV === 'development';
+export default withPWA({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: isDev,
+})(nextConfig);
