@@ -17,6 +17,8 @@ import WhatWedo_4 from './prayer_gathering.svg';
 
 // Logo
 import WisdomeHouseLogo from './OIP.webp';
+import EventBannerMobile from './mobile.jpg.jpeg';
+import EventBannerDesktop from './Container.png';
 
 
 // Associate Pastors
@@ -80,6 +82,8 @@ export {
   Banner_2,
   Banner_3,
   WisdomeHouseLogo,
+  EventBannerMobile,
+  EventBannerDesktop,
   PstKenny,
   PstKenny_1,
   hero_bg_1,
