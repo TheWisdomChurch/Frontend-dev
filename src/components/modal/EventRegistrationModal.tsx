@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 
 interface Event {
   id: string;
@@ -30,7 +31,7 @@ interface EventRegistrationModalProps {
   event: Event;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: RegistrationFormData) => Promise<void>;
+  onSubmit?: (data: RegistrationFormData) => Promise<void>;
   defaultValues?: Partial<RegistrationFormData>;
 }
 
@@ -41,6 +42,7 @@ export const EventRegistrationModal = ({
   onSubmit,
   defaultValues = {},
 }: EventRegistrationModalProps) => {
+  const { open } = useServiceUnavailable();
   const [formData, setFormData] = useState<RegistrationFormData>({
     firstName: '',
     lastName: '',
@@ -73,6 +75,16 @@ export const EventRegistrationModal = ({
     
     setIsSubmitting(true);
     try {
+      if (!onSubmit) {
+        onClose();
+        open({
+          title: 'Registration opening soon',
+          message:
+            'This registration flow is being prepared for production. Please check back shortly.',
+          actionLabel: 'Okay, thanks',
+        });
+        return;
+      }
       await onSubmit(formData);
       toast.success('Registration successful!');
       onClose();

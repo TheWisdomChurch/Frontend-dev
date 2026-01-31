@@ -7,6 +7,7 @@ import {
 } from '@/components/fonts/fonts';
 
 import { ThemeProvider } from '@/components/contexts/ThemeContext';
+import { ServiceUnavailableProvider } from '@/components/contexts/ServiceUnavailableContext';
 import { HeaderProvider } from '@/components/providers/NavProviders';
 import ReduxProvider from '@/components/providers/ReduxProvider';
 import ErrorBoundary from '@/components/layout/ErrorBoundary';
@@ -144,19 +145,21 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <ReduxProvider>
       <ThemeProvider>
-        <HeaderProvider>
-          <ErrorBoundary>
-            <ScrollHandler />
-            <RouteLoaderProvider>
-              <ClientHeader />
-              <main className="flex-1 flex flex-col min-h-screen">
-                {children}
-              </main>
-              <ClientFooter />
-              <ClientScrollToTop />
-            </RouteLoaderProvider>
-          </ErrorBoundary>
-        </HeaderProvider>
+        <ServiceUnavailableProvider>
+          <HeaderProvider>
+            <ErrorBoundary>
+              <ScrollHandler />
+              <RouteLoaderProvider>
+                <ClientHeader />
+                <main className="flex-1 flex flex-col min-h-screen">
+                  {children}
+                </main>
+                <ClientFooter />
+                <ClientScrollToTop />
+              </RouteLoaderProvider>
+            </ErrorBoundary>
+          </HeaderProvider>
+        </ServiceUnavailableProvider>
       </ThemeProvider>
     </ReduxProvider>
   );

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import GivingModal from '@/components/modal/GivingModal';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { ChevronLeft, ChevronRight, Phone, Sparkles, Gift } from 'lucide-react';
 import { useOnlineGiving } from '@/components/utils/hooks/Onlinegiving';
 import {
@@ -21,6 +22,7 @@ import {
 import { WisdomeHouseLogo } from '@/components/assets';
 export default function OnlineGiving() {
   const { colorScheme } = useTheme();
+  const { open } = useServiceUnavailable();
   const {
     isVisible,
     setIsVisible,
@@ -493,6 +495,14 @@ export default function OnlineGiving() {
                     borderColor: colorScheme.primary,
                     color: '#FFFFFF',
                   }}
+                  onClick={() =>
+                    open({
+                      title: 'More ways to give',
+                      message:
+                        'Our expanded giving options are rolling out shortly. We appreciate your generosity.',
+                      actionLabel: 'Sounds good',
+                    })
+                  }
                 >
                   Learn More
                 </Button>

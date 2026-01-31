@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { CalendarClock, MapPin, PlayCircle, Users, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { H1, H2, BodyMD } from '../../text';
 import CustomButton from '../../utils/buttons/CustomButton';
 import { Section, Container } from '../../layout';
@@ -43,14 +44,15 @@ interface HeroSectionProps {
 const HeroSection = ({
   primaryButtonText = 'Join Our Community',
   secondaryButtonText = 'Watch Live Stream',
-  onPrimaryButtonClick = () => console.log('Primary button clicked'),
-  onSecondaryButtonClick = () => console.log('Secondary button clicked'),
+  onPrimaryButtonClick,
+  onSecondaryButtonClick,
   showWaveText = true,
   colorScheme: externalColorScheme,
   slides = defaultSlides,
 }: HeroSectionProps) => {
   const { colorScheme: themeColors } = useTheme();
   const colorScheme = externalColorScheme || themeColors;
+  const { open } = useServiceUnavailable();
 
   // Create refs
   const heroRef = useRef<HTMLDivElement>(null!);
@@ -202,17 +204,55 @@ const HeroSection = ({
     [isAnimating, currentSlide, animateSlideTransition, isMultiSlide]
   );
 
+  const handleUnavailable = useCallback(
+    (title?: string, message?: string) => {
+      open({
+        title: title || 'Service not available yet',
+        message:
+          message ||
+          'We are polishing this experience for production. Please check back soon.',
+        actionLabel: 'Okay, thanks',
+      });
+    },
+    [open]
+  );
+
   const handleUpcomingCta = useCallback(() => {
-    if (!upcoming.ctaTarget) return;
+    if (!upcoming.ctaTarget) {
+      handleUnavailable('Reservations opening soon');
+      return;
+    }
     if (upcoming.ctaTarget.startsWith('#')) {
       const target = document.getElementById(upcoming.ctaTarget.slice(1));
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        handleUnavailable('Reservations opening soon');
       }
       return;
     }
-    window.location.href = upcoming.ctaTarget;
-  }, [upcoming.ctaTarget]);
+    if (upcoming.ctaTarget) {
+      window.location.href = upcoming.ctaTarget;
+    } else {
+      handleUnavailable('Reservations opening soon');
+    }
+  }, [upcoming.ctaTarget, handleUnavailable]);
+
+  const handlePrimaryClick = useCallback(() => {
+    if (onPrimaryButtonClick) {
+      onPrimaryButtonClick();
+      return;
+    }
+    handleUnavailable('Join our community');
+  }, [onPrimaryButtonClick, handleUnavailable]);
+
+  const handleSecondaryClick = useCallback(() => {
+    if (onSecondaryButtonClick) {
+      onSecondaryButtonClick();
+      return;
+    }
+    handleUnavailable('Live stream coming soon');
+  }, [onSecondaryButtonClick, handleUnavailable]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -381,7 +421,7 @@ const HeroSection = ({
               size="md"
               curvature="xl"
               elevated={true}
-              onClick={onPrimaryButtonClick}
+              onClick={handlePrimaryClick}
               className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
               style={{
                 background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
@@ -398,7 +438,7 @@ const HeroSection = ({
               variant="outline"
               size="md"
               curvature="xl"
-              onClick={onSecondaryButtonClick}
+              onClick={handleSecondaryClick}
               style={{
                 borderColor: 'rgba(255, 255, 255, 0.4)',
                 borderWidth: '1.5px',
