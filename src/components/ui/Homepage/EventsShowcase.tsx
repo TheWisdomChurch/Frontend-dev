@@ -9,8 +9,7 @@ import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
-import { hero_bg_1, hero_bg_3 } from '@/components/assets';
-import HeaderAlt from '../../../../public/HEADER 2.jpg.jpeg';
+import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 
@@ -21,6 +20,8 @@ type Slide = {
   date: string;
   location: string;
   image: any;
+  imageMobile?: any;
+  imageDesktop?: any;
   cta?: string;
   href?: string;
   badge: string;
@@ -42,7 +43,9 @@ export default function EventsShowcase() {
           'City-wide gathering with worship, word, and miracles. Come expectant.',
         date: 'Mar 10 • 6:00 PM',
         location: 'Honor Gardens Event Center, Alasia opp. dominion Church',
-        image: HeaderAlt,
+        image: EventBannerDesktop,
+        imageMobile: EventBannerMobile,
+        imageDesktop: EventBannerDesktop,
         cta: 'Save a seat',
         href: '/events',
         badge: 'Upcoming',
@@ -153,7 +156,9 @@ export default function EventsShowcase() {
             description: evt.description || '',
             date: start ? new Date(start).toLocaleString() : '',
             location: evt.location || '',
-            image: evt.bannerUrl || evt.imageUrl || HeaderAlt,
+            image: evt.bannerUrl || evt.imageUrl || EventBannerDesktop,
+            imageMobile: evt.bannerUrl || evt.imageUrl || EventBannerMobile,
+            imageDesktop: evt.bannerUrl || evt.imageUrl || EventBannerDesktop,
             cta: 'Save a seat',
             href: evt.formSlug ? `/forms/${evt.formSlug}` : '/events',
             badge,
@@ -225,16 +230,39 @@ export default function EventsShowcase() {
                   <div className="absolute inset-0">
                     {current.category === 'reel' ? (
                       <div className="w-full h-full relative">
-                        <Image
-                          src={current.image}
-                          alt={current.title}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 60vw"
-                          className="object-cover"
-                          // Mobile-friendly composition
-                          style={{ objectPosition: 'center 35%' }}
-                          priority
-                        />
+                        {current.imageMobile || current.imageDesktop ? (
+                          <>
+                            <Image
+                              src={current.imageMobile || current.imageDesktop || current.image}
+                              alt={current.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 60vw"
+                              className="object-cover md:hidden"
+                              style={{ objectPosition: 'center 35%' }}
+                              priority
+                            />
+                            <Image
+                              src={current.imageDesktop || current.imageMobile || current.image}
+                              alt={current.title}
+                              fill
+                              sizes="(max-width: 1024px) 100vw, 60vw"
+                              className="hidden md:block object-cover"
+                              style={{ objectPosition: 'center 35%' }}
+                              priority
+                            />
+                          </>
+                        ) : (
+                          <Image
+                            src={current.image}
+                            alt={current.title}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 60vw"
+                            className="object-cover"
+                            // Mobile-friendly composition
+                            style={{ objectPosition: 'center 35%' }}
+                            priority
+                          />
+                        )}
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                           <button
                             onClick={() => setReelModal(current)}
@@ -245,15 +273,38 @@ export default function EventsShowcase() {
                         </div>
                       </div>
                     ) : (
-                      <Image
-                        src={current.image}
-                        alt={current.title}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 60vw"
-                        className="object-cover"
-                        style={{ objectPosition: 'center 35%' }}
-                        priority
-                      />
+                      current.imageMobile || current.imageDesktop ? (
+                        <>
+                          <Image
+                            src={current.imageMobile || current.imageDesktop || current.image}
+                            alt={current.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 60vw"
+                            className="object-cover md:hidden"
+                            style={{ objectPosition: 'center 35%' }}
+                            priority
+                          />
+                          <Image
+                            src={current.imageDesktop || current.imageMobile || current.image}
+                            alt={current.title}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 60vw"
+                            className="hidden md:block object-cover"
+                            style={{ objectPosition: 'center 35%' }}
+                            priority
+                          />
+                        </>
+                      ) : (
+                        <Image
+                          src={current.image}
+                          alt={current.title}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 60vw"
+                          className="object-cover"
+                          style={{ objectPosition: 'center 35%' }}
+                          priority
+                        />
+                      )
                     )}
                   </div>
 
@@ -357,7 +408,7 @@ export default function EventsShowcase() {
                 <div className="flex items-center gap-3 sm:gap-3.5">
                   <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
                     <Image
-                      src={slide.image}
+                      src={slide.imageDesktop || slide.image}
                       alt={slide.title}
                       fill
                       sizes="(max-width: 1024px) 70vw, 25vw"

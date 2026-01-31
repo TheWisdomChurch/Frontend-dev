@@ -5,6 +5,7 @@ import {
   worksans,
   playfair,
 } from '@/components/fonts/fonts';
+
 import { ThemeProvider } from '@/components/contexts/ThemeContext';
 import { HeaderProvider } from '@/components/providers/NavProviders';
 import ReduxProvider from '@/components/providers/ReduxProvider';
@@ -13,26 +14,26 @@ import ClientHeader from '@/components/layout/ClientHeader';
 import ClientFooter from '@/components/layout/ClientFooter';
 import ClientScrollToTop from '@/components/layout/ClientscrollTop';
 import ScrollHandler from '@/components/layout/ClientScrollHandler';
-import './globals.css';
 import RouteLoaderProvider from '@/components/providers/RouteProvider';
+import './globals.css';
 
-// FULL PROFESSIONAL SEO — 2025 BEST PRACTICES
+const SITE_URL = 'https://wisdomchurchhq.org';
+const SITE_NAME = 'The Wisdom Church';
+const OG_IMAGE = `${SITE_URL}/logo.webp`; // ensure /public/og-image.jpg exists
+
 export const metadata: Metadata = {
-  // Core
-  metadataBase: new URL('https://wisdomchurchhq.org/'), 
+  metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
   },
 
-  // Title & Description
   title: {
-    default: 'The Wisdom  Church | Experience God’s Transforming Power',
+    default: 'The Wisdom Church | Experience God’s Transforming Power',
     template: '%s | The Wisdom Church',
   },
   description:
     'A vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
 
-  // Keywords (Google still reads them in 2025)
   keywords: [
     'wisdom house church',
     'the wisdom house church',
@@ -73,29 +74,27 @@ export const metadata: Metadata = {
     'church live stream',
   ],
 
-  // Author & Publisher
   authors: [
     {
-      name: 'The Wisdom House Church',
-      url: 'https://www.thewisdomhousechurch.org',
+      name: SITE_NAME,
+      url: SITE_URL,
     },
   ],
-  creator: 'The Wisdom Church',
-  publisher: 'The Wisdom House Church',
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
 
-  // Open Graph — Facebook, LinkedIn, WhatsApp, iMessage
   openGraph: {
-    title: 'The Wisdom House Church',
+    title: SITE_NAME,
     description:
       'Experience God’s transforming power in a loving, vibrant community.',
-    url: 'https://www.thewisdomhousechurch.org',
-    siteName: 'The Wisdom House Church',
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
-        url: '/og-image.jpg', // Put a 1200×630 image in /public/public/og-image.jpg
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: 'The Wisdom House Church - Welcome Home',
+        alt: `${SITE_NAME} - Welcome Home`,
         type: 'image/jpeg',
       },
     ],
@@ -103,17 +102,15 @@ export const metadata: Metadata = {
     type: 'website',
   },
 
-  // Twitter / X Card
   twitter: {
     card: 'summary_large_image',
-    title: 'The Wisdom House Church',
+    title: SITE_NAME,
     description: 'Join us for powerful worship and life-changing messages.',
-    images: ['/twitter-image.jpg'], // Optional: same as OG or 1200×600
-    creator: '@wisdomhousehq', // Update to your handle if different
+    images: [OG_IMAGE], // use same OG image
+    creator: '@wisdomhousehq',
     site: '@wisdomhousehq',
   },
 
-  // Robots
   robots: {
     index: true,
     follow: true,
@@ -126,15 +123,15 @@ export const metadata: Metadata = {
     },
   },
 
-  // Verification (add your codes later)
+  // ✅ Verification: token ONLY (NOT .html filename)
   verification: {
-    google: 'your-google-site-verification-code',
-    // yandex: '',
-    // bing: '',
-  },
+  google: '06pkcDIlRljdgVWZrLV9a9tqH7FJ5xp9lMfhho7LaRU',
+},
+other: {
+  'msvalidate.01': 'CDC0BA45440A0A1BB38769D83C132EBB',
+},
 };
 
-// Mobile responsiveness
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -170,6 +167,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: OG_IMAGE,
+    sameAs: [
+      'https://www.youtube.com/@wisdomhousehq',
+      'https://www.facebook.com/wisdomhousehq',
+      'https://www.instagram.com/wisdomhousehq',
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      availableLanguage: ['English'],
+    },
+  };
+
   return (
     <html
       lang="en"
@@ -177,27 +192,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={bricolageGrotesque.className}>
+        {/* ✅ Valid JSON-LD only (no <meta> inside JSON.stringify) */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'The Wisdom House Church',
-              url: 'https://www.thewisdomhousechurch.org',
-              logo: 'https://www.thewisdomhousechurch.org/og-image.jpg',
-              sameAs: [
-                'https://www.youtube.com/@wisdomhousehq',
-                'https://www.facebook.com/wisdomhousehq',
-                'https://www.instagram.com/wisdomhousehq',
-              ],
-              contactPoint: {
-                '@type': 'ContactPoint',
-                contactType: 'customer service',
-                availableLanguage: ['English'],
-              },
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
         <ClientLayout>{children}</ClientLayout>
       </body>
