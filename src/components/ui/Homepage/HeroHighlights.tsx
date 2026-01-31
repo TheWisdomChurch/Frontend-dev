@@ -10,6 +10,7 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { Container } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 
 const highlights = [
   {
@@ -44,6 +45,7 @@ const highlights = [
 export default function HeroHighlights() {
   const { colorScheme = lightShades } = useTheme();
   const [modal, setModal] = useState<'visit' | 'watch' | 'join' | null>(null);
+  const { open } = useServiceUnavailable();
 
   const modalCopy = {
     visit: {
@@ -95,7 +97,19 @@ export default function HeroHighlights() {
               <h3 className="text-2xl font-black">{copy.title}</h3>
               <p className="text-white/70 text-sm leading-relaxed">{copy.description}</p>
             </div>
-            <form className="mt-4 space-y-3">
+            <form
+              className="mt-4 space-y-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setModal(null);
+                open({
+                  title: 'Service not available yet',
+                  message:
+                    'We are polishing this experience for production. Please check back soon.',
+                  actionLabel: 'Okay, thanks',
+                });
+              }}
+            >
               <input
                 type="text"
                 placeholder="Full name"

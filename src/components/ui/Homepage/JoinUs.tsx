@@ -10,6 +10,7 @@ import { Users, Video, Music, Baby, Cpu, Users2, ArrowRight, Sparkles } from 'lu
 import { Section, Container } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { H2, BodySM, SmallText, Caption } from '@/components/text';
 import { Workforce_bg } from '@/components/assets';
 
@@ -60,6 +61,7 @@ const departments = [
 
 export default function JoinWisdomHouse() {
   const { colorScheme } = useTheme();
+  const { open } = useServiceUnavailable();
 
   const [submitted, setSubmitted] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -189,11 +191,16 @@ export default function JoinWisdomHouse() {
 
   const marriedValue = watch('married');
 
-  const onModalSubmit = handleModalSubmit((data) => {
-    console.log('Workforce submission', data);
+  const onModalSubmit = handleModalSubmit(() => {
     setOpenModal(false);
     resetModal();
     setSelectedDept('');
+    open({
+      title: 'Serving sign-up opening soon',
+      message:
+        'We are preparing this experience for production. Please check back shortly.',
+      actionLabel: 'Got it',
+    });
   });
 
   // Keep RHF "department" in sync if user opens modal from a department card

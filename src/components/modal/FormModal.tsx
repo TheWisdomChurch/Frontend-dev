@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { 
   Loader2, 
   Check, 
@@ -43,7 +44,7 @@ interface EventRegistrationModalProps {
   };
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: RegistrationData) => Promise<void>;
+  onSubmit?: (data: RegistrationData) => Promise<void>;
   defaultValues?: Partial<RegistrationData>;
 }
 
@@ -100,6 +101,7 @@ export const EventRegistrationModal = ({
   onSubmit,
   defaultValues = {},
 }: EventRegistrationModalProps) => {
+  const { open } = useServiceUnavailable();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState<'personal' | 'volunteer' | 'additional'>('personal');
 
@@ -138,6 +140,16 @@ export const EventRegistrationModal = ({
   const handleFormSubmit = async (data: RegistrationData) => {
     setIsSubmitting(true);
     try {
+      if (!onSubmit) {
+        onClose();
+        open({
+          title: 'Registration opening soon',
+          message:
+            'This registration flow is being prepared for production. Please check back shortly.',
+          actionLabel: 'Okay, thanks',
+        });
+        return;
+      }
       // Add event info to data
       const submissionData = {
         ...data,

@@ -40,6 +40,7 @@ import {
   Info
 } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import React from 'react';
 
 // Department types
@@ -280,7 +281,7 @@ interface JoinUsModalProps {
   department: DepartmentType;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: JoinFormData) => Promise<void>;
+  onSubmit?: (data: JoinFormData) => Promise<void>;
   defaultValues?: Partial<JoinFormData>;
 }
 
@@ -292,6 +293,7 @@ export const JoinUsModal = ({
   defaultValues = {},
 }: JoinUsModalProps) => {
   const { colorScheme } = useTheme();
+  const { open } = useServiceUnavailable();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState<'personal' | 'department' | 'availability'>('personal');
   const [selectedRole, setSelectedRole] = useState<string>('');
@@ -343,6 +345,17 @@ export const JoinUsModal = ({
         department_description: departmentConfig.description,
         applied_at: new Date().toISOString(),
       };
+
+      if (!onSubmit) {
+        onClose();
+        open({
+          title: 'Applications opening soon',
+          message:
+            'We are preparing this sign-up flow for production. Please check back shortly.',
+          actionLabel: 'Got it',
+        });
+        return;
+      }
 
       await onSubmit(submissionData);
       reset();

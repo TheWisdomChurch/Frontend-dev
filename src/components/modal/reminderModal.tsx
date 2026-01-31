@@ -5,6 +5,7 @@ import { Calendar, MapPin, Clock, Loader2 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 
 interface ReminderModalProps {
   event: {
@@ -16,7 +17,7 @@ interface ReminderModalProps {
   };
   isOpen: boolean;
   onClose: () => void;
-  onSetReminder: (data: { email: string; frequency: string }) => Promise<void>;
+  onSetReminder?: (data: { email: string; frequency: string }) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -27,6 +28,7 @@ export const ReminderModal = ({
   onSetReminder,
   isLoading = false,
 }: ReminderModalProps) => {
+  const { open } = useServiceUnavailable();
   const [email, setEmail] = useState('');
   const [frequency, setFrequency] = useState('weekly');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,6 +51,16 @@ export const ReminderModal = ({
 
     setIsSubmitting(true);
     try {
+      if (!onSetReminder) {
+        onClose();
+        open({
+          title: 'Reminders opening soon',
+          message:
+            'We are preparing reminders for production. Please check back shortly.',
+          actionLabel: 'Sounds good',
+        });
+        return;
+      }
       await onSetReminder({ email, frequency });
       toast.success(`Reminder set for ${event.title}!`);
       setEmail('');
