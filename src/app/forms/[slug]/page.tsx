@@ -73,8 +73,8 @@ export default function PublicFormPage() {
     };
   }, [formSlug]);
 
-  const bannerDesktop = event?.bannerUrl || event?.imageUrl || EventBannerDesktop;
-  const bannerMobile = event?.bannerUrl || event?.imageUrl || EventBannerMobile;
+  const bannerDesktop = EventBannerDesktop;
+  const bannerMobile = EventBannerMobile;
 
   const eventMeta = useMemo(() => {
     if (!event) return null;
