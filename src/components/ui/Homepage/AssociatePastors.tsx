@@ -79,17 +79,6 @@ export default function AssociatePastors() {
               Trusted voices helping steward the vision. Each carries a unique grace for the house.
             </BodySM>
           </div>
-          <CustomButton
-            variant="primary"
-            size="sm"
-            curvature="full"
-            className="text-black font-semibold px-5 py-2 sm:px-6 sm:py-2.5"
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-            style={{ backgroundColor: primary }}
-            onClick={() => router.push('/leadership')}
-          >
-            View more
-          </CustomButton>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -119,6 +108,20 @@ export default function AssociatePastors() {
               )}
             </div>
           ))}
+        </div>
+
+        <div className="flex justify-center lg:justify-end pt-2">
+          <CustomButton
+            variant="primary"
+            size="sm"
+            curvature="full"
+            className="text-black font-semibold px-5 py-2 sm:px-6 sm:py-2.5"
+            rightIcon={<ArrowRight className="w-4 h-4" />}
+            style={{ backgroundColor: primary }}
+            onClick={() => router.push('/leadership')}
+          >
+            View more
+          </CustomButton>
         </div>
       </Container>
     </Section>
