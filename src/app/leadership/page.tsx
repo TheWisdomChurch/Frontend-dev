@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, H3, H4, P, SmallText, Caption } from '@/components/text';
 import { hero_bg_2 } from '@/components/assets';
@@ -30,6 +30,8 @@ import CustomButton from '@/components/utils/buttons/CustomButton';
 import { createPortal } from 'react-dom';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ColorScheme } from '@/components/colors/colorScheme';
+import { WorkforceRegistrationModal } from '@/components/modal/WorkforceRegistrationModal';
+import apiClient from '@/lib/api';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -1159,6 +1161,7 @@ const LeadersPage = () => {
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVisitChurchModalOpen, setIsVisitChurchModalOpen] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [isWorkforceModalOpen, setIsWorkforceModalOpen] = useState(false);
   const [selectedLeader, setSelectedLeader] = useState<Leader | null>(null);
   const [selectedType, setSelectedType] = useState<
     'pastor' | 'deacon' | 'ministry'
@@ -1188,6 +1191,14 @@ const LeadersPage = () => {
     if (element && !cardsRef.current.includes(element)) {
       cardsRef.current.push(element);
     }
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setIsWorkforceModalOpen(true);
+    }, 180000);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   return (
@@ -1579,6 +1590,12 @@ const LeadersPage = () => {
         isOpen={isVisitChurchModalOpen}
         onClose={() => setIsVisitChurchModalOpen(false)}
         colorScheme={colorScheme}
+      />
+
+      <WorkforceRegistrationModal
+        isOpen={isWorkforceModalOpen}
+        onClose={() => setIsWorkforceModalOpen(false)}
+        onSubmit={apiClient.applyWorkforce}
       />
     </div>
   );

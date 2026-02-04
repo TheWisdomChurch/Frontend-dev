@@ -1,84 +1,32 @@
 'use client';
 
-import { BaseModal } from './Base';
+import { BaseModal, modalStyles } from './Base';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
-import { 
-  Loader2, 
-  Check, 
-  Users, 
-  Music, 
+import {
+  Loader2,
+  Users,
+  Music,
   Shield,
   UserCheck,
-  Calendar,
-  MapPin,
-  Clock,
   Heart,
   Building,
   DoorOpen,
   Bell,
-  Mail,
-  Phone,
-  User,
-  Briefcase,
-  MessageSquare,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
+import { eventRegistrationSchema } from '@/lib/validation';
+import type {
+  EventRegistrationData,
+  EventRegistrationModalProps,
+} from '@/lib/types';
+import type { EventRegistrationFormSchema } from '@/lib/validation';
+import { SuccessModal } from './SuccessModal';
 
-interface EventRegistrationModalProps {
-  event: {
-    id: string;
-    title: string;
-    description?: string;
-    start_date: string;
-    end_date?: string;
-    time: string;
-    location: string;
-    event_type: 'conference' | 'service' | 'program' | 'special' | 'lifting' | 'training';
-    image_url?: string;
-    requires_volunteers?: boolean;
-    volunteer_roles?: string[];
-  };
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit?: (data: RegistrationData) => Promise<void>;
-  defaultValues?: Partial<RegistrationData>;
-  headline?: string;
-  lead?: string;
-  eyebrow?: string;
-  highlight?: string;
-  ctaNote?: string;
-}
-
-interface RegistrationData {
-  // Personal Info
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  country: string;
-  city: string;
-  
-  // Attendance
-  attendance_type: 'attendee' | 'volunteer' | 'both';
-  volunteer_role?: string;
-  custom_role?: string;
-  
-  // Additional Info
-  occupation: string;
-  previous_experience?: string;
-  special_needs?: string;
-  expectations?: string;
-  
-  // Event Info
-  event_id: string;
-  registration_type: string;
-}
-
-// Volunteer role options
 const VOLUNTEER_ROLES = [
   { id: 'service_prep', label: 'Service Preparatory Unit', icon: <Bell className="w-4 h-4" /> },
   { id: 'music', label: 'Music Department', icon: <Music className="w-4 h-4" /> },
@@ -93,10 +41,18 @@ const VOLUNTEER_ROLES = [
   { id: 'other', label: 'Other (Please specify)', icon: <Users className="w-4 h-4" /> },
 ];
 
-// Country options (simplified)
 const COUNTRIES = [
-  'United States', 'United Kingdom', 'Canada', 'Nigeria', 'Ghana',
-  'South Africa', 'Kenya', 'Australia', 'Germany', 'France', 'Other'
+  'United States',
+  'United Kingdom',
+  'Canada',
+  'Nigeria',
+  'Ghana',
+  'South Africa',
+  'Kenya',
+  'Australia',
+  'Germany',
+  'France',
+  'Other',
 ];
 
 export const EventRegistrationModal = ({
@@ -113,7 +69,10 @@ export const EventRegistrationModal = ({
 }: EventRegistrationModalProps) => {
   const { open } = useServiceUnavailable();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [step, setStep] = useState<'personal' | 'volunteer' | 'additional'>('personal');
+
+  const resolver = useMemo(() => zodResolver(eventRegistrationSchema), []);
 
   const {
     register,
@@ -122,7 +81,9 @@ export const EventRegistrationModal = ({
     watch,
     setValue,
     trigger,
-  } = useForm<RegistrationData>({
+  } = useForm<EventRegistrationFormSchema>({
+    resolver,
+    mode: 'onChange',
     defaultValues: {
       ...defaultValues,
       event_id: event.id,
@@ -131,23 +92,20 @@ export const EventRegistrationModal = ({
     },
   });
 
-  // Watched values
   const attendanceType = watch('attendance_type');
   const volunteerRole = watch('volunteer_role');
-  const customRole = watch('custom_role');
 
-  // Format event dates
   const formatEventDate = () => {
     const start = new Date(event.start_date);
     const end = event.end_date ? new Date(event.end_date) : null;
-    
+
     if (end) {
       return `${format(start, 'MMM dd')} - ${format(end, 'MMM dd, yyyy')}`;
     }
     return format(start, 'MMMM dd, yyyy');
   };
 
-  const handleFormSubmit = async (data: RegistrationData) => {
+  const handleFormSubmit = async (data: EventRegistrationFormSchema) => {
     setIsSubmitting(true);
     try {
       if (!onSubmit) {
@@ -160,20 +118,17 @@ export const EventRegistrationModal = ({
         });
         return;
       }
-      // Add event info to data
       const submissionData = {
-        ...data,
+        ...(data as EventRegistrationData),
         event_title: event.title,
         event_date: event.start_date,
         event_time: event.time,
         event_location: event.location,
-      };
+      } as EventRegistrationData & Record<string, any>;
 
       await onSubmit(submissionData);
-      toast.success('Registration successful!', {
-        duration: 4000,
-      });
       onClose();
+      setShowSuccess(true);
     } catch (error) {
       toast.error('Registration failed. Please try again.');
     } finally {
@@ -182,497 +137,266 @@ export const EventRegistrationModal = ({
   };
 
   const handleNextStep = async () => {
-    let isValid = false;
-    
+    let isStepValid = false;
+
     switch (step) {
       case 'personal':
-        isValid = await trigger(['firstName', 'lastName', 'email', 'phone', 'country', 'city']);
+        isStepValid = await trigger([
+          'firstName',
+          'lastName',
+          'email',
+          'phone',
+          'country',
+          'city',
+        ]);
         break;
       case 'volunteer':
         if (attendanceType !== 'attendee') {
-          isValid = await trigger(['volunteer_role']);
+          isStepValid = await trigger(['volunteer_role', 'custom_role']);
         } else {
-          isValid = true;
+          isStepValid = true;
         }
         break;
       case 'additional':
-        isValid = await trigger(['occupation']);
+        isStepValid = await trigger(['occupation']);
         break;
     }
 
-    if (isValid) {
-      if (step === 'personal') {
-        if (attendanceType === 'attendee') {
-          setStep('additional');
-        } else {
-          setStep('volunteer');
-        }
-      } else if (step === 'volunteer') {
-        setStep('additional');
-      } else {
-        // Final step - submit
-        handleSubmit(handleFormSubmit)();
-      }
-    }
-  };
+    if (!isStepValid) return;
 
-  const handlePrevStep = () => {
-    if (step === 'volunteer') {
-      setStep('personal');
-    } else if (step === 'additional') {
+    if (step === 'personal') {
       if (attendanceType === 'attendee') {
-        setStep('personal');
+        setStep('additional');
       } else {
         setStep('volunteer');
       }
+      return;
     }
+
+    if (step === 'volunteer') {
+      setStep('additional');
+      return;
+    }
+
+    handleSubmit(handleFormSubmit)();
   };
 
-  // Event type specific configurations
-  const getEventConfig = () => {
-    const configs = {
-      conference: {
-        title: 'Conference Registration',
-        subtitle: 'Join our spiritual gathering',
-        requiresVolunteers: true,
-      },
-      lifting: {
-        title: '7 Nights of Lifting Registration',
-        subtitle: 'Seven powerful nights of spiritual elevation',
-        requiresVolunteers: true,
-      },
-      service: {
-        title: 'Service Registration',
-        subtitle: 'Join us for worship',
-        requiresVolunteers: true,
-      },
-      program: {
-        title: 'Program Registration',
-        subtitle: 'Special church program',
-        requiresVolunteers: true,
-      },
-      special: {
-        title: 'Special Event Registration',
-        subtitle: 'Join our special gathering',
-        requiresVolunteers: true,
-      },
-      training: {
-        title: 'Training Registration',
-        subtitle: 'Ministry training session',
-        requiresVolunteers: false,
-      },
-    };
-
-    return configs[event.event_type] || configs.conference;
+  const handlePrevStep = () => {
+    if (step === 'volunteer') setStep('personal');
+    if (step === 'additional') setStep(attendanceType === 'attendee' ? 'personal' : 'volunteer');
   };
-
-  const eventConfig = getEventConfig();
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={event.title}
-      subtitle={`${formatEventDate()} • ${event.time} • ${event.location}`}
-      maxWidth="max-w-2xl"
-      preventClose={isSubmitting}
-    >
-      {(headline || lead || eyebrow || highlight || ctaNote) && (
-        <div className="mb-6 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-black/70 to-black/90 p-5 text-white shadow-2xl">
-          <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/70">
-            <span className="rounded-full border border-white/20 px-3 py-1">
-              {eyebrow || 'Featured event'}
-            </span>
-            {highlight && (
-              <span className="rounded-full bg-white/10 px-3 py-1 text-white/80">
-                {highlight}
-              </span>
-            )}
-          </div>
-          {headline && (
-            <h3 className="mt-3 text-xl sm:text-2xl font-black leading-tight">
-              {headline}
-            </h3>
-          )}
-          {lead && (
-            <p className="mt-2 text-sm sm:text-base text-white/70 leading-relaxed">
-              {lead}
-            </p>
-          )}
-          {ctaNote && (
-            <p className="mt-3 text-xs sm:text-sm text-white/60">
-              {ctaNote}
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* Progress Steps */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          {['personal', 'volunteer', 'additional'].map((stepName, index) => (
-            <div key={stepName} className="flex items-center">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === stepName
-                    ? 'bg-blue-500 text-white'
-                    : step === 'volunteer' && attendanceType === 'attendee'
-                    ? 'bg-gray-200 text-gray-500'
-                    : 'bg-gray-100 text-gray-700'
-                }`}
-              >
-                {index + 1}
-              </div>
-              <div className="ml-2 text-sm font-medium capitalize">{stepName}</div>
-              {index < 2 && (
-                <div className="w-12 h-1 mx-2 bg-gray-200 rounded-full"></div>
+    <>
+      <BaseModal
+        isOpen={isOpen}
+        onClose={onClose}
+        title={headline || `Register for ${event.title}`}
+        subtitle={`${formatEventDate()} • ${event.location || 'Location TBD'}`}
+        maxWidth="max-w-3xl"
+        isLoading={isSubmitting}
+        loadingText="Submitting..."
+        preventClose={isSubmitting}
+      >
+        <div className="space-y-4">
+          {(eyebrow || lead) && (
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              {eyebrow && (
+                <p className="text-xs uppercase tracking-widest text-white/60 mb-2">
+                  {eyebrow}
+                </p>
+              )}
+              {lead && <p className="text-sm text-white/80 leading-relaxed">{lead}</p>}
+              {highlight && (
+                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-yellow-400/20 px-3 py-1 text-xs text-yellow-200">
+                  <AlertCircle className="h-3.5 w-3.5" />
+                  {highlight}
+                </div>
               )}
             </div>
-          ))}
-        </div>
-      </div>
+          )}
 
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-        {/* Step 1: Personal Information */}
-        {step === 'personal' && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <User className="w-5 h-5" />
-              Personal Information
-            </h3>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">First Name *</label>
-                <input
-                  type="text"
-                  {...register('firstName', { required: 'First name is required' })}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="John"
-                />
-                {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-1">Last Name *</label>
-                <input
-                  type="text"
-                  {...register('lastName', { required: 'Last name is required' })}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Doe"
-                />
-                {errors.lastName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Email *</label>
-                <input
-                  type="email"
-                  {...register('email', { 
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address'
-                    }
-                  })}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="john@example.com"
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-1">Phone *</label>
-                <input
-                  type="tel"
-                  {...register('phone', { required: 'Phone is required' })}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="+1 (555) 123-4567"
-                />
-                {errors.phone && (
-                  <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Country *</label>
-                <select
-                  {...register('country', { required: 'Country is required' })}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Country</option>
-                  {COUNTRIES.map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
-                </select>
-                {errors.country && (
-                  <p className="mt-1 text-sm text-red-600">{errors.country.message}</p>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-1">City *</label>
-                <input
-                  type="text"
-                  {...register('city', { required: 'City is required' })}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="New York"
-                />
-                {errors.city && (
-                  <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Attendance Type Selection */}
-            {eventConfig.requiresVolunteers && (
-              <div>
-                <h4 className="text-sm font-medium mb-2">How would you like to participate?</h4>
-                <div className="grid grid-cols-3 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setValue('attendance_type', 'attendee')}
-                    className={`p-3 border rounded-lg text-center transition-all ${
-                      attendanceType === 'attendee'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <Users className="w-5 h-5 mx-auto mb-1" />
-                    <div className="font-medium">Attendee</div>
-                    <div className="text-xs text-gray-500">Just attending</div>
-                  </button>
-                  
-                  <button
-                    type="button"
-                    onClick={() => setValue('attendance_type', 'volunteer')}
-                    className={`p-3 border rounded-lg text-center transition-all ${
-                      attendanceType === 'volunteer'
-                        ? 'border-green-500 bg-green-50 text-green-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <Heart className="w-5 h-5 mx-auto mb-1" />
-                    <div className="font-medium">Volunteer</div>
-                    <div className="text-xs text-gray-500">Serve at event</div>
-                  </button>
-                  
-                  <button
-                    type="button"
-                    onClick={() => setValue('attendance_type', 'both')}
-                    className={`p-3 border rounded-lg text-center transition-all ${
-                      attendanceType === 'both'
-                        ? 'border-purple-500 bg-purple-50 text-purple-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <UserCheck className="w-5 h-5 mx-auto mb-1" />
-                    <div className="font-medium">Both</div>
-                    <div className="text-xs text-gray-500">Attend & serve</div>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Step 2: Volunteer Role Selection */}
-        {step === 'volunteer' && attendanceType !== 'attendee' && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Heart className="w-5 h-5" />
-              Volunteer Role Selection
-            </h3>
-            
-            <div>
-              <h4 className="text-sm font-medium mb-3">Select a volunteer role *</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {VOLUNTEER_ROLES.map(role => (
-                  <button
-                    key={role.id}
-                    type="button"
-                    onClick={() => {
-                      setValue('volunteer_role', role.id);
-                      if (role.id !== 'other') {
-                        setValue('custom_role', '');
-                      }
-                    }}
-                    className={`p-3 border rounded-lg text-left transition-all ${
-                      volunteerRole === role.id
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-gray-600">{role.icon}</span>
-                      <span className="font-medium text-sm">{role.label}</span>
-                    </div>
-                    {role.id === 'other' && (
-                      <input
-                        type="text"
-                        {...register('custom_role')}
-                        onClick={(e) => e.stopPropagation()}
-                        className={`mt-2 w-full px-2 py-1 text-sm border rounded ${
-                          volunteerRole === 'other'
-                            ? 'border-blue-300'
-                            : 'border-gray-200'
-                        }`}
-                        placeholder="Specify your role"
-                        onChange={(e) => {
-                          setValue('custom_role', e.target.value);
-                          if (e.target.value.trim() && volunteerRole !== 'other') {
-                            setValue('volunteer_role', 'other');
-                          }
-                        }}
-                      />
-                    )}
-                  </button>
-                ))}
-              </div>
-              {errors.volunteer_role && (
-                <p className="mt-1 text-sm text-red-600">{errors.volunteer_role.message}</p>
-              )}
-            </div>
-
-            {/* Previous Experience */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Previous Volunteer Experience (Optional)
-              </label>
-              <textarea
-                {...register('previous_experience')}
-                rows={3}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Have you volunteered before? If yes, please share your experience..."
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Additional Information */}
-        {step === 'additional' && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Briefcase className="w-5 h-5" />
-              Additional Information
-            </h3>
-            
-            <div>
-              <label className="block text-sm font-medium mb-1">Occupation *</label>
-              <input
-                type="text"
-                {...register('occupation', { required: 'Occupation is required' })}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., Software Engineer, Teacher, Student, etc."
-              />
-              {errors.occupation && (
-                <p className="mt-1 text-sm text-red-600">{errors.occupation.message}</p>
-              )}
-            </div>
-
-            {attendanceType !== 'attendee' && (
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Why do you want to volunteer? *
-                </label>
-                <textarea
-                  {...register('expectations', { required: 'Please tell us why you want to volunteer' })}
-                  rows={3}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Share your motivation and what you hope to contribute..."
-                />
-                {errors.expectations && (
-                  <p className="mt-1 text-sm text-red-600">{errors.expectations.message}</p>
-                )}
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Special Needs or Accommodations (Optional)
-              </label>
-              <textarea
-                {...register('special_needs')}
-                rows={2}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Any special requirements we should know about?"
-              />
-            </div>
-
-            {/* Summary Card */}
-            <div className="border rounded-lg p-4 bg-gray-50">
-              <h4 className="font-medium mb-2">Registration Summary</h4>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="text-gray-600">Event:</span>
-                  <div className="font-medium">{event.title}</div>
-                </div>
-                <div>
-                  <span className="text-gray-600">Date:</span>
-                  <div className="font-medium">{formatEventDate()}</div>
-                </div>
-                <div>
-                  <span className="text-gray-600">Time:</span>
-                  <div className="font-medium">{event.time}</div>
-                </div>
-                <div>
-                  <span className="text-gray-600">Location:</span>
-                  <div className="font-medium">{event.location}</div>
-                </div>
-                <div>
-                  <span className="text-gray-600">Role:</span>
-                  <div className="font-medium capitalize">{attendanceType}</div>
-                </div>
-                {volunteerRole && volunteerRole !== 'attendee' && (
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+            {step === 'personal' && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <span className="text-gray-600">Volunteer Role:</span>
-                    <div className="font-medium">
-                      {VOLUNTEER_ROLES.find(r => r.id === volunteerRole)?.label}
-                      {customRole && ` (${customRole})`}
-                    </div>
+                    <label className={modalStyles.label}>First Name *</label>
+                    <input className={modalStyles.input} {...register('firstName')} />
+                    {errors.firstName && (
+                      <p className={modalStyles.errorText}>{errors.firstName.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className={modalStyles.label}>Last Name *</label>
+                    <input className={modalStyles.input} {...register('lastName')} />
+                    {errors.lastName && (
+                      <p className={modalStyles.errorText}>{errors.lastName.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className={modalStyles.label}>Email *</label>
+                    <input className={modalStyles.input} {...register('email')} />
+                    {errors.email && (
+                      <p className={modalStyles.errorText}>{errors.email.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className={modalStyles.label}>Phone *</label>
+                    <input className={modalStyles.input} {...register('phone')} />
+                    {errors.phone && (
+                      <p className={modalStyles.errorText}>{errors.phone.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className={modalStyles.label}>Country *</label>
+                    <select className={modalStyles.select} {...register('country')}>
+                      <option value="">Select country</option>
+                      {COUNTRIES.map(country => (
+                        <option key={country} value={country}>
+                          {country}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.country && (
+                      <p className={modalStyles.errorText}>{errors.country.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className={modalStyles.label}>City *</label>
+                    <input className={modalStyles.input} {...register('city')} />
+                    {errors.city && (
+                      <p className={modalStyles.errorText}>{errors.city.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className={modalStyles.label}>Attendance Type *</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {(['attendee', 'volunteer', 'both'] as const).map(option => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setValue('attendance_type', option)}
+                        className={`rounded-lg border px-3 py-2 text-sm capitalize transition ${
+                          watch('attendance_type') === option
+                            ? 'border-yellow-400 bg-yellow-400/10 text-yellow-100'
+                            : 'border-white/10 text-white/70 hover:border-white/30'
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {step === 'volunteer' && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {VOLUNTEER_ROLES.map(role => (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => setValue('volunteer_role', role.id)}
+                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition ${
+                        volunteerRole === role.id
+                          ? 'border-yellow-400 bg-yellow-400/10 text-yellow-100'
+                          : 'border-white/10 text-white/70 hover:border-white/30'
+                      }`}
+                    >
+                      {role.icon}
+                      {role.label}
+                    </button>
+                  ))}
+                </div>
+                {errors.volunteer_role && (
+                  <p className={modalStyles.errorText}>{errors.volunteer_role.message}</p>
+                )}
+
+                {volunteerRole === 'other' && (
+                  <div>
+                    <label className={modalStyles.label}>Specify Role *</label>
+                    <input className={modalStyles.input} {...register('custom_role')} />
+                    {errors.custom_role && (
+                      <p className={modalStyles.errorText}>{errors.custom_role.message}</p>
+                    )}
                   </div>
                 )}
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between pt-4 border-t">
-          <button
-            type="button"
-            onClick={handlePrevStep}
-            disabled={step === 'personal' || isSubmitting}
-            className={`px-4 py-2 rounded-lg border ${
-              step === 'personal' || isSubmitting
-                ? 'opacity-50 cursor-not-allowed'
-                : 'hover:bg-gray-50'
-            }`}
-          >
-            Back
-          </button>
-          
-          <button
-            type="button"
-            onClick={handleNextStep}
-            disabled={isSubmitting}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-            {step === 'additional' ? 'Complete Registration' : 'Continue'}
-          </button>
+            {step === 'additional' && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className={modalStyles.label}>Occupation *</label>
+                    <input className={modalStyles.input} {...register('occupation')} />
+                    {errors.occupation && (
+                      <p className={modalStyles.errorText}>{errors.occupation.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className={modalStyles.label}>Previous Experience</label>
+                    <input className={modalStyles.input} {...register('previous_experience')} />
+                  </div>
+                </div>
+                <div>
+                  <label className={modalStyles.label}>Special Needs</label>
+                  <textarea className={modalStyles.textarea} rows={3} {...register('special_needs')} />
+                </div>
+                <div>
+                  <label className={modalStyles.label}>Expectations</label>
+                  <textarea className={modalStyles.textarea} rows={3} {...register('expectations')} />
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={handlePrevStep}
+                disabled={step === 'personal'}
+                className="text-sm text-white/70 hover:text-white disabled:opacity-40"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={handleNextStep}
+                disabled={isSubmitting}
+                className={modalStyles.primaryButton}
+                style={{ backgroundColor: '#facc15' }}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Submitting...
+                  </span>
+                ) : step === 'additional' ? (
+                  'Submit Registration'
+                ) : (
+                  'Continue'
+                )}
+              </button>
+            </div>
+
+            {ctaNote && (
+              <p className="text-xs text-white/60 text-center">{ctaNote}</p>
+            )}
+          </form>
         </div>
-      </form>
-    </BaseModal>
+      </BaseModal>
+
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title="Registration complete"
+        message={`You are registered for ${event.title}.`}
+        actionLabel="Close"
+      />
+    </>
   );
 };
