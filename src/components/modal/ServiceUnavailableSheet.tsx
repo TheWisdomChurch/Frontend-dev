@@ -5,14 +5,7 @@ import { Sparkles, Clock, X } from 'lucide-react';
 import { BaseModal } from '@/components/modal/Base';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import CustomButton from '@/components/utils/buttons/CustomButton';
-
-interface ServiceUnavailableSheetProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  message?: string;
-  actionLabel?: string;
-}
+import type { ServiceUnavailableSheetProps } from '@/lib/types';
 
 export default function ServiceUnavailableSheet({
   isOpen,

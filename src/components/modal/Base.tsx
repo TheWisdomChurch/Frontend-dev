@@ -36,6 +36,22 @@ interface BaseModalProps {
   forceBottomSheet?: boolean;
 }
 
+export const modalStyles = {
+  sectionTitle: 'text-sm font-semibold text-white/80',
+  label: 'block text-xs font-semibold uppercase tracking-wide text-white/70 mb-1',
+  input:
+    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30',
+  select:
+    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/30',
+  textarea:
+    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30',
+  errorText: 'text-xs text-red-400 mt-1',
+  primaryButton:
+    'w-full rounded-lg px-4 py-3 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed',
+  ghostButton:
+    'w-full rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10 border border-white/20',
+};
+
 type ViewportSize = 'mobile' | 'tablet' | 'desktop';
 
 // Focus trap helper function

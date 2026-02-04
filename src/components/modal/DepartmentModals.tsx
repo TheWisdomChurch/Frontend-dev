@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect, JSX } from 'react';
+import { useState, useCallback, useEffect, JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,22 +35,14 @@ import {
   Home,
   Church,
   Palette,
-  X,
   ChevronRight,
   Info
 } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import React from 'react';
-
-// Department types
-export type DepartmentType = 
-  | 'Ushers'
-  | 'Media Team'
-  | 'Choir'
-  | 'Children Ministry'
-  | 'Youth Ministry'
-  | 'Technical Team';
+import { BaseModal } from './Base';
+import type { DepartmentType, JoinFormData, JoinUsModalProps } from '@/lib/types';
 
 // Department configuration
 const DEPARTMENT_CONFIG: Record<DepartmentType, {
@@ -147,9 +139,9 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
 };
 
 // Modern Modal Component
-const ModernModal = ({ 
-  isOpen, 
-  onClose, 
+const ModernModal = ({
+  isOpen,
+  onClose,
   title,
   subtitle,
   children,
@@ -160,60 +152,16 @@ const ModernModal = ({
   subtitle?: string;
   children: React.ReactNode;
 }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isOpen && mounted) {
-      const originalBody = document.body.style.overflow;
-      const originalHtml = document.documentElement.style.overflow;
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = originalBody;
-        document.documentElement.style.overflow = originalHtml;
-      };
-    }
-  }, [isOpen, mounted]);
-
-  if (!mounted || !isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        ref={modalRef}
-        className="relative w-full sm:w-full sm:max-w-2xl bg-gradient-to-b from-slate-950 to-slate-900 border border-slate-800/50 shadow-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto rounded-none sm:rounded-3xl"
-      >
-        {/* Header */}
-        <div className="sticky top-0 z-10 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/30 px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-center">
-          <div className="pr-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-white">{title}</h2>
-            {subtitle && (
-              <p className="text-slate-400 text-sm mt-1">{subtitle}</p>
-            )}
-          </div>
-          <button 
-            onClick={onClose}
-            className="text-slate-400 hover:text-white transition p-2 flex-shrink-0"
-          >
-            <X className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
-        </div>
-        
-        {/* Content */}
-        <div className="p-4 sm:p-8">
-          {children}
-        </div>
-      </div>
-    </div>
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={title}
+      subtitle={subtitle}
+      maxWidth="max-w-2xl"
+    >
+      {children}
+    </BaseModal>
   );
 };
 
@@ -275,15 +223,6 @@ const joinFormSchema = z.object({
   }),
 });
 
-type JoinFormData = z.infer<typeof joinFormSchema>;
-
-interface JoinUsModalProps {
-  department: DepartmentType;
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit?: (data: JoinFormData) => Promise<void>;
-  defaultValues?: Partial<JoinFormData>;
-}
 
 export const JoinUsModal = ({
   department,

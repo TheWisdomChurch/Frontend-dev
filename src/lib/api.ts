@@ -7,6 +7,7 @@ import type {
   Testimonial,
   CreateTestimonialRequest,
 } from './apiTypes';
+import type { WorkforceRegistrationData } from './types';
 
 /* ============================================================================
    API ORIGIN
@@ -182,6 +183,45 @@ function toQueryString(params?: Record<string, any>): string {
   return qs ? `?${qs}` : '';
 }
 
+function mapWorkforcePayload(payload: WorkforceRegistrationData) {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    title,
+    department,
+    leadershipCategory,
+    birthMonth,
+    anniversaryMonth,
+    isExistingMember,
+    currentAssignment,
+    notes,
+  } = payload;
+
+  return {
+    firstName,
+    lastName,
+    email,
+    phone,
+    title,
+    department,
+    leadershipCategory,
+    birthMonth,
+    anniversaryMonth,
+    isExistingMember,
+    currentAssignment,
+    notes,
+    first_name: firstName,
+    last_name: lastName,
+    leadership_category: leadershipCategory,
+    birth_month: birthMonth,
+    anniversary_month: anniversaryMonth,
+    is_existing_member: isExistingMember,
+    current_assignment: currentAssignment,
+  };
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_V1_BASE_URL}${path}`;
 
@@ -310,6 +350,20 @@ export const apiClient = {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+  },
+
+  /* -----------------------------
+     WORKFORCE (public apply)
+     Go:
+       POST /api/v1/workforce/apply
+     ----------------------------- */
+
+  async applyWorkforce(payload: WorkforceRegistrationData): Promise<any> {
+    const res = await request<any>('/workforce/apply', {
+      method: 'POST',
+      body: JSON.stringify(mapWorkforcePayload(payload)),
+    });
+    return unwrapData<any>(res);
   },
 };
 

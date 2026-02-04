@@ -5,24 +5,7 @@ import { Calendar, Clock, MapPin, Share2, CalendarPlus, Check, Loader2 } from 'l
 import { format, addHours } from 'date-fns';
 import { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
-
-interface EventDetailsModalProps {
-  event: {
-    id: string;
-    title: string;
-    description: string;
-    start_date: string;
-    end_date?: string;
-    time: string;
-    location: string;
-    type: string;
-    image_url?: string;
-  };
-  isOpen: boolean;
-  onClose: () => void;
-  onRegister?: () => Promise<void>; // Made async
-  isLoading?: boolean;
-}
+import type { EventDetailsModalProps } from '@/lib/types';
 
 export const EventDetailsModal = ({
   event,

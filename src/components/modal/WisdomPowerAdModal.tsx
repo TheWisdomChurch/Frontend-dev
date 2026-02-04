@@ -2,11 +2,7 @@
 
 import { useCallback } from 'react';
 import { EventRegistrationModal } from '@/components/modal/FormModal';
-
-interface WisdomPowerAdModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import type { WisdomPowerAdModalProps } from '@/lib/types';
 
 const EVENT = {
   id: 'conference-2026',
