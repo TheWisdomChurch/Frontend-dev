@@ -7,6 +7,7 @@ import { FlexboxLayout } from '@/components/layout';
 import { H2, H3, H4, BaseText, Caption } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { storeClient } from '@/lib/api/storeClient';
 import {
   CheckCircle,
   Clock,
@@ -106,53 +107,37 @@ const OrderConfirmation = () => {
     { id: 'delivered', label: 'Delivered', icon: CheckCircle, active: false },
   ];
 
-  // Fetch order details (will be replaced with API call)
+  // Fetch order details (backend-ready)
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        // In a real app, this would be an API call to fetch order by ID
-        // For now, we'll create mock data based on URL params and cart state
+        const storedOrder =
+          (orderId ? await storeClient.getOrder(orderId) : null) ||
+          (await storeClient.getLastOrder());
 
-        // Get payment method from localStorage or default to 'transfer'
-        const storedPaymentMethod =
-          (localStorage.getItem('lastPaymentMethod') as PaymentMethod) ||
-          'transfer';
-        const storedCustomerInfo = JSON.parse(
-          localStorage.getItem('customerInfo') || '{}'
-        );
-        const storedBankDetails = JSON.parse(
-          localStorage.getItem('bankDetails') || '{}'
-        );
+        if (!storedOrder) {
+          setOrderDetails(null);
+          return;
+        }
 
-        const mockOrder: OrderDetails = {
-          orderId: orderId || 'WH-' + Date.now().toString(36).toUpperCase(),
-          orderDate: new Date().toISOString(),
-          status: 'pending',
-          paymentMethod: storedPaymentMethod,
-          paymentStatus:
-            storedPaymentMethod === 'delivery' ? 'pending' : 'processing',
-          subtotal: cartTotal,
-          deliveryFee:
-            storedPaymentMethod === 'delivery'
-              ? Math.max(1000, cartTotal * 0.1)
-              : 0,
-          total: parseFloat(amount || cartTotal.toString()),
-          items: cartItems,
-          customer: {
-            firstName: storedCustomerInfo.firstName || 'John',
-            lastName: storedCustomerInfo.lastName || 'Doe',
-            email: storedCustomerInfo.email || 'customer@example.com',
-            phone: storedCustomerInfo.phone || '+2348012345678',
-            address: storedCustomerInfo.address,
-            city: storedCustomerInfo.city,
-            state: storedCustomerInfo.state,
-            zipCode: storedCustomerInfo.zipCode,
-          },
-          bankDetails:
-            storedPaymentMethod === 'transfer' ? storedBankDetails : undefined,
+        const resolvedPaymentStatus: PaymentStatus =
+          storedOrder.paymentMethod === 'delivery' ? 'pending' : 'processing';
+
+        const mappedOrder: OrderDetails = {
+          orderId: storedOrder.orderId,
+          orderDate: storedOrder.orderDate,
+          status: storedOrder.status,
+          paymentMethod: storedOrder.paymentMethod as PaymentMethod,
+          paymentStatus: resolvedPaymentStatus,
+          subtotal: storedOrder.subtotal,
+          deliveryFee: storedOrder.deliveryFee,
+          total: storedOrder.total,
+          items: storedOrder.items,
+          customer: storedOrder.customer,
+          bankDetails: storedOrder.bankDetails,
         };
 
-        setOrderDetails(mockOrder);
+        setOrderDetails(mappedOrder);
       } catch (error) {
         console.error('Error fetching order details:', error);
       } finally {
@@ -160,9 +145,7 @@ const OrderConfirmation = () => {
       }
     };
 
-    if (orderId) {
-      fetchOrderDetails();
-    }
+    fetchOrderDetails();
   }, [orderId, amount, cartItems, cartTotal]);
 
   // Payment method display config
