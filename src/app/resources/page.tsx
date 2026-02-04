@@ -1,7 +1,7 @@
 // app/resources/page.tsx — THE ULTIMATE 2026 CHURCH RESOURCE HUB
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -22,6 +22,8 @@ export default function ResourcesPage() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [showLiveModal, setShowLiveModal] = useState(false);
   const [email, setEmail] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
 
   useEffect(() => {
     cardRefs.current.forEach((card, i) => {
@@ -65,6 +67,30 @@ export default function ResourcesPage() {
   const handleYouTubeRedirect = () => {
     window.open('https://www.youtube.com/@wisdomhousehq', '_blank');
   };
+
+  const categories = useMemo(
+    () => ['all', 'media', 'live', 'events', 'store', 'care', 'books'],
+    []
+  );
+
+  const filteredResources = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    return resourceLinks.filter(resource => {
+      const categoryMatch =
+        activeCategory === 'all' ||
+        (activeCategory === 'media' && resource.path.includes('/sermons')) ||
+        (activeCategory === 'live' && resource.isLiveService) ||
+        (activeCategory === 'events' && resource.path.includes('/events')) ||
+        (activeCategory === 'store' && resource.path.includes('/store')) ||
+        (activeCategory === 'care' && resource.path.includes('/pastoral')) ||
+        (activeCategory === 'books' &&
+          resource.path.includes('/publications'));
+
+      if (!term) return categoryMatch;
+      const haystack = `${resource.title} ${resource.subtitle} ${resource.description}`.toLowerCase();
+      return categoryMatch && haystack.includes(term);
+    });
+  }, [activeCategory, searchTerm]);
 
   return (
     <div className="min-h-screen">
@@ -261,8 +287,86 @@ export default function ResourcesPage() {
             </BodyLG>
           </div>
 
+          {/* Filters */}
+          <div className="max-w-4xl mx-auto mb-10">
+            <div
+              className="rounded-2xl p-4 sm:p-5 border backdrop-blur"
+              style={{
+                background: isDarkMode
+                  ? `${colorScheme.surface}cc`
+                  : 'rgba(255,255,255,0.8)',
+                borderColor: isDarkMode ? '#333' : '#E5E7EB',
+              }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] gap-3 items-center">
+                <input
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  placeholder="Search resources, sermons, events..."
+                  className="w-full px-4 py-2.5 rounded-xl text-sm border focus:outline-none focus:ring-2"
+                  style={{
+                    backgroundColor: isDarkMode ? colorScheme.surface : '#fff',
+                    color: isDarkMode ? '#fff' : '#000',
+                    borderColor: isDarkMode ? '#333' : '#E5E7EB',
+                  }}
+                />
+                <div className="flex flex-wrap items-center gap-2">
+                  {categories.map(category => (
+                    <button
+                      key={category}
+                      onClick={() => setActiveCategory(category)}
+                      className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition"
+                      style={{
+                        backgroundColor:
+                          activeCategory === category
+                            ? colorScheme.primary
+                            : 'transparent',
+                        color:
+                          activeCategory === category
+                            ? colorScheme.black
+                            : isDarkMode
+                              ? colorScheme.white
+                              : colorScheme.black,
+                        borderColor:
+                          activeCategory === category
+                            ? colorScheme.primary
+                            : isDarkMode
+                              ? '#333'
+                              : '#E5E7EB',
+                      }}
+                    >
+                      {category === 'all'
+                        ? 'All'
+                        : category === 'media'
+                          ? 'Media'
+                          : category === 'live'
+                            ? 'Live'
+                            : category === 'events'
+                              ? 'Events'
+                              : category === 'store'
+                                ? 'Store'
+                                : category === 'care'
+                                  ? 'Care'
+                                  : 'Books'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <Caption
+                className="text-xs mt-3"
+                style={{
+                  color: isDarkMode
+                    ? colorScheme.textSecondary
+                    : colorScheme.textTertiary,
+                }}
+              >
+                Showing {filteredResources.length} resources
+              </Caption>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {resourceLinks.map((resource, i) => {
+            {filteredResources.map((resource, i) => {
               // Create the icon component dynamically
               const IconComponent = resource.icon;
 
