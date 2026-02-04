@@ -46,6 +46,11 @@ interface EventRegistrationModalProps {
   onClose: () => void;
   onSubmit?: (data: RegistrationData) => Promise<void>;
   defaultValues?: Partial<RegistrationData>;
+  headline?: string;
+  lead?: string;
+  eyebrow?: string;
+  highlight?: string;
+  ctaNote?: string;
 }
 
 interface RegistrationData {
@@ -100,6 +105,11 @@ export const EventRegistrationModal = ({
   onClose,
   onSubmit,
   defaultValues = {},
+  headline,
+  lead,
+  eyebrow,
+  highlight,
+  ctaNote,
 }: EventRegistrationModalProps) => {
   const { open } = useServiceUnavailable();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -267,6 +277,36 @@ export const EventRegistrationModal = ({
       maxWidth="max-w-2xl"
       preventClose={isSubmitting}
     >
+      {(headline || lead || eyebrow || highlight || ctaNote) && (
+        <div className="mb-6 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-black/70 to-black/90 p-5 text-white shadow-2xl">
+          <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/70">
+            <span className="rounded-full border border-white/20 px-3 py-1">
+              {eyebrow || 'Featured event'}
+            </span>
+            {highlight && (
+              <span className="rounded-full bg-white/10 px-3 py-1 text-white/80">
+                {highlight}
+              </span>
+            )}
+          </div>
+          {headline && (
+            <h3 className="mt-3 text-xl sm:text-2xl font-black leading-tight">
+              {headline}
+            </h3>
+          )}
+          {lead && (
+            <p className="mt-2 text-sm sm:text-base text-white/70 leading-relaxed">
+              {lead}
+            </p>
+          )}
+          {ctaNote && (
+            <p className="mt-3 text-xs sm:text-sm text-white/60">
+              {ctaNote}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Progress Steps */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">

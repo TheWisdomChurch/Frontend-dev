@@ -18,6 +18,7 @@ import { useAutoSlide } from '@/components/utils/hooks/mainHeroHooks/useAutoSlid
 import { useHeroAnimation } from '@/components/utils/hooks/mainHeroHooks/useheroAnimation';
 import { useSlideAnimation } from '@/components/utils/hooks/mainHeroHooks/useSlideAnimation';
 import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
+import Image from 'next/image';
 
 // Type guard helper for image objects
 const isSimpleImage = (image: any): image is { src: string; alt?: string } => {
@@ -273,7 +274,7 @@ const HeroSection = ({
       ref={heroRef}
       padding="none"
       fullHeight={false}
-      className="relative w-full min-h-[110vh] md:min-h-[118vh] overflow-hidden bg-black"
+      className="relative w-full min-h-[85vh] md:min-h-[92vh] overflow-hidden bg-black"
     >
       {/* Background Slides - FIXED: Proper image handling */}
       {slides.map((slide, index) => (
@@ -286,22 +287,16 @@ const HeroSection = ({
         >
           <div className="relative w-full h-full">
             {/* Handle both StaticImageData and simple object types */}
-            {isSimpleImage(slide.image) ? (
-              <img
-                src={slide.image.src}
-                alt={slide.image.alt || slide.title}
-                className="w-full h-full object-cover object-center"
-                loading={index === 0 ? 'eager' : 'lazy'}
-              />
-            ) : (
-              <img
-                src={slide.image.src}
-                alt={slide.title}
-                className="w-full h-full object-cover"
-                loading={index === 0 ? 'eager' : 'lazy'}
-                style={{ objectPosition: 'center 28%' }}
-              />
-            )}
+            <Image
+              src={slide.image.src}
+              alt={slide.image.alt || slide.title}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              quality={80}
+              className="object-cover"
+              style={{ objectPosition: isSimpleImage(slide.image) ? 'center' : 'center 28%' }}
+            />
 
             {/* Enhanced gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" />
@@ -314,7 +309,7 @@ const HeroSection = ({
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 h-screen flex items-center justify-center px-4 sm:px-5 md:px-6 lg:px-8"
+        className="relative z-20 min-h-[85vh] md:min-h-[92vh] flex items-center justify-center px-4 sm:px-5 md:px-6 lg:px-8"
       >
         <div className="w-full max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto text-center">
           {/* Wave of Greatness Text */}

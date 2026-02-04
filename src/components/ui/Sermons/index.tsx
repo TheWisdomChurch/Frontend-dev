@@ -80,6 +80,8 @@ const SeriesCard = ({
             src={group.latestThumbnail}
             alt={group.name}
             className="w-12 h-10 sm:w-16 sm:h-12 rounded-lg object-cover shadow-sm group-hover:shadow-md transition-shadow"
+            loading="lazy"
+            decoding="async"
           />
         )}
       </div>
@@ -258,6 +260,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
           src={video.thumbnail}
           alt={video.title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
           <FlexboxLayout gap="sm">
@@ -1074,6 +1078,8 @@ const FeaturedSection = ({
                               alt={video.title}
                               className="w-16 h-12 rounded object-cover border"
                               style={{ borderColor: themeStyles.borderColor }}
+                              loading="lazy"
+                              decoding="async"
                             />
                             <div
                               className={`absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center transition-opacity ${

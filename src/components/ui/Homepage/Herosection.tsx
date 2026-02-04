@@ -101,7 +101,7 @@ const HeroSection = ({
     const base = getHeroClasses();
     return {
       ...base,
-      container: `${base.container} min-h-[90vh] md:min-h-[100vh] lg:min-h-[110vh] xl:min-h-[120vh]`,
+      container: `${base.container} min-h-[80vh] md:min-h-[88vh] lg:min-h-[95vh] xl:min-h-[100vh]`,
     };
   }, [getHeroClasses]);
 
@@ -113,8 +113,8 @@ const HeroSection = ({
   // Optimized Image props with subtle parallax effect
   const imageProps = useMemo(() => ({
     fill: true,
-    sizes: "100vw",
-    quality: 95, // Higher quality for larger display
+    sizes: "(max-width: 768px) 100vw, (max-width: 1280px) 95vw, 90vw",
+    quality: 80,
     placeholder: "blur" as const,
     blurDataURL: generateBlurDataURL,
     className: "object-cover",

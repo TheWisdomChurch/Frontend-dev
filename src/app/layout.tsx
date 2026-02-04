@@ -20,7 +20,7 @@ import './globals.css';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
 const SITE_NAME = 'The Wisdom Church';
-const OG_IMAGE = `${SITE_URL}/logo.webp`; // ensure /public/og-image.jpg exists
+const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -29,15 +29,17 @@ export const metadata: Metadata = {
   },
 
   title: {
-    default: 'The Wisdom Church | Experience God’s Transforming Power',
+    default: 'The Wisdom Church (Wisdom House) | Experience God’s Transforming Power',
     template: '%s | The Wisdom Church',
   },
   description:
-    'A vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
+    'The Wisdom Church (Wisdom House) is a vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
 
   keywords: [
     'wisdom house church',
     'the wisdom house church',
+    'wisdom church',
+    'wisdom house',
     'pentecostal church',
     'spirit filled church',
     'church near me',
@@ -177,8 +179,8 @@ export default function RootLayout({
     url: SITE_URL,
     logo: OG_IMAGE,
     sameAs: [
-      'https://www.youtube.com/@wisdomhousehq',
       'https://www.facebook.com/wisdomhousehq',
+      'https://www.youtube.com/@wisdomhousehq',
       'https://www.instagram.com/wisdomhousehq',
     ],
     contactPoint: {
