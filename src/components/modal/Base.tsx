@@ -7,6 +7,7 @@ import {
   useCallback,
   useLayoutEffect,
   useMemo,
+  useId,
   ReactNode,
   memo
 } from 'react';
@@ -69,6 +70,8 @@ export const BaseModal = memo(function BaseModal({
   const backdropRef = useRef<HTMLDivElement>(null);
   const windowSize = useWindowSize();
   const lastFocusedElement = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const descriptionId = useId();
 
   const viewport: ViewportSize = useMemo(() => {
     if (!windowSize.width) return 'mobile';
@@ -77,8 +80,8 @@ export const BaseModal = memo(function BaseModal({
     return 'desktop';
   }, [windowSize.width]);
 
-  // Use bottom sheet for mobile AND tablet (or when forced)
-  const useBottomSheet = forceBottomSheet || viewport !== 'desktop';
+  // Use bottom sheet only when explicitly requested
+  const useBottomSheet = forceBottomSheet;
 
   const colors = useMemo(() => ({
     background: colorScheme.black,
@@ -389,13 +392,10 @@ export const BaseModal = memo(function BaseModal({
   return createPortal(
     <div 
       ref={backdropRef}
-      className={`fixed inset-0 z-[9999] ${useBottomSheet ? 'flex items-end' : 'flex items-center justify-center sm:p-4'}`}
+      className={`fixed inset-0 z-[9999] ${useBottomSheet ? 'flex items-end justify-center p-4' : 'flex items-center justify-center p-4'}`}
       onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? "modal-title" : undefined}
-      aria-describedby={subtitle ? "modal-description" : undefined}
-      aria-busy={isLoading}
+      role="presentation"
+      aria-hidden="true"
       style={{ 
         backgroundColor: colors.backdrop,
         backdropFilter: 'blur(8px)',
@@ -433,6 +433,12 @@ export const BaseModal = memo(function BaseModal({
           willChange: 'transform, opacity',
           touchAction: 'pan-y'
         }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={subtitle ? descriptionId : undefined}
+        aria-busy={isLoading}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={useBottomSheet ? handleTouchStart : undefined}
         onTouchMove={useBottomSheet ? handleTouchMove : undefined}
@@ -470,7 +476,7 @@ export const BaseModal = memo(function BaseModal({
                 <div className="flex-1">
                   {title && (
                     <h2
-                      id="modal-title"
+                      id={titleId}
                       className={`mb-2 ${useBottomSheet ? 'text-xl' : responsive.heading[viewport]} font-bold leading-tight`}
                       style={{ color: colors.text.primary }}
                     >
@@ -479,7 +485,7 @@ export const BaseModal = memo(function BaseModal({
                   )}
                   {subtitle && (
                     <p
-                      id="modal-description"
+                      id={descriptionId}
                       className={`${useBottomSheet ? 'text-sm' : responsive.body[viewport]} leading-relaxed`}
                       style={{ color: colors.text.muted }}
                     >
@@ -488,7 +494,7 @@ export const BaseModal = memo(function BaseModal({
                   )}
                 </div>
                 
-                {showCloseButton && !useBottomSheet && (
+                {showCloseButton && (
                   <button
                     onClick={handleClose}
                     className="rounded-full p-1.5 transition-all duration-200 hover:scale-110 active:scale-95 ml-2 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"

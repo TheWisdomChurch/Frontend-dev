@@ -346,41 +346,41 @@ html.light body {
 /* Increase height for medium devices and above */
 /* Hero Section Height - Mobile first approach */
 .hero-section {
-  height: 100vh !important;
+  height: 85vh !important;
 }
 
 .hero-section img {
-  height: 100vh !important;
+  height: 85vh !important;
 }
 
 /* Increase height for medium devices and above */
 @media (min-width: 768px) {
   .hero-section {
-    height: 110vh !important;
+    height: 90vh !important;
   }
 
   .hero-section img {
-    height: 110vh !important;
+    height: 90vh !important;
   }
 }
 
 @media (min-width: 1024px) {
   .hero-section {
-    height: 120vh !important;
+    height: 95vh !important;
   }
 
   .hero-section img {
-    height: 120vh !important;
+    height: 95vh !important;
   }
 }
 
 @media (min-width: 1280px) {
   .hero-section {
-    height: 130vh !important;
+    height: 100vh !important;
   }
 
   .hero-section img {
-    height: 130vh !important;
+    height: 100vh !important;
   }
 }
 

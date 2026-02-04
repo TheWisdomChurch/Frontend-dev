@@ -22,17 +22,6 @@ export default function ResourceSection() {
   useEffect(() => {
     if (fetchedOnce.current) return;
     let mounted = true;
-    const cached = sessionStorage.getItem('recent_video');
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached) as YouTubeVideo;
-        setRecentVideo(parsed);
-        fetchedOnce.current = true;
-        return;
-      } catch {
-        // fallback to network
-      }
-    }
     const fetchRecent = async () => {
       try {
         const res = await fetch('/api/sermons?sort=newest', { cache: 'force-cache' });
@@ -40,7 +29,6 @@ export default function ResourceSection() {
         const data: YouTubeVideo[] = await res.json();
         if (mounted && data.length > 0) {
           setRecentVideo(data[0]);
-          sessionStorage.setItem('recent_video', JSON.stringify(data[0]));
           fetchedOnce.current = true;
         }
       } catch (err) {
@@ -117,35 +105,38 @@ export default function ResourceSection() {
               {recentVideo && (
                 <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={
-                      recentVideo.thumbnail ||
-                      (recentVideo as any)?.thumbnails?.medium?.url ||
-                      (recentVideo as any)?.thumbnails?.default?.url ||
-                      '/images/placeholder.jpg'
-                    }
-                    alt={recentVideo.title}
-                    className="w-full h-36 object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Link
-                      href={`https://www.youtube.com/watch?v=${recentVideo.id}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.04] transition shadow-lg"
-                    >
-                      <PlayCircle className="w-4 h-4" /> Play latest message
-                    </Link>
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 space-y-1">
-                    <SmallText className="text-white line-clamp-2">
-                      {recentVideo.title}
-                    </SmallText>
-                    <Caption className="text-white/70">
-                      {recentVideo.likeCount ? `${recentVideo.likeCount} likes` : 'New upload'}
-                    </Caption>
+                  <div className="relative aspect-video w-full">
+                    <img
+                      src={
+                        recentVideo.thumbnail ||
+                        (recentVideo as any)?.thumbnails?.medium?.url ||
+                        (recentVideo as any)?.thumbnails?.default?.url ||
+                        '/images/placeholder.jpg'
+                      }
+                      alt={recentVideo.title}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Link
+                        href={`https://www.youtube.com/watch?v=${recentVideo.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.04] transition shadow-lg"
+                      >
+                        <PlayCircle className="w-4 h-4" /> Play latest message
+                      </Link>
+                    </div>
+                    <div className="absolute bottom-3 left-3 right-3 space-y-1">
+                      <SmallText className="text-white line-clamp-2">
+                        {recentVideo.title}
+                      </SmallText>
+                      <Caption className="text-white/70">
+                        {recentVideo.likeCount ? `${recentVideo.likeCount} likes` : 'New upload'}
+                      </Caption>
+                    </div>
                   </div>
                 </div>
               )}

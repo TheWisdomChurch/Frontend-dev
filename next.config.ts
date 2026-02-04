@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    qualities: [75, 85, 90, 95, 100],
+    qualities: [60, 70, 80, 85],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -107,10 +107,10 @@ const nextConfig: NextConfig = {
 };
 
 // Wrap with PWA config (disable in dev to avoid issues)
-const isDev = process.env.NODE_ENV === 'development';
+const enablePwa = false;
 export default withPWA({
   dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: isDev,
+  register: false,
+  skipWaiting: false,
+  disable: !enablePwa,
 })(nextConfig);

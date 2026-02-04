@@ -340,7 +340,13 @@ const handleSubmit = async (e: React.FormEvent) => {
                           >
                             {imagePreview ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                              <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                              />
                             ) : (
                               <div className="flex h-full w-full items-center justify-center">
                                 <Camera className="h-5 w-5" style={{ color: styles.muted }} />
