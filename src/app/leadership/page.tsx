@@ -1196,7 +1196,7 @@ const LeadersPage = () => {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setIsWorkforceModalOpen(true);
-    }, 180000);
+    }, 12000);
 
     return () => window.clearTimeout(timer);
   }, []);

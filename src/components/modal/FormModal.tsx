@@ -3,6 +3,7 @@
 import { BaseModal, modalStyles } from './Base';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState } from 'react';
+import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -199,6 +200,21 @@ export const EventRegistrationModal = ({
         preventClose={isSubmitting}
       >
         <div className="space-y-4">
+          {event.image_url && (
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+              <div className="relative h-36 sm:h-44 md:h-52 w-full">
+                <Image
+                  src={event.image_url}
+                  alt={`${event.title} program`}
+                  fill
+                  sizes="(max-width: 768px) 90vw, 640px"
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+              </div>
+            </div>
+          )}
           {(eyebrow || lead) && (
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               {eyebrow && (
