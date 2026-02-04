@@ -66,14 +66,6 @@ export default function Home() {
   useEffect(() => {
     if (!fontsLoaded) return;
 
-    const isReload =
-      typeof window !== 'undefined' &&
-      performance
-        .getEntriesByType('navigation')
-        .some(entry => (entry as PerformanceNavigationTiming).type === 'reload');
-
-    if (isReload) return;
-
     const timer = setTimeout(() => {
       setShowModal(true);
     }, 1400);
