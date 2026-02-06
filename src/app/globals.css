@@ -286,10 +286,10 @@ main > * + * {
   pointer-events: none;
   background-size: 140px 140px, 220px 220px;
   background-image:
-    radial-gradient(circle, rgba(255,255,255,0.04) 1.2px, transparent 1.2px),
-    radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+    radial-gradient(circle, rgba(255,255,255,0.035) 1.2px, transparent 1.2px),
+    radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px);
   animation: heroDots 22s linear infinite;
-  opacity: 0.3;
+  opacity: 0.08; /* softer so text never washes out */
 }
 
 @keyframes heroDots {
