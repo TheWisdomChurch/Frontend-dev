@@ -232,7 +232,7 @@ export const EventRegistrationModal = ({
             </div>
           )}
 
-          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 pb-6">
             {step === 'personal' && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -370,38 +370,39 @@ export const EventRegistrationModal = ({
               </div>
             )}
 
-            <div className="flex items-center justify-between gap-3">
-              <button
-                type="button"
-                onClick={handlePrevStep}
-                disabled={step === 'personal'}
-                className="text-sm text-white/70 hover:text-white disabled:opacity-40"
-              >
-                Back
-              </button>
-              <button
-                type="button"
-                onClick={handleNextStep}
-                disabled={isSubmitting}
-                className={modalStyles.primaryButton}
-                style={{ backgroundColor: '#facc15' }}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center">
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    Submitting...
-                  </span>
-                ) : step === 'additional' ? (
-                  'Submit Registration'
-                ) : (
-                  'Continue'
-                )}
-              </button>
-            </div>
-
             {ctaNote && (
               <p className="text-xs text-white/60 text-center">{ctaNote}</p>
             )}
+
+            <div className="sticky bottom-0 -mx-6 lg:-mx-8 px-6 lg:px-8 pt-4 pb-3 bg-black/95 backdrop-blur border-t border-white/10">
+              <div className="flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={handlePrevStep}
+                  disabled={step === 'personal'}
+                  className="text-sm text-white/70 hover:text-white disabled:opacity-40"
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  disabled={isSubmitting}
+                  className={modalStyles.primaryButton}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Submitting...
+                    </span>
+                  ) : step === 'additional' ? (
+                    'Submit Registration'
+                  ) : (
+                    'Continue'
+                  )}
+                </button>
+              </div>
+            </div>
           </form>
         </div>
       </BaseModal>

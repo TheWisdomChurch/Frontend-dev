@@ -260,6 +260,33 @@ const HeroSection = ({
     return cleanupAnimations;
   }, [cleanupAnimations]);
 
+  // Parallax layers inside hero
+  useEffect(() => {
+    if (!heroRef.current) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const ctx = gsap.context(() => {
+      const parallaxEls = gsap.utils.toArray<HTMLElement>('[data-parallax]');
+      parallaxEls.forEach((el) => {
+        const speed = Number(el.dataset.parallax ?? 0.2);
+        gsap.to(el, {
+          yPercent: speed * 20,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      });
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const addToSlidesRef = useCallback(
     (el: HTMLDivElement | null, index: number) => {
       if (el) {
@@ -285,7 +312,7 @@ const HeroSection = ({
             index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full" data-parallax="0.25">
             {/* Handle both StaticImageData and simple object types */}
             <Image
               src={slide.image.src}
@@ -299,9 +326,9 @@ const HeroSection = ({
             />
 
             {/* Enhanced gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" data-parallax="0.15" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" data-parallax="0.1" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" data-parallax="0.08" />
           </div>
         </div>
       ))}
@@ -309,15 +336,15 @@ const HeroSection = ({
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 min-h-[85vh] md:min-h-[92vh] flex items-center justify-center px-4 sm:px-5 md:px-6 lg:px-8"
+        className="relative z-20 min-h-[85vh] md:min-h-[92vh] flex items-center px-4 sm:px-5 md:px-6 lg:px-10"
       >
-        <div className="w-full max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto text-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 xl:gap-12 items-center">
           {/* Wave of Greatness Text */}
           {showWaveText && (
-            <div className="mb-2 sm:mb-3 md:mb-4 lg:mb-5 relative">
+            <div className="mb-3 sm:mb-4 md:mb-5 lg:mb-6 relative lg:col-span-1">
               <div
                 ref={waveTextRef}
-                className="flex justify-center items-center"
+                className="wave-tagline flex justify-start items-center"
                 style={{ opacity: 0.95 }}
               >
                 {'THE WAVE OF GREATNESS'.split('').map((char, index) => (
@@ -325,30 +352,29 @@ const HeroSection = ({
                     key={index}
                     className="wave-char inline-block will-change-transform"
                     style={{
-                      fontSize: 'clamp(0.85rem, 1.5vw, 1.05rem)',
+                      fontSize: 'clamp(0.9rem, 1.6vw, 1.15rem)',
                       fontFamily:
                         "'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif",
-                      fontWeight: 700,
+                      fontWeight: 800,
                       color: 'transparent',
                       backgroundImage: `linear-gradient(
-                        135deg, 
-                        ${colorScheme.primaryLight} 0%, 
-                        #FFFFFF 30%,
-                        ${colorScheme.primary} 60%, 
+                        110deg,
+                        ${colorScheme.primaryLight} 0%,
+                        #ffffff 35%,
+                        ${colorScheme.primary} 70%,
                         ${colorScheme.primaryDark} 100%
                       )`,
                       backgroundClip: 'text',
                       WebkitBackgroundClip: 'text',
                       textShadow: `
-                        0 0 8px ${colorScheme.opacity.primary40},
-                        0 0 12px ${colorScheme.opacity.primary20},
-                        0 1px 2px rgba(0,0,0,0.7)
+                        0 0 12px ${colorScheme.opacity.primary35},
+                        0 2px 10px rgba(0,0,0,0.65)
                       `,
-                      padding: '0 0.03em',
+                      padding: '0 0.04em',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.07em',
+                      letterSpacing: '0.08em',
                       lineHeight: '1.2',
-                      WebkitTextStroke: `0.2px ${colorScheme.primaryDark}`,
+                      WebkitTextStroke: `0.25px ${colorScheme.primaryDark}`,
                     }}
                   >
                     {char === ' ' ? '\u00A0' : char}
@@ -361,7 +387,7 @@ const HeroSection = ({
           {/* Main Title */}
           <H1
             ref={titleRef}
-            className="mb-3 sm:mb-4 md:mb-5 leading-tight tracking-tight font-black"
+            className="mb-3 sm:mb-4 md:mb-5 leading-tight tracking-tight font-black text-left"
             style={{
               color: '#FFFFFF',
               textShadow:
@@ -369,14 +395,14 @@ const HeroSection = ({
             }}
             useThemeColor={false}
           >
-            <span className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl block px-2">
+            <span className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl block">
               {renderTitle(currentSlideData.title, colorScheme)}
             </span>
           </H1>
 
           {/* Divider Line */}
           <div
-            className="h-0.5 w-14 sm:w-18 md:w-22 lg:w-24 mx-auto mb-3 sm:mb-4 md:mb-5 lg:mb-6 rounded-full"
+            className="h-0.5 w-16 sm:w-20 md:w-24 lg:w-28 mb-4 sm:mb-5 md:mb-6 rounded-full"
             style={{
               backgroundColor: colorScheme.primary,
               backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
@@ -388,7 +414,7 @@ const HeroSection = ({
           {currentSlideData.subtitle && (
             <H2
               ref={subtitleRef}
-              className="mb-4 sm:mb-5 md:mb-6 lg:mb-7"
+              className="mb-5 sm:mb-6 md:mb-7 text-left"
               style={{
                 color: colorScheme.primary,
                 textShadow:
@@ -404,12 +430,10 @@ const HeroSection = ({
             </H2>
           )}
 
-        
-
           {/* Buttons */}
           <div
             ref={buttonsRef}
-            className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 md:gap-5 lg:gap-6 justify-center items-center px-3 sm:px-0"
+            className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 md:gap-5 lg:gap-6 justify-start items-center"
           >
             <CustomButton
               variant="primary"
@@ -447,47 +471,91 @@ const HeroSection = ({
               </span>
             </CustomButton>
           </div>
-        </div>
-      </Container>
-
-      {/* Floating info rail */}
-      <div className="absolute inset-x-0 bottom-3 sm:bottom-4 lg:bottom-5 z-30 px-4">
-        <div className="mx-auto max-w-5xl grid grid-cols-1 gap-2.5 items-center">
-          <div className="rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 shadow-2xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="flex items-center gap-3">
+          <div className="lg:col-span-1">
+            <div className="relative">
               <div
-                className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
-                style={{ background: colorScheme.primary }}
-              >
-                <CalendarClock className="w-5 h-5 text-black" />
+                className="absolute -top-8 -left-6 h-24 w-24 rounded-full blur-3xl opacity-60"
+                style={{ backgroundColor: colorScheme.primary }}
+                data-parallax="0.2"
+              />
+              <div className="space-y-4">
+                <div
+                  className="rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-5 sm:p-6"
+                  data-parallax="0.12"
+                  data-gsap="reveal"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div
+                      className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
+                      style={{ background: colorScheme.primary }}
+                    >
+                      <CalendarClock className="w-5 h-5 text-black" />
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.18em] text-white/70 font-semibold">
+                        {upcoming.label}
+                      </p>
+                      <p className="text-lg text-white font-semibold">
+                        {upcoming.title}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 text-sm text-white/85">
+                    <div className="flex items-center gap-2">
+                      <CalendarClock className="w-4 h-4" />
+                      <span>
+                        {upcoming.date} • {upcoming.time}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      <span>{upcoming.location}</span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <CustomButton
+                      size="sm"
+                      curvature="full"
+                      elevated
+                      onClick={handleUpcomingCta}
+                      className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
+                    >
+                      {upcoming.ctaLabel ?? 'Reserve a seat'}
+                    </CustomButton>
+                  </div>
+                </div>
+
+                <div
+                  className="rounded-3xl border border-white/10 bg-black/50 backdrop-blur-xl p-5 sm:p-6 flex items-center justify-between"
+                  data-parallax="0.18"
+                  data-gsap="reveal"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-2xl border border-white/20 flex items-center justify-center">
+                      <PlayCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white font-semibold">
+                        Watch Live Stream
+                      </p>
+                      <p className="text-xs text-white/60">Sundays & midweek services</p>
+                    </div>
+                  </div>
+                  <CustomButton
+                    variant="outline"
+                    size="sm"
+                    curvature="full"
+                    onClick={handleSecondaryClick}
+                    className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10"
+                  >
+                    Watch
+                  </CustomButton>
+                </div>
               </div>
-              <div className="text-left">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/70 font-semibold">
-                  {upcoming.label}
-                </p>
-                <p className="text-sm sm:text-base text-white font-semibold">
-                  {upcoming.title} - {upcoming.date} - {upcoming.time}
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
-                <MapPin className="w-4 h-4" />
-                <span>{upcoming.location}</span>
-              </div>
-              <CustomButton
-                size="sm"
-                curvature="full"
-                elevated
-                onClick={handleUpcomingCta}
-                className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
-              >
-                {upcoming.ctaLabel ?? 'Reserve a seat'}
-              </CustomButton>
             </div>
           </div>
         </div>
-      </div>
+      </Container>
 
       {/* Slide Indicators */}
       {isMultiSlide && (

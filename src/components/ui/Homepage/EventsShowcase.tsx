@@ -173,6 +173,15 @@ export default function EventsShowcase() {
 
   return (
     <Section padding="md" className="relative overflow-hidden" style={{ background: '#0a0a0a' }}>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-80"
+        style={{
+          background:
+            'radial-gradient(circle at 12% 20%, rgba(255,255,255,0.08) 0%, transparent 40%), radial-gradient(circle at 80% 10%, rgba(255,255,255,0.06) 0%, transparent 35%), radial-gradient(circle at 60% 90%, rgba(255,255,255,0.05) 0%, transparent 40%)',
+          filter: 'blur(70px)',
+        }}
+        data-parallax-global="0.25"
+      />
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
           <Caption
@@ -227,7 +236,7 @@ export default function EventsShowcase() {
                   className="absolute inset-0"
                 >
                   {/* Image layer */}
-                  <div className="absolute inset-0">
+                  <div className="absolute inset-0" data-parallax-global="0.2">
                     {current.category === 'reel' ? (
                       <div className="w-full h-full relative">
                         {current.imageMobile || current.imageDesktop ? (
@@ -309,8 +318,20 @@ export default function EventsShowcase() {
                   </div>
 
                   {/* Dark overlays */}
-                  <div className="absolute inset-0 bg-black/25" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 lg:bg-gradient-to-r lg:from-black/88 lg:via-black/68 lg:to-black/45" />
+                  <div className="absolute inset-0 bg-black/25" data-parallax-global="0.12" />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 lg:bg-gradient-to-r lg:from-black/88 lg:via-black/68 lg:to-black/45"
+                    data-parallax-global="0.08"
+                  />
+
+                  {/* Cinematic film grain */}
+                  <div
+                    className="absolute inset-0 opacity-[0.18] mix-blend-soft-light"
+                    style={{
+                      backgroundImage:
+                        'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0%, transparent 45%), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+                    }}
+                  />
 
                   {/* Content */}
                   <div
@@ -404,6 +425,7 @@ export default function EventsShowcase() {
                   ${idx === active ? 'bg-[#161616] shadow-xl' : 'bg-[#0f0f0f]'}
                   min-w-[280px] sm:min-w-[340px] lg:min-w-0
                 `}
+                data-parallax-global={idx % 2 === 0 ? '0.12' : '0.18'}
               >
                 <div className="flex items-center gap-3 sm:gap-3.5">
                   <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
