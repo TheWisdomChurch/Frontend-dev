@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { H1, H3, BodyMD, BodySM, BodyLG, Caption, SmallText } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
