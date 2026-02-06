@@ -133,7 +133,7 @@ export const WorkforceRegistrationModal = ({
         isLoading={isSubmitting}
         loadingText="Submitting..."
       >
-        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-5 pb-6">
           <div className={modalStyles.sectionTitle}>
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -341,21 +341,22 @@ export const WorkforceRegistrationModal = ({
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={!isValid || isSubmitting}
-            className={modalStyles.primaryButton}
-            style={{ backgroundColor: '#facc15' }}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center">
-                <Loader2 className="animate-spin mr-2" />
-                Submitting...
-              </span>
-            ) : (
-              'Submit Workforce Details'
-            )}
-          </button>
+          <div className="sticky bottom-0 -mx-6 lg:-mx-8 px-6 lg:px-8 pt-4 pb-3 bg-black/95 backdrop-blur border-t border-white/10">
+            <button
+              type="submit"
+              disabled={!isValid || isSubmitting}
+              className={modalStyles.primaryButton}
+            >
+              {isSubmitting ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="animate-spin mr-2" />
+                  Submitting...
+                </span>
+              ) : (
+                'Submit Workforce Details'
+              )}
+            </button>
+          </div>
         </form>
       </BaseModal>
 

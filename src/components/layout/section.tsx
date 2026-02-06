@@ -93,6 +93,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
         id={id}
         className={sectionClasses}
         style={combinedStyles}
+        data-gsap="reveal"
       >
         {background === 'image' && overlay && (
           <div

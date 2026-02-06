@@ -141,7 +141,6 @@ export const ReminderModal = ({
             type="submit"
             disabled={!isValid || isProcessing}
             className={modalStyles.primaryButton}
-            style={{ backgroundColor: '#3b82f6' }}
           >
             {isProcessing ? (
               <span className="flex items-center justify-center">
