@@ -9,6 +9,7 @@ import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { apiClient } from '@/lib/api';
+import { testimonialsData } from '@/lib/data';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
 const fallbackImage = '/images/avatar-placeholder.jpg';
@@ -38,24 +39,42 @@ const normalizeTestimonial = (item: ApiTestimonial): UiTestimonial => {
   };
 };
 
+const fallbackTestimonials: UiTestimonial[] = testimonialsData.map(item => ({
+  id: item.id,
+  fullName:
+    item.fullName ||
+    [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
+    'Anonymous',
+  testimony: item.testimony,
+  imageUrl: item.image ?? null,
+  createdAt: item.date,
+  role: item.anonymous ? 'Anonymous' : item.role || 'Member',
+  tags: [],
+}));
+
 export default function Testimonials() {
   const { colorScheme } = useTheme();
   const [active, setActive] = useState(0);
-  const [items, setItems] = useState<UiTestimonial[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<UiTestimonial[]>(fallbackTestimonials);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let mounted = true;
 
     const loadTestimonials = async () => {
+      setLoading(true);
       try {
         const result = await apiClient.listApprovedTestimonials();
         if (!mounted) return;
         const normalized = (Array.isArray(result) ? result : []).map(normalizeTestimonial);
-        setItems(normalized.slice(0, 6));
+        if (normalized.length > 0) {
+          setItems(normalized.slice(0, 6));
+        } else {
+          setItems(fallbackTestimonials);
+        }
       } catch (error) {
         console.error('Failed to load testimonials:', error);
-        if (mounted) setItems([]);
+        if (mounted) setItems(prev => (prev.length ? prev : fallbackTestimonials));
       } finally {
         if (mounted) setLoading(false);
       }
@@ -75,7 +94,6 @@ export default function Testimonials() {
     return () => clearInterval(timer);
   }, [items.length]);
 
-  if (loading) return null;
   if (items.length === 0) return null;
 
   const current = items[active] ?? items[0];
