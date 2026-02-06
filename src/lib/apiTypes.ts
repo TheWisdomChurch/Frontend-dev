@@ -54,10 +54,11 @@ export type Testimonial = {
   lastName?: string;
   fullName?: string;
   testimony: string;
-  image?: string;
-  anonymous: boolean;
-  approved?: boolean;
+  imageUrl?: string | null;
+  isAnonymous?: boolean;
+  isApproved?: boolean;
   createdAt?: string;
+  updatedAt?: string;
 };
 
 // export type TestimonialPayload = {
