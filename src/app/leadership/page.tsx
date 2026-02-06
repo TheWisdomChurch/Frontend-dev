@@ -1215,9 +1215,10 @@ const LeadersPage = () => {
             filter: 'blur(70px)',
           }}
         />
+        <div className="hero-animated" />
         <Container
           size="xl"
-          className="relative z-10 flex flex-col gap-8 lg:gap-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-22"
+          className="relative z-10 flex flex-col gap-8 lg:gap-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-22 min-h-[100vh]"
         >
           <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
             <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">

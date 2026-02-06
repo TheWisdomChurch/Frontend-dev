@@ -30,9 +30,10 @@ export default function AboutUsPage() {
             filter: 'blur(70px)',
           }}
         />
+        <div className="hero-animated" />
         <Container
           size="xl"
-          className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-24"
+          className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-24 min-h-[100vh]"
         >
           <div className="space-y-6 max-w-4xl">
             <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
