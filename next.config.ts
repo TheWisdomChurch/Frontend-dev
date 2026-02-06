@@ -74,9 +74,6 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // ✅ Disable SWC in Docker environment
-  swcMinify: process.env.DOCKER_ENV !== 'true',
-
   // ✅ Comprehensive CSS handling
   experimental: {
     optimizeCss: false,
