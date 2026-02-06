@@ -120,20 +120,21 @@ export default function AboutUsPage() {
               <BodyMD className="text-white/75 leading-relaxed text-[15px] sm:text-base">
                 The Wisdom House is a Spirit-filled assembly committed to raising complete believers—men, women, and children—rooted in Christ, empowered by His wisdom, and established in faith. We are a trans-generational movement pursuing obedience and excellence in every facet of life.
               </BodyMD>
-              <GridboxLayout columns={2} gap="md" responsive={{ xs: 2, md: 2, lg: 2 }}>
+              <GridboxLayout columns={2} gap="sm" responsive={{ xs: 2, md: 2, lg: 2 }}>
                 {[
                   { label: 'Core', value: 'Obedience & service' },
                   { label: 'Focus', value: 'Word & Power' },
-                  { label: 'Reach', value: 'Generations & nations' },
                   { label: 'Culture', value: 'Excellence & love' },
                 ].map(item => (
                   <div
                     key={item.label}
-                    className="rounded-xl border border-white/10 bg-white/5 px-3 py-3"
-                    style={{ boxShadow: `0 10px 30px ${colorScheme.opacity.primary10}` }}
+                    className="rounded-xl border border-white/10 bg-white/5 px-3 py-2"
+                    style={{ boxShadow: `0 10px 24px ${colorScheme.opacity.primary10}` }}
                   >
-                    <Caption className="text-white/60">{item.label}</Caption>
-                    <BodySM className="text-white font-medium text-[14px] sm:text-sm">{item.value}</BodySM>
+                    <Caption className="text-white/60 text-[11px]">{item.label}</Caption>
+                    <BodySM className="text-white font-medium text-xs sm:text-[13px] leading-tight">
+                      {item.value}
+                    </BodySM>
                   </div>
                 ))}
               </GridboxLayout>

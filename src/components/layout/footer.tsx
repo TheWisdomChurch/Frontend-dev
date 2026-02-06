@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useRef, useEffect, useMemo, useCallback } from 'react';
+import { memo, useRef, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, MapPin, Mail, Facebook, Youtube, Instagram, Twitter, ArrowRight } from 'lucide-react';
@@ -35,27 +35,10 @@ const serviceTimes = [
   { day: 'Midweek Service', time: 'Thursday • 6:00 PM', highlight: false },
 ];
 
-// LAZY LOAD HEAVY LIBRARIES
-let gsapPromise: Promise<{ gsap: any; ScrollTrigger: any }> | undefined;
-const getGsap = () => {
-  if (!gsapPromise) {
-    gsapPromise = import('gsap').then(gsapModule => {
-      const gsap = gsapModule.default;
-      return import('gsap/ScrollTrigger').then(ScrollTriggerModule => {
-        const ScrollTrigger = ScrollTriggerModule.default;
-        gsap.registerPlugin(ScrollTrigger);
-        return { gsap, ScrollTrigger };
-      });
-    });
-  }
-  return gsapPromise;
-};
-
 // MAIN COMPONENT WITH MEMOIZATION
 function Footer() {
   const { colorScheme } = useTheme();
   const footerRef = useRef<HTMLElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const openDormant = useDormantAction();
 
   // MEMOIZE VALUES THAT DEPEND ON colorScheme
@@ -66,46 +49,6 @@ function Footer() {
   const borderStyle = useMemo(() => ({
     borderColor: colorScheme.primary + '40'
   }), [colorScheme.primary]);
-
-  // DELAYED ANIMATION INITIALIZATION
-  useEffect(() => {
-    const currentRef = footerRef.current;
-    if (!currentRef) return;
-
-    observerRef.current = new IntersectionObserver((entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting) {
-        getGsap().then(({ gsap, ScrollTrigger }) => {
-          gsap.fromTo(currentRef,
-            { y: 30, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.6,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: currentRef,
-                start: 'top 90%',
-                toggleActions: 'play none none reverse',
-                markers: false
-              }
-            }
-          );
-        });
-        if (observerRef.current) {
-          observerRef.current.unobserve(currentRef);
-        }
-      }
-    }, { threshold: 0.1, rootMargin: '50px' });
-
-    observerRef.current.observe(currentRef);
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, []);
 
   // MEMOIZE EVENT HANDLERS
   const handleSubscribe = useCallback(

@@ -5,18 +5,16 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { CalendarClock, MapPin, PlayCircle, Users, ChevronDown } from 'lucide-react';
+import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
-import { H1, H2, BodyMD } from '../../text';
+import { H1, H2 } from '../../text';
 import CustomButton from '../../utils/buttons/CustomButton';
 import { Section, Container } from '../../layout';
 import { ColorScheme } from '../../colors/colorScheme';
 import { defaultSlides } from '@/lib/data';
 import { renderTitle,  renderSubtitle } from '@/components/utils/heroTextUtil';
-import { useAutoSlide } from '@/components/utils/hooks/mainHeroHooks/useAutoSlide';
 import { useHeroAnimation } from '@/components/utils/hooks/mainHeroHooks/useheroAnimation';
-import { useSlideAnimation } from '@/components/utils/hooks/mainHeroHooks/useSlideAnimation';
 import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
 import type { YouTubeVideo } from '@/lib/types';
 import Image from 'next/image';
@@ -58,7 +56,6 @@ const HeroSection = ({
 
   // Create refs
   const heroRef = useRef<HTMLDivElement>(null!);
-  const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
   const titleRef = useRef<HTMLHeadingElement>(null!);
   const subtitleRef = useRef<HTMLHeadingElement>(null!);
   const descriptionRef = useRef<HTMLParagraphElement>(null!);
@@ -69,16 +66,9 @@ const HeroSection = ({
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
   const [videoLoading, setVideoLoading] = useState(false);
 
-  // State
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  // Derived values
-  const slidesLength = slides.length;
-  // Keep single visible slide to prevent flicker while we stabilise hero readability
-  const isMultiSlide = slidesLength > 1;
-  const enableAutoSlide = false;
-  const currentSlideData = slides[currentSlide];
+  // Keep hero static on the first slide for stability
+  const currentSlideData = slides[0] ?? defaultSlides[0];
+  const heroSlides = currentSlideData ? [currentSlideData] : [];
   const fallbackUpcoming = {
     label: 'Upcoming',
     title: 'Wisdom Power Conference 26',
@@ -135,57 +125,11 @@ const HeroSection = ({
     return tl;
   }, []);
 
-  const animateContentExit = useCallback((): gsap.core.Timeline => {
-    const tl = gsap.timeline();
-
-    const targets = [];
-    targets.push(titleRef.current);
-    targets.push(subtitleRef.current);
-
-    if (descriptionRef.current) {
-      targets.push(descriptionRef.current);
-    }
-
-    if (buttonsRef.current?.children) {
-      targets.push(...Array.from(buttonsRef.current.children));
-    }
-
-    if (targets.length > 0) {
-      tl.to(targets, {
-        y: -10,
-        opacity: 0,
-        duration: 0.4,
-        stagger: 0.03,
-        ease: 'power2.in',
-      });
-    }
-
-    return tl;
-  }, []);
-
   // Use hooks with non-nullable refs
   const { cleanupAnimations } = useHeroAnimation(
     heroRef,
     scrollIndicatorRef,
     animateContentEntrance
-  );
-
-  const { animateSlideTransition } = useSlideAnimation(
-    isAnimating,
-    currentSlide,
-    setIsAnimating,
-    setCurrentSlide,
-    slidesRef,
-    animateContentExit,
-    animateContentEntrance
-  );
-
-  useAutoSlide(
-    enableAutoSlide && isMultiSlide,
-    isAnimating,
-    currentSlide,
-    slidesLength,
-    animateSlideTransition
   );
 
   useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
@@ -200,16 +144,6 @@ const HeroSection = ({
       });
     }
   }, []);
-
-  // Slide change on indicator click
-  const goToSlide = useCallback(
-    (index: number) => {
-      if (!isAnimating && index !== currentSlide && isMultiSlide) {
-        animateSlideTransition(index);
-      }
-    },
-    [isAnimating, currentSlide, animateSlideTransition, isMultiSlide]
-  );
 
   const handleUnavailable = useCallback(
     (title?: string, message?: string) => {
@@ -340,15 +274,6 @@ const HeroSection = ({
     return () => ctx.revert();
   }, []);
 
-  const addToSlidesRef = useCallback(
-    (el: HTMLDivElement | null, index: number) => {
-      if (el) {
-        slidesRef.current[index] = el;
-      }
-    },
-    []
-  );
-
   return (
     <Section
       ref={heroRef}
@@ -358,12 +283,11 @@ const HeroSection = ({
       className="relative w-full min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] overflow-hidden bg-black"
     >
       {/* Background Slides - FIXED: Proper image handling */}
-      {slides.map((slide, index) => (
+      {heroSlides.map((slide, index) => (
         <div
           key={index}
-          ref={el => addToSlidesRef(el, index)}
           className={`absolute inset-0 transition-all duration-800 ease-in-out ${
-            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >
           <div className="relative w-full h-full" data-parallax="0.25">
@@ -573,15 +497,15 @@ const HeroSection = ({
             </div>
 
             <div
-              className="rounded-3xl border border-white/10 bg-black/50 backdrop-blur-xl p-5 sm:p-6 flex items-center justify-between gap-3"
+              className="rounded-3xl border border-white/10 bg-black/50 backdrop-blur-xl p-5 sm:p-6 flex flex-col gap-4"
               data-parallax="0.18"
               data-gsap="reveal"
             >
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-2xl border border-white/20 flex items-center justify-center">
+              <div className="flex items-start gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-white/20 flex items-center justify-center shrink-0">
                   <PlayCircle className="w-5 h-5 text-white" />
                 </div>
-                <div>
+                <div className="leading-tight">
                   <p className="text-sm text-white font-semibold">
                     Watch live stream
                   </p>
@@ -589,8 +513,8 @@ const HeroSection = ({
                 </div>
               </div>
               {latestVideo ? (
-                <div className="flex items-center gap-3">
-                  <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-white/15 bg-black/60">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2">
+                  <div className="relative h-20 w-full sm:w-32 rounded-xl overflow-hidden border border-white/15 bg-black/60">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={
@@ -618,7 +542,7 @@ const HeroSection = ({
                     href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg self-start sm:self-auto"
                   >
                     <PlayCircle className="w-4 h-4" /> Play
                   </a>
@@ -629,7 +553,7 @@ const HeroSection = ({
                   size="sm"
                   curvature="full"
                   onClick={handleSecondaryClick}
-                  className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10"
+                  className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10 self-start"
                 >
                   {videoLoading ? 'Loading…' : 'Watch'}
                 </CustomButton>
@@ -638,31 +562,6 @@ const HeroSection = ({
           </div>
         </div>
       </Container>
-
-      {/* Slide Indicators */}
-      {isMultiSlide && (
-        <div className="absolute right-1.5 sm:right-2 md:right-2.5 lg:right-3 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1 sm:gap-1.5 md:gap-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-200 focus:outline-none hover:scale-110"
-              style={{
-                backgroundColor:
-                  index === currentSlide
-                    ? colorScheme.primary
-                    : 'rgba(255, 255, 255, 0.2)',
-                boxShadow:
-                  index === currentSlide
-                    ? `0 0 5px ${colorScheme.primary}`
-                    : 'none',
-                transform: index === currentSlide ? 'scale(1.1)' : 'scale(1)',
-              }}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
 
       {/* Scroll Indicators */}
       <ScrollIndicators
