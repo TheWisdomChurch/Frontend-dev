@@ -1,33 +1,84 @@
 // components/ui/Homepage/Testimonials.tsx
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Section, Container } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { testimonialsData } from '@/lib/data';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
 const fallbackImage = '/images/avatar-placeholder.jpg';
+
+type UiTestimonial = {
+  id: number | string;
+  fullName: string;
+  testimony: string;
+  imageUrl?: string | null;
+  createdAt?: string;
+  role?: string;
+  tags?: string[];
+};
+
+const normalizeTestimonial = (item: ApiTestimonial): UiTestimonial => {
+  const fullName =
+    item.fullName ||
+    [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
+    'Anonymous';
+  return {
+    id: item.id,
+    fullName,
+    testimony: item.testimony,
+    imageUrl: item.imageUrl ?? null,
+    createdAt: item.createdAt,
+    role: item.isAnonymous ? 'Anonymous' : 'Member',
+  };
+};
 
 export default function Testimonials() {
   const { colorScheme } = useTheme();
   const [active, setActive] = useState(0);
-
-  const items = useMemo(() => testimonialsData.slice(0, 6), []);
+  const [items, setItems] = useState<UiTestimonial[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
+    const loadTestimonials = async () => {
+      try {
+        const result = await apiClient.listApprovedTestimonials();
+        if (!mounted) return;
+        const normalized = (Array.isArray(result) ? result : []).map(normalizeTestimonial);
+        setItems(normalized.slice(0, 6));
+      } catch (error) {
+        console.error('Failed to load testimonials:', error);
+        if (mounted) setItems([]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    loadTestimonials();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (items.length === 0) return;
     const timer = setInterval(() => {
-      setActive(prev => (prev + 1) % items.length);
+      setActive((prev) => (prev + 1) % items.length);
     }, 5200);
     return () => clearInterval(timer);
   }, [items.length]);
 
+  if (loading) return null;
   if (items.length === 0) return null;
 
-  const current = items[active];
+  const current = items[active] ?? items[0];
   const nextList = items
     .map((item, idx) => ({ ...item, idx }))
     .filter(i => i.idx !== active);
@@ -104,7 +155,7 @@ export default function Testimonials() {
             <div className="flex items-center gap-3 mb-4">
               <div className="relative h-14 w-14 rounded-full overflow-hidden border border-white/15 shadow-inner">
                 <Image
-                  src={current.image || fallbackImage}
+                  src={current.imageUrl || fallbackImage}
                   alt={current.fullName}
                   fill
                   sizes="56px"
@@ -115,10 +166,12 @@ export default function Testimonials() {
                 <SmallText weight="semibold" className="text-white text-base">
                   {current.fullName}
                 </SmallText>
-                <Caption className="text-white/60">{current.role}</Caption>
-                <Caption className="text-white/50">
-                  {new Date(current.date).toLocaleDateString()}
-                </Caption>
+                {current.role && <Caption className="text-white/60">{current.role}</Caption>}
+                {current.createdAt && (
+                  <Caption className="text-white/50">
+                    {new Date(current.createdAt).toLocaleDateString()}
+                  </Caption>
+                )}
               </div>
             </div>
             <p className="text-white/85 text-base leading-relaxed mb-4">
@@ -159,7 +212,7 @@ export default function Testimonials() {
               >
                 <div className="relative h-12 w-12 rounded-full overflow-hidden border border-white/15">
                   <Image
-                    src={item.image || fallbackImage}
+                    src={item.imageUrl || fallbackImage}
                     alt={item.fullName}
                     fill
                     sizes="48px"
