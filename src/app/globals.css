@@ -200,6 +200,30 @@ body {
   height: 100%;
 }
 
+/* Performance: render offscreen sections lazily */
+.perf-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+@media (max-width: 640px) {
+  .perf-section {
+    contain-intrinsic-size: 1px 700px;
+  }
+}
+
+/* Apply perf to all page children (skip first above-the-fold block) */
+main > *:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+@media (max-width: 640px) {
+  main > *:not(:first-child) {
+    contain-intrinsic-size: 1px 700px;
+  }
+}
+
 /* Wave of Greatness refinement */
 .wave-tagline {
   gap: 0.08em;

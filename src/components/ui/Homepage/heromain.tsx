@@ -301,6 +301,7 @@ const HeroSection = ({
       ref={heroRef}
       padding="none"
       fullHeight={false}
+      perf="none"
       className="relative w-full min-h-[85vh] md:min-h-[92vh] overflow-hidden bg-black"
     >
       {/* Background Slides - FIXED: Proper image handling */}
