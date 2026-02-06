@@ -15,6 +15,7 @@ export default function PageGsap({ children }: { children: React.ReactNode }) {
     if (!containerRef.current) return;
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
     const container = containerRef.current;
     const sections = Array.from(container.children) as HTMLElement[];
 
@@ -24,6 +25,11 @@ export default function PageGsap({ children }: { children: React.ReactNode }) {
     }
 
     const ctx = gsap.context(() => {
+      ScrollTrigger.config({
+        limitCallbacks: true,
+        ignoreMobileResize: true,
+      });
+
       gsap.fromTo(
         container,
         { opacity: 0, y: 12, filter: 'blur(4px)' },
@@ -50,38 +56,38 @@ export default function PageGsap({ children }: { children: React.ReactNode }) {
       });
 
       const reveals = gsap.utils.toArray<HTMLElement>('[data-gsap="reveal"]');
-      reveals.forEach((el) => {
-        gsap.fromTo(
-          el,
-          { autoAlpha: 0, y: 18 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.65,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 88%',
-              once: true,
-            },
-          }
-        );
-      });
-
-      const parallaxEls = gsap.utils.toArray<HTMLElement>('[data-parallax-global]');
-      parallaxEls.forEach((el) => {
-        const speed = Number(el.dataset.parallaxGlobal ?? 0.15);
-        gsap.to(el, {
-          yPercent: speed * 20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
+      if (reveals.length) {
+        ScrollTrigger.batch(reveals, {
+          start: 'top 88%',
+          once: true,
+          onEnter: (batch) => {
+            gsap.fromTo(
+              batch,
+              { autoAlpha: 0, y: 18 },
+              { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.05 }
+            );
           },
         });
-      });
+      }
+
+      const parallaxEls = gsap.utils
+        .toArray<HTMLElement>('[data-parallax-global]')
+        .slice(0, isMobile ? 6 : 16);
+      if (!isMobile) {
+        parallaxEls.forEach((el) => {
+          const speed = Math.min(0.25, Math.max(0.08, Number(el.dataset.parallaxGlobal ?? 0.15)));
+          gsap.to(el, {
+            yPercent: speed * 16,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 0.6,
+            },
+          });
+        });
+      }
     }, container);
 
     return () => {
