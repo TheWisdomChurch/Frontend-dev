@@ -15,8 +15,6 @@ import ClientHeader from '@/components/layout/ClientHeader';
 import ClientFooter from '@/components/layout/ClientFooter';
 import ClientScrollToTop from '@/components/layout/ClientscrollTop';
 import ScrollHandler from '@/components/layout/ClientScrollHandler';
-import RouteLoaderProvider from '@/components/providers/RouteProvider';
-import PageGsap from '@/components/animation/PageGsap';
 import './globals.css';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
@@ -153,14 +151,12 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
           <HeaderProvider>
             <ErrorBoundary>
               <ScrollHandler />
-              <RouteLoaderProvider>
-                <ClientHeader />
-                <main className="flex-1 flex flex-col min-h-screen">
-                  <PageGsap>{children}</PageGsap>
-                </main>
-                <ClientFooter />
-                <ClientScrollToTop />
-              </RouteLoaderProvider>
+              <ClientHeader />
+              <main className="flex-1 flex flex-col min-h-screen page-gsap">
+                {children}
+              </main>
+              <ClientFooter />
+              <ClientScrollToTop />
             </ErrorBoundary>
           </HeaderProvider>
         </ServiceUnavailableProvider>
