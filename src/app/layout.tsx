@@ -25,7 +25,7 @@ const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: '/',
+    canonical: SITE_URL,
   },
 
   title: {
@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     'The Wisdom Church (Wisdom House) is a vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
 
   keywords: [
+    'wisdomchurch',
     'wisdom house church',
     'the wisdom house church',
     'wisdom church',
@@ -174,7 +175,7 @@ export default function RootLayout({
 }>) {
   const orgSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'Church',
     name: SITE_NAME,
     url: SITE_URL,
     logo: OG_IMAGE,
@@ -186,7 +187,16 @@ export default function RootLayout({
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
+      telephone: '0706 999 5333',
+      email: 'Wisdomhousehq@gmail.com',
       availableLanguage: ['English'],
+    },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress:
+        'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway',
+      addressLocality: 'Lagos',
+      addressCountry: 'NG',
     },
   };
 
