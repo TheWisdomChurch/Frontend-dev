@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { H1, H3, BodyMD, BodySM, BodyLG } from '@/components/text';
+import { H1, H3, BodyMD, BodySM, BodyLG, Caption, SmallText } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
 import { Section, Container, GridboxLayout } from '@/components/layout';
 import {
@@ -50,6 +50,7 @@ export default function TestimoniesPage() {
   const [characterCount, setCharacterCount] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showWelcome, setShowWelcome] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // responsive
@@ -233,61 +234,71 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
   return (
-    <Section
-      padding="lg"
-      className="min-h-screen"
-      style={{
-        background: 'linear-gradient(180deg, #050505 0%, #0b0b0b 60%, #050505 100%)',
-      }}
-    >
-      <Container size="xl" className="space-y-9 lg:space-y-12">
-        <div className="pt-16 lg:pt-20">
-          {/* HERO */}
-          <div className="mb-8 lg:mb-10">
-            <div className="max-w-3xl">
-              <div
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-normal"
-                style={{
-                  borderColor: styles.border,
-                  color: styles.muted,
-                  background: styles.surface,
-                }}
-              >
-                <HeartHandshake className="h-4 w-4" style={{ color: styles.primary }} />
-                Encouragement • Faith • Transformation
-              </div>
-
-              <H1
-                className="mt-3 font-medium tracking-tight text-white text-2xl sm:text-3xl lg:text-[2.25rem]"
-                style={{ color: styles.text }}
-              >
-                Share Your Testimony
-              </H1>
-
-              <BodyLG className="mt-2 leading-relaxed text-sm sm:text-base" style={{ color: styles.muted }}>
-                Your story can strengthen someone else’s faith. Share what God has done in your life—
-                clearly, sincerely, and with hope.
-              </BodyLG>
-
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <div
-                  className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] sm:text-xs"
-                  style={{ borderColor: styles.border, background: styles.surface, color: styles.muted }}
-                >
-                  <Clock className="h-4 w-4" />
-                  Reviewed within 48 hours
-                </div>
-                <div
-                  className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] sm:text-xs"
-                  style={{ borderColor: styles.border, background: styles.surface, color: styles.muted }}
-                >
-                  <Shield className="h-4 w-4" />
-                  Privacy respected
-                </div>
-              </div>
+    <>
+      {/* Hero */}
+      <Section padding="none" className="relative overflow-hidden bg-[#030303]" perf="none">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.07) 0%, transparent 35%), radial-gradient(circle at 82% 12%, rgba(255,255,255,0.06) 0%, transparent 32%), radial-gradient(circle at 55% 90%, rgba(255,255,255,0.05) 0%, transparent 40%)',
+            filter: 'blur(70px)',
+          }}
+        />
+        <div className="hero-animated" />
+        <Container
+          size="xl"
+          className="relative z-10 flex flex-col gap-6 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-22 min-h-[100vh]"
+        >
+          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
+            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
+              <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-1.5" />
             </div>
+            <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
+              The Wisdom House Church
+            </Caption>
           </div>
 
+          <div className="space-y-4 max-w-4xl">
+            <H1 className="hero-title-glow text-3xl sm:text-4xl md:text-[2.7rem] lg:text-[3rem] font-black text-white leading-tight">
+              Stories of Transformation
+            </H1>
+            <H3 className="text-xl sm:text-2xl lg:text-3xl font-semibold" style={{ color: colorScheme.primary }}>
+              God is moving in our house.
+            </H3>
+            <BodyLG className="text-white/85 leading-relaxed text-base sm:text-lg">
+              Share what God has done in your life or be encouraged by testimonies from our global family.
+            </BodyLG>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl">
+            {[
+              { label: 'Testimonies', value: 'Fresh weekly' },
+              { label: 'Reach', value: 'Global family' },
+              { label: 'Focus', value: 'Jesus at the center' },
+              { label: 'Culture', value: 'Faith & Excellence' },
+            ].map(item => (
+              <div
+                key={item.label}
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 space-y-1"
+                style={{ boxShadow: `0 10px 30px ${styles.primary}20` }}
+              >
+                <Caption className="text-white/60">{item.label}</Caption>
+                <SmallText className="text-white font-semibold">{item.value}</SmallText>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section
+        padding="lg"
+        className="min-h-screen"
+        style={{
+          background: 'linear-gradient(180deg, #050505 0%, #0b0b0b 60%, #050505 100%)',
+        }}
+      >
+        <Container size="xl" className="space-y-9 lg:space-y-12">
           {/* MAIN GRID */}
           <GridboxLayout columns={2} gap="xl" responsive={{ xs: 1, md: 2, lg: 2 }} className="items-start">
             {/* FORM CARD */}
@@ -308,7 +319,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               </div>
 
               <div className="p-6 lg:p-7">
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form id="testimony-form" onSubmit={handleSubmit} className="space-y-6">
                   {/* IMAGE UPLOAD */}
                   {!formData.anonymous && (
                     <div className="space-y-2">
@@ -583,7 +594,49 @@ const handleSubmit = async (e: React.FormEvent) => {
           </GridboxLayout>
         </div>
       </Container>
-    </Section>
+      </Section>
+      <BaseModal
+        isOpen={showWelcome}
+        onClose={() => setShowWelcome(false)}
+        title="Welcome to Testimonies"
+        subtitle="Share what God has done or be encouraged by others."
+        maxWidth="max-w-lg"
+        showHandle
+        forceBottomSheet
+      >
+        <div className="space-y-4 text-white/80">
+          <div className="flex items-center gap-3">
+            <div className="relative h-12 w-12 rounded-2xl overflow-hidden border border-white/15 bg-black/70">
+              <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-2" />
+            </div>
+            <div>
+              <BodySM className="text-white font-semibold">The Wisdom House Church</BodySM>
+              <Caption className="text-white/60">Testimonies • Share & be inspired</Caption>
+            </div>
+          </div>
+          <BodyMD className="text-white/80 leading-relaxed">
+            We celebrate every story of God’s faithfulness. Tell us what He has done, or read how He’s moving among our global family.
+          </BodyMD>
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={() => setShowWelcome(false)}
+              className="rounded-xl px-4 py-2 bg-white text-black font-semibold text-sm hover:opacity-90 transition"
+            >
+              Continue
+            </button>
+            <button
+              onClick={() => {
+                setShowWelcome(false);
+                document.getElementById('testimony-form')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="rounded-xl px-4 py-2 border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition"
+            >
+              Share my testimony
+            </button>
+          </div>
+        </div>
+      </BaseModal>
+    </>
   );
 }
 
