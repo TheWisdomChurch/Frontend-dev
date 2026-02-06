@@ -64,6 +64,7 @@ const HeroSection = ({
   const buttonsRef = useRef<HTMLDivElement>(null!);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null!);
   const waveTextRef = useRef<HTMLDivElement>(null!);
+  const cardsRef = useRef<HTMLDivElement>(null!);
 
   // State
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -260,6 +261,31 @@ const HeroSection = ({
     return cleanupAnimations;
   }, [cleanupAnimations]);
 
+  // Gentle entrance animation for hero text/cards (no heavy motion)
+  useEffect(() => {
+    if (!heroRef.current) return;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.6 } });
+
+    tl.from(waveTextRef.current, { autoAlpha: 0, y: 14 })
+      .from(titleRef.current, { autoAlpha: 0, y: 18 }, '-=0.25')
+      .from(subtitleRef.current, { autoAlpha: 0, y: 16 }, '-=0.25');
+
+    if (buttonsRef.current) {
+      const btns = buttonsRef.current.querySelectorAll('button');
+      tl.from(btns, { autoAlpha: 0, y: 14, stagger: 0.08 }, '-=0.25');
+    }
+
+    if (cardsRef.current) {
+      const cards = cardsRef.current.children;
+      tl.from(cards, { autoAlpha: 0, y: 18, stagger: 0.08 }, '-=0.15');
+    }
+
+    return () => tl.kill();
+  }, []);
+
   // Parallax layers inside hero
   useEffect(() => {
     if (!heroRef.current) return;
@@ -302,7 +328,7 @@ const HeroSection = ({
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative w-full min-h-[85vh] md:min-h-[92vh] overflow-hidden bg-black"
+      className="relative w-full min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] overflow-hidden bg-black"
     >
       {/* Background Slides - FIXED: Proper image handling */}
       {slides.map((slide, index) => (
@@ -330,6 +356,7 @@ const HeroSection = ({
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" data-parallax="0.15" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" data-parallax="0.1" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" data-parallax="0.08" />
+            <div className="hero-matte absolute inset-0 opacity-70" />
           </div>
         </div>
       ))}
@@ -337,12 +364,12 @@ const HeroSection = ({
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 min-h-[85vh] md:min-h-[92vh] flex items-center px-4 sm:px-5 md:px-6 lg:px-10"
+        className="relative z-20 min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-16 pb-12 sm:pt-14 sm:pb-12 md:pt-12 lg:pt-14"
       >
-        <div className="w-full grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 xl:gap-12 items-center">
+        <div className="w-full flex flex-col gap-10 lg:gap-12 xl:gap-14 items-start max-w-6xl">
           {/* Wave of Greatness Text */}
           {showWaveText && (
-            <div className="mb-3 sm:mb-4 md:mb-5 lg:mb-6 relative lg:col-span-1">
+            <div className="mb-6 sm:mb-7 md:mb-8 lg:mb-9 mt-2 sm:mt-0 relative lg:col-span-1">
               <div
                 ref={waveTextRef}
                 className="wave-tagline flex justify-start items-center"
@@ -353,7 +380,7 @@ const HeroSection = ({
                     key={index}
                     className="wave-char inline-block will-change-transform"
                     style={{
-                      fontSize: 'clamp(0.9rem, 1.6vw, 1.15rem)',
+                      fontSize: 'clamp(0.85rem, 1.4vw, 1.1rem)',
                       fontFamily:
                         "'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif",
                       fontWeight: 800,
@@ -373,7 +400,7 @@ const HeroSection = ({
                       `,
                       padding: '0 0.04em',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
+                      letterSpacing: '0.1em',
                       lineHeight: '1.2',
                       WebkitTextStroke: `0.25px ${colorScheme.primaryDark}`,
                     }}
@@ -386,173 +413,170 @@ const HeroSection = ({
           )}
 
           {/* Main Title */}
-          <H1
-            ref={titleRef}
-            className="mb-3 sm:mb-4 md:mb-5 leading-tight tracking-tight font-black text-left"
-            style={{
-              color: '#FFFFFF',
-              textShadow:
-                '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
-            }}
-            useThemeColor={false}
-          >
-            <span className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl block">
-              {renderTitle(currentSlideData.title, colorScheme)}
-            </span>
-          </H1>
-
-          {/* Divider Line */}
-          <div
-            className="h-0.5 w-16 sm:w-20 md:w-24 lg:w-28 mb-4 sm:mb-5 md:mb-6 rounded-full"
-            style={{
-              backgroundColor: colorScheme.primary,
-              backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
-              boxShadow: `0 0 12px ${colorScheme.opacity.primary30}`,
-            }}
-          />
-
-          {/* Subtitle */}
-          {currentSlideData.subtitle && (
-            <H2
-              ref={subtitleRef}
-              className="mb-5 sm:mb-6 md:mb-7 text-left"
+          <div className="relative flex flex-col gap-5 sm:gap-6 md:gap-7 lg:gap-8 w-full max-w-5xl">
+            <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-r from-black/70 via-black/55 to-black/65 backdrop-blur-sm border border-white/10" />
+            <H1
+              ref={titleRef}
+              className="leading-tight tracking-tight font-black text-left"
               style={{
-                color: colorScheme.primary,
+                color: '#FFFFFF',
                 textShadow:
-                  '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
+                  '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
               }}
               useThemeColor={false}
-              weight="bold"
-              smWeight="extrabold"
             >
-              <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl block">
-                {renderSubtitle(currentSlideData.subtitle)}
+              <span className="text-3xl xs:text-[2.5rem] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl block">
+                {renderTitle(currentSlideData.title, colorScheme)}
               </span>
-            </H2>
-          )}
+            </H1>
 
-          {/* Buttons */}
-          <div
-            ref={buttonsRef}
-            className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 md:gap-5 lg:gap-6 justify-start items-center"
-          >
-            <CustomButton
-              variant="primary"
-              size="md"
-              curvature="xl"
-              elevated={true}
-              onClick={handlePrimaryClick}
-              className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
+            {/* Divider Line */}
+            <div
+              className="h-0.5 w-20 sm:w-24 md:w-28 lg:w-32 rounded-full"
               style={{
-                background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                color: colorScheme.buttonText || '#000000',
-                boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
+                backgroundColor: colorScheme.primary,
+                backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
+                boxShadow: `0 0 12px ${colorScheme.opacity.primary30}`,
               }}
-            >
-              <span className="text-sm sm:text-base md:text-lg font-medium">
-                {primaryButtonText}
-              </span>
-            </CustomButton>
+            />
 
-            <CustomButton
-              variant="outline"
-              size="md"
-              curvature="xl"
-              onClick={handleSecondaryClick}
-              style={{
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                borderWidth: '1.5px',
-                color: '#FFFFFF',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              }}
-              className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
+            {/* Subtitle */}
+            {currentSlideData.subtitle && (
+              <H2
+                ref={subtitleRef}
+                className="text-left"
+                style={{
+                  color: colorScheme.primary,
+                  textShadow:
+                    '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
+                }}
+                useThemeColor={false}
+                weight="bold"
+                smWeight="extrabold"
+              >
+                <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2.25rem] block">
+                  {renderSubtitle(currentSlideData.subtitle)}
+                </span>
+              </H2>
+            )}
+
+            {/* Buttons */}
+            <div
+              ref={buttonsRef}
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6 justify-start items-center pt-2"
             >
-              <span className="text-sm sm:text-base md:text-lg font-medium">
-                {secondaryButtonText}
-              </span>
-            </CustomButton>
+              <CustomButton
+                variant="primary"
+                size="md"
+                curvature="xl"
+                elevated={true}
+                onClick={handlePrimaryClick}
+                className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
+                style={{
+                  background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
+                  color: colorScheme.buttonText || '#000000',
+                  boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
+                }}
+              >
+                <span className="text-sm sm:text-base md:text-lg font-semibold tracking-wide">
+                  {primaryButtonText}
+                </span>
+              </CustomButton>
+
+              <CustomButton
+                variant="outline"
+                size="md"
+                curvature="xl"
+                onClick={handleSecondaryClick}
+                style={{
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  borderWidth: '1.5px',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                }}
+                className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
+              >
+                <span className="text-sm sm:text-base md:text-lg font-semibold tracking-wide">
+                  {secondaryButtonText}
+                </span>
+              </CustomButton>
+            </div>
           </div>
-          <div className="lg:col-span-1">
-            <div className="relative">
-              <div
-                className="absolute -top-8 -left-6 h-24 w-24 rounded-full blur-3xl opacity-60"
-                style={{ backgroundColor: colorScheme.primary }}
-                data-parallax="0.2"
-              />
-              <div className="space-y-4">
+          <div
+            ref={cardsRef}
+            className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6"
+          >
+            <div
+              className="rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-5 sm:p-6 flex flex-col gap-3"
+              data-parallax="0.12"
+              data-gsap="reveal"
+            >
+              <div className="flex items-center gap-3">
                 <div
-                  className="rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-5 sm:p-6"
-                  data-parallax="0.12"
-                  data-gsap="reveal"
+                  className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
+                  style={{ background: colorScheme.primary }}
                 >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div
-                      className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
-                      style={{ background: colorScheme.primary }}
-                    >
-                      <CalendarClock className="w-5 h-5 text-black" />
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-white/70 font-semibold">
-                        {upcoming.label}
-                      </p>
-                      <p className="text-lg text-white font-semibold">
-                        {upcoming.title}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 text-sm text-white/85">
-                    <div className="flex items-center gap-2">
-                      <CalendarClock className="w-4 h-4" />
-                      <span>
-                        {upcoming.date} • {upcoming.time}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      <span>{upcoming.location}</span>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <CustomButton
-                      size="sm"
-                      curvature="full"
-                      elevated
-                      onClick={handleUpcomingCta}
-                      className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
-                    >
-                      {upcoming.ctaLabel ?? 'Reserve a seat'}
-                    </CustomButton>
-                  </div>
+                  <CalendarClock className="w-5 h-5 text-black" />
                 </div>
-
-                <div
-                  className="rounded-3xl border border-white/10 bg-black/50 backdrop-blur-xl p-5 sm:p-6 flex items-center justify-between"
-                  data-parallax="0.18"
-                  data-gsap="reveal"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-2xl border border-white/20 flex items-center justify-center">
-                      <PlayCircle className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-white font-semibold">
-                        Watch Live Stream
-                      </p>
-                      <p className="text-xs text-white/60">Sundays & midweek services</p>
-                    </div>
-                  </div>
-                  <CustomButton
-                    variant="outline"
-                    size="sm"
-                    curvature="full"
-                    onClick={handleSecondaryClick}
-                    className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10"
-                  >
-                    Watch
-                  </CustomButton>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-white/70 font-semibold">
+                    {upcoming.label}
+                  </p>
+                  <p className="text-lg text-white font-semibold">
+                    {upcoming.title}
+                  </p>
                 </div>
               </div>
+              <div className="space-y-2 text-sm text-white/85">
+                <div className="flex items-center gap-2">
+                  <CalendarClock className="w-4 h-4" />
+                  <span>
+                    {upcoming.date} • {upcoming.time}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  <span>{upcoming.location}</span>
+                </div>
+              </div>
+              <div>
+                <CustomButton
+                  size="sm"
+                  curvature="full"
+                  elevated
+                  onClick={handleUpcomingCta}
+                  className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
+                >
+                  {upcoming.ctaLabel ?? 'Reserve a seat'}
+                </CustomButton>
+              </div>
+            </div>
+
+            <div
+              className="rounded-3xl border border-white/10 bg-black/50 backdrop-blur-xl p-5 sm:p-6 flex items-center justify-between gap-3"
+              data-parallax="0.18"
+              data-gsap="reveal"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-white/20 flex items-center justify-center">
+                  <PlayCircle className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm text-white font-semibold">
+                    Watch Live Stream
+                  </p>
+                  <p className="text-xs text-white/60">Sundays & midweek services</p>
+                </div>
+              </div>
+              <CustomButton
+                variant="outline"
+                size="sm"
+                curvature="full"
+                onClick={handleSecondaryClick}
+                className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10"
+              >
+                Watch
+              </CustomButton>
             </div>
           </div>
         </div>

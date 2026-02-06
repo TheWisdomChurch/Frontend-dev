@@ -232,7 +232,7 @@ export const EventRegistrationModal = ({
             </div>
           )}
 
-          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 pb-6">
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 pb-28">
             {step === 'personal' && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
