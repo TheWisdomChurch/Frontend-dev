@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import HeroSection from '@/components/ui/Homepage/heromain';
 import HeroHighlights from '@/components/ui/Homepage/HeroHighlights';
 import ProfessionalPopup from '@/components/ui/ConfessionPopup';
-import WisdomPowerAdModal from '@/components/modal/WisdomPowerAdModal';
 import MobileDebug from '@/components/utils/mobileDebug';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
@@ -45,7 +44,6 @@ const ResourceSection = dynamic(() => import('@/components/ui/Homepage/Resource'
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
-  const [showAdModal, setShowAdModal] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { colorScheme } = useTheme();
 
@@ -75,11 +73,6 @@ export default function Home() {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setTimeout(() => setShowAdModal(true), 500);
-  };
-
-  const handleCloseAd = () => {
-    setShowAdModal(false);
   };
 
   return (
@@ -130,9 +123,6 @@ export default function Home() {
 
         {showModal && (
           <ProfessionalPopup onClose={handleCloseModal} delay={0} />
-        )}
-        {showAdModal && (
-          <WisdomPowerAdModal isOpen={showAdModal} onClose={handleCloseAd} />
         )}
       </main>
     </div>
