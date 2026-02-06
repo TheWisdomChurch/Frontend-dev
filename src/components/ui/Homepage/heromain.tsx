@@ -65,6 +65,7 @@ const HeroSection = ({
   const scrollIndicatorRef = useRef<HTMLDivElement>(null!);
   const waveTextRef = useRef<HTMLDivElement>(null!);
   const cardsRef = useRef<HTMLDivElement>(null!);
+  const [latestVideo, setLatestVideo] = useState<{ id: string; title: string; thumbnail?: string } | null>(null);
 
   // State
   const [currentSlide, setCurrentSlide] = useState(0);
