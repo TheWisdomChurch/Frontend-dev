@@ -592,7 +592,6 @@ const handleSubmit = async (e: React.FormEvent) => {
               </div>
             </div>
           </GridboxLayout>
-        </div>
       </Container>
       </Section>
       <BaseModal
