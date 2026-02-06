@@ -73,7 +73,9 @@ const HeroSection = ({
 
   // Derived values
   const slidesLength = slides.length;
+  // Keep single visible slide to prevent flicker while we stabilise hero readability
   const isMultiSlide = slidesLength > 1;
+  const enableAutoSlide = false;
   const currentSlideData = slides[currentSlide];
   const fallbackUpcoming = {
     label: 'Upcoming',
@@ -177,7 +179,7 @@ const HeroSection = ({
   );
 
   useAutoSlide(
-    isMultiSlide,
+    enableAutoSlide && isMultiSlide,
     isAnimating,
     currentSlide,
     slidesLength,
@@ -357,7 +359,7 @@ const HeroSection = ({
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" data-parallax="0.15" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" data-parallax="0.1" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" data-parallax="0.08" />
-            <div className="hero-matte absolute inset-0 opacity-70" />
+            <div className="hero-matte absolute inset-0 opacity-30" />
           </div>
         </div>
       ))}
