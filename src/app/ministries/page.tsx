@@ -8,7 +8,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronRight } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { H2, BodyLG, BodyMD, Caption, SmallText } from '@/components/text';
+import { H2, H3, BodyLG, BodyMD, Caption, SmallText } from '@/components/text';
 import { Section, Container, GridboxLayout } from '@/components/layout';
 import { WisdomeHouseLogo } from '@/components/assets';
 import { Ministries } from '@/lib/data';
