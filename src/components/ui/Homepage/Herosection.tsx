@@ -101,7 +101,7 @@ const HeroSection = ({
     const base = getHeroClasses();
     return {
       ...base,
-      container: `${base.container} min-h-[80vh] md:min-h-[88vh] lg:min-h-[95vh] xl:min-h-[100vh]`,
+      container: `${base.container} min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh]`,
     };
   }, [getHeroClasses]);
 
@@ -164,13 +164,14 @@ const HeroSection = ({
                 {...imageProps}
               />
 
-              {/* Enhanced gradient overlay - optimized for taller heights */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/97 via-black/40 to-black/10" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/90 to-transparent" />
-              
-              {/* Subtle animated particles overlay */}
-              <div className="absolute inset-0 opacity-[0.12]">
+            {/* Enhanced gradient overlay - optimized for taller heights */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/97 via-black/40 to-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/90 to-transparent" />
+            <div className="hero-animated" />
+            
+            {/* Subtle animated particles overlay */}
+            <div className="absolute inset-0 opacity-[0.12]">
                 {Array.from({ length: 30 }).map((_, i) => (
                   <div
                     key={i}
@@ -204,6 +205,7 @@ const HeroSection = ({
             <div className="absolute inset-0 bg-gradient-to-t from-black/97 via-black/40 to-black/10" />
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/90 to-transparent" />
+            <div className="hero-animated" />
             
             {/* Subtle animated particles */}
             <div className="absolute inset-0 opacity-[0.12]">
@@ -258,7 +260,7 @@ const HeroSection = ({
               }}
               useThemeColor={false}
             >
-              <span className={`${heroClasses.title} block`}>
+              <span className={`hero-title-glow ${heroClasses.title} block`}>
                 {currentSlideData.title}
               </span>
             </H1>

@@ -2,9 +2,8 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
-import HeroSection from '@/components/ui/Homepage/Herosection';
 import { H2, H3, H4, P, SmallText, Caption } from '@/components/text';
-import { hero_bg_2 } from '@/components/assets';
+import { WisdomeHouseLogo } from '@/components/assets';
 import { leaders, ministryLeadersData, deaconsData } from '@/lib/data';
 import Image from 'next/image';
 import { gsap } from 'gsap';
@@ -1206,15 +1205,62 @@ const LeadersPage = () => {
       className="min-h-screen transition-colors duration-300"
       style={{ backgroundColor: colorScheme.pageBackground }}
     >
-      {/* Hero Section */}
-      <HeroSection
-        title="Our Leadership"
-        subtitle="Guided by Servant Leaders"
-        description="Meet the dedicated team of pastors, deacons, and leaders who serve our church family with wisdom, compassion, and commitment to God's calling."
-        backgroundImage={hero_bg_2.src}
-        showButtons={false}
-        showScrollIndicator={true}
-      />
+      {/* Hero */}
+      <Section padding="none" className="relative overflow-hidden bg-[#030303]" perf="none">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.07) 0%, transparent 35%), radial-gradient(circle at 82% 12%, rgba(255,255,255,0.06) 0%, transparent 32%), radial-gradient(circle at 55% 90%, rgba(255,255,255,0.05) 0%, transparent 40%)',
+            filter: 'blur(70px)',
+          }}
+        />
+        <div className="hero-animated" />
+        <Container
+          size="xl"
+          className="relative z-10 flex flex-col gap-8 lg:gap-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-22 min-h-[100vh]"
+        >
+          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
+            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
+              <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-1.5" />
+            </div>
+            <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
+              The Wisdom House Church
+            </Caption>
+          </div>
+
+          <div className="space-y-4 max-w-4xl">
+            <H2 className="text-3xl sm:text-4xl md:text-[2.8rem] lg:text-[3rem] font-black text-white leading-tight">
+              Our Leadership
+            </H2>
+            <H3 className="text-xl sm:text-2xl lg:text-3xl font-semibold" style={{ color: colorScheme.primary }}>
+              Guided by servant leaders.
+            </H3>
+            <P className="text-white/80 leading-relaxed text-base sm:text-lg">
+              Meet the dedicated team of pastors, deacons, and leaders who serve our church family with wisdom,
+              compassion, and commitment to God's calling.
+            </P>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl">
+            {[
+              { label: 'Lead Pastors', value: leaders.length },
+              { label: 'Ministries', value: ministryLeadersData.length },
+              { label: 'Deacons', value: deaconsData.length },
+              { label: 'Focus', value: 'Wisdom & Power' },
+            ].map(item => (
+              <div
+                key={item.label}
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 space-y-1"
+                style={{ boxShadow: `0 10px 30px ${colorScheme.opacity.primary10}` }}
+              >
+                <Caption className="text-white/60">{item.label}</Caption>
+                <SmallText className="text-white font-semibold">{item.value}</SmallText>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
 
       {/* Main Leadership Section */}
       <Section
