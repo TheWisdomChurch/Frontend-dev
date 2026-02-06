@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { CreateTestimonialRequest } from '@/lib/apiTypes';
+import { WisdomeHouseLogo } from '@/components/assets';
+import { BaseModal } from '@/components/modal/Base';
 
 
 const BREAKPOINTS = { md: 768 } as const;
