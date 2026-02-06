@@ -18,6 +18,7 @@ import { useAutoSlide } from '@/components/utils/hooks/mainHeroHooks/useAutoSlid
 import { useHeroAnimation } from '@/components/utils/hooks/mainHeroHooks/useheroAnimation';
 import { useSlideAnimation } from '@/components/utils/hooks/mainHeroHooks/useSlideAnimation';
 import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
+import type { YouTubeVideo } from '@/lib/types';
 import Image from 'next/image';
 
 // Type guard helper for image objects
@@ -65,7 +66,8 @@ const HeroSection = ({
   const scrollIndicatorRef = useRef<HTMLDivElement>(null!);
   const waveTextRef = useRef<HTMLDivElement>(null!);
   const cardsRef = useRef<HTMLDivElement>(null!);
-  const [latestVideo, setLatestVideo] = useState<{ id: string; title: string; thumbnail?: string } | null>(null);
+  const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
+  const [videoLoading, setVideoLoading] = useState(false);
 
   // State
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -259,6 +261,28 @@ const HeroSection = ({
     handleUnavailable('Live stream coming soon');
   }, [onSecondaryButtonClick, handleUnavailable]);
 
+  // Pull newest YouTube video for hero card
+  useEffect(() => {
+    let mounted = true;
+    const fetchLatest = async () => {
+      setVideoLoading(true);
+      try {
+        const res = await fetch('/api/sermons?sort=newest', { cache: 'force-cache' });
+        if (!res.ok) return;
+        const data: YouTubeVideo[] = await res.json();
+        if (mounted && data.length) setLatestVideo(data[0]);
+      } catch (err) {
+        console.warn('Hero latest video fetch failed', err);
+      } finally {
+        if (mounted) setVideoLoading(false);
+      }
+    };
+    fetchLatest();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   // Cleanup on unmount
   useEffect(() => {
     return cleanupAnimations;
@@ -367,57 +391,50 @@ const HeroSection = ({
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-16 pb-12 sm:pt-14 sm:pb-12 md:pt-12 lg:pt-14"
+        className="relative z-20 min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20"
       >
         <div className="w-full flex flex-col gap-10 lg:gap-12 xl:gap-14 items-start max-w-6xl">
           {/* Wave of Greatness Text */}
           {showWaveText && (
-            <div className="mb-6 sm:mb-7 md:mb-8 lg:mb-9 mt-2 sm:mt-0 relative lg:col-span-1">
+            <div className="w-full flex justify-start mt-2 sm:mt-4 lg:mt-6 mb-6 sm:mb-8 md:mb-9 lg:mb-10">
               <div
                 ref={waveTextRef}
-                className="wave-tagline flex justify-start items-center"
-                style={{ opacity: 0.95 }}
+                className="relative inline-flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-full border border-white/15 bg-white/8 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+                style={{ opacity: 0.97 }}
               >
-                {'THE WAVE OF GREATNESS'.split('').map((char, index) => (
+                <span
+                  className="h-2 w-2 rounded-full shadow-[0_0_12px_currentColor]"
+                  style={{ backgroundColor: colorScheme.primary }}
+                />
+                <span
+                  className="flex items-center gap-2 uppercase tracking-[0.18em] font-black text-[0.78rem] sm:text-[0.9rem] md:text-[1rem] leading-tight"
+                  style={{
+                    color: '#fff',
+                    textShadow: `0 2px 10px rgba(0,0,0,0.45)`,
+                  }}
+                >
                   <span
-                    key={index}
-                    className="wave-char inline-block will-change-transform"
+                    className="inline-block text-transparent bg-clip-text"
                     style={{
-                      fontSize: 'clamp(0.85rem, 1.4vw, 1.1rem)',
-                      fontFamily:
-                        "'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif",
-                      fontWeight: 800,
-                      color: 'transparent',
-                      backgroundImage: `linear-gradient(
-                        110deg,
-                        ${colorScheme.primaryLight} 0%,
-                        #ffffff 35%,
-                        ${colorScheme.primary} 70%,
-                        ${colorScheme.primaryDark} 100%
-                      )`,
-                      backgroundClip: 'text',
+                      backgroundImage: `linear-gradient(120deg, ${colorScheme.primaryLight} 0%, #ffffff 35%, ${colorScheme.primary} 70%, ${colorScheme.primaryDark} 100%)`,
                       WebkitBackgroundClip: 'text',
-                      textShadow: `
-                        0 0 12px ${colorScheme.opacity.primary35},
-                        0 2px 10px rgba(0,0,0,0.65)
-                      `,
-                      padding: '0 0.04em',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                      lineHeight: '1.2',
-                      WebkitTextStroke: `0.25px ${colorScheme.primaryDark}`,
                     }}
                   >
-                    {char === ' ' ? '\u00A0' : char}
+                    THE WAVE OF GREATNESS
                   </span>
-                ))}
+                </span>
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    boxShadow: `0 0 0 1px rgba(255,255,255,0.06), 0 18px 40px rgba(0,0,0,0.35)`,
+                  }}
+                />
               </div>
             </div>
           )}
 
           {/* Main Title */}
-          <div className="relative flex flex-col gap-5 sm:gap-6 md:gap-7 lg:gap-8 w-full max-w-5xl">
-            <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-r from-black/70 via-black/55 to-black/65 backdrop-blur-sm border border-white/10" />
+          <div className="relative flex flex-col gap-6 sm:gap-7 md:gap-8 lg:gap-9 w-full max-w-5xl">
             <H1
               ref={titleRef}
               className="leading-tight tracking-tight font-black text-left"
@@ -566,20 +583,57 @@ const HeroSection = ({
                 </div>
                 <div>
                   <p className="text-sm text-white font-semibold">
-                    Watch Live Stream
+                    Watch live stream
                   </p>
-                  <p className="text-xs text-white/60">Sundays & midweek services</p>
+                  <p className="text-xs text-white/60">Latest message from YouTube</p>
                 </div>
               </div>
-              <CustomButton
-                variant="outline"
-                size="sm"
-                curvature="full"
-                onClick={handleSecondaryClick}
-                className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10"
-              >
-                Watch
-              </CustomButton>
+              {latestVideo ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-white/15 bg-black/60">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={
+                        latestVideo.thumbnail ||
+                        (latestVideo as any)?.thumbnails?.medium?.url ||
+                        (latestVideo as any)?.thumbnails?.default?.url ||
+                        '/images/placeholder.jpg'
+                      }
+                      alt={latestVideo.title}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
+                      <PlayCircle className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-semibold line-clamp-2">
+                      {latestVideo.title}
+                    </p>
+                    <p className="text-white/60 text-xs">Tap to watch now</p>
+                  </div>
+                  <a
+                    href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg"
+                  >
+                    <PlayCircle className="w-4 h-4" /> Play
+                  </a>
+                </div>
+              ) : (
+                <CustomButton
+                  variant="outline"
+                  size="sm"
+                  curvature="full"
+                  onClick={handleSecondaryClick}
+                  className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10"
+                >
+                  {videoLoading ? 'Loading…' : 'Watch'}
+                </CustomButton>
+              )}
             </div>
           </div>
         </div>
