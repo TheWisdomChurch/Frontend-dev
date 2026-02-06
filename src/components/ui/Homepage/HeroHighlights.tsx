@@ -14,10 +14,10 @@ import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableC
 
 const highlights = [
   {
-    title: 'Wave Sundays',
-    meta: 'Two vibrant gatherings',
+    title: 'Worship with us onsite',
+    meta: 'In-person gathering',
     detail: 'Sundays • 9:00 AM (WAT)',
-    description: 'Spirit-filled worship, teaching, and community moments.',
+    description: 'Be in the room for worship, teaching, and community.',
     icon: CalendarClock,
     href: '/contact',
     actionLabel: 'Plan a visit',
@@ -77,13 +77,13 @@ export default function HeroHighlights() {
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[120] flex items-center justify-center px-4"
         >
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setModal(null)} />
+          <div className="absolute inset-0 bg-black/65 backdrop-blur-md" onClick={() => setModal(null)} />
           <motion.div
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.96, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-lg rounded-3xl border border-white/15 bg-[#0f0f0f] p-6 shadow-2xl text-white"
+            className="relative w-full max-w-2xl rounded-[28px] border border-white/12 bg-gradient-to-br from-[#0f0f0f] via-[#121212] to-[#0c0c0c] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white"
           >
             <button
               onClick={() => setModal(null)}
@@ -92,13 +92,13 @@ export default function HeroHighlights() {
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="space-y-2 pr-8">
-              <p className="text-xs uppercase tracking-[0.18em] text-white/60">Quick form</p>
-              <h3 className="text-2xl font-black">{copy.title}</h3>
-              <p className="text-white/70 text-sm leading-relaxed">{copy.description}</p>
+            <div className="space-y-3 pr-10">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
+              <h3 className="text-3xl font-black leading-tight">{copy.title}</h3>
+              <p className="text-white/75 text-sm leading-relaxed">{copy.description}</p>
             </div>
             <form
-              className="mt-4 space-y-3"
+              className="mt-6 space-y-4"
               onSubmit={(e) => {
                 e.preventDefault();
                 setModal(null);
@@ -110,41 +110,57 @@ export default function HeroHighlights() {
                 });
               }}
             >
-              <input
-                type="text"
-                placeholder="Full name"
-                className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
-                required
-              />
-              <input
-                type="email"
-                placeholder="Email address"
-                className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
-                required
-              />
-              {modal === 'visit' ? (
-                <input
-                  type="date"
-                  className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
-                  required
-                />
-              ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <input
                   type="text"
-                  placeholder="Which team? (media, music, hospitality)"
-                  className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
+                  placeholder="Full name"
+                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
                   required
                 />
-              )}
-              <button
-                type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-white text-black font-semibold py-3 text-sm hover:scale-[1.01] transition"
-              >
-                {copy.cta} <ArrowRight className="w-4 h-4" />
-              </button>
-              <p className="text-white/50 text-xs">
-                We confirm by email and send a reminder. No spam, ever.
-              </p>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                  required
+                />
+                {modal === 'visit' ? (
+                  <input
+                    type="date"
+                    className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                    required
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    placeholder="Which team? (media, music, hospitality)"
+                    className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                    required
+                  />
+                )}
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                  required
+                />
+              </div>
+              <textarea
+                placeholder="Anything we should know?"
+                className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 min-h-[120px] resize-none"
+              />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p className="text-white/55 text-xs">
+                  We confirm by email and send a reminder. No spam, ever.
+                </p>
+                <CustomButton
+                  variant="primary"
+                  size="md"
+                  curvature="xl"
+                  className="px-6 py-3 text-sm font-semibold shadow-lg shadow-primary/20"
+                >
+                  {copy.cta}
+                </CustomButton>
+              </div>
             </form>
           </motion.div>
         </motion.div>
