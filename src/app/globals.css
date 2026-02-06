@@ -224,6 +224,17 @@ main > *:not(:first-child) {
   }
 }
 
+/* Thin dividers between stacked page sections */
+main > * + * {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 640px) {
+  main > * + * {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+}
+
 /* Wave of Greatness refinement */
 .wave-tagline {
   gap: 0.08em;
@@ -255,6 +266,45 @@ main > *:not(:first-child) {
     background-position: 0% 50%;
     transform: translateY(0);
   }
+}
+
+/* Matte textured overlay for hero */
+.hero-matte {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05) 0%, transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(255,255,255,0.04) 0%, transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(255,255,255,0.035) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.65));
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Animated dotted wave overlay for heroes */
+.hero-animated {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: 140px 140px, 220px 220px;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.06) 1.2px, transparent 1.2px),
+    radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  animation: heroDots 22s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes heroDots {
+  0% { background-position: 0 0, 0 0; }
+  50% { background-position: 80px 60px, -90px -70px; }
+  100% { background-position: 0 0, 0 0; }
+}
+
+/* Hero title glow */
+.hero-title-glow {
+  text-shadow:
+    0 3px 12px rgba(0,0,0,0.6),
+    0 6px 24px rgba(0,0,0,0.45),
+    0 0 18px rgba(255,255,255,0.12);
+  letter-spacing: 0.01em;
 }
 
 
