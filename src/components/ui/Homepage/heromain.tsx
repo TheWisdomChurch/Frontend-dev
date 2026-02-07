@@ -65,9 +65,10 @@ const HeroSection = ({
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
   const [videoLoading, setVideoLoading] = useState(false);
 
-  // Keep hero static on the first slide for stability
-  const currentSlideData = slides[0] ?? defaultSlides[0];
-  const heroSlides = currentSlideData ? [currentSlideData] : [];
+  // Simple slider state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideList = slides.length ? slides : defaultSlides;
+  const currentSlideData = slideList[currentSlide] ?? defaultSlides[0];
   const fallbackUpcoming = {
     label: 'Upcoming',
     title: 'Wisdom Power Conference 26',
@@ -125,6 +126,14 @@ const HeroSection = ({
   }, []);
 
   useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
+
+  // Auto-rotate slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % slideList.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [slideList.length]);
 
   // Scroll to next section
   const scrollToNextSection = useCallback(() => {
@@ -249,11 +258,11 @@ const HeroSection = ({
       className="relative w-full min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] overflow-hidden bg-black"
     >
       {/* Background Slides - FIXED: Proper image handling */}
-      {heroSlides.map((slide, index) => (
+      {slideList.map((slide, index) => (
         <div
           key={index}
           className={`absolute inset-0 transition-all duration-800 ease-in-out ${
-            index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >
           <div className="relative w-full h-full" data-parallax="0.25">
@@ -527,6 +536,28 @@ const HeroSection = ({
           </div>
         </div>
       </Container>
+
+      {/* Slide Indicators */}
+      {slideList.length > 1 && (
+        <div className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2">
+          {slideList.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-200 ${
+                currentSlide === index ? 'scale-110' : 'scale-90'
+              }`}
+              style={{
+                backgroundColor:
+                  currentSlide === index ? colorScheme.primary : 'rgba(255,255,255,0.3)',
+                boxShadow:
+                  currentSlide === index ? `0 0 6px ${colorScheme.primary}` : 'none',
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Scroll Indicators */}
       <ScrollIndicators
