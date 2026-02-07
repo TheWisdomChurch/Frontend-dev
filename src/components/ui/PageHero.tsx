@@ -14,6 +14,7 @@ type PageHeroProps = {
   eyebrow?: string;
   note?: string;
   chips?: string[];
+  compact?: boolean;
 };
 
 export default function PageHero({
@@ -22,6 +23,7 @@ export default function PageHero({
   eyebrow = 'The Wisdom House Church',
   note,
   chips,
+  compact = false,
 }: PageHeroProps) {
   const { colorScheme } = useTheme();
 
@@ -47,7 +49,7 @@ export default function PageHero({
 
       <Container
         size="xl"
-        className="relative z-10 flex flex-col gap-6 sm:gap-7 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-16 lg:pb-20"
+        className="relative z-10 flex flex-col gap-6 sm:gap-7 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 pt-28 sm:pt-32 lg:pt-36 pb-20 lg:pb-28"
       >
         <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur fade-up">
           <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
@@ -57,16 +59,34 @@ export default function PageHero({
         </div>
 
         <div className="space-y-3 max-w-3xl fade-up" style={{ animationDelay: '70ms' }}>
-          <H2 className="text-3xl sm:text-4xl md:text-[2.75rem] font-extrabold text-white leading-tight">
+          <H2
+            className={
+              compact
+                ? 'text-2xl sm:text-3xl md:text-[2.2rem] font-bold text-white leading-tight'
+                : 'text-3xl sm:text-4xl md:text-[2.75rem] font-extrabold text-white leading-tight'
+            }
+          >
             {title}
           </H2>
           {subtitle && (
-            <BodySM className="text-white/80 text-base sm:text-lg leading-relaxed">
+            <BodySM
+              className={
+                compact
+                  ? 'text-white/80 text-sm sm:text-base leading-relaxed'
+                  : 'text-white/80 text-base sm:text-lg leading-relaxed'
+              }
+            >
               {subtitle}
             </BodySM>
           )}
           {note && (
-            <BodySM className="text-white/65 text-sm sm:text-base leading-relaxed">
+            <BodySM
+              className={
+                compact
+                  ? 'text-white/65 text-xs sm:text-sm leading-relaxed'
+                  : 'text-white/65 text-sm sm:text-base leading-relaxed'
+              }
+            >
               {note}
             </BodySM>
           )}
@@ -77,7 +97,7 @@ export default function PageHero({
             {chips.map(chip => (
               <span
                 key={chip}
-                className="px-3 py-1 rounded-full text-xs font-semibold border border-white/15 bg-white/5 text-white"
+                className="px-2.5 py-1 rounded-full text-[11px] font-semibold border border-white/15 bg-white/5 text-white"
                 style={{ boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}` }}
               >
                 {chip}

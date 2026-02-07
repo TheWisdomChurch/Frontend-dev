@@ -5,8 +5,6 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
 import { H2, BaseText, BodyMD, SemiBoldText, Caption, SmallText, H1 } from '@/components/text';
-import { WisdomeHouseLogo } from '@/components/assets';
-import Image from 'next/image';
 import SermonUtil from '@/components/ui/Sermons';
 import Button from '@/components/utils/buttons/CustomButton';
 import {
@@ -17,6 +15,7 @@ import {
 } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { Youtube } from 'lucide-react';
+import PageHero from '@/components/ui/PageHero';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,60 +60,12 @@ const SermonPage = () => {
 
   return (
     <div className="min-h-screen">
-      <Section padding="none" className="relative overflow-hidden bg-black" perf="none">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.05) 0%, transparent 35%), radial-gradient(circle at 82% 12%, rgba(255,255,255,0.05) 0%, transparent 32%), radial-gradient(circle at 55% 90%, rgba(255,255,255,0.04) 0%, transparent 40%)',
-            filter: 'blur(70px)',
-          }}
-        />
-        <div className="hero-animated" />
-        <Container
-          size="xl"
-          className="relative z-10 flex flex-col gap-6 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-22 min-h-[100vh]"
-        >
-          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
-            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
-              <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-1.5" />
-            </div>
-            <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
-              The Wisdom House Church
-            </Caption>
-          </div>
-
-          <div className="space-y-4 max-w-4xl">
-            <H1 className="hero-title-glow text-3xl sm:text-4xl md:text-[2.8rem] lg:text-[3.1rem] font-black text-white leading-tight">
-              Sermons & Teachings
-            </H1>
-            <H2 className="text-xl sm:text-2xl lg:text-3xl font-semibold" style={{ color: colorScheme.primary }}>
-              Catch up on every message.
-            </H2>
-            <BodyMD className="text-white/85 leading-relaxed text-base sm:text-lg">
-              Discover transformative messages from Sundays, conferences, and midweek gatherings. Grow through practical biblical teaching.
-            </BodyMD>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl">
-            {[
-              { label: 'Platform', value: 'YouTube' },
-              { label: 'Format', value: 'Video + Audio' },
-              { label: 'New', value: 'Weekly uploads' },
-              { label: 'Live', value: 'Sundays & Thursdays' },
-            ].map(item => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 space-y-1"
-                style={{ boxShadow: `0 10px 30px ${colorScheme.primary}20` }}
-              >
-                <Caption className="text-white/60">{item.label}</Caption>
-                <SmallText className="text-white font-semibold">{item.value}</SmallText>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <PageHero
+        title="Sermons & Teachings"
+        subtitle="Catch up on every message"
+        note="Transformative messages from Sundays, conferences, and midweek gatherings. Practical biblical teaching for daily life."
+        chips={['Platform: YouTube', 'Format: Video + Audio', 'New: Weekly uploads', 'Live: Sun & Thu']}
+      />
 
       <SermonUtil />
 
@@ -133,7 +84,7 @@ const SermonPage = () => {
             className="text-center"
           >
             <H2
-              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center mb-8"
+              className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight text-center mb-6"
               style={{ color: themeStyles.textColor }}
             >
               Watch & Listen Anywhere

@@ -6,6 +6,7 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { H1, H3, BodyMD, BodySM, BodyLG, Caption, SmallText } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
 import { Section, Container, GridboxLayout } from '@/components/layout';
+import PageHero from '@/components/ui/PageHero';
 import {
   Camera,
   Check,
@@ -61,7 +62,7 @@ export default function TestimoniesPage() {
     const checkViewport = () => setIsMobile(window.innerWidth < BREAKPOINTS.md);
     checkViewport();
     window.addEventListener('resize', checkViewport);
-    return () => window.removeEventListener('resize', checkViewport);
+  return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
   const styles = useMemo(() => {
@@ -238,61 +239,12 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   return (
     <>
-      {/* Hero */}
-      <Section padding="none" className="relative overflow-hidden bg-[#030303]" perf="none">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.07) 0%, transparent 35%), radial-gradient(circle at 82% 12%, rgba(255,255,255,0.06) 0%, transparent 32%), radial-gradient(circle at 55% 90%, rgba(255,255,255,0.05) 0%, transparent 40%)',
-            filter: 'blur(70px)',
-          }}
-        />
-        <div className="hero-animated" />
-        <Container
-          size="xl"
-          className="relative z-10 flex flex-col gap-6 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-22 min-h-[100vh]"
-        >
-          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
-            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
-              <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-1.5" />
-            </div>
-            <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
-              The Wisdom House Church
-            </Caption>
-          </div>
-
-          <div className="space-y-4 max-w-4xl">
-            <H1 className="hero-title-glow text-3xl sm:text-4xl md:text-[2.7rem] lg:text-[3rem] font-black text-white leading-tight">
-              Stories of Transformation
-            </H1>
-            <H3 className="text-xl sm:text-2xl lg:text-3xl font-semibold" style={{ color: colorScheme.primary }}>
-              God is moving in our house.
-            </H3>
-            <BodyLG className="text-white/85 leading-relaxed text-base sm:text-lg">
-              Share what God has done in your life or be encouraged by testimonies from our global family.
-            </BodyLG>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl">
-            {[
-              { label: 'Testimonies', value: 'Fresh weekly' },
-              { label: 'Reach', value: 'Global family' },
-              { label: 'Focus', value: 'Jesus at the center' },
-              { label: 'Culture', value: 'Faith & Excellence' },
-            ].map(item => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 space-y-1"
-                style={{ boxShadow: `0 10px 30px ${styles.primary}20` }}
-              >
-                <Caption className="text-white/60">{item.label}</Caption>
-                <SmallText className="text-white font-semibold">{item.value}</SmallText>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <PageHero
+        title="Stories of Transformation"
+        subtitle="God is moving in our house."
+        note="Share what God has done in your life or be encouraged by testimonies from our global family."
+        chips={['Testimonies: Fresh weekly', 'Reach: Global family', 'Focus: Jesus at the center', 'Culture: Faith & Excellence']}
+      />
 
       <Section
         padding="lg"

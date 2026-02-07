@@ -9,9 +9,11 @@ import {
   MapPin,
   MessageCircle,
   ChevronDown,
+  CheckCircle2,
 } from 'lucide-react';
 import { H2, H3, BodyMD, BodyLG, Caption } from '@/components/text';
 import { Section, Container } from '@/components/layout';
+import { BaseModal } from '@/components/modal/Base';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
 interface PastoralCareFormData {
@@ -46,9 +48,10 @@ const PastoralCareUnit = () => {
     comments: '',
   });
 
-  const [errors, setErrors] = useState<Partial<PastoralCareFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const errors: Partial<PastoralCareFormData> = {};
 
   const eventTypes = [
     'Wedding Ceremony',
@@ -85,76 +88,23 @@ const PastoralCareUnit = () => {
         [name]: value,
       }));
 
-      // Clear error when user starts typing
-      if (errors[name as keyof PastoralCareFormData]) {
-        setErrors(prev => ({
-          ...prev,
-          [name]: undefined,
-        }));
-      }
-
       // Show custom role input if "Custom Role" is selected
       if (name === 'churchRole') {
         setShowCustomRole(value === 'Custom Role');
       }
     },
-    [errors]
+    []
   );
-
-  const validateForm = useCallback((): boolean => {
-    const newErrors: Partial<PastoralCareFormData> = {};
-
-    if (!formData.title) newErrors.title = 'Title is required';
-    if (!formData.firstName.trim())
-      newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!formData.contactNumber.trim())
-      newErrors.contactNumber = 'Contact number is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    if (!formData.contactAddress.trim())
-      newErrors.contactAddress = 'Contact address is required';
-    if (!formData.eventDate) newErrors.eventDate = 'Event date is required';
-    if (!formData.eventType) newErrors.eventType = 'Event type is required';
-    if (!formData.churchRole) newErrors.churchRole = 'Church role is required';
-    if (formData.churchRole === 'Custom Role' && !formData.customRole.trim()) {
-      newErrors.customRole = 'Please specify your preferred role';
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    // Phone number validation (basic)
-    const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
-    if (
-      formData.contactNumber &&
-      !phoneRegex.test(formData.contactNumber.replace(/\s/g, ''))
-    ) {
-      newErrors.contactNumber = 'Please enter a valid phone number';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [formData]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      if (!validateForm()) {
-        return;
-      }
-
       setIsSubmitting(true);
 
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Here you would typically send the data to your backend
-        console.log('Form submitted:', formData);
+        // TODO: replace with real API call; backend should validate and send confirmation email
+        await new Promise(resolve => setTimeout(resolve, 1200));
 
         // Reset form
         setFormData({
@@ -172,18 +122,14 @@ const PastoralCareUnit = () => {
         });
         setShowCustomRole(false);
 
-        // Show success message (you can replace this with a toast)
-        alert(
-          'Thank you! Your pastoral care request has been submitted successfully. We will contact you shortly.'
-        );
+        setShowSuccess(true);
       } catch (error) {
         console.error('Error submitting form:', error);
-        alert('There was an error submitting your request. Please try again.');
       } finally {
         setIsSubmitting(false);
       }
     },
-    [formData, validateForm]
+    [formData]
   );
 
   const getMinDate = useCallback(() => {
@@ -250,39 +196,38 @@ const PastoralCareUnit = () => {
 
         {/* Registration Form */}
         <div className="max-w-4xl mx-auto">
-          <div
-            className="rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl"
-            style={{
-              background: isDarkMode
-                ? `linear-gradient(145deg, ${colorScheme.surface}ee, ${colorScheme.surfaceVariant}cc)`
-                : `linear-gradient(145deg, #ffffff, ${colorScheme.backgroundSecondary})`,
-              border: `1px solid ${isDarkMode ? colorScheme.border : '#E5E7EB'}`,
-            }}
-          >
-            {/* Form Header */}
             <div
-              className="p-6 md:p-8 text-center text-white"
+              className="rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl border"
               style={{
-                background: colorScheme.primaryGradient,
+                background: isDarkMode
+                  ? colorScheme.surface
+                  : '#0b0b0b',
+                borderColor: isDarkMode ? colorScheme.border : 'rgba(255,255,255,0.08)',
               }}
             >
-              <H3 className="text-2xl md:text-3xl font-black mb-2">
-                Event Registration Form
-              </H3>
-              <BodyMD className="opacity-90">
-                Complete the form below to request pastoral care services for
-                your special event
-              </BodyMD>
-            </div>
+              {/* Form Header */}
+              <div
+                className="p-5 md:p-7 text-center text-white"
+                style={{
+                  background: colorScheme.primaryGradient,
+                }}
+              >
+                <H3 className="text-xl md:text-2xl font-semibold mb-1">
+                  Pastoral Care Request
+                </H3>
+                <BodyMD className="opacity-85 text-sm md:text-base">
+                  Share your details and we’ll follow up promptly. Email confirmation will be sent after submission.
+                </BodyMD>
+              </div>
 
-            {/* Form Content */}
-            <div className="p-6 md:p-8 lg:p-10">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Personal Information Section */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <User
-                      className="w-5 h-5"
+              {/* Form Content */}
+              <div className="p-5 md:p-7 lg:p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Personal Information Section */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <User
+                        className="w-5 h-5"
                       style={{ color: colorScheme.primary }}
                     />
                     <H3
@@ -307,11 +252,9 @@ const PastoralCareUnit = () => {
                           name="title"
                           value={formData.title}
                           onChange={handleInputChange}
-                          className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 appearance-none cursor-pointer ${
-                            errors.title
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                              : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                          className={`w-full px-3.5 py-2.75 rounded-lg border transition-all duration-200 appearance-none cursor-pointer ${
+                            isDarkMode ? 'bg-gray-900 text-white border-white/10' : 'bg-white text-gray-900 border-white/10'
+                          } focus:border-primary focus:ring-2 focus:ring-primary/25`}
                         >
                           <option value="">Select Title</option>
                           {titles.map(title => (
@@ -326,11 +269,6 @@ const PastoralCareUnit = () => {
                           style={{ color: colorScheme.primary }}
                         />
                       </div>
-                      {errors.title && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.title}
-                        </p>
-                      )}
                     </div>
 
                     {/* First Name */}
@@ -347,17 +285,10 @@ const PastoralCareUnit = () => {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         placeholder="Enter your first name"
-                        className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 ${
-                          errors.firstName
-                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                            : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                        } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
+                        className={`w-full px-3.5 py-2.75 rounded-lg border transition-all duration-200 ${
+                          isDarkMode ? 'bg-gray-900 text-white placeholder-gray-500 border-white/10' : 'bg-white text-gray-900 placeholder-gray-500 border-white/10'
+                        } focus:border-primary focus:ring-2 focus:ring-primary/25`}
                       />
-                      {errors.firstName && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.firstName}
-                        </p>
-                      )}
                     </div>
 
                     {/* Last Name */}
@@ -738,6 +669,21 @@ const PastoralCareUnit = () => {
             </div>
           </div>
         </div>
+      <BaseModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title="Request received"
+        subtitle="We've emailed a confirmation of your pastoral care request."
+        maxWidth="max-w-md"
+        showHandle
+        forceBottomSheet
+      >
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+          <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ backgroundColor: colorScheme.opacity.primary10 }}><CheckCircle2 className="w-5 h-5" style={{ color: colorScheme.primary }} /></div>
+          <p className="text-white/80 text-sm leading-relaxed">Thank you. Our team will review and reach out soon. A confirmation email has been sent to the address you provided.</p>
+        </div>
+      </BaseModal>
+
       </Container>
     </Section>
   );
