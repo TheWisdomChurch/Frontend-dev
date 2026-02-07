@@ -353,7 +353,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                             style={{ borderColor: styles.border, background: styles.surface }}
                           >
                             {imagePreview ? (
-                              // eslint-disable-next-line @next/next/no-img-element
                               <img
                                 src={imagePreview}
                                 alt="Preview"
