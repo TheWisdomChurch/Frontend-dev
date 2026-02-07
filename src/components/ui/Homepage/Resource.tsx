@@ -130,7 +130,6 @@ export default function ResourceSection() {
               {recentVideo ? (
                 <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-3 sm:p-4">
                   <div className="flex items-center gap-3 min-h-[88px] sm:min-h-[96px]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-white/10 shrink-0">
                       <img
                         src={

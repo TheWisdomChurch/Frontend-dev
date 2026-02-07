@@ -9,7 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { H1, H2, BodyLG, Caption } from '@/components/text';
 import { Section, Container } from '@/components/layout';
-import { WisdomeHouseLogo } from '@/components/assets';
+import PageHero from '@/components/ui/PageHero';
 import { resourceLinks } from '@/lib/data';
 import { mainResourceLink } from '@/lib/types';
 import { Radio, Sparkles, X, Youtube, Bell } from 'lucide-react';
@@ -94,61 +94,12 @@ export default function ResourcesPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <Section padding="none" className="relative overflow-hidden bg-[#030303]" perf="none">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.07) 0%, transparent 35%), radial-gradient(circle at 82% 12%, rgba(255,255,255,0.06) 0%, transparent 32%), radial-gradient(circle at 55% 90%, rgba(255,255,255,0.05) 0%, transparent 40%)',
-            filter: 'blur(70px)',
-          }}
-        />
-        <div className="hero-animated" />
-        <Container
-          size="xl"
-          className="relative z-10 flex flex-col gap-6 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 py-16 lg:py-22 min-h-[100vh]"
-        >
-          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
-            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
-              <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-1.5" />
-            </div>
-            <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
-              The Wisdom House Church
-            </Caption>
-          </div>
-
-          <div className="space-y-4 max-w-4xl">
-            <H1 className="hero-title-glow text-3xl sm:text-4xl md:text-[2.7rem] lg:text-[3rem] font-black text-white leading-tight">
-              Resource Center
-            </H1>
-            <H2 className="text-xl sm:text-2xl lg:text-3xl font-semibold" style={{ color: colorScheme.primary }}>
-              Everything you need in one place.
-            </H2>
-            <BodyLG className="text-white/85 leading-relaxed text-base sm:text-lg">
-              Access sermons, live streams, events, publications, merchandise, and pastoral care — all designed to help you grow closer to God.
-            </BodyLG>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl">
-            {[
-              { label: 'Media', value: 'Sermons & Live' },
-              { label: 'Events', value: 'Confs & Gatherings' },
-              { label: 'Care', value: 'Pastoral Support' },
-              { label: 'Store', value: 'Merch & Books' },
-            ].map(item => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 space-y-1"
-                style={{ boxShadow: `0 10px 30px ${colorScheme.primary}20` }}
-              >
-                <Caption className="text-white/60">{item.label}</Caption>
-                <H2 className="text-white text-lg font-semibold">{item.value}</H2>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <PageHero
+        title="Resource Center"
+        subtitle="Everything you need in one place."
+        note="Access sermons, live streams, events, publications, merchandise, and pastoral care — all designed to help you grow closer to God."
+        chips={['Media: Sermons & Live', 'Events: Confs & Gatherings', 'Care: Pastoral Support', 'Store: Merch & Books']}
+      />
 
       {/* Live Services Modal */}
       {showLiveModal && (

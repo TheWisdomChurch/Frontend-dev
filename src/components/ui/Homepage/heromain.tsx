@@ -14,7 +14,6 @@ import { Section, Container } from '../../layout';
 import { ColorScheme } from '../../colors/colorScheme';
 import { defaultSlides } from '@/lib/data';
 import { renderTitle,  renderSubtitle } from '@/components/utils/heroTextUtil';
-import { useHeroAnimation } from '@/components/utils/hooks/mainHeroHooks/useheroAnimation';
 import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
 import type { YouTubeVideo } from '@/lib/types';
 import Image from 'next/image';
@@ -125,13 +124,6 @@ const HeroSection = ({
     return tl;
   }, []);
 
-  // Use hooks with non-nullable refs
-  const { cleanupAnimations } = useHeroAnimation(
-    heroRef,
-    scrollIndicatorRef,
-    animateContentEntrance
-  );
-
   useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
 
   // Scroll to next section
@@ -218,34 +210,8 @@ const HeroSection = ({
   }, []);
 
   // Cleanup on unmount
-  useEffect(() => {
-    return cleanupAnimations;
-  }, [cleanupAnimations]);
-
-  // Gentle entrance animation for hero text/cards (no heavy motion)
-  useEffect(() => {
-    if (!heroRef.current) return;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
-
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.6 } });
-
-    tl.from(waveTextRef.current, { autoAlpha: 0, y: 14 })
-      .from(titleRef.current, { autoAlpha: 0, y: 18 }, '-=0.25')
-      .from(subtitleRef.current, { autoAlpha: 0, y: 16 }, '-=0.25');
-
-    if (buttonsRef.current) {
-      const btns = buttonsRef.current.querySelectorAll('button');
-      tl.from(btns, { autoAlpha: 0, y: 14, stagger: 0.08 }, '-=0.25');
-    }
-
-    if (cardsRef.current) {
-      const cards = cardsRef.current.children;
-      tl.from(cards, { autoAlpha: 0, y: 18, stagger: 0.08 }, '-=0.15');
-    }
-
-    return () => tl.kill();
-  }, []);
+  // No hero-level entrance animation; keep content visible instantly
+  useEffect(() => {}, []);
 
   // Parallax layers inside hero
   useEffect(() => {
@@ -515,7 +481,6 @@ const HeroSection = ({
               {latestVideo ? (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2">
                   <div className="relative h-20 w-full sm:w-32 rounded-xl overflow-hidden border border-white/15 bg-black/60">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={
                         latestVideo.thumbnail ||

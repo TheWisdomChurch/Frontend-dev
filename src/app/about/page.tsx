@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { WisdomeHouseLogo } from '@/components/assets';
 import { Section, Container, GridboxLayout, FlexboxLayout } from '@/components/layout';
 import { H2, H3, BodySM, BodyMD, Caption } from '@/components/text';
+import PageHero from '@/components/ui/PageHero';
 import { missionStatement } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { BaseModal } from '@/components/modal/Base';
@@ -20,91 +21,12 @@ export default function AboutUsPage() {
 
   return (
     <div className="min-h-screen bg-[#050505]">
-      {/* About hero */}
-      <Section padding="none" className="relative overflow-hidden bg-[#030303]" perf="none">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.07) 0%, transparent 35%), radial-gradient(circle at 82% 12%, rgba(255,255,255,0.06) 0%, transparent 32%), radial-gradient(circle at 55% 90%, rgba(255,255,255,0.05) 0%, transparent 40%)',
-            filter: 'blur(70px)',
-          }}
-        />
-        <div className="hero-animated" />
-        <Container
-          size="xl"
-          className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start px-4 sm:px-6 md:px-8 lg:px-12 py-14 lg:py-22"
-        >
-          <div className="space-y-6 max-w-4xl order-2 lg:order-1">
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur">
-              <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
-                <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-1.5" />
-              </div>
-              <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
-                The Wisdom House Church
-              </Caption>
-            </div>
-
-            <div className="space-y-4">
-              <H2 className="text-3xl sm:text-4xl md:text-[2.7rem] lg:text-[3rem] font-black text-white leading-tight">
-                About Us
-              </H2>
-              <H3 className="text-xl sm:text-2xl lg:text-3xl font-semibold" style={{ color: colorScheme.primary }}>
-                A trans-generational movement of greatness
-              </H3>
-              <BodyMD className="text-white/85 leading-relaxed text-base sm:text-lg">
-                Discover the heart, identity, and purpose of The Wisdom House Church — a vibrant, Spirit-filled family
-                raising complete believers.
-              </BodyMD>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl">
-              {[
-                { label: 'Founded', value: 'Lagos, Nigeria' },
-                { label: 'Focus', value: 'Wisdom & Power' },
-                { label: 'Culture', value: 'Excellence in Love' },
-                { label: 'Reach', value: 'Generations & Nations' },
-              ].map(item => (
-                <div
-                  key={item.label}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 space-y-1"
-                  style={{ boxShadow: `0 10px 30px ${colorScheme.opacity.primary10}` }}
-                >
-                  <Caption className="text-white/60">{item.label}</Caption>
-                  <BodySM className="text-white font-semibold">{item.value}</BodySM>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative w-full order-1 lg:order-2">
-            <div className="absolute -top-8 -left-8 h-28 w-28 rounded-full blur-3xl opacity-50" style={{ background: colorScheme.primary }} />
-            <div className="rounded-3xl border border-white/12 bg-white/5 backdrop-blur-xl p-6 sm:p-8 space-y-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
-              <H3 className="text-xl sm:text-2xl font-bold text-white leading-tight">
-                Welcome to a house of wisdom, presence, and power.
-              </H3>
-              <BodySM className="text-white/75 leading-relaxed">
-                We’re called to raise complete believers—rooted in Christ, empowered by His Spirit, and released to impact
-                nations. Explore our story, mission, and culture below.
-              </BodySM>
-              <div className="flex flex-wrap gap-2">
-                {['Word & Power', 'Excellence', 'Generations', 'Nations'].map(tag => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 rounded-full text-xs font-semibold"
-                    style={{
-                      backgroundColor: colorScheme.opacity.primary10,
-                      color: colorScheme.primary,
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section>
+      <PageHero
+        title="About Us"
+        subtitle="A trans-generational movement of greatness"
+        note="Discover the heart, identity, and purpose of The Wisdom House Church — a vibrant, Spirit-filled family raising complete believers."
+        chips={['Word & Power', 'Excellence', 'Generations', 'Nations']}
+      />
 
       {/* Who we are */}
       <Section padding="lg" className="bg-[#050505]">
