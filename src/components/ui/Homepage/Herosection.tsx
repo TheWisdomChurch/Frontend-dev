@@ -1,4 +1,4 @@
-// Lightweight shared hero shim to reuse new PageHero across subpages
+// Lightweight wrapper to reuse PageHero for legacy imports
 'use client';
 
 import PageHero from '../PageHero';
