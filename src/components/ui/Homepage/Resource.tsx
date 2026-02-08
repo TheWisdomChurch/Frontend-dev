@@ -9,7 +9,8 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { resourceLinks } from '@/lib/data';
 import { ArrowRight, PlayCircle, Radio } from 'lucide-react';
 import type { YouTubeVideo } from '@/lib/types';
-import { apiClient } from '@/lib/api';
+// import { apiClient } from '@/lib/api';
+import apiP
 
 export default function ResourceSection() {
   const { colorScheme } = useTheme();
@@ -58,7 +59,7 @@ export default function ResourceSection() {
     if (!subscriber.email) return;
     setSubmitting(true);
     try {
-      await apiClient.subscribe(subscriber);
+      await apiPublic.subscribe(subscriber);
       setSubscriber({ name: '', email: '' });
     } catch (err) {
       console.warn('Subscribe failed', err);

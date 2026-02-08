@@ -1,34 +1,41 @@
 'use client';
 
-
-import { EventPublic, PublicFormPayload, PublicFormSubmissionRequest,
-  Testimonial, TestimonialPayload,CreateTestimonialRequest
- } from './apiTypes';
+import type {
+  PublicFormPayload,
+  PublicFormSubmissionRequest,
+  // Testimonial,
+  TestimonialFormData,
+  CreateTestimonialRequest,
+  SubscriberPayload,
+} from './apiTypes';
 
 /* ============================================================================
-   API ORIGIN
+   API CONFIG (PUBLIC WEBSITE)
 ============================================================================ */
 
 function normalizeOrigin(raw?: string | null): string {
-  const fallback = 'http://localhost:8080';
-  if (!raw) return fallback;
+  const isProd = process.env.NODE_ENV === 'production';
 
-  let base = raw.trim().replace(/\/+$/, '');
-
-  // If someone mistakenly sets NEXT_PUBLIC_API_URL=https://domain.com/api/v1
-  // normalize it back to origin so we can safely append /api/v1.
-  if (base.endsWith('/api/v1')) {
-    base = base.slice(0, -'/api/v1'.length);
+  if (!raw || !raw.trim()) {
+    if (!isProd) return 'http://localhost:8080';
+    throw new Error(
+      '[public api] Missing NEXT_PUBLIC_API_URL (or NEXT_PUBLIC_BACKEND_URL) in production.'
+    );
   }
 
-  return base || fallback;
+  let base = raw.trim().replace(/\/+$/, '');
+  if (base.endsWith('/api/v1')) base = base.slice(0, -'/api/v1'.length);
+  return base;
 }
 
-const API_ORIGIN = normalizeOrigin(process.env.NEXT_PUBLIC_API_URL);
+const API_ORIGIN = normalizeOrigin(
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+);
+
 const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
 
 /* ============================================================================
-   Error + Fetch Utilities
+   Errors + Fetch
 ============================================================================ */
 
 export interface ApiError extends Error {
@@ -43,6 +50,10 @@ function createApiError(message: string, statusCode?: number, details?: unknown)
   return err;
 }
 
+function isApiError(err: unknown): err is ApiError {
+  return typeof err === 'object' && err !== null && 'statusCode' in err;
+}
+
 async function safeParseJson(res: Response): Promise<any | null> {
   const ct = res.headers.get('content-type') || '';
   if (!ct.includes('application/json')) return null;
@@ -53,25 +64,9 @@ async function safeParseJson(res: Response): Promise<any | null> {
   }
 }
 
-/**
- * Supports both:
- * 1) { data: ... }
- * 2) raw payload
- */
 function unwrapData<T>(res: any): T {
   if (res && typeof res === 'object' && 'data' in res) return res.data as T;
   return res as T;
-}
-
-function toQueryString(params?: Record<string, any>): string {
-  if (!params) return '';
-  const cleaned: Record<string, string> = {};
-  for (const [k, v] of Object.entries(params)) {
-    if (v === undefined || v === null || v === '') continue;
-    cleaned[k] = String(v);
-  }
-  const qs = new URLSearchParams(cleaned).toString();
-  return qs ? `?${qs}` : '';
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -107,54 +102,105 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
     return payload as T;
   } catch (err: any) {
-    if (err?.statusCode !== undefined) throw err;
+    if (isApiError(err)) throw err;
     throw createApiError(err?.message || 'Network error', 0, err);
   }
 }
 
 /* ============================================================================
-   Public API Client (Frontend)
+   Normalizers (optional but keeps frontend stable)
 ============================================================================ */
 
-export const apiClient = {
-  /* -----------------------------
-     EVENTS (public read)
-     ----------------------------- */
+function normalizeTestimonial(raw: any): Testimonial {
+  const firstName = raw?.firstName ?? raw?.first_name;
+  const lastName = raw?.lastName ?? raw?.last_name;
 
-  /**
-   * Recommended public endpoints:
-   *   GET /api/v1/public/events
-   *   GET /api/v1/public/events/:id
-   *
-   * Note: Your current /api/v1/events is admin-protected.
-   */
-  async listEvents(): Promise<EventPublic[]> {
-    const res = await request<any>('/public/events', { method: 'GET' });
-    return unwrapData<EventPublic[]>(res);
-  },
+  const anonymous =
+    raw?.anonymous ??
+    raw?.isAnonymous ??
+    raw?.is_anonymous ??
+    raw?.isAnonymous ??
+    false;
 
-  async getEvent(id: string): Promise<EventPublic> {
-    const res = await request<any>(`/public/events/${encodeURIComponent(id)}`, { method: 'GET' });
-    return unwrapData<EventPublic>(res);
-  },
+  const image =
+    raw?.image ??
+    raw?.imageUrl ??
+    raw?.image_url ??
+    undefined;
 
-  /* -----------------------------
-     FORMS (public)
-     ----------------------------- */
+  const createdAt =
+    raw?.createdAt ?? raw?.created_at;
 
-  /**
-   * User opens: /forms/:slug on the website
-   * Frontend calls backend: GET /api/v1/forms/:slug
-   */
+  const fullName =
+    raw?.fullName ??
+    raw?.full_name ??
+    (firstName || lastName ? `${firstName ?? ''} ${lastName ?? ''}`.trim() : undefined);
+
+  return {
+    id: raw?.id,
+    firstName,
+    lastName,
+    fullName,
+    testimony: raw?.testimony ?? '',
+    image,
+    anonymous: Boolean(anonymous),
+    approved: raw?.approved ?? raw?.isApproved ?? raw?.is_approved,
+    createdAt,
+  };
+}
+
+/* ============================================================================
+   FORM → BACKEND MAPPER (THIS IS THE INTEGRATION)
+============================================================================ */
+
+/**
+ * IMPORTANT:
+ * Your Go backend currently expects imageUrl (not base64) unless you add support.
+ * So we send base64 only if you decide to support it on the backend as imageBase64.
+ *
+ * For now, we include imageBase64 if it's a data URL; if your backend rejects it,
+ * remove imageBase64 line OR implement backend support.
+ */
+export function mapTestimonialFormToRequest(form: TestimonialFormData): CreateTestimonialRequest {
+  const isAnonymous = Boolean(form.anonymous);
+
+  // Backend requires firstName/lastName: provide placeholders if anonymous
+  const firstName = isAnonymous ? 'Anonymous' : form.firstName.trim();
+  const lastName = isAnonymous ? 'Anonymous' : form.lastName.trim();
+
+  const imageBase64 =
+    typeof form.image === 'string' && form.image.startsWith('data:')
+      ? form.image
+      : undefined;
+
+  return {
+    firstName,
+    lastName,
+    email: form.email?.trim() || undefined,
+    testimony: form.testimony.trim(),
+    isAnonymous,
+
+    // If your backend DOES NOT support base64, delete this line:
+    imageBase64,
+
+    // If you upload first and get a URL, set this instead:
+    // imageUrl: "https://....",
+
+    allowSharing: Boolean(form.allowSharing),
+    agreeToTerms: Boolean(form.agreeToTerms),
+  };
+}
+
+/* ============================================================================
+   PUBLIC API (matches your Go routes)
+============================================================================ */
+
+export const apiPublic = {
   async getPublicForm(slug: string): Promise<PublicFormPayload> {
     const res = await request<any>(`/forms/${encodeURIComponent(slug)}`, { method: 'GET' });
     return unwrapData<PublicFormPayload>(res);
   },
 
-  /**
-   * User submits: POST /api/v1/forms/:slug/submissions
-   * Backend stores + notifies admin portal
-   */
   async submitPublicForm(slug: string, body: PublicFormSubmissionRequest): Promise<any> {
     const res = await request<any>(`/forms/${encodeURIComponent(slug)}/submissions`, {
       method: 'POST',
@@ -163,43 +209,48 @@ export const apiClient = {
     return unwrapData<any>(res);
   },
 
-  /* -----------------------------
-     TESTIMONIALS (public submit + public list approved)
-     ----------------------------- */
-
-  /**
-   * Public display: ONLY approved testimonials should render on the website.
-   * Flow:
-   *   Frontend submits -> backend stores as approved=false -> super admin approves ->
-   *   admin publishes (or approval itself marks it approved) -> frontend lists approved=true.
-   */
   async listApprovedTestimonials(): Promise<Testimonial[]> {
-    const qs = toQueryString({ approved: true });
-    const res = await request<any>(`/testimonials${qs}`, { method: 'GET' });
-    return unwrapData<Testimonial[]>(res);
+    const res = await request<any>(`/testimonials?approved=true`, { method: 'GET' });
+    const data = unwrapData<any>(res);
+    return Array.isArray(data) ? data.map(normalizeTestimonial) : [];
   },
 
-  /**
-   * Public submit: creates testimonial as pending (approved=false).
-   * Backend handles super admin + admin workflow.
-   */
   async submitTestimonial(payload: CreateTestimonialRequest): Promise<Testimonial> {
     const res = await request<any>('/testimonials', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-    return unwrapData<Testimonial>(res);
+    return normalizeTestimonial(unwrapData<any>(res));
   },
 
-  /* -----------------------------
-     SUBSCRIBERS
-     ----------------------------- */
-  async subscribe(payload: { name?: string; email: string }) {
-    return request<any>('/subscribers', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
+  /**
+   * This is the one your React page should call.
+   * It converts your form state to the backend request payload.
+   */
+  async submitTestimonialFromForm(form: TestimonialFormData): Promise<Testimonial> {
+    const payload = mapTestimonialFormToRequest(form);
+    return this.submitTestimonial(payload);
+  },
+
+  async subscribe(payload: SubscriberPayload) {
+    return request<any>('/subscribers', { method: 'POST', body: JSON.stringify(payload) });
+  },
+
+  async unsubscribe(payload: { email: string }) {
+    return request<any>('/subscribers/unsubscribe', { method: 'POST', body: JSON.stringify(payload) });
+  },
+
+  async sendOtp(payload: { email: string; purpose?: string }) {
+    return request<any>('/otp/send', { method: 'POST', body: JSON.stringify(payload) });
+  },
+
+  async verifyOtp(payload: { email: string; code: string; purpose?: string }) {
+    return request<any>('/otp/verify', { method: 'POST', body: JSON.stringify(payload) });
+  },
+
+  async applyToWorkforce(payload: any) {
+    return request<any>('/workforce/apply', { method: 'POST', body: JSON.stringify(payload) });
   },
 };
 
-export default apiClient;
+export default apiPublic;
