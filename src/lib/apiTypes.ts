@@ -11,7 +11,7 @@ export type FormFieldType =
 
 export type PublicFormField = {
   id?: string;
-  key: string;          // stable machine key
+  key: string; // stable machine key
   label: string;
   type: FormFieldType;
   required: boolean;
@@ -31,7 +31,6 @@ export type PublicFormPayload = {
 };
 
 export type PublicFormSubmissionRequest = {
-  // simplest: key/value map matching field keys
   answers: Record<string, any>;
 };
 
@@ -44,10 +43,9 @@ export type EventPublic = {
   location?: string;
   imageUrl?: string;
   bannerUrl?: string;
-
-  // IMPORTANT: backend should include this OR frontend derives it from related form
   formSlug?: string | null;
 };
+
 export type Testimonial = {
   id: number | string;
   firstName?: string;
@@ -60,24 +58,6 @@ export type Testimonial = {
   createdAt?: string;
 };
 
-// export type TestimonialPayload = {
-//   firstName?: string;
-//   lastName?: string;
-//   email?: string;
-//   testimony: string;
-//   image?: string;        // base64 data URL (if your backend accepts it)
-//   anonymous: boolean;
-//   allowSharing: boolean; // store for admin decision
-// };
-export type CreateTestimonialRequest = {
-  firstName: string;
-  lastName: string;
-  imageUrl?: string | null;
-  testimony: string;
-  isAnonymous: boolean;
-};
-
-
 export interface SubscriberPayload {
   name?: string;
   email: string;
@@ -88,3 +68,31 @@ export interface NotificationPayload {
   message: string;
   audience?: string;
 }
+
+/** What your PAGE form state uses */
+export interface TestimonialFormData {
+  firstName: string;
+  lastName: string;
+  image: string; // base64 data URL
+  testimony: string;
+  anonymous: boolean;
+  allowSharing: boolean;
+  agreeToTerms: boolean;
+  email?: string;
+}
+
+/** What your BACKEND should receive */
+export type CreateTestimonialRequest = {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  testimony: string;
+  isAnonymous: boolean;
+
+  // You can send base64 (if backend supports) OR send imageUrl (if you upload elsewhere)
+  imageBase64?: string;
+  imageUrl?: string | null;
+
+  allowSharing?: boolean;
+  agreeToTerms?: boolean;
+};

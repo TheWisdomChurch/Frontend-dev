@@ -15,9 +15,9 @@ import {
   Clock,
   HeartHandshake,
 } from 'lucide-react';
-import { apiClient } from '@/lib/api';
-import { CreateTestimonialRequest } from '@/lib/apiTypes';
+import apiPublic from '@/lib/api';
 
+// import apiPublic from '@/lib/api';
 
 const BREAKPOINTS = { md: 768 } as const;
 
@@ -206,7 +206,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   };
 
   try {
-    await apiClient.submitTestimonial(payload);
+    await apiPublic.submitTestimonial(payload);
   } catch (err: any) {
     alert(err?.message || 'Failed to submit testimony');
     setSubmitting(false);

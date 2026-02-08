@@ -223,15 +223,15 @@ export const leaders: Leader[] = [
       'Provides overall spiritual leadership and vision for the church.',
   },
   {
-    id: 3,
-    name: 'Pastor Kenny Ayilara',
-    role: 'Associate Pastor',
+    id: 2,
+    name: 'Pastor Kehinde Ayilara',
+    role: 'Senior Pastor',
     image: PstKenny,
     description: 'Supports the senior pastor in ministry and pastoral care.',
   },
 
   {
-    id: 4,
+    id: 3,
     name: 'Pastor Bamidele',
     role: 'Associate Pastor',
     image: Associate_1,
@@ -323,20 +323,21 @@ export const pastorsData: Leader[] = [
   },
     {
     id: 2,
+    name: 'Pst. Mrs Kehinde Ayilara',
+    role: 'Senior Pastor',
+    image: PstKenny,
+    description:
+      'Assist in discipleship, mentorship, and faith-building activities',
+  },
+    {
+    id: 3,
     name: 'Rev. Victor Jimba',
     role: 'Resident Pastor',
     image: Associate_2,
     description:
       'Provides overall spiritual leadership and vision for the church.',
   },
-  {
-    id: 3,
-    name: 'Pst. Mrs Kehinder Ayilara',
-    role: 'Associate Pastor',
-    image: PstKenny,
-    description:
-      'Assist in discipleship, mentorship, and faith-building activities',
-  },
+
   {
     id: 4,
     name: 'Pastor Bamidele',
