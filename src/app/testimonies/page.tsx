@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { H1, H3, BodyMD, BodySM, BodyLG } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
@@ -14,17 +14,19 @@ import {
   Eye,
   Clock,
   HeartHandshake,
+  X,
 } from 'lucide-react';
 import apiPublic from '@/lib/api';
 
-// import apiPublic from '@/lib/api';
-
 const BREAKPOINTS = { md: 768 } as const;
+const MAX_TESTIMONY_LEN = 1000;
+
+type AsyncStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 interface TestimonialFormData {
   firstName: string;
   lastName: string;
-  image: string; // base64 data URL
+  image: string; // base64 data URL (for preview only; do not send to backend)
   testimony: string;
   anonymous: boolean;
   allowSharing: boolean;
@@ -32,8 +34,183 @@ interface TestimonialFormData {
   email?: string;
 }
 
+type ModalVariant = 'success' | 'error';
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const onChange = () => setMatches(media.matches);
+    onChange();
+
+    // Safari fallback
+    if (media.addEventListener) media.addEventListener('change', onChange);
+    else media.addListener(onChange);
+
+    return () => {
+      if (media.removeEventListener) media.removeEventListener('change', onChange);
+      else media.removeListener(onChange);
+    };
+  }, [query]);
+
+  return matches;
+}
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
+/* =============================================================================
+   Modal (accessible, scalable)
+============================================================================= */
+
+function Modal({
+  open,
+  onClose,
+  title,
+  description,
+  variant = 'success',
+  primaryActionLabel = 'Close',
+  onPrimaryAction,
+  styles,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  description?: string;
+  variant?: ModalVariant;
+  primaryActionLabel?: string;
+  onPrimaryAction?: () => void;
+  styles: {
+    border: string;
+    bg: string;
+    surface: string;
+    text: string;
+    muted: string;
+    primary: string;
+    wash: string;
+    ringColor: string;
+  };
+}) {
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    // focus close button when opened
+    const t = window.setTimeout(() => closeBtnRef.current?.focus(), 0);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.clearTimeout(t);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const icon =
+    variant === 'success' ? (
+      <div
+        className="flex h-11 w-11 items-center justify-center rounded-xl border"
+        style={{ borderColor: styles.border, background: styles.bg }}
+      >
+        <Check className="h-5 w-5" style={{ color: styles.primary }} />
+      </div>
+    ) : (
+      <div
+        className="flex h-11 w-11 items-center justify-center rounded-xl border"
+        style={{ borderColor: styles.border, background: styles.bg }}
+      >
+        <Shield className="h-5 w-5" style={{ color: '#f87171' }} />
+      </div>
+    );
+
+  return (
+    <div
+      className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+      onMouseDown={(e) => {
+        // click outside to close
+        if (e.target === e.currentTarget) onClose();
+      }}
+      style={{
+        background: 'rgba(0,0,0,0.65)',
+        backdropFilter: 'blur(6px)',
+      }}
+    >
+      <div
+        className="w-full max-w-lg rounded-2xl border shadow-xl"
+        style={{
+          borderColor: styles.border,
+          background: `linear-gradient(180deg, ${styles.surface}, rgba(255,255,255,0.02))`,
+        }}
+      >
+        <div className="flex items-start justify-between gap-4 border-b p-5 sm:p-6" style={{ borderColor: styles.border }}>
+          <div className="flex items-start gap-4">
+            {icon}
+            <div className="min-w-0">
+              <h3 className="text-base sm:text-lg font-semibold" style={{ color: styles.text }}>
+                {title}
+              </h3>
+              {description ? (
+                <p className="mt-1 text-sm sm:text-[0.95rem] leading-relaxed" style={{ color: styles.muted }}>
+                  {description}
+                </p>
+              ) : null}
+            </div>
+          </div>
+
+          <button
+            ref={closeBtnRef}
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border p-2 transition hover:opacity-80"
+            aria-label="Close"
+            style={{ borderColor: styles.border, background: styles.bg, color: styles.muted }}
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="p-5 sm:p-6">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="primary"
+              size="md"
+              curvature="xl"
+              onClick={() => {
+                onPrimaryAction?.();
+                onClose();
+              }}
+              className="w-full sm:w-auto font-medium"
+              style={{ backgroundColor: styles.primary, color: '#fff' }}
+            >
+              {primaryActionLabel}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =============================================================================
+   Page
+============================================================================= */
+
 export default function TestimoniesPage() {
   const { colorScheme } = useTheme();
+
+  const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.md - 1}px)`);
 
   const [formData, setFormData] = useState<TestimonialFormData>({
     firstName: '',
@@ -46,19 +223,13 @@ export default function TestimoniesPage() {
     email: '',
   });
 
-  const [submitting, setSubmitting] = useState(false);
-  const [characterCount, setCharacterCount] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [status, setStatus] = useState<AsyncStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalVariant, setModalVariant] = useState<ModalVariant>('success');
 
-  // responsive
-  useEffect(() => {
-    const checkViewport = () => setIsMobile(window.innerWidth < BREAKPOINTS.md);
-    checkViewport();
-    window.addEventListener('resize', checkViewport);
-    return () => window.removeEventListener('resize', checkViewport);
-  }, []);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const styles = useMemo(() => {
     const primary = colorScheme.primary || '#fbbf24';
@@ -72,7 +243,7 @@ export default function TestimoniesPage() {
       wash: 'rgba(255,255,255,0.06)',
       ringColor: `${primary}55`,
     };
-  }, [colorScheme]);
+  }, [colorScheme.primary]);
 
   const focusRingStyle = useMemo(
     () =>
@@ -83,56 +254,11 @@ export default function TestimoniesPage() {
     [styles.ringColor, styles.bg]
   );
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value, type } = e.target;
+  const submitting = status === 'submitting';
 
-      if (type === 'checkbox') {
-        const checked = (e.target as HTMLInputElement).checked;
-        setFormData((prev) => ({ ...prev, [name]: checked }));
-        return;
-      }
+  const characterCount = formData.testimony.length;
 
-      if (name === 'testimony') {
-        setCharacterCount(value.length);
-      }
-
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    },
-    []
-  );
-
-  const handleImageChange = useCallback((file?: File) => {
-    if (!file) return;
-
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData((prev) => ({ ...prev, image: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
-  }, []);
-
-  const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    handleImageChange(file);
-  };
-
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setFormData((prev) => ({ ...prev, image: '' }));
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) handleImageChange(file);
-  };
-
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData({
       firstName: '',
       lastName: '',
@@ -143,94 +269,171 @@ export default function TestimoniesPage() {
       agreeToTerms: false,
       email: '',
     });
-    setCharacterCount(0);
     setImagePreview(null);
+    setErrorMessage('');
+    setStatus('idle');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }, []);
+
+  const setModal = useCallback((variant: ModalVariant, message?: string) => {
+    setModalVariant(variant);
+    setErrorMessage(message || '');
+    setModalOpen(true);
+  }, []);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value, type } = e.target;
+
+      if (type === 'checkbox') {
+        const checked = (e.target as HTMLInputElement).checked;
+
+        setFormData((prev) => {
+          const next = { ...prev, [name]: checked } as TestimonialFormData;
+
+          // When toggling anonymous ON, clear fields that won't be used
+          if (name === 'anonymous' && checked) {
+            next.firstName = '';
+            next.lastName = '';
+            next.image = '';
+          }
+
+          return next;
+        });
+
+        // also clear preview if anonymous turned on
+        if (name === 'anonymous' && (e.target as HTMLInputElement).checked) {
+          setImagePreview(null);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+
+        return;
+      }
+
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    },
+    []
+  );
+
+  const handleImageChange = useCallback((file?: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+
+    // Revoke old preview to avoid memory leaks
+    setImagePreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData((prev) => ({ ...prev, image: String(reader.result || '') }));
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      // cleanup preview URL on unmount
+      if (imagePreview) URL.revokeObjectURL(imagePreview);
+    };
+  }, [imagePreview]);
+
+  const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    handleImageChange(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setFormData((prev) => ({ ...prev, image: '' }));
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const validate = (): string | null => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    handleImageChange(file);
+  };
+
+  const validate = useCallback((): string | null => {
     if (!formData.agreeToTerms) return 'Please agree to the terms and conditions.';
     if (!formData.testimony.trim()) return 'Please enter your testimony.';
+
+    const testimonyLen = formData.testimony.trim().length;
+    if (testimonyLen > MAX_TESTIMONY_LEN) return `Testimony must be ${MAX_TESTIMONY_LEN} characters or less.`;
 
     if (!formData.anonymous) {
       if (!formData.firstName.trim()) return 'Please enter your first name (or choose Anonymous).';
       if (!formData.lastName.trim()) return 'Please enter your last name (or choose Anonymous).';
     }
 
-    // Optional email: basic sanity check when provided
     const email = (formData.email || '').trim();
     if (email && !/^\S+@\S+\.\S+$/.test(email)) return 'Please enter a valid email address.';
 
     return null;
-  };
+  }, [formData]);
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
 
-  if (!formData.agreeToTerms) {
-    alert('Please agree to the terms and conditions');
-    return;
-  }
-
-  if (!formData.testimony.trim()) {
-    alert('Please enter your testimony');
-    return;
-  }
-
-  // Because backend requires firstName + lastName (binding:"required")
-  // we must provide values even when anonymous.
-  const firstName = formData.anonymous ? 'Anonymous' : formData.firstName.trim();
-  const lastName = formData.anonymous ? 'Anonymous' : formData.lastName.trim();
-
-  if (!formData.anonymous) {
-    if (!firstName) {
-      alert('Please enter your first name (or select Anonymous).');
+    const err = validate();
+    if (err) {
+      setStatus('error');
+      setModal('error', err);
       return;
     }
-    if (!lastName) {
-      alert('Please enter your last name (or select Anonymous).');
-      return;
+
+    setStatus('submitting');
+
+    // Backend binding requires firstName + lastName
+    const firstName = formData.anonymous ? 'Anonymous' : formData.firstName.trim();
+    const lastName = formData.anonymous ? 'Anonymous' : formData.lastName.trim();
+
+    // ✅ payload matches backend (add fields later only when backend supports)
+    const payload = {
+      firstName,
+      lastName,
+      testimony: formData.testimony.trim(),
+      isAnonymous: formData.anonymous,
+      allowSharing: formData.allowSharing, // keep it for scalability (remove if backend rejects unknown fields)
+      email: (formData.email || '').trim() || undefined, // keep optional (remove if backend rejects)
+      // imageUrl: "https://..." // implement upload later; do NOT send base64
+    };
+
+    try {
+      // If your backend rejects extra fields, remove allowSharing/email above.
+      await apiPublic.submitTestimonial(payload as any);
+
+      setStatus('success');
+      setModal(
+        'success',
+        'Thank you! Your testimony was received and will be reviewed before publishing.'
+      );
+      resetForm();
+    } catch (e: any) {
+      const msg =
+        e?.response?.data?.message ||
+        e?.message ||
+        'Failed to submit testimony. Please try again.';
+      setStatus('error');
+      setModal('error', msg);
+    } finally {
+      setStatus((s) => (s === 'submitting' ? 'idle' : s));
     }
-  }
-
-  setSubmitting(true);
-
-  // ✅ Matches backend CreateTestimonialRequest exactly
-  const payload = {
-    firstName,
-    lastName,
-    testimony: formData.testimony.trim(),
-    isAnonymous: formData.anonymous,
-    // Backend expects a URL. Do NOT send base64 here.
-    // imageUrl: "https://..." // later when you implement upload
   };
 
-  try {
-    await apiPublic.submitTestimonial(payload);
-  } catch (err: any) {
-    alert(err?.message || 'Failed to submit testimony');
-    setSubmitting(false);
-    return;
-  }
+  const modalTitle =
+    modalVariant === 'success' ? 'Submission received' : 'Unable to submit';
 
-  setSubmitting(false);
-  alert('Thank you! Your testimony was received and will be reviewed before publishing.');
-
-  setFormData({
-    firstName: '',
-    lastName: '',
-    image: '',
-    testimony: '',
-    anonymous: false,
-    allowSharing: true,
-    agreeToTerms: false,
-    email: '',
-  });
-  setCharacterCount(0);
-  setImagePreview(null);
-  if (fileInputRef.current) fileInputRef.current.value = '';
-};
-
+  const modalDescription =
+    modalVariant === 'success'
+      ? 'Thank you! Your testimony was received and will be reviewed before publishing.'
+      : errorMessage || 'Please check the form and try again.';
 
   return (
     <Section
@@ -240,6 +443,16 @@ const handleSubmit = async (e: React.FormEvent) => {
         background: 'linear-gradient(180deg, #050505 0%, #0b0b0b 60%, #050505 100%)',
       }}
     >
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalTitle}
+        description={modalDescription}
+        variant={modalVariant}
+        primaryActionLabel="Close"
+        styles={styles}
+      />
+
       <Container size="xl" className="space-y-9 lg:space-y-12">
         <div className="pt-16 lg:pt-20">
           {/* HERO */}
@@ -291,7 +504,10 @@ const handleSubmit = async (e: React.FormEvent) => {
           {/* MAIN GRID */}
           <GridboxLayout columns={2} gap="xl" responsive={{ xs: 1, md: 2, lg: 2 }} className="items-start">
             {/* FORM CARD */}
-            <div className="rounded-2xl border shadow-sm" style={{ borderColor: styles.border, background: styles.surface }}>
+            <div
+              className="rounded-2xl border shadow-sm"
+              style={{ borderColor: styles.border, background: styles.surface }}
+            >
               <div
                 className="border-b p-6 lg:p-7"
                 style={{
@@ -309,7 +525,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
               <div className="p-6 lg:p-7">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* IMAGE UPLOAD */}
+                  {/* IMAGE UPLOAD (hidden when anonymous) */}
                   {!formData.anonymous && (
                     <div className="space-y-2">
                       <BodySM className="text-sm font-medium" style={{ color: styles.text }}>
@@ -317,12 +533,18 @@ const handleSubmit = async (e: React.FormEvent) => {
                       </BodySM>
 
                       <div
-                        className="group relative rounded-xl border p-4 transition"
-                        style={{ borderColor: styles.border, background: styles.bg }}
+                        className={cx(
+                          'group relative rounded-xl border p-4 transition',
+                          'focus-within:ring-2'
+                        )}
+                        style={{ borderColor: styles.border, background: styles.bg, ...focusRingStyle }}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={handleDrop}
                         role="button"
                         tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click();
+                        }}
                         onClick={() => fileInputRef.current?.click()}
                       >
                         <input
@@ -348,7 +570,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                             )}
                           </div>
 
-                          <div className="flex-1">
+                          <div className="min-w-0 flex-1">
                             <BodyMD className="font-medium text-sm sm:text-base" style={{ color: styles.text }}>
                               {imagePreview ? 'Photo selected' : 'Upload a photo'}
                             </BodyMD>
@@ -452,7 +674,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                       <BodySM className="text-sm font-medium" style={{ color: styles.text }}>
                         Your testimony <span style={{ color: styles.muted }}>*</span>
                       </BodySM>
-                      <BodySM style={{ color: styles.muted }}>{characterCount}/1000</BodySM>
+                      <BodySM style={{ color: styles.muted }}>
+                        {characterCount}/{MAX_TESTIMONY_LEN}
+                      </BodySM>
                     </div>
                     <textarea
                       name="testimony"
@@ -460,7 +684,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       onChange={handleChange}
                       required
                       rows={isMobile ? 6 : 7}
-                      maxLength={1000}
+                      maxLength={MAX_TESTIMONY_LEN}
                       placeholder="Share your story—what happened, what changed, and what you learned…"
                       className="w-full resize-none rounded-xl border px-4 py-3 text-sm leading-relaxed outline-none ring-offset-2 transition focus:ring-2"
                       style={{
@@ -537,12 +761,16 @@ const handleSubmit = async (e: React.FormEvent) => {
 
             {/* RIGHT PANEL */}
             <div className="space-y-6">
-              <div className="rounded-2xl border p-6 lg:p-7 shadow-sm" style={{ borderColor: styles.border, background: styles.surface }}>
+              <div
+                className="rounded-2xl border p-6 lg:p-7 shadow-sm"
+                style={{ borderColor: styles.border, background: styles.surface }}
+              >
                 <H3 className="mb-2 font-medium text-lg" style={{ color: styles.text }}>
                   Why share your story?
                 </H3>
                 <BodyMD className="leading-relaxed text-sm sm:text-base" style={{ color: styles.muted }}>
-                  Testimonies encourage believers, strengthen faith, and give glory to God. Your story may be exactly what someone needs to hear today.
+                  Testimonies encourage believers, strengthen faith, and give glory to God. Your story may be exactly
+                  what someone needs to hear today.
                 </BodyMD>
 
                 <div className="mt-6 grid gap-3">
@@ -552,7 +780,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </div>
               </div>
 
-              <div className="rounded-2xl border p-6 lg:p-7 shadow-sm" style={{ borderColor: styles.border, background: styles.surface }}>
+              <div
+                className="rounded-2xl border p-6 lg:p-7 shadow-sm"
+                style={{ borderColor: styles.border, background: styles.surface }}
+              >
                 <div className="flex items-start gap-3">
                   <div className="rounded-xl border p-2" style={{ borderColor: styles.border, background: styles.bg }}>
                     <Quote className="h-5 w-5" style={{ color: styles.primary }} />
@@ -569,7 +800,8 @@ const handleSubmit = async (e: React.FormEvent) => {
 
                 <div className="mt-6 rounded-xl border p-4" style={{ borderColor: styles.border, background: styles.bg }}>
                   <BodySM style={{ color: styles.muted }}>
-                    Privacy note: If you submit anonymously, your name and photo will be hidden. Email is collected for verification only.
+                    Privacy note: If you submit anonymously, your name and photo will be hidden. Email is collected for
+                    verification only.
                   </BodySM>
                 </div>
               </div>
@@ -580,6 +812,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     </Section>
   );
 }
+
+/* =============================================================================
+   Small components
+============================================================================= */
 
 function CheckboxRow({
   name,
@@ -601,7 +837,10 @@ function CheckboxRow({
   styles: { border: string; bg: string; surface: string; text: string; muted: string; primary: string };
 }) {
   return (
-    <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition hover:opacity-95" style={{ borderColor: styles.border, background: styles.bg }}>
+    <label
+      className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition hover:opacity-95"
+      style={{ borderColor: styles.border, background: styles.bg }}
+    >
       <span
         className="mt-0.5 flex h-5 w-5 items-center justify-center rounded border"
         style={{
@@ -648,7 +887,10 @@ function InfoPill({
             {description}
           </BodySM>
         </div>
-        <div className="rounded-lg border px-2 py-1 text-xs font-semibold" style={{ borderColor: styles.border, color: styles.primary, background: '#ffffff00' }}>
+        <div
+          className="rounded-lg border px-2 py-1 text-xs font-semibold"
+          style={{ borderColor: styles.border, color: styles.primary, background: '#ffffff00' }}
+        >
           Impact
         </div>
       </div>

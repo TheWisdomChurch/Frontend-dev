@@ -18,7 +18,7 @@ import WhatWedo_4 from './prayer_gathering.svg';
 // Logo
 import WisdomeHouseLogo from './OIP.webp';
 
-
+import avatar from './avatar.png'
 // Associate Pastors
 import Associate_1 from './Pst.Bamidele.png';
 import Associate_2 from './Rev..png';
@@ -80,6 +80,7 @@ export {
   Banner_2,
   Banner_3,
   WisdomeHouseLogo,
+  avatar,
   PstKenny,
   PstKenny_1,
   hero_bg_1,
