@@ -18,17 +18,13 @@ import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/use
 import type { YouTubeVideo } from '@/lib/types';
 import Image from 'next/image';
 
-// Type guard helper for image objects
-const isSimpleImage = (image: any): image is { src: string; alt?: string } => {
-  return (
-    typeof image === 'object' && 'src' in image && typeof image.src === 'string'
-  );
-};
-
-// Register GSAP plugins
+// Register GSAP plugins once on client
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
+
+/** Slide type inferred from your data */
+type Slide = (typeof defaultSlides)[number];
 
 interface HeroSectionProps {
   primaryButtonText?: string;
@@ -37,7 +33,32 @@ interface HeroSectionProps {
   onSecondaryButtonClick?: () => void;
   showWaveText?: boolean;
   colorScheme?: ColorScheme;
-  slides?: typeof defaultSlides;
+  slides?: Slide[];
+}
+
+/** Normalize slide image input to Next/Image src + alt */
+function normalizeImage(
+  image: any,
+  fallbackAlt: string
+): { src: string | StaticImageData; alt: string } {
+  // string URL
+  if (typeof image === 'string') {
+    return { src: image, alt: fallbackAlt };
+  }
+
+  // Next static import: has `src` and other props
+  if (image && typeof image === 'object' && typeof image.src === 'string') {
+    // if your object also contains alt, use it
+    return { src: image as StaticImageData, alt: image.alt || fallbackAlt };
+  }
+
+  // custom shape {src, alt}
+  if (image && typeof image === 'object' && 'src' in image) {
+    return { src: (image as any).src, alt: (image as any).alt || fallbackAlt };
+  }
+
+  // last resort
+  return { src: '/images/placeholder.jpg', alt: fallbackAlt };
 }
 
 const HeroSection = ({
@@ -84,19 +105,23 @@ const HeroSection = ({
   const animateContentEntrance = useCallback((): gsap.core.Timeline => {
     const tl = gsap.timeline();
 
-    tl.fromTo(
-      titleRef.current,
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-      0
-    );
+    if (titleRef.current) {
+      tl.fromTo(
+        titleRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+        0
+      );
+    }
 
-    tl.fromTo(
-      subtitleRef.current,
-      { y: 15, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-      0.3
-    );
+    if (subtitleRef.current) {
+      tl.fromTo(
+        subtitleRef.current,
+        { y: 15, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
+        0.3
+      );
+    }
 
     if (descriptionRef.current) {
       tl.fromTo(
@@ -107,7 +132,7 @@ const HeroSection = ({
       );
     }
 
-    if (buttonsRef.current?.children) {
+    if (buttonsRef.current?.children?.length) {
       tl.fromTo(
         buttonsRef.current.children,
         { y: 10, opacity: 0 },
@@ -135,15 +160,9 @@ const HeroSection = ({
     return () => clearInterval(interval);
   }, [slideList.length]);
 
-  // Scroll to next section
   const scrollToNextSection = useCallback(() => {
     const nextSection = heroRef.current?.nextElementSibling;
-    if (nextSection) {
-      nextSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
+    if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   const handleUnavailable = useCallback(
@@ -571,34 +590,28 @@ const HeroSection = ({
 
 // Extracted Scroll Indicators component
 interface ScrollIndicatorsProps {
-  scrollIndicatorRef: React.RefObject<HTMLDivElement>;
+  scrollIndicatorRef: React.RefObject<HTMLDivElement | null>;
   scrollToNextSection: () => void;
   colorScheme: ColorScheme;
 }
 
-const ScrollIndicators = ({
-  scrollIndicatorRef,
-  scrollToNextSection,
-  colorScheme,
-}: ScrollIndicatorsProps) => (
+const ScrollIndicators = ({ scrollIndicatorRef, scrollToNextSection, colorScheme }: ScrollIndicatorsProps) => (
   <>
-      <div
-        ref={scrollIndicatorRef}
-        className="absolute bottom-0 sm:bottom-1.5 md:bottom-2 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
+    <div
+      ref={scrollIndicatorRef}
+      className="absolute bottom-0 sm:bottom-1.5 md:bottom-2 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
     >
       <div className="flex flex-col items-center">
         <ChevronDown
-          className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 animate-bounce"
+          className="w-5 h-5 md:w-6 md:h-6 animate-bounce"
           style={{
             color: colorScheme.primary,
             filter: `drop-shadow(0 1px 3px rgba(0,0,0,0.5))`,
           }}
         />
-        <span className="text-xs sm:text-sm mt-1 text-white/60 font-medium tracking-wider">
-          SCROLL
-        </span>
+        <span className="text-xs sm:text-sm mt-1 text-white/60 font-medium tracking-wider">SCROLL</span>
       </div>
     </div>
 

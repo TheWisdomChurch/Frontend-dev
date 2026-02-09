@@ -1,11 +1,11 @@
 // app/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/ui/Homepage/heromain';
 import HeroHighlights from '@/components/ui/Homepage/HeroHighlights';
-import ProfessionalPopup from '@/components/ui/ConfessionPopup';
+import EventAdModal from '@/components/ui/Homepage/EventAdModal';
 import MobileDebug from '@/components/utils/mobileDebug';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
@@ -47,6 +47,22 @@ export default function Home() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { colorScheme } = useTheme();
 
+  const eventAd = useMemo(
+    () => ({
+      id: 'rise-2026',
+      title: 'Rise Conference 2026',
+      subtitle: 'A 2-day encounter for leaders, creatives, and visionaries.',
+      description:
+        'Join powerful sessions on leadership, worship, and breakthrough. Seats are limited — reserve now and get priority access to the conference guide.',
+      startAt: '2026-03-14T09:00:00Z',
+      location: 'Wisdom House Auditorium, Lagos',
+      imageUrl: '/HEADER.png',
+      formSlug: null,
+      ctaLabel: 'Register in 30 seconds',
+    }),
+    []
+  );
+
   useEffect(() => {
     const checkFonts = () => {
       if (document.fonts && typeof document.fonts.check === 'function') {
@@ -64,6 +80,13 @@ export default function Home() {
   useEffect(() => {
     if (!fontsLoaded) return;
 
+    const storageKey = 'wc_event_ad_seen_v1';
+    const now = Date.now();
+    const nextAllowedRaw = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
+    const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
+
+    if (nextAllowed && now < nextAllowed) return;
+
     const timer = setTimeout(() => {
       setShowModal(true);
     }, 1400);
@@ -72,6 +95,20 @@ export default function Home() {
   }, [fontsLoaded]);
 
   const handleCloseModal = () => {
+    const storageKey = 'wc_event_ad_seen_v1';
+    const cooldownMs = 1000 * 60 * 60 * 12;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, String(Date.now() + cooldownMs));
+    }
+    setShowModal(false);
+  };
+
+  const handleRemindLater = () => {
+    const storageKey = 'wc_event_ad_seen_v1';
+    const cooldownMs = 1000 * 60 * 60; // 1 hour
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, String(Date.now() + cooldownMs));
+    }
     setShowModal(false);
   };
 
@@ -121,9 +158,12 @@ export default function Home() {
           </div>
         </div>
 
-        {showModal && (
-          <ProfessionalPopup onClose={handleCloseModal} delay={0} />
-        )}
+        <EventAdModal
+          open={showModal}
+          event={eventAd}
+          onClose={handleCloseModal}
+          onRemindLater={handleRemindLater}
+        />
       </main>
     </div>
   );

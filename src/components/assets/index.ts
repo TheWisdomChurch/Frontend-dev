@@ -20,7 +20,7 @@ import WisdomeHouseLogo from './OIP.webp';
 import EventBannerMobile from './mobile.jpg.jpeg';
 import EventBannerDesktop from './Container.png';
 
-
+import avatar from './avatar.png'
 // Associate Pastors
 import Associate_1 from './Pst.Bamidele.png';
 import Associate_2 from './Rev..png';

@@ -10,7 +10,7 @@ import type {
 import type { WorkforceRegistrationData } from './types';
 
 /* ============================================================================
-   API ORIGIN
+   API CONFIG (PUBLIC WEBSITE)
 ============================================================================ */
 
 /**
@@ -150,7 +150,6 @@ function getErrorMessage(err: unknown): string {
 
 /* ============================================================================
    Fetch Utilities
-============================================================================ */
 
 async function safeParseJson(res: Response): Promise<any | null> {
   const ct = res.headers.get('content-type') || '';
@@ -163,24 +162,21 @@ async function safeParseJson(res: Response): Promise<any | null> {
 }
 
 /**
- * Supports both:
- * 1) { data: ... }
- * 2) raw payload
+ * Supports these common backend shapes:
+ * - direct payload: {...}
+ * - wrapped: { data: {...} }
+ * - wrapped: { data: { data: ... } }   (some "SuccessResponse" patterns)
  */
 function unwrapData<T>(res: any): T {
-  if (res && typeof res === 'object' && 'data' in res) return res.data as T;
-  return res as T;
-}
+  if (!res || typeof res !== 'object') return res as T;
 
-function toQueryString(params?: Record<string, any>): string {
-  if (!params) return '';
-  const cleaned: Record<string, string> = {};
-  for (const [k, v] of Object.entries(params)) {
-    if (v === undefined || v === null || v === '') continue;
-    cleaned[k] = String(v);
+  if ('data' in res) {
+    const d = (res as any).data;
+    if (d && typeof d === 'object' && 'data' in d) return d.data as T; // { data: { data: ... } }
+    return d as T; // { data: ... }
   }
-  const qs = new URLSearchParams(cleaned).toString();
-  return qs ? `?${qs}` : '';
+
+  return res as T;
 }
 
 function mapWorkforcePayload(payload: WorkforceRegistrationData) {
@@ -258,13 +254,88 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     return payload as T;
   } catch (err: any) {
     if (isApiError(err)) throw err;
+
+function normalizeTestimonial(raw: any): Testimonial {
+  const firstName = raw?.firstName ?? raw?.first_name;
+  const lastName = raw?.lastName ?? raw?.last_name;
+
+  const anonymous =
+    raw?.anonymous ??
+    raw?.isAnonymous ??
+    raw?.is_anonymous ??
+    false;
+
+  const image =
+    raw?.image ??
+    raw?.imageUrl ??
+    raw?.image_url ??
+    undefined;
+
+  const createdAt = raw?.createdAt ?? raw?.created_at;
+
+  const fullName =
+    raw?.fullName ??
+    raw?.full_name ??
+    (firstName || lastName ? `${firstName ?? ''} ${lastName ?? ''}`.trim() : undefined);
+
+  return {
+    id: raw?.id,
+    firstName,
+    lastName,
+    fullName,
+    testimony: raw?.testimony ?? '',
+    image,
+    anonymous: Boolean(anonymous),
+    approved: raw?.approved ?? raw?.isApproved ?? raw?.is_approved,
+    createdAt,
+  };
+}
+
+/* ============================================================================
+   FORM → BACKEND MAPPER (THIS IS THE INTEGRATION)
+
+/**
+ * IMPORTANT:
+ * Your Go backend currently expects imageUrl (not base64) unless you add support.
+ * We include imageBase64 only if it's a data URL. If backend rejects it, remove it.
+ */
+export function mapTestimonialFormToRequest(form: TestimonialFormData): CreateTestimonialRequest {
+  const isAnonymous = Boolean(form.anonymous);
+
+  // Backend requires firstName/lastName: provide placeholders if anonymous
+  const firstName = isAnonymous ? 'Anonymous' : form.firstName.trim();
+  const lastName = isAnonymous ? 'Anonymous' : form.lastName.trim();
+
+  const imageBase64 =
+    typeof form.image === 'string' && form.image.startsWith('data:')
+      ? form.image
+      : undefined;
+
+  return {
+    firstName,
+    lastName,
+    email: form.email?.trim() || undefined,
+    testimony: form.testimony.trim(),
+    isAnonymous,
+
+    // If your backend DOES NOT support base64, delete this line:
+    imageBase64,
+
+    allowSharing: Boolean(form.allowSharing),
+    agreeToTerms: Boolean(form.agreeToTerms),
+  };
+}
+
+/* ============================================================================
+   PUBLIC API (matches your Go routes)
+
+export const apiPublic = {
     throw createApiError(getErrorMessage(err), 0, err);
   }
 }
 
 /* ============================================================================
    Public API Client (PUBLIC WEBSITE)
-============================================================================ */
 
 export const apiClient = {
   /* -----------------------------
@@ -326,9 +397,9 @@ export const apiClient = {
      ----------------------------- */
 
   async listApprovedTestimonials(): Promise<Testimonial[]> {
-    const qs = toQueryString({ approved: true });
-    const res = await request<any>(`/testimonials${qs}`, { method: 'GET' });
-    return unwrapData<Testimonial[]>(res);
+    const res = await request<any>(`/testimonials?approved=true`, { method: 'GET' });
+    const data = unwrapData<any>(res);
+    return Array.isArray(data) ? data.map(normalizeTestimonial) : [];
   },
 
   async submitTestimonial(payload: CreateTestimonialRequest): Promise<Testimonial> {
@@ -336,7 +407,7 @@ export const apiClient = {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-    return unwrapData<Testimonial>(res);
+    return normalizeTestimonial(unwrapData<any>(res));
   },
 
   /* -----------------------------
@@ -367,4 +438,4 @@ export const apiClient = {
   },
 };
 
-export default apiClient;
+export default apiPublic;
