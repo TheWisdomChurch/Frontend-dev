@@ -10,7 +10,6 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
-import apiClient from '@/lib/apiClient';
 import type { EventPublic } from '@/lib/apiTypes';
 
 type Slide = {
@@ -241,8 +240,8 @@ export default function EventsShowcase() {
 
           const title = (evt as any).title ?? 'Event';
           const description = (evt as any).description ?? '';
-          const location = (evt as any).location ?? '';
-          const bannerUrl = (evt as any).bannerUrl ?? (evt as any).imageUrl ?? HeaderAlt;
+          // const location = (evt as any).location ?? '';
+          // const bannerUrl = (evt as any).bannerUrl ?? (evt as any).imageUrl ?? HeaderAlt;
           const formSlug = (evt as any).formSlug as string | undefined;
 
           return {
