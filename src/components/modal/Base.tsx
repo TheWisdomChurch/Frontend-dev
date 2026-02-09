@@ -7,6 +7,7 @@ import {
   useCallback,
   useLayoutEffect,
   useMemo,
+  useId,
   ReactNode,
   memo
 } from 'react';
@@ -34,6 +35,22 @@ interface BaseModalProps {
   onAnimationComplete?: () => void;
   forceBottomSheet?: boolean;
 }
+
+export const modalStyles = {
+  sectionTitle: 'text-sm font-semibold text-white/80',
+  label: 'block text-xs font-semibold uppercase tracking-wide text-white/70 mb-1',
+  input:
+    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30',
+  select:
+    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/30',
+  textarea:
+    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30',
+  errorText: 'text-xs text-red-400 mt-1',
+  primaryButton:
+    'w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed',
+  ghostButton:
+    'w-full rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10 border border-white/20',
+};
 
 type ViewportSize = 'mobile' | 'tablet' | 'desktop';
 
@@ -69,6 +86,8 @@ export const BaseModal = memo(function BaseModal({
   const backdropRef = useRef<HTMLDivElement>(null);
   const windowSize = useWindowSize();
   const lastFocusedElement = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const descriptionId = useId();
 
   const viewport: ViewportSize = useMemo(() => {
     if (!windowSize.width) return 'mobile';
@@ -77,8 +96,8 @@ export const BaseModal = memo(function BaseModal({
     return 'desktop';
   }, [windowSize.width]);
 
-  // Use bottom sheet for mobile AND tablet (or when forced)
-  const useBottomSheet = forceBottomSheet || viewport !== 'desktop';
+  // Use bottom sheet on mobile for consistency; allow forced sheet on larger screens
+  const useBottomSheet = forceBottomSheet || viewport === 'mobile';
 
   const colors = useMemo(() => ({
     background: colorScheme.black,
@@ -389,13 +408,10 @@ export const BaseModal = memo(function BaseModal({
   return createPortal(
     <div 
       ref={backdropRef}
-      className={`fixed inset-0 z-[9999] ${useBottomSheet ? 'flex items-end' : 'flex items-center justify-center sm:p-4'}`}
+      className={`fixed inset-0 z-[9999] ${useBottomSheet ? 'flex items-end justify-center p-4' : 'flex items-center justify-center p-4'}`}
       onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? "modal-title" : undefined}
-      aria-describedby={subtitle ? "modal-description" : undefined}
-      aria-busy={isLoading}
+      role="presentation"
+      aria-hidden="true"
       style={{ 
         backgroundColor: colors.backdrop,
         backdropFilter: 'blur(8px)',
@@ -422,7 +438,7 @@ export const BaseModal = memo(function BaseModal({
           w-full overflow-hidden border shadow-2xl
           ${responsive.modal[viewport]}
           ${useBottomSheet ? 'rounded-t-3xl pb-safe-bottom' : 'rounded-2xl'}
-          ${useBottomSheet ? 'max-h-[90vh]' : ''}
+          max-h-[92vh]
           ${maxWidth}
           ${isLoading ? 'opacity-80' : ''}
           transition-transform duration-300 ease-out
@@ -433,6 +449,12 @@ export const BaseModal = memo(function BaseModal({
           willChange: 'transform, opacity',
           touchAction: 'pan-y'
         }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={subtitle ? descriptionId : undefined}
+        aria-busy={isLoading}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={useBottomSheet ? handleTouchStart : undefined}
         onTouchMove={useBottomSheet ? handleTouchMove : undefined}
@@ -470,7 +492,7 @@ export const BaseModal = memo(function BaseModal({
                 <div className="flex-1">
                   {title && (
                     <h2
-                      id="modal-title"
+                      id={titleId}
                       className={`mb-2 ${useBottomSheet ? 'text-xl' : responsive.heading[viewport]} font-bold leading-tight`}
                       style={{ color: colors.text.primary }}
                     >
@@ -479,7 +501,7 @@ export const BaseModal = memo(function BaseModal({
                   )}
                   {subtitle && (
                     <p
-                      id="modal-description"
+                      id={descriptionId}
                       className={`${useBottomSheet ? 'text-sm' : responsive.body[viewport]} leading-relaxed`}
                       style={{ color: colors.text.muted }}
                     >
@@ -488,7 +510,7 @@ export const BaseModal = memo(function BaseModal({
                   )}
                 </div>
                 
-                {showCloseButton && !useBottomSheet && (
+                {showCloseButton && (
                   <button
                     onClick={handleClose}
                     className="rounded-full p-1.5 transition-all duration-200 hover:scale-110 active:scale-95 ml-2 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"

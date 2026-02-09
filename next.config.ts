@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import withPWA from 'next-pwa';
 
 const nextConfig: NextConfig = {
   // ✅ CRITICAL: Add this for Docker production build
@@ -33,8 +34,21 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // Add your own domain for logos/OG images if needed
+      {
+        protocol: 'https',
+        hostname: 'wisdomchurchhq.org',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.thewisdomhousechurch.org',
+        port: '',
+        pathname: '/**',
+      },
     ],
-    qualities: [75, 85, 90, 95, 100],
+    qualities: [60, 70, 80, 85],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -59,9 +73,6 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
-
-  // ✅ Disable SWC in Docker environment
-  swcMinify: process.env.DOCKER_ENV !== 'true',
 
   // ✅ Comprehensive CSS handling
   experimental: {
@@ -92,4 +103,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Wrap with PWA config (disable in dev to avoid issues)
+const enablePwa = false;
+export default withPWA({
+  dest: 'public',
+  register: false,
+  skipWaiting: false,
+  disable: !enablePwa,
+})(nextConfig);

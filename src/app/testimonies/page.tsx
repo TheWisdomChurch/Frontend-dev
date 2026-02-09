@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { H1, H3, BodyMD, BodySM, BodyLG } from '@/components/text';
+import { H1, H3, BodyMD, BodySM, BodyLG, Caption, SmallText } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
 import { Section, Container, GridboxLayout } from '@/components/layout';
+import PageHero from '@/components/ui/PageHero';
 import {
   Camera,
   Check,
@@ -16,7 +18,11 @@ import {
   HeartHandshake,
   X,
 } from 'lucide-react';
-import apiPublic from '@/lib/api';
+import { apiClient } from '@/lib/api';
+import { CreateTestimonialRequest } from '@/lib/apiTypes';
+import { WisdomeHouseLogo } from '@/components/assets';
+import { BaseModal } from '@/components/modal/Base';
+
 
 const BREAKPOINTS = { md: 768 } as const;
 const MAX_TESTIMONY_LEN = 1000;
@@ -223,13 +229,20 @@ export default function TestimoniesPage() {
     email: '',
   });
 
-  const [status, setStatus] = useState<AsyncStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState<ModalVariant>('success');
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showWelcome, setShowWelcome] = useState(true);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // responsive
+  useEffect(() => {
+    const checkViewport = () => setIsMobile(window.innerWidth < BREAKPOINTS.md);
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+  return () => window.removeEventListener('resize', checkViewport);
+  }, []);
 
   const styles = useMemo(() => {
     const primary = colorScheme.primary || '#fbbf24';
@@ -436,71 +449,22 @@ export default function TestimoniesPage() {
       : errorMessage || 'Please check the form and try again.';
 
   return (
-    <Section
-      padding="lg"
-      className="min-h-screen"
-      style={{
-        background: 'linear-gradient(180deg, #050505 0%, #0b0b0b 60%, #050505 100%)',
-      }}
-    >
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={modalTitle}
-        description={modalDescription}
-        variant={modalVariant}
-        primaryActionLabel="Close"
-        styles={styles}
+    <>
+      <PageHero
+        title="Stories of Transformation"
+        subtitle="God is moving in our house."
+        note="Share what God has done in your life or be encouraged by testimonies from our global family."
+        chips={['Testimonies: Fresh weekly', 'Reach: Global family', 'Focus: Jesus at the center', 'Culture: Faith & Excellence']}
       />
 
-      <Container size="xl" className="space-y-9 lg:space-y-12">
-        <div className="pt-16 lg:pt-20">
-          {/* HERO */}
-          <div className="mb-8 lg:mb-10">
-            <div className="max-w-3xl">
-              <div
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-normal"
-                style={{
-                  borderColor: styles.border,
-                  color: styles.muted,
-                  background: styles.surface,
-                }}
-              >
-                <HeartHandshake className="h-4 w-4" style={{ color: styles.primary }} />
-                Encouragement • Faith • Transformation
-              </div>
-
-              <H1
-                className="mt-3 font-medium tracking-tight text-white text-2xl sm:text-3xl lg:text-[2.25rem]"
-                style={{ color: styles.text }}
-              >
-                Share Your Testimony
-              </H1>
-
-              <BodyLG className="mt-2 leading-relaxed text-sm sm:text-base" style={{ color: styles.muted }}>
-                Your story can strengthen someone else’s faith. Share what God has done in your life—
-                clearly, sincerely, and with hope.
-              </BodyLG>
-
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <div
-                  className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] sm:text-xs"
-                  style={{ borderColor: styles.border, background: styles.surface, color: styles.muted }}
-                >
-                  <Clock className="h-4 w-4" />
-                  Reviewed within 48 hours
-                </div>
-                <div
-                  className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] sm:text-xs"
-                  style={{ borderColor: styles.border, background: styles.surface, color: styles.muted }}
-                >
-                  <Shield className="h-4 w-4" />
-                  Privacy respected
-                </div>
-              </div>
-            </div>
-          </div>
-
+      <Section
+        padding="lg"
+        className="min-h-screen"
+        style={{
+          background: 'linear-gradient(180deg, #050505 0%, #0b0b0b 60%, #050505 100%)',
+        }}
+      >
+        <Container size="xl" className="space-y-9 lg:space-y-12">
           {/* MAIN GRID */}
           <GridboxLayout columns={2} gap="xl" responsive={{ xs: 1, md: 2, lg: 2 }} className="items-start">
             {/* FORM CARD */}
@@ -524,8 +488,8 @@ export default function TestimoniesPage() {
               </div>
 
               <div className="p-6 lg:p-7">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* IMAGE UPLOAD (hidden when anonymous) */}
+                <form id="testimony-form" onSubmit={handleSubmit} className="space-y-6">
+                  {/* IMAGE UPLOAD */}
                   {!formData.anonymous && (
                     <div className="space-y-2">
                       <BodySM className="text-sm font-medium" style={{ color: styles.text }}>
@@ -561,8 +525,13 @@ export default function TestimoniesPage() {
                             style={{ borderColor: styles.border, background: styles.surface }}
                           >
                             {imagePreview ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                              <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                              />
                             ) : (
                               <div className="flex h-full w-full items-center justify-center">
                                 <Camera className="h-5 w-5" style={{ color: styles.muted }} />
@@ -807,9 +776,50 @@ export default function TestimoniesPage() {
               </div>
             </div>
           </GridboxLayout>
-        </div>
       </Container>
-    </Section>
+      </Section>
+      <BaseModal
+        isOpen={showWelcome}
+        onClose={() => setShowWelcome(false)}
+        title="Welcome to Testimonies"
+        subtitle="Share what God has done or be encouraged by others."
+        maxWidth="max-w-lg"
+        showHandle
+        forceBottomSheet
+      >
+        <div className="space-y-4 text-white/80">
+          <div className="flex items-center gap-3">
+            <div className="relative h-12 w-12 rounded-2xl overflow-hidden border border-white/15 bg-black/70">
+              <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-2" />
+            </div>
+            <div>
+              <BodySM className="text-white font-semibold">The Wisdom House Church</BodySM>
+              <Caption className="text-white/60">Testimonies • Share & be inspired</Caption>
+            </div>
+          </div>
+          <BodyMD className="text-white/80 leading-relaxed">
+            We celebrate every story of God’s faithfulness. Tell us what He has done, or read how He’s moving among our global family.
+          </BodyMD>
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={() => setShowWelcome(false)}
+              className="rounded-xl px-4 py-2 bg-white text-black font-semibold text-sm hover:opacity-90 transition"
+            >
+              Continue
+            </button>
+            <button
+              onClick={() => {
+                setShowWelcome(false);
+                document.getElementById('testimony-form')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="rounded-xl px-4 py-2 border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition"
+            >
+              Share my testimony
+            </button>
+          </div>
+        </div>
+      </BaseModal>
+    </>
   );
 }
 

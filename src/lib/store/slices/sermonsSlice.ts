@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { YouTubeVideo } from '@/lib/types';
+import { seriesGroups } from '@/lib/data';
 
 interface SermonsState {
   videos: YouTubeVideo[];
@@ -70,9 +71,22 @@ const applyFilters = (
 
   // Apply series filter
   if (filters.selectedSeries !== 'all') {
-    filtered = filtered.filter(video =>
-      video.series.toLowerCase().includes(filters.selectedSeries.toLowerCase())
-    );
+    if (filters.selectedSeries.startsWith('group:')) {
+      const groupName = filters.selectedSeries.replace('group:', '').trim();
+      const group = seriesGroups.find(
+        item => item.name.toLowerCase() === groupName.toLowerCase()
+      );
+      if (group) {
+        const terms = group.searchTerms.map(term => term.toLowerCase());
+        filtered = filtered.filter(video =>
+          terms.some(term => video.series.toLowerCase().includes(term))
+        );
+      }
+    } else {
+      filtered = filtered.filter(video =>
+        video.series.toLowerCase().includes(filters.selectedSeries.toLowerCase())
+      );
+    }
   }
 
   // Apply preacher filter

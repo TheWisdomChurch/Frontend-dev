@@ -12,6 +12,7 @@ import {
   GroupedSeriesData,
   UngroupedSeriesData,
 } from '@/lib/types';
+import { seriesGroups } from '@/lib/data';
 import Button from '@/components/utils/buttons/CustomButton';
 import {
   Section,
@@ -80,6 +81,8 @@ const SeriesCard = ({
             src={group.latestThumbnail}
             alt={group.name}
             className="w-12 h-10 sm:w-16 sm:h-12 rounded-lg object-cover shadow-sm group-hover:shadow-md transition-shadow"
+            loading="lazy"
+            decoding="async"
           />
         )}
       </div>
@@ -244,20 +247,22 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
 
   return (
     <div
-      className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border overflow-hidden"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border overflow-hidden"
       style={{
         backgroundColor: themeStyles.cardBackground,
         borderColor: themeStyles.borderColor,
       }}
     >
       <div
-        className="h-48 relative overflow-hidden cursor-pointer"
+        className="h-40 sm:h-44 relative overflow-hidden cursor-pointer"
         onClick={() => setShowPlayer(true)}
       >
         <img
           src={video.thumbnail}
           alt={video.title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
           <FlexboxLayout gap="sm">
@@ -425,13 +430,14 @@ interface SearchFiltersProps {
   searchTerm: string;
   selectedSeries: string;
   selectedPreacher: string;
-  sortBy: string;
+  selectedYear: string;
   seriesOptions: string[];
   preacherOptions: string[];
+  yearOptions: string[];
   handleSearchChange: (value: string) => void;
   handleSeriesFilterChange: (value: string) => void;
   handlePreacherChange: (value: string) => void;
-  handleSortChange: (value: 'newest' | 'oldest' | 'popular') => void;
+  handleYearChange: (value: string) => void;
   handleResetFilters: () => void;
   filteredVideos: YouTubeVideo[];
 }
@@ -440,13 +446,14 @@ const SearchFiltersComponent = ({
   searchTerm,
   selectedSeries,
   selectedPreacher,
-  sortBy,
+  selectedYear,
   seriesOptions,
   preacherOptions,
+  yearOptions,
   handleSearchChange,
   handleSeriesFilterChange,
   handlePreacherChange,
-  handleSortChange,
+  handleYearChange,
   handleResetFilters,
   filteredVideos,
 }: SearchFiltersProps) => {
@@ -469,28 +476,28 @@ const SearchFiltersComponent = ({
   );
 
   return (
-    <div className="max-w-6xl mx-auto mb-12">
+    <div className="max-w-6xl mx-auto mb-10 sm:mb-12">
       <div
-        className="rounded-2xl p-6 border"
+        className="rounded-2xl p-5 sm:p-6 border"
         style={{
           backgroundColor: themeStyles.cardBackground,
           borderColor: themeStyles.borderColor,
         }}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
-          <div>
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 items-end">
+          <div className="lg:col-span-2">
             <label
-              className="block text-sm md:text-base font-medium mb-2"
+              className="block text-sm font-medium mb-2"
               style={{ color: themeStyles.textColor }}
             >
-              Search Messages
+              Search
             </label>
             <input
               type="text"
               value={searchTerm}
               onChange={e => handleSearchChange(e.target.value)}
-              placeholder="Search by title, description, series, or preacher..."
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-gray-400"
+              placeholder="Title, series, preacher, or keywords..."
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-gray-400 text-sm"
               style={{
                 backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
@@ -500,7 +507,7 @@ const SearchFiltersComponent = ({
           </div>
           <div>
             <label
-              className="block text-sm md:text-base font-medium mb-2"
+              className="block text-sm font-medium mb-2"
               style={{ color: themeStyles.textColor }}
             >
               Series
@@ -508,7 +515,7 @@ const SearchFiltersComponent = ({
             <select
               value={selectedSeries}
               onChange={e => handleSeriesFilterChange(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               style={{
                 backgroundColor: colorScheme.white,
                 borderColor: themeStyles.inputBorderColor,
@@ -517,14 +524,18 @@ const SearchFiltersComponent = ({
             >
               {seriesOptions.map((series: string) => (
                 <option key={series} value={series}>
-                  {series === 'all' ? 'All Series' : series}
+                  {series === 'all'
+                    ? 'All Series'
+                    : series.startsWith('group:')
+                      ? `Group: ${series.replace('group:', '').trim()}`
+                      : series}
                 </option>
               ))}
             </select>
           </div>
           <div>
             <label
-              className="block text-sm md:text-base font-medium mb-2"
+              className="block text-sm font-medium mb-2"
               style={{ color: themeStyles.textColor }}
             >
               Preacher
@@ -532,7 +543,7 @@ const SearchFiltersComponent = ({
             <select
               value={selectedPreacher}
               onChange={e => handlePreacherChange(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               style={{
                 backgroundColor: colorScheme.white,
                 borderColor: themeStyles.inputBorderColor,
@@ -548,57 +559,214 @@ const SearchFiltersComponent = ({
           </div>
           <div>
             <label
-              className="block text-sm md:text-base font-medium mb-2"
+              className="block text-sm font-medium mb-2"
               style={{ color: themeStyles.textColor }}
             >
-              Sort By
+              Year
             </label>
             <select
-              value={sortBy}
-              onChange={e =>
-                handleSortChange(
-                  e.target.value as 'newest' | 'oldest' | 'popular'
-                )
-              }
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              value={selectedYear}
+              onChange={e => handleYearChange(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               style={{
                 backgroundColor: colorScheme.white,
                 borderColor: themeStyles.inputBorderColor,
                 color: colorScheme.black,
               }}
             >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="popular">Most Popular</option>
+              {yearOptions.map((year: string) => (
+                <option key={year} value={year}>
+                  {year === 'all' ? 'All Years' : year}
+                </option>
+              ))}
             </select>
           </div>
-          <div className="text-center lg:text-right">
-            <LightText
-              className="text-sm md:text-base"
-              style={{ color: colorScheme.primary }}
-            >
+          <div className="text-left lg:text-right">
+            <LightText className="text-sm" style={{ color: colorScheme.primary }}>
               Showing{' '}
               <BaseText
-                className="font-semibold md:font-bold inline"
+                className="font-semibold inline"
                 style={{ color: colorScheme.primary }}
               >
                 {filteredVideos.length}
               </BaseText>{' '}
               messages
             </LightText>
-            {(searchTerm ||
-              selectedSeries !== 'all' ||
-              selectedPreacher !== 'all' ||
-              sortBy !== 'newest') && (
-              <button
-                onClick={handleResetFilters}
-                className="text-sm md:text-base font-medium mt-1 transition-colors"
-                style={{ color: colorScheme.primary }}
-              >
-                Clear filters
-              </button>
-            )}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================
+// QUICK FILTER CHIPS + TOOLBAR
+// ============================================
+
+interface QuickFiltersProps {
+  selectedSeries: string;
+  onSelectGroup: (searchTerms: string[], name: string) => void;
+  onReset: () => void;
+}
+
+const QuickFilters = ({
+  selectedSeries,
+  onSelectGroup,
+  onReset,
+}: QuickFiltersProps) => {
+  const { colorScheme } = useTheme();
+  const isDarkMode = colorScheme.background === '#000000';
+  const chips = useMemo(
+    () => [
+      'Monday Morning Prayers',
+      'Celebration & Communion',
+      'Sunday Services',
+      'Wisdom Power Conference',
+    ],
+    []
+  );
+
+  const chipGroups = seriesGroups.filter(group =>
+    chips.some(name => group.name.toLowerCase() === name.toLowerCase())
+  );
+
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {chipGroups.map(group => {
+        const value = `group:${group.name}`;
+        const isActive = selectedSeries === value;
+        return (
+          <button
+            key={group.name}
+            onClick={() => onSelectGroup(group.searchTerms, group.name)}
+            className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition"
+            style={{
+              backgroundColor: isActive
+                ? colorScheme.primary
+                : isDarkMode
+                  ? colorScheme.opacity.white10
+                  : colorScheme.opacity.black10,
+              color: isActive ? colorScheme.black : colorScheme.primary,
+              borderColor: isActive
+                ? colorScheme.primary
+                : `${colorScheme.primary}50`,
+            }}
+          >
+            {group.name}
+          </button>
+        );
+      })}
+      <button
+        onClick={onReset}
+        className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition"
+        style={{
+          backgroundColor: 'transparent',
+          color: colorScheme.primary,
+          borderColor: `${colorScheme.primary}50`,
+        }}
+      >
+        Reset
+      </button>
+    </div>
+  );
+};
+
+interface ResultsToolbarProps {
+  totalCount: number;
+  filteredCount: number;
+  searchTerm: string;
+  selectedSeries: string;
+  selectedPreacher: string;
+  selectedYear: string;
+  sortBy: 'newest' | 'oldest' | 'popular';
+  onSortChange: (value: 'newest' | 'oldest' | 'popular') => void;
+  onClear: () => void;
+}
+
+const ResultsToolbar = ({
+  totalCount,
+  filteredCount,
+  searchTerm,
+  selectedSeries,
+  selectedPreacher,
+  selectedYear,
+  sortBy,
+  onSortChange,
+  onClear,
+}: ResultsToolbarProps) => {
+  const { colorScheme } = useTheme();
+  const isDarkMode = colorScheme.background === '#000000';
+  const activeFilters = [
+    searchTerm ? `Search: "${searchTerm}"` : null,
+    selectedSeries !== 'all'
+      ? selectedSeries.startsWith('group:')
+        ? `Group: ${selectedSeries.replace('group:', '').trim()}`
+        : `Series: ${selectedSeries}`
+      : null,
+    selectedPreacher !== 'all' ? `Preacher: ${selectedPreacher}` : null,
+    selectedYear !== 'all' ? `Year: ${selectedYear}` : null,
+  ].filter(Boolean);
+
+  return (
+    <div
+      className="rounded-2xl border p-4 sm:p-5 mb-6 sm:mb-8"
+      style={{ borderColor: `${colorScheme.primary}40` }}
+    >
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <BaseText
+            className="text-sm font-semibold"
+            style={{ color: isDarkMode ? colorScheme.white : colorScheme.black }}
+          >
+            Results: {filteredCount} of {totalCount}
+          </BaseText>
+          {activeFilters.length > 0 && (
+            <LightText
+              className="text-xs sm:text-sm mt-1"
+              style={{
+                color: isDarkMode
+                  ? colorScheme.textSecondary
+                  : colorScheme.textTertiary,
+              }}
+            >
+              {activeFilters.join(' • ')}
+            </LightText>
+          )}
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex items-center gap-2">
+            <label
+              className="text-xs sm:text-sm font-semibold"
+              style={{ color: isDarkMode ? colorScheme.white : colorScheme.black }}
+            >
+              Sort by
+            </label>
+            <select
+              value={sortBy}
+              onChange={e =>
+                onSortChange(e.target.value as 'newest' | 'oldest' | 'popular')
+              }
+              className="px-3 py-2 border rounded-lg text-xs sm:text-sm"
+              style={{
+                backgroundColor: colorScheme.white,
+                borderColor: `${colorScheme.primary}40`,
+                color: colorScheme.black,
+              }}
+            >
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="popular">Most Popular</option>
+            </select>
+          </div>
+          {activeFilters.length > 0 && (
+            <button
+              onClick={onClear}
+              className="text-xs sm:text-sm font-semibold"
+              style={{ color: colorScheme.primary }}
+            >
+              Clear all
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -611,7 +779,7 @@ const SearchFiltersComponent = ({
 
 interface MobileHorizontalScrollProps {
   groupedSeries: GroupedSeriesData[];
-  handleGroupClick: (searchTerms: string[]) => void;
+  handleGroupClick: (searchTerms: string[], groupName?: string) => void;
 }
 
 const MobileHorizontalScroll = ({
@@ -630,7 +798,7 @@ const MobileHorizontalScroll = ({
           <div key={group.name} className="snap-start">
             <SeriesCard
               group={group}
-              onClick={() => handleGroupClick(group.searchTerms)}
+              onClick={() => handleGroupClick(group.searchTerms, group.name)}
             />
           </div>
         ))}
@@ -649,7 +817,7 @@ const MobileHorizontalScroll = ({
 
 interface DesktopGridSeriesProps {
   groupedSeries: GroupedSeriesData[];
-  handleGroupClick: (searchTerms: string[]) => void;
+  handleGroupClick: (searchTerms: string[], groupName?: string) => void;
   cardsRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -666,7 +834,7 @@ const DesktopGridSeries = ({
       <SeriesCard
         key={group.name}
         group={group}
-        onClick={() => handleGroupClick(group.searchTerms)}
+        onClick={() => handleGroupClick(group.searchTerms, group.name)}
       />
     ))}
   </div>
@@ -728,6 +896,108 @@ const DesktopSermonsGrid = ({
     ))}
   </div>
 );
+
+// ============================================
+// CURATED SECTIONS
+// ============================================
+
+interface CuratedSectionsProps {
+  videos: YouTubeVideo[];
+  onSelectGroup: (searchTerms: string[], groupName?: string) => void;
+}
+
+const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
+  const { colorScheme } = useTheme();
+  const isDarkMode = colorScheme.background === '#000000';
+
+  const curatedGroups = useMemo(
+    () => [
+      {
+        title: 'Monday Morning Prayers',
+        groupName: 'Monday Morning Prayers',
+        description: 'Start your week with focused prayer and declarations.',
+        searchTerms: ['MONDAY MORNING PRAYER MOMENT WITH BISHOP'],
+      },
+      {
+        title: 'Celebration Service',
+        groupName: 'Celebration & Communion',
+        description: 'Celebration, thanksgiving, and communion services.',
+        searchTerms: [
+          'CELEBRATION & COMMUNION SERVICE',
+          'THANKSGIVING & COMMUNION SERVICE',
+          'END OF THE YEAR THANKSGIVING',
+          'NOVEMBER SUPERNATURAL SERVICE',
+          'CELEBRATION SERVICE',
+        ],
+      },
+    ],
+    []
+  );
+
+  const matchesGroup = useCallback((video: YouTubeVideo, terms: string[]) => {
+    const series = (video.series || '').toUpperCase();
+    return terms.some(term => series.includes(term.toUpperCase()));
+  }, []);
+
+  const sections = curatedGroups.map(group => {
+    const groupVideos = videos.filter(video => matchesGroup(video, group.searchTerms));
+    return {
+      ...group,
+      videos: groupVideos,
+    };
+  });
+
+  if (!sections.some(section => section.videos.length > 0)) return null;
+
+  return (
+    <div className="mb-8 sm:mb-10">
+      {sections.map(section => {
+        if (!section.videos.length) return null;
+        const preview = section.videos.slice(0, 4);
+        return (
+          <div key={section.title} className="mb-8 sm:mb-10">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <BaseText
+                  className="text-lg sm:text-xl font-semibold"
+                  style={{ color: isDarkMode ? colorScheme.white : colorScheme.black }}
+                >
+                  {section.title}
+                </BaseText>
+                <LightText
+                  className="text-sm"
+                  style={{
+                    color: isDarkMode
+                      ? colorScheme.textSecondary
+                      : colorScheme.textTertiary,
+                  }}
+                >
+                  {section.description}
+                </LightText>
+              </div>
+              <button
+                onClick={() =>
+                  onSelectGroup(section.searchTerms, section.groupName)
+                }
+                className="text-sm font-semibold transition-colors"
+                style={{ color: colorScheme.primary }}
+              >
+                View all
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+              {preview.map(video => (
+                <div key={video.id} className="sermon-card">
+                  <SermonCardComponent video={video} />
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 // ============================================
 // FEATURED SECTION COMPONENT
@@ -1074,6 +1344,8 @@ const FeaturedSection = ({
                               alt={video.title}
                               className="w-16 h-12 rounded object-cover border"
                               style={{ borderColor: themeStyles.borderColor }}
+                              loading="lazy"
+                              decoding="async"
                             />
                             <div
                               className={`absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center transition-opacity ${
@@ -1223,12 +1495,14 @@ const SermonUtil = () => {
     searchTerm,
     selectedSeries,
     selectedPreacher,
+    selectedYear,
     sortBy,
     groupedSeries,
     ungroupedSeries,
     hasMoreVideos,
     seriesOptions,
     preacherOptions,
+    yearOptions,
     recentVideos,
     currentVideo,
     playerKey,
@@ -1243,6 +1517,7 @@ const SermonUtil = () => {
     handleSearchChange,
     handleSeriesFilterChange,
     handlePreacherChange,
+    handleYearChange,
     handleSortChange,
     handleResetFilters,
     handleVideoSelect,
@@ -1435,17 +1710,40 @@ const SermonUtil = () => {
               searchTerm={searchTerm}
               selectedSeries={selectedSeries}
               selectedPreacher={selectedPreacher}
-              sortBy={sortBy}
+              selectedYear={selectedYear}
               seriesOptions={seriesOptions}
               preacherOptions={preacherOptions}
+              yearOptions={yearOptions}
               handleSearchChange={handleSearchChange}
               handleSeriesFilterChange={handleSeriesFilterChange}
               handlePreacherChange={handlePreacherChange}
-              handleSortChange={handleSortChange}
+              handleYearChange={handleYearChange}
               handleResetFilters={handleResetFilters}
               filteredVideos={filteredVideos}
             />
           </div>
+          <div className="mb-4 sm:mb-6">
+            <QuickFilters
+              selectedSeries={selectedSeries}
+              onSelectGroup={(terms, name) => handleSeriesFilterChange(`group:${name}`)}
+              onReset={handleResetFilters}
+            />
+          </div>
+          <ResultsToolbar
+            totalCount={videos.length}
+            filteredCount={filteredVideos.length}
+            searchTerm={searchTerm}
+            selectedSeries={selectedSeries}
+            selectedPreacher={selectedPreacher}
+            selectedYear={selectedYear}
+            sortBy={sortBy}
+            onSortChange={handleSortChange}
+            onClear={handleResetFilters}
+          />
+          <CuratedSections
+            videos={filteredVideos.length ? filteredVideos : videos}
+            onSelectGroup={handleGroupClick}
+          />
           <MobileHorizontalGrid
             displayedVideos={displayedVideos}
             horizontalGridRef={horizontalGridRef}
