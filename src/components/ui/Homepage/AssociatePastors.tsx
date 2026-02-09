@@ -79,17 +79,6 @@ export default function AssociatePastors() {
               Trusted voices helping steward the vision. Each carries a unique grace for the house.
             </BodySM>
           </div>
-          <CustomButton
-            variant="primary"
-            size="sm"
-            curvature="full"
-            className="text-black font-semibold px-5 py-2 sm:px-6 sm:py-2.5"
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-            style={{ backgroundColor: primary }}
-            onClick={() => router.push('/leadership')}
-          >
-            View more
-          </CustomButton>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -98,14 +87,14 @@ export default function AssociatePastors() {
               key={item.id}
               className="rounded-2xl border border-white/15 bg-[#111] p-4 space-y-3 shadow-xl"
             >
-              <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10">
+              <div className="relative w-full h-44 sm:h-48 md:h-52 lg:h-60 rounded-xl overflow-hidden border border-white/10">
                 <Image
                   src={item.image}
                   alt={item.name}
                   fill
                   className="object-cover"
                   style={{ objectPosition: 'center 18%' }}
-                  sizes="(max-width: 768px) 100vw, 25vw"
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 25vw"
                 />
               </div>
               <div className="space-y-1">
@@ -119,6 +108,20 @@ export default function AssociatePastors() {
               )}
             </div>
           ))}
+        </div>
+
+        <div className="flex justify-center lg:justify-end pt-2">
+          <CustomButton
+            variant="primary"
+            size="sm"
+            curvature="full"
+            className="text-black font-semibold px-5 py-2 sm:px-6 sm:py-2.5"
+            rightIcon={<ArrowRight className="w-4 h-4" />}
+            style={{ backgroundColor: primary }}
+            onClick={() => router.push('/leadership')}
+          >
+            View more
+          </CustomButton>
         </div>
       </Container>
     </Section>

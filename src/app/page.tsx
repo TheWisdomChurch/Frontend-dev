@@ -121,23 +121,42 @@ export default function Home() {
           background: `radial-gradient(circle at 20% 20%, ${colorScheme.opacity.primary20} 0%, transparent 45%), radial-gradient(circle at 80% 10%, ${colorScheme.opacity.primary10} 0%, transparent 40%), radial-gradient(circle at 50% 90%, ${colorScheme.opacity.primary10} 0%, transparent 40%)`,
           filter: 'blur(60px)',
         }}
+        data-parallax-global="0.2"
       />
       <main className="flex-1 w-full">
         {process.env.NODE_ENV === 'development' && <MobileDebug />}
 
         <div className="flex flex-col">
           <HeroSection />
-          <HeroHighlights />
-          <WhatWeDo />
-          <EventsShowcase />
-          <SeniorPastor />
-          <AssociatePastors />
-          <div id="join">
-            <JoinWisdomHouse />
+          <div data-gsap="reveal">
+            <HeroHighlights />
           </div>
-          <Testimonial />
-          <OnlineGiving />
-          <ResourceSection />
+          <div data-gsap="reveal">
+            <WhatWeDo />
+          </div>
+          <div data-gsap="reveal">
+            <EventsShowcase />
+          </div>
+          <div data-gsap="reveal">
+            <SeniorPastor />
+          </div>
+          <div data-gsap="reveal">
+            <AssociatePastors />
+          </div>
+          <div id="join">
+            <div data-gsap="reveal">
+              <JoinWisdomHouse />
+            </div>
+          </div>
+          <div data-gsap="reveal">
+            <Testimonial />
+          </div>
+          <div data-gsap="reveal">
+            <OnlineGiving />
+          </div>
+          <div data-gsap="reveal">
+            <ResourceSection />
+          </div>
         </div>
 
         <EventAdModal

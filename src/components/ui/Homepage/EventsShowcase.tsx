@@ -9,8 +9,8 @@ import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
-import { hero_bg_1, hero_bg_3 } from '@/components/assets';
-import HeaderAlt from '../../../../public/HEADER 2.jpg.jpeg';
+import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
+import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 
 type Slide = {
@@ -20,6 +20,8 @@ type Slide = {
   date: string;
   location: string;
   image: any;
+  imageMobile?: any;
+  imageDesktop?: any;
   cta?: string;
   href?: string;
   badge: string;
@@ -126,7 +128,9 @@ export default function EventsShowcase() {
         description: 'City-wide gathering with worship, word, and miracles. Come expectant.',
         date: 'Mar 10 • 6:00 PM',
         location: 'Honor Gardens Event Center, Alasia opp. dominion Church',
-        image: HeaderAlt,
+        image: EventBannerDesktop,
+        imageMobile: EventBannerMobile,
+        imageDesktop: EventBannerDesktop,
         cta: 'Save a seat',
         href: '/events',
         badge: 'Upcoming',
@@ -246,8 +250,10 @@ export default function EventsShowcase() {
             subtitle: badge,
             description,
             date: start ? new Date(start).toLocaleString() : '',
-            location,
-            image: bannerUrl,
+            location: evt.location || '',
+            image: EventBannerDesktop,
+            imageMobile: EventBannerMobile,
+            imageDesktop: EventBannerDesktop,
             cta: 'Save a seat',
             href: formSlug ? `/forms/${formSlug}` : '/events',
             badge,
@@ -262,6 +268,15 @@ export default function EventsShowcase() {
 
   return (
     <Section padding="md" className="relative overflow-hidden" style={{ background: '#0a0a0a' }}>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-80"
+        style={{
+          background:
+            'radial-gradient(circle at 12% 20%, rgba(255,255,255,0.08) 0%, transparent 40%), radial-gradient(circle at 80% 10%, rgba(255,255,255,0.06) 0%, transparent 35%), radial-gradient(circle at 60% 90%, rgba(255,255,255,0.05) 0%, transparent 40%)',
+          filter: 'blur(70px)',
+        }}
+        data-parallax-global="0.25"
+      />
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
           <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
@@ -309,18 +324,42 @@ export default function EventsShowcase() {
                   className="absolute inset-0"
                 >
                   {/* Image layer */}
-                  <div className="absolute inset-0">
+                  <div className="absolute inset-0" data-parallax-global="0.2">
                     {current.category === 'reel' ? (
                       <div className="w-full h-full relative">
-                        <Image
-                          src={current.image}
-                          alt={current.title}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 60vw"
-                          className="object-cover"
-                          style={{ objectPosition: 'center 35%' }}
-                          priority
-                        />
+                        {current.imageMobile || current.imageDesktop ? (
+                          <>
+                            <Image
+                              src={current.imageMobile || current.imageDesktop || current.image}
+                              alt={current.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 60vw"
+                              className="object-cover md:hidden"
+                              style={{ objectPosition: 'center 35%' }}
+                              priority
+                            />
+                            <Image
+                              src={current.imageDesktop || current.imageMobile || current.image}
+                              alt={current.title}
+                              fill
+                              sizes="(max-width: 1024px) 100vw, 60vw"
+                              className="hidden md:block object-cover"
+                              style={{ objectPosition: 'center 35%' }}
+                              priority
+                            />
+                          </>
+                        ) : (
+                          <Image
+                            src={current.image}
+                            alt={current.title}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 60vw"
+                            className="object-cover"
+                            // Mobile-friendly composition
+                            style={{ objectPosition: 'center 35%' }}
+                            priority
+                          />
+                        )}
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                           <button
                             onClick={() => setReelModal(current)}
@@ -331,21 +370,56 @@ export default function EventsShowcase() {
                         </div>
                       </div>
                     ) : (
-                      <Image
-                        src={current.image}
-                        alt={current.title}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 60vw"
-                        className="object-cover"
-                        style={{ objectPosition: 'center 35%' }}
-                        priority
-                      />
+                      current.imageMobile || current.imageDesktop ? (
+                        <>
+                          <Image
+                            src={current.imageMobile || current.imageDesktop || current.image}
+                            alt={current.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 60vw"
+                            className="object-cover md:hidden"
+                            style={{ objectPosition: 'center 35%' }}
+                            priority
+                          />
+                          <Image
+                            src={current.imageDesktop || current.imageMobile || current.image}
+                            alt={current.title}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 60vw"
+                            className="hidden md:block object-cover"
+                            style={{ objectPosition: 'center 35%' }}
+                            priority
+                          />
+                        </>
+                      ) : (
+                        <Image
+                          src={current.image}
+                          alt={current.title}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 60vw"
+                          className="object-cover"
+                          style={{ objectPosition: 'center 35%' }}
+                          priority
+                        />
+                      )
                     )}
                   </div>
 
                   {/* Dark overlays */}
-                  <div className="absolute inset-0 bg-black/25" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 lg:bg-gradient-to-r lg:from-black/88 lg:via-black/68 lg:to-black/45" />
+                  <div className="absolute inset-0 bg-black/25" data-parallax-global="0.12" />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 lg:bg-gradient-to-r lg:from-black/88 lg:via-black/68 lg:to-black/45"
+                    data-parallax-global="0.08"
+                  />
+
+                  {/* Cinematic film grain */}
+                  <div
+                    className="absolute inset-0 opacity-[0.18] mix-blend-soft-light"
+                    style={{
+                      backgroundImage:
+                        'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0%, transparent 45%), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+                    }}
+                  />
 
                   {/* Content */}
                   <div
@@ -435,11 +509,12 @@ export default function EventsShowcase() {
                   ${idx === active ? 'bg-[#161616] shadow-xl' : 'bg-[#0f0f0f]'}
                   min-w-[280px] sm:min-w-[340px] lg:min-w-0
                 `}
+                data-parallax-global={idx % 2 === 0 ? '0.12' : '0.18'}
               >
                 <div className="flex items-center gap-3 sm:gap-3.5">
                   <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
                     <Image
-                      src={slide.image}
+                      src={slide.imageDesktop || slide.image}
                       alt={slide.title}
                       fill
                       sizes="(max-width: 1024px) 70vw, 25vw"

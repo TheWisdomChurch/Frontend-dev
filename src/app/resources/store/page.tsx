@@ -38,6 +38,7 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import Image from 'next/image';
 import { merchandise } from '@/lib/data';
 import { Product } from '@/lib/types';
+import { storeClient } from '@/lib/api/storeClient';
 
 const StorePage = () => {
   const dispatch = useAppDispatch();
@@ -96,9 +97,25 @@ const StorePage = () => {
     },
   ];
 
-  // Initialize products in Redux
+  // Initialize products in Redux (backend-ready)
   useEffect(() => {
-    dispatch(setProducts(merchandise));
+    let isMounted = true;
+    const loadProducts = async () => {
+      try {
+        const data = await storeClient.listProducts();
+        if (isMounted && Array.isArray(data)) {
+          dispatch(setProducts(data));
+        }
+      } catch {
+        if (isMounted) {
+          dispatch(setProducts(merchandise));
+        }
+      }
+    };
+    loadProducts();
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch]);
 
   // Filter products when filters change
