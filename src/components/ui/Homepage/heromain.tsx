@@ -1,31 +1,93 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';
+import Image, { type StaticImageData } from 'next/image';
+
 import { useTheme } from '../../contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { H1, H2 } from '../../text';
 import CustomButton from '../../utils/buttons/CustomButton';
 import { Section, Container } from '../../layout';
-import { ColorScheme } from '../../colors/colorScheme';
+import type { ColorScheme } from '../../colors/colorScheme';
+
 import { defaultSlides } from '@/lib/data';
-import { renderTitle,  renderSubtitle } from '@/components/utils/heroTextUtil';
+import { renderTitle, renderSubtitle } from '@/components/utils/heroTextUtil';
 import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
 import type { YouTubeVideo } from '@/lib/types';
-import Image from 'next/image';
 
 // Register GSAP plugins once on client
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
 
-/** Slide type inferred from your data */
-type Slide = (typeof defaultSlides)[number];
+/* ----------------------------------------------------------------------------
+   Types (fix StaticImageData alt errors)
+----------------------------------------------------------------------------- */
+type SlideImage =
+  | string
+  | StaticImageData
+  | { src: string; alt?: string; objectPosition?: string }
+  | { src: StaticImageData; alt?: string; objectPosition?: string };
 
+type Slide = Omit<(typeof defaultSlides)[number], 'image'> & {
+  image: SlideImage;
+};
+
+function isStaticImageData(x: any): x is StaticImageData {
+  return !!x && typeof x === 'object' && typeof x.src === 'string' && 'height' in x && 'width' in x;
+}
+
+function isSimpleImageObject(
+  x: any
+): x is { src: string | StaticImageData; alt?: string; objectPosition?: string } {
+  return !!x && typeof x === 'object' && 'src' in x;
+}
+
+/**
+ * Normalize slide.image into something safe for Next/Image + a guaranteed alt.
+ * Also returns a preferred objectPosition if provided.
+ */
+function normalizeImage(image: SlideImage, fallbackAlt: string): {
+  src: string | StaticImageData;
+  alt: string;
+  objectPosition: string;
+} {
+  // 1) string URL
+  if (typeof image === 'string') {
+    return { src: image, alt: fallbackAlt, objectPosition: 'center' };
+  }
+
+  // 2) Static import
+  if (isStaticImageData(image)) {
+    return { src: image, alt: fallbackAlt, objectPosition: 'center' };
+  }
+
+  // 3) object {src, alt?, objectPosition?}
+  if (isSimpleImageObject(image)) {
+    const src = (image as any).src as string | StaticImageData;
+    const alt = (image as any).alt || fallbackAlt;
+    const objectPosition = (image as any).objectPosition || 'center';
+    return { src, alt, objectPosition };
+  }
+
+  // fallback
+  return { src: '/images/placeholder.jpg', alt: fallbackAlt, objectPosition: 'center' };
+}
+
+/** You used this earlier; define it so TS stops complaining */
+function isSimpleImage(image: SlideImage): boolean {
+  // "simple" == not providing special objectPosition etc.
+  return typeof image === 'string' || isStaticImageData(image);
+}
+
+/* ----------------------------------------------------------------------------
+   Props
+----------------------------------------------------------------------------- */
 interface HeroSectionProps {
   primaryButtonText?: string;
   secondaryButtonText?: string;
@@ -36,31 +98,9 @@ interface HeroSectionProps {
   slides?: Slide[];
 }
 
-/** Normalize slide image input to Next/Image src + alt */
-function normalizeImage(
-  image: any,
-  fallbackAlt: string
-): { src: string | StaticImageData; alt: string } {
-  // string URL
-  if (typeof image === 'string') {
-    return { src: image, alt: fallbackAlt };
-  }
-
-  // Next static import: has `src` and other props
-  if (image && typeof image === 'object' && typeof image.src === 'string') {
-    // if your object also contains alt, use it
-    return { src: image as StaticImageData, alt: image.alt || fallbackAlt };
-  }
-
-  // custom shape {src, alt}
-  if (image && typeof image === 'object' && 'src' in image) {
-    return { src: (image as any).src, alt: (image as any).alt || fallbackAlt };
-  }
-
-  // last resort
-  return { src: '/images/placeholder.jpg', alt: fallbackAlt };
-}
-
+/* ----------------------------------------------------------------------------
+   Component
+----------------------------------------------------------------------------- */
 const HeroSection = ({
   primaryButtonText = 'Join Our Community',
   secondaryButtonText = 'Watch Live Stream',
@@ -68,13 +108,13 @@ const HeroSection = ({
   onSecondaryButtonClick,
   showWaveText = true,
   colorScheme: externalColorScheme,
-  slides = defaultSlides,
+  slides = defaultSlides as any,
 }: HeroSectionProps) => {
   const { colorScheme: themeColors } = useTheme();
   const colorScheme = externalColorScheme || themeColors;
   const { open } = useServiceUnavailable();
 
-  // Create refs
+  // Refs
   const heroRef = useRef<HTMLDivElement>(null!);
   const titleRef = useRef<HTMLHeadingElement>(null!);
   const subtitleRef = useRef<HTMLHeadingElement>(null!);
@@ -83,13 +123,20 @@ const HeroSection = ({
   const scrollIndicatorRef = useRef<HTMLDivElement>(null!);
   const waveTextRef = useRef<HTMLDivElement>(null!);
   const cardsRef = useRef<HTMLDivElement>(null!);
+
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
   const [videoLoading, setVideoLoading] = useState(false);
 
-  // Simple slider state
+  // Slider state
   const [currentSlide, setCurrentSlide] = useState(0);
-  const slideList = slides.length ? slides : defaultSlides;
-  const currentSlideData = slideList[currentSlide] ?? defaultSlides[0];
+
+  const slideList: Slide[] = useMemo(() => {
+    const s = (slides as Slide[])?.length ? (slides as Slide[]) : (defaultSlides as any as Slide[]);
+    return s;
+  }, [slides]);
+
+  const currentSlideData = slideList[currentSlide] ?? slideList[0];
+
   const fallbackUpcoming = {
     label: 'Upcoming',
     title: 'Wisdom Power Conference 26',
@@ -99,63 +146,17 @@ const HeroSection = ({
     ctaLabel: 'Reserve a seat',
     ctaTarget: '#programs',
   };
-  const upcoming = currentSlideData.upcoming ?? fallbackUpcoming;
 
-  // Animation functions
-  const animateContentEntrance = useCallback((): gsap.core.Timeline => {
-    const tl = gsap.timeline();
+  const upcoming = (currentSlideData as any)?.upcoming ?? fallbackUpcoming;
 
-    if (titleRef.current) {
-      tl.fromTo(
-        titleRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-        0
-      );
-    }
-
-    if (subtitleRef.current) {
-      tl.fromTo(
-        subtitleRef.current,
-        { y: 15, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-        0.3
-      );
-    }
-
-    if (descriptionRef.current) {
-      tl.fromTo(
-        descriptionRef.current,
-        { y: 10, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
-        0.5
-      );
-    }
-
-    if (buttonsRef.current?.children?.length) {
-      tl.fromTo(
-        buttonsRef.current.children,
-        { y: 10, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'back.out(1.4)',
-        },
-        0.7
-      );
-    }
-
-    return tl;
-  }, []);
-
+  // wave text
   useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
 
   // Auto-rotate slides
   useEffect(() => {
+    if (slideList.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % slideList.length);
+      setCurrentSlide((prev) => (prev + 1) % slideList.length);
     }, 7000);
     return () => clearInterval(interval);
   }, [slideList.length]);
@@ -169,9 +170,7 @@ const HeroSection = ({
     (title?: string, message?: string) => {
       open({
         title: title || 'Service not available yet',
-        message:
-          message ||
-          'We are polishing this experience for production. Please check back soon.',
+        message: message || 'We are polishing this experience for production. Please check back soon.',
         actionLabel: 'Okay, thanks',
       });
     },
@@ -179,45 +178,35 @@ const HeroSection = ({
   );
 
   const handleUpcomingCta = useCallback(() => {
-    if (!upcoming.ctaTarget) {
+    if (!upcoming?.ctaTarget) {
       handleUnavailable('Reservations opening soon');
       return;
     }
-    if (upcoming.ctaTarget.startsWith('#')) {
+
+    if (typeof upcoming.ctaTarget === 'string' && upcoming.ctaTarget.startsWith('#')) {
       const target = document.getElementById(upcoming.ctaTarget.slice(1));
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        handleUnavailable('Reservations opening soon');
-      }
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      else handleUnavailable('Reservations opening soon');
       return;
     }
-    if (upcoming.ctaTarget) {
-      window.location.href = upcoming.ctaTarget;
-    } else {
-      handleUnavailable('Reservations opening soon');
-    }
-  }, [upcoming.ctaTarget, handleUnavailable]);
+
+    window.location.href = upcoming.ctaTarget;
+  }, [upcoming, handleUnavailable]);
 
   const handlePrimaryClick = useCallback(() => {
-    if (onPrimaryButtonClick) {
-      onPrimaryButtonClick();
-      return;
-    }
+    if (onPrimaryButtonClick) return onPrimaryButtonClick();
     handleUnavailable('Join our community');
   }, [onPrimaryButtonClick, handleUnavailable]);
 
   const handleSecondaryClick = useCallback(() => {
-    if (onSecondaryButtonClick) {
-      onSecondaryButtonClick();
-      return;
-    }
+    if (onSecondaryButtonClick) return onSecondaryButtonClick();
     handleUnavailable('Live stream coming soon');
   }, [onSecondaryButtonClick, handleUnavailable]);
 
-  // Pull newest YouTube video for hero card
+  // Pull newest YouTube video
   useEffect(() => {
     let mounted = true;
+
     const fetchLatest = async () => {
       setVideoLoading(true);
       try {
@@ -231,15 +220,12 @@ const HeroSection = ({
         if (mounted) setVideoLoading(false);
       }
     };
+
     fetchLatest();
     return () => {
       mounted = false;
     };
   }, []);
-
-  // Cleanup on unmount
-  // No hero-level entrance animation; keep content visible instantly
-  useEffect(() => {}, []);
 
   // Parallax layers inside hero
   useEffect(() => {
@@ -276,35 +262,41 @@ const HeroSection = ({
       perf="none"
       className="relative w-full min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] overflow-hidden bg-black"
     >
-      {/* Background Slides - FIXED: Proper image handling */}
-      {slideList.map((slide, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-all duration-800 ease-in-out ${
-            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-          }`}
-        >
-          <div className="relative w-full h-full" data-parallax="0.25">
-            {/* Handle both StaticImageData and simple object types */}
-            <Image
-              src={slide.image.src}
-              alt={slide.image.alt || slide.title}
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              quality={80}
-              className="object-cover"
-              style={{ objectPosition: isSimpleImage(slide.image) ? 'center' : 'center 28%' }}
-            />
+      {/* Background Slides (✅ fixed alt typing + src normalization) */}
+      {slideList.map((slide, index) => {
+        const img = normalizeImage(slide.image, (slide as any)?.title || `Slide ${index + 1}`);
 
-            {/* Enhanced gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" data-parallax="0.15" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" data-parallax="0.1" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" data-parallax="0.08" />
-            <div className="hero-matte absolute inset-0 opacity-30" />
+        return (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-all duration-800 ease-in-out ${
+              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            }`}
+          >
+            <div className="relative w-full h-full" data-parallax="0.25">
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                quality={80}
+                className="object-cover"
+                style={{
+                  // if your custom object provides objectPosition use it; else default
+                  objectPosition: img.objectPosition || (isSimpleImage(slide.image) ? 'center' : 'center 28%'),
+                }}
+              />
+
+              {/* overlays */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" data-parallax="0.15" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" data-parallax="0.1" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" data-parallax="0.08" />
+              <div className="hero-matte absolute inset-0 opacity-30" />
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {/* Hero Content */}
       <Container
@@ -312,7 +304,7 @@ const HeroSection = ({
         className="relative z-20 min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20"
       >
         <div className="w-full flex flex-col gap-10 lg:gap-12 xl:gap-14 items-start max-w-6xl">
-          {/* Wave of Greatness Text */}
+          {/* Wave label */}
           {showWaveText && (
             <div className="w-full flex justify-start mt-2 sm:mt-4 lg:mt-6 mb-6 sm:mb-8 md:mb-9 lg:mb-10">
               <div
@@ -326,10 +318,7 @@ const HeroSection = ({
                 />
                 <span
                   className="flex items-center gap-2 uppercase tracking-[0.18em] font-black text-[0.78rem] sm:text-[0.9rem] md:text-[1rem] leading-tight"
-                  style={{
-                    color: '#fff',
-                    textShadow: `0 2px 10px rgba(0,0,0,0.45)`,
-                  }}
+                  style={{ color: '#fff', textShadow: `0 2px 10px rgba(0,0,0,0.45)` }}
                 >
                   <span
                     className="inline-block text-transparent bg-clip-text"
@@ -351,24 +340,22 @@ const HeroSection = ({
             </div>
           )}
 
-          {/* Main Title */}
+          {/* Title block */}
           <div className="relative flex flex-col gap-6 sm:gap-7 md:gap-8 lg:gap-9 w-full max-w-5xl">
             <H1
               ref={titleRef}
               className="leading-tight tracking-tight font-black text-left"
               style={{
                 color: '#FFFFFF',
-                textShadow:
-                  '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
               }}
               useThemeColor={false}
             >
               <span className="text-3xl xs:text-[2.5rem] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl block">
-                {renderTitle(currentSlideData.title, colorScheme)}
+                {renderTitle((currentSlideData as any)?.title, colorScheme)}
               </span>
             </H1>
 
-            {/* Divider Line */}
             <div
               className="h-0.5 w-20 sm:w-24 md:w-28 lg:w-32 rounded-full"
               style={{
@@ -378,27 +365,24 @@ const HeroSection = ({
               }}
             />
 
-            {/* Subtitle */}
-            {currentSlideData.subtitle && (
+            {(currentSlideData as any)?.subtitle ? (
               <H2
                 ref={subtitleRef}
                 className="text-left"
                 style={{
                   color: colorScheme.primary,
-                  textShadow:
-                    '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
+                  textShadow: '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
                 }}
                 useThemeColor={false}
                 weight="bold"
                 smWeight="extrabold"
               >
                 <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2.25rem] block">
-                  {renderSubtitle(currentSlideData.subtitle)}
+                  {renderSubtitle((currentSlideData as any)?.subtitle)}
                 </span>
               </H2>
-            )}
+            ) : null}
 
-            {/* Buttons */}
             <div
               ref={buttonsRef}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6 justify-start items-center pt-2"
@@ -407,7 +391,7 @@ const HeroSection = ({
                 variant="primary"
                 size="md"
                 curvature="xl"
-                elevated={true}
+                elevated
                 onClick={handlePrimaryClick}
                 className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
                 style={{
@@ -440,10 +424,9 @@ const HeroSection = ({
               </CustomButton>
             </div>
           </div>
-          <div
-            ref={cardsRef}
-            className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6"
-          >
+
+          {/* Cards */}
+          <div ref={cardsRef} className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
             <div
               className="rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-5 sm:p-6 flex flex-col gap-3"
               data-parallax="0.12"
@@ -460,11 +443,10 @@ const HeroSection = ({
                   <p className="text-xs uppercase tracking-[0.18em] text-white/70 font-semibold">
                     {upcoming.label}
                   </p>
-                  <p className="text-lg text-white font-semibold">
-                    {upcoming.title}
-                  </p>
+                  <p className="text-lg text-white font-semibold">{upcoming.title}</p>
                 </div>
               </div>
+
               <div className="space-y-2 text-sm text-white/85">
                 <div className="flex items-center gap-2">
                   <CalendarClock className="w-4 h-4" />
@@ -477,6 +459,7 @@ const HeroSection = ({
                   <span>{upcoming.location}</span>
                 </div>
               </div>
+
               <div>
                 <CustomButton
                   size="sm"
@@ -500,12 +483,11 @@ const HeroSection = ({
                   <PlayCircle className="w-5 h-5 text-white" />
                 </div>
                 <div className="leading-tight">
-                  <p className="text-sm text-white font-semibold">
-                    Watch live stream
-                  </p>
+                  <p className="text-sm text-white font-semibold">Watch live stream</p>
                   <p className="text-xs text-white/60">Latest message from YouTube</p>
                 </div>
               </div>
+
               {latestVideo ? (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2">
                   <div className="relative h-20 w-full sm:w-32 rounded-xl overflow-hidden border border-white/15 bg-black/60">
@@ -525,12 +507,12 @@ const HeroSection = ({
                       <PlayCircle className="w-5 h-5 text-white" />
                     </div>
                   </div>
+
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm font-semibold line-clamp-2">
-                      {latestVideo.title}
-                    </p>
+                    <p className="text-white text-sm font-semibold line-clamp-2">{latestVideo.title}</p>
                     <p className="text-white/60 text-xs">Tap to watch now</p>
                   </div>
+
                   <a
                     href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
                     target="_blank"
@@ -567,10 +549,8 @@ const HeroSection = ({
                 currentSlide === index ? 'scale-110' : 'scale-90'
               }`}
               style={{
-                backgroundColor:
-                  currentSlide === index ? colorScheme.primary : 'rgba(255,255,255,0.3)',
-                boxShadow:
-                  currentSlide === index ? `0 0 6px ${colorScheme.primary}` : 'none',
+                backgroundColor: currentSlide === index ? colorScheme.primary : 'rgba(255,255,255,0.3)',
+                boxShadow: currentSlide === index ? `0 0 6px ${colorScheme.primary}` : 'none',
               }}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -588,14 +568,17 @@ const HeroSection = ({
   );
 };
 
-// Extracted Scroll Indicators component
 interface ScrollIndicatorsProps {
   scrollIndicatorRef: React.RefObject<HTMLDivElement | null>;
   scrollToNextSection: () => void;
   colorScheme: ColorScheme;
 }
 
-const ScrollIndicators = ({ scrollIndicatorRef, scrollToNextSection, colorScheme }: ScrollIndicatorsProps) => (
+const ScrollIndicators = ({
+  scrollIndicatorRef,
+  scrollToNextSection,
+  colorScheme,
+}: ScrollIndicatorsProps) => (
   <>
     <div
       ref={scrollIndicatorRef}
@@ -611,7 +594,9 @@ const ScrollIndicators = ({ scrollIndicatorRef, scrollToNextSection, colorScheme
             filter: `drop-shadow(0 1px 3px rgba(0,0,0,0.5))`,
           }}
         />
-        <span className="text-xs sm:text-sm mt-1 text-white/60 font-medium tracking-wider">SCROLL</span>
+        <span className="text-xs sm:text-sm mt-1 text-white/60 font-medium tracking-wider">
+          SCROLL
+        </span>
       </div>
     </div>
 
