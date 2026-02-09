@@ -10,6 +10,7 @@ import { Button } from '@/components/utils/buttons';
 import { FlexboxLayout } from '@/components/layout';
 import { H3, H4, BaseText, SmallText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { storeClient } from '@/lib/api/storeClient';
 import {
   CreditCard,
   Building,
@@ -541,24 +542,14 @@ const CheckoutForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Save ALL necessary data to localStorage BEFORE clearing cart
-      const orderData = {
+      const orderPayload = {
         orderId,
-        formData,
         items,
         subtotal: total,
         total: grandTotal,
         deliveryFee: formData.paymentMethod === 'delivery' ? deliveryFee : 0,
-        status: 'pending',
-        orderDate: new Date().toISOString(),
-      };
-
-      // Save to localStorage
-      localStorage.setItem('lastOrderData', JSON.stringify(orderData));
-      localStorage.setItem('lastPaymentMethod', formData.paymentMethod);
-      localStorage.setItem(
-        'customerInfo',
-        JSON.stringify({
+        paymentMethod: formData.paymentMethod,
+        customer: {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
@@ -567,23 +558,17 @@ const CheckoutForm = () => {
           city: formData.city,
           state: formData.state,
           zipCode: formData.zipCode,
-        })
-      );
+        },
+        bankDetails:
+          formData.paymentMethod === 'transfer'
+            ? {
+                customerAccountName: formData.customerAccountName,
+                customerBankName: formData.customerBankName,
+              }
+            : undefined,
+      };
 
-      if (formData.paymentMethod === 'transfer') {
-        localStorage.setItem(
-          'bankDetails',
-          JSON.stringify({
-            customerAccountName: formData.customerAccountName,
-            customerBankName: formData.customerBankName,
-          })
-        );
-      }
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      console.log('Order submitted:', orderData);
+      await storeClient.createOrder(orderPayload);
 
       // Clear cart and redirect to confirmation with order data
       dispatch(clearCart());

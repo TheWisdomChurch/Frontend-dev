@@ -1,15 +1,16 @@
 // components/ui/Homepage/Testimonials.tsx
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Section, Container } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { testimonialsData } from '@/lib/data';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import avatar from '@/components/assets/avatar.png';
+import { apiClient } from '@/lib/api';
+import { testimonialsData } from '@/lib/data';
+import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
 const fallbackImage = avatar;
 
@@ -37,17 +38,82 @@ function makeChipsFromText(text: string, max = 4): string[] {
   return unique.length ? unique.map(w => w[0].toUpperCase() + w.slice(1)) : ['Grace', 'Faith', 'Hope', 'Joy'].slice(0, max);
 }
 
+type UiTestimonial = {
+  id: number | string;
+  fullName: string;
+  testimony: string;
+  imageUrl?: string | null;
+  createdAt?: string;
+  role?: string;
+  tags?: string[];
+};
+
+const normalizeTestimonial = (item: ApiTestimonial): UiTestimonial => {
+  const fullName =
+    item.fullName ||
+    [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
+    'Anonymous';
+  return {
+    id: item.id,
+    fullName,
+    testimony: item.testimony,
+    imageUrl: item.imageUrl ?? null,
+    createdAt: item.createdAt,
+    role: item.isAnonymous ? 'Anonymous' : 'Member',
+  };
+};
+
+const fallbackTestimonials: UiTestimonial[] = testimonialsData.map(item => ({
+  id: item.id,
+  fullName:
+    item.fullName ||
+    [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
+    'Anonymous',
+  testimony: item.testimony,
+  imageUrl: item.image ?? null,
+  createdAt: item.date,
+  role: item.anonymous ? 'Anonymous' : item.role || 'Member',
+  tags: [],
+}));
+
 export default function Testimonials() {
   const { colorScheme } = useTheme();
   const [active, setActive] = useState(0);
-
-  const items = useMemo(() => testimonialsData.slice(0, 6), []);
+  const [items, setItems] = useState<UiTestimonial[]>(fallbackTestimonials);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (items.length <= 1) return;
+    let mounted = true;
 
+    const loadTestimonials = async () => {
+      setLoading(true);
+      try {
+        const result = await apiClient.listApprovedTestimonials();
+        if (!mounted) return;
+        const normalized = (Array.isArray(result) ? result : []).map(normalizeTestimonial);
+        if (normalized.length > 0) {
+          setItems(normalized.slice(0, 6));
+        } else {
+          setItems(fallbackTestimonials);
+        }
+      } catch (error) {
+        console.error('Failed to load testimonials:', error);
+        if (mounted) setItems(prev => (prev.length ? prev : fallbackTestimonials));
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    loadTestimonials();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (items.length === 0) return;
     const timer = setInterval(() => {
-      setActive(prev => (prev + 1) % items.length);
+      setActive((prev) => (prev + 1) % items.length);
     }, 5200);
 
     return () => clearInterval(timer);
@@ -55,7 +121,7 @@ export default function Testimonials() {
 
   if (items.length === 0) return null;
 
-  const current = items[active];
+  const current = items[active] ?? items[0];
   const nextList = items
     .map((item, idx) => ({ ...item, idx }))
     .filter(i => i.idx !== active);
@@ -69,6 +135,15 @@ export default function Testimonials() {
       className="relative overflow-hidden"
       style={{ background: '#0b0b0b' }}
     >
+      <div
+        className="pointer-events-none absolute inset-0 opacity-80"
+        style={{
+          background:
+            'radial-gradient(circle at 15% 30%, rgba(255,255,255,0.08) 0%, transparent 45%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%), radial-gradient(circle at 60% 85%, rgba(255,255,255,0.06) 0%, transparent 45%)',
+          filter: 'blur(70px)',
+        }}
+        data-parallax-global="0.2"
+      />
       <Container size="xl" className="relative z-10 space-y-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2.5">
@@ -113,12 +188,22 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-5 items-start">
           <article className="relative overflow-hidden rounded-3xl border border-white/12 bg-[#101010] p-6 sm:p-7 shadow-2xl min-h-[340px]">
-            <Quote className="absolute -top-4 -right-4 h-16 w-16 text-white/10" />
-
+            <Quote
+              className="absolute -top-6 -right-6 h-20 w-20 text-white/10"
+              data-parallax-global="0.18"
+            />
+            <div
+              className="absolute inset-0 opacity-[0.12]"
+              style={{
+                backgroundImage:
+                  'linear-gradient(120deg, rgba(255,255,255,0.08), transparent 45%), radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08) 0%, transparent 50%)',
+              }}
+              data-parallax-global="0.1"
+            />
             <div className="flex items-center gap-3 mb-4">
               <div className="relative h-14 w-14 rounded-full overflow-hidden border border-white/15 shadow-inner">
                 <Image
-                  src={current.image || fallbackImage}
+                  src={current.imageUrl || fallbackImage}
                   alt={current.fullName}
                   fill
                   sizes="56px"
@@ -130,10 +215,12 @@ export default function Testimonials() {
                 <SmallText weight="semibold" className="text-white text-base">
                   {current.fullName}
                 </SmallText>
-
-                <Caption className="text-white/50">
-                  {new Date(current.date).toLocaleDateString()}
-                </Caption>
+                {current.role && <Caption className="text-white/60">{current.role}</Caption>}
+                {current.createdAt && (
+                  <Caption className="text-white/50">
+                    {new Date(current.createdAt).toLocaleDateString()}
+                  </Caption>
+                )}
               </div>
             </div>
 
@@ -175,11 +262,11 @@ export default function Testimonials() {
                 key={item.id}
                 onClick={() => setActive(item.idx)}
                 className="text-left relative overflow-hidden rounded-2xl border border-white/12 bg-[#0f0f0f] p-4 flex items-start gap-3 shadow-lg hover:-translate-y-1 transition-transform"
-                type="button"
+                data-parallax-global={item.idx % 2 === 0 ? '0.12' : '0.18'}
               >
                 <div className="relative h-12 w-12 rounded-full overflow-hidden border border-white/15">
                   <Image
-                    src={item.image || fallbackImage}
+                    src={item.imageUrl || fallbackImage}
                     alt={item.fullName}
                     fill
                     sizes="48px"

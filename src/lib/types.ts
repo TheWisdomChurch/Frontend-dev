@@ -201,6 +201,186 @@ export interface ReminderFormData {
   eventType: 'conference' | 'lifting';
 }
 
+export interface WorkforceRegistrationData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  title: string;
+  department: string;
+  leadershipCategory: string;
+  birthMonth?: string;
+  anniversaryMonth?: string;
+  isExistingMember: boolean;
+  currentAssignment?: string;
+  notes?: string;
+}
+
+export interface WorkforceRegistrationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (data: WorkforceRegistrationData) => Promise<void>;
+  defaultValues?: Partial<WorkforceRegistrationData>;
+}
+
+export interface EventRegistrationEvent {
+  id: string;
+  title: string;
+  description?: string;
+  start_date: string;
+  end_date?: string;
+  time: string;
+  location: string;
+  event_type:
+    | 'conference'
+    | 'service'
+    | 'program'
+    | 'special'
+    | 'lifting'
+    | 'training';
+  image_url?: string;
+  requires_volunteers?: boolean;
+  volunteer_roles?: string[];
+}
+
+export interface EventRegistrationData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  city: string;
+  attendance_type: 'attendee' | 'volunteer' | 'both';
+  volunteer_role?: string;
+  custom_role?: string;
+  occupation: string;
+  previous_experience?: string;
+  special_needs?: string;
+  expectations?: string;
+  event_id: string;
+  registration_type: string;
+}
+
+export interface EventRegistrationModalProps {
+  event: EventRegistrationEvent;
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (data: EventRegistrationData) => Promise<void>;
+  defaultValues?: Partial<EventRegistrationData>;
+  headline?: string;
+  lead?: string;
+  eyebrow?: string;
+  highlight?: string;
+  ctaNote?: string;
+}
+
+export interface EventDetailsData {
+  id: string;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date?: string;
+  time: string;
+  location: string;
+  type: string;
+  image_url?: string;
+}
+
+export interface EventDetailsModalProps {
+  event: EventDetailsData;
+  isOpen: boolean;
+  onClose: () => void;
+  onRegister?: () => Promise<void>;
+  isLoading?: boolean;
+}
+
+export interface ReminderEventData {
+  id: string;
+  title: string;
+  description?: string;
+  start_date: string;
+  location?: string;
+}
+
+export interface ReminderModalProps {
+  event: ReminderEventData;
+  isOpen: boolean;
+  onClose: () => void;
+  onSetReminder?: (data: { email: string; frequency: string }) => Promise<void>;
+  isLoading?: boolean;
+}
+
+export interface GivingModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  givingOption: GivingOption | null;
+}
+
+export interface JoinCommunityModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export type DepartmentType =
+  | 'Ushers'
+  | 'Media Team'
+  | 'Choir'
+  | 'Children Ministry'
+  | 'Youth Ministry'
+  | 'Technical Team';
+
+export interface JoinFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  department: DepartmentType;
+  role: string;
+  experience: string;
+  availability: string[];
+  occupation: string;
+  whyJoin: string;
+  spiritualGifts?: string;
+  previousMinistry?: string;
+  agreeToTerms: boolean;
+  agreeToTraining: boolean;
+}
+
+export interface JoinUsModalProps {
+  department: DepartmentType;
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (data: JoinFormData) => Promise<void>;
+  defaultValues?: Partial<JoinFormData>;
+}
+
+export interface ProductModalProps {
+  product: Product | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface SuccessModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  message?: string;
+  actionLabel?: string;
+}
+
+export interface ServiceUnavailableSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  message?: string;
+  actionLabel?: string;
+}
+
+export interface WisdomPowerAdModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 // store section
 export interface Product {
   id: number;

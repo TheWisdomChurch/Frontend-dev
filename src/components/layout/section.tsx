@@ -22,6 +22,7 @@ interface SectionProps {
   centered?: boolean;
   style?: React.CSSProperties;
   id?: string;
+  perf?: 'auto' | 'none';
 }
 
 const Section = forwardRef<HTMLElement, SectionProps>(
@@ -39,6 +40,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
       centered = false,
       style,
       id,
+      perf = 'auto',
     },
     ref
   ) => {
@@ -77,6 +79,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
       paddingClasses[padding], // Only applied if explicitly set
       fullHeight ? 'min-h-screen' : '',
       centered ? 'flex items-center' : '',
+      perf === 'auto' ? 'perf-section' : '',
       className,
     ]
       .join(' ')
@@ -93,6 +96,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
         id={id}
         className={sectionClasses}
         style={combinedStyles}
+        data-gsap="reveal"
       >
         {background === 'image' && overlay && (
           <div

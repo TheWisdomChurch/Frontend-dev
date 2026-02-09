@@ -200,6 +200,114 @@ body {
   height: 100%;
 }
 
+/* Performance: render offscreen sections lazily */
+.perf-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+@media (max-width: 640px) {
+  .perf-section {
+    contain-intrinsic-size: 1px 700px;
+  }
+}
+
+/* Apply perf to all page children (skip first above-the-fold block) */
+main > *:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+@media (max-width: 640px) {
+  main > *:not(:first-child) {
+    contain-intrinsic-size: 1px 700px;
+  }
+}
+
+/* Thin dividers between stacked page sections */
+main > * + * {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 640px) {
+  main > * + * {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* Wave of Greatness refinement */
+.wave-tagline {
+  gap: 0.08em;
+}
+
+.wave-char {
+  background-size: 180% 180%;
+  animation: waveSheen 5.5s ease-in-out infinite;
+}
+
+.wave-char:nth-child(3n) {
+  animation-delay: 0.4s;
+}
+
+.wave-char:nth-child(4n) {
+  animation-delay: 0.7s;
+}
+
+@keyframes waveSheen {
+  0% {
+    background-position: 0% 50%;
+    transform: translateY(0);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: translateY(-2px);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: translateY(0);
+  }
+}
+
+/* Matte textured overlay for hero */
+.hero-matte {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05) 0%, transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(255,255,255,0.04) 0%, transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(255,255,255,0.035) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.65));
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Animated dotted wave overlay for heroes */
+.hero-animated {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: 140px 140px, 220px 220px;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.035) 1.2px, transparent 1.2px),
+    radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px);
+  animation: heroDots 22s linear infinite;
+  opacity: 0.08; /* softer so text never washes out */
+}
+
+@keyframes heroDots {
+  0% { background-position: 0 0, 0 0; }
+  50% { background-position: 80px 60px, -90px -70px; }
+  100% { background-position: 0 0, 0 0; }
+}
+
+/* Hero title glow */
+.hero-title-glow {
+  text-shadow:
+    0 3px 12px rgba(0,0,0,0.6),
+    0 6px 24px rgba(0,0,0,0.45),
+    0 0 18px rgba(255,255,255,0.12);
+  letter-spacing: 0.01em;
+}
+
+
 /* Ensure hero section containers work properly */
 .hero-container {
   width: 100vw;
@@ -303,6 +411,24 @@ html.light body {
   color: #000000;
 }
 
+/* Lightweight fade-up animation for shared page hero */
+.fade-up {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: fadeUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 :root.theme-transition *,
 :root.theme-transition *::before,
 :root.theme-transition *::after {
@@ -346,41 +472,41 @@ html.light body {
 /* Increase height for medium devices and above */
 /* Hero Section Height - Mobile first approach */
 .hero-section {
-  height: 100vh !important;
+  height: 85vh !important;
 }
 
 .hero-section img {
-  height: 100vh !important;
+  height: 85vh !important;
 }
 
 /* Increase height for medium devices and above */
 @media (min-width: 768px) {
   .hero-section {
-    height: 110vh !important;
+    height: 90vh !important;
   }
 
   .hero-section img {
-    height: 110vh !important;
+    height: 90vh !important;
   }
 }
 
 @media (min-width: 1024px) {
   .hero-section {
-    height: 120vh !important;
+    height: 95vh !important;
   }
 
   .hero-section img {
-    height: 120vh !important;
+    height: 95vh !important;
   }
 }
 
 @media (min-width: 1280px) {
   .hero-section {
-    height: 130vh !important;
+    height: 100vh !important;
   }
 
   .hero-section img {
-    height: 130vh !important;
+    height: 100vh !important;
   }
 }
 

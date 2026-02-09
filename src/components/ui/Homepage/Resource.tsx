@@ -24,25 +24,34 @@ export default function ResourceSection() {
   const [submitting, setSubmitting] = useState(false);
 
   const fetchedOnce = useRef(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
-    if (fetchedOnce.current) return;
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldFetch(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShouldFetch(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!shouldFetch || fetchedOnce.current) return;
     let mounted = true;
-
-    // ✅ sessionStorage only exists in browser, but this is a client component anyway.
-    const cached = sessionStorage.getItem('recent_video');
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached) as YouTubeVideo;
-        setRecentVideo(parsed);
-        fetchedOnce.current = true;
-        return;
-      } catch {
-        // fall through to network
-      }
-    }
-
     const fetchRecent = async () => {
       try {
         const res = await fetch('/api/sermons?sort=newest', { cache: 'force-cache' });
@@ -51,7 +60,6 @@ export default function ResourceSection() {
         const data: YouTubeVideo[] = await res.json();
         if (mounted && data.length > 0) {
           setRecentVideo(data[0]);
-          sessionStorage.setItem('recent_video', JSON.stringify(data[0]));
           fetchedOnce.current = true;
         }
       } catch {
@@ -64,7 +72,7 @@ export default function ResourceSection() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [shouldFetch]);
 
   const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,6 +103,7 @@ export default function ResourceSection() {
 
   return (
     <Section
+      ref={sectionRef}
       id="resources"
       padding="lg"
       className="relative overflow-hidden"
@@ -142,37 +151,47 @@ export default function ResourceSection() {
                   Stream Sundays & Thursdays. Turn on reminders so you never miss a moment.
                 </BodySM>
               </div>
-
               {recentVideo ? (
-                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={recentVideoThumb}
-                    alt={recentVideo.title}
-                    className="w-full h-36 object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-                  {recentVideoUrl ? (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Link
-                        href={recentVideoUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.04] transition shadow-lg"
-                      >
-                        <PlayCircle className="w-4 h-4" /> Play latest message
-                      </Link>
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-3 sm:p-4">
+                  <div className="flex items-center gap-3 min-h-[88px] sm:min-h-[96px]">
+                    <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-white/10 shrink-0">
+                      <img
+                        src={
+                          recentVideo.thumbnail ||
+                          (recentVideo as any)?.thumbnails?.medium?.url ||
+                          (recentVideo as any)?.thumbnails?.default?.url ||
+                          '/images/placeholder.jpg'
+                        }
+                        alt={recentVideo.title}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
+                        <PlayCircle className="w-4 h-4 text-white" />
+                      </div>
                     </div>
-                  ) : null}
-
-                  <div className="absolute bottom-3 left-3 right-3 space-y-1">
-                    <SmallText className="text-white line-clamp-2">{recentVideo.title}</SmallText>
-                    <Caption className="text-white/70">
-                      {recentVideo.likeCount ? `${recentVideo.likeCount} likes` : 'New upload'}
-                    </Caption>
+                    <div className="flex-1 min-w-0">
+                      <SmallText className="text-white line-clamp-2">
+                        {recentVideo.title}
+                      </SmallText>
+                      <Caption className="text-white/60">
+                        {recentVideo.likeCount ? `${recentVideo.likeCount} likes` : 'New upload'}
+                      </Caption>
+                    </div>
+                    <Link
+                      href={`https://www.youtube.com/watch?v=${recentVideo.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg shrink-0"
+                    >
+                      <PlayCircle className="w-4 h-4" /> Play
+                    </Link>
                   </div>
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-white/10 bg-black/40 p-4 text-white/70 text-sm min-h-[88px] sm:min-h-[96px] flex items-center">
+                  Latest message coming soon.
                 </div>
               ) : (
                 <div className="rounded-2xl border border-white/10 bg-black/40 p-4">

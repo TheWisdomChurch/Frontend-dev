@@ -1,25 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import Image, { type StaticImageData } from 'next/image';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { CalendarClock, MapPin, ChevronDown } from 'lucide-react';
-
+import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { H1, H2 } from '../../text';
 import CustomButton from '../../utils/buttons/CustomButton';
 import { Section, Container } from '../../layout';
-import type { ColorScheme } from '../../colors/colorScheme';
-
+import { ColorScheme } from '../../colors/colorScheme';
 import { defaultSlides } from '@/lib/data';
-import { renderTitle, renderSubtitle } from '@/components/utils/heroTextUtil';
-import { useAutoSlide } from '@/components/utils/hooks/mainHeroHooks/useAutoSlide';
-import { useHeroAnimation } from '@/components/utils/hooks/mainHeroHooks/useheroAnimation';
-import { useSlideAnimation } from '@/components/utils/hooks/mainHeroHooks/useSlideAnimation';
+import { renderTitle,  renderSubtitle } from '@/components/utils/heroTextUtil';
 import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
+import type { YouTubeVideo } from '@/lib/types';
+import Image from 'next/image';
 
 // Register GSAP plugins once on client
 if (typeof window !== 'undefined') {
@@ -71,68 +68,38 @@ const HeroSection = ({
   onSecondaryButtonClick,
   showWaveText = true,
   colorScheme: externalColorScheme,
-  slides = defaultSlides as Slide[],
+  slides = defaultSlides,
 }: HeroSectionProps) => {
   const { colorScheme: themeColors } = useTheme();
   const colorScheme = externalColorScheme || themeColors;
+  const { open } = useServiceUnavailable();
 
-  // Refs (nullable-safe)
-  const heroRef = useRef<HTMLDivElement | null>(null);
-  const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
-  const titleRef = useRef<HTMLHeadingElement | null>(null);
-  const subtitleRef = useRef<HTMLHeadingElement | null>(null);
-  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
-  const buttonsRef = useRef<HTMLDivElement | null>(null);
-  const scrollIndicatorRef = useRef<HTMLDivElement | null>(null);
-  const waveTextRef = useRef<HTMLDivElement | null>(null);
+  // Create refs
+  const heroRef = useRef<HTMLDivElement>(null!);
+  const titleRef = useRef<HTMLHeadingElement>(null!);
+  const subtitleRef = useRef<HTMLHeadingElement>(null!);
+  const descriptionRef = useRef<HTMLParagraphElement>(null!);
+  const buttonsRef = useRef<HTMLDivElement>(null!);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null!);
+  const waveTextRef = useRef<HTMLDivElement>(null!);
+  const cardsRef = useRef<HTMLDivElement>(null!);
+  const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
+  const [videoLoading, setVideoLoading] = useState(false);
 
-  // State
+  // Simple slider state
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  // Derived
-  const slidesLength = slides.length;
-  const isMultiSlide = slidesLength > 1;
-  const safeIndex = Math.min(currentSlide, Math.max(0, slidesLength - 1));
-  const currentSlideData = slides[safeIndex];
-
-  const fallbackUpcoming = useMemo(
-    () => ({
-      label: 'Upcoming',
-      title: 'Wisdom Power Conference 26',
-      date: 'Mar 21 - 23',
-      time: 'Morning session 9:00 AM WAT & Evening Session 5:00 PM',
-      location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
-      ctaLabel: 'Reserve a seat',
-      ctaTarget: '#programs',
-    }),
-    []
-  );
-
-  const upcoming = currentSlideData?.upcoming ?? fallbackUpcoming;
-
-  /** MOBILE FIXES:
-   * - avoid h-screen on iOS Safari causing jumpy layout
-   * - use min-heights that look good on mobile (no 118vh on phones)
-   */
-  const sectionClassName =
-    'relative w-full overflow-hidden bg-black min-h-[86vh] sm:min-h-[92vh] md:min-h-[102vh] lg:min-h-[110vh]';
-
-  /** Enhanced gradient overlays that behave better on mobile */
-  const Overlay = useCallback(() => {
-    return (
-      <>
-        {/* Mobile-first: stronger bottom fade for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/10 sm:from-black/90 sm:via-black/40 sm:to-black/10" />
-        {/* subtle top shading */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/55 sm:from-black/35 sm:to-black/50" />
-        {/* side vignette */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" />
-        {/* inner vignette */}
-        <div className="absolute inset-0" style={{ boxShadow: 'inset 0 0 180px rgba(0,0,0,0.65)' }} />
-      </>
-    );
-  }, []);
+  const slideList = slides.length ? slides : defaultSlides;
+  const currentSlideData = slideList[currentSlide] ?? defaultSlides[0];
+  const fallbackUpcoming = {
+    label: 'Upcoming',
+    title: 'Wisdom Power Conference 26',
+    date: 'Mar 21 - 23',
+    time: 'Morning session 9:00 PM WAT & Evening Session 5:00 Pm',
+    location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
+    ctaLabel: 'Reserve a seat',
+    ctaTarget: '#programs',
+  };
+  const upcoming = currentSlideData.upcoming ?? fallbackUpcoming;
 
   // Animation functions
   const animateContentEntrance = useCallback((): gsap.core.Timeline => {
@@ -183,327 +150,427 @@ const HeroSection = ({
     return tl;
   }, []);
 
-  const animateContentExit = useCallback((): gsap.core.Timeline => {
-    const tl = gsap.timeline();
+  useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
 
-    const targets: Element[] = [];
-    if (titleRef.current) targets.push(titleRef.current);
-    if (subtitleRef.current) targets.push(subtitleRef.current);
-    if (descriptionRef.current) targets.push(descriptionRef.current);
-
-    if (buttonsRef.current?.children?.length) {
-      targets.push(...Array.from(buttonsRef.current.children));
-    }
-
-    if (targets.length) {
-      tl.to(targets, {
-        y: -10,
-        opacity: 0,
-        duration: 0.4,
-        stagger: 0.03,
-        ease: 'power2.in',
-      });
-    }
-
-    return tl;
-  }, []);
-
-  // Hooks (your existing animation architecture)
-  const { cleanupAnimations } = useHeroAnimation(
-    heroRef as any,
-    scrollIndicatorRef as any,
-    animateContentEntrance
-  );
-
-  const { animateSlideTransition } = useSlideAnimation(
-    isAnimating,
-    safeIndex,
-    setIsAnimating,
-    setCurrentSlide,
-    slidesRef,
-    animateContentExit,
-    animateContentEntrance
-  );
-
-  useAutoSlide(isMultiSlide, isAnimating, safeIndex, slidesLength, animateSlideTransition);
-  useWaveTextAnimation(waveTextRef as any, showWaveText, colorScheme);
+  // Auto-rotate slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % slideList.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [slideList.length]);
 
   const scrollToNextSection = useCallback(() => {
     const nextSection = heroRef.current?.nextElementSibling;
     if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
-  const goToSlide = useCallback(
-    (index: number) => {
-      if (!isAnimating && index !== safeIndex && isMultiSlide) {
-        animateSlideTransition(index);
-      }
+  const handleUnavailable = useCallback(
+    (title?: string, message?: string) => {
+      open({
+        title: title || 'Service not available yet',
+        message:
+          message ||
+          'We are polishing this experience for production. Please check back soon.',
+        actionLabel: 'Okay, thanks',
+      });
     },
-    [isAnimating, safeIndex, animateSlideTransition, isMultiSlide]
+    [open]
   );
 
   const handleUpcomingCta = useCallback(() => {
-    if (!upcoming.ctaTarget) return;
-
-    if (upcoming.ctaTarget.startsWith('#')) {
-      const target = document.getElementById(upcoming.ctaTarget.slice(1));
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    if (!upcoming.ctaTarget) {
+      handleUnavailable('Reservations opening soon');
       return;
     }
-    window.location.href = upcoming.ctaTarget;
-  }, [upcoming.ctaTarget]);
+    if (upcoming.ctaTarget.startsWith('#')) {
+      const target = document.getElementById(upcoming.ctaTarget.slice(1));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        handleUnavailable('Reservations opening soon');
+      }
+      return;
+    }
+    if (upcoming.ctaTarget) {
+      window.location.href = upcoming.ctaTarget;
+    } else {
+      handleUnavailable('Reservations opening soon');
+    }
+  }, [upcoming.ctaTarget, handleUnavailable]);
 
-  useEffect(() => cleanupAnimations, [cleanupAnimations]);
+  const handlePrimaryClick = useCallback(() => {
+    if (onPrimaryButtonClick) {
+      onPrimaryButtonClick();
+      return;
+    }
+    handleUnavailable('Join our community');
+  }, [onPrimaryButtonClick, handleUnavailable]);
 
-  const addToSlidesRef = useCallback((el: HTMLDivElement | null, index: number) => {
-    slidesRef.current[index] = el;
+  const handleSecondaryClick = useCallback(() => {
+    if (onSecondaryButtonClick) {
+      onSecondaryButtonClick();
+      return;
+    }
+    handleUnavailable('Live stream coming soon');
+  }, [onSecondaryButtonClick, handleUnavailable]);
+
+  // Pull newest YouTube video for hero card
+  useEffect(() => {
+    let mounted = true;
+    const fetchLatest = async () => {
+      setVideoLoading(true);
+      try {
+        const res = await fetch('/api/sermons?sort=newest', { cache: 'force-cache' });
+        if (!res.ok) return;
+        const data: YouTubeVideo[] = await res.json();
+        if (mounted && data.length) setLatestVideo(data[0]);
+      } catch (err) {
+        console.warn('Hero latest video fetch failed', err);
+      } finally {
+        if (mounted) setVideoLoading(false);
+      }
+    };
+    fetchLatest();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  // Stable particle positions for nicer mobile rendering (optional)
-  const particles = useMemo(() => {
-    return Array.from({ length: 14 }).map((_, i) => ({
-      id: i,
-      size: Math.random() * 5 + 2,
-      top: Math.random() * 100,
-      left: Math.random() * 100,
-      delay: Math.random() * 5,
-      duration: Math.random() * 10 + 12,
-    }));
+  // Cleanup on unmount
+  // No hero-level entrance animation; keep content visible instantly
+  useEffect(() => {}, []);
+
+  // Parallax layers inside hero
+  useEffect(() => {
+    if (!heroRef.current) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const ctx = gsap.context(() => {
+      const parallaxEls = gsap.utils.toArray<HTMLElement>('[data-parallax]');
+      parallaxEls.forEach((el) => {
+        const speed = Number(el.dataset.parallax ?? 0.2);
+        gsap.to(el, {
+          yPercent: speed * 20,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      });
+    }, heroRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <Section ref={heroRef as any} padding="none" fullHeight={false} className={sectionClassName}>
-      {/* Background Slides (responsive + correct gradients) */}
-      {slides.map((slide, index) => {
-        const img = normalizeImage(slide.image, slide.title);
+    <Section
+      ref={heroRef}
+      padding="none"
+      fullHeight={false}
+      perf="none"
+      className="relative w-full min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] overflow-hidden bg-black"
+    >
+      {/* Background Slides - FIXED: Proper image handling */}
+      {slideList.map((slide, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-all duration-800 ease-in-out ${
+            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+          }`}
+        >
+          <div className="relative w-full h-full" data-parallax="0.25">
+            {/* Handle both StaticImageData and simple object types */}
+            <Image
+              src={slide.image.src}
+              alt={slide.image.alt || slide.title}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              quality={80}
+              className="object-cover"
+              style={{ objectPosition: isSimpleImage(slide.image) ? 'center' : 'center 28%' }}
+            />
 
-        return (
-          <div
-            key={index}
-            ref={(el) => addToSlidesRef(el, index)}
-            className={`absolute inset-0 transition-opacity duration-700 ease-out ${
-              index === safeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            }`}
-          >
-            <div className="relative w-full h-full">
-              {/* ✅ Use Next/Image for better mobile rendering */}
-              <Image
-                src={img.src}
-                alt={img.alt}
-                fill
-                priority={index === 0}
-                sizes="100vw"
-                className="object-cover"
-                style={{
-                  // ✅ mobile-friendly crop
-                  objectPosition: 'center 28%',
-                }}
-              />
-
-              {/* ✅ fixed overlays */}
-              <Overlay />
-
-              {/* subtle particles (optional) */}
-              <div className="absolute inset-0 opacity-[0.10]">
-                {particles.map((p) => (
-                  <span
-                    key={p.id}
-                    className="absolute rounded-full animate-float"
-                    style={{
-                      width: `${p.size}px`,
-                      height: `${p.size}px`,
-                      background: colorScheme.primary,
-                      top: `${p.top}%`,
-                      left: `${p.left}%`,
-                      animationDelay: `${p.delay}s`,
-                      animationDuration: `${p.duration}s`,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Enhanced gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" data-parallax="0.15" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" data-parallax="0.1" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" data-parallax="0.08" />
+            <div className="hero-matte absolute inset-0 opacity-30" />
           </div>
-        );
-      })}
+        </div>
+      ))}
 
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 flex items-center justify-center px-4 sm:px-5 md:px-6 lg:px-8 py-16 sm:py-20 md:py-24"
+        className="relative z-20 min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20"
       >
-        <div className="w-full max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto text-center">
-          {/* Wave Text */}
+        <div className="w-full flex flex-col gap-10 lg:gap-12 xl:gap-14 items-start max-w-6xl">
+          {/* Wave of Greatness Text */}
           {showWaveText && (
-            <div className="mb-2 sm:mb-3 md:mb-4 lg:mb-5 relative">
-              <div ref={waveTextRef} className="flex justify-center items-center" style={{ opacity: 0.95 }}>
-                {'THE WAVE OF GREATNESS'.split('').map((char, index) => (
+            <div className="w-full flex justify-start mt-2 sm:mt-4 lg:mt-6 mb-6 sm:mb-8 md:mb-9 lg:mb-10">
+              <div
+                ref={waveTextRef}
+                className="relative inline-flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-full border border-white/15 bg-white/8 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+                style={{ opacity: 0.97 }}
+              >
+                <span
+                  className="h-2 w-2 rounded-full shadow-[0_0_12px_currentColor]"
+                  style={{ backgroundColor: colorScheme.primary }}
+                />
+                <span
+                  className="flex items-center gap-2 uppercase tracking-[0.18em] font-black text-[0.78rem] sm:text-[0.9rem] md:text-[1rem] leading-tight"
+                  style={{
+                    color: '#fff',
+                    textShadow: `0 2px 10px rgba(0,0,0,0.45)`,
+                  }}
+                >
                   <span
-                    key={index}
-                    className="wave-char inline-block will-change-transform"
+                    className="inline-block text-transparent bg-clip-text"
                     style={{
-                      fontSize: 'clamp(0.85rem, 1.5vw, 1.05rem)',
-                      fontFamily: "'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif",
-                      fontWeight: 700,
-                      color: 'transparent',
-                      backgroundImage: `linear-gradient(
-                        135deg,
-                        ${colorScheme.primaryLight} 0%,
-                        #FFFFFF 30%,
-                        ${colorScheme.primary} 60%,
-                        ${colorScheme.primaryDark} 100%
-                      )`,
-                      backgroundClip: 'text',
+                      backgroundImage: `linear-gradient(120deg, ${colorScheme.primaryLight} 0%, #ffffff 35%, ${colorScheme.primary} 70%, ${colorScheme.primaryDark} 100%)`,
                       WebkitBackgroundClip: 'text',
-                      textShadow: `0 0 8px ${colorScheme.opacity.primary40},
-                                   0 0 12px ${colorScheme.opacity.primary20},
-                                   0 1px 2px rgba(0,0,0,0.7)`,
-                      padding: '0 0.03em',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.07em',
-                      lineHeight: '1.2',
-                      WebkitTextStroke: `0.2px ${colorScheme.primaryDark}`,
                     }}
                   >
-                    {char === ' ' ? '\u00A0' : char}
+                    THE WAVE OF GREATNESS
                   </span>
-                ))}
+                </span>
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    boxShadow: `0 0 0 1px rgba(255,255,255,0.06), 0 18px 40px rgba(0,0,0,0.35)`,
+                  }}
+                />
               </div>
             </div>
           )}
 
-          {/* Title */}
-          <H1
-            ref={titleRef as any}
-            className="mb-3 sm:mb-4 md:mb-5 leading-tight tracking-tight font-black"
-            style={{
-              color: '#FFFFFF',
-              textShadow: '0 2px 10px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.6)',
-            }}
-            useThemeColor={false}
-          >
-            <span className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl block px-2">
-              {renderTitle(currentSlideData.title, colorScheme)}
-            </span>
-          </H1>
-
-          {/* Divider */}
-          <div
-            className="h-0.5 w-14 sm:w-18 md:w-22 lg:w-24 mx-auto mb-3 sm:mb-4 md:mb-5 lg:mb-6 rounded-full"
-            style={{
-              backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
-              boxShadow: `0 0 12px ${colorScheme.opacity.primary30}`,
-            }}
-          />
-
-          {/* Subtitle */}
-          {currentSlideData.subtitle && (
-            <H2
-              ref={subtitleRef as any}
-              className="mb-4 sm:mb-5 md:mb-6 lg:mb-7"
+          {/* Main Title */}
+          <div className="relative flex flex-col gap-6 sm:gap-7 md:gap-8 lg:gap-9 w-full max-w-5xl">
+            <H1
+              ref={titleRef}
+              className="leading-tight tracking-tight font-black text-left"
               style={{
-                color: colorScheme.primary,
-                textShadow: '0 1px 6px rgba(0,0,0,0.8), 0 2px 12px rgba(0,0,0,0.6)',
+                color: '#FFFFFF',
+                textShadow:
+                  '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
               }}
               useThemeColor={false}
-              weight="bold"
-              smWeight="extrabold"
             >
-              <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl block">
-                {renderSubtitle(currentSlideData.subtitle)}
+              <span className="text-3xl xs:text-[2.5rem] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl block">
+                {renderTitle(currentSlideData.title, colorScheme)}
               </span>
-            </H2>
-          )}
+            </H1>
 
-          {/* Buttons */}
+            {/* Divider Line */}
+            <div
+              className="h-0.5 w-20 sm:w-24 md:w-28 lg:w-32 rounded-full"
+              style={{
+                backgroundColor: colorScheme.primary,
+                backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
+                boxShadow: `0 0 12px ${colorScheme.opacity.primary30}`,
+              }}
+            />
+
+            {/* Subtitle */}
+            {currentSlideData.subtitle && (
+              <H2
+                ref={subtitleRef}
+                className="text-left"
+                style={{
+                  color: colorScheme.primary,
+                  textShadow:
+                    '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
+                }}
+                useThemeColor={false}
+                weight="bold"
+                smWeight="extrabold"
+              >
+                <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2.25rem] block">
+                  {renderSubtitle(currentSlideData.subtitle)}
+                </span>
+              </H2>
+            )}
+
+            {/* Buttons */}
+            <div
+              ref={buttonsRef}
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6 justify-start items-center pt-2"
+            >
+              <CustomButton
+                variant="primary"
+                size="md"
+                curvature="xl"
+                elevated={true}
+                onClick={handlePrimaryClick}
+                className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
+                style={{
+                  background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
+                  color: colorScheme.buttonText || '#000000',
+                  boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
+                }}
+              >
+                <span className="text-sm sm:text-base md:text-lg font-semibold tracking-wide">
+                  {primaryButtonText}
+                </span>
+              </CustomButton>
+
+              <CustomButton
+                variant="outline"
+                size="md"
+                curvature="xl"
+                onClick={handleSecondaryClick}
+                style={{
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  borderWidth: '1.5px',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                }}
+                className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
+              >
+                <span className="text-sm sm:text-base md:text-lg font-semibold tracking-wide">
+                  {secondaryButtonText}
+                </span>
+              </CustomButton>
+            </div>
+          </div>
           <div
-            ref={buttonsRef as any}
-            className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 md:gap-5 lg:gap-6 justify-center items-center px-3 sm:px-0"
+            ref={cardsRef}
+            className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6"
           >
-            <CustomButton
-              variant="primary"
-              size="md"
-              curvature="xl"
-              elevated
-              onClick={onPrimaryButtonClick}
-              className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
-              style={{
-                background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                color: colorScheme.buttonText || '#000000',
-                boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
-              }}
+            <div
+              className="rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-5 sm:p-6 flex flex-col gap-3"
+              data-parallax="0.12"
+              data-gsap="reveal"
             >
-              <span className="text-sm sm:text-base md:text-lg font-medium">{primaryButtonText}</span>
-            </CustomButton>
+              <div className="flex items-center gap-3">
+                <div
+                  className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
+                  style={{ background: colorScheme.primary }}
+                >
+                  <CalendarClock className="w-5 h-5 text-black" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-white/70 font-semibold">
+                    {upcoming.label}
+                  </p>
+                  <p className="text-lg text-white font-semibold">
+                    {upcoming.title}
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm text-white/85">
+                <div className="flex items-center gap-2">
+                  <CalendarClock className="w-4 h-4" />
+                  <span>
+                    {upcoming.date} • {upcoming.time}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  <span>{upcoming.location}</span>
+                </div>
+              </div>
+              <div>
+                <CustomButton
+                  size="sm"
+                  curvature="full"
+                  elevated
+                  onClick={handleUpcomingCta}
+                  className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
+                >
+                  {upcoming.ctaLabel ?? 'Reserve a seat'}
+                </CustomButton>
+              </div>
+            </div>
 
-            <CustomButton
-              variant="outline"
-              size="md"
-              curvature="xl"
-              onClick={onSecondaryButtonClick}
-              style={{
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                borderWidth: '1.5px',
-                color: '#FFFFFF',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              }}
-              className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
+            <div
+              className="rounded-3xl border border-white/10 bg-black/50 backdrop-blur-xl p-5 sm:p-6 flex flex-col gap-4"
+              data-parallax="0.18"
+              data-gsap="reveal"
             >
-              <span className="text-sm sm:text-base md:text-lg font-medium">{secondaryButtonText}</span>
-            </CustomButton>
+              <div className="flex items-start gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-white/20 flex items-center justify-center shrink-0">
+                  <PlayCircle className="w-5 h-5 text-white" />
+                </div>
+                <div className="leading-tight">
+                  <p className="text-sm text-white font-semibold">
+                    Watch live stream
+                  </p>
+                  <p className="text-xs text-white/60">Latest message from YouTube</p>
+                </div>
+              </div>
+              {latestVideo ? (
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2">
+                  <div className="relative h-20 w-full sm:w-32 rounded-xl overflow-hidden border border-white/15 bg-black/60">
+                    <img
+                      src={
+                        latestVideo.thumbnail ||
+                        (latestVideo as any)?.thumbnails?.medium?.url ||
+                        (latestVideo as any)?.thumbnails?.default?.url ||
+                        '/images/placeholder.jpg'
+                      }
+                      alt={latestVideo.title}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
+                      <PlayCircle className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-semibold line-clamp-2">
+                      {latestVideo.title}
+                    </p>
+                    <p className="text-white/60 text-xs">Tap to watch now</p>
+                  </div>
+                  <a
+                    href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg self-start sm:self-auto"
+                  >
+                    <PlayCircle className="w-4 h-4" /> Play
+                  </a>
+                </div>
+              ) : (
+                <CustomButton
+                  variant="outline"
+                  size="sm"
+                  curvature="full"
+                  onClick={handleSecondaryClick}
+                  className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10 self-start"
+                >
+                  {videoLoading ? 'Loading…' : 'Watch'}
+                </CustomButton>
+              )}
+            </div>
           </div>
         </div>
       </Container>
 
-      {/* Floating info rail (mobile-safe) */}
-      <div className="absolute inset-x-0 bottom-3 sm:bottom-4 lg:bottom-5 z-30 px-4">
-        <div className="mx-auto max-w-5xl grid grid-cols-1 gap-2.5 items-center">
-          <div className="rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 shadow-2xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div
-                className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
-                style={{ background: colorScheme.primary }}
-              >
-                <CalendarClock className="w-5 h-5 text-black" />
-              </div>
-              <div className="text-left">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/70 font-semibold">{upcoming.label}</p>
-                <p className="text-sm sm:text-base text-white font-semibold">
-                  {upcoming.title} - {upcoming.date} - {upcoming.time}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
-                <MapPin className="w-4 h-4" />
-                <span>{upcoming.location}</span>
-              </div>
-              <CustomButton
-                size="sm"
-                curvature="full"
-                elevated
-                onClick={handleUpcomingCta}
-                className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
-              >
-                {upcoming.ctaLabel ?? 'Reserve a seat'}
-              </CustomButton>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Slide Indicators */}
-      {isMultiSlide && (
-        <div className="absolute right-2 sm:right-2.5 lg:right-3 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1.5 md:gap-2">
-          {slides.map((_, index) => (
+      {slideList.length > 1 && (
+        <div className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2">
+          {slideList.map((_, index) => (
             <button
               key={index}
-              onClick={() => goToSlide(index)}
-              type="button"
-              className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-200 focus:outline-none hover:scale-110"
+              onClick={() => setCurrentSlide(index)}
+              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-200 ${
+                currentSlide === index ? 'scale-110' : 'scale-90'
+              }`}
               style={{
-                backgroundColor: index === safeIndex ? colorScheme.primary : 'rgba(255, 255, 255, 0.22)',
-                boxShadow: index === safeIndex ? `0 0 6px ${colorScheme.primary}` : 'none',
+                backgroundColor:
+                  currentSlide === index ? colorScheme.primary : 'rgba(255,255,255,0.3)',
+                boxShadow:
+                  currentSlide === index ? `0 0 6px ${colorScheme.primary}` : 'none',
               }}
               aria-label={`Go to slide ${index + 1}`}
             />

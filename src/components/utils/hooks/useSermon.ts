@@ -63,6 +63,7 @@ export const useSermonUtil = () => {
     searchTerm,
     selectedSeries,
     selectedPreacher,
+    selectedYear,
     sortBy,
   } = sermonsState;
 
@@ -235,7 +236,7 @@ export const useSermonUtil = () => {
   );
 
   const handleGroupClick = useCallback(
-    (searchTerms: string[]) => {
+    (searchTerms: string[], groupName?: string) => {
       if (isAnimating || !isClient) return;
 
       // Add click animation feedback
@@ -249,7 +250,11 @@ export const useSermonUtil = () => {
         });
       }
 
-      dispatch(setSelectedSeries(searchTerms[0]));
+      if (groupName) {
+        dispatch(setSelectedSeries(`group:${groupName}`));
+      } else {
+        dispatch(setSelectedSeries(searchTerms[0]));
+      }
 
       // Enhanced scroll with coordinated timing
       setTimeout(() => {
@@ -328,11 +333,19 @@ export const useSermonUtil = () => {
   }, [dispatch, isClient]);
 
   // Search Filters Handlers
-  const seriesOptions = isClient
+  const baseSeriesOptions = isClient
     ? [
         'all',
         ...new Set(videos.map(video => video.series).filter(Boolean)),
       ].sort()
+    : ['all'];
+
+  const seriesOptions = isClient
+    ? selectedSeries.startsWith('group:')
+      ? baseSeriesOptions.includes(selectedSeries)
+        ? baseSeriesOptions
+        : [selectedSeries, ...baseSeriesOptions]
+      : baseSeriesOptions
     : ['all'];
 
   const preacherOptions = isClient
@@ -362,6 +375,14 @@ export const useSermonUtil = () => {
     (preacher: string) => {
       if (!isClient) return;
       dispatch(setSelectedPreacher(preacher));
+    },
+    [dispatch, isClient]
+  );
+
+  const handleYearChange = useCallback(
+    (year: string) => {
+      if (!isClient) return;
+      dispatch(setSelectedYear(year));
     },
     [dispatch, isClient]
   );
@@ -537,6 +558,16 @@ export const useSermonUtil = () => {
     ? featuredSeries[0]?.series || 'Latest Content'
     : 'Latest Content';
   const recentVideos = isClient ? videos.slice(0, 5) : [];
+  const yearOptions = isClient
+    ? [
+        'all',
+        ...new Set(
+          videos
+            .map(video => new Date(video.publishedAt).getFullYear().toString())
+            .filter(Boolean)
+        ),
+      ].sort((a, b) => (a === 'all' || b === 'all' ? 0 : Number(b) - Number(a)))
+    : ['all'];
 
   return {
     // State
@@ -547,6 +578,7 @@ export const useSermonUtil = () => {
     searchTerm,
     selectedSeries,
     selectedPreacher,
+    selectedYear,
     sortBy,
     currentVideo,
     playerKey,
@@ -555,6 +587,7 @@ export const useSermonUtil = () => {
     hasMoreVideos,
     seriesOptions,
     preacherOptions,
+    yearOptions,
     recentVideos,
     featuredSeriesName,
     isAnimating,
@@ -577,6 +610,7 @@ export const useSermonUtil = () => {
     handleSearchChange,
     handleSeriesFilterChange,
     handlePreacherChange,
+    handleYearChange,
     handleSortChange,
     handleResetFilters,
     smoothScrollToElement,

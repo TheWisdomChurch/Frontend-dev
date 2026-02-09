@@ -3,15 +3,16 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronRight } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { H2, BodyLG, BodyMD, Caption } from '@/components/text';
+import { H2, H3, BodyLG, BodyMD, Caption, SmallText } from '@/components/text';
 import { Section, Container, GridboxLayout } from '@/components/layout';
-import { hero_bg_3 } from '@/components/assets';
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import PageHero from '@/components/ui/PageHero';
 import { Ministries } from '@/lib/data';
+import CustomButton from '@/components/utils/buttons/CustomButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,13 +40,16 @@ export default function MinistryPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <HeroSection
+      <PageHero
         title="Our Ministries"
         subtitle="One family. Many expressions of faith."
-        description="Discover a place to belong, grow, serve, and become everything God has called you to be."
-        backgroundImage={hero_bg_3.src}
-        showButtons={false}
-        showScrollIndicator={false}
+        note="Discover a place to belong, grow, serve, and become everything God has called you to be."
+        chips={[
+          `Ministries: ${Ministries.length}`,
+          'Focus: Word & Power',
+          'Culture: Excellence & Love',
+          'Family: All Generations',
+        ]}
       />
 
       <Section
@@ -106,7 +110,7 @@ export default function MinistryPage() {
             ))}
           </GridboxLayout>
 
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center">
             <div
               className="inline-block p-5 sm:p-6 lg:p-7 rounded-xl lg:rounded-2xl shadow-lg bg-white text-black"
               style={{ boxShadow: `0 0 30px ${colorScheme.primary}30` }}
@@ -118,6 +122,72 @@ export default function MinistryPage() {
                 No matter where you are in your faith journey — you belong at The Wisdom House.
               </BodyLG>
             </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
+        <Container size="xl">
+          <div className="text-center mb-8">
+            <H2 className="text-2xl sm:text-3xl font-bold mb-3">
+              How to Get Involved
+            </H2>
+            <BodyLG className="text-white/70 max-w-2xl mx-auto text-sm sm:text-base">
+              A simple path to help you connect, serve, and grow with others.
+            </BodyLG>
+          </div>
+
+          <GridboxLayout
+            columns={1}
+            responsive={{ sm: 3 }}
+            gap="md"
+            className="max-w-5xl mx-auto"
+          >
+            {[
+              {
+                title: 'Explore Ministries',
+                description:
+                  'Browse the ministries that resonate with your season and interests.',
+              },
+              {
+                title: 'Connect With a Leader',
+                description:
+                  'Ask questions and learn how each team serves the church and community.',
+              },
+              {
+                title: 'Start Serving',
+                description:
+                  'Join a team and begin serving with purpose and accountability.',
+              },
+            ].map((step, index) => (
+              <div
+                key={index}
+                className="rounded-2xl border border-white/10 p-5 sm:p-6 bg-white/5"
+              >
+                <BodyMD className="text-base font-semibold mb-2">
+                  {step.title}
+                </BodyMD>
+                <Caption className="text-xs text-white/70 leading-relaxed">
+                  {step.description}
+                </Caption>
+              </div>
+            ))}
+          </GridboxLayout>
+
+          <div className="mt-8 text-center">
+            <CustomButton
+              variant="primary"
+              size="md"
+              curvature="full"
+              onClick={() => (window.location.href = '/contact')}
+              className="px-6 py-3 text-sm font-semibold"
+              style={{
+                backgroundColor: colorScheme.primary,
+                color: colorScheme.black,
+              }}
+            >
+              Talk to a Leader
+            </CustomButton>
           </div>
         </Container>
       </Section>
