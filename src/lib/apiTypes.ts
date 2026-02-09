@@ -1,3 +1,5 @@
+// lib/api/apiTypes.ts
+
 export type FormFieldType =
   | 'text'
   | 'email'
@@ -11,7 +13,7 @@ export type FormFieldType =
 
 export type PublicFormField = {
   id?: string;
-  key: string; // stable machine key
+  key: string;
   label: string;
   type: FormFieldType;
   required: boolean;
@@ -26,7 +28,7 @@ export type PublicFormPayload = {
   title: string;
   description?: string;
   capacity?: number | null;
-  closesAt?: string | null; // ISO string
+  closesAt?: string | null;
   fields: PublicFormField[];
 };
 
@@ -45,6 +47,7 @@ export type EventPublic = {
   bannerUrl?: string;
   formSlug?: string | null;
 };
+
 export type Testimonial = {
   id: number | string;
   firstName?: string;
@@ -56,6 +59,18 @@ export type Testimonial = {
   isApproved?: boolean;
   createdAt?: string;
   updatedAt?: string;
+};
+
+export type CreateTestimonialRequest = {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  testimony: string;
+  isAnonymous: boolean;
+  imageUrl?: string;
+  imageBase64?: string;
+  allowSharing?: boolean;
+  agreeToTerms?: boolean;
 };
 
 export interface SubscriberPayload {
