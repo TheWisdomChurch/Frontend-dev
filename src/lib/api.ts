@@ -3,7 +3,7 @@
 import type {
   PublicFormPayload,
   PublicFormSubmissionRequest,
-  // Testimonial,
+  Testimonial, // ✅ FIX: import the missing type
   TestimonialFormData,
   CreateTestimonialRequest,
   SubscriberPayload,
@@ -64,8 +64,21 @@ async function safeParseJson(res: Response): Promise<any | null> {
   }
 }
 
+/**
+ * Supports these common backend shapes:
+ * - direct payload: {...}
+ * - wrapped: { data: {...} }
+ * - wrapped: { data: { data: ... } }   (some "SuccessResponse" patterns)
+ */
 function unwrapData<T>(res: any): T {
-  if (res && typeof res === 'object' && 'data' in res) return res.data as T;
+  if (!res || typeof res !== 'object') return res as T;
+
+  if ('data' in res) {
+    const d = (res as any).data;
+    if (d && typeof d === 'object' && 'data' in d) return d.data as T; // { data: { data: ... } }
+    return d as T; // { data: ... }
+  }
+
   return res as T;
 }
 
@@ -119,7 +132,6 @@ function normalizeTestimonial(raw: any): Testimonial {
     raw?.anonymous ??
     raw?.isAnonymous ??
     raw?.is_anonymous ??
-    raw?.isAnonymous ??
     false;
 
   const image =
@@ -128,8 +140,7 @@ function normalizeTestimonial(raw: any): Testimonial {
     raw?.image_url ??
     undefined;
 
-  const createdAt =
-    raw?.createdAt ?? raw?.created_at;
+  const createdAt = raw?.createdAt ?? raw?.created_at;
 
   const fullName =
     raw?.fullName ??
@@ -156,10 +167,7 @@ function normalizeTestimonial(raw: any): Testimonial {
 /**
  * IMPORTANT:
  * Your Go backend currently expects imageUrl (not base64) unless you add support.
- * So we send base64 only if you decide to support it on the backend as imageBase64.
- *
- * For now, we include imageBase64 if it's a data URL; if your backend rejects it,
- * remove imageBase64 line OR implement backend support.
+ * We include imageBase64 only if it's a data URL. If backend rejects it, remove it.
  */
 export function mapTestimonialFormToRequest(form: TestimonialFormData): CreateTestimonialRequest {
   const isAnonymous = Boolean(form.anonymous);
@@ -182,9 +190,6 @@ export function mapTestimonialFormToRequest(form: TestimonialFormData): CreateTe
 
     // If your backend DOES NOT support base64, delete this line:
     imageBase64,
-
-    // If you upload first and get a URL, set this instead:
-    // imageUrl: "https://....",
 
     allowSharing: Boolean(form.allowSharing),
     agreeToTerms: Boolean(form.agreeToTerms),
@@ -223,33 +228,34 @@ export const apiPublic = {
     return normalizeTestimonial(unwrapData<any>(res));
   },
 
-  /**
-   * This is the one your React page should call.
-   * It converts your form state to the backend request payload.
-   */
   async submitTestimonialFromForm(form: TestimonialFormData): Promise<Testimonial> {
     const payload = mapTestimonialFormToRequest(form);
     return this.submitTestimonial(payload);
   },
 
   async subscribe(payload: SubscriberPayload) {
-    return request<any>('/subscribers', { method: 'POST', body: JSON.stringify(payload) });
+    const res = await request<any>('/subscribers', { method: 'POST', body: JSON.stringify(payload) });
+    return unwrapData<any>(res);
   },
 
   async unsubscribe(payload: { email: string }) {
-    return request<any>('/subscribers/unsubscribe', { method: 'POST', body: JSON.stringify(payload) });
+    const res = await request<any>('/subscribers/unsubscribe', { method: 'POST', body: JSON.stringify(payload) });
+    return unwrapData<any>(res);
   },
 
   async sendOtp(payload: { email: string; purpose?: string }) {
-    return request<any>('/otp/send', { method: 'POST', body: JSON.stringify(payload) });
+    const res = await request<any>('/otp/send', { method: 'POST', body: JSON.stringify(payload) });
+    return unwrapData<any>(res);
   },
 
   async verifyOtp(payload: { email: string; code: string; purpose?: string }) {
-    return request<any>('/otp/verify', { method: 'POST', body: JSON.stringify(payload) });
+    const res = await request<any>('/otp/verify', { method: 'POST', body: JSON.stringify(payload) });
+    return unwrapData<any>(res);
   },
 
   async applyToWorkforce(payload: any) {
-    return request<any>('/workforce/apply', { method: 'POST', body: JSON.stringify(payload) });
+    const res = await request<any>('/workforce/apply', { method: 'POST', body: JSON.stringify(payload) });
+    return unwrapData<any>(res);
   },
 };
 
