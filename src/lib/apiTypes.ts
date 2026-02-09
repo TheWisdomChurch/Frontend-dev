@@ -45,17 +45,17 @@ export type EventPublic = {
   bannerUrl?: string;
   formSlug?: string | null;
 };
-
 export type Testimonial = {
   id: number | string;
   firstName?: string;
   lastName?: string;
   fullName?: string;
   testimony: string;
-  image?: string;
-  anonymous: boolean;
-  approved?: boolean;
+  imageUrl?: string | null;
+  isAnonymous?: boolean;
+  isApproved?: boolean;
   createdAt?: string;
+  updatedAt?: string;
 };
 
 export interface SubscriberPayload {
@@ -68,31 +68,3 @@ export interface NotificationPayload {
   message: string;
   audience?: string;
 }
-
-/** What your PAGE form state uses */
-export interface TestimonialFormData {
-  firstName: string;
-  lastName: string;
-  image: string; // base64 data URL
-  testimony: string;
-  anonymous: boolean;
-  allowSharing: boolean;
-  agreeToTerms: boolean;
-  email?: string;
-}
-
-/** What your BACKEND should receive */
-export type CreateTestimonialRequest = {
-  firstName: string;
-  lastName: string;
-  email?: string;
-  testimony: string;
-  isAnonymous: boolean;
-
-  // You can send base64 (if backend supports) OR send imageUrl (if you upload elsewhere)
-  imageBase64?: string;
-  imageUrl?: string | null;
-
-  allowSharing?: boolean;
-  agreeToTerms?: boolean;
-};

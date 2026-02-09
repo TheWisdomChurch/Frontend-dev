@@ -4,21 +4,19 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarClock, Radio, Users, ArrowRight, X, Clock, MapPin } from 'lucide-react';
+import { CalendarClock, Radio, Users, ArrowRight, X } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { Container } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
-
-type ModalKind = 'visit' | 'watch' | 'join';
+import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 
 const highlights = [
   {
-    key: 'visit',
-    title: 'Wave Sundays',
-    meta: 'Two vibrant gatherings',
+    title: 'Worship with us onsite',
+    meta: 'In-person gathering',
     detail: 'Sundays • 9:00 AM (WAT)',
-    description: 'Spirit-filled worship, teaching, and community moments.',
+    description: 'Be in the room for worship, teaching, and community.',
     icon: CalendarClock,
     href: '/contact',
     actionLabel: 'Plan a visit',
@@ -45,16 +43,10 @@ const highlights = [
   },
 ] as const;
 
-const departments = [
-  'Media & Tech',
-  'Music / Worship',
-  'Hospitality & Welcome',
-  'Ushering & Protocol',
-  'Prayer Team',
-  'Children / Teens',
-  'Outreach & Evangelism',
-  'Follow-up & Care',
-] as const;
+export default function HeroHighlights() {
+  const { colorScheme = lightShades } = useTheme();
+  const [modal, setModal] = useState<'visit' | 'watch' | 'join' | null>(null);
+  const { open } = useServiceUnavailable();
 
 type Department = (typeof departments)[number];
 
@@ -112,134 +104,104 @@ function ModalShell({
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   useLockBody(open);
 
-  useEffect(() => {
-    if (!open) return;
-
-    const t = window.setTimeout(() => closeBtnRef.current?.focus(), 0);
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      window.clearTimeout(t);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [open, onClose]);
-
-  return (
-    <AnimatePresence>
-      {open ? (
+    return (
+      <AnimatePresence>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label={title}
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) onClose();
-          }}
+          className="fixed inset-0 z-[120] flex items-center justify-center px-4"
         >
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-
+          <div className="absolute inset-0 bg-black/65 backdrop-blur-md" onClick={() => setModal(null)} />
           <motion.div
-            initial={{ scale: 0.96, opacity: 0, y: 10 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.96, opacity: 0, y: 10 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
-            className={cx(
-              'relative w-full max-w-lg rounded-2xl sm:rounded-3xl border border-white/15 bg-[#0f0f0f] shadow-2xl text-white',
-              'max-h-[85vh] overflow-auto'
-            )}
+            initial={{ scale: 0.96, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.96, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-2xl rounded-[28px] border border-white/12 bg-gradient-to-br from-[#0f0f0f] via-[#121212] to-[#0c0c0c] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white"
           >
-            <div className="flex items-start justify-between gap-3 border-b border-white/10 p-4 sm:p-6">
-              <div className="min-w-0">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
-                <h3 className="mt-1 text-xl sm:text-2xl font-black leading-tight">{title}</h3>
-                {subtitle ? (
-                  <p className="mt-2 text-sm sm:text-[0.95rem] leading-relaxed text-white/70">{subtitle}</p>
-                ) : null}
-              </div>
-
-              <button
-                ref={closeBtnRef}
-                onClick={onClose}
-                className="shrink-0 rounded-xl border border-white/15 bg-white/5 p-2 text-white/70 hover:text-white hover:bg-white/10 transition"
-                aria-label="Close"
-                type="button"
-              >
-                <X className="w-5 h-5" />
-              </button>
+            <button
+              onClick={() => setModal(null)}
+              className="absolute right-4 top-4 text-white/70 hover:text-white"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="space-y-3 pr-10">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
+              <h3 className="text-3xl font-black leading-tight">{copy.title}</h3>
+              <p className="text-white/75 text-sm leading-relaxed">{copy.description}</p>
             </div>
-
-            <div className="p-4 sm:p-6">{children}</div>
+            <form
+              className="mt-6 space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setModal(null);
+                open({
+                  title: 'Service not available yet',
+                  message:
+                    'We are polishing this experience for production. Please check back soon.',
+                  actionLabel: 'Okay, thanks',
+                });
+              }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  placeholder="Full name"
+                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                  required
+                />
+                {modal === 'visit' ? (
+                  <input
+                    type="date"
+                    className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                    required
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    placeholder="Which team? (media, music, hospitality)"
+                    className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                    required
+                  />
+                )}
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
+                  required
+                />
+              </div>
+              <textarea
+                placeholder="Anything we should know?"
+                className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 min-h-[120px] resize-none"
+              />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p className="text-white/55 text-xs">
+                  We confirm by email and send a reminder. No spam, ever.
+                </p>
+                <CustomButton
+                  variant="primary"
+                  size="md"
+                  curvature="xl"
+                  className="px-6 py-3 text-sm font-semibold shadow-lg shadow-primary/20"
+                >
+                  {copy.cta}
+                </CustomButton>
+              </div>
+            </form>
           </motion.div>
         </motion.div>
-      ) : null}
-    </AnimatePresence>
-  );
-}
-
-export default function HeroHighlights() {
-  const { colorScheme = lightShades } = useTheme();
-
-  const [open, setOpen] = useState<ModalKind | null>(null);
-
-  // ✅ Explicit state typing prevents “department becomes only 'Media & Tech'” bug.
-  const [visit, setVisit] = useState<VisitState>({
-    name: '',
-    email: '',
-    phone: '',
-    date: '',
-    time: '',
-    attendance: '1',
-    notes: '',
-  });
-
-  const [watch, setWatch] = useState<WatchState>({ name: '', email: '' });
-
-  const [join, setJoin] = useState<JoinState>({
-    name: '',
-    email: '',
-    phone: '',
-    department: departments[0], // Department (union), not literal-only
-    experience: '',
-  });
-
-  const closeModal = useCallback(() => setOpen(null), []);
-
-  const openModal = useCallback((kind: ModalKind) => setOpen(kind), []);
-
-  const onSubmitVisit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      // TODO: send to backend (apiPublic.planVisit / appointment endpoint)
-      closeModal();
-    },
-    [closeModal]
-  );
-
-  const onSubmitWatch = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      // TODO: send to backend (apiPublic.subscribe)
-      closeModal();
-    },
-    [closeModal]
-  );
-
-  const onSubmitJoin = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      // TODO: send to backend (apiPublic.joinTeam)
-      closeModal();
-    },
-    [closeModal]
-  );
-
-  const cardBase = 'relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/12 bg-[#111] shadow-xl';
+      </AnimatePresence>
+    );
+  };
 
   return (
     <section className="relative z-30" style={{ background: '#0b0b0b' }}>

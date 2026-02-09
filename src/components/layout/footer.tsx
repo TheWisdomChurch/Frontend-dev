@@ -1,18 +1,19 @@
 'use client';
 
-import { memo, useRef, useEffect, useMemo, useCallback } from 'react';
+import { memo, useRef, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, MapPin, Mail, Facebook, Youtube, Instagram, Twitter, ArrowRight } from 'lucide-react';
 import { bricolageGrotesque } from '@/components/fonts/fonts';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { useDormantAction } from '@/components/utils/hooks/useDormantAction';
 import { BodySM, BodyMD, Caption, BodyLG } from '@/components/text';
 import { WisdomeHouseLogo } from '../assets';
 
 // MEMOIZE STATIC DATA & COMPONENTS OUTSIDE
 const currentYear = new Date().getFullYear();
 const socialLinks = [
-  { Icon: Facebook, href: 'https://web.facebook.com/search/top?q=wisdom%20house%20hq', label: 'Facebook' },
+  { Icon: Facebook, href: 'https://www.facebook.com/wisdomhousehq', label: 'Facebook' },
   { Icon: Youtube, href: 'https://www.youtube.com/@wisdomhousehq', label: 'YouTube' },
   { Icon: Instagram, href: '#', label: 'Instagram' },
   { Icon: Twitter, href: '#', label: 'Twitter' },
@@ -34,27 +35,11 @@ const serviceTimes = [
   { day: 'Midweek Service', time: 'Thursday • 6:00 PM', highlight: false },
 ];
 
-// LAZY LOAD HEAVY LIBRARIES
-let gsapPromise: Promise<{ gsap: any; ScrollTrigger: any }> | undefined;
-const getGsap = () => {
-  if (!gsapPromise) {
-    gsapPromise = import('gsap').then(gsapModule => {
-      const gsap = gsapModule.default;
-      return import('gsap/ScrollTrigger').then(ScrollTriggerModule => {
-        const ScrollTrigger = ScrollTriggerModule.default;
-        gsap.registerPlugin(ScrollTrigger);
-        return { gsap, ScrollTrigger };
-      });
-    });
-  }
-  return gsapPromise;
-};
-
 // MAIN COMPONENT WITH MEMOIZATION
 function Footer() {
   const { colorScheme } = useTheme();
   const footerRef = useRef<HTMLElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const openDormant = useDormantAction();
 
   // MEMOIZE VALUES THAT DEPEND ON colorScheme
   const gradientStyle = useMemo(() => ({
@@ -65,51 +50,18 @@ function Footer() {
     borderColor: colorScheme.primary + '40'
   }), [colorScheme.primary]);
 
-  // DELAYED ANIMATION INITIALIZATION
-  useEffect(() => {
-    const currentRef = footerRef.current;
-    if (!currentRef) return;
-
-    observerRef.current = new IntersectionObserver((entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting) {
-        getGsap().then(({ gsap, ScrollTrigger }) => {
-          gsap.fromTo(currentRef,
-            { y: 30, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.6,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: currentRef,
-                start: 'top 90%',
-                toggleActions: 'play none none reverse',
-                markers: false
-              }
-            }
-          );
-        });
-        if (observerRef.current) {
-          observerRef.current.unobserve(currentRef);
-        }
-      }
-    }, { threshold: 0.1, rootMargin: '50px' });
-
-    observerRef.current.observe(currentRef);
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, []);
-
   // MEMOIZE EVENT HANDLERS
-  const handleSubscribe = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Subscribe handler');
-  }, []);
+  const handleSubscribe = useCallback(
+    (e: React.FormEvent) => {
+      openDormant(e, {
+        title: 'Newsletter signup opening soon',
+        message:
+          'We are preparing weekly updates and devotionals. Please check back shortly.',
+        actionLabel: 'Okay, thanks',
+      });
+    },
+    [openDormant]
+  );
 
   // RENDER LOGIC
   return (
@@ -223,11 +175,32 @@ function Footer() {
               <div className="text-center">
                 <BodyMD className="font-medium mb-4 text-white" useThemeColor={false}>Follow Us</BodyMD>
                 <div className="flex justify-center items-center gap-3">
-                  {socialLinks.map((social, i) => (
-                    <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full bg-white/10 border border-gray-700 hover:bg-primary/20 hover:border-primary transition-all duration-300 hover:scale-105" aria-label={social.label}>
-                      <social.Icon className="w-4 h-4" style={{ color: colorScheme.primary }} />
-                    </a>
-                  ))}
+                  {socialLinks.map((social, i) => {
+                    const isDormant = social.href === '#';
+                    return (
+                      <a
+                        key={i}
+                        href={social.href}
+                        target={isDormant ? undefined : '_blank'}
+                        rel={isDormant ? undefined : 'noopener noreferrer'}
+                        onClick={
+                          isDormant
+                            ? (event) =>
+                                openDormant(event, {
+                                  title: `${social.label} opening soon`,
+                                  message:
+                                    'We are activating this social channel. Please check back shortly.',
+                                  actionLabel: 'Got it',
+                                })
+                            : undefined
+                        }
+                        className="p-2.5 rounded-full bg-white/10 border border-gray-700 hover:bg-primary/20 hover:border-primary transition-all duration-300 hover:scale-105"
+                        aria-label={social.label}
+                      >
+                        <social.Icon className="w-4 h-4" style={{ color: colorScheme.primary }} />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>
