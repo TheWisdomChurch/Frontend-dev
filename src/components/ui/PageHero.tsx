@@ -8,13 +8,20 @@ import { useTheme } from '../contexts/ThemeContext';
 import { Caption, H2, BodySM } from '../text';
 import { Section, Container } from '../layout';
 
-type PageHeroProps = {
+export type PageHeroProps = {
   title: string;
   subtitle?: string;
   eyebrow?: string;
   note?: string;
   chips?: string[];
   compact?: boolean;
+
+  /** ✅ NEW: optional hero background image (e.g. hero_bg_2.src) */
+  backgroundImage?: string;
+
+  /** ✅ NEW: safe optional flags so callers won’t error */
+  showButtons?: boolean;
+  showScrollIndicator?: boolean;
 };
 
 export default function PageHero({
@@ -24,18 +31,46 @@ export default function PageHero({
   note,
   chips,
   compact = false,
+  backgroundImage,
+  // not used here yet, but supported so callers compile
+  showButtons,
+  showScrollIndicator,
 }: PageHeroProps) {
   const { colorScheme } = useTheme();
 
   const overlay = useMemo(
     () =>
-      `radial-gradient(circle at 20% 20%, ${colorScheme.opacity.primary20} 0%, transparent 32%), radial-gradient(circle at 80% 10%, ${colorScheme.opacity.primary10} 0%, transparent 36%), radial-gradient(circle at 55% 90%, ${colorScheme.opacity.primary10} 0%, transparent 42%)`,
+      `radial-gradient(circle at 20% 20%, ${colorScheme.opacity.primary20} 0%, transparent 32%),
+       radial-gradient(circle at 80% 10%, ${colorScheme.opacity.primary10} 0%, transparent 36%),
+       radial-gradient(circle at 55% 90%, ${colorScheme.opacity.primary10} 0%, transparent 42%)`,
     [colorScheme.opacity.primary10, colorScheme.opacity.primary20]
   );
 
   return (
     <Section padding="none" className="relative overflow-hidden bg-[#050505]">
-      <div className="absolute inset-0 -z-10" style={{ background: overlay, filter: 'blur(70px)' }} />
+      {/* Optional background image */}
+      {backgroundImage ? (
+        <div className="absolute inset-0 -z-30">
+          <Image
+            src={backgroundImage}
+            alt=""
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          {/* darken for legibility */}
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+      ) : null}
+
+      {/* Glow overlay */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{ background: overlay, filter: 'blur(70px)' }}
+      />
+
+      {/* Watermark */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center opacity-8 sm:opacity-10">
         <Image
           src={WisdomeHouseLogo}
@@ -53,9 +88,16 @@ export default function PageHero({
       >
         <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur fade-up">
           <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
-            <Image src={WisdomeHouseLogo} alt="The Wisdom House" fill className="object-contain p-1.5" />
+            <Image
+              src={WisdomeHouseLogo}
+              alt="The Wisdom House"
+              fill
+              className="object-contain p-1.5"
+            />
           </div>
-          <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">{eyebrow}</Caption>
+          <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
+            {eyebrow}
+          </Caption>
         </div>
 
         <div className="space-y-3 max-w-3xl fade-up" style={{ animationDelay: '70ms' }}>
@@ -68,7 +110,8 @@ export default function PageHero({
           >
             {title}
           </H2>
-          {subtitle && (
+
+          {subtitle ? (
             <BodySM
               className={
                 compact
@@ -78,8 +121,9 @@ export default function PageHero({
             >
               {subtitle}
             </BodySM>
-          )}
-          {note && (
+          ) : null}
+
+          {note ? (
             <BodySM
               className={
                 compact
@@ -89,12 +133,12 @@ export default function PageHero({
             >
               {note}
             </BodySM>
-          )}
+          ) : null}
         </div>
 
         {chips?.length ? (
           <div className="flex flex-wrap gap-2 fade-up" style={{ animationDelay: '120ms' }}>
-            {chips.map(chip => (
+            {chips.map((chip) => (
               <span
                 key={chip}
                 className="px-2.5 py-1 rounded-full text-[11px] font-semibold border border-white/15 bg-white/5 text-white"
@@ -105,6 +149,10 @@ export default function PageHero({
             ))}
           </div>
         ) : null}
+
+        {/* If you ever want to implement these, you can add UI here.
+            For now they exist only to satisfy callers safely. */}
+        {showButtons || showScrollIndicator ? null : null}
       </Container>
     </Section>
   );

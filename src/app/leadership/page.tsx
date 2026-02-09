@@ -772,7 +772,6 @@ const LeadersPage = () => {
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVisitChurchModalOpen, setIsVisitChurchModalOpen] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [isWorkforceModalOpen, setIsWorkforceModalOpen] = useState(false);
   const [selectedLeader, setSelectedLeader] = useState<Leader | null>(null);
   const [selectedType, setSelectedType] = useState<'pastor' | 'deacon' | 'ministry'>('pastor');
 
