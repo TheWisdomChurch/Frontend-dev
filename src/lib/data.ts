@@ -120,11 +120,9 @@ export const testimonialsData: Testimonial[] = [
     firstName: 'Michael',
     lastName: 'Johnson',
     fullName: 'Michael Johnson',
-    role: 'Church Member',
     image: '/images/testimonials/michael.jpg',
     testimony:
       'This church has transformed my life. The community here is unlike any other - supportive, loving, and genuinely committed to helping each other grow in faith. The teachings are biblically sound and practically applicable to everyday life.',
-    rating: 5,
     date: '2024-01-15',
     anonymous: false,
   },
@@ -133,11 +131,9 @@ export const testimonialsData: Testimonial[] = [
     firstName: 'Sarah',
     lastName: 'Williams',
     fullName: 'Sarah Williams',
-    role: 'Youth Leader',
     image: '/images/testimonials/sarah.jpg',
     testimony:
       'As a young professional, finding a church that speaks to my generation while maintaining biblical truth was challenging. This church does it perfectly! The youth programs are engaging and the community is welcoming.',
-    rating: 5,
     date: '2024-02-20',
     anonymous: false,
   },
@@ -146,15 +142,14 @@ export const testimonialsData: Testimonial[] = [
     firstName: 'Robert',
     lastName: 'Chen',
     fullName: 'Robert Chen',
-    role: 'Volunteer',
     image: '/images/testimonials/robert.jpg',
     testimony:
       "The outreach programs have allowed me to serve my community in meaningful ways. I've found purpose and fulfillment through serving here. The leadership is supportive and empowering.",
-    rating: 5,
     date: '2024-03-10',
     anonymous: false,
   },
 ];
+
 
 export const testimonialFormFields = {
   maxImageSize: 5 * 1024 * 1024, // 5MB
@@ -223,15 +218,15 @@ export const leaders: Leader[] = [
       'Provides overall spiritual leadership and vision for the church.',
   },
   {
-    id: 3,
-    name: 'Pastor Kenny Ayilara',
-    role: 'Associate Pastor',
+    id: 2,
+    name: 'Pastor Kehinde Ayilara',
+    role: 'Senior Pastor',
     image: PstKenny,
     description: 'Supports the senior pastor in ministry and pastoral care.',
   },
 
   {
-    id: 4,
+    id: 3,
     name: 'Pastor Bamidele',
     role: 'Associate Pastor',
     image: Associate_1,
@@ -323,20 +318,21 @@ export const pastorsData: Leader[] = [
   },
     {
     id: 2,
+    name: 'Pst. Mrs Kehinde Ayilara',
+    role: 'Senior Pastor',
+    image: PstKenny,
+    description:
+      'Assist in discipleship, mentorship, and faith-building activities',
+  },
+    {
+    id: 3,
     name: 'Rev. Victor Jimba',
     role: 'Resident Pastor',
     image: Associate_2,
     description:
       'Provides overall spiritual leadership and vision for the church.',
   },
-  {
-    id: 3,
-    name: 'Pst. Mrs Kehinder Ayilara',
-    role: 'Associate Pastor',
-    image: PstKenny,
-    description:
-      'Assist in discipleship, mentorship, and faith-building activities',
-  },
+
   {
     id: 4,
     name: 'Pastor Bamidele',

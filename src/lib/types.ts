@@ -407,18 +407,19 @@ export type mainResourceLink = {
   isLiveService?: boolean;
 };
 
+// lib/types.ts (or wherever your Testimonial interface lives)
+
 export interface Testimonial {
   id: number;
   firstName: string;
   lastName: string;
   fullName: string;
-  role: string;
   image: string;
   testimony: string;
-  rating: number;
-  date: string;
+  date: string; // ISO string e.g. "2024-01-15"
   anonymous: boolean;
 }
+
 export interface CartItem {
   id: string;
   productId: number;

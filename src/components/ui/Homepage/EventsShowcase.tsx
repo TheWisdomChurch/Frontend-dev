@@ -1,4 +1,4 @@
-// components/ui/Homepage/EventsShowcase.tsx
+
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
@@ -31,6 +31,92 @@ type Slide = {
   videoUrl?: string;
 };
 
+/* =========================================
+   API ORIGIN (robust + matches your pattern)
+========================================= */
+function normalizeOrigin(raw?: string | null): string {
+  // Prefer NEXT_PUBLIC_API_URL; fallback to NEXT_PUBLIC_API_BASE_URL
+  const fallback = 'http://localhost:8080';
+  const v = (raw ?? '').trim();
+  if (!v) return fallback;
+
+  // Remove trailing slashes
+  let base = v.replace(/\/+$/, '');
+
+  // If someone sets NEXT_PUBLIC_API_URL=https://domain.com/api/v1
+  // normalize it back to origin so we can safely append /api/v1.
+  if (base.endsWith('/api/v1')) {
+    base = base.slice(0, -'/api/v1'.length);
+  }
+
+  return base || fallback;
+}
+
+const API_ORIGIN = normalizeOrigin(
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL
+);
+const API_V1_BASE = `${API_ORIGIN}/api/v1`;
+
+async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(url, {
+    ...init,
+    method: init?.method ?? 'GET',
+    headers: {
+      Accept: 'application/json',
+      ...(init?.headers ?? {}),
+    },
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Request failed (${res.status}) ${text || url}`);
+  }
+
+  return (await res.json()) as T;
+}
+
+/**
+ * Tries common event endpoints:
+ * 1) /api/v1/events/public
+ * 2) /api/v1/events
+ *
+ * Also supports either raw array response OR wrapped responses like:
+ * { data: [...] } OR { data: { data: [...] } }
+ */
+async function listEventsPublic(): Promise<EventPublic[]> {
+  const candidates = [`${API_V1_BASE}/events/public`, `${API_V1_BASE}/events`];
+
+  let lastErr: unknown = null;
+
+  for (const url of candidates) {
+    try {
+      const raw = await fetchJSON<any>(url);
+
+      // If API returns an array directly
+      if (Array.isArray(raw)) return raw as EventPublic[];
+
+      // If API wraps with { data: [...] }
+      if (raw && Array.isArray(raw.data)) return raw.data as EventPublic[];
+
+      // If API wraps with { data: { data: [...] } }
+      if (raw?.data && Array.isArray(raw.data.data)) return raw.data.data as EventPublic[];
+
+      // If API wraps with { payload: [...] }
+      if (raw && Array.isArray(raw.payload)) return raw.payload as EventPublic[];
+
+      // Unknown shape -> treat as empty (or throw)
+      return [];
+    } catch (e) {
+      lastErr = e;
+      continue;
+    }
+  }
+
+  // If both endpoints failed, surface the last error
+  throw lastErr instanceof Error ? lastErr : new Error('Failed to load events');
+}
+
 export default function EventsShowcase() {
   const { colorScheme = lightShades } = useTheme();
 
@@ -39,8 +125,7 @@ export default function EventsShowcase() {
       {
         title: 'Wisdom Power Conference 26',
         subtitle: 'Upcoming',
-        description:
-          'City-wide gathering with worship, word, and miracles. Come expectant.',
+        description: 'City-wide gathering with worship, word, and miracles. Come expectant.',
         date: 'Mar 10 • 6:00 PM',
         location: 'Honor Gardens Event Center, Alasia opp. dominion Church',
         image: EventBannerDesktop,
@@ -56,8 +141,7 @@ export default function EventsShowcase() {
       {
         title: 'Highlights & Reels',
         subtitle: 'Media',
-        description:
-          'Watch quick reels from recent services and events—perfect for sharing.',
+        description: 'Watch quick reels from recent services and events—perfect for sharing.',
         date: 'Updated weekly',
         location: 'Media Team',
         image: hero_bg_3,
@@ -70,8 +154,7 @@ export default function EventsShowcase() {
       {
         title: 'Media Stories',
         subtitle: 'Media',
-        description:
-          'Short testimonies, sermon snippets, and behind-the-scenes moments.',
+        description: 'Short testimonies, sermon snippets, and behind-the-scenes moments.',
         date: 'New drops every week',
         location: 'Content Hub',
         image: hero_bg_1,
@@ -93,7 +176,7 @@ export default function EventsShowcase() {
   const [events, setEvents] = useState<EventPublic[]>([]);
   const [eventsLoaded, setEventsLoaded] = useState(false);
 
-  const filteredSlides = slides.filter(slide => slide.category === category);
+  const filteredSlides = slides.filter((slide) => slide.category === category);
 
   const statusOf = (slide: Slide) => {
     if (!slide.start || !slide.end) return slide.badge;
@@ -106,30 +189,34 @@ export default function EventsShowcase() {
     return daysAgo <= 90 ? 'Recent' : 'Past';
   };
 
+  // Keep active index valid when switching categories
   useEffect(() => {
     if (active >= filteredSlides.length) setActive(0);
   }, [category, filteredSlides.length, active]);
 
+  // Auto-advance slides within selected category
   useEffect(() => {
     const timer = setInterval(() => {
-      setActive(prev => (prev + 1) % Math.max(filteredSlides.length, 1));
+      setActive((prev) => (prev + 1) % Math.max(filteredSlides.length, 1));
     }, 7000);
     return () => clearInterval(timer);
   }, [filteredSlides.length]);
 
+  // Load events from backend
   useEffect(() => {
     let mounted = true;
-    const loadEvents = async () => {
+
+    (async () => {
       try {
-        const data = await apiClient.listEvents();
-        if (mounted && Array.isArray(data) && data.length) setEvents(data);
+        const data = await listEventsPublic();
+        if (mounted && Array.isArray(data)) setEvents(data);
       } catch (err) {
         console.warn('Failed to load events', err);
       } finally {
         if (mounted) setEventsLoaded(true);
       }
-    };
-    loadEvents();
+    })();
+
     return () => {
       mounted = false;
     };
@@ -137,9 +224,10 @@ export default function EventsShowcase() {
 
   const programList: Slide[] =
     eventsLoaded && events.length && category === 'program'
-      ? events.map(evt => {
-          const start = evt.startAt;
-          const end = evt.endAt;
+      ? events.map((evt) => {
+          const start = (evt as any).startAt as string | undefined;
+          const end = (evt as any).endAt as string | undefined;
+
           const badge = (() => {
             if (!start || !end) return 'Upcoming';
             const now = new Date();
@@ -150,17 +238,24 @@ export default function EventsShowcase() {
             const daysAgo = (now.getTime() - e.getTime()) / (1000 * 60 * 60 * 24);
             return daysAgo <= 90 ? 'Recent' : 'Past';
           })();
+
+          const title = (evt as any).title ?? 'Event';
+          const description = (evt as any).description ?? '';
+          const location = (evt as any).location ?? '';
+          const bannerUrl = (evt as any).bannerUrl ?? (evt as any).imageUrl ?? HeaderAlt;
+          const formSlug = (evt as any).formSlug as string | undefined;
+
           return {
-            title: evt.title,
+            title,
             subtitle: badge,
-            description: evt.description || '',
+            description,
             date: start ? new Date(start).toLocaleString() : '',
             location: evt.location || '',
             image: EventBannerDesktop,
             imageMobile: EventBannerMobile,
             imageDesktop: EventBannerDesktop,
             cta: 'Save a seat',
-            href: evt.formSlug ? `/forms/${evt.formSlug}` : '/events',
+            href: formSlug ? `/forms/${formSlug}` : '/events',
             badge,
             category: 'program' as const,
             start,
@@ -184,30 +279,23 @@ export default function EventsShowcase() {
       />
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
-          <Caption
-            className="uppercase tracking-[0.2em] text-xs"
-            style={{ color: colorScheme.primary }}
-          >
+          <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
             Programs & Media
           </Caption>
 
-          <H3 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-            What’s happening now
-          </H3>
+          <H3 className="text-2xl sm:text-3xl font-black text-white leading-tight">What’s happening now</H3>
 
           <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
             Announcements, events, and reels in one place—swipe through the highlights.
           </BodySM>
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            {(['program', 'media', 'reel'] as const).map(cat => (
+            {(['program', 'media', 'reel'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
-                  category === cat
-                    ? 'bg-white text-black border-white'
-                    : 'border-white/25 text-white hover:bg-white/10'
+                  category === cat ? 'bg-white text-black border-white' : 'border-white/25 text-white hover:bg-white/10'
                 }`}
               >
                 {cat === 'program' ? 'Programs & Events' : cat === 'media' ? 'Media' : 'Reels'}
@@ -352,9 +440,7 @@ export default function EventsShowcase() {
                       {statusOf(current)}
                     </div>
 
-                    <SmallText className="text-white/70 text-sm line-clamp-1">
-                      {current.subtitle}
-                    </SmallText>
+                    <SmallText className="text-white/70 text-sm line-clamp-1">{current.subtitle}</SmallText>
 
                     <H3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">
                       {current.title}
@@ -389,9 +475,7 @@ export default function EventsShowcase() {
                       )}
 
                       <button
-                        onClick={() =>
-                          setActive(prev => (prev + 1) % Math.max(programList.length, 1))
-                        }
+                        onClick={() => setActive((prev) => (prev + 1) % Math.max(programList.length, 1))}
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
                       >
                         Next <ArrowRight className="w-4 h-4" />
@@ -407,7 +491,7 @@ export default function EventsShowcase() {
             )}
           </div>
 
-          {/* LIST: horizontal scroll on mobile, vertical stack on lg */}
+          {/* LIST */}
           <div
             className="
               flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1
@@ -453,9 +537,7 @@ export default function EventsShowcase() {
                     <SmallText weight="bold" className="text-white truncate">
                       {slide.title}
                     </SmallText>
-                    <Caption className="text-white/60 line-clamp-2">
-                      {slide.description}
-                    </Caption>
+                    <Caption className="text-white/60 line-clamp-2">{slide.description}</Caption>
                   </div>
 
                   <ArrowRight className="w-4 h-4 text-white/50 shrink-0" />
@@ -502,7 +584,8 @@ export default function EventsShowcase() {
                   <video
                     controls
                     className="w-full rounded-2xl border border-white/10 bg-black"
-                    poster={reelModal.image?.src}
+                    // poster only works reliably if image is a string URL. Keep safe fallback:
+                    poster={typeof reelModal.image === 'string' ? reelModal.image : undefined}
                   >
                     <source src={reelModal.videoUrl} type="video/mp4" />
                     Your browser does not support the video tag.
