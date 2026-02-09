@@ -4,15 +4,42 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarClock, Radio, Users, ArrowRight, X } from 'lucide-react';
+import {
+  CalendarClock,
+  Radio,
+  Users,
+  ArrowRight,
+  X,
+  Clock,
+  MapPin,
+} from 'lucide-react';
+
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { Container } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 
+/* =============================================================================
+   Data
+============================================================================= */
+
+const departments = [
+  'Media',
+  'Music',
+  'Hospitality',
+  'Protocol',
+  'Prayer',
+  'Children',
+  'Ushering',
+] as const;
+
+type Department = (typeof departments)[number];
+type ModalKey = 'visit' | 'watch' | 'join' | null;
+
 const highlights = [
   {
+    key: 'visit',
     title: 'Worship with us onsite',
     meta: 'In-person gathering',
     detail: 'Sundays • 9:00 AM (WAT)',
@@ -43,12 +70,110 @@ const highlights = [
   },
 ] as const;
 
-export default function HeroHighlights() {
-  const { colorScheme = lightShades } = useTheme();
-  const [modal, setModal] = useState<'visit' | 'watch' | 'join' | null>(null);
-  const { open } = useServiceUnavailable();
+/* =============================================================================
+   Small utilities
+============================================================================= */
 
-type Department = (typeof departments)[number];
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
+function useLockBody(open: boolean) {
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [open]);
+}
+
+/* =============================================================================
+   Modal shell
+============================================================================= */
+
+function ModalShell({
+  open,
+  onClose,
+  title,
+  subtitle,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) {
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  useLockBody(open);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const t = window.setTimeout(() => closeBtnRef.current?.focus(), 0);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.clearTimeout(t);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[120] flex items-center justify-center px-4"
+      >
+        <div className="absolute inset-0 bg-black/65 backdrop-blur-md" onClick={onClose} />
+
+        <motion.div
+          initial={{ scale: 0.96, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.96, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="relative w-full max-w-2xl rounded-[28px] border border-white/12 bg-gradient-to-br from-[#0f0f0f] via-[#121212] to-[#0c0c0c] p-6 sm:p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white"
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+        >
+          <button
+            ref={closeBtnRef}
+            onClick={onClose}
+            className="absolute right-4 top-4 text-white/70 hover:text-white"
+            aria-label="Close"
+            type="button"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          <div className="space-y-2 pr-10">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
+            <h3 className="text-2xl sm:text-3xl font-black leading-tight">{title}</h3>
+            {subtitle ? (
+              <p className="text-white/75 text-sm leading-relaxed">{subtitle}</p>
+            ) : null}
+          </div>
+
+          <div className="mt-6">{children}</div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+/* =============================================================================
+   Page component
+============================================================================= */
 
 type VisitState = {
   name: string;
@@ -73,135 +198,98 @@ type JoinState = {
   experience: string;
 };
 
-function cx(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(' ');
-}
+export default function HeroHighlights() {
+  const { colorScheme = lightShades } = useTheme();
+  const serviceUnavailable = useServiceUnavailable();
 
-function useLockBody(open: boolean) {
-  useEffect(() => {
-    if (!open) return;
-    const original = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = original;
-    };
-  }, [open]);
-}
+  const [modal, setModal] = useState<ModalKey>(null);
 
-function ModalShell({
-  open,
-  onClose,
-  title,
-  subtitle,
-  children,
-}: {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-}) {
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
-  useLockBody(open);
+  const [visit, setVisit] = useState<VisitState>({
+    name: '',
+    email: '',
+    phone: '',
+    date: '',
+    time: '',
+    attendance: '1',
+    notes: '',
+  });
 
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[120] flex items-center justify-center px-4"
-        >
-          <div className="absolute inset-0 bg-black/65 backdrop-blur-md" onClick={() => setModal(null)} />
-          <motion.div
-            initial={{ scale: 0.96, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.96, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="relative w-full max-w-2xl rounded-[28px] border border-white/12 bg-gradient-to-br from-[#0f0f0f] via-[#121212] to-[#0c0c0c] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white"
-          >
-            <button
-              onClick={() => setModal(null)}
-              className="absolute right-4 top-4 text-white/70 hover:text-white"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="space-y-3 pr-10">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
-              <h3 className="text-3xl font-black leading-tight">{copy.title}</h3>
-              <p className="text-white/75 text-sm leading-relaxed">{copy.description}</p>
-            </div>
-            <form
-              className="mt-6 space-y-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                setModal(null);
-                open({
-                  title: 'Service not available yet',
-                  message:
-                    'We are polishing this experience for production. Please check back soon.',
-                  actionLabel: 'Okay, thanks',
-                });
-              }}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  placeholder="Full name"
-                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
-                  required
-                />
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
-                  required
-                />
-                {modal === 'visit' ? (
-                  <input
-                    type="date"
-                    className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
-                    required
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    placeholder="Which team? (media, music, hospitality)"
-                    className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
-                    required
-                  />
-                )}
-                <input
-                  type="tel"
-                  placeholder="Phone number"
-                  className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60"
-                  required
-                />
-              </div>
-              <textarea
-                placeholder="Anything we should know?"
-                className="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3.5 text-white text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 min-h-[120px] resize-none"
-              />
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <p className="text-white/55 text-xs">
-                  We confirm by email and send a reminder. No spam, ever.
-                </p>
-                <CustomButton
-                  variant="primary"
-                  size="md"
-                  curvature="xl"
-                  className="px-6 py-3 text-sm font-semibold shadow-lg shadow-primary/20"
-                >
-                  {copy.cta}
-                </CustomButton>
-              </div>
-            </form>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    );
-  };
+  const [watch, setWatch] = useState<WatchState>({
+    name: '',
+    email: '',
+  });
+
+  const [join, setJoin] = useState<JoinState>({
+    name: '',
+    email: '',
+    phone: '',
+    department: departments[0],
+    experience: '',
+  });
+
+  const cardBase = useMemo(
+    () =>
+      cx(
+        'relative overflow-hidden rounded-3xl border border-white/12 bg-white/5 backdrop-blur-xl',
+        'shadow-[0_18px_50px_rgba(0,0,0,0.35)]'
+      ),
+    []
+  );
+
+  const openModal = useCallback((key: ModalKey) => setModal(key), []);
+  const closeModal = useCallback(() => setModal(null), []);
+
+  const showUnavailable = useCallback(() => {
+    serviceUnavailable.open({
+      title: 'Service not available yet',
+      message: 'We are polishing this experience for production. Please check back soon.',
+      actionLabel: 'Okay, thanks',
+    });
+  }, [serviceUnavailable]);
+
+  const onSubmitVisit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      closeModal();
+      showUnavailable();
+      setVisit({
+        name: '',
+        email: '',
+        phone: '',
+        date: '',
+        time: '',
+        attendance: '1',
+        notes: '',
+      });
+    },
+    [closeModal, showUnavailable]
+  );
+
+  const onSubmitWatch = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      closeModal();
+      showUnavailable();
+      setWatch({ name: '', email: '' });
+    },
+    [closeModal, showUnavailable]
+  );
+
+  const onSubmitJoin = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      closeModal();
+      showUnavailable();
+      setJoin({
+        name: '',
+        email: '',
+        phone: '',
+        department: departments[0],
+        experience: '',
+      });
+    },
+    [closeModal, showUnavailable]
+  );
 
   return (
     <section className="relative z-30" style={{ background: '#0b0b0b' }}>
@@ -212,7 +300,7 @@ function ModalShell({
 
             return (
               <motion.article
-                key={item.title}
+                key={item.key}
                 className={cardBase}
                 initial={{ y: 18, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -222,7 +310,7 @@ function ModalShell({
                 <div
                   className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
                   style={{
-                    background: `radial-gradient(900px circle at 20% 20%, ${colorScheme.opacity.primary20}, transparent 55%)`,
+                    background: `radial-gradient(900px circle at 20% 20%, ${colorScheme.opacity?.primary20 ?? 'rgba(251,191,36,0.20)'}, transparent 55%)`,
                   }}
                 />
 
@@ -232,24 +320,27 @@ function ModalShell({
                       <p className="text-[10px] sm:text-xs uppercase tracking-[0.14em] text-white/70 font-semibold">
                         {item.meta}
                       </p>
-                      <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight">{item.title}</h3>
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight">
+                        {item.title}
+                      </h3>
                     </div>
 
                     <span
                       className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl border border-white/20 shadow-inner shrink-0"
                       style={{
-                        background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                        boxShadow: `0 16px 26px ${colorScheme.opacity.primary25}`,
+                        background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark ?? colorScheme.primary} 100%)`,
+                        boxShadow: `0 16px 26px ${colorScheme.opacity?.primary25 ?? 'rgba(251,191,36,0.25)'}`,
                       }}
                       aria-hidden="true"
                     >
-                      <Icon className="h-4.5 w-4.5 sm:h-5 sm:w-5 text-black" />
+                      <Icon className="h-5 w-5 text-black" />
                     </span>
                   </div>
 
                   <p className="text-[11px] sm:text-sm font-semibold text-white">{item.detail}</p>
-
-                  <p className="text-[12px] sm:text-sm leading-relaxed text-white/75">{item.description}</p>
+                  <p className="text-[12px] sm:text-sm leading-relaxed text-white/75">
+                    {item.description}
+                  </p>
 
                   <div className="flex items-center justify-between pt-1">
                     <CustomButton
@@ -264,6 +355,7 @@ function ModalShell({
                         borderColor: 'rgba(255,255,255,0.30)',
                       }}
                       onClick={() => openModal(item.key)}
+                      type="button"
                     >
                       {item.actionLabel}
                     </CustomButton>
@@ -292,7 +384,7 @@ function ModalShell({
       {/* ===================== MODALS ===================== */}
 
       <ModalShell
-        open={open === 'visit'}
+        open={modal === 'visit'}
         onClose={closeModal}
         title="Plan your visit"
         subtitle="Book a visit appointment—so we can prepare seats, parking, and a warm welcome."
@@ -398,7 +490,7 @@ function ModalShell({
       </ModalShell>
 
       <ModalShell
-        open={open === 'watch'}
+        open={modal === 'watch'}
         onClose={closeModal}
         title="Watch live or on-demand"
         subtitle="Drop your email and we’ll remind you 30 minutes before we go live."
@@ -431,7 +523,7 @@ function ModalShell({
       </ModalShell>
 
       <ModalShell
-        open={open === 'join'}
+        open={modal === 'join'}
         onClose={closeModal}
         title="Join a serve team"
         subtitle="Pick a department and we’ll connect you with the team lead within 24 hours."

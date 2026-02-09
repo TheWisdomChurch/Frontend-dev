@@ -21,10 +21,10 @@ const SeniorPastor = dynamic(() => import('@/components/ui/Homepage/SeniorPastor
   ssr: true,
   loading: () => <div className="min-h-[260px]" />,
 });
-const AssociatePastors = dynamic(
-  () => import('@/components/ui/Homepage/AssociatePastors'),
-  { ssr: true, loading: () => <div className="min-h-[220px]" /> }
-);
+// const AssociatePastors = dynamic(
+//   () => import('@/components/ui/Homepage/AssociatePastors'),
+//   { ssr: true, loading: () => <div className="min-h-[220px]" /> }
+// );
 const JoinWisdomHouse = dynamic(() => import('@/components/ui/Homepage/JoinUs'), {
   ssr: true,
   loading: () => <div className="min-h-[240px]" />,
@@ -139,9 +139,9 @@ export default function Home() {
           <div data-gsap="reveal">
             <SeniorPastor />
           </div>
-          <div data-gsap="reveal">
+          {/* <div data-gsap="reveal">
             <AssociatePastors />
-          </div>
+          </div> */}
           <div id="join">
             <div data-gsap="reveal">
               <JoinWisdomHouse />
