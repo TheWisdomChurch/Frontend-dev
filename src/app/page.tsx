@@ -81,7 +81,6 @@ export default function Home() {
     if (!fontsLoaded) return;
 
     const storageKey = 'wc_event_ad_seen_v1';
-    const cooldownMs = 1000 * 60 * 60 * 12; // 12 hours
     const now = Date.now();
     const nextAllowedRaw = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
     const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
