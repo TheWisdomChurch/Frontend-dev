@@ -1,4 +1,4 @@
-// components/ui/Homepage/Resource.tsx
+// src/components/ui/Homepage/Resource.tsx
 'use client';
 
 import React, { type ElementType, useEffect, useRef, useState } from 'react';
@@ -9,7 +9,7 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { resourceLinks } from '@/lib/data';
 import { ArrowRight, PlayCircle, Radio } from 'lucide-react';
 import type { YouTubeVideo } from '@/lib/types';
-import apiPublic from '@/lib/api';
+import apiClient from '@/lib/api';
 
 type Subscriber = { name: string; email: string };
 
@@ -20,6 +20,8 @@ export default function ResourceSection() {
   const highlight = resourceLinks.slice(0, 4);
 
   const [recentVideo, setRecentVideo] = useState<YouTubeVideo | null>(null);
+  const [loadingRecent, setLoadingRecent] = useState(true);
+
   const [subscriber, setSubscriber] = useState<Subscriber>({ name: '', email: '' });
   const [submitting, setSubmitting] = useState(false);
 
@@ -27,8 +29,10 @@ export default function ResourceSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [shouldFetch, setShouldFetch] = useState(false);
 
+  // Fetch once when section enters viewport
   useEffect(() => {
     if (!sectionRef.current) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -38,32 +42,40 @@ export default function ResourceSection() {
       },
       { rootMargin: '200px' }
     );
+
     observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
+  // Fallback: fetch after 1.5s even if observer doesn't fire
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShouldFetch(true);
-    }, 1500);
+    const timer = setTimeout(() => setShouldFetch(true), 1500);
     return () => clearTimeout(timer);
   }, []);
 
+  // Actual fetch
   useEffect(() => {
     if (!shouldFetch || fetchedOnce.current) return;
+
     let mounted = true;
+
     const fetchRecent = async () => {
+      setLoadingRecent(true);
       try {
+        // Your internal route that proxies / fetches YouTube
         const res = await fetch('/api/sermons?sort=newest', { cache: 'force-cache' });
         if (!res.ok) return;
 
         const data: YouTubeVideo[] = await res.json();
-        if (mounted && data.length > 0) {
-          setRecentVideo(data[0]);
+
+        if (mounted) {
+          setRecentVideo(data?.[0] ?? null);
           fetchedOnce.current = true;
         }
       } catch {
-        // ✅ remove noisy console in production; you can hook this into your logger if needed
+        // no-op (avoid console spam in prod)
+      } finally {
+        if (mounted) setLoadingRecent(false);
       }
     };
 
@@ -79,15 +91,15 @@ export default function ResourceSection() {
 
     const email = subscriber.email.trim();
     const name = subscriber.name.trim();
+
     if (!email) return;
 
     setSubmitting(true);
     try {
-      // ✅ if your backend expects { name, email } this is correct
-      await apiPublic.subscribe({ name, email });
+      await apiClient.subscribe({ name: name || undefined, email });
       setSubscriber({ name: '', email: '' });
     } catch {
-      // ✅ no console spam; optionally show toast/modal here
+      // optional: show toast/modal
     } finally {
       setSubmitting(false);
     }
@@ -99,7 +111,9 @@ export default function ResourceSection() {
     (recentVideo as any)?.thumbnails?.default?.url ||
     '/images/placeholder.jpg';
 
-  const recentVideoUrl = recentVideo?.id ? `https://www.youtube.com/watch?v=${recentVideo.id}` : null;
+  const recentVideoUrl = recentVideo?.id
+    ? `https://www.youtube.com/watch?v=${recentVideo.id}`
+    : null;
 
   return (
     <Section
@@ -110,6 +124,7 @@ export default function ResourceSection() {
       style={{ background: '#0b0b0b' }}
     >
       <Container size="xl" className="relative z-10 space-y-6">
+        {/* HEADER */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-3">
             <Caption
@@ -151,17 +166,14 @@ export default function ResourceSection() {
                   Stream Sundays & Thursdays. Turn on reminders so you never miss a moment.
                 </BodySM>
               </div>
-              {recentVideo ? (
+
+              {/* ✅ FIXED: only ONE ternary (no extra ":(") */}
+              {!loadingRecent && recentVideo ? (
                 <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-3 sm:p-4">
                   <div className="flex items-center gap-3 min-h-[88px] sm:min-h-[96px]">
                     <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-white/10 shrink-0">
                       <img
-                        src={
-                          recentVideo.thumbnail ||
-                          (recentVideo as any)?.thumbnails?.medium?.url ||
-                          (recentVideo as any)?.thumbnails?.default?.url ||
-                          '/images/placeholder.jpg'
-                        }
+                        src={recentVideoThumb}
                         alt={recentVideo.title}
                         className="absolute inset-0 h-full w-full object-cover"
                         loading="lazy"
@@ -171,35 +183,36 @@ export default function ResourceSection() {
                         <PlayCircle className="w-4 h-4 text-white" />
                       </div>
                     </div>
+
                     <div className="flex-1 min-w-0">
-                      <SmallText className="text-white line-clamp-2">
-                        {recentVideo.title}
-                      </SmallText>
+                      <SmallText className="text-white line-clamp-2">{recentVideo.title}</SmallText>
                       <Caption className="text-white/60">
                         {recentVideo.likeCount ? `${recentVideo.likeCount} likes` : 'New upload'}
                       </Caption>
                     </div>
-                    <Link
-                      href={`https://www.youtube.com/watch?v=${recentVideo.id}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg shrink-0"
-                    >
-                      <PlayCircle className="w-4 h-4" /> Play
-                    </Link>
+
+                    {recentVideoUrl ? (
+                      <Link
+                        href={recentVideoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg shrink-0"
+                      >
+                        <PlayCircle className="w-4 h-4" /> Play
+                      </Link>
+                    ) : null}
                   </div>
+                </div>
+              ) : loadingRecent ? (
+                <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                  <BodySM className="text-white/70">Loading latest message…</BodySM>
                 </div>
               ) : (
                 <div className="rounded-2xl border border-white/10 bg-black/40 p-4 text-white/70 text-sm min-h-[88px] sm:min-h-[96px] flex items-center">
                   Latest message coming soon.
                 </div>
-              ) : (
-                <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                  <BodySM className="text-white/70">Loading latest message…</BodySM>
-                </div>
               )}
 
-              {/* ✅ fix: do NOT nest a <button> inside <Link> (causes TS/DOM issues in many setups) */}
               <div className="flex flex-wrap gap-2">
                 <Link
                   href="/resources/sermons"
