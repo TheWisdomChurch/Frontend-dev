@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
-import { Instagram, Facebook, Twitter } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Instagram, Facebook, Twitter, ArrowRight } from 'lucide-react';
 import { Bishop } from '@/components/assets';
 import { H1, P } from '@/components/text';
 import Button from '@/components/utils/buttons/CustomButton';
@@ -19,12 +20,18 @@ interface SeniorPastorProps {
 
 export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   const { colorScheme } = useTheme();
+  const router = useRouter();
+
   const { sectionRef, isVisible } = useSeniorPastor();
   const textRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
-  const summary =
-    seniorPastorData?.description?.[0]?.replace(/\s+/g, ' ').trim() ||
-    'Bishop Gabriel Ayilara leads The Wisdom House Church with practical teaching, prayer, and a heart for raising strong believers and families.';
+
+  const summary = useMemo(() => {
+    return (
+      seniorPastorData?.description?.[0]?.replace(/\s+/g, ' ').trim() ||
+      'Bishop Gabriel Ayilara leads The Wisdom House Church with practical teaching, prayer, and a heart for raising strong believers and families.'
+    );
+  }, []);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -50,6 +57,10 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
     return () => ctx.revert();
   }, [isVisible]);
 
+  const goToLeadership = () => router.push('/leadership');
+
+  const primary = colorScheme.primary || '#fbbf24';
+
   return (
     <Section
       ref={sectionRef}
@@ -72,32 +83,45 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black/85" />
 
       <Container size="xl" className="relative z-10 py-6 md:py-8">
-        <FlexboxLayout
-          direction="column"
-          justify="center"
-          align="center"
-          className="w-full h-full"
-        >
+        <FlexboxLayout direction="column" justify="center" align="center" className="w-full h-full">
           <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-8 md:gap-10 items-center w-full">
             {/* Text column */}
             <div ref={textRef} className="space-y-2.5 md:space-y-4 order-2 md:order-1">
               <P className="text-[11px] md:text-xs uppercase tracking-[0.18em] text-white/70">
                 Meet our Senior Pastor
               </P>
-              <H1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
-                Bishop Gabriel Ayilara
-              </H1>
-              <P className="text-sm md:text-base text-white/80">
-                Senior Pastor, The Wisdom House Church
-              </P>
-              <div
-                className="h-1 w-20 rounded-full"
-                style={{ background: colorScheme.primary }}
-              />
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div className="space-y-2">
+                  <H1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
+                    Bishop Gabriel Ayilara
+                  </H1>
+                  <P className="text-sm md:text-base text-white/80">
+                    Senior Pastor, The Wisdom House Church
+                  </P>
+                </div>
+
+                {/* ✅ Leadership CTA (same “button features” idea as the other component) */}
+                <Button
+                  onClick={goToLeadership}
+                  variant="primary"
+                  size="xs"
+                  curvature="full"
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                  className="w-full sm:w-auto px-5 py-2 text-[13px] font-semibold shadow-lg"
+                  style={{ backgroundColor: primary, color: '#0b0b0b' }}
+                >
+                  View leadership
+                </Button>
+              </div>
+
+              <div className="h-1 w-20 rounded-full" style={{ background: primary }} />
+
               <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed">
                 {summary}
               </P>
 
+              {/* Social buttons */}
               <div className="flex flex-wrap gap-2.5 pt-1">
                 <Button
                   onClick={() =>
@@ -119,10 +143,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                 >
                   Instagram
                 </Button>
+
                 <Button
-                  onClick={() =>
-                    window.open('https://facebook.com', '_blank', 'noopener,noreferrer')
-                  }
+                  onClick={() => window.open('https://facebook.com', '_blank', 'noopener,noreferrer')}
                   variant="outline"
                   size="xs"
                   curvature="full"
@@ -136,10 +159,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                 >
                   Facebook
                 </Button>
+
                 <Button
-                  onClick={() =>
-                    window.open('https://twitter.com', '_blank', 'noopener,noreferrer')
-                  }
+                  onClick={() => window.open('https://twitter.com', '_blank', 'noopener,noreferrer')}
                   variant="outline"
                   size="xs"
                   curvature="full"
@@ -158,7 +180,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
 
             {/* Portrait column */}
             <div ref={imageRef} className="flex justify-center md:justify-end order-1 md:order-2">
-              <div className="relative w-full max-w-[200px] sm:max-w-[230px] md:max-w-[300px] aspect-[3/4] md:aspect-[3/4] rounded-full md:rounded-3xl overflow-hidden border border-white/12 shadow-2xl">
+              <div className="relative w-full max-w-[200px] sm:max-w-[230px] md:max-w-[300px] aspect-[3/4] rounded-full md:rounded-3xl overflow-hidden border border-white/12 shadow-2xl">
                 <Image
                   src={Bishop}
                   alt="Bishop Gabriel Ayilara"
@@ -168,7 +190,8 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                   style={{ objectPosition: 'center 20%' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
-                {/** Hide badge on mobile for cleaner circle */}
+
+                {/* Hide badge on mobile for cleaner circle */}
                 <div className="hidden md:flex absolute bottom-4 left-4 right-4 items-center justify-between text-sm font-semibold text-white">
                   <span className="text-white/90">Bishop Gabriel Ayilara</span>
                   <span
