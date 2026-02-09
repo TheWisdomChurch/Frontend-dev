@@ -10,7 +10,7 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
 import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
-import { apiClient } from '@/lib/api';
+import apiClient from '@/lib/apiClient';
 import type { EventPublic } from '@/lib/apiTypes';
 
 type Slide = {
