@@ -1,6 +1,5 @@
 // components/layout/Section.tsx
 import React, { forwardRef } from 'react';
-import { useTheme } from '@/components/contexts/ThemeContext';
 
 interface SectionProps {
   children: React.ReactNode;
@@ -44,8 +43,6 @@ const Section = forwardRef<HTMLElement, SectionProps>(
     },
     ref
   ) => {
-    const { colorScheme } = useTheme();
-
     // REMOVED all vertical padding - only apply when explicitly requested
     const paddingClasses = {
       none: '',
@@ -60,10 +57,10 @@ const Section = forwardRef<HTMLElement, SectionProps>(
     // Background colors
     const backgroundStyles = {
       none: {},
-      primary: { backgroundColor: colorScheme.primary },
-      secondary: { backgroundColor: colorScheme.secondary },
-      dark: { backgroundColor: colorScheme.background },
-      light: { backgroundColor: colorScheme.white },
+      primary: { backgroundColor: 'var(--color-primary, #f7de12)' },
+      secondary: { backgroundColor: 'var(--color-secondary, #1f2937)' },
+      dark: { backgroundColor: 'var(--color-background, #000000)' },
+      light: { backgroundColor: 'var(--color-white, #ffffff)' },
       custom: customBackground ? { backgroundColor: customBackground } : {},
       image: backgroundImage
         ? {
