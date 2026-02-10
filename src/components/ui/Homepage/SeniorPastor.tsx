@@ -93,7 +93,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div className="space-y-2">
-                  <H1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
+                  <H1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-tight">
                     Bishop Gabriel Ayilara
                   </H1>
                   <P className="text-sm md:text-base text-white/80">

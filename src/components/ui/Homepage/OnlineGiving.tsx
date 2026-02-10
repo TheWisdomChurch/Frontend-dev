@@ -158,7 +158,7 @@ export default function OnlineGiving() {
             </div>
             {/* Title with gradient */}
             <H2
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight tracking-tight"
+              className="text-xl sm:text-2xl lg:text-3xl font-semibold leading-tight tracking-tight"
               style={{
                 color: '#FFFFFF',
                 textShadow: '0 2px 10px rgba(0,0,0,0.3)'

@@ -85,7 +85,7 @@ const Button: React.FC<ButtonProps> = ({
 
   // Enhanced variant styles - SIMPLIFIED
   const getVariantStyles = () => {
-    const baseStyles = `inline-flex items-center justify-center font-semibold transition-all duration-300 ease-out focus:outline-none focus:ring-3 focus:ring-offset-2 ${curvatureStyles[curvature]}`;
+    const baseStyles = `inline-flex items-center justify-center font-medium transition-all duration-300 ease-out focus:outline-none focus:ring-3 focus:ring-offset-2 ${curvatureStyles[curvature]}`;
 
     const variants = {
       primary: {

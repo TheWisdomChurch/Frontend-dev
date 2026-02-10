@@ -3,19 +3,19 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   CalendarClock,
   Radio,
   Users,
   ArrowRight,
-  X,
   Clock,
   MapPin,
 } from 'lucide-react';
 
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
+import { BaseModal } from '@/components/modal/Base';
 import { Container } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
@@ -78,17 +78,6 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-function useLockBody(open: boolean) {
-  useEffect(() => {
-    if (!open) return;
-    const original = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = original;
-    };
-  }, [open]);
-}
-
 /* =============================================================================
    Modal shell
 ============================================================================= */
@@ -106,68 +95,19 @@ function ModalShell({
   subtitle?: string;
   children: React.ReactNode;
 }) {
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
-  useLockBody(open);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const t = window.setTimeout(() => closeBtnRef.current?.focus(), 0);
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      window.clearTimeout(t);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
-
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[120] flex items-center justify-center px-4"
-      >
-        <div className="absolute inset-0 bg-black/65 backdrop-blur-md" onClick={onClose} />
-
-        <motion.div
-          initial={{ scale: 0.96, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.96, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="relative w-full max-w-2xl rounded-[28px] border border-white/12 bg-gradient-to-br from-[#0f0f0f] via-[#121212] to-[#0c0c0c] p-6 sm:p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white"
-          role="dialog"
-          aria-modal="true"
-          aria-label={title}
-        >
-          <button
-            ref={closeBtnRef}
-            onClick={onClose}
-            className="absolute right-4 top-4 text-white/70 hover:text-white"
-            aria-label="Close"
-            type="button"
-          >
-            <X className="w-5 h-5" />
-          </button>
-
-          <div className="space-y-2 pr-10">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
-            <h3 className="text-2xl sm:text-3xl font-black leading-tight">{title}</h3>
-            {subtitle ? (
-              <p className="text-white/75 text-sm leading-relaxed">{subtitle}</p>
-            ) : null}
-          </div>
-
-          <div className="mt-6">{children}</div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+    <BaseModal
+      isOpen={open}
+      onClose={onClose}
+      title={title}
+      subtitle={subtitle}
+      maxWidth="max-w-2xl"
+    >
+      <div className="space-y-4">
+        <p className="text-[10px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
+        {children}
+      </div>
+    </BaseModal>
   );
 }
 
@@ -317,10 +257,10 @@ export default function HeroHighlights() {
                 <div className="relative p-4 sm:p-5 lg:p-6 space-y-2.5 sm:space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 space-y-1">
-                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.14em] text-white/70 font-semibold">
+                      <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-white/70 font-medium">
                         {item.meta}
                       </p>
-                      <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight">
+                      <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight">
                         {item.title}
                       </h3>
                     </div>
@@ -337,8 +277,8 @@ export default function HeroHighlights() {
                     </span>
                   </div>
 
-                  <p className="text-[11px] sm:text-sm font-semibold text-white">{item.detail}</p>
-                  <p className="text-[12px] sm:text-sm leading-relaxed text-white/75">
+                  <p className="text-[11px] sm:text-sm font-medium text-white">{item.detail}</p>
+                  <p className="text-[12px] sm:text-sm leading-relaxed text-white/70">
                     {item.description}
                   </p>
 

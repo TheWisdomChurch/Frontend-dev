@@ -34,17 +34,8 @@ import type { ColorScheme } from '@/components/colors/colorScheme';
 /* ----------------------------------------------------------------------------
    Small utilities
 ----------------------------------------------------------------------------- */
-function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const calc = () => setIsMobile(window.innerWidth < breakpoint);
-    calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
-  }, [breakpoint]);
-
-  return isMobile;
+function useIsMobile() {
+  return true;
 }
 
 function useLockBodyScroll(locked: boolean) {

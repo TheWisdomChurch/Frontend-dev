@@ -11,15 +11,15 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 
 const WhatWeDo = dynamic(() => import('@/components/ui/Homepage/WhatWeDo'), {
   ssr: true,
-  loading: () => <div className="min-h-[220px]" />,
+  loading: () => null,
 });
 const EventsShowcase = dynamic(
   () => import('@/components/ui/Homepage/EventsShowcase'),
-  { ssr: true, loading: () => <div className="min-h-[240px]" /> }
+  { ssr: true, loading: () => null }
 );
 const SeniorPastor = dynamic(() => import('@/components/ui/Homepage/SeniorPastor'), {
   ssr: true,
-  loading: () => <div className="min-h-[260px]" />,
+  loading: () => null,
 });
 // const AssociatePastors = dynamic(
 //   () => import('@/components/ui/Homepage/AssociatePastors'),
@@ -27,19 +27,19 @@ const SeniorPastor = dynamic(() => import('@/components/ui/Homepage/SeniorPastor
 // );
 const JoinWisdomHouse = dynamic(() => import('@/components/ui/Homepage/JoinUs'), {
   ssr: true,
-  loading: () => <div className="min-h-[240px]" />,
+  loading: () => null,
 });
 const Testimonial = dynamic(() => import('@/components/ui/Homepage/Testimonials'), {
   ssr: true,
-  loading: () => <div className="min-h-[200px]" />,
+  loading: () => null,
 });
 const OnlineGiving = dynamic(() => import('@/components/ui/Homepage/OnlineGiving'), {
   ssr: true,
-  loading: () => <div className="min-h-[200px]" />,
+  loading: () => null,
 });
 const ResourceSection = dynamic(() => import('@/components/ui/Homepage/Resource'), {
   ssr: true,
-  loading: () => <div className="min-h-[200px]" />,
+  loading: () => null,
 });
 
 export default function Home() {
@@ -49,16 +49,19 @@ export default function Home() {
 
   const eventAd = useMemo(
     () => ({
-      id: 'rise-2026',
-      title: 'Rise Conference 2026',
-      subtitle: 'A 2-day encounter for leaders, creatives, and visionaries.',
+      id: 'wpc-2026',
+      title: 'Wisdom Power Conference 2026',
+      headline: 'Have you registered for WPC 2026?',
       description:
-        'Join powerful sessions on leadership, worship, and breakthrough. Seats are limited — reserve now and get priority access to the conference guide.',
-      startAt: '2026-03-14T09:00:00Z',
-      location: 'Wisdom House Auditorium, Lagos',
-      imageUrl: '/HEADER.png',
-      formSlug: null,
-      ctaLabel: 'Register in 30 seconds',
+        'Join three days of worship, impartation, and encounters designed to refresh your spirit and strengthen your walk.',
+      startAt: '2026-03-20T18:00:00Z',
+      endAt: '2026-03-22T20:00:00Z',
+      time: '6:00 PM Daily',
+      location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
+      image: '/HEADER.png',
+      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wisdom-power-conference26',
+      ctaLabel: 'Register now',
+      note: 'You will be returned to the main website after you finish.',
     }),
     []
   );
