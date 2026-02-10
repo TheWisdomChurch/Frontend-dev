@@ -165,15 +165,18 @@ export default function ResourcesPage() {
 
       {/* Live modal */}
       {showLiveModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-end justify-center p-0 bg-black/60 backdrop-blur-sm">
           <div
-            className="relative rounded-3xl overflow-hidden w-full max-w-md"
+            className="relative overflow-hidden w-full max-w-md rounded-t-3xl rounded-b-none"
             style={{
               background: isDark ? `linear-gradient(145deg, ${colorScheme.surface}ee, ${colorScheme.surfaceVariant}cc)` : `linear-gradient(145deg, #ffffff, #f8f9fa)`,
               border: `1px solid ${isDark ? '#333' : '#E5E7EB'}`,
               boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
             }}
           >
+            <div className="flex justify-center pt-3 pb-2">
+              <span className="h-1.5 w-12 rounded-full bg-black/20" />
+            </div>
             <button
               onClick={() => setShowLiveModal(false)}
               className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/20 hover:bg-black/30 transition-colors"

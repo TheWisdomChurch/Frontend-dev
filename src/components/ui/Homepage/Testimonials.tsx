@@ -147,7 +147,7 @@ export default function Testimonials() {
             <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: primary }}>
               Stories of transformation
             </Caption>
-            <H3 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
+            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
               God is moving in our house
             </H3>
             <BodySM className="text-white/75 max-w-2xl">

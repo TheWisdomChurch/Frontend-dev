@@ -50,7 +50,7 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-500"
+      className="fixed inset-0 z-[9999] flex items-end justify-center p-0 transition-all duration-500"
       style={{
         background:
           'radial-gradient(circle at 20% 20%, rgba(247,222,18,0.12), transparent 40%), rgba(0,0,0,0.75)',
@@ -61,13 +61,16 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
     >
       <div
         ref={modalRef}
-        className="relative rounded-3xl w-full max-w-2xl mx-auto overflow-hidden shadow-2xl border border-white/10"
+        className="relative w-full max-w-2xl mx-auto overflow-hidden shadow-2xl border border-white/10 rounded-t-3xl rounded-b-none"
         style={{
           background: 'linear-gradient(145deg, rgba(6,6,6,0.9), rgba(0,0,0,0.7))',
-          maxHeight: '85vh',
+          maxHeight: '90vh',
         }}
         onClick={e => e.stopPropagation()}
       >
+        <div className="flex justify-center pt-3 pb-2">
+          <span className="h-1.5 w-12 rounded-full bg-white/30" />
+        </div>
         <div className="absolute top-0 left-0 right-0 h-1 z-20 bg-white/10">
           <div
             className="h-full transition-all duration-500 ease-out"
@@ -106,7 +109,7 @@ export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProp
                 <div>
                   <H2
                     as="h2"
-                    className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-white"
+                    className="text-2xl sm:text-3xl font-semibold mb-3 leading-tight text-white"
                   >
                     Welcome to{' '}
                     <BaseText

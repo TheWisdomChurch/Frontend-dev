@@ -133,7 +133,7 @@ export default function ResourceSection() {
             >
               Resources & Media
             </Caption>
-            <H3 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
               Streams, sermons, events, and pastoral care
             </H3>
             <BodySM className="text-white/75 max-w-3xl">
@@ -161,7 +161,7 @@ export default function ResourceSection() {
             <div className="relative flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <SmallText className="text-white/70">This week</SmallText>
-                <H3 className="text-xl sm:text-2xl font-bold text-white">Latest from YouTube</H3>
+                <H3 className="text-lg sm:text-xl font-semibold text-white">Latest from YouTube</H3>
                 <BodySM className="text-white/70">
                   Stream Sundays & Thursdays. Turn on reminders so you never miss a moment.
                 </BodySM>

@@ -4,11 +4,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BaseModal } from '@/components/modal/Base';
 import { Section, Container } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
-import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
 import type { EventPublic } from '@/lib/apiTypes';
 
@@ -282,7 +283,7 @@ export default function EventsShowcase() {
             Programs & Media
           </Caption>
 
-          <H3 className="text-2xl sm:text-3xl font-black text-white leading-tight">What’s happening now</H3>
+          <H3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">What’s happening now</H3>
 
           <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
             Announcements, events, and reels in one place—swipe through the highlights.
@@ -441,7 +442,7 @@ export default function EventsShowcase() {
 
                     <SmallText className="text-white/70 text-sm line-clamp-1">{current.subtitle}</SmallText>
 
-                    <H3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">
+                    <H3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white leading-tight">
                       {current.title}
                     </H3>
 
@@ -548,61 +549,37 @@ export default function EventsShowcase() {
       </Container>
 
       {/* Reel modal/player */}
-      <AnimatePresence>
-        {reelModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] flex items-center justify-center px-4"
-          >
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setReelModal(null)} />
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative w-full max-w-3xl rounded-3xl border border-white/15 bg-[#0f0f0f] p-4 sm:p-6 shadow-2xl text-white"
-            >
-              <button
-                onClick={() => setReelModal(null)}
-                className="absolute right-4 top-4 text-white/70 hover:text-white"
-                aria-label="Close reel"
+      {reelModal && (
+        <BaseModal
+          isOpen={Boolean(reelModal)}
+          onClose={() => setReelModal(null)}
+          title={reelModal.title}
+          subtitle={reelModal.description}
+          maxWidth="max-w-3xl"
+        >
+          <div className="space-y-3">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-white/60">Reel</p>
+            {reelModal.videoUrl ? (
+              <video
+                controls
+                className="w-full rounded-2xl border border-white/10 bg-black"
+                poster={typeof reelModal.image === 'string' ? reelModal.image : undefined}
               >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="space-y-2 pr-8">
-                <p className="text-xs uppercase tracking-[0.18em] text-white/60">Reel</p>
-                <h3 className="text-2xl font-black">{reelModal.title}</h3>
-                <p className="text-white/70 text-sm leading-relaxed">{reelModal.description}</p>
+                <source src={reelModal.videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center">
+                <Play className="w-10 h-10 text-white/70" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
+                <p className="absolute bottom-3 left-4 text-white/70 text-sm">
+                  Upload reels media to enable playback.
+                </p>
               </div>
-
-              <div className="mt-4">
-                {reelModal.videoUrl ? (
-                  <video
-                    controls
-                    className="w-full rounded-2xl border border-white/10 bg-black"
-                    // poster only works reliably if image is a string URL. Keep safe fallback:
-                    poster={typeof reelModal.image === 'string' ? reelModal.image : undefined}
-                  >
-                    <source src={reelModal.videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center">
-                    <Play className="w-10 h-10 text-white/70" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
-                    <p className="absolute bottom-3 left-4 text-white/70 text-sm">
-                      Upload reels media to enable playback.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            )}
+          </div>
+        </BaseModal>
+      )}
     </Section>
   );
 }

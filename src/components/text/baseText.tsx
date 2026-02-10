@@ -135,33 +135,33 @@ const variantMap: Record<
 > = {
   // Hero - Largest, most prominent text
   hero: {
-    fontSize: { base: '4xl', sm: '5xl', md: '6xl', lg: '7xl', xl: '8xl' },
-    weight: { base: 'black', sm: 'black', md: 'black', lg: 'black' }, // ← Use 'black' here
+    fontSize: { base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' },
+    weight: { base: 'bold', sm: 'bold', md: 'bold', lg: 'bold' },
     fontFamily: 'bricolage',
     lineHeight: '1.1',
   },
   // Headings with progressive scaling
   h1: {
-    fontSize: { base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' },
-    weight: { base: 'black', sm: 'black', md: 'black', lg: 'black' }, // ← Use 'black' here
+    fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
+    weight: { base: 'bold', sm: 'bold', md: 'bold', lg: 'bold' },
     fontFamily: 'bricolage',
     lineHeight: '1.2',
   },
   h2: {
-    fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
-    weight: { base: 'bold', sm: 'black', md: 'black', lg: 'black' }, // ← Use 'black' here
+    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
+    weight: { base: 'semibold', sm: 'bold', md: 'bold', lg: 'bold' },
     fontFamily: 'bricolage',
     lineHeight: '1.3',
   },
   h3: {
-    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
-    weight: { base: 'bold', sm: 'bold', md: 'black', lg: 'black' }, // ← Use 'black' here
+    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
+    weight: { base: 'semibold', sm: 'semibold', md: 'bold', lg: 'bold' },
     fontFamily: 'bricolage',
     lineHeight: '1.4',
   },
   h4: {
-    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
-    weight: { base: 'semibold', sm: 'bold', md: 'bold', lg: 'black' }, // ← Use 'black' here
+    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
+    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'bold' },
     fontFamily: 'bricolage',
     lineHeight: '1.4',
   },
