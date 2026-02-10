@@ -216,6 +216,7 @@ body {
 main > *:not(:first-child) {
   content-visibility: auto;
   contain-intrinsic-size: 1px 900px;
+  padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
 @media (max-width: 640px) {
@@ -340,6 +341,12 @@ button {
 button:focus-visible {
   outline: 2px solid var(--color-lime-green);
   outline-offset: 2px;
+}
+
+/* Tone down overly heavy weights for a more readable UI */
+.font-black,
+.font-extrabold {
+  font-weight: 600 !important;
 }
 
 /* Utility Classes */

@@ -317,7 +317,7 @@ const HeroSection = ({
                   style={{ backgroundColor: colorScheme.primary }}
                 />
                 <span
-                  className="flex items-center gap-2 uppercase tracking-[0.18em] font-black text-[0.78rem] sm:text-[0.9rem] md:text-[1rem] leading-tight"
+                  className="flex items-center gap-2 uppercase tracking-[0.18em] font-semibold text-[0.68rem] sm:text-[0.78rem] md:text-[0.85rem] leading-tight"
                   style={{ color: '#fff', textShadow: `0 2px 10px rgba(0,0,0,0.45)` }}
                 >
                   <span
@@ -344,14 +344,14 @@ const HeroSection = ({
           <div className="relative flex flex-col gap-6 sm:gap-7 md:gap-8 lg:gap-9 w-full max-w-5xl">
             <H1
               ref={titleRef}
-              className="leading-tight tracking-tight font-black text-left"
+              className="leading-tight tracking-tight font-semibold text-left"
               style={{
                 color: '#FFFFFF',
                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
               }}
               useThemeColor={false}
             >
-              <span className="text-3xl xs:text-[2.5rem] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl block">
+              <span className="text-2xl xs:text-[2.1rem] sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl block">
                 {renderTitle((currentSlideData as any)?.title, colorScheme)}
               </span>
             </H1>
@@ -377,7 +377,7 @@ const HeroSection = ({
                 weight="bold"
                 smWeight="extrabold"
               >
-                <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2.25rem] block">
+                <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-[2rem] block">
                   {renderSubtitle((currentSlideData as any)?.subtitle)}
                 </span>
               </H2>
@@ -400,7 +400,7 @@ const HeroSection = ({
                   boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
                 }}
               >
-                <span className="text-sm sm:text-base md:text-lg font-semibold tracking-wide">
+                <span className="text-sm sm:text-base font-medium tracking-wide">
                   {primaryButtonText}
                 </span>
               </CustomButton>
@@ -418,7 +418,7 @@ const HeroSection = ({
                 }}
                 className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
               >
-                <span className="text-sm sm:text-base md:text-lg font-semibold tracking-wide">
+                <span className="text-sm sm:text-base font-medium tracking-wide">
                   {secondaryButtonText}
                 </span>
               </CustomButton>
@@ -440,14 +440,14 @@ const HeroSection = ({
                   <CalendarClock className="w-5 h-5 text-black" />
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/70 font-semibold">
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-white/70 font-medium">
                     {upcoming.label}
                   </p>
-                  <p className="text-lg text-white font-semibold">{upcoming.title}</p>
+                  <p className="text-base text-white font-semibold">{upcoming.title}</p>
                 </div>
               </div>
 
-              <div className="space-y-2 text-sm text-white/85">
+              <div className="space-y-2 text-[13px] text-white/85">
                 <div className="flex items-center gap-2">
                   <CalendarClock className="w-4 h-4" />
                   <span>
@@ -484,7 +484,7 @@ const HeroSection = ({
                 </div>
                 <div className="leading-tight">
                   <p className="text-sm text-white font-semibold">Watch live stream</p>
-                  <p className="text-xs text-white/60">Latest message from YouTube</p>
+                  <p className="text-[11px] text-white/60">Latest message from YouTube</p>
                 </div>
               </div>
 

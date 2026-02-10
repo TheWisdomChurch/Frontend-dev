@@ -72,7 +72,7 @@ export default function AssociatePastors() {
             <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: primary }}>
               Leadership
             </Caption>
-            <H3 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
               Meet our associate pastors
             </H3>
             <BodySM className="text-white/75 max-w-2xl text-sm sm:text-base">
@@ -98,7 +98,7 @@ export default function AssociatePastors() {
                 />
               </div>
               <div className="space-y-1">
-                <SmallText weight="semibold" className="text-white text-[15px] sm:text-base">
+                <SmallText weight="medium" className="text-white text-[14px] sm:text-base">
                   {item.name}
                 </SmallText>
                 <Caption className="text-white/65 text-sm">{item.role}</Caption>
