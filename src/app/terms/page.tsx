@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import type { JSX } from 'react';
+import { BodyMD, BodySM, Caption, H2, H3 } from '@/components/text';
+import { PageSection } from '@/components/layout';
 
 type Section = {
   title: string;
@@ -116,58 +118,52 @@ const sections: Section[] = [
 
 export default function TermsPage(): JSX.Element {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-12 md:py-16 lg:py-20">
-      <section className="max-w-5xl mx-auto space-y-10">
+    <PageSection tone="surface" padding="xl">
+      <div className="max-w-5xl mx-auto space-y-8">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.4em] text-gray-400">Legal</p>
-          <h1 className="text-3xl md:text-5xl font-black">Terms of Use</h1>
-          <p className="text-gray-300 max-w-3xl">
-            Welcome to The Wisdom Church online experience. These Terms govern your access to and use of our website,
-            livestreams, event registrations, forms, content, and related services (the “Services”). By using the
-            Services, you agree to these Terms.
-          </p>
-          <p className="text-sm text-gray-400">Last updated: February 6, 2026</p>
+          <Caption className="uppercase tracking-[0.32em] text-subtle">Legal</Caption>
+          <H2>Terms of Use</H2>
+          <BodyMD className="text-muted max-w-3xl">
+            Welcome to The Wisdom Church online experience. These Terms govern
+            your access to and use of our website, livestreams, event
+            registrations, forms, content, and related services (the “Services”).
+            By using the Services, you agree to these Terms.
+          </BodyMD>
+          <BodySM className="text-subtle">Last updated: February 6, 2026</BodySM>
         </header>
 
-        <div className="space-y-8 text-gray-200">
+        <div className="space-y-6">
           {sections.map((section) => (
-            <section key={section.title} className="space-y-3">
-              <h2 className="text-xl md:text-2xl font-semibold text-white">{section.title}</h2>
-              {section.body && <p>{section.body}</p>}
+            <section key={section.title} className="space-y-2">
+              <H3>{section.title}</H3>
+              {section.body && <BodyMD className="text-muted">{section.body}</BodyMD>}
               {section.list && (
-                <ul className="list-disc pl-6 space-y-2 text-gray-200">
+                <ul className="list-disc pl-6 space-y-2 text-sm text-muted">
                   {section.list.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
               )}
               {section.links && (
-                <p className="space-x-4">
+                <div className="space-x-4 text-sm">
                   {section.links.map((l) => (
-                    <Link
-                      key={l.href}
-                      href={l.href}
-                      className="underline underline-offset-4 text-white hover:text-gray-200"
-                    >
+                    <Link key={l.href} href={l.href} className="underline underline-offset-4 text-muted">
                       {l.label}
                     </Link>
                   ))}
-                </p>
+                </div>
               )}
               {section.link && !section.links && (
-                <p>
-                  <Link
-                    href={section.link.href}
-                    className="underline underline-offset-4 text-white hover:text-gray-200"
-                  >
+                <div className="text-sm">
+                  <Link href={section.link.href} className="underline underline-offset-4 text-muted">
                     {section.link.label}
                   </Link>
-                </p>
+                </div>
               )}
             </section>
           ))}
         </div>
-      </section>
-    </main>
+      </div>
+    </PageSection>
   );
 }

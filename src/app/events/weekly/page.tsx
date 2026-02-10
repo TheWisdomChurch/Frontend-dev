@@ -1,6 +1,7 @@
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2 } from '@/components/text';
+import { BodyMD, BodySM, H2, H3 } from '@/components/text';
 import { hero_bg_3 } from '@/components/assets';
+import { PageSection } from '@/components/layout';
 
 const WeeklyPage = () => {
   const weeklyServices = [
@@ -89,117 +90,104 @@ const WeeklyPage = () => {
       />
 
       {/* Weekly Schedule */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <H2>Our Weekly Schedule</H2>
-            <p className="text-xl text-gray-600 mt-4 max-w-2xl mx-auto">
-              We have multiple service times and gatherings throughout the week
-              to fit your schedule
-            </p>
+      <PageSection tone="surface" padding="xl">
+        <div className="text-center mb-8">
+          <H2>Our Weekly Schedule</H2>
+          <BodyMD className="text-muted mt-3 max-w-2xl mx-auto">
+            We have multiple service times and gatherings throughout the week
+            to fit your schedule
+          </BodyMD>
+        </div>
+
+        <div className="max-w-6xl mx-auto space-y-6">
+          {weeklyServices.map((daySchedule, index) => (
+            <div key={index} className="page-card-muted p-6">
+              <H3 className="text-center mb-4">{daySchedule.day}</H3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {daySchedule.services.map((service, serviceIndex) => (
+                  <div key={serviceIndex} className="page-card p-5">
+                    <div className="text-center mb-3">
+                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-medium border border-muted text-muted">
+                        {service.type}
+                      </span>
+                    </div>
+
+                    <H3 className="text-center mb-1">{service.name}</H3>
+
+                    <div className="text-center mb-3">
+                      <BodySM className="text-accent font-medium">
+                        {service.time}
+                      </BodySM>
+                    </div>
+
+                    <BodySM className="text-muted text-center mb-3">
+                      {service.description}
+                    </BodySM>
+
+                    <BodySM className="text-subtle text-center">
+                      <span className="font-medium">Location:</span>{' '}
+                      {service.location}
+                    </BodySM>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </PageSection>
+
+      {/* What to Expect Section */}
+      <PageSection tone="muted" padding="xl">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <H2>What to Expect</H2>
+            <BodyMD className="text-muted mt-3">
+              Your first visit to Wisdom House
+            </BodyMD>
           </div>
 
-          <div className="max-w-6xl mx-auto space-y-8">
-            {weeklyServices.map((daySchedule, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
-                  {daySchedule.day}
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {daySchedule.services.map((service, serviceIndex) => (
-                    <div
-                      key={serviceIndex}
-                      className="bg-white rounded-xl p-6 shadow-md border border-gray-200"
-                    >
-                      <div className="text-center mb-4">
-                        <span className="inline-block bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-sm font-semibold">
-                          {service.type}
-                        </span>
-                      </div>
-
-                      <h4 className="text-xl font-bold text-gray-900 mb-2 text-center">
-                        {service.name}
-                      </h4>
-
-                      <div className="text-center mb-4">
-                        <span className="text-2xl font-bold text-yellow-600">
-                          {service.time}
-                        </span>
-                      </div>
-
-                      <p className="text-gray-600 text-center mb-4">
-                        {service.description}
-                      </p>
-
-                      <div className="text-center text-sm text-gray-500">
-                        <span className="font-semibold">Location:</span>{' '}
-                        {service.location}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[
+              {
+                title: 'Welcoming Atmosphere',
+                description:
+                  'Friendly greeters will welcome you and help you find your way around our campus.',
+              },
+              {
+                title: 'Casual Dress',
+                description:
+                  'Come as you are! Most people dress casually, so wear whatever feels comfortable.',
+              },
+              {
+                title: 'Engaging Worship',
+                description:
+                  "Our services feature contemporary worship music that's both uplifting and meaningful.",
+              },
+              {
+                title: 'Practical Teaching',
+                description:
+                  'Messages that connect biblical truth to everyday life in relevant, applicable ways.',
+              },
+              {
+                title: "Safe Children's Ministry",
+                description:
+                  'Secure check-in and age-appropriate programs for children from infants to 5th grade.',
+              },
+              {
+                title: 'No Pressure',
+                description:
+                  "We won't single you out or pressure you to give. Just come and experience God's presence.",
+              },
+            ].map((item, index) => (
+              <div key={index} className="page-card p-5">
+                <H3 className="mb-2">{item.title}</H3>
+                <BodySM className="text-muted">{item.description}</BodySM>
               </div>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* What to Expect Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <H2>What to Expect</H2>
-              <p className="text-xl text-gray-600 mt-4">
-                Your first visit to Wisdom House
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: 'Welcoming Atmosphere',
-                  description:
-                    'Friendly greeters will welcome you and help you find your way around our campus.',
-                },
-                {
-                  title: 'Casual Dress',
-                  description:
-                    'Come as you are! Most people dress casually, so wear whatever feels comfortable.',
-                },
-                {
-                  title: 'Engaging Worship',
-                  description:
-                    "Our services feature contemporary worship music that's both uplifting and meaningful.",
-                },
-                {
-                  title: 'Practical Teaching',
-                  description:
-                    'Messages that connect biblical truth to everyday life in relevant, applicable ways.',
-                },
-                {
-                  title: "Safe Children's Ministry",
-                  description:
-                    'Secure check-in and age-appropriate programs for children from infants to 5th grade.',
-                },
-                {
-                  title: 'No Pressure',
-                  description:
-                    "We won't single you out or pressure you to give. Just come and experience God's presence.",
-                },
-              ].map((item, index) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-sm">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-600">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      </PageSection>
     </div>
   );
 };

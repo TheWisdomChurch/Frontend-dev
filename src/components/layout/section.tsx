@@ -29,7 +29,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
   (
     {
       children,
-      padding = 'none', // CHANGED: Default to none
+      padding = 'lg',
       background = 'none',
       customBackground,
       backgroundImage,

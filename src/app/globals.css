@@ -24,7 +24,8 @@
   --color-army-green: #005538;
 
   /* Font Family */
-  --font-bricolage-grotesque: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-sans: var(--font-worksans);
+  --font-serif: var(--font-playfair);
 }
 
 /* FIXED RESET - Less aggressive */
@@ -61,16 +62,114 @@ body {
 html {
   scroll-behavior: smooth;
   height: 100%;
+  font-size: 15px;
 }
 
 body {
-  font-family: var(--font-bricolage-grotesque), system-ui, sans-serif;
-  line-height: 1.6;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+  font-weight: 400;
   color: var(--color-text, #111827);
-  background-color: var(--color-background, #ffffff);
+  background-color: var(--color-pageBackground, #ffffff);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.page-shell {
+  background-color: var(--color-pageBackground, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-section {
+  background-color: var(--color-pageBackground, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-section-muted {
+  background-color: var(--color-backgroundSecondary, #f7f7f7);
+  color: var(--color-text, #111827);
+}
+
+.page-surface {
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-surface-strong {
+  background-color: var(--color-surfaceVariant, #f3f4f6);
+  color: var(--color-text, #111827);
+}
+
+.page-card {
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+}
+
+.page-card-muted {
+  background-color: var(--color-surfaceVariant, #f3f4f6);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+}
+
+.text-muted {
+  color: var(--color-textSecondary, #6b7280);
+}
+
+.text-subtle {
+  color: var(--color-textTertiary, #9ca3af);
+}
+
+.text-accent {
+  color: var(--color-primary, #f7de12);
+}
+
+.border-muted {
+  border-color: var(--color-border, #e5e7eb);
+}
+
+/* Theme alignment overrides for common utility classes */
+.bg-white {
+  background-color: var(--color-surface, #ffffff) !important;
+}
+
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: var(--color-surfaceVariant, #f3f4f6) !important;
+}
+
+.text-gray-900,
+.text-gray-800 {
+  color: var(--color-text, #111827) !important;
+}
+
+.text-gray-700,
+.text-gray-600 {
+  color: var(--color-textSecondary, #6b7280) !important;
+}
+
+.text-gray-500,
+.text-gray-400,
+.text-gray-300 {
+  color: var(--color-textTertiary, #9ca3af) !important;
+}
+
+.border-gray-200,
+.border-gray-300 {
+  border-color: var(--color-border, #e5e7eb) !important;
 }
 /* Hide scrollbar but keep functionality */
 .scrollbar-hide {
@@ -216,6 +315,7 @@ body {
 main > *:not(:first-child) {
   content-visibility: auto;
   contain-intrinsic-size: 1px 900px;
+  padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
 @media (max-width: 640px) {
@@ -325,7 +425,7 @@ main > * + * {
 
 /* Typography Utilities */
 .font-bricolage {
-  font-family: var(--font-bricolage-grotesque), sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 /* Component Base Styles */
@@ -340,6 +440,12 @@ button {
 button:focus-visible {
   outline: 2px solid var(--color-lime-green);
   outline-offset: 2px;
+}
+
+/* Tone down overly heavy weights for a more readable UI */
+.font-black,
+.font-extrabold {
+  font-weight: 600 !important;
 }
 
 /* Utility Classes */
