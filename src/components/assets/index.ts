@@ -69,6 +69,7 @@ export {
   Mug_1,
   Mug_2,
   Bishop,
+  avatar,
   NL,
   Cap_1,
   Img_1,
