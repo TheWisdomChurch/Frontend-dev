@@ -4,7 +4,6 @@ import { memo, useRef, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, MapPin, Mail, Facebook, Youtube, Instagram, Twitter, ArrowRight } from 'lucide-react';
-import { bricolageGrotesque } from '@/components/fonts/fonts';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useDormantAction } from '@/components/utils/hooks/useDormantAction';
 import { BodySM, BodyMD, Caption, BodyLG } from '@/components/text';
@@ -91,7 +90,7 @@ function Footer() {
                 />
               </div>
               <div>
-                <BodySM className={`${bricolageGrotesque.className} text-lg font-semibold  text-white`}>
+                <BodySM className="text-base font-medium text-white">
                   The Wisdom Church
                 </BodySM>
                 <Caption style={{ color: colorScheme.primary }} useThemeColor={false}>
