@@ -1,21 +1,20 @@
-// components/ui/Homepage/Testimonials.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
+import Image, { type StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { Section, Container } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import { apiClient } from '@/lib/api';
+import apiClient from '@/lib/api';
 import { testimonialsData } from '@/lib/data';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
+import { avatar } from '@/components/assets'; // ✅ FIX: import avatar
 
-const fallbackImage = avatar;
+const fallbackImage: StaticImageData = avatar;
 
 function makeChipsFromText(text: string, max = 4): string[] {
-  // simple, predictable keyword chips
   const stop = new Set([
     'the','and','to','of','a','in','is','it','for','on','with','that','this','was','are','as','be','have','has','i',
     'my','we','our','you','they','him','her','their','from','at','by','an','or','but','not','so'
@@ -28,14 +27,15 @@ function makeChipsFromText(text: string, max = 4): string[] {
     .filter(Boolean)
     .filter(w => w.length >= 4 && !stop.has(w));
 
-  // keep unique in order
   const unique: string[] = [];
   for (const w of words) {
     if (!unique.includes(w)) unique.push(w);
     if (unique.length >= max) break;
   }
 
-  return unique.length ? unique.map(w => w[0].toUpperCase() + w.slice(1)) : ['Grace', 'Faith', 'Hope', 'Joy'].slice(0, max);
+  return unique.length
+    ? unique.map(w => w[0].toUpperCase() + w.slice(1))
+    : ['Grace', 'Faith', 'Hope', 'Joy'].slice(0, max);
 }
 
 type UiTestimonial = {
@@ -45,7 +45,6 @@ type UiTestimonial = {
   imageUrl?: string | null;
   createdAt?: string;
   role?: string;
-  tags?: string[];
 };
 
 const normalizeTestimonial = (item: ApiTestimonial): UiTestimonial => {
@@ -53,6 +52,7 @@ const normalizeTestimonial = (item: ApiTestimonial): UiTestimonial => {
     item.fullName ||
     [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
     'Anonymous';
+
   return {
     id: item.id,
     fullName,
@@ -70,37 +70,34 @@ const fallbackTestimonials: UiTestimonial[] = testimonialsData.map(item => ({
     [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
     'Anonymous',
   testimony: item.testimony,
-  imageUrl: item.image ?? null,
-  createdAt: item.date,
-  role: item.anonymous ? 'Anonymous' : item.role || 'Member',
-  tags: [],
+  imageUrl: (item as any).image ?? null, // matches your local data shape
+  createdAt: (item as any).date,
+  role: (item as any).anonymous ? 'Anonymous' : (item as any).role || 'Member',
 }));
 
 export default function Testimonials() {
   const { colorScheme } = useTheme();
+  const primary = colorScheme?.primary ?? '#fbbf24';
+  const primary10 = colorScheme?.opacity?.primary10 ?? 'rgba(251,191,36,0.10)';
+
   const [active, setActive] = useState(0);
   const [items, setItems] = useState<UiTestimonial[]>(fallbackTestimonials);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let mounted = true;
 
     const loadTestimonials = async () => {
-      setLoading(true);
       try {
         const result = await apiClient.listApprovedTestimonials();
         if (!mounted) return;
+
         const normalized = (Array.isArray(result) ? result : []).map(normalizeTestimonial);
-        if (normalized.length > 0) {
-          setItems(normalized.slice(0, 6));
-        } else {
-          setItems(fallbackTestimonials);
-        }
+
+        if (normalized.length > 0) setItems(normalized.slice(0, 6));
+        else setItems(fallbackTestimonials);
       } catch (error) {
-        console.error('Failed to load testimonials:', error);
+        // keep fallback silently (avoid crashing SSR build)
         if (mounted) setItems(prev => (prev.length ? prev : fallbackTestimonials));
-      } finally {
-        if (mounted) setLoading(false);
       }
     };
 
@@ -113,28 +110,27 @@ export default function Testimonials() {
   useEffect(() => {
     if (items.length === 0) return;
     const timer = setInterval(() => {
-      setActive((prev) => (prev + 1) % items.length);
+      setActive(prev => (prev + 1) % items.length);
     }, 5200);
-
     return () => clearInterval(timer);
   }, [items.length]);
 
   if (items.length === 0) return null;
 
   const current = items[active] ?? items[0];
-  const nextList = items
-    .map((item, idx) => ({ ...item, idx }))
-    .filter(i => i.idx !== active);
+
+  const nextList = useMemo(
+    () =>
+      items
+        .map((item, idx) => ({ ...item, idx }))
+        .filter(i => i.idx !== active),
+    [items, active]
+  );
 
   const chips = makeChipsFromText(current.testimony, 4);
 
   return (
-    <Section
-      id="stories"
-      padding="xl"
-      className="relative overflow-hidden"
-      style={{ background: '#0b0b0b' }}
-    >
+    <Section id="stories" padding="xl" className="relative overflow-hidden" style={{ background: '#0b0b0b' }}>
       <div
         className="pointer-events-none absolute inset-0 opacity-80"
         style={{
@@ -144,10 +140,11 @@ export default function Testimonials() {
         }}
         data-parallax-global="0.2"
       />
+
       <Container size="xl" className="relative z-10 space-y-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2.5">
-            <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
+            <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: primary }}>
               Stories of transformation
             </Caption>
             <H3 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
@@ -188,10 +185,8 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-5 items-start">
           <article className="relative overflow-hidden rounded-3xl border border-white/12 bg-[#101010] p-6 sm:p-7 shadow-2xl min-h-[340px]">
-            <Quote
-              className="absolute -top-6 -right-6 h-20 w-20 text-white/10"
-              data-parallax-global="0.18"
-            />
+            <Quote className="absolute -top-6 -right-6 h-20 w-20 text-white/10" data-parallax-global="0.18" />
+
             <div
               className="absolute inset-0 opacity-[0.12]"
               style={{
@@ -200,6 +195,7 @@ export default function Testimonials() {
               }}
               data-parallax-global="0.1"
             />
+
             <div className="flex items-center gap-3 mb-4">
               <div className="relative h-14 w-14 rounded-full overflow-hidden border border-white/15 shadow-inner">
                 <Image
@@ -215,29 +211,21 @@ export default function Testimonials() {
                 <SmallText weight="semibold" className="text-white text-base">
                   {current.fullName}
                 </SmallText>
-                {current.role && <Caption className="text-white/60">{current.role}</Caption>}
-                {current.createdAt && (
-                  <Caption className="text-white/50">
-                    {new Date(current.createdAt).toLocaleDateString()}
-                  </Caption>
-                )}
+                {current.role ? <Caption className="text-white/60">{current.role}</Caption> : null}
+                {current.createdAt ? (
+                  <Caption className="text-white/50">{new Date(current.createdAt).toLocaleDateString()}</Caption>
+                ) : null}
               </div>
             </div>
 
-            <p className="text-white/85 text-base leading-relaxed mb-4">
-              “{current.testimony}”
-            </p>
+            <p className="text-white/85 text-base leading-relaxed mb-4">“{current.testimony}”</p>
 
-            {/* ✅ chips without tags */}
             <div className="flex flex-wrap gap-2">
               {chips.map((tag, i) => (
                 <span
                   key={`${tag}-${i}`}
                   className="px-2.5 py-1 rounded-full text-[11px] font-medium"
-                  style={{
-                    backgroundColor: colorScheme.opacity.primary10,
-                    color: colorScheme.primary,
-                  }}
+                  style={{ backgroundColor: primary10, color: primary }}
                 >
                   {tag}
                 </span>
@@ -246,7 +234,7 @@ export default function Testimonials() {
 
             <div className="mt-5 flex items-center justify-between">
               <div className="flex items-center gap-2 text-white/70 text-sm">
-                <span className="h-2 w-2 rounded-full" style={{ background: colorScheme.primary }} />
+                <span className="h-2 w-2 rounded-full" style={{ background: primary }} />
                 <span>Fresh every week</span>
               </div>
 
@@ -261,6 +249,7 @@ export default function Testimonials() {
               <button
                 key={item.id}
                 onClick={() => setActive(item.idx)}
+                type="button"
                 className="text-left relative overflow-hidden rounded-2xl border border-white/12 bg-[#0f0f0f] p-4 flex items-start gap-3 shadow-lg hover:-translate-y-1 transition-transform"
                 data-parallax-global={item.idx % 2 === 0 ? '0.12' : '0.18'}
               >
@@ -278,9 +267,7 @@ export default function Testimonials() {
                   <SmallText weight="semibold" className="text-white">
                     {item.fullName}
                   </SmallText>
-                  <Caption className="text-white/65 line-clamp-2">
-                    “{item.testimony}”
-                  </Caption>
+                  <Caption className="text-white/65 line-clamp-2">“{item.testimony}”</Caption>
                 </div>
 
                 <ArrowRight className="w-4 h-4 text-white/50" />
