@@ -1,12 +1,7 @@
 import HeroSection from '@/components/ui/Homepage/Herosection';
-import {
-  H2,
-  BaseText,
-  LightText,
-  BodyMD,
-  SemiBoldText,
-} from '@/components/text';
+import { BodyMD, BodySM, H2, H3 } from '@/components/text';
 import { hero_bg_3 } from '@/components/assets';
+import { PageSection } from '@/components/layout';
 
 const PublicationPage = () => {
   const publications = [
@@ -74,121 +69,87 @@ const PublicationPage = () => {
       />
 
       {/* Publications Grid */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <H2>Available Resources</H2>
-            <BodyMD className="text-xl text-gray-600 mt-4">
-              Free resources to support your spiritual growth
-            </BodyMD>
-          </div>
+      <PageSection tone="surface" padding="xl">
+        <div className="text-center mb-8">
+          <H2>Available Resources</H2>
+          <BodyMD className="text-muted mt-3">
+            Free resources to support your spiritual growth
+          </BodyMD>
+        </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {publications.map((pub, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="mb-4">
-                    <span className="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
-                      {pub.frequency}
-                    </span>
-                  </div>
-
-                  <BaseText
-                    fontFamily="bricolage"
-                    weight="bold"
-                    className="text-xl text-gray-900 mb-3"
-                  >
-                    {pub.title}
-                  </BaseText>
-
-                  <LightText className="text-gray-600 mb-4 leading-relaxed">
-                    {pub.description}
-                  </LightText>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <SemiBoldText className="text-gray-500">
-                        Format:
-                      </SemiBoldText>
-                      <BodyMD className="ml-2 text-gray-500">
-                        {pub.format}
-                      </BodyMD>
-                    </div>
-
-                    <button className="w-full bg-yellow-400 text-gray-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors">
-                      <SemiBoldText>{pub.action}</SemiBoldText>
-                    </button>
-                  </div>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {publications.map((pub, index) => (
+              <div key={index} className="page-card p-5">
+                <div className="mb-3">
+                  <span className="inline-block px-3 py-1 rounded-full text-[11px] font-medium border border-muted text-muted">
+                    {pub.frequency}
+                  </span>
                 </div>
-              ))}
-            </div>
+
+                <H3 className="mb-2">{pub.title}</H3>
+
+                <BodySM className="text-muted mb-4 leading-relaxed">
+                  {pub.description}
+                </BodySM>
+
+                <div className="space-y-3">
+                  <div className="flex items-center text-[11px] text-subtle">
+                    <span className="font-medium">Format:</span>
+                    <span className="ml-2">{pub.format}</span>
+                  </div>
+
+                  <button className="w-full page-card-muted py-2.5 text-[12px] font-medium">
+                    {pub.action}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
+      </PageSection>
 
       {/* Free Downloads Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <H2 className="mb-8">Free Downloadable Resources</H2>
+      <PageSection tone="muted" padding="xl">
+        <div className="max-w-4xl mx-auto text-center">
+          <H2 className="mb-6">Free Downloadable Resources</H2>
 
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="text-left">
-                  <BaseText
-                    fontFamily="bricolage"
-                    weight="bold"
-                    className="text-2xl text-gray-900 mb-4"
-                  >
-                    Get Started Today
-                  </BaseText>
-                  <BodyMD className="text-gray-700 mb-6">
-                    All our publications are available free of charge. Download
-                    instantly or request printed copies for yourself or your
-                    small group.
-                  </BodyMD>
-                  <ul className="space-y-2 text-gray-600">
-                    <li>✓ No cost, no registration required</li>
-                    <li>✓ Available in multiple formats</li>
-                    <li>✓ Perfect for personal or group use</li>
-                    <li>✓ New resources added regularly</li>
-                  </ul>
-                </div>
+          <div className="page-card p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="text-left">
+                <H3 className="mb-3">Get Started Today</H3>
+                <BodyMD className="text-muted mb-5">
+                  All our publications are available free of charge. Download
+                  instantly or request printed copies for yourself or your
+                  small group.
+                </BodyMD>
+                <ul className="space-y-2 text-muted text-sm">
+                  <li>✓ No cost, no registration required</li>
+                  <li>✓ Available in multiple formats</li>
+                  <li>✓ Perfect for personal or group use</li>
+                  <li>✓ New resources added regularly</li>
+                </ul>
+              </div>
 
-                <div className="bg-yellow-50 rounded-xl p-6">
-                  <BaseText
-                    fontFamily="bricolage"
-                    weight="bold"
-                    className="text-lg text-gray-900 mb-4"
-                  >
-                    Most Popular Downloads
-                  </BaseText>
-                  <div className="space-y-3">
-                    {[
-                      '30-Day Prayer Challenge',
-                      'Bible Reading Plan 2024',
-                      'Small Group Leader Guide',
-                      'Family Devotional Kit',
-                    ].map((item, index) => (
-                      <button
-                        key={index}
-                        className="w-full text-left bg-white p-3 rounded-lg hover:bg-yellow-100 transition-colors"
-                      >
-                        <SemiBoldText className="text-gray-800">
-                          {item}
-                        </SemiBoldText>
-                      </button>
-                    ))}
-                  </div>
+              <div className="page-card-muted p-5">
+                <H3 className="mb-3">Most Popular Downloads</H3>
+                <div className="space-y-3">
+                  {[
+                    '30-Day Prayer Challenge',
+                    'Bible Reading Plan 2024',
+                    'Small Group Leader Guide',
+                    'Family Devotional Kit',
+                  ].map((item, index) => (
+                    <button key={index} className="w-full text-left page-card p-3 text-sm">
+                      {item}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </PageSection>
     </div>
   );
 };

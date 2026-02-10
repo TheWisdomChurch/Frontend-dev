@@ -140,6 +140,37 @@ h6 {
 .border-muted {
   border-color: var(--color-border, #e5e7eb);
 }
+
+/* Theme alignment overrides for common utility classes */
+.bg-white {
+  background-color: var(--color-surface, #ffffff) !important;
+}
+
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: var(--color-surfaceVariant, #f3f4f6) !important;
+}
+
+.text-gray-900,
+.text-gray-800 {
+  color: var(--color-text, #111827) !important;
+}
+
+.text-gray-700,
+.text-gray-600 {
+  color: var(--color-textSecondary, #6b7280) !important;
+}
+
+.text-gray-500,
+.text-gray-400,
+.text-gray-300 {
+  color: var(--color-textTertiary, #9ca3af) !important;
+}
+
+.border-gray-200,
+.border-gray-300 {
+  border-color: var(--color-border, #e5e7eb) !important;
+}
 /* Hide scrollbar but keep functionality */
 .scrollbar-hide {
   -ms-overflow-style: none;
