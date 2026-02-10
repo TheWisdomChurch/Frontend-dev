@@ -3,7 +3,7 @@
 
 import React, { forwardRef } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import { bricolageGrotesque, worksans, playfair } from '../fonts/fonts';
+import { worksans, playfair } from '../fonts/fonts';
 
 // ADD "black" to FontWeight type
 type FontWeight =
@@ -79,7 +79,7 @@ export interface BaseTextProps {
 }
 
 const fontFamilyMap: Record<string, string> = {
-  bricolage: bricolageGrotesque.className,
+  bricolage: worksans.className,
   worksans: worksans.className,
   playfair: playfair.className,
 };
@@ -135,88 +135,88 @@ const variantMap: Record<
 > = {
   // Hero - Largest, most prominent text
   hero: {
-    fontSize: { base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' },
-    weight: { base: 'bold', sm: 'bold', md: 'bold', lg: 'bold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.1',
+    fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
+    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'worksans',
+    lineHeight: '1.2',
   },
   // Headings with progressive scaling
   h1: {
-    fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
-    weight: { base: 'bold', sm: 'bold', md: 'bold', lg: 'bold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.2',
+    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
+    weight: { base: 'semibold', sm: 'semibold', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'worksans',
+    lineHeight: '1.25',
   },
   h2: {
-    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
-    weight: { base: 'semibold', sm: 'bold', md: 'bold', lg: 'bold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.3',
+    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
+    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'worksans',
+    lineHeight: '1.35',
   },
   h3: {
-    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
-    weight: { base: 'semibold', sm: 'semibold', md: 'bold', lg: 'bold' },
-    fontFamily: 'bricolage',
+    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
+    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'worksans',
     lineHeight: '1.4',
   },
   h4: {
-    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
-    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'bold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.4',
+    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
+    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'worksans',
+    lineHeight: '1.45',
   },
   h5: {
-    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
-    weight: { base: 'semibold', sm: 'semibold', md: 'bold', lg: 'bold' },
-    fontFamily: 'bricolage',
+    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
+    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'worksans',
     lineHeight: '1.5',
   },
   h6: {
-    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
-    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'bold' },
-    fontFamily: 'bricolage',
+    fontSize: { base: 'xs', sm: 'sm', md: 'base', lg: 'lg' },
+    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
+    fontFamily: 'worksans',
     lineHeight: '1.5',
   },
   // Body text - consistent readability
   'body-xl': {
-    fontSize: { base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.6',
-  },
-  'body-lg': {
     fontSize: { base: 'lg', sm: 'lg', md: 'xl', lg: 'xl' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
     lineHeight: '1.6',
   },
-  'body-md': {
+  'body-lg': {
     fontSize: { base: 'base', sm: 'base', md: 'lg', lg: 'lg' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
     lineHeight: '1.6',
   },
-  'body-sm': {
+  'body-md': {
     fontSize: { base: 'sm', sm: 'sm', md: 'base', lg: 'base' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
+    fontFamily: 'worksans',
+    lineHeight: '1.6',
+  },
+  'body-sm': {
+    fontSize: { base: 'xs', sm: 'xs', md: 'sm', lg: 'sm' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
     lineHeight: '1.5',
   },
   'body-responsive': {
-    fontSize: { base: 'sm', sm: 'base', md: 'base', lg: 'lg' },
+    fontSize: { base: 'sm', sm: 'sm', md: 'base', lg: 'base' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
     lineHeight: '1.6',
   },
   'body-xs': {
-    fontSize: { base: 'xs', sm: 'xs', md: 'sm', lg: 'sm' },
+    fontSize: { base: 'xs', sm: 'xs', md: 'xs', lg: 'xs' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
     lineHeight: '1.4',
   },
   caption: {
     fontSize: { base: 'xs', sm: 'xs', md: 'xs', lg: 'xs' },
-    weight: { base: 'light', sm: 'light', md: 'light', lg: 'light' },
+    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
     lineHeight: '1.4',
   },

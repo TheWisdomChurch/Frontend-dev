@@ -260,7 +260,7 @@ const HeroSection = ({
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative w-full min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] overflow-hidden bg-black"
+      className="relative w-full min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] overflow-hidden bg-black"
     >
       {/* Background Slides (✅ fixed alt typing + src normalization) */}
       {slideList.map((slide, index) => {
@@ -301,15 +301,15 @@ const HeroSection = ({
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 min-h-[100vh] md:min-h-[105vh] lg:min-h-[110vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20"
+        className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-20 sm:pt-24 lg:pt-28 pb-12 sm:pb-16"
       >
-        <div className="w-full flex flex-col gap-10 lg:gap-12 xl:gap-14 items-start max-w-6xl">
+        <div className="w-full flex flex-col gap-8 lg:gap-10 xl:gap-12 items-start max-w-6xl">
           {/* Wave label */}
           {showWaveText && (
-            <div className="w-full flex justify-start mt-2 sm:mt-4 lg:mt-6 mb-6 sm:mb-8 md:mb-9 lg:mb-10">
+            <div className="w-full flex justify-start mt-1 sm:mt-3 lg:mt-4 mb-4 sm:mb-6 md:mb-7 lg:mb-8">
               <div
                 ref={waveTextRef}
-                className="relative inline-flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-full border border-white/15 bg-white/8 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+                className="relative inline-flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-full border border-white/15 bg-white/8 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
                 style={{ opacity: 0.97 }}
               >
                 <span
@@ -317,7 +317,7 @@ const HeroSection = ({
                   style={{ backgroundColor: colorScheme.primary }}
                 />
                 <span
-                  className="flex items-center gap-2 uppercase tracking-[0.18em] font-semibold text-[0.68rem] sm:text-[0.78rem] md:text-[0.85rem] leading-tight"
+                  className="flex items-center gap-2 uppercase tracking-[0.16em] font-medium text-[0.62rem] sm:text-[0.7rem] md:text-[0.78rem] leading-tight"
                   style={{ color: '#fff', textShadow: `0 2px 10px rgba(0,0,0,0.45)` }}
                 >
                   <span
@@ -341,23 +341,23 @@ const HeroSection = ({
           )}
 
           {/* Title block */}
-          <div className="relative flex flex-col gap-6 sm:gap-7 md:gap-8 lg:gap-9 w-full max-w-5xl">
+          <div className="relative flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-7 w-full max-w-5xl">
             <H1
               ref={titleRef}
-              className="leading-tight tracking-tight font-semibold text-left"
+              className="leading-tight tracking-tight font-medium text-left"
               style={{
                 color: '#FFFFFF',
                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
               }}
               useThemeColor={false}
             >
-              <span className="text-2xl xs:text-[2.1rem] sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl block">
+              <span className="text-xl xs:text-[1.9rem] sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl block">
                 {renderTitle((currentSlideData as any)?.title, colorScheme)}
               </span>
             </H1>
 
             <div
-              className="h-0.5 w-20 sm:w-24 md:w-28 lg:w-32 rounded-full"
+              className="h-px w-16 sm:w-20 md:w-24 lg:w-28 rounded-full"
               style={{
                 backgroundColor: colorScheme.primary,
                 backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
@@ -374,10 +374,10 @@ const HeroSection = ({
                   textShadow: '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
                 }}
                 useThemeColor={false}
-                weight="bold"
-                smWeight="extrabold"
+                weight="medium"
+                smWeight="semibold"
               >
-                <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-[2rem] block">
+                <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem] block">
                   {renderSubtitle((currentSlideData as any)?.subtitle)}
                 </span>
               </H2>
@@ -385,7 +385,7 @@ const HeroSection = ({
 
             <div
               ref={buttonsRef}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6 justify-start items-center pt-2"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 justify-start items-center pt-1"
             >
               <CustomButton
                 variant="primary"
@@ -393,14 +393,14 @@ const HeroSection = ({
                 curvature="xl"
                 elevated
                 onClick={handlePrimaryClick}
-                className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
+                className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
                 style={{
                   background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                   color: colorScheme.buttonText || '#000000',
                   boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
                 }}
               >
-                <span className="text-sm sm:text-base font-medium tracking-wide">
+                <span className="text-xs sm:text-sm font-medium tracking-wide">
                   {primaryButtonText}
                 </span>
               </CustomButton>
@@ -416,9 +416,9 @@ const HeroSection = ({
                   color: '#FFFFFF',
                   backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 }}
-                className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5"
+                className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
               >
-                <span className="text-sm sm:text-base font-medium tracking-wide">
+                <span className="text-xs sm:text-sm font-medium tracking-wide">
                   {secondaryButtonText}
                 </span>
               </CustomButton>
@@ -426,28 +426,28 @@ const HeroSection = ({
           </div>
 
           {/* Cards */}
-          <div ref={cardsRef} className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
+          <div ref={cardsRef} className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-5">
             <div
-              className="rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-5 sm:p-6 flex flex-col gap-3"
+              className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-4 sm:p-5 flex flex-col gap-3"
               data-parallax="0.12"
               data-gsap="reveal"
             >
               <div className="flex items-center gap-3">
                 <div
-                  className="h-11 w-11 rounded-2xl flex items-center justify-center border border-white/30"
+                  className="h-10 w-10 rounded-2xl flex items-center justify-center border border-white/30"
                   style={{ background: colorScheme.primary }}
                 >
                   <CalendarClock className="w-5 h-5 text-black" />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-white/70 font-medium">
+                  <p className="text-[9px] uppercase tracking-[0.16em] text-white/70 font-medium">
                     {upcoming.label}
                   </p>
-                  <p className="text-base text-white font-semibold">{upcoming.title}</p>
+                  <p className="text-sm text-white font-medium">{upcoming.title}</p>
                 </div>
               </div>
 
-              <div className="space-y-2 text-[13px] text-white/85">
+              <div className="space-y-2 text-[12px] text-white/85">
                 <div className="flex items-center gap-2">
                   <CalendarClock className="w-4 h-4" />
                   <span>
@@ -466,7 +466,7 @@ const HeroSection = ({
                   curvature="full"
                   elevated
                   onClick={handleUpcomingCta}
-                  className="px-4 py-2 text-xs font-semibold bg-white text-black border border-white/30 hover:scale-[1.02]"
+                  className="px-4 py-2 text-[11px] font-medium bg-white text-black border border-white/30 hover:scale-[1.02]"
                 >
                   {upcoming.ctaLabel ?? 'Reserve a seat'}
                 </CustomButton>
@@ -474,7 +474,7 @@ const HeroSection = ({
             </div>
 
             <div
-              className="rounded-3xl border border-white/10 bg-black/50 backdrop-blur-xl p-5 sm:p-6 flex flex-col gap-4"
+              className="rounded-2xl border border-white/10 bg-black/50 backdrop-blur-xl p-4 sm:p-5 flex flex-col gap-4"
               data-parallax="0.18"
               data-gsap="reveal"
             >
@@ -483,8 +483,8 @@ const HeroSection = ({
                   <PlayCircle className="w-5 h-5 text-white" />
                 </div>
                 <div className="leading-tight">
-                  <p className="text-sm text-white font-semibold">Watch live stream</p>
-                  <p className="text-[11px] text-white/60">Latest message from YouTube</p>
+                  <p className="text-[13px] text-white font-medium">Watch live stream</p>
+                  <p className="text-[10px] text-white/60">Latest message from YouTube</p>
                 </div>
               </div>
 
@@ -509,15 +509,15 @@ const HeroSection = ({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm font-semibold line-clamp-2">{latestVideo.title}</p>
-                    <p className="text-white/60 text-xs">Tap to watch now</p>
+                    <p className="text-white text-[13px] font-medium line-clamp-2">{latestVideo.title}</p>
+                    <p className="text-white/60 text-[11px]">Tap to watch now</p>
                   </div>
 
                   <a
                     href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg self-start sm:self-auto"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-[11px] font-medium hover:scale-[1.04] transition shadow-lg self-start sm:self-auto"
                   >
                     <PlayCircle className="w-4 h-4" /> Play
                   </a>
@@ -528,7 +528,7 @@ const HeroSection = ({
                   size="sm"
                   curvature="full"
                   onClick={handleSecondaryClick}
-                  className="px-4 py-2 text-xs text-white border border-white/40 hover:border-primary/80 hover:bg-white/10 self-start"
+                  className="px-4 py-2 text-[11px] text-white border border-white/40 hover:border-primary/80 hover:bg-white/10 self-start"
                 >
                   {videoLoading ? 'Loading…' : 'Watch'}
                 </CustomButton>

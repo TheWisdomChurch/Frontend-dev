@@ -24,7 +24,8 @@
   --color-army-green: #005538;
 
   /* Font Family */
-  --font-bricolage-grotesque: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-sans: var(--font-worksans);
+  --font-serif: var(--font-playfair);
 }
 
 /* FIXED RESET - Less aggressive */
@@ -61,16 +62,83 @@ body {
 html {
   scroll-behavior: smooth;
   height: 100%;
+  font-size: 15px;
 }
 
 body {
-  font-family: var(--font-bricolage-grotesque), system-ui, sans-serif;
-  line-height: 1.6;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+  font-weight: 400;
   color: var(--color-text, #111827);
-  background-color: var(--color-background, #ffffff);
+  background-color: var(--color-pageBackground, #ffffff);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.page-shell {
+  background-color: var(--color-pageBackground, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-section {
+  background-color: var(--color-pageBackground, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-section-muted {
+  background-color: var(--color-backgroundSecondary, #f7f7f7);
+  color: var(--color-text, #111827);
+}
+
+.page-surface {
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-surface-strong {
+  background-color: var(--color-surfaceVariant, #f3f4f6);
+  color: var(--color-text, #111827);
+}
+
+.page-card {
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+}
+
+.page-card-muted {
+  background-color: var(--color-surfaceVariant, #f3f4f6);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+}
+
+.text-muted {
+  color: var(--color-textSecondary, #6b7280);
+}
+
+.text-subtle {
+  color: var(--color-textTertiary, #9ca3af);
+}
+
+.text-accent {
+  color: var(--color-primary, #f7de12);
+}
+
+.border-muted {
+  border-color: var(--color-border, #e5e7eb);
 }
 /* Hide scrollbar but keep functionality */
 .scrollbar-hide {
@@ -326,7 +394,7 @@ main > * + * {
 
 /* Typography Utilities */
 .font-bricolage {
-  font-family: var(--font-bricolage-grotesque), sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 /* Component Base Styles */
