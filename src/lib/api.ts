@@ -7,7 +7,12 @@ import type {
   Testimonial,
   CreateTestimonialRequest,
 } from './apiTypes';
-import type { WorkforceRegistrationData } from './types';
+import type {
+  WorkforceRegistrationData,
+  LeadershipApplicationRequest,
+  LeadershipMember,
+  LeadershipRole,
+} from './types';
 
 /* ============================================================================
    API ORIGIN
@@ -184,41 +189,16 @@ function toQueryString(params?: Record<string, any>): string {
 }
 
 function mapWorkforcePayload(payload: WorkforceRegistrationData) {
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    title,
-    department,
-    leadershipCategory,
-    birthMonth,
-    anniversaryMonth,
-    isExistingMember,
-    currentAssignment,
-    notes,
-  } = payload;
+  const { firstName, lastName, email, phone, department, birthday, notes } = payload;
 
   return {
     firstName,
     lastName,
     email,
     phone,
-    title,
     department,
-    leadershipCategory,
-    birthMonth,
-    anniversaryMonth,
-    isExistingMember,
-    currentAssignment,
+    birthday,
     notes,
-    first_name: firstName,
-    last_name: lastName,
-    leadership_category: leadershipCategory,
-    birth_month: birthMonth,
-    anniversary_month: anniversaryMonth,
-    is_existing_member: isExistingMember,
-    current_assignment: currentAssignment,
   };
 }
 
@@ -362,6 +342,27 @@ export const apiClient = {
     const res = await request<any>('/workforce/apply', {
       method: 'POST',
       body: JSON.stringify(mapWorkforcePayload(payload)),
+    });
+    return unwrapData<any>(res);
+  },
+
+  /* -----------------------------
+     LEADERSHIP (public apply + public list)
+     Go:
+       GET  /api/v1/leadership
+       POST /api/v1/leadership/apply
+     ----------------------------- */
+
+  async listLeadership(role?: LeadershipRole): Promise<LeadershipMember[]> {
+    const qs = toQueryString({ role });
+    const res = await request<any>(`/leadership${qs}`, { method: 'GET' });
+    return unwrapData<LeadershipMember[]>(res);
+  },
+
+  async applyLeadership(payload: LeadershipApplicationRequest): Promise<any> {
+    const res = await request<any>('/leadership/apply', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
     return unwrapData<any>(res);
   },

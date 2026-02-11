@@ -13,6 +13,7 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { H2, BodySM, SmallText, Caption } from '@/components/text';
 import { Workforce_bg } from '@/components/assets';
+import { apiClient } from '@/lib/api';
 
 const departments = [
   {
@@ -64,6 +65,8 @@ export default function JoinWisdomHouse() {
   const { open } = useServiceUnavailable();
 
   const [submitted, setSubmitted] = useState(false);
+  const [quickSubmitting, setQuickSubmitting] = useState(false);
+  const [modalSubmitting, setModalSubmitting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [existing, setExisting] = useState(false);
   const [selectedDept, setSelectedDept] = useState<string>('');
@@ -88,7 +91,10 @@ export default function JoinWisdomHouse() {
 
   /* ----------------------- Quick signup (compact form) ---------------------- */
   const quickSchema = z.object({
-    name: z.string().min(2, 'Enter your full name'),
+    name: z
+      .string()
+      .min(2, 'Enter your full name')
+      .refine((val) => val.trim().split(/\s+/).length >= 2, 'Enter first and last name'),
     email: z.string().email('Enter a valid email'),
     team: z.string().min(1, 'Select a team'),
   });
@@ -103,11 +109,44 @@ export default function JoinWisdomHouse() {
     defaultValues: { name: '', email: '', team: '' },
   });
 
-  const onQuickSubmit = () => {
-    setSubmitted(true);
-    resetQuick();
-    setTimeout(() => setSubmitted(false), 2400);
+  const splitName = (value: string) => {
+    const parts = value.trim().split(/\s+/);
+    const firstName = parts.shift() || '';
+    const lastName = parts.join(' ').trim() || firstName;
+    return { firstName, lastName };
   };
+
+  const toBackendBirthday = (mmdd: string) => {
+    const trimmed = mmdd.trim();
+    const [mm, dd] = trimmed.split('/');
+    if (!mm || !dd) return '';
+    return `${dd}/${mm}`;
+  };
+
+  const onQuickSubmit = handleQuickSubmit(async (values) => {
+    try {
+      setQuickSubmitting(true);
+      const { firstName, lastName } = splitName(values.name);
+      await apiClient.applyWorkforce({
+        firstName,
+        lastName,
+        email: values.email,
+        department: values.team,
+        notes: 'Quick signup',
+      });
+      setSubmitted(true);
+      resetQuick();
+      setTimeout(() => setSubmitted(false), 2400);
+    } catch (err: any) {
+      open({
+        title: 'Unable to submit',
+        message: err?.message || 'Please try again shortly.',
+        actionLabel: 'Got it',
+      });
+    } finally {
+      setQuickSubmitting(false);
+    }
+  });
 
   const handleOpenModal = (dept?: string) => {
     const v = dept || '';
@@ -130,7 +169,10 @@ export default function JoinWisdomHouse() {
    */
   const modalSchema = z
     .object({
-      fullName: z.string().min(3, 'Full name is required'),
+      fullName: z
+        .string()
+        .min(3, 'Full name is required')
+        .refine((val) => val.trim().split(/\s+/).length >= 2, 'Enter first and last name'),
       phoneCode: z.string().min(2),
       phone: z.string().min(7, 'Phone number is required'),
       email: z.string().email('Valid email required'),
@@ -191,16 +233,49 @@ export default function JoinWisdomHouse() {
 
   const marriedValue = watch('married');
 
-  const onModalSubmit = handleModalSubmit(() => {
-    setOpenModal(false);
-    resetModal();
-    setSelectedDept('');
-    open({
-      title: 'Serving sign-up opening soon',
-      message:
-        'We are preparing this experience for production. Please check back shortly.',
-      actionLabel: 'Got it',
-    });
+  const onModalSubmit = handleModalSubmit(async (values) => {
+    try {
+      setModalSubmitting(true);
+      const { firstName, lastName } = splitName(values.fullName);
+      const notesParts: string[] = [];
+      if (existing) notesParts.push('Existing worker: yes');
+      if (values.occupation) notesParts.push(`Occupation: ${values.occupation}`);
+      if (values.married === 'yes') {
+        if (values.spouse) notesParts.push(`Spouse: ${values.spouse}`);
+        if (values.anniversary) notesParts.push(`Anniversary: ${values.anniversary}`);
+      }
+      if (values.about) notesParts.push(`About: ${values.about}`);
+
+      const birthday = toBackendBirthday(values.birthday);
+      const phone = `${values.phoneCode} ${values.phone}`.trim();
+
+      await apiClient.applyWorkforce({
+        firstName,
+        lastName,
+        email: values.email,
+        phone,
+        department: values.department,
+        birthday: birthday || undefined,
+        notes: notesParts.length > 0 ? notesParts.join('\n') : undefined,
+      });
+
+      setOpenModal(false);
+      resetModal();
+      setSelectedDept('');
+      open({
+        title: 'Application received',
+        message: 'Thank you for joining the workforce. We will reach out soon.',
+        actionLabel: 'Great',
+      });
+    } catch (err: any) {
+      open({
+        title: 'Unable to submit',
+        message: err?.message || 'Please try again shortly.',
+        actionLabel: 'Got it',
+      });
+    } finally {
+      setModalSubmitting(false);
+    }
   });
 
   // Keep RHF "department" in sync if user opens modal from a department card
@@ -268,7 +343,7 @@ export default function JoinWisdomHouse() {
 
           {/* ✅ QUICK SIGNUP FORM */}
           <form
-            onSubmit={handleQuickSubmit(onQuickSubmit)}
+            onSubmit={onQuickSubmit}
             className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-4"
           >
             <SmallText className="text-white/80">Quick signup</SmallText>
@@ -331,8 +406,9 @@ export default function JoinWisdomHouse() {
               curvature="xl"
               elevated
               className="w-full"
+              disabled={quickSubmitting}
             >
-              {submitted ? 'We will reach out!' : 'Quick signup'}
+              {quickSubmitting ? 'Submitting...' : submitted ? 'We will reach out!' : 'Quick signup'}
             </CustomButton>
 
             <CustomButton
@@ -612,8 +688,9 @@ export default function JoinWisdomHouse() {
                     curvature="xl"
                     className="w-full sm:w-auto"
                     type="submit"
+                    disabled={modalSubmitting}
                   >
-                    Submit details
+                    {modalSubmitting ? 'Submitting...' : 'Submit details'}
                   </CustomButton>
 
                   <CustomButton
