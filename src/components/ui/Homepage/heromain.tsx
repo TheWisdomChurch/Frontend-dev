@@ -303,7 +303,7 @@ const HeroSection = ({
         size="xl"
         className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-20 sm:pt-24 lg:pt-28 pb-12 sm:pb-16"
       >
-        <div className="w-full flex flex-col gap-8 lg:gap-10 xl:gap-12 items-start max-w-6xl">
+        <div className="w-full flex flex-col gap-8 lg:gap-10 xl:gap-12 items-center sm:items-start max-w-6xl">
           {/* Wave label */}
           {showWaveText && (
             <div className="w-full flex justify-start mt-1 sm:mt-3 lg:mt-4 mb-4 sm:mb-6 md:mb-7 lg:mb-8">
@@ -341,10 +341,10 @@ const HeroSection = ({
           )}
 
           {/* Title block */}
-          <div className="relative flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-7 w-full max-w-5xl">
+          <div className="relative flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-7 w-full max-w-5xl text-center sm:text-left">
             <H1
               ref={titleRef}
-              className="leading-tight tracking-tight font-medium text-left"
+              className="leading-tight tracking-tight font-medium text-center sm:text-left"
               style={{
                 color: '#FFFFFF',
                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
@@ -368,7 +368,7 @@ const HeroSection = ({
             {(currentSlideData as any)?.subtitle ? (
               <H2
                 ref={subtitleRef}
-                className="text-left"
+                className="text-center sm:text-left"
                 style={{
                   color: colorScheme.primary,
                   textShadow: '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
@@ -385,7 +385,7 @@ const HeroSection = ({
 
             <div
               ref={buttonsRef}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 justify-start items-center pt-1"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 justify-center sm:justify-start items-center pt-1"
             >
               <CustomButton
                 variant="primary"

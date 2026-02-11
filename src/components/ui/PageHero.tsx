@@ -84,10 +84,10 @@ export default function PageHero({
 
       <Container
         size="xl"
-        className="relative z-10 flex flex-col gap-6 sm:gap-7 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 pt-28 sm:pt-32 lg:pt-36 pb-20 lg:pb-28"
+        className="relative z-10 flex flex-col gap-5 sm:gap-6 lg:gap-7 px-4 sm:px-6 md:px-8 lg:px-12 pt-20 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24"
       >
-        <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 w-fit backdrop-blur fade-up">
-          <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 bg-black/60">
+        <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 w-fit backdrop-blur fade-up">
+          <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg overflow-hidden border border-white/15 bg-black/60">
             <Image
               src={WisdomeHouseLogo}
               alt="The Wisdom House"
@@ -95,17 +95,17 @@ export default function PageHero({
               className="object-contain p-1.5"
             />
           </div>
-          <Caption className="text-white/80 uppercase tracking-[0.22em] text-[11px]">
+          <Caption className="text-white/80 uppercase tracking-[0.2em] text-[10px] sm:text-[11px]">
             {eyebrow}
           </Caption>
         </div>
 
-        <div className="space-y-3 max-w-3xl fade-up" style={{ animationDelay: '70ms' }}>
+        <div className="space-y-3 max-w-3xl fade-up text-center sm:text-left" style={{ animationDelay: '70ms' }}>
           <H2
             className={
               compact
-                ? 'text-2xl sm:text-3xl md:text-[2.2rem] font-bold text-white leading-tight'
-                : 'text-3xl sm:text-4xl md:text-[2.75rem] font-extrabold text-white leading-tight'
+                ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-semibold text-white leading-tight'
+                : 'text-2xl sm:text-3xl md:text-[2.4rem] font-semibold text-white leading-tight'
             }
           >
             {title}
@@ -116,7 +116,7 @@ export default function PageHero({
               className={
                 compact
                   ? 'text-white/80 text-sm sm:text-base leading-relaxed'
-                  : 'text-white/80 text-base sm:text-lg leading-relaxed'
+                  : 'text-white/80 text-sm sm:text-base leading-relaxed'
               }
             >
               {subtitle}
@@ -128,7 +128,7 @@ export default function PageHero({
               className={
                 compact
                   ? 'text-white/65 text-xs sm:text-sm leading-relaxed'
-                  : 'text-white/65 text-sm sm:text-base leading-relaxed'
+                  : 'text-white/65 text-xs sm:text-sm leading-relaxed'
               }
             >
               {note}
@@ -137,11 +137,11 @@ export default function PageHero({
         </div>
 
         {chips?.length ? (
-          <div className="flex flex-wrap gap-2 fade-up" style={{ animationDelay: '120ms' }}>
+          <div className="flex flex-wrap gap-2 fade-up justify-center sm:justify-start" style={{ animationDelay: '120ms' }}>
             {chips.map((chip) => (
               <span
                 key={chip}
-                className="px-2.5 py-1 rounded-full text-[11px] font-semibold border border-white/15 bg-white/5 text-white"
+                className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-medium border border-white/15 bg-white/5 text-white"
                 style={{ boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}` }}
               >
                 {chip}
