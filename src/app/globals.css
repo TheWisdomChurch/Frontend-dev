@@ -141,6 +141,27 @@ h6 {
   border-color: var(--color-border, #e5e7eb);
 }
 
+.input-base {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border, #e5e7eb);
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text, #111827);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-base::placeholder {
+  color: var(--color-textTertiary, #9ca3af);
+}
+
+.input-base:focus {
+  outline: none;
+  border-color: var(--color-primary, #f7de12);
+  box-shadow: 0 0 0 3px var(--color-primary, #f7de12)33;
+}
+
 /* Theme alignment overrides for common utility classes */
 .bg-white {
   background-color: var(--color-surface, #ffffff) !important;

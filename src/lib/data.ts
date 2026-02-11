@@ -59,7 +59,7 @@ import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 export const defaultSlides: Slide[] = [
   {
     title: 'Welcome to The Wisdom Church',
-    subtitle: "Experience God's Transforming Power",
+    subtitle: "Equiping and Empowering for greatness",
     // description:
     //   'Where lives are transformed through faith.',
     image: {

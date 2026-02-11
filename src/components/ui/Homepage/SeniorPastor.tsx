@@ -91,91 +91,79 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                 Meet our Senior Pastor
               </P>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div className="space-y-2">
-                  <H1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-tight">
-                    Bishop Gabriel Ayilara
-                  </H1>
-                  <P className="text-sm md:text-base text-white/80">
-                    Senior Pastor, The Wisdom House Church
-                  </P>
-                </div>
-
-                {/* ✅ Leadership CTA (same “button features” idea as the other component) */}
-                <Button
-                  onClick={goToLeadership}
-                  variant="primary"
-                  size="xs"
-                  curvature="full"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
-                  className="w-full sm:w-auto px-5 py-2 text-[13px] font-semibold shadow-lg"
-                  style={{ backgroundColor: primary, color: '#0b0b0b' }}
-                >
-                  View leadership
-                </Button>
+              <div className="space-y-2">
+                <H1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-tight">
+                  Bishop Gabriel Ayilara
+                </H1>
+                <P className="text-sm md:text-base text-white/80">
+                  Senior Pastor, The Wisdom House Church
+                </P>
               </div>
 
               <div className="h-1 w-20 rounded-full" style={{ background: primary }} />
 
-              <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed">
-                {summary}
-              </P>
+              <div className="space-y-3">
+                <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed">
+                  {summary}
+                </P>
 
-              {/* Social buttons */}
-              <div className="flex flex-wrap gap-2.5 pt-1">
-                <Button
-                  onClick={() =>
-                    window.open(
-                      'https://www.instagram.com/gabrielayilara',
-                      '_blank',
-                      'noopener,noreferrer'
-                    )
-                  }
-                  variant="primary"
-                  size="xs"
-                  curvature="full"
-                  leftIcon={<Instagram className="w-4 h-4" />}
-                  className="px-5 py-2 text-[13px] font-semibold shadow-lg"
-                  style={{
-                    background: 'linear-gradient(135deg, #E4405F, #C13584)',
-                    color: '#fff',
-                  }}
-                >
-                  Instagram
-                </Button>
+                {/* Social buttons (Senior Pastor only) */}
+                <div className="flex flex-wrap gap-2.5 pt-1">
+                  <Button
+                    onClick={() =>
+                      window.open(
+                        'https://www.instagram.com/gabrielayilara',
+                        '_blank',
+                        'noopener,noreferrer'
+                      )
+                    }
+                    variant="primary"
+                    size="xs"
+                    curvature="full"
+                    leftIcon={<Instagram className="w-4 h-4" />}
+                    className="px-5 py-2 text-[13px] font-semibold shadow-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, #E4405F, #C13584)',
+                      color: '#fff',
+                    }}
+                  >
+                    Instagram
+                  </Button>
 
-                <Button
-                  onClick={() => window.open('https://facebook.com', '_blank', 'noopener,noreferrer')}
-                  variant="outline"
-                  size="xs"
-                  curvature="full"
-                  leftIcon={<Facebook className="w-4 h-4" />}
-                  className="px-4 py-2 text-[13px] font-semibold"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.08)',
-                    color: '#fff',
-                    border: '1px solid rgba(255,255,255,0.3)',
-                  }}
-                >
-                  Facebook
-                </Button>
+                  <Button
+                    onClick={() => window.open('https://facebook.com', '_blank', 'noopener,noreferrer')}
+                    variant="outline"
+                    size="xs"
+                    curvature="full"
+                    leftIcon={<Facebook className="w-4 h-4" />}
+                    className="px-4 py-2 text-[13px] font-semibold"
+                    style={{
+                      backgroundColor: 'rgba(255,255,255,0.08)',
+                      color: '#fff',
+                      border: '1px solid rgba(255,255,255,0.3)',
+                    }}
+                  >
+                    Facebook
+                  </Button>
 
-                <Button
-                  onClick={() => window.open('https://twitter.com', '_blank', 'noopener,noreferrer')}
-                  variant="outline"
-                  size="xs"
-                  curvature="full"
-                  leftIcon={<Twitter className="w-4 h-4" />}
-                  className="px-4 py-2 text-[13px] font-semibold"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.08)',
-                    color: '#fff',
-                    border: '1px solid rgba(255,255,255,0.3)',
-                  }}
-                >
-                  X (Twitter)
-                </Button>
+                  <Button
+                    onClick={() => window.open('https://twitter.com', '_blank', 'noopener,noreferrer')}
+                    variant="outline"
+                    size="xs"
+                    curvature="full"
+                    leftIcon={<Twitter className="w-4 h-4" />}
+                    className="px-4 py-2 text-[13px] font-semibold"
+                    style={{
+                      backgroundColor: 'rgba(255,255,255,0.08)',
+                      color: '#fff',
+                      border: '1px solid rgba(255,255,255,0.3)',
+                    }}
+                  >
+                    X (Twitter)
+                  </Button>
+                </div>
               </div>
+
             </div>
 
             {/* Portrait column */}
@@ -204,6 +192,35 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     Senior Pastor
                   </span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Leadership section at the bottom */}
+          <div className="mt-8 md:mt-10 w-full">
+            <div className="rounded-2xl border border-white/12 bg-white/5 backdrop-blur-xl p-5 md:p-6">
+              <P className="text-[11px] md:text-xs uppercase tracking-[0.2em] text-white/60">
+                Leadership
+              </P>
+              <H1 className="text-lg sm:text-xl md:text-2xl font-semibold text-white leading-tight mt-2">
+                Guided with vision, prayer, and care.
+              </H1>
+              <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed mt-3">
+                Our leaders are devoted to building a Spirit‑filled community rooted in
+                the Word, integrity, and compassionate service.
+              </P>
+              <div className="pt-4">
+                <Button
+                  onClick={goToLeadership}
+                  variant="primary"
+                  size="xs"
+                  curvature="full"
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                  className="w-full sm:w-auto px-5 py-2 text-[13px] font-semibold shadow-lg"
+                  style={{ backgroundColor: primary, color: '#0b0b0b' }}
+                >
+                  View leadership
+                </Button>
               </div>
             </div>
           </div>

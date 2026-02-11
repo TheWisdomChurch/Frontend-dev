@@ -43,7 +43,7 @@ const highlights = [
     title: 'Worship with us onsite',
     meta: 'In-person gathering',
     detail: 'Sundays • 9:00 AM (WAT)',
-    description: 'Be in the room for worship, teaching, and community.',
+    description: 'Stay in faith',
     icon: CalendarClock,
     href: '/contact',
     actionLabel: 'Plan a visit',
@@ -53,7 +53,7 @@ const highlights = [
     title: 'Live Stream',
     meta: 'Join our online family',
     detail: 'YouTube + Mixlr every service',
-    description: 'Stay in the flow from anywhere on earth.',
+    description: 'Stream our service from anywhere.',
     icon: Radio,
     href: '/resources/sermons',
     actionLabel: 'Watch now',
@@ -63,7 +63,7 @@ const highlights = [
     title: 'Serve & Belong',
     meta: 'Creative, worship & outreach',
     detail: 'Join a team this month',
-    description: 'Put your gifts to work in music, media, youth, or prayer.',
+    description: 'Put your gifts to work by serving',
     icon: Users,
     href: '#join',
     actionLabel: 'Join a team',
@@ -306,14 +306,14 @@ export default function HeroHighlights() {
                     </div>
                   </div>
 
-                  <div className="pt-1">
+                  {/* <div className="pt-1">
                     <Link
                       href={item.href}
                       className="text-[11px] sm:text-xs text-white/55 hover:text-white/80 inline-flex items-center gap-2"
                     >
                       Open page <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </motion.article>
             );
