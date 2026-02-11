@@ -1,15 +1,12 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import Image from 'next/image';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import { H3, BodyMD, BodySM, Caption } from '@/components/text';
+import React, { useEffect, useState } from 'react';
+import { H3, BodyMD, BodySM } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
-import { Section, Container, GridboxLayout } from '@/components/layout';
+import { PageSection } from '@/components/layout';
 import PageHero from '@/components/ui/PageHero';
-import { Camera, Check, Quote, Shield, Globe, Eye, X } from 'lucide-react';
+import { Quote, Shield, Eye } from 'lucide-react';
 import apiClient from '@/lib/api';
-import { WisdomeHouseLogo } from '@/components/assets';
 import { BaseModal } from '@/components/modal/Base';
 
 const BREAKPOINT_MD = 768;
@@ -32,7 +29,6 @@ function useMediaQuery(query: string) {
 
 /* -------------------- page -------------------- */
 export default function TestimoniesPage() {
-  const { colorScheme } = useTheme();
   const isMobile = useMediaQuery(`(max-width: ${BREAKPOINT_MD - 1}px)`);
 
   const [formData, setFormData] = useState({
@@ -45,22 +41,11 @@ export default function TestimoniesPage() {
     email: '',
   });
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const characterCount = formData.testimony.length;
-
-  const styles = useMemo(() => ({
-    border: 'rgba(255,255,255,0.12)',
-    surface: 'rgba(255,255,255,0.04)',
-    bg: '#0a0a0a',
-    text: '#f8fafc',
-    muted: 'rgba(226,232,240,0.75)',
-    primary: colorScheme.primary || '#fbbf24',
-  }), [colorScheme.primary]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -112,36 +97,159 @@ export default function TestimoniesPage() {
     }
   };
 
+  const labelClass = 'text-sm font-medium text-gray-800';
+
   return (
     <>
-      <PageHero title="Stories of Transformation" subtitle="God is moving in our house." />
+      <PageHero
+        title="Stories of Transformation"
+        subtitle="God is moving in our house."
+        note="Share what God has done in your life. Your testimony encourages faith and builds community."
+        compact={isMobile}
+      />
 
-      <Section padding="lg">
-        <Container size="xl">
-          <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
-            <textarea
-              name="testimony"
-              value={formData.testimony}
-              onChange={handleChange}
-              rows={isMobile ? 6 : 8}
-              maxLength={MAX_TESTIMONY_LEN}
-              className="w-full rounded-xl p-4"
-            />
-            <div className="text-sm text-white/60">
-              {characterCount}/{MAX_TESTIMONY_LEN}
+      <PageSection tone="surface" padding="xl">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 items-start">
+          <div className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full page-card-muted flex items-center justify-center">
+                <Quote className="w-5 h-5 text-accent" />
+              </div>
+              <div>
+                <H3 className="mb-1">Share your testimony</H3>
+                <BodySM className="text-muted">
+                  We review every submission with care.
+                </BodySM>
+              </div>
             </div>
 
-            <label className="flex gap-2 items-center">
-              <input type="checkbox" name="agreeToTerms" checked={formData.agreeToTerms} onChange={handleChange} />
-              I agree to the terms
-            </label>
+            <BodyMD className="text-muted">
+              Your story helps others find hope. Keep it honest and concise, and
+              include details that will encourage someone walking a similar
+              path.
+            </BodyMD>
 
-            <Button type="submit" disabled={submitting}>
+            <div className="page-card-muted p-5 space-y-4">
+              {/* <div className="flex gap-3">
+                <Shield className="w-4 h-4 text-accent mt-0.5" />
+                <BodySM className="text-muted">
+                  We never sell your information. Your privacy matters.
+                </BodySM>
+              </div> */}
+              <div className="flex gap-3">
+                <Eye className="w-4 h-4 text-accent mt-0.5" />
+                <BodySM className="text-muted">
+                  You can choose to stay anonymous or allow public sharing.
+                </BodySM>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="page-card p-6 sm:p-8 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className={labelClass} htmlFor="firstName">
+                  First name
+                </label>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  disabled={formData.anonymous}
+                  className={`input-base ${formData.anonymous ? 'opacity-60' : ''}`}
+                  placeholder="Jane"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className={labelClass} htmlFor="lastName">
+                  Last name
+                </label>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  disabled={formData.anonymous}
+                  className={`input-base ${formData.anonymous ? 'opacity-60' : ''}`}
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className={labelClass} htmlFor="email">
+                Email (optional)
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="input-base"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className={labelClass} htmlFor="testimony">
+                Your testimony
+              </label>
+              <textarea
+                id="testimony"
+                name="testimony"
+                value={formData.testimony}
+                onChange={handleChange}
+                rows={isMobile ? 7 : 9}
+                maxLength={MAX_TESTIMONY_LEN}
+                className="input-base min-h-[180px]"
+                placeholder="Tell us what God has done in your life..."
+              />
+              <div className="text-xs text-gray-500">
+                {characterCount}/{MAX_TESTIMONY_LEN}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  name="anonymous"
+                  checked={formData.anonymous}
+                  onChange={handleChange}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+                Share anonymously
+              </label>
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  name="allowSharing"
+                  checked={formData.allowSharing}
+                  onChange={handleChange}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+                Allow public sharing
+              </label>
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  name="agreeToTerms"
+                  checked={formData.agreeToTerms}
+                  onChange={handleChange}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+                I agree to the terms
+              </label>
+            </div>
+
+            <Button type="submit" disabled={submitting} fullWidth>
               {submitting ? 'Submitting…' : 'Submit testimony'}
             </Button>
           </form>
-        </Container>
-      </Section>
+        </div>
+      </PageSection>
 
       <BaseModal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Testimony">
         <p>{modalMessage}</p>
