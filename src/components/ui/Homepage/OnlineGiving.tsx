@@ -51,6 +51,13 @@ export default function OnlineGiving() {
   const addCardRef = (el: HTMLDivElement | null, index: number) => {
     cardsRef.current[index] = el;
   };
+
+  const cardShell =
+    'giving-card rounded-2xl border border-white/12 bg-white/5 backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 ease-out';
+  const cardTitle = 'text-[15px] font-medium text-white';
+  const cardDesc = 'text-[13px] text-white/70 leading-relaxed';
+  const cardButton =
+    'giving-cta w-full h-10 text-[12px] font-medium border border-white/20 bg-white/5 text-white hover:bg-white/10 transition-all duration-300';
   return (
     <>
       <style jsx global>{`
@@ -85,6 +92,37 @@ export default function OnlineGiving() {
        
         .backface-hidden {
           backface-visibility: hidden;
+        }
+
+        @keyframes cardRise {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-6px); }
+        }
+
+        .giving-card:hover {
+          box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+          border-color: rgba(255,255,255,0.24);
+        }
+
+        .giving-card .giving-overlay {
+          opacity: 0;
+          transition: opacity 0.4s ease;
+        }
+
+        .giving-card:hover .giving-overlay {
+          opacity: 1;
+        }
+
+        .giving-card:hover .giving-cta {
+          border-color: rgba(255,255,255,0.35);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .giving-card,
+          .giving-card:hover {
+            transform: none !important;
+            transition: none !important;
+          }
         }
       `}</style>
       <Section
@@ -234,15 +272,9 @@ export default function OnlineGiving() {
                       {/* 3D Card */}
                       <div className="w-full h-80 relative preserve-3d cursor-pointer group">
                         {/* Card front */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-2xl p-6 shadow-2xl border border-white/10 preserve-3d backface-hidden">
+                        <div className={`absolute inset-0 ${cardShell} preserve-3d backface-hidden`}>
                           {/* Glow effect */}
-                          <div className="absolute inset-0 rounded-2xl"
-                            style={{
-                              background: `linear-gradient(45deg, transparent 40%, ${colorScheme.primary}20 50%, transparent 60%)`,
-                              opacity: 0.3,
-                              filter: 'blur(20px)',
-                            }}
-                          />
+                          <div className="absolute inset-0 rounded-2xl giving-overlay bg-black/50" />
                           {/* Content */}
                           <div className="relative z-10 h-full flex flex-col">
                             {/* Title with gradient */}
@@ -257,9 +289,8 @@ export default function OnlineGiving() {
                                 <Sparkles className="w-4 h-4" style={{ color: colorScheme.primary }} />
                               </div>
                               <BaseText
-                                fontFamily="bricolage"
                                 weight="semibold"
-                                className="text-lg text-white mb-2 group-hover:text-primary transition-colors duration-300"
+                                className={`${cardTitle} mb-2`}
                                 useThemeColor={false}
                               >
                                 {option.title}
@@ -268,7 +299,7 @@ export default function OnlineGiving() {
                             {/* Description */}
                             <div className="flex-grow">
                               <Caption
-                                className="text-gray-300 text-sm leading-relaxed line-clamp-3 group-hover:text-gray-200 transition-colors duration-300"
+                                className={`${cardDesc} line-clamp-3`}
                                 useThemeColor={false}
                               >
                                 {option.description}
@@ -280,15 +311,9 @@ export default function OnlineGiving() {
                                 variant="ghost"
                                 size="sm"
                                 curvature="lg"
-                                className="w-full py-2 text-sm font-medium backdrop-blur-sm border border-white/20 hover:border-primary/40 transition-all duration-300 hover:scale-[1.02]"
-                                style={{
-                                  color: '#FFFFFF',
-                                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                                }}
+                                className={cardButton}
                               >
-                                <span className="group-hover:text-primary transition-colors duration-300">
-                                  Give Now
-                                </span>
+                                Give Now
                               </Button>
                             </div>
                           </div>
@@ -327,13 +352,13 @@ export default function OnlineGiving() {
                   onMouseEnter={() => handleCardHover(index)}
                   onMouseLeave={() => handleCardLeave(index)}
                 >
-                  <div className="bg-gradient-to-br from-gray-900 to-black rounded-xl p-5 shadow-xl border border-white/10 hover:border-primary/30 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
+                  <div className={`${cardShell} relative h-full flex flex-col`}>
+                    <div className="absolute inset-0 rounded-2xl giving-overlay bg-black/50" />
                     {/* Title */}
                     <div className="mb-4">
                       <BaseText
-                        fontFamily="bricolage"
                         weight="semibold"
-                        className="text-base text-white mb-2"
+                        className={cardTitle}
                         useThemeColor={false}
                       >
                         {option.title}
@@ -342,7 +367,7 @@ export default function OnlineGiving() {
                     {/* Description */}
                     <div className="flex-grow mb-4">
                       <Caption
-                        className="text-gray-300 text-sm leading-relaxed line-clamp-3"
+                        className={`${cardDesc} line-clamp-3`}
                         useThemeColor={false}
                       >
                         {option.description}
@@ -354,12 +379,7 @@ export default function OnlineGiving() {
                       variant="ghost"
                       size="sm"
                       curvature="lg"
-                      className="w-full py-2 text-sm font-medium"
-                      style={{
-                        color: '#FFFFFF',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                      }}
+                      className={cardButton}
                     >
                       Give Now
                     </Button>
@@ -401,13 +421,13 @@ export default function OnlineGiving() {
                     key={option.title}
                     className="flex-shrink-0 w-72 snap-center"
                   >
-                    <div className="bg-gradient-to-br from-gray-900 to-black rounded-xl p-5 shadow-xl border border-white/10 flex flex-col h-full">
+                    <div className={`${cardShell} relative flex flex-col h-full`}>
+                      <div className="absolute inset-0 rounded-2xl giving-overlay bg-black/50" />
                       {/* Title */}
                       <div className="mb-4">
                         <BaseText
-                          fontFamily="bricolage"
                           weight="semibold"
-                          className="text-base text-white mb-2"
+                          className={cardTitle}
                           useThemeColor={false}
                         >
                           {option.title}
@@ -416,7 +436,7 @@ export default function OnlineGiving() {
                       {/* Description */}
                       <div className="flex-grow mb-4">
                         <Caption
-                          className="text-gray-300 text-sm leading-relaxed line-clamp-3"
+                          className={`${cardDesc} line-clamp-3`}
                           useThemeColor={false}
                         >
                           {option.description}
@@ -428,12 +448,7 @@ export default function OnlineGiving() {
                         variant="ghost"
                         size="sm"
                         curvature="lg"
-                        className="w-full py-2 text-sm font-medium"
-                        style={{
-                          color: '#FFFFFF',
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                        }}
+                        className={cardButton}
                       >
                         Give Now
                       </Button>
@@ -452,7 +467,7 @@ export default function OnlineGiving() {
                 : 'opacity-0 translate-y-12'
             }`}
           >
-            <div className="max-w-lg mx-auto bg-gradient-to-br from-gray-900/50 to-black/50 rounded-xl p-6 border border-white/10 text-center backdrop-blur-sm">
+            <div className="max-w-lg mx-auto bg-gradient-to-br from-gray-900/50 to-black/50 rounded-2xl p-6 border border-white/10 text-center backdrop-blur-sm">
               <H3
                 className="text-center mb-4 text-lg font-semibold"
                 style={{ color: '#ffffff' }}
@@ -461,7 +476,7 @@ export default function OnlineGiving() {
                 Other Ways to Give
               </H3>
               <Caption
-                className="mb-6 text-gray-300 text-sm leading-relaxed"
+                className="mb-6 text-white/70 text-sm leading-relaxed"
                 useThemeColor={false}
               >
                 Give by mail, in person during services, or set up recurring donations.
@@ -478,7 +493,7 @@ export default function OnlineGiving() {
                   size="sm"
                   curvature="full"
                   leftIcon={<Phone className="w-4 h-4" />}
-                  className="px-4 py-2 font-medium hover:scale-105 transition text-sm"
+                  className="h-10 px-5 text-[12px] font-medium hover:scale-105 transition w-full sm:w-auto min-w-[150px]"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: '#000000',
@@ -490,7 +505,7 @@ export default function OnlineGiving() {
                   variant="outline"
                   size="sm"
                   curvature="full"
-                  className="px-4 py-2 font-medium border text-sm hover:bg-white/10 transition"
+                  className="h-10 px-5 text-[12px] font-medium border text-sm hover:bg-white/10 transition w-full sm:w-auto min-w-[150px]"
                   style={{
                     borderColor: colorScheme.primary,
                     color: '#FFFFFF',

@@ -154,9 +154,7 @@ export default function ResourcesPage() {
                 <BodyMD className="text-white/70 text-sm leading-relaxed">
                   {resource.description}
                 </BodyMD>
-                <SmallText className="text-white/50 text-[12px]">
-                  {resource.path}
-                </SmallText>
+               
               </Link>
             ))}
           </GridboxLayout>
