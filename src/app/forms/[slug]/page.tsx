@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { Section, Container } from '@/components/layout';
 import { H2, H3, BodyMD, BodySM, SmallText } from '@/components/text';
 import { EventBannerDesktop, EventBannerMobile } from '@/components/assets';
-import { apiClient } from '@/lib/api';
-import type { EventPublic, PublicFormField, PublicFormPayload } from '@/lib/apiTypes';
+import apiClient from '@/lib/api';
+import { PublicFormPayload, EventPublic,PublicFormField } from '@/lib';
 import { Calendar, MapPin } from 'lucide-react';
 
 const fieldBaseClass =
@@ -17,7 +17,9 @@ const labelClass = 'text-sm font-semibold text-white/80';
 
 export default function PublicFormPage() {
   const params = useParams();
-  const formSlug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
+  const formSlug = Array.isArray(params?.slug)
+    ? params.slug[0]
+    : (params?.slug as string | undefined);
 
   const [form, setForm] = useState<PublicFormPayload | null>(null);
   const [event, setEvent] = useState<EventPublic | null>(null);
@@ -35,15 +37,17 @@ export default function PublicFormPage() {
     const load = async () => {
       setLoading(true);
       setError(null);
+
       try {
         const [formData, eventsData] = await Promise.all([
           apiClient.getPublicForm(formSlug),
-          apiClient.listEvents().catch(() => []),
+          apiClient.listEvents().catch(() => [] as EventPublic[]),
         ]);
 
         if (!mounted) return;
 
         setForm(formData);
+
         setEvent(
           Array.isArray(eventsData)
             ? eventsData.find(evt => evt.formSlug === formSlug) || null
@@ -58,6 +62,7 @@ export default function PublicFormPage() {
             defaults[field.key] = '';
           }
         });
+
         setAnswers(prev => ({ ...defaults, ...prev }));
       } catch (err: any) {
         if (!mounted) return;
@@ -72,9 +77,6 @@ export default function PublicFormPage() {
       mounted = false;
     };
   }, [formSlug]);
-
-  const bannerDesktop = EventBannerDesktop;
-  const bannerMobile = EventBannerMobile;
 
   const eventMeta = useMemo(() => {
     if (!event) return null;
@@ -100,6 +102,7 @@ export default function PublicFormPage() {
 
     setSubmitting(true);
     setError(null);
+
     try {
       await apiClient.submitPublicForm(formSlug, { answers });
       setSubmitted(true);
@@ -115,7 +118,7 @@ export default function PublicFormPage() {
       <Section padding="sm" className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src={bannerMobile}
+            src={EventBannerMobile}
             alt={event?.title || form?.title || 'Event banner'}
             fill
             sizes="(max-width: 768px) 100vw, 0px"
@@ -123,7 +126,7 @@ export default function PublicFormPage() {
             priority
           />
           <Image
-            src={bannerDesktop}
+            src={EventBannerDesktop}
             alt={event?.title || form?.title || 'Event banner'}
             fill
             sizes="(max-width: 1024px) 100vw, 70vw"
@@ -131,19 +134,25 @@ export default function PublicFormPage() {
             priority
           />
         </div>
+
         <div className="absolute inset-0 bg-black/60" />
+
         <Container size="xl" className="relative z-10 py-8 sm:py-12">
           <div className="max-w-3xl space-y-3">
             <SmallText className="uppercase tracking-[0.22em] text-white/70">
               Event Registration
             </SmallText>
+
             <H2 className="text-3xl sm:text-4xl font-black">
               {event?.title || form?.title || 'Event Registration'}
             </H2>
+
             <BodyMD className="text-white/80">
-              {event?.description || form?.description ||
+              {event?.description ||
+                form?.description ||
                 'Complete the form below to reserve your spot.'}
             </BodyMD>
+
             {eventMeta && (
               <div className="flex flex-wrap items-center gap-4 text-white/75 text-sm">
                 {eventMeta.date && (
@@ -189,6 +198,7 @@ export default function PublicFormPage() {
 
               <div className="grid grid-cols-1 gap-5">
                 {form.fields
+                  .slice()
                   .sort((a, b) => a.order - b.order)
                   .map(field => {
                     const value = answers[field.key];
@@ -246,7 +256,10 @@ export default function PublicFormPage() {
                           </legend>
                           <div className="flex flex-wrap gap-3">
                             {field.options?.map(option => (
-                              <label key={option.value} className="flex items-center gap-2 text-sm text-white/80">
+                              <label
+                                key={option.value}
+                                className="flex items-center gap-2 text-sm text-white/80"
+                              >
                                 <input
                                   type="radio"
                                   name={field.key}
@@ -274,7 +287,10 @@ export default function PublicFormPage() {
                           </legend>
                           <div className="flex flex-wrap gap-3">
                             {field.options.map(option => (
-                              <label key={option.value} className="flex items-center gap-2 text-sm text-white/80">
+                              <label
+                                key={option.value}
+                                className="flex items-center gap-2 text-sm text-white/80"
+                              >
                                 <input
                                   type="checkbox"
                                   checked={currentValues.includes(option.value)}
@@ -293,7 +309,10 @@ export default function PublicFormPage() {
 
                     if (field.type === 'checkbox') {
                       return (
-                        <label key={field.key} className="flex items-center gap-2 text-sm text-white/80">
+                        <label
+                          key={field.key}
+                          className="flex items-center gap-2 text-sm text-white/80"
+                        >
                           <input
                             type="checkbox"
                             checked={Boolean(value)}

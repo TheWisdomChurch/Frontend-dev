@@ -1,18 +1,16 @@
+
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
-
+import { BaseModal } from '@/components/modal/Base';
 import { Section, Container } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
-import { EventBannerDesktop } from '@/components/assets';
-import { apiClient } from '@/lib/api';
-import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
-
-type ShowcaseCategory = 'program' | 'reel';
+import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
+import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
+import type { EventPublic } from '@/lib/apiTypes';
 
 type Slide = {
   id: string;
@@ -31,178 +29,238 @@ type Slide = {
   videoUrl?: string;
 };
 
-function formatDateLabel(event: EventPublic): string {
-  if (event.startAt) {
-    const d = new Date(event.startAt);
-    if (!Number.isNaN(d.getTime())) {
-      return d.toLocaleString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+/* =========================================
+   API ORIGIN (robust + matches your pattern)
+function normalizeOrigin(raw?: string | null): string {
+  // Prefer NEXT_PUBLIC_API_URL; fallback to NEXT_PUBLIC_API_BASE_URL
+  const fallback = 'http://localhost:8080';
+  const v = (raw ?? '').trim();
+  if (!v) return fallback;
+
+  // Remove trailing slashes
+  let base = v.replace(/\/+$/, '');
+
+  // If someone sets NEXT_PUBLIC_API_URL=https://domain.com/api/v1
+  // normalize it back to origin so we can safely append /api/v1.
+  if (base.endsWith('/api/v1')) {
+    base = base.slice(0, -'/api/v1'.length);
+  }
+
+  return base || fallback;
+}
+
+const API_ORIGIN = normalizeOrigin(
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL
+);
+const API_V1_BASE = `${API_ORIGIN}/api/v1`;
+
+async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(url, {
+    ...init,
+    method: init?.method ?? 'GET',
+    headers: {
+      Accept: 'application/json',
+      ...(init?.headers ?? {}),
+    },
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Request failed (${res.status}) ${text || url}`);
+  }
+
+  return (await res.json()) as T;
+}
+
+/**
+ * Tries common event endpoints:
+ * 1) /api/v1/events/public
+ * 2) /api/v1/events
+ *
+ * Also supports either raw array response OR wrapped responses like:
+ * { data: [...] } OR { data: { data: [...] } }
+ */
+async function listEventsPublic(): Promise<EventPublic[]> {
+  const candidates = [`${API_V1_BASE}/events/public`, `${API_V1_BASE}/events`];
+
+  let lastErr: unknown = null;
+
+  for (const url of candidates) {
+    try {
+      const raw = await fetchJSON<any>(url);
+
+      // If API returns an array directly
+      if (Array.isArray(raw)) return raw as EventPublic[];
+
+      // If API wraps with { data: [...] }
+      if (raw && Array.isArray(raw.data)) return raw.data as EventPublic[];
+
+      // If API wraps with { data: { data: [...] } }
+      if (raw?.data && Array.isArray(raw.data.data)) return raw.data.data as EventPublic[];
+
+      // If API wraps with { payload: [...] }
+      if (raw && Array.isArray(raw.payload)) return raw.payload as EventPublic[];
+
+      // Unknown shape -> treat as empty (or throw)
+      return [];
+    } catch (e) {
+      lastErr = e;
+      continue;
     }
   }
 
-  const date = event.date?.trim();
-  const time = event.time?.trim();
-  if (date && time) return `${date} • ${time}`;
-  if (date) return date;
-  if (time) return time;
-  return 'Date to be announced';
-}
-
-function eventBadge(event: EventPublic): string {
-  const now = new Date();
-
-  if (event.startAt) {
-    const start = new Date(event.startAt);
-    if (!Number.isNaN(start.getTime())) {
-      const end = event.endAt ? new Date(event.endAt) : new Date(start.getTime() + 2 * 60 * 60 * 1000);
-      if (now >= start && now <= end) return 'Happening now';
-      if (now < start) return 'Upcoming';
-      const daysAgo = (now.getTime() - end.getTime()) / (1000 * 60 * 60 * 24);
-      return daysAgo <= 90 ? 'Recent' : 'Past';
-    }
-  }
-
-  if (event.date) {
-    const day = new Date(`${event.date}T00:00:00`);
-    const today = new Date();
-    if (!Number.isNaN(day.getTime())) {
-      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const eventDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
-      if (eventDay.getTime() === todayStart.getTime()) return 'Happening now';
-      if (eventDay.getTime() > todayStart.getTime()) return 'Upcoming';
-      return 'Recent';
-    }
-  }
-
-  return 'Upcoming';
-}
-
-function toProgramSlide(event: EventPublic): Slide {
-  const href = event.registerLink || (event.formSlug ? `/forms/${event.formSlug}` : '/events');
-  return {
-    id: event.id,
-    title: event.title,
-    subtitle: event.location || 'Program',
-    description: event.description || 'Join us for this gathering.',
-    date: formatDateLabel(event),
-    location: event.location || 'Venue to be announced',
-    imageUrl: event.bannerUrl || event.imageUrl || EventBannerDesktop.src,
-    cta: 'Register now',
-    href,
-    badge: eventBadge(event),
-    category: 'program',
-    start: event.startAt,
-    end: event.endAt,
-  };
-}
-
-function toReelSlide(reel: ReelPublic): Slide {
-  const createdAt = reel.createdAt ? new Date(reel.createdAt) : null;
-  const dateLabel = createdAt && !Number.isNaN(createdAt.getTime())
-    ? createdAt.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-      })
-    : 'Latest upload';
-
-  const description = reel.duration
-    ? `Short highlight reel (${reel.duration}).`
-    : 'Short highlight reel from a recent service.';
-
-  return {
-    id: reel.id,
-    title: reel.title,
-    subtitle: 'Media reel',
-    description,
-    date: dateLabel,
-    location: 'Wisdom House Media',
-    imageUrl: reel.thumbnail,
-    cta: 'Play reel',
-    badge: 'Reel',
-    category: 'reel',
-    videoUrl: reel.videoUrl,
-  };
-}
-
-function resolveImageUrl(value?: string): string {
-  const trimmed = value?.trim();
-  return trimmed || EventBannerDesktop.src;
+  // If both endpoints failed, surface the last error
+  throw lastErr instanceof Error ? lastErr : new Error('Failed to load events');
 }
 
 export default function EventsShowcase() {
   const { colorScheme = lightShades } = useTheme();
 
-  const [category, setCategory] = useState<ShowcaseCategory>('program');
+  const slides: Slide[] = useMemo(
+    () => [
+      {
+        title: 'Wisdom Power Conference 26',
+        subtitle: 'Upcoming',
+        description: 'City-wide gathering with worship, word, and miracles. Come expectant.',
+        date: 'Mar 10 • 6:00 PM',
+        location: 'Honor Gardens Event Center, Alasia opp. dominion Church',
+        image: EventBannerDesktop,
+        imageMobile: EventBannerMobile,
+        imageDesktop: EventBannerDesktop,
+        cta: 'Save a seat',
+        href: '/events',
+        badge: 'Upcoming',
+        category: 'program',
+        start: '2026-03-10T18:00:00.000Z',
+        end: '2026-03-10T21:00:00.000Z',
+      },
+      {
+        title: 'Highlights & Reels',
+        subtitle: 'Media',
+        description: 'Watch quick reels from recent services and events—perfect for sharing.',
+        date: 'Updated weekly',
+        location: 'Media Team',
+        image: hero_bg_3,
+        cta: 'Watch reels',
+        href: '/resources/sermons',
+        badge: 'Reels',
+        category: 'reel',
+        videoUrl: '',
+      },
+      {
+        title: 'Media Stories',
+        subtitle: 'Media',
+        description: 'Short testimonies, sermon snippets, and behind-the-scenes moments.',
+        date: 'New drops every week',
+        location: 'Content Hub',
+        image: hero_bg_1,
+        cta: 'View media',
+        href: '/resources',
+        badge: 'Media',
+        category: 'media',
+        start: '2026-02-01T10:00:00.000Z',
+        end: '2026-02-01T12:00:00.000Z',
+      },
+    ],
+    []
+  );
+
   const [active, setActive] = useState(0);
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   const [events, setEvents] = useState<EventPublic[]>([]);
-  const [reels, setReels] = useState<ReelPublic[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [eventsLoaded, setEventsLoaded] = useState(false);
 
+  const filteredSlides = slides.filter((slide) => slide.category === category);
+
+  const statusOf = (slide: Slide) => {
+    if (!slide.start || !slide.end) return slide.badge;
+    const now = new Date();
+    const start = new Date(slide.start);
+    const end = new Date(slide.end);
+    if (now >= start && now <= end) return 'Happening now';
+    if (now < start) return 'Upcoming';
+    const daysAgo = (now.getTime() - end.getTime()) / (1000 * 60 * 60 * 24);
+    return daysAgo <= 90 ? 'Recent' : 'Past';
+  };
+
+  // Keep active index valid when switching categories
+  useEffect(() => {
+    if (active >= filteredSlides.length) setActive(0);
+  }, [category, filteredSlides.length, active]);
+
+  // Auto-advance slides within selected category
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % Math.max(filteredSlides.length, 1));
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [filteredSlides.length]);
+
+  // Load events from backend
   useEffect(() => {
     let mounted = true;
 
-    const load = async () => {
+    (async () => {
       try {
-        const [eventsRes, reelsRes] = await Promise.allSettled([
-          apiClient.listEvents(),
-          apiClient.listReels(),
-        ]);
-
-        if (!mounted) return;
-
-        if (eventsRes.status === 'fulfilled') {
-          setEvents(eventsRes.value);
-        } else {
-          console.warn('Failed to load events', eventsRes.reason);
-        }
-
-        if (reelsRes.status === 'fulfilled') {
-          setReels(reelsRes.value);
-        } else {
-          console.warn('Failed to load reels', reelsRes.reason);
-        }
+        const data = await listEventsPublic();
+        if (mounted && Array.isArray(data)) setEvents(data);
+      } catch (err) {
+        console.warn('Failed to load events', err);
       } finally {
         if (mounted) setLoading(false);
       }
-    };
+    })();
 
-    load();
     return () => {
       mounted = false;
     };
   }, []);
 
-  const slides = useMemo(() => {
-    return {
-      program: events.map(toProgramSlide),
-      reel: reels.map(toReelSlide),
-    };
-  }, [events, reels]);
+  const programList: Slide[] =
+    eventsLoaded && events.length && category === 'program'
+      ? events.map((evt) => {
+          const start = (evt as any).startAt as string | undefined;
+          const end = (evt as any).endAt as string | undefined;
 
-  const activeSlides = slides[category];
-  const current = activeSlides[active];
+          const badge = (() => {
+            if (!start || !end) return 'Upcoming';
+            const now = new Date();
+            const s = new Date(start);
+            const e = new Date(end);
+            if (now >= s && now <= e) return 'Happening now';
+            if (now < s) return 'Upcoming';
+            const daysAgo = (now.getTime() - e.getTime()) / (1000 * 60 * 60 * 24);
+            return daysAgo <= 90 ? 'Recent' : 'Past';
+          })();
 
-  useEffect(() => {
-    if (active >= activeSlides.length) {
-      setActive(0);
-    }
-  }, [active, activeSlides.length]);
+          const title = (evt as any).title ?? 'Event';
+          const description = (evt as any).description ?? '';
+          // const location = (evt as any).location ?? '';
+          // const bannerUrl = (evt as any).bannerUrl ?? (evt as any).imageUrl ?? HeaderAlt;
+          const formSlug = (evt as any).formSlug as string | undefined;
 
-  useEffect(() => {
-    if (!activeSlides.length) return;
-    const timer = setInterval(() => {
-      setActive((prev) => (prev + 1) % activeSlides.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [activeSlides.length]);
+          return {
+            title,
+            subtitle: badge,
+            description,
+            date: start ? new Date(start).toLocaleString() : '',
+            location: evt.location || '',
+            image: EventBannerDesktop,
+            imageMobile: EventBannerMobile,
+            imageDesktop: EventBannerDesktop,
+            cta: 'Save a seat',
+            href: formSlug ? `/forms/${formSlug}` : '/events',
+            badge,
+            category: 'program' as const,
+            start,
+            end,
+          };
+        })
+      : filteredSlides;
+
+  const current = programList[active];
 
   return (
     <Section padding="md" className="relative overflow-hidden" style={{ background: '#0a0a0a' }}>
@@ -218,30 +276,23 @@ export default function EventsShowcase() {
 
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
-          <Caption
-            className="uppercase tracking-[0.2em] text-xs"
-            style={{ color: colorScheme.primary }}
-          >
-            Programs & Reels
+          <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
+            Programs & Media
           </Caption>
 
-          <H3 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-            What&apos;s happening now
-          </H3>
+          <H3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">What’s happening now</H3>
 
           <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
             Live programs and recent reels, powered by your backend data.
           </BodySM>
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            {(['program', 'reel'] as const).map((cat) => (
+            {(['program', 'media', 'reel'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
-                  category === cat
-                    ? 'bg-white text-black border-white'
-                    : 'border-white/25 text-white hover:bg-white/10'
+                  category === cat ? 'bg-white text-black border-white' : 'border-white/25 text-white hover:bg-white/10'
                 }`}
               >
                 {cat === 'program' ? 'Programs & Events' : 'Reels'}
@@ -315,11 +366,9 @@ export default function EventsShowcase() {
                       {current.badge}
                     </div>
 
-                    <SmallText className="text-white/70 text-sm line-clamp-1">
-                      {current.subtitle}
-                    </SmallText>
+                    <SmallText className="text-white/70 text-sm line-clamp-1">{current.subtitle}</SmallText>
 
-                    <H3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">
+                    <H3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white leading-tight">
                       {current.title}
                     </H3>
 
@@ -360,16 +409,12 @@ export default function EventsShowcase() {
                         )
                       )}
 
-                      {activeSlides.length > 1 && (
-                        <button
-                          onClick={() =>
-                            setActive((prev) => (prev + 1) % Math.max(activeSlides.length, 1))
-                          }
-                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
-                        >
-                          Next <ArrowRight className="w-4 h-4" />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setActive((prev) => (prev + 1) % Math.max(programList.length, 1))}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
+                      >
+                        Next <ArrowRight className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </motion.div>
@@ -383,6 +428,7 @@ export default function EventsShowcase() {
             )}
           </div>
 
+          {/* LIST */}
           <div
             className="
               flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1
@@ -436,60 +482,38 @@ export default function EventsShowcase() {
         </div>
       </Container>
 
-      <AnimatePresence>
-        {reelModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] flex items-center justify-center px-4"
-          >
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setReelModal(null)} />
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative w-full max-w-3xl rounded-3xl border border-white/15 bg-[#0f0f0f] p-4 sm:p-6 shadow-2xl text-white"
-            >
-              <button
-                onClick={() => setReelModal(null)}
-                className="absolute right-4 top-4 text-white/70 hover:text-white"
-                aria-label="Close reel"
+      {/* Reel modal/player */}
+      {reelModal && (
+        <BaseModal
+          isOpen={Boolean(reelModal)}
+          onClose={() => setReelModal(null)}
+          title={reelModal.title}
+          subtitle={reelModal.description}
+          maxWidth="max-w-3xl"
+        >
+          <div className="space-y-3">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-white/60">Reel</p>
+            {reelModal.videoUrl ? (
+              <video
+                controls
+                className="w-full rounded-2xl border border-white/10 bg-black"
+                poster={typeof reelModal.image === 'string' ? reelModal.image : undefined}
               >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="space-y-2 pr-8">
-                <p className="text-xs uppercase tracking-[0.18em] text-white/60">Reel</p>
-                <h3 className="text-2xl font-black">{reelModal.title}</h3>
-                <p className="text-white/70 text-sm leading-relaxed">{reelModal.description}</p>
+                <source src={reelModal.videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center">
+                <Play className="w-10 h-10 text-white/70" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
+                <p className="absolute bottom-3 left-4 text-white/70 text-sm">
+                  Upload reels media to enable playback.
+                </p>
               </div>
-
-              <div className="mt-4">
-                {reelModal.videoUrl ? (
-                  <video
-                    controls
-                    className="w-full rounded-2xl border border-white/10 bg-black"
-                    poster={resolveImageUrl(reelModal.imageUrl)}
-                  >
-                    <source src={reelModal.videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center">
-                    <Play className="w-10 h-10 text-white/70" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
-                    <p className="absolute bottom-3 left-4 text-white/70 text-sm">
-                      Reel video source is missing.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            )}
+          </div>
+        </BaseModal>
+      )}
     </Section>
   );
 }

@@ -1,19 +1,17 @@
-// app/not-found.tsx
 import Link from 'next/link';
+import { BodyMD, H2 } from '@/components/text';
+import { PageSection } from '@/components/layout';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <PageSection tone="surface" padding="xl" container={false} centered fullHeight>
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-        <p className="text-lg text-gray-600 mb-4">Page Not Found</p>
-        <Link
-          href="/"
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
-        >
+        <H2>404</H2>
+        <BodyMD className="text-muted mb-4">Page Not Found</BodyMD>
+        <Link href="/" className="page-card-muted inline-flex items-center px-5 py-2 text-sm font-medium">
           Go back home
         </Link>
       </div>
-    </div>
+    </PageSection>
   );
 }

@@ -1,9 +1,8 @@
 ﻿'use client';
 
 import React from 'react';
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import PageHero from '@/components/ui/PageHero';
 import { H2, H3, BodyMD, SmallText } from '@/components/text';
-import { hero_bg_1 } from '@/components/assets';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import {
   Section,
@@ -45,23 +44,14 @@ const ContactPage = () => {
   const isDarkMode = colorScheme.background === '#000000';
 
   // Theme-based styles
-  const sectionBackground = isDarkMode ? colorScheme.black : colorScheme.white;
-  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const cardBackground = isDarkMode ? colorScheme.surface : colorScheme.white;
-  const cardTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const formBackground = isDarkMode
-    ? colorScheme.surface
-    : colorScheme.backgroundSecondary;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : `${colorScheme.primary}40`;
-  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
-  const inputBorderColor = isDarkMode
-    ? colorScheme.borderLight
-    : colorScheme.border;
+  const sectionBackground = '#050505';
+  const cardBackground = isDarkMode ? '#0b0b0b' : '#0b0b0b';
+  const formBackground = isDarkMode ? '#0b0b0b' : '#0b0b0b';
+  const borderColor = 'rgba(255,255,255,0.08)';
+  const inputBackground = '#0f0f0f';
+  const inputBorderColor = 'rgba(255,255,255,0.12)';
+  const textColor = '#ffffff';
+  const secondaryTextColor = 'rgba(255,255,255,0.72)';
 
   const contactMethods: ContactMethod[] = [
     {
@@ -122,369 +112,180 @@ const ContactPage = () => {
   };
 
   return (
-    <div>
-      <HeroSection
+    <div className="bg-[#050505] text-white">
+      <PageHero
         title="Contact Us"
-        subtitle="We'd Love to Hear From You"
-        description="Whether you're new to our church family or have been with us for years, we're here to help you connect, grow, and serve. Reach out to us through any of the following ways."
-        backgroundImage={hero_bg_1.src}
-        showButtons={false}
-        primaryButtonText="Get Directions"
-        secondaryButtonText="Send Message"
-        showScrollIndicator={true}
+        subtitle="We'd love to hear from you"
+        note="Whether you’re new or part of the family, reach out and we’ll get back quickly."
+        chips={['Visit', 'Call', 'Email', 'Connect']}
+        compact
       />
 
-      {/* Contact Methods Section */}
-      <Section
-        padding="lg"
-        fullHeight={false}
-        style={{ backgroundColor: sectionBackground }}
-      >
-        <Container size="xl">
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="md"
-            className="text-center mb-8"
-          >
-            <H2
-              style={{ color: textColor }}
-              className="text-2xl sm:text-3xl font-bold"
-            >
-              Get In Touch
-            </H2>
-            <BodyMD
-              className="max-w-2xl mx-auto"
-              style={{ color: secondaryTextColor }}
-            >
-              Multiple ways to connect with our church family and leadership
-            </BodyMD>
-          </FlexboxLayout>
-
-          <div className="max-w-6xl mx-auto">
-            <GridboxLayout columns={1} responsive={{ md: 2, lg: 3 }} gap="md">
-              {contactMethods.map(method => {
-                const IconComponent = method.icon;
-                return (
-                  <div
-                    key={method.title}
-                    className="rounded-xl p-5 text-center border transition-all duration-300 hover:translate-y-1"
-                    style={{
-                      backgroundColor: cardBackground,
-                      border: `1px solid ${borderColor}`,
-                    }}
-                  >
-                    <div className="flex justify-center mb-3">
-                      <IconComponent
-                        className="w-8 h-8"
-                        style={{ color: colorScheme.primary }}
-                      />
-                    </div>
-                    <H3
-                      className="text-lg font-semibold mb-2"
-                      style={{ color: cardTextColor }}
-                    >
-                      {method.title}
-                    </H3>
-                    <BodyMD
-                      className="mb-3 text-sm"
-                      style={{ color: secondaryTextColor }}
-                    >
-                      {method.description}
-                    </BodyMD>
-                    <div className="space-y-1">
-                      {method.details.map(detail => (
-                        <SmallText
-                          key={detail}
-                          className="text-xs"
-                          style={{ color: secondaryTextColor }}
-                        >
-                          {detail}
-                        </SmallText>
-                      ))}
-                    </div>
-                    {method.link && (
-                      <a
-                        href={method.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block mt-3 text-sm font-medium hover:underline"
-                        style={{ color: colorScheme.primary }}
-                      >
-                        Contact Now →
-                      </a>
-                    )}
-                  </div>
-                );
-              })}
-            </GridboxLayout>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Social Media Section */}
-      <Section
-        padding="lg"
-        fullHeight={false}
-        style={{
-          backgroundColor: isDarkMode
-            ? colorScheme.surface
-            : colorScheme.backgroundSecondary,
-        }}
-      >
-        <Container size="xl">
-          <div className="max-w-4xl mx-auto">
-            <FlexboxLayout
-              direction="column"
-              justify="center"
-              align="center"
-              gap="md"
-              className="text-center mb-8"
-            >
-              <H2
-                style={{ color: textColor }}
-                className="text-2xl sm:text-3xl font-bold"
-              >
-                Follow Us
-              </H2>
-              <BodyMD
-                className="max-w-2xl mx-auto"
-                style={{ color: secondaryTextColor }}
-              >
-                Stay connected with us on social media for updates, events, and
-                inspirational content
-              </BodyMD>
-            </FlexboxLayout>
-
-            <GridboxLayout columns={1} responsive={{ sm: 3 }} gap="md">
-              {socialMedia.map(social => {
-                const IconComponent = social.icon;
-                return (
-                  <a
-                    key={social.platform}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-xl p-5 text-center border transition-all duration-300 hover:translate-y-1 hover:shadow-md"
-                    style={{
-                      backgroundColor: cardBackground,
-                      border: `1px solid ${borderColor}`,
-                      textDecoration: 'none',
-                    }}
-                  >
-                    <div className="flex justify-center mb-3">
-                      <IconComponent
-                        className="w-8 h-8"
-                        style={{ color: colorScheme.primary }}
-                      />
-                    </div>
-                    <H3
-                      className="text-lg font-semibold mb-1"
-                      style={{ color: cardTextColor }}
-                    >
-                      {social.platform}
-                    </H3>
-                    <BodyMD
-                      className="text-sm mb-2"
-                      style={{ color: secondaryTextColor }}
-                    >
-                      {social.handle}
-                    </BodyMD>
-                    <SmallText
-                      className="text-xs font-medium hover:underline"
-                      style={{ color: colorScheme.primary }}
-                    >
-                      Follow Us →
-                    </SmallText>
-                  </a>
-                );
-              })}
-            </GridboxLayout>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Contact Form Section */}
-      <Section
-        padding="lg"
-        fullHeight={false}
-        style={{
-          backgroundColor: isDarkMode
-            ? colorScheme.surface
-            : colorScheme.backgroundSecondary,
-        }}
-      >
-        <Container size="xl">
-          <div className="max-w-4xl mx-auto">
-            <FlexboxLayout
-              direction="column"
-              justify="center"
-              align="center"
-              gap="md"
-              className="text-center mb-8"
-            >
-              <H2
-                style={{ color: textColor }}
-                className="text-2xl sm:text-3xl font-bold"
-              >
-                Send Us a Message
-              </H2>
-              <BodyMD style={{ color: secondaryTextColor }}>
-                Have a question or prayer request? We&apos;re here to help.
-              </BodyMD>
-            </FlexboxLayout>
-
+      <Section padding="xl" className="bg-[#050505]">
+        <Container size="xl" className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12">
+          {/* Left column: contact and social */}
+          <div className="space-y-6">
             <div
-              className="rounded-xl p-6 border"
-              style={{
-                backgroundColor: formBackground,
-                border: `1px solid ${borderColor}`,
-              }}
+              className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-black/60 to-black/80 p-6 sm:p-7 shadow-[0_18px_50px_rgba(0,0,0,0.45)]"
             >
-              <form className="space-y-5">
-                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="md">
-                  <div>
-                    <label
-                      className="block font-medium mb-2 text-sm"
-                      style={{ color: textColor }}
+              <H2 className="text-xl sm:text-2xl font-semibold mb-2">Visit & Reach Us</H2>
+              <BodyMD className="text-white/70 text-xs sm:text-sm mb-4">
+                Multiple ways to connect with leadership and teams.
+              </BodyMD>
+              <div className="space-y-4">
+                {contactMethods.map(method => {
+                  const Icon = method.icon;
+                  return (
+                    <div
+                      key={method.title}
+                      className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-3.5"
                     >
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
-                      placeholder="Your first name"
-                      style={{
-                        backgroundColor: inputBackground,
-                        borderColor: inputBorderColor,
-                        color: textColor,
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      className="block font-medium mb-2 text-sm"
-                      style={{ color: textColor }}
-                    >
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
-                      placeholder="Your last name"
-                      style={{
-                        backgroundColor: inputBackground,
-                        borderColor: inputBorderColor,
-                        color: textColor,
-                      }}
-                    />
-                  </div>
-                </GridboxLayout>
-
-                <GridboxLayout columns={1} responsive={{ md: 2 }} gap="md">
-                  <div>
-                    <label
-                      className="block font-medium mb-2 text-sm"
-                      style={{ color: textColor }}
-                    >
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
-                      placeholder="your.email@example.com"
-                      style={{
-                        backgroundColor: inputBackground,
-                        borderColor: inputBorderColor,
-                        color: textColor,
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      className="block font-medium mb-2 text-sm"
-                      style={{ color: textColor }}
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
-                      placeholder="(555) 123-4567"
-                      style={{
-                        backgroundColor: inputBackground,
-                        borderColor: inputBorderColor,
-                        color: textColor,
-                      }}
-                    />
-                  </div>
-                </GridboxLayout>
-
-                <div>
-                  <label
-                    className="block font-medium mb-2 text-sm"
-                    style={{ color: textColor }}
-                  >
-                    Department
-                  </label>
-                  <select
-                    className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
-                    style={{
-                      backgroundColor: colorScheme.white,
-                      borderColor: inputBorderColor,
-                      color: colorScheme.black,
-                    }}
-                  >
-                    <option value="">Select a department...</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="pastoral">Pastoral Care</option>
-                    <option value="youth">Youth Ministry</option>
-                    <option value="children">Children&apos;s Ministry</option>
-                    <option value="worship">Worship & Music</option>
-                    <option value="missions">Missions & Outreach</option>
-                    <option value="facilities">Facilities & Events</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    className="block font-medium mb-2 text-sm"
-                    style={{ color: textColor }}
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    rows={5}
-                    className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
-                    placeholder="Tell us how we can help you..."
-                    style={{
-                      backgroundColor: inputBackground,
-                      borderColor: inputBorderColor,
-                      color: textColor,
-                    }}
-                  ></textarea>
-                </div>
-
-                <FlexboxLayout justify="center">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="md"
-                    curvature="full"
-                    className="px-6 py-2 font-medium text-sm transition-colors"
-                    style={{
-                      backgroundColor: colorScheme.primary,
-                      color: colorScheme.black,
-                    }}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    Send Message
-                  </Button>
-                </FlexboxLayout>
-              </form>
+                      <div className="mt-0.5 h-10 w-10 rounded-lg flex items-center justify-center"
+                        style={{ backgroundColor: colorScheme.opacity.primary10 }}>
+                        <Icon className="w-5 h-5" style={{ color: colorScheme.primary }} />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <H3 className="text-sm font-semibold">{method.title}</H3>
+                        <SmallText className="text-white/65 text-[12px]">{method.description}</SmallText>
+                        <div className="space-y-0.5">
+                          {method.details.map(detail => (
+                            <SmallText key={detail} className="text-white/60 text-[11px]">
+                              {detail}
+                            </SmallText>
+                          ))}
+                        </div>
+                        {method.link && (
+                          <a
+                            href={method.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[12px] font-semibold"
+                            style={{ color: colorScheme.primary }}
+                          >
+                            Reach out →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <H3 className="text-base font-semibold mb-3">Follow us</H3>
+              <div className="flex flex-wrap gap-3">
+                {socialMedia.map(social => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={social.platform}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-black/40 hover:border-primary transition"
+                    >
+                      <Icon className="w-4 h-4" style={{ color: colorScheme.primary }} />
+                      <SmallText className="text-white/80">{social.platform}</SmallText>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Right column: form */}
+          <div
+            className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-black/70 to-black/85 p-6 sm:p-7 lg:p-8 shadow-[0_18px_50px_rgba(0,0,0,0.45)]"
+          >
+            <div className="mb-6 space-y-1">
+              <H3 className="text-lg font-semibold">Send us a message</H3>
+              <SmallText className="text-white/65 text-[12px]">
+                We respond within 24 hours on weekdays.
+              </SmallText>
+            </div>
+            <form className="space-y-4">
+              <GridboxLayout columns={2} responsive={{ xs: 1, md: 2 }} gap="sm">
+                <div className="space-y-1.5">
+                  <SmallText className="text-white/70 text-[12px]">First name</SmallText>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
+                    placeholder="John"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <SmallText className="text-white/70 text-[12px]">Last name</SmallText>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
+                    placeholder="Doe"
+                  />
+                </div>
+              </GridboxLayout>
+
+              <GridboxLayout columns={2} responsive={{ xs: 1, md: 2 }} gap="sm">
+                <div className="space-y-1.5">
+                  <SmallText className="text-white/70 text-[12px]">Email</SmallText>
+                  <input
+                    type="email"
+                    className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
+                    placeholder="you@example.com"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <SmallText className="text-white/70 text-[12px]">Phone</SmallText>
+                  <input
+                    type="tel"
+                    className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
+                    placeholder="+234 706 999 5333"
+                  />
+                </div>
+              </GridboxLayout>
+
+              <div className="space-y-1.5">
+                <SmallText className="text-white/70 text-[12px]">Topic</SmallText>
+                <select
+                  className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
+                >
+                  <option value="">Select a topic</option>
+                  <option value="visit">Plan a visit</option>
+                  <option value="pastoral">Pastoral care</option>
+                  <option value="prayer">Prayer request</option>
+                  <option value="serve">Serving / volunteering</option>
+                  <option value="events">Events / bookings</option>
+                  <option value="media">Media / resources</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <SmallText className="text-white/70 text-[12px]">Message</SmallText>
+                <textarea
+                  rows={5}
+                  className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
+                  placeholder="Tell us how we can help..."
+                />
+              </div>
+
+              <div className="flex items-center gap-2 text-white/70 text-xs">
+                <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colorScheme.primary }} />
+                <span>We’ll respond by email and phone if provided.</span>
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="md"
+                curvature="xl"
+                className="w-full sm:w-auto px-6 py-2.5 text-sm font-semibold"
+                style={{ backgroundColor: colorScheme.primary, color: colorScheme.black }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                Send Message
+              </Button>
+            </form>
           </div>
         </Container>
       </Section>
