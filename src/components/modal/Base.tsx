@@ -77,7 +77,7 @@ export const BaseModal = memo(function BaseModal({
   loadingText = 'Loading...',
   initialFocusRef,
   onAnimationComplete,
-  forceBottomSheet = false,
+  forceBottomSheet = true,
 }: BaseModalProps) {
   const { colorScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -437,7 +437,7 @@ export const BaseModal = memo(function BaseModal({
         className={`
           w-full overflow-hidden border shadow-2xl
           ${responsive.modal[viewport]}
-          ${useBottomSheet ? 'rounded-t-3xl pb-safe-bottom' : 'rounded-2xl'}
+          ${useBottomSheet ? 'rounded-t-3xl rounded-b-none pb-safe-bottom' : 'rounded-2xl'}
           max-h-[92vh]
           ${maxWidth}
           ${isLoading ? 'opacity-80' : ''}

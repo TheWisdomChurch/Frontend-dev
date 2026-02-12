@@ -1,53 +1,70 @@
 // app/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/ui/Homepage/heromain';
 import HeroHighlights from '@/components/ui/Homepage/HeroHighlights';
-import ProfessionalPopup from '@/components/ui/ConfessionPopup';
-import WisdomPowerAdModal from '@/components/modal/WisdomPowerAdModal';
+import EventAdModal from '@/components/ui/Homepage/EventAdModal';
 import MobileDebug from '@/components/utils/mobileDebug';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
 const WhatWeDo = dynamic(() => import('@/components/ui/Homepage/WhatWeDo'), {
   ssr: true,
-  loading: () => <div className="min-h-[220px]" />,
+  loading: () => null,
 });
 const EventsShowcase = dynamic(
   () => import('@/components/ui/Homepage/EventsShowcase'),
-  { ssr: true, loading: () => <div className="min-h-[240px]" /> }
+  { ssr: true, loading: () => null }
 );
 const SeniorPastor = dynamic(() => import('@/components/ui/Homepage/SeniorPastor'), {
   ssr: true,
-  loading: () => <div className="min-h-[260px]" />,
+  loading: () => null,
 });
-const AssociatePastors = dynamic(
-  () => import('@/components/ui/Homepage/AssociatePastors'),
-  { ssr: true, loading: () => <div className="min-h-[220px]" /> }
-);
+// const AssociatePastors = dynamic(
+//   () => import('@/components/ui/Homepage/AssociatePastors'),
+//   { ssr: true, loading: () => <div className="min-h-[220px]" /> }
+// );
 const JoinWisdomHouse = dynamic(() => import('@/components/ui/Homepage/JoinUs'), {
   ssr: true,
-  loading: () => <div className="min-h-[240px]" />,
+  loading: () => null,
 });
 const Testimonial = dynamic(() => import('@/components/ui/Homepage/Testimonials'), {
   ssr: true,
-  loading: () => <div className="min-h-[200px]" />,
+  loading: () => null,
 });
 const OnlineGiving = dynamic(() => import('@/components/ui/Homepage/OnlineGiving'), {
   ssr: true,
-  loading: () => <div className="min-h-[200px]" />,
+  loading: () => null,
 });
 const ResourceSection = dynamic(() => import('@/components/ui/Homepage/Resource'), {
   ssr: true,
-  loading: () => <div className="min-h-[200px]" />,
+  loading: () => null,
 });
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
-  const [showAdModal, setShowAdModal] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { colorScheme } = useTheme();
+
+  const eventAd = useMemo(
+    () => ({
+      id: 'wpc-2026',
+      title: 'Wisdom Power Conference 2026',
+      headline: 'Have you registered for WPC 2026?',
+      description:
+        'Join three days of worship, impartation, and encounters designed to refresh your spirit and strengthen your walk.',
+      startAt: '2026-03-20T18:00:00Z',
+      endAt: '2026-03-22T20:00:00Z',
+      time: '6:00 PM Daily',
+      location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
+      image: '/HEADER.png',
+      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wisdom-power-conference26',
+      ctaLabel: 'Register now',
+      note: 'You will be returned to the main website after you finish.',
+    }),
+    []
+  );
 
   useEffect(() => {
     const checkFonts = () => {
@@ -66,6 +83,13 @@ export default function Home() {
   useEffect(() => {
     if (!fontsLoaded) return;
 
+    const storageKey = 'wc_event_ad_seen_v1';
+    const now = Date.now();
+    const nextAllowedRaw = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
+    const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
+
+    if (nextAllowed && now < nextAllowed) return;
+
     const timer = setTimeout(() => {
       setShowModal(true);
     }, 1400);
@@ -74,12 +98,21 @@ export default function Home() {
   }, [fontsLoaded]);
 
   const handleCloseModal = () => {
+    const storageKey = 'wc_event_ad_seen_v1';
+    const cooldownMs = 1000 * 60 * 60 * 12;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, String(Date.now() + cooldownMs));
+    }
     setShowModal(false);
-    setTimeout(() => setShowAdModal(true), 500);
   };
 
-  const handleCloseAd = () => {
-    setShowAdModal(false);
+  const handleRemindLater = () => {
+    const storageKey = 'wc_event_ad_seen_v1';
+    const cooldownMs = 1000 * 60 * 60; // 1 hour
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, String(Date.now() + cooldownMs));
+    }
+    setShowModal(false);
   };
 
   return (
@@ -109,9 +142,9 @@ export default function Home() {
           <div data-gsap="reveal">
             <SeniorPastor />
           </div>
-          <div data-gsap="reveal">
+          {/* <div data-gsap="reveal">
             <AssociatePastors />
-          </div>
+          </div> */}
           <div id="join">
             <div data-gsap="reveal">
               <JoinWisdomHouse />
@@ -128,12 +161,12 @@ export default function Home() {
           </div>
         </div>
 
-        {showModal && (
-          <ProfessionalPopup onClose={handleCloseModal} delay={0} />
-        )}
-        {showAdModal && (
-          <WisdomPowerAdModal isOpen={showAdModal} onClose={handleCloseAd} />
-        )}
+        <EventAdModal
+          open={showModal}
+          event={eventAd}
+          onClose={handleCloseModal}
+          onRemindLater={handleRemindLater}
+        />
       </main>
     </div>
   );

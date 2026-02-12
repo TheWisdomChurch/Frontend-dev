@@ -15,8 +15,6 @@ import ClientHeader from '@/components/layout/ClientHeader';
 import ClientFooter from '@/components/layout/ClientFooter';
 import ClientScrollToTop from '@/components/layout/ClientscrollTop';
 import ScrollHandler from '@/components/layout/ClientScrollHandler';
-import RouteLoaderProvider from '@/components/providers/RouteProvider';
-import PageGsap from '@/components/animation/PageGsap';
 import './globals.css';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
@@ -30,11 +28,11 @@ export const metadata: Metadata = {
   },
 
   title: {
-    default: 'The Wisdom Church (Wisdom House) | Experience God’s Transforming Power',
+    default: 'The Wisdom Church | Experience God’s Transforming Power',
     template: '%s | The Wisdom Church',
   },
   description:
-    'The Wisdom Church (Wisdom House) is a vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
+    'The Wisdom Church is a vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
 
   keywords: [
     'wisdomchurch',
@@ -153,14 +151,12 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
           <HeaderProvider>
             <ErrorBoundary>
               <ScrollHandler />
-              <RouteLoaderProvider>
-                <ClientHeader />
-                <main className="flex-1 flex flex-col min-h-screen">
-                  <PageGsap>{children}</PageGsap>
-                </main>
-                <ClientFooter />
-                <ClientScrollToTop />
-              </RouteLoaderProvider>
+              <ClientHeader />
+              <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
+                {children}
+              </main>
+              <ClientFooter />
+              <ClientScrollToTop />
             </ErrorBoundary>
           </HeaderProvider>
         </ServiceUnavailableProvider>
@@ -207,7 +203,7 @@ export default function RootLayout({
       className={`${bricolageGrotesque.variable} ${worksans.variable} ${playfair.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className={bricolageGrotesque.className}>
+      <body className={worksans.className}>
         {/* ✅ Valid JSON-LD only (no <meta> inside JSON.stringify) */}
         <script
           type="application/ld+json"

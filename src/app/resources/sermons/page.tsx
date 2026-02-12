@@ -4,9 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
-import HeroSection from '@/components/ui/Homepage/Herosection';
-import { H2, BaseText, BodyMD, SemiBoldText } from '@/components/text';
-import { hero_bg_1 } from '@/components/assets';
+import { H2, BaseText, BodyMD, SemiBoldText, Caption, SmallText, H1 } from '@/components/text';
 import SermonUtil from '@/components/ui/Sermons';
 import Button from '@/components/utils/buttons/CustomButton';
 import {
@@ -17,6 +15,7 @@ import {
 } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { Youtube } from 'lucide-react';
+import PageHero from '@/components/ui/PageHero';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,13 +60,11 @@ const SermonPage = () => {
 
   return (
     <div className="min-h-screen">
-      <HeroSection
+      <PageHero
         title="Sermons & Teachings"
-        subtitle="Catch up on all our Sermons and Teachings"
-        description="Discover transformative messages from Sunday Teachings, Catch up on all our teachings from our Outreaches(Wisdom Power Conferences,Prayer), and special teachings. Grow spiritually through practical biblical Teachings."
-        backgroundImage={hero_bg_1.src}
-        showButtons={false}
-        showScrollIndicator={true}
+        subtitle="Catch up on every message"
+        note="Transformative messages from Sundays, conferences, and midweek gatherings. Practical biblical teaching for daily life."
+        chips={['Platform: YouTube', 'Format: Video + Audio', 'New: Weekly uploads', 'Live: Sun & Thu']}
       />
 
       <SermonUtil />
@@ -87,7 +84,7 @@ const SermonPage = () => {
             className="text-center"
           >
             <H2
-              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-center mb-8"
+              className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight text-center mb-6"
               style={{ color: themeStyles.textColor }}
             >
               Watch & Listen Anywhere
