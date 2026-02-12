@@ -44,9 +44,22 @@ export type EventPublic = {
   location?: string;
   imageUrl?: string;
   bannerUrl?: string;
+  date?: string;
+  time?: string;
+  registerLink?: string | null;
 
   // IMPORTANT: backend should include this OR frontend derives it from related form
   formSlug?: string | null;
+};
+
+export type ReelPublic = {
+  id: string;
+  title: string;
+  thumbnail: string;
+  videoUrl: string;
+  duration?: string;
+  eventId?: string;
+  createdAt?: string;
 };
 export type Testimonial = {
   id: number | string;

@@ -2,6 +2,7 @@
 
 import type {
   EventPublic,
+  ReelPublic,
   PublicFormPayload,
   PublicFormSubmissionRequest,
   Testimonial,
@@ -202,6 +203,109 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
   };
 }
 
+function asNonEmptyString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed.length ? trimmed : undefined;
+}
+
+function parseEventDate(date?: string, time?: string): { startAt?: string; endAt?: string } {
+  if (!date) return {};
+
+  const baseDate = date.includes('T') ? date : `${date}T00:00:00`;
+  const start = new Date(baseDate);
+  if (Number.isNaN(start.getTime())) return {};
+
+  if (time) {
+    const parsedWithTime = new Date(`${date} ${time}`);
+    if (!Number.isNaN(parsedWithTime.getTime())) {
+      const end = new Date(parsedWithTime.getTime() + 2 * 60 * 60 * 1000);
+      return { startAt: parsedWithTime.toISOString(), endAt: end.toISOString() };
+    }
+  }
+
+  return { startAt: start.toISOString() };
+}
+
+function extractFormSlug(registerLink?: string): string | null {
+  if (!registerLink) return null;
+  try {
+    const url = new URL(registerLink);
+    const match = url.pathname.match(/\/forms\/([^/?#]+)/i);
+    return match?.[1] ? decodeURIComponent(match[1]) : null;
+  } catch {
+    const match = registerLink.match(/\/forms\/([^/?#]+)/i);
+    return match?.[1] ? decodeURIComponent(match[1]) : null;
+  }
+}
+
+function mapBackendEvent(input: unknown): EventPublic | null {
+  if (!isRecord(input)) return null;
+
+  const id = asNonEmptyString(input.id);
+  const title = asNonEmptyString(input.title);
+  if (!id || !title) return null;
+
+  const description =
+    asNonEmptyString(input.description) ?? asNonEmptyString(input.shortDescription);
+  const date = asNonEmptyString(input.date);
+  const time = asNonEmptyString(input.time);
+  const location = asNonEmptyString(input.location);
+  const bannerUrl = asNonEmptyString(input.bannerImage);
+  const imageUrl = bannerUrl ?? asNonEmptyString(input.image);
+  const registerLink = asNonEmptyString(input.registerLink);
+  const { startAt, endAt } = parseEventDate(date, time);
+
+  return {
+    id,
+    title,
+    description,
+    date,
+    time,
+    location,
+    imageUrl,
+    bannerUrl,
+    registerLink: registerLink ?? null,
+    formSlug: extractFormSlug(registerLink),
+    startAt,
+    endAt,
+  };
+}
+
+function mapBackendReel(input: unknown): ReelPublic | null {
+  if (!isRecord(input)) return null;
+
+  const id = asNonEmptyString(input.id);
+  const title = asNonEmptyString(input.title);
+  const thumbnail = asNonEmptyString(input.thumbnail);
+  const videoUrl = asNonEmptyString(input.videoUrl);
+  if (!id || !title || !thumbnail || !videoUrl) return null;
+
+  return {
+    id,
+    title,
+    thumbnail,
+    videoUrl,
+    duration: asNonEmptyString(input.duration),
+    eventId: asNonEmptyString(input.eventId),
+    createdAt: asNonEmptyString(input.createdAt),
+  };
+}
+
+function extractArrayData<T>(payload: unknown): T[] {
+  if (Array.isArray(payload)) return payload as T[];
+  if (!isRecord(payload)) return [];
+
+  const rootData = payload.data;
+  if (Array.isArray(rootData)) return rootData as T[];
+
+  if (isRecord(rootData) && Array.isArray(rootData.data)) {
+    return rootData.data as T[];
+  }
+
+  return [];
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_V1_BASE_URL}${path}`;
 
@@ -251,26 +355,37 @@ export const apiClient = {
      EVENTS (public read)
      ----------------------------- */
 
-  /**
-   * ⚠️ Your Go backend (main.go you posted) does NOT expose these public event routes yet.
-   * Your current routes:
-   *   /api/v1/events  -> admin protected
-   *
-   * If you add these later:
-   *   GET /api/v1/public/events
-   *   GET /api/v1/public/events/:id
-   * then these functions will work.
-   */
   async listEvents(): Promise<EventPublic[]> {
-    const res = await request<any>('/public/events', { method: 'GET' });
-    return unwrapData<EventPublic[]>(res);
+    const qs = toQueryString({ page: 1, limit: 100 });
+    const res = await request<any>(`/events${qs}`, { method: 'GET' });
+    return extractArrayData<unknown>(res)
+      .map(mapBackendEvent)
+      .filter((item): item is EventPublic => item !== null);
   },
 
   async getEvent(id: string): Promise<EventPublic> {
-    const res = await request<any>(`/public/events/${encodeURIComponent(id)}`, {
+    const res = await request<any>(`/events/${encodeURIComponent(id)}`, {
       method: 'GET',
     });
-    return unwrapData<EventPublic>(res);
+    const item = mapBackendEvent(unwrapData<unknown>(res));
+    if (!item) {
+      throw createApiError('Invalid event payload', 400, res);
+    }
+    return item;
+  },
+
+  /* -----------------------------
+     REELS (public read)
+     Go:
+       GET /api/v1/reels
+     ----------------------------- */
+
+  async listReels(): Promise<ReelPublic[]> {
+    const qs = toQueryString({ page: 1, limit: 30 });
+    const res = await request<any>(`/reels${qs}`, { method: 'GET' });
+    return extractArrayData<unknown>(res)
+      .map(mapBackendReel)
+      .filter((item): item is ReelPublic => item !== null);
   },
 
   /* -----------------------------

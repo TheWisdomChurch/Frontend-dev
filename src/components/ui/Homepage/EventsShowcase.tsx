@@ -1,175 +1,208 @@
-// components/ui/Homepage/EventsShowcase.tsx
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
+
 import { Section, Container } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
-import { ArrowRight, Calendar, MapPin, Play, X } from 'lucide-react';
-import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
+import { EventBannerDesktop } from '@/components/assets';
 import { apiClient } from '@/lib/api';
-import type { EventPublic } from '@/lib/apiTypes';
+import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
+
+type ShowcaseCategory = 'program' | 'reel';
 
 type Slide = {
+  id: string;
   title: string;
   subtitle: string;
   description: string;
   date: string;
   location: string;
-  image: any;
-  imageMobile?: any;
-  imageDesktop?: any;
-  cta?: string;
+  imageUrl: string;
+  cta: string;
   href?: string;
   badge: string;
-  category: 'program' | 'media' | 'reel';
-  start?: string; // ISO
-  end?: string; // ISO
+  category: ShowcaseCategory;
+  start?: string;
+  end?: string;
   videoUrl?: string;
 };
+
+function formatDateLabel(event: EventPublic): string {
+  if (event.startAt) {
+    const d = new Date(event.startAt);
+    if (!Number.isNaN(d.getTime())) {
+      return d.toLocaleString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+  }
+
+  const date = event.date?.trim();
+  const time = event.time?.trim();
+  if (date && time) return `${date} • ${time}`;
+  if (date) return date;
+  if (time) return time;
+  return 'Date to be announced';
+}
+
+function eventBadge(event: EventPublic): string {
+  const now = new Date();
+
+  if (event.startAt) {
+    const start = new Date(event.startAt);
+    if (!Number.isNaN(start.getTime())) {
+      const end = event.endAt ? new Date(event.endAt) : new Date(start.getTime() + 2 * 60 * 60 * 1000);
+      if (now >= start && now <= end) return 'Happening now';
+      if (now < start) return 'Upcoming';
+      const daysAgo = (now.getTime() - end.getTime()) / (1000 * 60 * 60 * 24);
+      return daysAgo <= 90 ? 'Recent' : 'Past';
+    }
+  }
+
+  if (event.date) {
+    const day = new Date(`${event.date}T00:00:00`);
+    const today = new Date();
+    if (!Number.isNaN(day.getTime())) {
+      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const eventDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+      if (eventDay.getTime() === todayStart.getTime()) return 'Happening now';
+      if (eventDay.getTime() > todayStart.getTime()) return 'Upcoming';
+      return 'Recent';
+    }
+  }
+
+  return 'Upcoming';
+}
+
+function toProgramSlide(event: EventPublic): Slide {
+  const href = event.registerLink || (event.formSlug ? `/forms/${event.formSlug}` : '/events');
+  return {
+    id: event.id,
+    title: event.title,
+    subtitle: event.location || 'Program',
+    description: event.description || 'Join us for this gathering.',
+    date: formatDateLabel(event),
+    location: event.location || 'Venue to be announced',
+    imageUrl: event.bannerUrl || event.imageUrl || EventBannerDesktop.src,
+    cta: 'Register now',
+    href,
+    badge: eventBadge(event),
+    category: 'program',
+    start: event.startAt,
+    end: event.endAt,
+  };
+}
+
+function toReelSlide(reel: ReelPublic): Slide {
+  const createdAt = reel.createdAt ? new Date(reel.createdAt) : null;
+  const dateLabel = createdAt && !Number.isNaN(createdAt.getTime())
+    ? createdAt.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+      })
+    : 'Latest upload';
+
+  const description = reel.duration
+    ? `Short highlight reel (${reel.duration}).`
+    : 'Short highlight reel from a recent service.';
+
+  return {
+    id: reel.id,
+    title: reel.title,
+    subtitle: 'Media reel',
+    description,
+    date: dateLabel,
+    location: 'Wisdom House Media',
+    imageUrl: reel.thumbnail,
+    cta: 'Play reel',
+    badge: 'Reel',
+    category: 'reel',
+    videoUrl: reel.videoUrl,
+  };
+}
+
+function resolveImageUrl(value?: string): string {
+  const trimmed = value?.trim();
+  return trimmed || EventBannerDesktop.src;
+}
 
 export default function EventsShowcase() {
   const { colorScheme = lightShades } = useTheme();
 
-  const slides: Slide[] = useMemo(
-    () => [
-      {
-        title: 'Wisdom Power Conference 26',
-        subtitle: 'Upcoming',
-        description:
-          'City-wide gathering with worship, word, and miracles. Come expectant.',
-        date: 'Mar 10 • 6:00 PM',
-        location: 'Honor Gardens Event Center, Alasia opp. dominion Church',
-        image: EventBannerDesktop,
-        imageMobile: EventBannerMobile,
-        imageDesktop: EventBannerDesktop,
-        cta: 'Save a seat',
-        href: '/events',
-        badge: 'Upcoming',
-        category: 'program',
-        start: '2026-03-10T18:00:00.000Z',
-        end: '2026-03-10T21:00:00.000Z',
-      },
-      {
-        title: 'Highlights & Reels',
-        subtitle: 'Media',
-        description:
-          'Watch quick reels from recent services and events—perfect for sharing.',
-        date: 'Updated weekly',
-        location: 'Media Team',
-        image: hero_bg_3,
-        cta: 'Watch reels',
-        href: '/resources/sermons',
-        badge: 'Reels',
-        category: 'reel',
-        videoUrl: '',
-      },
-      {
-        title: 'Media Stories',
-        subtitle: 'Media',
-        description:
-          'Short testimonies, sermon snippets, and behind-the-scenes moments.',
-        date: 'New drops every week',
-        location: 'Content Hub',
-        image: hero_bg_1,
-        cta: 'View media',
-        href: '/resources',
-        badge: 'Media',
-        category: 'media',
-        start: '2026-02-01T10:00:00.000Z',
-        end: '2026-02-01T12:00:00.000Z',
-      },
-    ],
-    []
-  );
-
+  const [category, setCategory] = useState<ShowcaseCategory>('program');
   const [active, setActive] = useState(0);
-  const [category, setCategory] = useState<'program' | 'media' | 'reel'>('program');
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   const [events, setEvents] = useState<EventPublic[]>([]);
-  const [eventsLoaded, setEventsLoaded] = useState(false);
-
-  const filteredSlides = slides.filter(slide => slide.category === category);
-
-  const statusOf = (slide: Slide) => {
-    if (!slide.start || !slide.end) return slide.badge;
-    const now = new Date();
-    const start = new Date(slide.start);
-    const end = new Date(slide.end);
-    if (now >= start && now <= end) return 'Happening now';
-    if (now < start) return 'Upcoming';
-    const daysAgo = (now.getTime() - end.getTime()) / (1000 * 60 * 60 * 24);
-    return daysAgo <= 90 ? 'Recent' : 'Past';
-  };
-
-  useEffect(() => {
-    if (active >= filteredSlides.length) setActive(0);
-  }, [category, filteredSlides.length, active]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActive(prev => (prev + 1) % Math.max(filteredSlides.length, 1));
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [filteredSlides.length]);
+  const [reels, setReels] = useState<ReelPublic[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    const loadEvents = async () => {
+
+    const load = async () => {
       try {
-        const data = await apiClient.listEvents();
-        if (mounted && Array.isArray(data) && data.length) setEvents(data);
-      } catch (err) {
-        console.warn('Failed to load events', err);
+        const [eventsRes, reelsRes] = await Promise.allSettled([
+          apiClient.listEvents(),
+          apiClient.listReels(),
+        ]);
+
+        if (!mounted) return;
+
+        if (eventsRes.status === 'fulfilled') {
+          setEvents(eventsRes.value);
+        } else {
+          console.warn('Failed to load events', eventsRes.reason);
+        }
+
+        if (reelsRes.status === 'fulfilled') {
+          setReels(reelsRes.value);
+        } else {
+          console.warn('Failed to load reels', reelsRes.reason);
+        }
       } finally {
-        if (mounted) setEventsLoaded(true);
+        if (mounted) setLoading(false);
       }
     };
-    loadEvents();
+
+    load();
     return () => {
       mounted = false;
     };
   }, []);
 
-  const programList: Slide[] =
-    eventsLoaded && events.length && category === 'program'
-      ? events.map(evt => {
-          const start = evt.startAt;
-          const end = evt.endAt;
-          const badge = (() => {
-            if (!start || !end) return 'Upcoming';
-            const now = new Date();
-            const s = new Date(start);
-            const e = new Date(end);
-            if (now >= s && now <= e) return 'Happening now';
-            if (now < s) return 'Upcoming';
-            const daysAgo = (now.getTime() - e.getTime()) / (1000 * 60 * 60 * 24);
-            return daysAgo <= 90 ? 'Recent' : 'Past';
-          })();
-          return {
-            title: evt.title,
-            subtitle: badge,
-            description: evt.description || '',
-            date: start ? new Date(start).toLocaleString() : '',
-            location: evt.location || '',
-            image: EventBannerDesktop,
-            imageMobile: EventBannerMobile,
-            imageDesktop: EventBannerDesktop,
-            cta: 'Save a seat',
-            href: evt.formSlug ? `/forms/${evt.formSlug}` : '/events',
-            badge,
-            category: 'program' as const,
-            start,
-            end,
-          };
-        })
-      : filteredSlides;
+  const slides = useMemo(() => {
+    return {
+      program: events.map(toProgramSlide),
+      reel: reels.map(toReelSlide),
+    };
+  }, [events, reels]);
 
-  const current = programList[active];
+  const activeSlides = slides[category];
+  const current = activeSlides[active];
+
+  useEffect(() => {
+    if (active >= activeSlides.length) {
+      setActive(0);
+    }
+  }, [active, activeSlides.length]);
+
+  useEffect(() => {
+    if (!activeSlides.length) return;
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % activeSlides.length);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [activeSlides.length]);
 
   return (
     <Section padding="md" className="relative overflow-hidden" style={{ background: '#0a0a0a' }}>
@@ -182,25 +215,26 @@ export default function EventsShowcase() {
         }}
         data-parallax-global="0.25"
       />
+
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
           <Caption
             className="uppercase tracking-[0.2em] text-xs"
             style={{ color: colorScheme.primary }}
           >
-            Programs & Media
+            Programs & Reels
           </Caption>
 
           <H3 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-            What’s happening now
+            What&apos;s happening now
           </H3>
 
           <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
-            Announcements, events, and reels in one place—swipe through the highlights.
+            Live programs and recent reels, powered by your backend data.
           </BodySM>
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            {(['program', 'media', 'reel'] as const).map(cat => (
+            {(['program', 'reel'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
@@ -210,14 +244,13 @@ export default function EventsShowcase() {
                     : 'border-white/25 text-white hover:bg-white/10'
                 }`}
               >
-                {cat === 'program' ? 'Programs & Events' : cat === 'media' ? 'Media' : 'Reels'}
+                {cat === 'program' ? 'Programs & Events' : 'Reels'}
               </button>
             ))}
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-3 sm:gap-4 items-stretch">
-          {/* HERO */}
           <div
             className="
               relative overflow-hidden rounded-3xl border border-white/15 bg-[#111] shadow-2xl
@@ -225,115 +258,45 @@ export default function EventsShowcase() {
               lg:aspect-[16/9] lg:min-h-[340px]
             "
           >
-            {current ? (
+            {loading ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+              </div>
+            ) : current ? (
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`${current.title}-${category}-${active}`}
+                  key={`${current.id}-${category}-${active}`}
                   initial={{ opacity: 0, scale: 0.985 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.985 }}
                   transition={{ duration: 0.35 }}
                   className="absolute inset-0"
                 >
-                  {/* Image layer */}
                   <div className="absolute inset-0" data-parallax-global="0.2">
-                    {current.category === 'reel' ? (
-                      <div className="w-full h-full relative">
-                        {current.imageMobile || current.imageDesktop ? (
-                          <>
-                            <Image
-                              src={current.imageMobile || current.imageDesktop || current.image}
-                              alt={current.title}
-                              fill
-                              sizes="(max-width: 768px) 100vw, 60vw"
-                              className="object-cover md:hidden"
-                              style={{ objectPosition: 'center 35%' }}
-                              priority
-                            />
-                            <Image
-                              src={current.imageDesktop || current.imageMobile || current.image}
-                              alt={current.title}
-                              fill
-                              sizes="(max-width: 1024px) 100vw, 60vw"
-                              className="hidden md:block object-cover"
-                              style={{ objectPosition: 'center 35%' }}
-                              priority
-                            />
-                          </>
-                        ) : (
-                          <Image
-                            src={current.image}
-                            alt={current.title}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 60vw"
-                            className="object-cover"
-                            // Mobile-friendly composition
-                            style={{ objectPosition: 'center 35%' }}
-                            priority
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                          <button
-                            onClick={() => setReelModal(current)}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition shadow-lg"
-                          >
-                            <Play className="w-4 h-4" /> Play reel
-                          </button>
-                        </div>
+                    <img
+                      src={resolveImageUrl(current.imageUrl)}
+                      alt={current.title}
+                      className="h-full w-full object-cover"
+                    />
+
+                    {current.category === 'reel' && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                        <button
+                          onClick={() => setReelModal(current)}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition shadow-lg"
+                        >
+                          <Play className="w-4 h-4" /> Play reel
+                        </button>
                       </div>
-                    ) : (
-                      current.imageMobile || current.imageDesktop ? (
-                        <>
-                          <Image
-                            src={current.imageMobile || current.imageDesktop || current.image}
-                            alt={current.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 60vw"
-                            className="object-cover md:hidden"
-                            style={{ objectPosition: 'center 35%' }}
-                            priority
-                          />
-                          <Image
-                            src={current.imageDesktop || current.imageMobile || current.image}
-                            alt={current.title}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 60vw"
-                            className="hidden md:block object-cover"
-                            style={{ objectPosition: 'center 35%' }}
-                            priority
-                          />
-                        </>
-                      ) : (
-                        <Image
-                          src={current.image}
-                          alt={current.title}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 60vw"
-                          className="object-cover"
-                          style={{ objectPosition: 'center 35%' }}
-                          priority
-                        />
-                      )
                     )}
                   </div>
 
-                  {/* Dark overlays */}
                   <div className="absolute inset-0 bg-black/25" data-parallax-global="0.12" />
                   <div
                     className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 lg:bg-gradient-to-r lg:from-black/88 lg:via-black/68 lg:to-black/45"
                     data-parallax-global="0.08"
                   />
 
-                  {/* Cinematic film grain */}
-                  <div
-                    className="absolute inset-0 opacity-[0.18] mix-blend-soft-light"
-                    style={{
-                      backgroundImage:
-                        'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0%, transparent 45%), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-                    }}
-                  />
-
-                  {/* Content */}
                   <div
                     className="
                       absolute inset-0 flex flex-col justify-end lg:justify-center
@@ -349,7 +312,7 @@ export default function EventsShowcase() {
                         border: '1px solid rgba(255,255,255,0.18)',
                       }}
                     >
-                      {statusOf(current)}
+                      {current.badge}
                     </div>
 
                     <SmallText className="text-white/70 text-sm line-clamp-1">
@@ -379,35 +342,47 @@ export default function EventsShowcase() {
                     </div>
 
                     <div className="flex gap-2.5 sm:gap-3 pt-1.5 flex-wrap">
-                      {current.href && (
-                        <a
-                          href={current.href}
+                      {current.category === 'reel' ? (
+                        <button
+                          onClick={() => setReelModal(current)}
                           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
                         >
-                          {current.cta || 'Open'} <ArrowRight className="w-4 h-4" />
-                        </a>
+                          {current.cta} <Play className="w-4 h-4" />
+                        </button>
+                      ) : (
+                        current.href && (
+                          <a
+                            href={current.href}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
+                          >
+                            {current.cta} <ArrowRight className="w-4 h-4" />
+                          </a>
+                        )
                       )}
 
-                      <button
-                        onClick={() =>
-                          setActive(prev => (prev + 1) % Math.max(programList.length, 1))
-                        }
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
-                      >
-                        Next <ArrowRight className="w-4 h-4" />
-                      </button>
+                      {activeSlides.length > 1 && (
+                        <button
+                          onClick={() =>
+                            setActive((prev) => (prev + 1) % Math.max(activeSlides.length, 1))
+                          }
+                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
+                        >
+                          Next <ArrowRight className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </motion.div>
               </AnimatePresence>
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-white/60">
-                No items in this category yet.
+              <div className="absolute inset-0 flex items-center justify-center text-white/60 px-6 text-center">
+                {category === 'program'
+                  ? 'No approved events available yet.'
+                  : 'No reels available yet.'}
               </div>
             )}
           </div>
 
-          {/* LIST: horizontal scroll on mobile, vertical stack on lg */}
           <div
             className="
               flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1
@@ -415,9 +390,9 @@ export default function EventsShowcase() {
               scroll-smooth
             "
           >
-            {programList.map((slide, idx) => (
+            {activeSlides.map((slide, idx) => (
               <button
-                key={`${slide.title}-${idx}`}
+                key={`${slide.id}-${idx}`}
                 onClick={() => setActive(idx)}
                 className={`
                   relative overflow-hidden rounded-2xl border border-white/15 p-3.5 sm:p-4 text-left
@@ -429,13 +404,10 @@ export default function EventsShowcase() {
               >
                 <div className="flex items-center gap-3 sm:gap-3.5">
                   <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
-                    <Image
-                      src={slide.imageDesktop || slide.image}
+                    <img
+                      src={resolveImageUrl(slide.imageUrl)}
                       alt={slide.title}
-                      fill
-                      sizes="(max-width: 1024px) 70vw, 25vw"
-                      className="object-cover"
-                      style={{ objectPosition: 'center 35%' }}
+                      className="h-full w-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/30" />
                     <div
@@ -453,9 +425,7 @@ export default function EventsShowcase() {
                     <SmallText weight="bold" className="text-white truncate">
                       {slide.title}
                     </SmallText>
-                    <Caption className="text-white/60 line-clamp-2">
-                      {slide.description}
-                    </Caption>
+                    <Caption className="text-white/60 line-clamp-2">{slide.description}</Caption>
                   </div>
 
                   <ArrowRight className="w-4 h-4 text-white/50 shrink-0" />
@@ -466,7 +436,6 @@ export default function EventsShowcase() {
         </div>
       </Container>
 
-      {/* Reel modal/player */}
       <AnimatePresence>
         {reelModal && (
           <motion.div
@@ -502,7 +471,7 @@ export default function EventsShowcase() {
                   <video
                     controls
                     className="w-full rounded-2xl border border-white/10 bg-black"
-                    poster={reelModal.image?.src}
+                    poster={resolveImageUrl(reelModal.imageUrl)}
                   >
                     <source src={reelModal.videoUrl} type="video/mp4" />
                     Your browser does not support the video tag.
@@ -512,7 +481,7 @@ export default function EventsShowcase() {
                     <Play className="w-10 h-10 text-white/70" />
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
                     <p className="absolute bottom-3 left-4 text-white/70 text-sm">
-                      Upload reels media to enable playback.
+                      Reel video source is missing.
                     </p>
                   </div>
                 )}
