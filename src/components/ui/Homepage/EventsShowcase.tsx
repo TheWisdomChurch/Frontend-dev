@@ -2,7 +2,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BaseModal } from '@/components/modal/Base';
 import { Section, Container } from '@/components/layout';
@@ -14,26 +13,24 @@ import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/c
 import type { EventPublic } from '@/lib/apiTypes';
 
 type Slide = {
+  id: string;
   title: string;
   subtitle: string;
   description: string;
   date: string;
   location: string;
-  image: any;
-  imageMobile?: any;
-  imageDesktop?: any;
-  cta?: string;
+  imageUrl: string;
+  cta: string;
   href?: string;
   badge: string;
-  category: 'program' | 'media' | 'reel';
-  start?: string; // ISO
-  end?: string; // ISO
+  category: ShowcaseCategory;
+  start?: string;
+  end?: string;
   videoUrl?: string;
 };
 
 /* =========================================
    API ORIGIN (robust + matches your pattern)
-========================================= */
 function normalizeOrigin(raw?: string | null): string {
   // Prefer NEXT_PUBLIC_API_URL; fallback to NEXT_PUBLIC_API_BASE_URL
   const fallback = 'http://localhost:8080';
@@ -170,7 +167,6 @@ export default function EventsShowcase() {
   );
 
   const [active, setActive] = useState(0);
-  const [category, setCategory] = useState<'program' | 'media' | 'reel'>('program');
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   const [events, setEvents] = useState<EventPublic[]>([]);
@@ -213,7 +209,7 @@ export default function EventsShowcase() {
       } catch (err) {
         console.warn('Failed to load events', err);
       } finally {
-        if (mounted) setEventsLoaded(true);
+        if (mounted) setLoading(false);
       }
     })();
 
@@ -277,6 +273,7 @@ export default function EventsShowcase() {
         }}
         data-parallax-global="0.25"
       />
+
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
           <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
@@ -286,7 +283,7 @@ export default function EventsShowcase() {
           <H3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">What’s happening now</H3>
 
           <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
-            Announcements, events, and reels in one place—swipe through the highlights.
+            Live programs and recent reels, powered by your backend data.
           </BodySM>
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
@@ -298,14 +295,13 @@ export default function EventsShowcase() {
                   category === cat ? 'bg-white text-black border-white' : 'border-white/25 text-white hover:bg-white/10'
                 }`}
               >
-                {cat === 'program' ? 'Programs & Events' : cat === 'media' ? 'Media' : 'Reels'}
+                {cat === 'program' ? 'Programs & Events' : 'Reels'}
               </button>
             ))}
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-3 sm:gap-4 items-stretch">
-          {/* HERO */}
           <div
             className="
               relative overflow-hidden rounded-3xl border border-white/15 bg-[#111] shadow-2xl
@@ -313,115 +309,45 @@ export default function EventsShowcase() {
               lg:aspect-[16/9] lg:min-h-[340px]
             "
           >
-            {current ? (
+            {loading ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+              </div>
+            ) : current ? (
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`${current.title}-${category}-${active}`}
+                  key={`${current.id}-${category}-${active}`}
                   initial={{ opacity: 0, scale: 0.985 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.985 }}
                   transition={{ duration: 0.35 }}
                   className="absolute inset-0"
                 >
-                  {/* Image layer */}
                   <div className="absolute inset-0" data-parallax-global="0.2">
-                    {current.category === 'reel' ? (
-                      <div className="w-full h-full relative">
-                        {current.imageMobile || current.imageDesktop ? (
-                          <>
-                            <Image
-                              src={current.imageMobile || current.imageDesktop || current.image}
-                              alt={current.title}
-                              fill
-                              sizes="(max-width: 768px) 100vw, 60vw"
-                              className="object-cover md:hidden"
-                              style={{ objectPosition: 'center 35%' }}
-                              priority
-                            />
-                            <Image
-                              src={current.imageDesktop || current.imageMobile || current.image}
-                              alt={current.title}
-                              fill
-                              sizes="(max-width: 1024px) 100vw, 60vw"
-                              className="hidden md:block object-cover"
-                              style={{ objectPosition: 'center 35%' }}
-                              priority
-                            />
-                          </>
-                        ) : (
-                          <Image
-                            src={current.image}
-                            alt={current.title}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 60vw"
-                            className="object-cover"
-                            // Mobile-friendly composition
-                            style={{ objectPosition: 'center 35%' }}
-                            priority
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                          <button
-                            onClick={() => setReelModal(current)}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition shadow-lg"
-                          >
-                            <Play className="w-4 h-4" /> Play reel
-                          </button>
-                        </div>
+                    <img
+                      src={resolveImageUrl(current.imageUrl)}
+                      alt={current.title}
+                      className="h-full w-full object-cover"
+                    />
+
+                    {current.category === 'reel' && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                        <button
+                          onClick={() => setReelModal(current)}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition shadow-lg"
+                        >
+                          <Play className="w-4 h-4" /> Play reel
+                        </button>
                       </div>
-                    ) : (
-                      current.imageMobile || current.imageDesktop ? (
-                        <>
-                          <Image
-                            src={current.imageMobile || current.imageDesktop || current.image}
-                            alt={current.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 60vw"
-                            className="object-cover md:hidden"
-                            style={{ objectPosition: 'center 35%' }}
-                            priority
-                          />
-                          <Image
-                            src={current.imageDesktop || current.imageMobile || current.image}
-                            alt={current.title}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 60vw"
-                            className="hidden md:block object-cover"
-                            style={{ objectPosition: 'center 35%' }}
-                            priority
-                          />
-                        </>
-                      ) : (
-                        <Image
-                          src={current.image}
-                          alt={current.title}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 60vw"
-                          className="object-cover"
-                          style={{ objectPosition: 'center 35%' }}
-                          priority
-                        />
-                      )
                     )}
                   </div>
 
-                  {/* Dark overlays */}
                   <div className="absolute inset-0 bg-black/25" data-parallax-global="0.12" />
                   <div
                     className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 lg:bg-gradient-to-r lg:from-black/88 lg:via-black/68 lg:to-black/45"
                     data-parallax-global="0.08"
                   />
 
-                  {/* Cinematic film grain */}
-                  <div
-                    className="absolute inset-0 opacity-[0.18] mix-blend-soft-light"
-                    style={{
-                      backgroundImage:
-                        'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0%, transparent 45%), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-                    }}
-                  />
-
-                  {/* Content */}
                   <div
                     className="
                       absolute inset-0 flex flex-col justify-end lg:justify-center
@@ -437,7 +363,7 @@ export default function EventsShowcase() {
                         border: '1px solid rgba(255,255,255,0.18)',
                       }}
                     >
-                      {statusOf(current)}
+                      {current.badge}
                     </div>
 
                     <SmallText className="text-white/70 text-sm line-clamp-1">{current.subtitle}</SmallText>
@@ -465,13 +391,22 @@ export default function EventsShowcase() {
                     </div>
 
                     <div className="flex gap-2.5 sm:gap-3 pt-1.5 flex-wrap">
-                      {current.href && (
-                        <a
-                          href={current.href}
+                      {current.category === 'reel' ? (
+                        <button
+                          onClick={() => setReelModal(current)}
                           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
                         >
-                          {current.cta || 'Open'} <ArrowRight className="w-4 h-4" />
-                        </a>
+                          {current.cta} <Play className="w-4 h-4" />
+                        </button>
+                      ) : (
+                        current.href && (
+                          <a
+                            href={current.href}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
+                          >
+                            {current.cta} <ArrowRight className="w-4 h-4" />
+                          </a>
+                        )
                       )}
 
                       <button
@@ -485,8 +420,10 @@ export default function EventsShowcase() {
                 </motion.div>
               </AnimatePresence>
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-white/60">
-                No items in this category yet.
+              <div className="absolute inset-0 flex items-center justify-center text-white/60 px-6 text-center">
+                {category === 'program'
+                  ? 'No approved events available yet.'
+                  : 'No reels available yet.'}
               </div>
             )}
           </div>
@@ -499,9 +436,9 @@ export default function EventsShowcase() {
               scroll-smooth
             "
           >
-            {programList.map((slide, idx) => (
+            {activeSlides.map((slide, idx) => (
               <button
-                key={`${slide.title}-${idx}`}
+                key={`${slide.id}-${idx}`}
                 onClick={() => setActive(idx)}
                 className={`
                   relative overflow-hidden rounded-2xl border border-white/15 p-3.5 sm:p-4 text-left
@@ -513,13 +450,10 @@ export default function EventsShowcase() {
               >
                 <div className="flex items-center gap-3 sm:gap-3.5">
                   <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
-                    <Image
-                      src={slide.imageDesktop || slide.image}
+                    <img
+                      src={resolveImageUrl(slide.imageUrl)}
                       alt={slide.title}
-                      fill
-                      sizes="(max-width: 1024px) 70vw, 25vw"
-                      className="object-cover"
-                      style={{ objectPosition: 'center 35%' }}
+                      className="h-full w-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/30" />
                     <div

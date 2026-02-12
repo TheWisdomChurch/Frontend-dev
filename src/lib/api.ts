@@ -2,6 +2,7 @@
 
 import type {
   EventPublic,
+  ReelPublic,
   PublicFormPayload,
   PublicFormSubmissionRequest,
   Testimonial,
@@ -186,41 +187,85 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 ============================================================================ */
 
 function mapWorkforcePayload(payload: WorkforceRegistrationData) {
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    title,
-    department,
-    leadershipCategory,
-    birthMonth,
-    anniversaryMonth,
-    isExistingMember,
-    currentAssignment,
-    notes,
-  } = payload;
+  const { firstName, lastName, email, phone, department, birthday, notes } = payload;
 
   return {
     firstName,
     lastName,
     email,
     phone,
-    title,
     department,
-    leadershipCategory,
-    birthMonth,
-    anniversaryMonth,
-    isExistingMember,
-    currentAssignment,
+    birthday,
     notes,
-    first_name: firstName,
-    last_name: lastName,
-    leadership_category: leadershipCategory,
-    birth_month: birthMonth,
-    anniversary_month: anniversaryMonth,
-    is_existing_member: isExistingMember,
-    current_assignment: currentAssignment,
+  };
+}
+
+function asNonEmptyString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed.length ? trimmed : undefined;
+}
+
+function parseEventDate(date?: string, time?: string): { startAt?: string; endAt?: string } {
+  if (!date) return {};
+
+  const baseDate = date.includes('T') ? date : `${date}T00:00:00`;
+  const start = new Date(baseDate);
+  if (Number.isNaN(start.getTime())) return {};
+
+  if (time) {
+    const parsedWithTime = new Date(`${date} ${time}`);
+    if (!Number.isNaN(parsedWithTime.getTime())) {
+      const end = new Date(parsedWithTime.getTime() + 2 * 60 * 60 * 1000);
+      return { startAt: parsedWithTime.toISOString(), endAt: end.toISOString() };
+    }
+  }
+
+  return { startAt: start.toISOString() };
+}
+
+function extractFormSlug(registerLink?: string): string | null {
+  if (!registerLink) return null;
+  try {
+    const url = new URL(registerLink);
+    const match = url.pathname.match(/\/forms\/([^/?#]+)/i);
+    return match?.[1] ? decodeURIComponent(match[1]) : null;
+  } catch {
+    const match = registerLink.match(/\/forms\/([^/?#]+)/i);
+    return match?.[1] ? decodeURIComponent(match[1]) : null;
+  }
+}
+
+function mapBackendEvent(input: unknown): EventPublic | null {
+  if (!isRecord(input)) return null;
+
+  const id = asNonEmptyString(input.id);
+  const title = asNonEmptyString(input.title);
+  if (!id || !title) return null;
+
+  const description =
+    asNonEmptyString(input.description) ?? asNonEmptyString(input.shortDescription);
+  const date = asNonEmptyString(input.date);
+  const time = asNonEmptyString(input.time);
+  const location = asNonEmptyString(input.location);
+  const bannerUrl = asNonEmptyString(input.bannerImage);
+  const imageUrl = bannerUrl ?? asNonEmptyString(input.image);
+  const registerLink = asNonEmptyString(input.registerLink);
+  const { startAt, endAt } = parseEventDate(date, time);
+
+  return {
+    id,
+    title,
+    description,
+    date,
+    time,
+    location,
+    imageUrl,
+    bannerUrl,
+    registerLink: registerLink ?? null,
+    formSlug: extractFormSlug(registerLink),
+    startAt,
+    endAt,
   };
 }
 
@@ -262,15 +307,36 @@ function normalizeTestimonial(raw: any): Testimonial {
 
 export const apiClient = {
   async listEvents(): Promise<EventPublic[]> {
-    const res = await request<any>('/public/events', { method: 'GET' });
-    return unwrapData<EventPublic[]>(res);
+    const qs = toQueryString({ page: 1, limit: 100 });
+    const res = await request<any>(`/events${qs}`, { method: 'GET' });
+    return extractArrayData<unknown>(res)
+      .map(mapBackendEvent)
+      .filter((item): item is EventPublic => item !== null);
   },
 
   async getEvent(id: string): Promise<EventPublic> {
-    const res = await request<any>(`/public/events/${encodeURIComponent(id)}`, {
+    const res = await request<any>(`/events/${encodeURIComponent(id)}`, {
       method: 'GET',
     });
-    return unwrapData<EventPublic>(res);
+    const item = mapBackendEvent(unwrapData<unknown>(res));
+    if (!item) {
+      throw createApiError('Invalid event payload', 400, res);
+    }
+    return item;
+  },
+
+  /* -----------------------------
+     REELS (public read)
+     Go:
+       GET /api/v1/reels
+     ----------------------------- */
+
+  async listReels(): Promise<ReelPublic[]> {
+    const qs = toQueryString({ page: 1, limit: 30 });
+    const res = await request<any>(`/reels${qs}`, { method: 'GET' });
+    return extractArrayData<unknown>(res)
+      .map(mapBackendReel)
+      .filter((item): item is ReelPublic => item !== null);
   },
 
   async getPublicForm(slug: string): Promise<PublicFormPayload> {
@@ -313,6 +379,27 @@ export const apiClient = {
     const res = await request<any>('/workforce/apply', {
       method: 'POST',
       body: JSON.stringify(mapWorkforcePayload(payload)),
+    });
+    return unwrapData<any>(res);
+  },
+
+  /* -----------------------------
+     LEADERSHIP (public apply + public list)
+     Go:
+       GET  /api/v1/leadership
+       POST /api/v1/leadership/apply
+     ----------------------------- */
+
+  async listLeadership(role?: LeadershipRole): Promise<LeadershipMember[]> {
+    const qs = toQueryString({ role });
+    const res = await request<any>(`/leadership${qs}`, { method: 'GET' });
+    return unwrapData<LeadershipMember[]>(res);
+  },
+
+  async applyLeadership(payload: LeadershipApplicationRequest): Promise<any> {
+    const res = await request<any>('/leadership/apply', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
     return unwrapData<any>(res);
   },
