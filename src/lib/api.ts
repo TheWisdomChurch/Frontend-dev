@@ -8,26 +8,13 @@ import type {
   Testimonial,
   CreateTestimonialRequest,
 } from './apiTypes';
-import type {
-  WorkforceRegistrationData,
-  LeadershipApplicationRequest,
-  LeadershipMember,
-  LeadershipRole,
-} from './types';
+
+import type { WorkforceRegistrationData } from './types';
 
 /* ============================================================================
-   API ORIGIN
+   API CONFIG
 ============================================================================ */
 
-/**
- * Normalize an origin string:
- * - trims
- * - removes trailing slashes
- * - strips a trailing /api/v1 if someone passes that
- *
- * DEV: falls back to localhost
- * PROD: throws (prevents shipping localhost builds)
- */
 function normalizeOrigin(raw?: string | null): string {
   const isProd = process.env.NODE_ENV === 'production';
 
@@ -40,7 +27,6 @@ function normalizeOrigin(raw?: string | null): string {
 
   let base = raw.trim().replace(/\/+$/, '');
   if (base.endsWith('/api/v1')) base = base.slice(0, -'/api/v1'.length);
-
   return base;
 }
 
@@ -50,7 +36,7 @@ const API_ORIGIN = normalizeOrigin(
 const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
 
 /* ============================================================================
-   Error Utilities (WITH validationErrors)
+   Error Utilities
 ============================================================================ */
 
 export type ValidationFieldError = {
@@ -74,34 +60,12 @@ export function createApiError(
   const err = new Error(message) as ApiError;
   err.statusCode = statusCode;
   err.details = details;
-  if (validationErrors && validationErrors.length > 0) {
-    err.validationErrors = validationErrors;
-  }
+  if (validationErrors?.length) err.validationErrors = validationErrors;
   return err;
 }
 
 export function isApiError(err: unknown): err is ApiError {
   return typeof err === 'object' && err !== null && 'statusCode' in err;
-}
-
-export function isValidationError(
-  err: unknown
-): err is ApiError & { validationErrors: ValidationFieldError[] } {
-  return (
-    isApiError(err) &&
-    Array.isArray((err as ApiError).validationErrors) &&
-    (err as ApiError).validationErrors!.length > 0
-  );
-}
-
-export function mapValidationErrors(err: unknown): Record<string, string> | null {
-  if (!isValidationError(err)) return null;
-  const out: Record<string, string> = {};
-  for (const e of err.validationErrors) {
-    if (!e.field) continue;
-    if (!out[e.field]) out[e.field] = e.message;
-  }
-  return out;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -139,10 +103,10 @@ function extractValidationErrors(payload: unknown): ValidationFieldError[] | und
     const code =
       typeof item.code === 'string' && item.code.trim() ? item.code.trim() : undefined;
 
-    normalized.push({ field, code, message });
+    if (field) normalized.push({ field, code, message });
   }
 
-  return normalized.length > 0 ? normalized : undefined;
+  return normalized.length ? normalized : undefined;
 }
 
 function getErrorMessage(err: unknown): string {
@@ -168,26 +132,59 @@ async function safeParseJson(res: Response): Promise<any | null> {
   }
 }
 
-/**
- * Supports both:
- * 1) { data: ... }
- * 2) raw payload
- */
 function unwrapData<T>(res: any): T {
-  if (res && typeof res === 'object' && 'data' in res) return res.data as T;
+  if (!res || typeof res !== 'object') return res as T;
+  if ('data' in res) {
+    const d = (res as any).data;
+    if (d && typeof d === 'object' && 'data' in d) return d.data as T;
+    return d as T;
+  }
   return res as T;
 }
 
-function toQueryString(params?: Record<string, any>): string {
-  if (!params) return '';
-  const cleaned: Record<string, string> = {};
-  for (const [k, v] of Object.entries(params)) {
-    if (v === undefined || v === null || v === '') continue;
-    cleaned[k] = String(v);
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const url = `${API_V1_BASE_URL}${path}`;
+
+  const isFormData =
+    typeof FormData !== 'undefined' && options.body instanceof FormData;
+
+  const headers: HeadersInit = {
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+    ...(options.headers || {}),
+  };
+
+  try {
+    const res = await fetch(url, {
+      ...options,
+      headers,
+      credentials: 'include',
+      cache: 'no-store',
+    });
+
+    const json = await safeParseJson(res);
+    const payload =
+      json ?? ({ message: await res.text().catch(() => '') } as Record<string, any>);
+
+    if (!res.ok) {
+      const validationErrors = extractValidationErrors(payload);
+      throw createApiError(
+        getMessageFromPayload(payload) || 'Request failed',
+        res.status,
+        payload,
+        validationErrors
+      );
+    }
+
+    return payload as T;
+  } catch (err: any) {
+    if (isApiError(err)) throw err;
+    throw createApiError(getErrorMessage(err), 0, err);
   }
-  const qs = new URLSearchParams(cleaned).toString();
-  return qs ? `?${qs}` : '';
 }
+
+/* ============================================================================
+   MAPPERS
+============================================================================ */
 
 function mapWorkforcePayload(payload: WorkforceRegistrationData) {
   const { firstName, lastName, email, phone, department, birthday, notes } = payload;
@@ -272,89 +269,43 @@ function mapBackendEvent(input: unknown): EventPublic | null {
   };
 }
 
-function mapBackendReel(input: unknown): ReelPublic | null {
-  if (!isRecord(input)) return null;
+function normalizeTestimonial(raw: any): Testimonial {
+  const firstName = raw?.firstName ?? raw?.first_name;
+  const lastName = raw?.lastName ?? raw?.last_name;
 
-  const id = asNonEmptyString(input.id);
-  const title = asNonEmptyString(input.title);
-  const thumbnail = asNonEmptyString(input.thumbnail);
-  const videoUrl = asNonEmptyString(input.videoUrl);
-  if (!id || !title || !thumbnail || !videoUrl) return null;
+  const isAnonymous = raw?.isAnonymous ?? raw?.is_anonymous ?? raw?.anonymous ?? false;
+  const isApproved = raw?.isApproved ?? raw?.is_approved ?? raw?.approved ?? undefined;
+
+  const imageUrl =
+    raw?.imageUrl ?? raw?.image_url ?? raw?.image ?? raw?.imageURL ?? null;
+
+  const createdAt = raw?.createdAt ?? raw?.created_at;
+  const updatedAt = raw?.updatedAt ?? raw?.updated_at;
+
+  const fullName =
+    raw?.fullName ??
+    raw?.full_name ??
+    (firstName || lastName ? `${firstName ?? ''} ${lastName ?? ''}`.trim() : undefined);
 
   return {
-    id,
-    title,
-    thumbnail,
-    videoUrl,
-    duration: asNonEmptyString(input.duration),
-    eventId: asNonEmptyString(input.eventId),
-    createdAt: asNonEmptyString(input.createdAt),
+    id: raw?.id,
+    firstName,
+    lastName,
+    fullName,
+    testimony: raw?.testimony ?? '',
+    imageUrl,
+    isAnonymous: Boolean(isAnonymous),
+    isApproved,
+    createdAt,
+    updatedAt,
   };
-}
-
-function extractArrayData<T>(payload: unknown): T[] {
-  if (Array.isArray(payload)) return payload as T[];
-  if (!isRecord(payload)) return [];
-
-  const rootData = payload.data;
-  if (Array.isArray(rootData)) return rootData as T[];
-
-  if (isRecord(rootData) && Array.isArray(rootData.data)) {
-    return rootData.data as T[];
-  }
-
-  return [];
-}
-
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_V1_BASE_URL}${path}`;
-
-  const isFormData =
-    typeof FormData !== 'undefined' && options.body instanceof FormData;
-
-  const headers: HeadersInit = {
-    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-    ...(options.headers || {}),
-  };
-
-  try {
-    const res = await fetch(url, {
-      ...options,
-      headers,
-      credentials: 'include',
-      cache: 'no-store',
-    });
-
-    const json = await safeParseJson(res);
-    const payload =
-      json ?? ({ message: await res.text().catch(() => '') } as Record<string, any>);
-
-    if (!res.ok) {
-      const validationErrors = extractValidationErrors(payload);
-      throw createApiError(
-        getMessageFromPayload(payload) || 'Request failed',
-        res.status,
-        payload,
-        validationErrors
-      );
-    }
-
-    return payload as T;
-  } catch (err: any) {
-    if (isApiError(err)) throw err;
-    throw createApiError(getErrorMessage(err), 0, err);
-  }
 }
 
 /* ============================================================================
-   Public API Client (PUBLIC WEBSITE)
+   PUBLIC API CLIENT
 ============================================================================ */
 
 export const apiClient = {
-  /* -----------------------------
-     EVENTS (public read)
-     ----------------------------- */
-
   async listEvents(): Promise<EventPublic[]> {
     const qs = toQueryString({ page: 1, limit: 100 });
     const res = await request<any>(`/events${qs}`, { method: 'GET' });
@@ -388,13 +339,6 @@ export const apiClient = {
       .filter((item): item is ReelPublic => item !== null);
   },
 
-  /* -----------------------------
-     FORMS (public)
-     Go:
-       GET  /api/v1/forms/:slug
-       POST /api/v1/forms/:slug/submissions
-     ----------------------------- */
-
   async getPublicForm(slug: string): Promise<PublicFormPayload> {
     const res = await request<any>(`/forms/${encodeURIComponent(slug)}`, {
       method: 'GET',
@@ -402,10 +346,7 @@ export const apiClient = {
     return unwrapData<PublicFormPayload>(res);
   },
 
-  async submitPublicForm(
-    slug: string,
-    body: PublicFormSubmissionRequest
-  ): Promise<any> {
+  async submitPublicForm(slug: string, body: PublicFormSubmissionRequest): Promise<any> {
     const res = await request<any>(`/forms/${encodeURIComponent(slug)}/submissions`, {
       method: 'POST',
       body: JSON.stringify(body),
@@ -413,17 +354,10 @@ export const apiClient = {
     return unwrapData<any>(res);
   },
 
-  /* -----------------------------
-     TESTIMONIALS (public submit + public list approved)
-     Go:
-       GET  /api/v1/testimonials?approved=true
-       POST /api/v1/testimonials
-     ----------------------------- */
-
   async listApprovedTestimonials(): Promise<Testimonial[]> {
-    const qs = toQueryString({ approved: true });
-    const res = await request<any>(`/testimonials${qs}`, { method: 'GET' });
-    return unwrapData<Testimonial[]>(res);
+    const res = await request<any>(`/testimonials?approved=true`, { method: 'GET' });
+    const data = unwrapData<any>(res);
+    return Array.isArray(data) ? data.map(normalizeTestimonial) : [];
   },
 
   async submitTestimonial(payload: CreateTestimonialRequest): Promise<Testimonial> {
@@ -431,14 +365,8 @@ export const apiClient = {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-    return unwrapData<Testimonial>(res);
+    return normalizeTestimonial(unwrapData<any>(res));
   },
-
-  /* -----------------------------
-     SUBSCRIBERS (public)
-     Go:
-       POST /api/v1/subscribers
-     ----------------------------- */
 
   async subscribe(payload: { name?: string; email: string }) {
     return request<any>('/subscribers', {
@@ -446,12 +374,6 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
-
-  /* -----------------------------
-     WORKFORCE (public apply)
-     Go:
-       POST /api/v1/workforce/apply
-     ----------------------------- */
 
   async applyWorkforce(payload: WorkforceRegistrationData): Promise<any> {
     const res = await request<any>('/workforce/apply', {

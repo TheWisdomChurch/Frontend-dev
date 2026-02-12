@@ -1,3 +1,5 @@
+// lib/api/apiTypes.ts
+
 export type FormFieldType =
   | 'text'
   | 'email'
@@ -11,7 +13,7 @@ export type FormFieldType =
 
 export type PublicFormField = {
   id?: string;
-  key: string;          // stable machine key
+  key: string;
   label: string;
   type: FormFieldType;
   required: boolean;
@@ -26,12 +28,11 @@ export type PublicFormPayload = {
   title: string;
   description?: string;
   capacity?: number | null;
-  closesAt?: string | null; // ISO string
+  closesAt?: string | null;
   fields: PublicFormField[];
 };
 
 export type PublicFormSubmissionRequest = {
-  // simplest: key/value map matching field keys
   answers: Record<string, any>;
 };
 
@@ -44,23 +45,9 @@ export type EventPublic = {
   location?: string;
   imageUrl?: string;
   bannerUrl?: string;
-  date?: string;
-  time?: string;
-  registerLink?: string | null;
-
-  // IMPORTANT: backend should include this OR frontend derives it from related form
   formSlug?: string | null;
 };
 
-export type ReelPublic = {
-  id: string;
-  title: string;
-  thumbnail: string;
-  videoUrl: string;
-  duration?: string;
-  eventId?: string;
-  createdAt?: string;
-};
 export type Testimonial = {
   id: number | string;
   firstName?: string;
@@ -74,23 +61,17 @@ export type Testimonial = {
   updatedAt?: string;
 };
 
-// export type TestimonialPayload = {
-//   firstName?: string;
-//   lastName?: string;
-//   email?: string;
-//   testimony: string;
-//   image?: string;        // base64 data URL (if your backend accepts it)
-//   anonymous: boolean;
-//   allowSharing: boolean; // store for admin decision
-// };
 export type CreateTestimonialRequest = {
   firstName: string;
   lastName: string;
-  imageUrl?: string | null;
+  email?: string;
   testimony: string;
   isAnonymous: boolean;
+  imageUrl?: string;
+  imageBase64?: string;
+  allowSharing?: boolean;
+  agreeToTerms?: boolean;
 };
-
 
 export interface SubscriberPayload {
   name?: string;

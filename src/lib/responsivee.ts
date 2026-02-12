@@ -26,9 +26,9 @@ export const responsive = {
     desktop: 'py-3.5 text-base'
   },
   modal: {
-    mobile: 'max-h-[85vh] rounded-t-2xl rounded-b-none',
-    tablet: 'max-h-[90vh] max-w-lg rounded-2xl',
-    desktop: 'max-h-[90vh] max-w-xl rounded-2xl'
+    mobile: 'max-h-[85vh]',
+    tablet: 'max-h-[90vh] max-w-2xl',
+    desktop: 'max-h-[90vh] max-w-3xl'
   },
   image: {
     mobile: 'h-56',

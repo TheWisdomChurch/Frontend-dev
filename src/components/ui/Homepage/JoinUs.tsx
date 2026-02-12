@@ -313,7 +313,7 @@ export default function JoinWisdomHouse() {
               “Two are better than one” — Ecclesiastes 4:9
             </div>
 
-            <H2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+            <H2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-tight">
               Join the <span style={{ color: colorScheme.primary }}>Wisdom Church</span>{' '}
               workforce
             </H2>
@@ -466,19 +466,22 @@ export default function JoinWisdomHouse() {
 
         {/* ✅ MODAL */}
         {openModal && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="fixed inset-0 z-50 flex items-end justify-center p-0">
             <div
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setOpenModal(false)}
             />
 
-            <div className="relative w-full sm:max-w-2xl bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-t-3xl sm:rounded-3xl border border-white/12 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="relative w-full max-w-2xl bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-t-3xl rounded-b-none border border-white/12 shadow-2xl max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-center pt-3 pb-2">
+                <span className="h-1.5 w-12 rounded-full bg-white/30" />
+              </div>
               <div className="sticky top-0 z-10 bg-slate-950/90 backdrop-blur-md border-b border-white/10 px-5 sm:px-8 py-4 sm:py-5 flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] text-white/70">
                     Join the Wisdom Church Workforce
                   </p>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white">
+                  <h3 className="text-lg sm:text-xl font-semibold text-white">
                     “Two are better than one...”
                   </h3>
                   <p className="text-xs text-white/70">

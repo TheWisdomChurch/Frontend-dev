@@ -1,6 +1,5 @@
 // components/layout/Container.tsx
 import React from 'react';
-import { useTheme } from '@/components/contexts/ThemeContext';
 
 interface ContainerProps {
   children: React.ReactNode;
@@ -23,8 +22,6 @@ const Container: React.FC<ContainerProps> = ({
   centered = true,
   style = {}, 
 }) => {
-  const { colorScheme } = useTheme();
-
   // Size classes
   const sizeClasses = {
     sm: 'max-w-3xl',
@@ -48,10 +45,10 @@ const Container: React.FC<ContainerProps> = ({
   // Background colors
   const backgroundStyles = {
     none: {},
-    primary: { backgroundColor: colorScheme.primary },
-    secondary: { backgroundColor: colorScheme.secondary },
-    dark: { backgroundColor: colorScheme.background },
-    light: { backgroundColor: colorScheme.white },
+    primary: { backgroundColor: 'var(--color-primary, #f7de12)' },
+    secondary: { backgroundColor: 'var(--color-secondary, #1f2937)' },
+    dark: { backgroundColor: 'var(--color-background, #000000)' },
+    light: { backgroundColor: 'var(--color-white, #ffffff)' },
     custom: customBackground ? { backgroundColor: customBackground } : {},
   };
 

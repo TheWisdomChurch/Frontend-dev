@@ -247,14 +247,14 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
 
   return (
     <div
-      className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border overflow-hidden"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border overflow-hidden"
       style={{
         backgroundColor: themeStyles.cardBackground,
         borderColor: themeStyles.borderColor,
       }}
     >
       <div
-        className="h-48 relative overflow-hidden cursor-pointer"
+        className="h-40 sm:h-44 relative overflow-hidden cursor-pointer"
         onClick={() => setShowPlayer(true)}
       >
         <img

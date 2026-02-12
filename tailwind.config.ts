@@ -10,9 +10,16 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['Playfair Display', 'serif'],
-        code: ['monospace'],
+        sans: ['var(--font-worksans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-playfair)', 'serif'],
+        body: ['var(--font-worksans)', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-worksans)', 'system-ui', 'sans-serif'],
+        code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+      fontWeight: {
+        bold: '600',
+        extrabold: '700',
+        black: '800',
       },
       colors: {
         background: 'hsl(var(--background))',
