@@ -7,12 +7,6 @@ const API_BASE_URL = process.env.API_BASE_URL;
 // How often Next should refresh this sitemap (seconds)
 export const revalidate = 3600; // 1 hour
 
-type ApiEvent = {
-  slug: string;
-  updatedAt?: string; // ISO string
-  createdAt?: string; // ISO string
-};
-
 type ApiResource = {
   slug: string;
   updatedAt?: string;
@@ -62,9 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/ministries/children`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/ministries/outreach`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/events`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${SITE_URL}/events/upcoming`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${SITE_URL}/events/weekly`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
-    { url: `${SITE_URL}/events/special`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${SITE_URL}/events/calendar`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${SITE_URL}/resources`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/resources/sermons`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${SITE_URL}/resources/blogs`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
@@ -74,17 +66,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 2) Fetch dynamic content from backend (adjust endpoints to YOUR API)
   // Recommended: your backend exposes public lists with slugs + updatedAt
-  const events = await fetchJSON<ApiEvent[]>('/api/v1/public/events'); // example
   const resources = await fetchJSON<ApiResource[]>('/api/v1/public/resources'); // example
 
   // 3) Map backend items to sitemap URLs (adjust route patterns to YOUR frontend)
-  const eventRoutes: MetadataRoute.Sitemap =
-    events?.map((e) => ({
-      url: `${SITE_URL}/events/${encodeURIComponent(e.slug)}`,
-      lastModified: toLastMod(e.updatedAt ?? e.createdAt) ?? now,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    })) ?? [];
+  const eventRoutes: MetadataRoute.Sitemap = [];
 
   const resourceRoutes: MetadataRoute.Sitemap =
     resources?.map((r) => ({
