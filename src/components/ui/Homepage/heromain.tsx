@@ -289,9 +289,18 @@ const HeroSection = ({
               />
 
               {/* overlays */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" data-parallax="0.15" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-transparent" data-parallax="0.1" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" data-parallax="0.08" />
+              <div
+                className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/70 sm:from-black/60 sm:via-black/35 sm:to-black/60"
+                data-parallax="0.15"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent sm:from-black/75 sm:via-black/45"
+                data-parallax="0.1"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 sm:from-black/35 sm:to-black/35"
+                data-parallax="0.08"
+              />
               <div className="hero-matte absolute inset-0 opacity-30" />
             </div>
           </div>
@@ -301,9 +310,9 @@ const HeroSection = ({
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-20 sm:pt-24 lg:pt-28 pb-12 sm:pb-16"
+        className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16"
       >
-        <div className="w-full flex flex-col gap-8 lg:gap-10 xl:gap-12 items-center sm:items-start max-w-6xl">
+        <div className="w-full flex flex-col gap-6 sm:gap-8 lg:gap-10 items-center sm:items-start max-w-6xl">
           {/* Wave label */}
           {showWaveText && (
             <div className="w-full flex justify-start mt-1 sm:mt-3 lg:mt-4 mb-4 sm:mb-6 md:mb-7 lg:mb-8">
@@ -351,7 +360,7 @@ const HeroSection = ({
               }}
               useThemeColor={false}
             >
-              <span className="text-xl xs:text-[1.9rem] sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl block">
+              <span className="text-xl xs:text-[1.9rem] sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl block leading-[1.15]">
                 {renderTitle((currentSlideData as any)?.title, colorScheme)}
               </span>
             </H1>
@@ -377,7 +386,7 @@ const HeroSection = ({
                 weight="medium"
                 smWeight="semibold"
               >
-                <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem] block">
+                <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem] block leading-[1.3]">
                   {renderSubtitle((currentSlideData as any)?.subtitle)}
                 </span>
               </H2>
