@@ -190,7 +190,7 @@ export default function WhatWeDo() {
 
         {/* Service Boxes - Responsive Grid */}
         <div className="relative">
-          <div className="absolute -inset-6 rounded-[32px] bg-white/60 blur-3xl opacity-50 pointer-events-none" />
+          <div className="absolute -inset-4 rounded-2xl bg-white/60 blur-3xl opacity-50 pointer-events-none" />
           <GridboxLayout
             columns={1}
             gap="xl"

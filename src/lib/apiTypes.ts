@@ -40,12 +40,26 @@ export type EventPublic = {
   id: string;
   title: string;
   description?: string;
+  date?: string;
+  time?: string;
   startAt?: string;
   endAt?: string;
   location?: string;
   imageUrl?: string;
   bannerUrl?: string;
+  registerLink?: string | null;
   formSlug?: string | null;
+};
+
+export type ReelPublic = {
+  id: string;
+  title: string;
+  thumbnail: string;
+  videoUrl: string;
+  duration?: string;
+  eventId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type Testimonial = {
