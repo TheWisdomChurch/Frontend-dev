@@ -36,12 +36,12 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # ✅ Build-time env (needed because your pages prerender at build time)
-ARG NEXT_PUBLIC_BACKEND_URL
-ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_BACKEND_URL=https://api.wisdomchurchhq.org/api/v1
+ARG NEXT_PUBLIC_API_URL=https://api.wisdomchurchhq.org/api/v1
 
-# ✅ Hard defaults so build won't crash if secrets are not set yet
-ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-https://api.wisdomchurchhq.org/api/v1}
-ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.wisdomchurchhq.org/api/v1}
+# ✅ Stable defaults, overridable with --build-arg
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 RUN npm run build --loglevel verbose
 

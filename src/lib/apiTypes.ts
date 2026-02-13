@@ -40,11 +40,14 @@ export type EventPublic = {
   id: string;
   title: string;
   description?: string;
+  date?: string;
+  time?: string;
   startAt?: string;
   endAt?: string;
   location?: string;
   imageUrl?: string;
   bannerUrl?: string;
+  registerLink?: string | null;
   formSlug?: string | null;
 };
 
