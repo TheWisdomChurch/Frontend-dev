@@ -61,7 +61,7 @@ export default function WhatWeDo() {
           <div className="relative w-full pt-12 sm:pt-16 lg:pt-20 pb-2 sm:pb-3 lg:pb-4">
             {/* Title */}
             <h3
-              className="font-semibold mb-2 sm:mb-3 drop-shadow-lg text-base sm:text-lg lg:text-xl"
+              className="font-semibold mb-2 sm:mb-3 drop-shadow-lg text-[15px] sm:text-base lg:text-lg"
               style={{
                 color: colorScheme.primary,
                 textShadow: '1px 1px 6px rgba(0,0,0,0.85)',
@@ -73,7 +73,7 @@ export default function WhatWeDo() {
 
             {/* Description */}
             <BodySM
-              className="text-white/90 leading-relaxed drop-shadow-lg max-w-2xl text-sm sm:text-base line-clamp-2 sm:line-clamp-3 lg:line-clamp-4"
+              className="text-white/90 leading-relaxed drop-shadow-lg max-w-2xl text-[13px] sm:text-sm lg:text-[15px] line-clamp-2 sm:line-clamp-3 lg:line-clamp-4"
               style={{
                 textShadow: '1px 1px 5px rgba(0,0,0,0.85)',
                 lineHeight: 1.6
@@ -120,7 +120,7 @@ export default function WhatWeDo() {
           </div>
           <H2
             ref={headingRef}
-            className="leading-tight text-center text-2xl sm:text-3xl lg:text-4xl font-semibold"
+            className="leading-tight text-center text-xl sm:text-2xl lg:text-3xl font-semibold"
             style={{ color: '#FFFFFF' }}
             useThemeColor={false}
             weight="semibold"
@@ -156,7 +156,7 @@ export default function WhatWeDo() {
         >
           <div className="w-full max-w-3xl mx-auto">
             <BodySM
-              className="leading-relaxed font-normal text-left text-sm sm:text-base text-white/70 px-4 sm:px-6"
+              className="leading-relaxed font-normal text-left text-[13px] sm:text-sm lg:text-base text-white/70 px-4 sm:px-6"
               useThemeColor={false}
             >
               {missionStatement}

@@ -9,6 +9,7 @@ import type {
 } from './apiTypes';
 
 import type { WorkforceRegistrationData } from './types';
+import { trackApiRequestStart, trackApiRequestEnd } from './apiActivity';
 
 /* ============================================================================
    API CONFIG
@@ -152,6 +153,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     ...(options.headers || {}),
   };
 
+  trackApiRequestStart();
   try {
     const res = await fetch(url, {
       ...options,
@@ -178,6 +180,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   } catch (err: any) {
     if (isApiError(err)) throw err;
     throw createApiError(getErrorMessage(err), 0, err);
+  } finally {
+    trackApiRequestEnd();
   }
 }
 
