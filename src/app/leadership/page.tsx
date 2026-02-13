@@ -10,18 +10,41 @@ import { apiClient } from '@/lib/api';
 import type { LeadershipApplicationRequest, LeadershipMember, LeadershipRole } from '@/lib/types';
 
 const ROLE_LABELS: Record<LeadershipRole, string> = {
+  senior_pastor: 'Senior Pastor',
   associate_pastor: 'Associate Pastor',
   deacon: 'Deacon',
-  deaconess: 'Deaconess',
+  deaconess: 'Deaconness',
   reverend: 'Reverend',
 };
 
 const ROLE_ORDER: LeadershipRole[] = [
+  'senior_pastor',
   'associate_pastor',
   'reverend',
   'deacon',
   'deaconess',
 ];
+
+const INITIAL_LEADERSHIP: LeadershipMember[] = [
+  {
+    id: 'seed-senior-pastor',
+    firstName: 'Senior',
+    lastName: 'Pastor',
+    role: 'senior_pastor',
+    status: 'approved',
+    bio: 'Visionary and spiritual oversight for the church.',
+  },
+  {
+    id: 'seed-associate',
+    firstName: 'Associate',
+    lastName: 'Pastor',
+    role: 'associate_pastor',
+    status: 'approved',
+    bio: 'Supports pastoral care, discipleship, and ministry development.',
+  },
+];
+
+const ddmmyyyy = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
 const emptyForm: LeadershipApplicationRequest = {
   firstName: '',
@@ -30,6 +53,8 @@ const emptyForm: LeadershipApplicationRequest = {
   phone: '',
   role: 'associate_pastor',
   bio: '',
+  birthday: '',
+  anniversary: '',
 };
 
 function initials(firstName?: string, lastName?: string) {
@@ -45,6 +70,7 @@ export default function LeadershipPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const [form, setForm] = useState<LeadershipApplicationRequest>(emptyForm);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
     null
@@ -57,12 +83,17 @@ export default function LeadershipPage() {
       .listLeadership()
       .then((items) => {
         if (!active) return;
-        setLeaders(items || []);
+        if (Array.isArray(items) && items.length > 0) {
+          setLeaders(items);
+        } else {
+          setLeaders(INITIAL_LEADERSHIP);
+        }
         setLoadError(null);
       })
       .catch((err: any) => {
         if (!active) return;
         setLoadError(err?.message || 'Unable to load leadership.');
+        setLeaders(INITIAL_LEADERSHIP);
       })
       .finally(() => {
         if (!active) return;
@@ -96,9 +127,27 @@ export default function LeadershipPage() {
       setSubmitMessage({ type: 'error', text: 'First and last name are required.' });
       return;
     }
+    if (form.birthday && !ddmmyyyy.test(form.birthday)) {
+      setSubmitMessage({ type: 'error', text: 'Birthday must use DD/MM/YYYY.' });
+      return;
+    }
+    if (form.anniversary && !ddmmyyyy.test(form.anniversary)) {
+      setSubmitMessage({ type: 'error', text: 'Wedding anniversary must use DD/MM/YYYY.' });
+      return;
+    }
+    if (profileImage && profileImage.size > 5 * 1024 * 1024) {
+      setSubmitMessage({ type: 'error', text: 'Profile image must be 5MB or less.' });
+      return;
+    }
 
     try {
       setSubmitting(true);
+      let imageUrl: string | undefined;
+      if (profileImage) {
+        const upload = await apiClient.uploadLeadershipImage(profileImage);
+        imageUrl = upload?.url;
+      }
+
       await apiClient.applyLeadership({
         firstName: form.firstName.trim(),
         lastName: form.lastName.trim(),
@@ -106,8 +155,12 @@ export default function LeadershipPage() {
         phone: form.phone?.trim() || undefined,
         role: form.role,
         bio: form.bio?.trim() || undefined,
+        birthday: form.birthday?.trim() || undefined,
+        anniversary: form.anniversary?.trim() || undefined,
+        imageUrl,
       });
       setForm(emptyForm);
+      setProfileImage(null);
       setSubmitMessage({
         type: 'success',
         text: 'Application submitted. Our leadership team will follow up soon.',
@@ -213,8 +266,8 @@ export default function LeadershipPage() {
           <div className="space-y-3">
             <H3 className="text-2xl sm:text-3xl font-bold">Leadership registration</H3>
             <BodySM className="text-white/70">
-              This form is for associate pastors, deacons, deaconesses, and reverends. Workforce
-              applications should be submitted through the workforce section.
+              This form is for Senior Pastor, Associate Pastor, Reverend, Deacon, and Deaconness
+              leadership categories.
             </BodySM>
           </div>
 
@@ -281,6 +334,40 @@ export default function LeadershipPage() {
                   </option>
                 ))}
               </select>
+            </label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="text-sm text-white/80 space-y-1">
+                Birthday (DD/MM/YYYY)
+                <input
+                  name="birthday"
+                  value={form.birthday || ''}
+                  onChange={handleChange}
+                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+                  placeholder="25/12/1990"
+                />
+              </label>
+
+              <label className="text-sm text-white/80 space-y-1">
+                Wedding anniversary (DD/MM/YYYY)
+                <input
+                  name="anniversary"
+                  value={form.anniversary || ''}
+                  onChange={handleChange}
+                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+                  placeholder="16/06/2014"
+                />
+              </label>
+            </div>
+
+            <label className="text-sm text-white/80 space-y-1 block">
+              Profile image (max 5MB)
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
+                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+              />
             </label>
 
             <label className="text-sm text-white/80 space-y-1 block">

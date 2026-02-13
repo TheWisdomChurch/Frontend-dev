@@ -69,6 +69,18 @@ export function isApiError(err: unknown): err is ApiError {
   return typeof err === 'object' && err !== null && 'statusCode' in err;
 }
 
+export function mapValidationErrors(err: unknown): Record<string, string> | null {
+  if (!isApiError(err) || !Array.isArray(err.validationErrors) || err.validationErrors.length === 0) {
+    return null;
+  }
+  const mapped: Record<string, string> = {};
+  err.validationErrors.forEach((entry) => {
+    if (!entry.field || mapped[entry.field]) return;
+    mapped[entry.field] = entry.message;
+  });
+  return mapped;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -204,6 +216,32 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
   };
 }
 
+function toQueryString(params?: Record<string, unknown>): string {
+  if (!params) return '';
+  const cleaned: Record<string, string> = {};
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') return;
+    cleaned[key] = String(value);
+  });
+  const qs = new URLSearchParams(cleaned).toString();
+  return qs ? `?${qs}` : '';
+}
+
+function extractArrayData<T>(payload: any): T[] {
+  if (Array.isArray(payload)) return payload as T[];
+  if (!payload || typeof payload !== 'object') return [];
+
+  const topData = (payload as any).data;
+  if (Array.isArray(topData)) return topData as T[];
+  if (topData && typeof topData === 'object') {
+    if (Array.isArray((topData as any).items)) return (topData as any).items as T[];
+    if (Array.isArray((topData as any).data)) return (topData as any).data as T[];
+  }
+
+  if (Array.isArray((payload as any).items)) return (payload as any).items as T[];
+  return [];
+}
+
 function asNonEmptyString(value: unknown): string | undefined {
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();
@@ -302,6 +340,44 @@ function normalizeTestimonial(raw: any): Testimonial {
     isApproved,
     createdAt,
     updatedAt,
+  };
+}
+
+function mapBackendReel(input: unknown): ReelPublic | null {
+  if (!isRecord(input)) return null;
+
+  const id = asNonEmptyString(input.id);
+  const title = asNonEmptyString(input.title) ?? 'Reel';
+  if (!id) return null;
+
+  const thumbnail =
+    asNonEmptyString(input.thumbnail) ??
+    asNonEmptyString(input.thumbnailUrl) ??
+    asNonEmptyString(input.thumbnail_url);
+  const videoUrl =
+    asNonEmptyString(input.videoUrl) ??
+    asNonEmptyString(input.video_url) ??
+    asNonEmptyString(input.url);
+  if (!videoUrl) return null;
+
+  return {
+    id,
+    title,
+    thumbnail: thumbnail ?? '',
+    videoUrl,
+    duration:
+      asNonEmptyString(input.duration) ??
+      asNonEmptyString(input.length) ??
+      asNonEmptyString(input.videoDuration),
+    eventId:
+      asNonEmptyString(input.eventId) ??
+      asNonEmptyString(input.event_id),
+    createdAt:
+      asNonEmptyString(input.createdAt) ??
+      asNonEmptyString(input.created_at),
+    updatedAt:
+      asNonEmptyString(input.updatedAt) ??
+      asNonEmptyString(input.updated_at),
   };
 }
 
@@ -406,6 +482,16 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
     return unwrapData<any>(res);
+  },
+
+  async uploadLeadershipImage(file: File): Promise<{ url: string; key?: string }> {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await request<any>('/leadership/upload-image', {
+      method: 'POST',
+      body: form,
+    });
+    return unwrapData<{ url: string; key?: string }>(res);
   },
 };
 
