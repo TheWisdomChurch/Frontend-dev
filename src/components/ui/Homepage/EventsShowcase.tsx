@@ -1,9 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
-
+import { motion, AnimatePresence } from 'framer-motion';
 import { BaseModal } from '@/components/modal/Base';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/components/assets';
 import { lightShades } from '@/components/colors/colorScheme';
@@ -32,55 +30,25 @@ type Slide = {
   videoUrl?: string;
 };
 
-const STATIC_SLIDES: Slide[] = [
-  {
-    id: 'wpc-2026',
-    title: 'Wisdom Power Conference 2026',
-    subtitle: 'Upcoming',
-    description: 'City-wide gathering with worship, word, and miracles. Come expectant.',
-    date: 'March 20, 2026 • 6:00 PM',
-    location: 'Honor Gardens Event Center',
-    imageUrl: EventBannerDesktop.src,
-    cta: 'Save a seat',
-    href: '/events',
-    badge: 'Upcoming',
-    category: 'program',
-    start: '2026-03-20T18:00:00.000Z',
-    end: '2026-03-22T20:00:00.000Z',
-  },
-  {
-    id: 'media-stories',
-    title: 'Media Stories',
-    subtitle: 'Media',
-    description: 'Short testimonies, sermon clips, and behind-the-scenes moments.',
-    date: 'Updated weekly',
-    location: 'Content Hub',
-    imageUrl: hero_bg_1.src,
-    cta: 'View media',
-    href: '/resources',
-    badge: 'Media',
-    category: 'media',
-  },
-  {
-    id: 'highlights-reels',
-    title: 'Highlights & Reels',
-    subtitle: 'Reels',
-    description: 'Watch quick reels from recent services and events.',
-    date: 'Updated weekly',
-    location: 'Media Team',
-    imageUrl: hero_bg_3.src,
-    cta: 'Watch reels',
-    href: '/resources/sermons',
-    badge: 'Reel',
-    category: 'reel',
-  },
-];
+/* =========================================
+   API ORIGIN (robust + matches your pattern)
+function normalizeOrigin(raw?: string | null): string {
+  // Prefer NEXT_PUBLIC_API_URL; fallback to NEXT_PUBLIC_API_BASE_URL
+  const fallback = 'http://localhost:8080';
+  const v = (raw ?? '').trim();
+  if (!v) return fallback;
 
-const CATEGORY_LABELS: Record<ShowcaseCategory, string> = {
-  program: 'Programs & Events',
-  media: 'Media',
-  reel: 'Reels',
-};
+  // Remove trailing slashes
+  let base = v.replace(/\/+$/, '');
+
+  // If someone sets NEXT_PUBLIC_API_URL=https://domain.com/api/v1
+  // normalize it back to origin so we can safely append /api/v1.
+  if (base.endsWith('/api/v1')) {
+    base = base.slice(0, -'/api/v1'.length);
+  }
+
+  return base || fallback;
+}
 
 function formatEventDate(startAt?: string): string {
   if (!startAt) return 'Date to be announced';
@@ -119,7 +87,8 @@ export default function EventsShowcase() {
 
   const [category, setCategory] = useState<ShowcaseCategory>('program');
   const [active, setActive] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [reelModal, setReelModal] = useState<Slide | null>(null);
+
   const [events, setEvents] = useState<EventPublic[]>([]);
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
@@ -138,9 +107,7 @@ export default function EventsShowcase() {
           setEvents([]);
         }
       } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        if (mounted) setLoading(false);
       }
     };
 
@@ -235,7 +202,7 @@ export default function EventsShowcase() {
                     : 'border-white/25 text-white hover:bg-white/10'
                 }`}
               >
-                {CATEGORY_LABELS[cat]}
+                {cat === 'program' ? 'Programs & Events' : 'Reels'}
               </button>
             ))}
           </div>
@@ -249,7 +216,7 @@ export default function EventsShowcase() {
               lg:aspect-[16/9] lg:min-h-[340px]
             "
           >
-            {loading && category === 'program' ? (
+            {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-10 w-10 rounded-full border-2 border-white/40 border-t-white animate-spin" />
               </div>
@@ -265,7 +232,7 @@ export default function EventsShowcase() {
                 >
                   <div className="absolute inset-0" data-parallax-global="0.2">
                     <img
-                      src={current.imageUrl}
+                      src={resolveImageUrl(current.imageUrl)}
                       alt={current.title}
                       className="h-full w-full object-cover"
                     />
@@ -365,9 +332,7 @@ export default function EventsShowcase() {
               <div className="absolute inset-0 flex items-center justify-center text-white/60 px-6 text-center">
                 {category === 'program'
                   ? 'No approved events available yet.'
-                  : category === 'media'
-                    ? 'No media stories available yet.'
-                    : 'No reels available yet.'}
+                  : 'No reels available yet.'}
               </div>
             )}
           </div>
@@ -394,7 +359,7 @@ export default function EventsShowcase() {
                 <div className="flex items-center gap-3 sm:gap-3.5">
                   <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
                     <img
-                      src={slide.imageUrl}
+                      src={resolveImageUrl(slide.imageUrl)}
                       alt={slide.title}
                       className="h-full w-full object-cover"
                     />

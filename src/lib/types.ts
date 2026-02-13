@@ -204,15 +204,10 @@ export interface ReminderFormData {
 export interface WorkforceRegistrationData {
   firstName: string;
   lastName: string;
-  email: string;
-  phone: string;
-  title: string;
+  email?: string;
+  phone?: string;
   department: string;
-  leadershipCategory: string;
-  birthMonth?: string;
-  anniversaryMonth?: string;
-  isExistingMember: boolean;
-  currentAssignment?: string;
+  birthday?: string; // DD/MM
   notes?: string;
 }
 
@@ -221,6 +216,38 @@ export interface WorkforceRegistrationModalProps {
   onClose: () => void;
   onSubmit?: (data: WorkforceRegistrationData) => Promise<void>;
   defaultValues?: Partial<WorkforceRegistrationData>;
+}
+
+export type LeadershipRole =
+  | 'associate_pastor'
+  | 'deacon'
+  | 'deaconess'
+  | 'reverend';
+
+export type LeadershipStatus = 'pending' | 'approved';
+
+export interface LeadershipMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phone?: string;
+  role: LeadershipRole;
+  status: LeadershipStatus;
+  bio?: string | null;
+  imageUrl?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface LeadershipApplicationRequest {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phone?: string;
+  role: LeadershipRole;
+  bio?: string;
+  imageUrl?: string;
 }
 
 export interface EventRegistrationEvent {
