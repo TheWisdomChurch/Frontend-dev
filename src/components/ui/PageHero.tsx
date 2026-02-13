@@ -47,7 +47,10 @@ export default function PageHero({
   );
 
   return (
-    <Section padding="none" className="relative overflow-hidden bg-[#050505]">
+    <Section
+      padding="none"
+      className="relative overflow-hidden bg-[#050505] min-h-[58vh] sm:min-h-[62vh] lg:min-h-[68vh] flex items-center"
+    >
       {/* Optional background image */}
       {backgroundImage ? (
         <div className="absolute inset-0 -z-30">
@@ -56,22 +59,23 @@ export default function PageHero({
             alt=""
             fill
             priority
-            className="object-cover"
+            className="object-cover object-center sm:object-[center_20%]"
             sizes="100vw"
           />
           {/* darken for legibility */}
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-black/65 sm:bg-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/70 sm:from-black/55 sm:via-black/35 sm:to-black/55" />
         </div>
       ) : null}
 
       {/* Glow overlay */}
       <div
-        className="absolute inset-0 -z-10"
-        style={{ background: overlay, filter: 'blur(70px)' }}
+        className="absolute inset-0 -z-10 opacity-50 sm:opacity-70"
+        style={{ background: overlay, filter: 'blur(60px)' }}
       />
 
       {/* Watermark */}
-      <div className="absolute inset-0 -z-20 flex items-center justify-center opacity-8 sm:opacity-10">
+      <div className="absolute inset-0 -z-20 hidden sm:flex items-center justify-center opacity-10">
         <Image
           src={WisdomeHouseLogo}
           alt="Wisdom House watermark"
@@ -84,7 +88,7 @@ export default function PageHero({
 
       <Container
         size="xl"
-        className="relative z-10 flex flex-col gap-5 sm:gap-6 lg:gap-7 px-4 sm:px-6 md:px-8 lg:px-12 pt-20 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24"
+        className="relative z-10 flex flex-col gap-4 sm:gap-5 lg:gap-6 px-4 sm:px-6 md:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20"
       >
         <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 w-fit backdrop-blur fade-up">
           <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg overflow-hidden border border-white/15 bg-black/60">
@@ -100,7 +104,7 @@ export default function PageHero({
           </Caption>
         </div>
 
-        <div className="space-y-3 max-w-3xl fade-up text-center sm:text-left" style={{ animationDelay: '70ms' }}>
+        <div className="space-y-2 max-w-3xl fade-up text-center sm:text-left" style={{ animationDelay: '70ms' }}>
           <H2
             className={
               compact
