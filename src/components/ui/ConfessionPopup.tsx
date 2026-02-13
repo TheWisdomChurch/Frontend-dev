@@ -1,340 +1,187 @@
 'use client';
 
-import { createPortal } from 'react-dom';
-import { useEffect } from 'react';
 import Image from 'next/image';
-import { X, Church, Hand, TrendingUp, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, BookOpen, Church, HeartHandshake, Sparkles } from 'lucide-react';
+import { BaseModal } from '@/components/modal/Base';
 import CustomButton from '@/components/utils/buttons/CustomButton';
-import { BaseText, BricolageText, H2, P } from '@/components/text';
-import { PlayfairText } from '../text/FontText';
+import { BaseText, BodySM, Caption, H3 } from '@/components/text';
+import { PlayfairText } from '@/components/text/FontText';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { confessionContent } from '@/lib/data';
-import { WisdomeHouseLogo } from '../assets';
-import { useWelcomeModal } from '../utils/hooks/Useconfession';
+import { WisdomeHouseLogo } from '@/components/assets';
+import { useWelcomeModal } from '@/components/utils/hooks/Useconfession';
 
 interface WelcomeModalProps {
   onClose: () => void;
   delay?: number;
 }
 
-export default function WelcomeModal({ onClose, delay = 2000 }: WelcomeModalProps) {
+export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalProps) {
   const { colorScheme } = useTheme();
   const {
     isVisible,
     currentStep,
     mounted,
-    modalRef,
-    contentRef,
     handleClose,
     showConfession,
     showWelcome,
   } = useWelcomeModal({ delay, onClose });
 
-  // Lock body scroll when modal is visible
-  useEffect(() => {
-    if (!mounted || !isVisible) return;
-    const original = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = original;
-    };
-  }, [mounted, isVisible]);
-
   if (!mounted || !isVisible) return null;
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      handleClose();
-    }
-  };
-
-  return createPortal(
-    <div
-      className="fixed inset-0 z-[9999] flex items-end justify-center p-0 transition-all duration-500"
-      style={{
-        background:
-          'radial-gradient(circle at 20% 20%, rgba(247,222,18,0.12), transparent 40%), rgba(0,0,0,0.75)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-      }}
-      onClick={handleBackdropClick}
+  return (
+    <BaseModal
+      isOpen={isVisible}
+      onClose={handleClose}
+      title={currentStep === 'welcome' ? 'Welcome Home' : 'Our Confession'}
+      subtitle={
+        currentStep === 'welcome'
+          ? 'A short stop before you continue exploring.'
+          : 'Speak this over your week with bold faith.'
+      }
+      maxWidth="max-w-2xl"
+      forceBottomSheet
     >
-      <div
-        ref={modalRef}
-        className="relative w-full max-w-2xl mx-auto overflow-hidden shadow-2xl border border-white/10 rounded-t-3xl rounded-b-none"
-        style={{
-          background: 'linear-gradient(145deg, rgba(6,6,6,0.9), rgba(0,0,0,0.7))',
-          maxHeight: '90vh',
-        }}
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="flex justify-center pt-3 pb-2">
-          <span className="h-1.5 w-12 rounded-full bg-white/30" />
-        </div>
-        <div className="absolute top-0 left-0 right-0 h-1 z-20 bg-white/10">
-          <div
-            className="h-full transition-all duration-500 ease-out"
-            style={{
-              width: currentStep === 'welcome' ? '50%' : '100%',
-              background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
-            }}
-          />
-        </div>
-
-        <button
-          onClick={handleClose}
-          className="absolute top-4 right-4 z-50 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 border border-white/20 bg-white/5 text-white"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        <div
-          ref={contentRef}
-          className="p-5 sm:p-8 overflow-y-auto"
-          style={{ maxHeight: 'calc(85vh - 1rem)' }}
-        >
-          {currentStep === 'welcome' && (
-            <div className="space-y-6">
-              <div className="text-center space-y-5">
-                <div className="relative w-18 h-18 mx-auto rounded-full border border-white/20 bg-white/8 flex items-center justify-center overflow-hidden">
-                  <Image
-                    src={WisdomeHouseLogo}
-                    alt="The Wisdom House Church"
-                    width={64}
-                    height={64}
-                    className="object-contain w-14 h-14 sm:w-16 sm:h-16"
-                  />
-                </div>
-
-                <div>
-                  <H2
-                    as="h2"
-                    className="text-2xl sm:text-3xl font-semibold mb-3 leading-tight text-white"
-                  >
-                    Welcome to{' '}
-                    <BaseText
-                      fontFamily="playfair"
-                      style={{
-                        fontStyle: 'italic',
-                        color: colorScheme.primary,
-                        display: 'inline',
-                      }}
-                    >
-                      The Wisdom Church Online Community
-                    </BaseText>
-                  </H2>
-                  <p className="text-white/70 text-sm sm:text-base max-w-xl mx-auto">
-                    You are stepping into a house of faith, worship, and
-                    miracles. Take a moment to speak life over your week.
-                  </p>
-                </div>
+      {currentStep === 'welcome' ? (
+        <div className="space-y-5">
+          <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-5">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="rounded-full border border-white/15 bg-black/40 p-3">
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt="The Wisdom Church"
+                  width={42}
+                  height={42}
+                  className="h-10 w-10 object-contain"
+                />
               </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { icon: Church, title: 'Worship' },
-                  { icon: Hand, title: 'Pray' },
-                  { icon: TrendingUp, title: 'Grow' },
-                ].map((item, index) => (
-                  <div
-                    key={index}
-                    className="text-center p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-1"
-                    style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                      borderColor: `${colorScheme.primary}25`,
-                      boxShadow: `0 10px 30px ${colorScheme.opacity.primary15}`,
-                    }}
-                  >
-                    <div
-                      className="w-11 h-11 rounded-full flex items-center justify-center mx-auto mb-2"
-                      style={{
-                        background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                      }}
-                    >
-                      <item.icon className="w-5 h-5 text-black" />
-                    </div>
-                    <BricolageText
-                      as="p"
-                      className="font-semibold text-xs"
-                      style={{ color: colorScheme.white }}
-                    >
-                      {item.title}
-                    </BricolageText>
-                  </div>
-                ))}
+              <div>
+                <Caption className="uppercase tracking-[0.15em] text-white/60">
+                  The Wisdom Church
+                </Caption>
+                <H3 className="text-white">We are Equipped and Empowered</H3>
               </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <CustomButton
-                  variant="outline"
-                  size="sm"
-                  onClick={showConfession}
-                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
-                  curvature="lg"
-                  style={{
-                    borderColor: colorScheme.primary,
-                    color: colorScheme.white,
-                    backgroundColor: `${colorScheme.primary}05`,
-                  }}
-                >
-                  Our Confession
-                </CustomButton>
-
-                <CustomButton
-                  variant="primary"
-                  size="sm"
-                  onClick={handleClose}
-                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
-                  curvature="lg"
-                  style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                    color: colorScheme.black,
-                  }}
-                >
-                  Explore Site
-                </CustomButton>
-              </div>
-
-              <BricolageText
-                as="p"
-                className="text-xs sm:text-sm text-center opacity-75 pt-2"
-                style={{ color: colorScheme.white }}
-                weight="light"
-              >
-                Begin your journey{' '}
-                <BaseText
-                  weight="medium"
-                  fontFamily="playfair"
-                  style={{
-                    fontStyle: 'italic',
-                    color: colorScheme.primary,
-                    display: 'inline',
-                  }}
-                >
-                  with us today
-                </BaseText>
-                .
-              </BricolageText>
             </div>
-          )}
+            <BodySM className="leading-relaxed text-white/80">
+              You are in a place of worship, truth, and transformation. Before you continue,
+              take a moment with our confession and align your words with faith.
+            </BodySM>
+          </div>
 
-          {currentStep === 'confession' && (
-            <div className="space-y-6">
-              <div className="text-center space-y-4">
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto border-2"
-                  style={{
-                    backgroundColor: `${colorScheme.primary}10`,
-                    borderColor: colorScheme.primary,
-                  }}
-                >
-                  <span className="text-3xl">📖</span>
-                </div>
-
-                <div>
-                  <BricolageText
-                    as="h3"
-                    className="text-xl sm:text-2xl font-bold mb-2"
-                    style={{ color: colorScheme.white }}
-                  >
-                    Our{' '}
-                    <BaseText
-                      fontFamily="playfair"
-                      style={{
-                        fontStyle: 'italic',
-                        color: colorScheme.primary,
-                        display: 'inline',
-                      }}
-                    >
-                      Confession
-                    </BaseText>
-                  </BricolageText>
-
-                  <div
-                    className="w-16 h-0.5 mx-auto rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, ${colorScheme.primary}, ${colorScheme.primaryLight})`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              <PlayfairText
-                as="p"
-                className="text-sm sm:text-base leading-relaxed text-center italic"
-                style={{ color: colorScheme.white }}
-                weight="light"
-              >
-                "We Begin to Prosper,{' '}
-                <BaseText
-                  weight="medium"
-                  fontFamily="playfair"
-                  style={{
-                    fontStyle: 'italic',
-                    color: colorScheme.primary,
-                    display: 'inline',
-                  }}
-                >
-                  We continue to prosper
-                </BaseText>
-                , Until we become very prosperous."
-              </PlayfairText>
-
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {[
+              { icon: Church, label: 'Worship' },
+              { icon: HeartHandshake, label: 'Community' },
+              { icon: Sparkles, label: 'Growth' },
+            ].map(item => (
               <div
-                className="relative bg-black/50 border border-white/15 rounded-2xl p-5 sm:p-6 text-white text-sm sm:text-base leading-relaxed space-y-3 max-h-[320px] overflow-y-auto shadow-inner"
+                key={item.label}
+                className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-4 text-center"
               >
-                <div className="absolute -left-2 -top-2 h-10 w-10 rounded-full bg-white/5 blur-xl" />
-                <div className="absolute -right-4 -bottom-4 h-12 w-12 rounded-full bg-amber-400/10 blur-2xl" />
-                <PlayfairText
-                  as="div"
-                  className="text-xs sm:text-sm leading-relaxed space-y-3 text-justify"
-                  style={{ color: colorScheme.white }}
-                  weight="regular"
+                <div
+                  className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full"
+                  style={{ background: `${colorScheme.primary}24` }}
                 >
-                  {confessionContent.split('\n\n').map((paragraph, index) => (
-                    <P key={index} className="opacity-90">
-                      {paragraph}
-                    </P>
-                  ))}
-                </PlayfairText>
+                  <item.icon className="h-4 w-4" style={{ color: colorScheme.primary }} />
+                </div>
+                <Caption className="text-white/80">{item.label}</Caption>
               </div>
+            ))}
+          </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <CustomButton
-                  variant="outline"
-                  size="sm"
-                  onClick={showWelcome}
-                  leftIcon={<ArrowLeft className="w-4 h-4" />}
-                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
-                  curvature="lg"
-                  style={{
-                    borderColor: colorScheme.primary,
-                    color: colorScheme.white,
-                    backgroundColor: `${colorScheme.primary}05`,
-                  }}
-                >
-                  Back
-                </CustomButton>
-
-                <CustomButton
-                  variant="primary"
-                  size="sm"
-                  onClick={handleClose}
-                  className="flex-1 font-semibold transition-all duration-300 hover:scale-105 text-sm"
-                  curvature="lg"
-                  style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                    color: colorScheme.black,
-                  }}
-                >
-                  Explore Site
-                </CustomButton>
-              </div>
-            </div>
-          )}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <CustomButton
+              variant="outline"
+              size="sm"
+              curvature="full"
+              onClick={showConfession}
+              leftIcon={<BookOpen className="h-4 w-4" />}
+              className="h-11 w-full text-sm font-medium"
+              style={{
+                borderColor: `${colorScheme.primary}66`,
+                color: '#FFFFFF',
+                backgroundColor: `${colorScheme.primary}08`,
+              }}
+            >
+              Read Confession
+            </CustomButton>
+            <CustomButton
+              variant="primary"
+              size="sm"
+              curvature="full"
+              onClick={handleClose}
+              className="h-11 w-full text-sm font-medium"
+              style={{
+                background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                color: colorScheme.black,
+              }}
+            >
+              Continue
+            </CustomButton>
+          </div>
         </div>
-      </div>
-    </div>,
-    document.body
+      ) : (
+        <div className="space-y-5">
+          <div className="rounded-2xl border border-white/15 bg-black/35 p-5">
+            <PlayfairText
+              as="p"
+              className="text-center text-sm italic leading-relaxed sm:text-base"
+              style={{ color: '#ffffff' }}
+              weight="regular"
+            >
+              We begin to prosper, we continue to prosper, until we become very prosperous.
+            </PlayfairText>
+          </div>
+
+          <div className="max-h-[42vh] space-y-3 overflow-y-auto rounded-2xl border border-white/12 bg-white/[0.03] p-4">
+            {confessionContent
+              .split('\n\n')
+              .map(paragraph => paragraph.trim())
+              .filter(Boolean)
+              .map((paragraph, index) => (
+                <BodySM key={`${paragraph.slice(0, 20)}-${index}`} className="leading-relaxed text-white/82">
+                  {paragraph}
+                </BodySM>
+              ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <CustomButton
+              variant="outline"
+              size="sm"
+              curvature="full"
+              onClick={showWelcome}
+              leftIcon={<ArrowLeft className="h-4 w-4" />}
+              className="h-11 w-full text-sm font-medium"
+              style={{
+                borderColor: `${colorScheme.primary}66`,
+                color: '#FFFFFF',
+                backgroundColor: `${colorScheme.primary}08`,
+              }}
+            >
+              Back
+            </CustomButton>
+            <CustomButton
+              variant="primary"
+              size="sm"
+              curvature="full"
+              onClick={handleClose}
+              className="h-11 w-full text-sm font-medium"
+              style={{
+                background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                color: colorScheme.black,
+              }}
+            >
+              I Believe It
+            </CustomButton>
+          </div>
+
+          <BaseText className="text-center text-xs text-white/55">
+            This confession appears periodically and can always be revisited.
+          </BaseText>
+        </div>
+      )}
+    </BaseModal>
   );
 }
+

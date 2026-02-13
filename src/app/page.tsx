@@ -6,8 +6,10 @@ import dynamic from 'next/dynamic';
 import HeroSection from '@/components/ui/Homepage/heromain';
 import HeroHighlights from '@/components/ui/Homepage/HeroHighlights';
 import EventAdModal from '@/components/ui/Homepage/EventAdModal';
+import ConfessionPopup from '@/components/ui/ConfessionPopup';
 import MobileDebug from '@/components/utils/mobileDebug';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import { Megaphone } from 'lucide-react';
 
 const WhatWeDo = dynamic(() => import('@/components/ui/Homepage/WhatWeDo'), {
   ssr: true,
@@ -45,7 +47,14 @@ const ResourceSection = dynamic(() => import('@/components/ui/Homepage/Resource'
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [nextAdAt, setNextAdAt] = useState<number | null>(null);
+  const [showConfessionPopup, setShowConfessionPopup] = useState(true);
   const { colorScheme } = useTheme();
+
+  const eventStorageKey = 'wc_event_ad_seen_v1';
+  const autoOpenDelayMs = 1400;
+  const closeCooldownMs = 1000 * 60 * 20;
+  const remindCooldownMs = 1000 * 60 * 45;
 
   const eventAd = useMemo(
     () => ({
@@ -83,35 +92,50 @@ export default function Home() {
   useEffect(() => {
     if (!fontsLoaded) return;
 
-    const storageKey = 'wc_event_ad_seen_v1';
     const now = Date.now();
-    const nextAllowedRaw = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
+    const nextAllowedRaw =
+      typeof window !== 'undefined' ? localStorage.getItem(eventStorageKey) : null;
     const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
 
-    if (nextAllowed && now < nextAllowed) return;
+    if (nextAllowed && now < nextAllowed) {
+      setNextAdAt(nextAllowed);
+      return;
+    }
 
-    const timer = setTimeout(() => {
+    setNextAdAt(now + autoOpenDelayMs);
+  }, [autoOpenDelayMs, eventStorageKey, fontsLoaded]);
+
+  useEffect(() => {
+    if (!fontsLoaded || nextAdAt === null) return;
+
+    const timeLeft = nextAdAt - Date.now();
+    if (timeLeft <= 0) {
       setShowModal(true);
-    }, 1400);
+      return;
+    }
 
-    return () => clearTimeout(timer);
-  }, [fontsLoaded]);
+    const timer = window.setTimeout(() => {
+      setShowModal(true);
+    }, timeLeft);
+
+    return () => window.clearTimeout(timer);
+  }, [fontsLoaded, nextAdAt]);
+
+  const persistAdCooldown = (cooldownMs: number) => {
+    const nextAllowedAt = Date.now() + cooldownMs;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(eventStorageKey, String(nextAllowedAt));
+    }
+    setNextAdAt(nextAllowedAt);
+  };
 
   const handleCloseModal = () => {
-    const storageKey = 'wc_event_ad_seen_v1';
-    const cooldownMs = 1000 * 60 * 60 * 12;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, String(Date.now() + cooldownMs));
-    }
+    persistAdCooldown(closeCooldownMs);
     setShowModal(false);
   };
 
   const handleRemindLater = () => {
-    const storageKey = 'wc_event_ad_seen_v1';
-    const cooldownMs = 1000 * 60 * 60; // 1 hour
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, String(Date.now() + cooldownMs));
-    }
+    persistAdCooldown(remindCooldownMs);
     setShowModal(false);
   };
 
@@ -167,6 +191,25 @@ export default function Home() {
           onClose={handleCloseModal}
           onRemindLater={handleRemindLater}
         />
+
+        {!showModal && (
+          <button
+            type="button"
+            aria-label="Open conference registration ad"
+            onClick={() => setShowModal(true)}
+            className="fixed bottom-5 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-4 py-2.5 text-xs font-medium text-white shadow-2xl backdrop-blur-lg transition hover:-translate-y-0.5 hover:bg-black sm:text-sm"
+          >
+            <Megaphone className="h-4 w-4" style={{ color: colorScheme.primary }} />
+            <span>WPC 2026</span>
+          </button>
+        )}
+
+        {!showModal && showConfessionPopup && (
+          <ConfessionPopup
+            onClose={() => setShowConfessionPopup(false)}
+            delay={1800}
+          />
+        )}
       </main>
     </div>
   );
