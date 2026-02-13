@@ -16,14 +16,14 @@ import { trackApiRequestStart, trackApiRequestEnd } from './apiActivity';
    API CONFIG
 ============================================================================ */
 
+const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
+const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
+
 function normalizeOrigin(raw?: string | null): string {
   const isProd = process.env.NODE_ENV === 'production';
 
   if (!raw || !raw.trim()) {
-    if (!isProd) return 'http://localhost:8080';
-    throw new Error(
-      '[public api] Missing NEXT_PUBLIC_API_URL (or NEXT_PUBLIC_BACKEND_URL) in production.'
-    );
+    return isProd ? DEFAULT_PROD_API_ORIGIN : DEFAULT_LOCAL_API_ORIGIN;
   }
 
   let base = raw.trim().replace(/\/+$/, '');
