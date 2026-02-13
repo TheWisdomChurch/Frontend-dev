@@ -71,7 +71,7 @@ export default function EventAdModal({ event, open, onClose, onRemindLater }: Pr
 
     try {
       const url = new URL(event.registerUrl);
-      url.searchParams.set('redirect', window.location.origin);
+      url.searchParams.set('redirect', window.location.href);
       return url.toString();
     } catch (error) {
       return event.registerUrl;

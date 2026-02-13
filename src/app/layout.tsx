@@ -15,6 +15,8 @@ import ClientHeader from '@/components/layout/ClientHeader';
 import ClientFooter from '@/components/layout/ClientFooter';
 import ClientScrollToTop from '@/components/layout/ClientscrollTop';
 import ScrollHandler from '@/components/layout/ClientScrollHandler';
+import AppStartupLoader from '@/components/providers/AppStartupLoader';
+import CookieConsentBanner from '@/components/ui/CookieConsentBanner';
 import './globals.css';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
@@ -150,6 +152,7 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
         <ServiceUnavailableProvider>
           <HeaderProvider>
             <ErrorBoundary>
+              <AppStartupLoader />
               <ScrollHandler />
               <ClientHeader />
               <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
@@ -157,6 +160,7 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
               </main>
               <ClientFooter />
               <ClientScrollToTop />
+              <CookieConsentBanner />
             </ErrorBoundary>
           </HeaderProvider>
         </ServiceUnavailableProvider>

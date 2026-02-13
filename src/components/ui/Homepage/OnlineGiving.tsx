@@ -56,8 +56,9 @@ export default function OnlineGiving() {
     'giving-card rounded-2xl border border-white/12 bg-white/5 backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 ease-out';
   const cardTitle = 'text-[15px] font-medium text-white';
   const cardDesc = 'text-[13px] text-white/70 leading-relaxed';
+  const cardCtaWrap = 'giving-cta-wrap mt-4 min-h-10';
   const cardButton =
-    'giving-cta w-full h-10 text-[12px] font-medium border border-white/20 bg-white/5 text-white hover:bg-white/10 transition-all duration-300';
+    'giving-cta w-full h-10 text-[12px] sm:text-[13px] font-medium border border-white/20 bg-white/5 text-white hover:bg-white/10 transition-all duration-300';
   return (
     <>
       <style jsx global>{`
@@ -104,6 +105,20 @@ export default function OnlineGiving() {
           border-color: rgba(255,255,255,0.24);
         }
 
+        .giving-cta-wrap {
+          opacity: 0;
+          transform: translateY(12px);
+          pointer-events: none;
+          transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .giving-card:hover .giving-cta-wrap,
+        .giving-card:focus-within .giving-cta-wrap {
+          opacity: 1;
+          transform: translateY(0);
+          pointer-events: auto;
+        }
+
         .giving-card .giving-overlay {
           opacity: 0;
           transition: opacity 0.4s ease;
@@ -115,11 +130,23 @@ export default function OnlineGiving() {
 
         .giving-card:hover .giving-cta {
           border-color: rgba(255,255,255,0.35);
+          transform: translateY(0) scale(1.01);
+          box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+        }
+
+        @media (hover: none), (pointer: coarse) {
+          .giving-cta-wrap {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .giving-card,
-          .giving-card:hover {
+          .giving-card:hover,
+          .giving-cta-wrap,
+          .giving-card:hover .giving-cta-wrap {
             transform: none !important;
             transition: none !important;
           }
@@ -306,14 +333,14 @@ export default function OnlineGiving() {
                               </Caption>
                             </div>
                             {/* Button - Not too big */}
-                            <div className="mt-4">
+                            <div className={cardCtaWrap}>
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 curvature="lg"
                                 className={cardButton}
                               >
-                                Give Now
+                                Make contribution
                               </Button>
                             </div>
                           </div>
@@ -374,15 +401,17 @@ export default function OnlineGiving() {
                       </Caption>
                     </div>
                     {/* Button */}
-                    <Button
-                      onClick={() => handleGiveNow(option)}
-                      variant="ghost"
-                      size="sm"
-                      curvature="lg"
-                      className={cardButton}
-                    >
-                      Give Now
-                    </Button>
+                    <div className={cardCtaWrap}>
+                      <Button
+                        onClick={() => handleGiveNow(option)}
+                        variant="ghost"
+                        size="sm"
+                        curvature="lg"
+                        className={cardButton}
+                      >
+                        Make contribution
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -443,15 +472,17 @@ export default function OnlineGiving() {
                         </Caption>
                       </div>
                       {/* Button */}
-                      <Button
-                        onClick={() => handleGiveNow(option)}
-                        variant="ghost"
-                        size="sm"
-                        curvature="lg"
-                        className={cardButton}
-                      >
-                        Give Now
-                      </Button>
+                      <div className={cardCtaWrap}>
+                        <Button
+                          onClick={() => handleGiveNow(option)}
+                          variant="ghost"
+                          size="sm"
+                          curvature="lg"
+                          className={cardButton}
+                        >
+                          Make contribution
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -482,18 +513,14 @@ export default function OnlineGiving() {
                 Give by mail, in person during services, or set up recurring donations.
                 Contact our Admin for more options.
               </Caption>
-              <FlexboxLayout
-                justify="center"
-                gap="md"
-                className="flex-wrap"
-              >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
                 <Button
                   onClick={handleContactCall}
                   variant="primary"
                   size="sm"
                   curvature="full"
                   leftIcon={<Phone className="w-4 h-4" />}
-                  className="h-10 px-5 text-[12px] font-medium hover:scale-105 transition w-full sm:w-auto min-w-[150px]"
+                  className="h-11 w-full px-4 text-[13px] sm:text-sm font-medium hover:scale-[1.01] transition"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: '#000000',
@@ -505,7 +532,7 @@ export default function OnlineGiving() {
                   variant="outline"
                   size="sm"
                   curvature="full"
-                  className="h-10 px-5 text-[12px] font-medium border text-sm hover:bg-white/10 transition w-full sm:w-auto min-w-[150px]"
+                  className="h-11 w-full px-4 text-[13px] sm:text-sm font-medium border hover:bg-white/10 transition"
                   style={{
                     borderColor: colorScheme.primary,
                     color: '#FFFFFF',
@@ -521,7 +548,7 @@ export default function OnlineGiving() {
                 >
                   Learn More
                 </Button>
-              </FlexboxLayout>
+              </div>
             </div>
           </div>
         </Container>
