@@ -3,7 +3,7 @@
 import { whatWeDoData, missionStatement } from '@/lib/data';
 import { ServiceBox } from '@/lib/types';
 import Image from 'next/image';
-import { H2, BodyMD, BodySM } from '@/components/text';
+import { H2, BodySM } from '@/components/text';
 import { useWhatWeDo } from '@/components/utils/hooks/useWhatwedo';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import {
@@ -12,48 +12,10 @@ import {
   GridboxLayout,
   FlexboxLayout,
 } from '@/components/layout';
-import  { responsive,getHeroResponsiveValue } from '@/lib/responsivee';
-import { useEffect, useState } from 'react';
-
-// Viewport hook for responsive design
-const useViewport = () => {
-  const [viewport, setViewport] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
-
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 768) {
-        setViewport('mobile');
-      } else if (width < 1200) {
-        setViewport('tablet');
-      } else {
-        setViewport('desktop');
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return viewport;
-};
 
 export default function WhatWeDo() {
   const { sectionRef, headingRef, textRef, addToBoxesRef } = useWhatWeDo();
   const { colorScheme } = useTheme();
-  const viewport = useViewport();
-
-  // Detect dark mode
-  const isDarkMode = colorScheme.pageBackground === '#000000';
-
-  // Heading & Mission text color: yellow in dark, black in light
-  const accentTextColor = isDarkMode ? colorScheme.primary : '#000000';
-
-  // Get responsive values
-  const headingSizes = getHeroResponsiveValue('title') as Record<string, string>;
-  const bodySizes = getHeroResponsiveValue('description') as Record<string, string>;
-  const containerSizes = getHeroResponsiveValue('container') as Record<string, string>;
 
   const renderBox = (box: ServiceBox, index: number) => {
     const isLargeBox = index < 2;
@@ -91,7 +53,7 @@ export default function WhatWeDo() {
           </div>
           
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/60 z-10 group-hover:from-black/60 group-hover:via-black/40 group-hover:to-black/50 transition-all duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-black/70 z-10 group-hover:from-black/65 group-hover:via-black/45 group-hover:to-black/60 transition-all duration-500"></div>
         </div>
 
         {/* Content Container */}
@@ -99,36 +61,27 @@ export default function WhatWeDo() {
           <div className="relative w-full pt-12 sm:pt-16 lg:pt-20 pb-2 sm:pb-3 lg:pb-4">
             {/* Title */}
             <h3
-              className="font-bold mb-2 sm:mb-3 lg:mb-4 drop-shadow-lg"
+              className="font-semibold mb-2 sm:mb-3 drop-shadow-lg text-[15px] sm:text-base lg:text-lg"
               style={{
                 color: colorScheme.primary,
-                textShadow: '2px 2px 8px rgba(0,0,0,0.9)',
-                fontSize: viewport === 'mobile' ? '1.25rem' : 
-                          viewport === 'tablet' ? '1.5rem' : '1.75rem',
-                lineHeight: 1.2
+                textShadow: '1px 1px 6px rgba(0,0,0,0.85)',
+                lineHeight: 1.3
               }}
             >
               {box.title}
             </h3>
 
             {/* Description */}
-            <BodyMD
-              className="text-white/95 leading-relaxed drop-shadow-lg max-w-2xl"
+            <BodySM
+              className="text-white/90 leading-relaxed drop-shadow-lg max-w-2xl text-[13px] sm:text-sm lg:text-[15px] line-clamp-2 sm:line-clamp-3 lg:line-clamp-4"
               style={{
-                textShadow: '1px 1px 6px rgba(0,0,0,0.9)',
-                fontSize: viewport === 'mobile' ? '0.875rem' : 
-                          viewport === 'tablet' ? '1rem' : '1.125rem',
-                lineHeight: 1.5,
-                display: '-webkit-box',
-                WebkitLineClamp: viewport === 'mobile' ? 2 : 
-                                viewport === 'tablet' ? 3 : 4,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden'
+                textShadow: '1px 1px 5px rgba(0,0,0,0.85)',
+                lineHeight: 1.6
               }}
               useThemeColor={false}
             >
               {box.description}
-            </BodyMD>
+            </BodySM>
           </div>
         </div>
       </div>
@@ -146,24 +99,17 @@ export default function WhatWeDo() {
       }}
       className="relative overflow-hidden"
     >
-      <Container 
-        size="xl" 
-        className="relative z-10"
-        style={{
-          paddingLeft: containerSizes.base,
-          paddingRight: containerSizes.base
-        }}
-      >
+      <Container size="xl" className="relative z-10">
         {/* Header - Centered */}
         <FlexboxLayout
           direction="column"
           justify="center"
           align="center"
           gap="md"
-          className="text-center pt-8 sm:pt-10 lg:pt-12 pb-4 sm:pb-6 lg:pb-8"
+          className="text-center pt-6 sm:pt-8 lg:pt-10 pb-4 sm:pb-6"
         >
           <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.18em]"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] sm:text-xs font-medium uppercase tracking-[0.18em]"
             style={{
               color: '#fff',
               background: colorScheme.primary,
@@ -174,15 +120,10 @@ export default function WhatWeDo() {
           </div>
           <H2
             ref={headingRef}
-            className="leading-tight text-center"
-            style={{ 
-              color: '#FFFFFF',
-              fontSize: headingSizes[viewport === 'mobile' ? 'sm' : 
-                                   viewport === 'tablet' ? 'md' : 'lg']
-            }}
+            className="leading-tight text-center text-xl sm:text-2xl lg:text-3xl font-semibold"
+            style={{ color: '#FFFFFF' }}
             useThemeColor={false}
-            weight="bold"
-            smWeight="extrabold"
+            weight="semibold"
           >
             Sundays that feel alive in every lane
           </H2>
@@ -211,18 +152,11 @@ export default function WhatWeDo() {
           direction="column"
           justify="center"
           align="center"
-          className="text-center pt-2 sm:pt-4 lg:pt-6 pb-4 sm:pb-6 lg:pb-8"
+          className="text-center pt-2 sm:pt-4 pb-4 sm:pb-6"
         >
           <div className="w-full max-w-3xl mx-auto">
             <BodySM
-              className="leading-relaxed font-normal text-left"
-              style={{ 
-                color: '#e5e7eb',
-                fontSize: bodySizes[viewport === 'mobile' ? 'base' : 
-                                   viewport === 'tablet' ? 'sm' : 'md'],
-                padding: `0 ${viewport === 'mobile' ? '1rem' : 
-                         viewport === 'tablet' ? '1.5rem' : '2rem'}`
-              }}
+              className="leading-relaxed font-normal text-left text-[13px] sm:text-sm lg:text-base text-white/70 px-4 sm:px-6"
               useThemeColor={false}
             >
               {missionStatement}
