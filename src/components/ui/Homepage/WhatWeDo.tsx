@@ -189,7 +189,7 @@ export default function WhatWeDo() {
         </FlexboxLayout>
 
         {/* Service Boxes - Responsive Grid */}
-        <div className="relative">
+        <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 lg:p-5">
           <div className="absolute -inset-4 rounded-2xl bg-white/60 blur-3xl opacity-50 pointer-events-none" />
           <GridboxLayout
             columns={1}
