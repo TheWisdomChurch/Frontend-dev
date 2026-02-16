@@ -25,25 +25,7 @@ const ROLE_ORDER: LeadershipRole[] = [
   'deaconess',
 ];
 
-const INITIAL_LEADERSHIP: LeadershipMember[] = [
-  {
-    id: 'seed-senior-pastor',
-    firstName: 'Senior',
-    lastName: 'Pastor',
-    role: 'senior_pastor',
-    status: 'approved',
-    bio: 'Visionary and spiritual oversight for the church.',
-  },
-  {
-    id: 'seed-associate',
-    firstName: 'Associate',
-    lastName: 'Pastor',
-    role: 'associate_pastor',
-    status: 'approved',
-    bio: 'Supports pastoral care, discipleship, and ministry development.',
-  },
-];
-
+const ddmm = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])$/;
 const ddmmyyyy = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
 const emptyForm: LeadershipApplicationRequest = {
@@ -83,17 +65,13 @@ export default function LeadershipPage() {
       .listLeadership()
       .then((items) => {
         if (!active) return;
-        if (Array.isArray(items) && items.length > 0) {
-          setLeaders(items);
-        } else {
-          setLeaders(INITIAL_LEADERSHIP);
-        }
+        setLeaders(Array.isArray(items) ? items : []);
         setLoadError(null);
       })
       .catch((err: any) => {
         if (!active) return;
         setLoadError(err?.message || 'Unable to load leadership.');
-        setLeaders(INITIAL_LEADERSHIP);
+        setLeaders([]);
       })
       .finally(() => {
         if (!active) return;
@@ -127,8 +105,8 @@ export default function LeadershipPage() {
       setSubmitMessage({ type: 'error', text: 'First and last name are required.' });
       return;
     }
-    if (form.birthday && !ddmmyyyy.test(form.birthday)) {
-      setSubmitMessage({ type: 'error', text: 'Birthday must use DD/MM/YYYY.' });
+    if (form.birthday && !ddmm.test(form.birthday)) {
+      setSubmitMessage({ type: 'error', text: 'Birthday must use DD/MM.' });
       return;
     }
     if (form.anniversary && !ddmmyyyy.test(form.anniversary)) {
@@ -338,13 +316,13 @@ export default function LeadershipPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="text-sm text-white/80 space-y-1">
-                Birthday (DD/MM/YYYY)
+                Birthday (DD/MM)
                 <input
                   name="birthday"
                   value={form.birthday || ''}
                   onChange={handleChange}
                   className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-                  placeholder="25/12/1990"
+                  placeholder="25/12"
                 />
               </label>
 

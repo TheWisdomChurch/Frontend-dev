@@ -84,12 +84,16 @@ export const WorkforceRegistrationModal = ({
     },
   });
 
-  const submitHandler = onSubmit ?? apiClient.applyWorkforce;
+  const submitHandler = onSubmit ?? apiClient.applyWorkforceServing;
 
   const onSubmitForm = async (data: WorkforceRegistrationData) => {
     setIsSubmitting(true);
     try {
-      await submitHandler(data);
+      await submitHandler({
+        ...data,
+        isExistingMember: true,
+        registrationType: 'serving',
+      });
       reset();
       onClose();
       setShowSuccess(true);

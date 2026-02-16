@@ -203,7 +203,28 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 ============================================================================ */
 
 function mapWorkforcePayload(payload: WorkforceRegistrationData) {
-  const { firstName, lastName, email, phone, department, birthday, notes } = payload;
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    department,
+    birthday,
+    notes,
+    title,
+    leadershipCategory,
+    currentAssignment,
+    isExistingMember,
+  } = payload;
+
+  const notesParts: string[] = [];
+  if (notes?.trim()) notesParts.push(notes.trim());
+  if (title?.trim()) notesParts.push(`Title: ${title.trim()}`);
+  if (leadershipCategory?.trim()) notesParts.push(`Category: ${leadershipCategory.trim()}`);
+  if (currentAssignment?.trim()) notesParts.push(`Assignment: ${currentAssignment.trim()}`);
+  if (typeof isExistingMember === 'boolean') {
+    notesParts.push(`Existing worker: ${isExistingMember ? 'yes' : 'no'}`);
+  }
 
   return {
     firstName,
@@ -212,7 +233,7 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     phone,
     department,
     birthday,
-    notes,
+    notes: notesParts.length > 0 ? notesParts.join('\n') : undefined,
   };
 }
 
@@ -449,13 +470,33 @@ export const apiClient = {
   },
 
   async subscribe(payload: { name?: string; email: string }) {
-    return request<any>('/subscribers', {
+    return request<any>('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
   },
 
   async applyWorkforce(payload: WorkforceRegistrationData): Promise<any> {
+    const res = await request<any>('/workforce/apply', {
+      method: 'POST',
+      body: JSON.stringify(mapWorkforcePayload(payload)),
+    });
+    return unwrapData<any>(res);
+  },
+
+  async applyWorkforceServing(payload: WorkforceRegistrationData): Promise<any> {
+    const body = {
+      ...mapWorkforcePayload(payload),
+      status: 'serving',
+    };
+    const res = await request<any>('/workforce/serving/register', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return unwrapData<any>(res);
+  },
+
+  async applyWorkforceNew(payload: WorkforceRegistrationData): Promise<any> {
     const res = await request<any>('/workforce/apply', {
       method: 'POST',
       body: JSON.stringify(mapWorkforcePayload(payload)),
@@ -487,11 +528,22 @@ export const apiClient = {
   async uploadLeadershipImage(file: File): Promise<{ url: string; key?: string }> {
     const form = new FormData();
     form.append('file', file);
-    const res = await request<any>('/leadership/upload-image', {
-      method: 'POST',
-      body: form,
-    });
-    return unwrapData<{ url: string; key?: string }>(res);
+    try {
+      const res = await request<any>('/leadership/upload-image', {
+        method: 'POST',
+        body: form,
+      });
+      return unwrapData<{ url: string; key?: string }>(res);
+    } catch (error) {
+      if (isApiError(error) && error.statusCode === 404) {
+        const fallbackRes = await request<any>('/leadership/upload', {
+          method: 'POST',
+          body: form,
+        });
+        return unwrapData<{ url: string; key?: string }>(fallbackRes);
+      }
+      throw error;
+    }
   },
 };
 

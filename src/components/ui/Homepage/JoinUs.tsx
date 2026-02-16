@@ -116,22 +116,16 @@ export default function JoinWisdomHouse() {
     return { firstName, lastName };
   };
 
-  const toBackendBirthday = (mmdd: string) => {
-    const trimmed = mmdd.trim();
-    const [mm, dd] = trimmed.split('/');
-    if (!mm || !dd) return '';
-    return `${dd}/${mm}`;
-  };
-
   const onQuickSubmit = handleQuickSubmit(async (values) => {
     try {
       setQuickSubmitting(true);
       const { firstName, lastName } = splitName(values.name);
-      await apiClient.applyWorkforce({
+      await apiClient.applyWorkforceNew({
         firstName,
         lastName,
         email: values.email,
         department: values.team,
+        registrationType: 'new',
         notes: 'Quick signup',
       });
       setSubmitted(true);
@@ -178,7 +172,7 @@ export default function JoinWisdomHouse() {
       email: z.string().email('Valid email required'),
       birthday: z
         .string()
-        .regex(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/, 'Use MM/DD'),
+        .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])$/, 'Use DD/MM'),
       occupation: z.string().optional(),
       department: z.string().min(1, 'Select a department'),
       married: z.enum(['yes', 'no']), // ✅ no default here
@@ -246,16 +240,22 @@ export default function JoinWisdomHouse() {
       }
       if (values.about) notesParts.push(`About: ${values.about}`);
 
-      const birthday = toBackendBirthday(values.birthday);
+      const birthday = values.birthday.trim();
       const phone = `${values.phoneCode} ${values.phone}`.trim();
 
-      await apiClient.applyWorkforce({
+      const submitWorkforce = existing
+        ? apiClient.applyWorkforceServing.bind(apiClient)
+        : apiClient.applyWorkforceNew.bind(apiClient);
+
+      await submitWorkforce({
         firstName,
         lastName,
         email: values.email,
         phone,
         department: values.department,
         birthday: birthday || undefined,
+        registrationType: existing ? 'serving' : 'new',
+        isExistingMember: existing,
         notes: notesParts.length > 0 ? notesParts.join('\n') : undefined,
       });
 
@@ -571,10 +571,10 @@ export default function JoinWisdomHouse() {
                   </label>
 
                   <label className="text-sm text-white/80 space-y-1">
-                    Birthday (MM/DD)
+                    Birthday (DD/MM)
                     <input
                       type="text"
-                      placeholder="08/15"
+                      placeholder="15/08"
                       className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
                       {...register('birthday')}
                     />
