@@ -1,16 +1,19 @@
-
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BaseModal } from '@/components/modal/Base';
-import { Section, Container } from '@/components/layout';
-import { Caption, H3, BodySM, SmallText } from '@/components/text';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import { lightShades } from '@/components/colors/colorScheme';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
-import { hero_bg_1, hero_bg_3, EventBannerDesktop, EventBannerMobile } from '@/components/assets';
-import type { EventPublic } from '@/lib/apiTypes';
+
+import { BaseModal } from '@/components/modal/Base';
+import { EventBannerDesktop } from '@/components/assets';
+import { lightShades } from '@/components/colors/colorScheme';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { Container, Section } from '@/components/layout';
+import { BodySM, Caption, H3, SmallText } from '@/components/text';
+import { apiClient } from '@/lib/api';
+import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
+
+type ShowcaseCategory = 'program' | 'reel';
 
 type Slide = {
   id: string;
@@ -29,238 +32,149 @@ type Slide = {
   videoUrl?: string;
 };
 
-/* =========================================
-   API ORIGIN (robust + matches your pattern)
-function normalizeOrigin(raw?: string | null): string {
-  // Prefer NEXT_PUBLIC_API_URL; fallback to NEXT_PUBLIC_API_BASE_URL
-  const fallback = 'http://localhost:8080';
-  const v = (raw ?? '').trim();
-  if (!v) return fallback;
+const CATEGORY_LABELS: Record<ShowcaseCategory, string> = {
+  program: 'Programs & Events',
+  reel: 'Reels',
+};
 
-  // Remove trailing slashes
-  let base = v.replace(/\/+$/, '');
+function formatEventDate(startAt?: string): string {
+  if (!startAt) return 'Date to be announced';
+  const parsed = new Date(startAt);
+  if (Number.isNaN(parsed.getTime())) return 'Date to be announced';
 
-  // If someone sets NEXT_PUBLIC_API_URL=https://domain.com/api/v1
-  // normalize it back to origin so we can safely append /api/v1.
-  if (base.endsWith('/api/v1')) {
-    base = base.slice(0, -'/api/v1'.length);
-  }
-
-  return base || fallback;
-}
-
-const API_ORIGIN = normalizeOrigin(
-  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL
-);
-const API_V1_BASE = `${API_ORIGIN}/api/v1`;
-
-async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, {
-    ...init,
-    method: init?.method ?? 'GET',
-    headers: {
-      Accept: 'application/json',
-      ...(init?.headers ?? {}),
-    },
-    cache: 'no-store',
+  return parsed.toLocaleString(undefined, {
+    weekday: 'short',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
   });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`Request failed (${res.status}) ${text || url}`);
-  }
-
-  return (await res.json()) as T;
 }
 
-/**
- * Tries common event endpoints:
- * 1) /api/v1/events/public
- * 2) /api/v1/events
- *
- * Also supports either raw array response OR wrapped responses like:
- * { data: [...] } OR { data: { data: [...] } }
- */
-async function listEventsPublic(): Promise<EventPublic[]> {
-  const candidates = [`${API_V1_BASE}/events/public`, `${API_V1_BASE}/events`];
+function statusFromRange(startAt?: string, endAt?: string): string {
+  if (!startAt) return 'Upcoming';
 
-  let lastErr: unknown = null;
+  const start = new Date(startAt);
+  if (Number.isNaN(start.getTime())) return 'Upcoming';
 
-  for (const url of candidates) {
-    try {
-      const raw = await fetchJSON<any>(url);
+  const end = endAt ? new Date(endAt) : null;
+  const now = Date.now();
+  const startTime = start.getTime();
+  const endTime = end && !Number.isNaN(end.getTime()) ? end.getTime() : startTime;
 
-      // If API returns an array directly
-      if (Array.isArray(raw)) return raw as EventPublic[];
+  if (now >= startTime && now <= endTime) return 'Happening now';
+  if (now < startTime) return 'Upcoming';
 
-      // If API wraps with { data: [...] }
-      if (raw && Array.isArray(raw.data)) return raw.data as EventPublic[];
-
-      // If API wraps with { data: { data: [...] } }
-      if (raw?.data && Array.isArray(raw.data.data)) return raw.data.data as EventPublic[];
-
-      // If API wraps with { payload: [...] }
-      if (raw && Array.isArray(raw.payload)) return raw.payload as EventPublic[];
-
-      // Unknown shape -> treat as empty (or throw)
-      return [];
-    } catch (e) {
-      lastErr = e;
-      continue;
-    }
-  }
-
-  // If both endpoints failed, surface the last error
-  throw lastErr instanceof Error ? lastErr : new Error('Failed to load events');
+  const daysAgo = (now - endTime) / (1000 * 60 * 60 * 24);
+  return daysAgo <= 90 ? 'Recent' : 'Past';
 }
 
 export default function EventsShowcase() {
   const { colorScheme = lightShades } = useTheme();
 
-  const slides: Slide[] = useMemo(
-    () => [
-      {
-        title: 'Wisdom Power Conference 26',
-        subtitle: 'Upcoming',
-        description: 'City-wide gathering with worship, word, and miracles. Come expectant.',
-        date: 'Mar 10 • 6:00 PM',
-        location: 'Honor Gardens Event Center, Alasia opp. dominion Church',
-        image: EventBannerDesktop,
-        imageMobile: EventBannerMobile,
-        imageDesktop: EventBannerDesktop,
-        cta: 'Save a seat',
-        href: '/events',
-        badge: 'Upcoming',
-        category: 'program',
-        start: '2026-03-10T18:00:00.000Z',
-        end: '2026-03-10T21:00:00.000Z',
-      },
-      {
-        title: 'Highlights & Reels',
-        subtitle: 'Media',
-        description: 'Watch quick reels from recent services and events—perfect for sharing.',
-        date: 'Updated weekly',
-        location: 'Media Team',
-        image: hero_bg_3,
-        cta: 'Watch reels',
-        href: '/resources/sermons',
-        badge: 'Reels',
-        category: 'reel',
-        videoUrl: '',
-      },
-      {
-        title: 'Media Stories',
-        subtitle: 'Media',
-        description: 'Short testimonies, sermon snippets, and behind-the-scenes moments.',
-        date: 'New drops every week',
-        location: 'Content Hub',
-        image: hero_bg_1,
-        cta: 'View media',
-        href: '/resources',
-        badge: 'Media',
-        category: 'media',
-        start: '2026-02-01T10:00:00.000Z',
-        end: '2026-02-01T12:00:00.000Z',
-      },
-    ],
-    []
-  );
-
+  const [category, setCategory] = useState<ShowcaseCategory>('program');
   const [active, setActive] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState<EventPublic[]>([]);
+  const [reels, setReels] = useState<ReelPublic[]>([]);
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
-  const [events, setEvents] = useState<EventPublic[]>([]);
-  const [eventsLoaded, setEventsLoaded] = useState(false);
-
-  const filteredSlides = slides.filter((slide) => slide.category === category);
-
-  const statusOf = (slide: Slide) => {
-    if (!slide.start || !slide.end) return slide.badge;
-    const now = new Date();
-    const start = new Date(slide.start);
-    const end = new Date(slide.end);
-    if (now >= start && now <= end) return 'Happening now';
-    if (now < start) return 'Upcoming';
-    const daysAgo = (now.getTime() - end.getTime()) / (1000 * 60 * 60 * 24);
-    return daysAgo <= 90 ? 'Recent' : 'Past';
-  };
-
-  // Keep active index valid when switching categories
-  useEffect(() => {
-    if (active >= filteredSlides.length) setActive(0);
-  }, [category, filteredSlides.length, active]);
-
-  // Auto-advance slides within selected category
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActive((prev) => (prev + 1) % Math.max(filteredSlides.length, 1));
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [filteredSlides.length]);
-
-  // Load events from backend
   useEffect(() => {
     let mounted = true;
 
-    (async () => {
+    const loadEvents = async () => {
       try {
-        const data = await listEventsPublic();
-        if (mounted && Array.isArray(data)) setEvents(data);
-      } catch (err) {
-        console.warn('Failed to load events', err);
+        const [eventData, reelData] = await Promise.all([
+          apiClient.listEvents(),
+          apiClient.listReels(),
+        ]);
+        if (mounted) {
+          setEvents(Array.isArray(eventData) ? eventData : []);
+          setReels(Array.isArray(reelData) ? reelData : []);
+        }
+      } catch (error) {
+        console.warn('Failed to load events showcase', error);
+        if (mounted) {
+          setEvents([]);
+          setReels([]);
+        }
       } finally {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
-    })();
+    };
 
+    loadEvents();
     return () => {
       mounted = false;
     };
   }, []);
 
-  const programList: Slide[] =
-    eventsLoaded && events.length && category === 'program'
-      ? events.map((evt) => {
-          const start = (evt as any).startAt as string | undefined;
-          const end = (evt as any).endAt as string | undefined;
+  const programSlides = useMemo<Slide[]>(() => {
+    return events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      subtitle: statusFromRange(event.startAt, event.endAt),
+      description: event.description || 'Join us for this gathering.',
+      date: formatEventDate(event.startAt),
+      location: event.location || 'Venue to be announced',
+      imageUrl: event.bannerUrl || event.imageUrl || EventBannerDesktop.src,
+      cta: 'Save a seat',
+      href: event.formSlug ? `/forms/${event.formSlug}` : '/events',
+      badge: statusFromRange(event.startAt, event.endAt),
+      category: 'program',
+      start: event.startAt,
+      end: event.endAt,
+    }));
+  }, [events]);
 
-          const badge = (() => {
-            if (!start || !end) return 'Upcoming';
-            const now = new Date();
-            const s = new Date(start);
-            const e = new Date(end);
-            if (now >= s && now <= e) return 'Happening now';
-            if (now < s) return 'Upcoming';
-            const daysAgo = (now.getTime() - e.getTime()) / (1000 * 60 * 60 * 24);
-            return daysAgo <= 90 ? 'Recent' : 'Past';
-          })();
+  const reelSlides = useMemo<Slide[]>(
+    () =>
+      reels.map((reel) => ({
+        id: reel.id,
+        title: reel.title || 'Reel',
+        subtitle: 'Reel',
+        description: 'Short highlights from services and events.',
+        date: 'Now streaming',
+        location: 'Wisdom House Media',
+        imageUrl: reel.thumbnail || EventBannerDesktop.src,
+        cta: 'Play reel',
+        href: reel.videoUrl,
+        badge: 'Reel',
+        category: 'reel',
+        videoUrl: reel.videoUrl,
+      })),
+    [reels]
+  );
 
-          const title = (evt as any).title ?? 'Event';
-          const description = (evt as any).description ?? '';
-          // const location = (evt as any).location ?? '';
-          // const bannerUrl = (evt as any).bannerUrl ?? (evt as any).imageUrl ?? HeaderAlt;
-          const formSlug = (evt as any).formSlug as string | undefined;
+  const activeSlides = useMemo<Slide[]>(() => {
+    if (category === 'program') return programSlides;
+    return reelSlides;
+  }, [category, programSlides, reelSlides]);
 
-          return {
-            title,
-            subtitle: badge,
-            description,
-            date: start ? new Date(start).toLocaleString() : '',
-            location: evt.location || '',
-            image: EventBannerDesktop,
-            imageMobile: EventBannerMobile,
-            imageDesktop: EventBannerDesktop,
-            cta: 'Save a seat',
-            href: formSlug ? `/forms/${formSlug}` : '/events',
-            badge,
-            category: 'program' as const,
-            start,
-            end,
-          };
-        })
-      : filteredSlides;
+  useEffect(() => {
+    if (activeSlides.length === 0) {
+      setActive(0);
+      return;
+    }
 
-  const current = programList[active];
+    if (active >= activeSlides.length) {
+      setActive(0);
+    }
+  }, [active, activeSlides.length]);
+
+  useEffect(() => {
+    if (activeSlides.length <= 1) return;
+
+    const timer = window.setInterval(() => {
+      setActive((prev) => (prev + 1) % activeSlides.length);
+    }, 7000);
+
+    return () => window.clearInterval(timer);
+  }, [activeSlides.length]);
+
+  const current = activeSlides[active];
 
   return (
     <Section padding="md" className="relative overflow-hidden" style={{ background: '#0a0a0a' }}>
@@ -277,25 +191,27 @@ export default function EventsShowcase() {
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
           <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
-            Programs & Media
+            Programs & Reels
           </Caption>
 
-          <H3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">What’s happening now</H3>
+          <H3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">What&apos;s happening now</H3>
 
           <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
             Live programs and recent reels, powered by your backend data.
           </BodySM>
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            {(['program', 'media', 'reel'] as const).map((cat) => (
+            {(Object.keys(CATEGORY_LABELS) as ShowcaseCategory[]).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
-                  category === cat ? 'bg-white text-black border-white' : 'border-white/25 text-white hover:bg-white/10'
+                  category === cat
+                    ? 'bg-white text-black border-white'
+                    : 'border-white/25 text-white hover:bg-white/10'
                 }`}
               >
-                {cat === 'program' ? 'Programs & Events' : 'Reels'}
+                {CATEGORY_LABELS[cat]}
               </button>
             ))}
           </div>
@@ -325,7 +241,7 @@ export default function EventsShowcase() {
                 >
                   <div className="absolute inset-0" data-parallax-global="0.2">
                     <img
-                      src={resolveImageUrl(current.imageUrl)}
+                      src={current.imageUrl}
                       alt={current.title}
                       className="h-full w-full object-cover"
                     />
@@ -410,7 +326,9 @@ export default function EventsShowcase() {
                       )}
 
                       <button
-                        onClick={() => setActive((prev) => (prev + 1) % Math.max(programList.length, 1))}
+                        onClick={() =>
+                          setActive((prev) => (prev + 1) % Math.max(activeSlides.length, 1))
+                        }
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
                       >
                         Next <ArrowRight className="w-4 h-4" />
@@ -428,7 +346,6 @@ export default function EventsShowcase() {
             )}
           </div>
 
-          {/* LIST */}
           <div
             className="
               flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1
@@ -451,7 +368,7 @@ export default function EventsShowcase() {
                 <div className="flex items-center gap-3 sm:gap-3.5">
                   <div className="relative w-16 sm:w-20 aspect-[4/3] rounded-xl overflow-hidden border border-white/15 shrink-0">
                     <img
-                      src={resolveImageUrl(slide.imageUrl)}
+                      src={slide.imageUrl}
                       alt={slide.title}
                       className="h-full w-full object-cover"
                     />
@@ -482,7 +399,6 @@ export default function EventsShowcase() {
         </div>
       </Container>
 
-      {/* Reel modal/player */}
       {reelModal && (
         <BaseModal
           isOpen={Boolean(reelModal)}
@@ -497,7 +413,7 @@ export default function EventsShowcase() {
               <video
                 controls
                 className="w-full rounded-2xl border border-white/10 bg-black"
-                poster={typeof reelModal.image === 'string' ? reelModal.image : undefined}
+                poster={reelModal.imageUrl}
               >
                 <source src={reelModal.videoUrl} type="video/mp4" />
                 Your browser does not support the video tag.
