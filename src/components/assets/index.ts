@@ -15,6 +15,8 @@ import WhatWedo_2 from './Community_service.svg';
 import WhatWeDo_3 from './Youth_gathering.svg';
 import WhatWedo_4 from './prayer_gathering.svg';
 
+// 
+
 // Logo
 import WisdomeHouseLogo from './OIP.webp';
 import EventBannerMobile from './mobile.jpg.jpeg';
