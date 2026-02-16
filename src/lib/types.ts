@@ -214,6 +214,7 @@ export interface WorkforceRegistrationData {
   isExistingMember?: boolean;
   currentAssignment?: string;
   birthday?: string; // DD/MM
+  registrationType?: 'new' | 'serving';
   notes?: string;
 }
 
@@ -261,7 +262,7 @@ export interface LeadershipApplicationRequest {
   role: LeadershipRole;
   bio?: string;
   imageUrl?: string;
-  birthday?: string; // DD/MM/YYYY
+  birthday?: string; // DD/MM
   anniversary?: string; // DD/MM/YYYY
 }
 

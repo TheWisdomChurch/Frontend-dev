@@ -5,13 +5,23 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
 
 import { BaseModal } from '@/components/modal/Base';
+<<<<<<< HEAD
+import { EventBannerDesktop } from '@/components/assets';
+=======
 import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/components/assets';
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
 import { lightShades } from '@/components/colors/colorScheme';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { Container, Section } from '@/components/layout';
 import { BodySM, Caption, H3, SmallText } from '@/components/text';
 import { apiClient } from '@/lib/api';
+<<<<<<< HEAD
+import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
+
+type ShowcaseCategory = 'program' | 'reel';
+=======
 import type { EventPublic } from '@/lib/apiTypes';
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
 
 type ShowcaseCategory = 'program' | 'media' | 'reel';
 
@@ -32,6 +42,18 @@ type Slide = {
   videoUrl?: string;
 };
 
+<<<<<<< HEAD
+const CATEGORY_LABELS: Record<ShowcaseCategory, string> = {
+  program: 'Programs & Events',
+  reel: 'Reels',
+};
+
+function formatEventDate(startAt?: string): string {
+  if (!startAt) return 'Date to be announced';
+  const parsed = new Date(startAt);
+  if (Number.isNaN(parsed.getTime())) return 'Date to be announced';
+
+=======
 const STATIC_SLIDES: Slide[] = [
   {
     id: 'wpc-2026',
@@ -87,6 +109,7 @@ function formatEventDate(startAt?: string): string {
   const parsed = new Date(startAt);
   if (Number.isNaN(parsed.getTime())) return 'Date to be announced';
 
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
   return parsed.toLocaleString(undefined, {
     weekday: 'short',
     month: 'short',
@@ -121,6 +144,10 @@ export default function EventsShowcase() {
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<EventPublic[]>([]);
+<<<<<<< HEAD
+  const [reels, setReels] = useState<ReelPublic[]>([]);
+=======
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   useEffect(() => {
@@ -128,14 +155,28 @@ export default function EventsShowcase() {
 
     const loadEvents = async () => {
       try {
+<<<<<<< HEAD
+        const [eventData, reelData] = await Promise.all([
+          apiClient.listEvents(),
+          apiClient.listReels(),
+        ]);
+        if (mounted) {
+          setEvents(Array.isArray(eventData) ? eventData : []);
+          setReels(Array.isArray(reelData) ? reelData : []);
+=======
         const data = await apiClient.listEvents();
         if (mounted) {
           setEvents(Array.isArray(data) ? data : []);
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
         }
       } catch (error) {
         console.warn('Failed to load events showcase', error);
         if (mounted) {
           setEvents([]);
+<<<<<<< HEAD
+          setReels([]);
+=======
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
         }
       } finally {
         if (mounted) {
@@ -151,6 +192,48 @@ export default function EventsShowcase() {
   }, []);
 
   const programSlides = useMemo<Slide[]>(() => {
+<<<<<<< HEAD
+    return events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      subtitle: statusFromRange(event.startAt, event.endAt),
+      description: event.description || 'Join us for this gathering.',
+      date: formatEventDate(event.startAt),
+      location: event.location || 'Venue to be announced',
+      imageUrl: event.bannerUrl || event.imageUrl || EventBannerDesktop.src,
+      cta: 'Save a seat',
+      href: event.formSlug ? `/forms/${event.formSlug}` : '/events',
+      badge: statusFromRange(event.startAt, event.endAt),
+      category: 'program',
+      start: event.startAt,
+      end: event.endAt,
+    }));
+  }, [events]);
+
+  const reelSlides = useMemo<Slide[]>(
+    () =>
+      reels.map((reel) => ({
+        id: reel.id,
+        title: reel.title || 'Reel',
+        subtitle: 'Reel',
+        description: 'Short highlights from services and events.',
+        date: 'Now streaming',
+        location: 'Wisdom House Media',
+        imageUrl: reel.thumbnail || EventBannerDesktop.src,
+        cta: 'Play reel',
+        href: reel.videoUrl,
+        badge: 'Reel',
+        category: 'reel',
+        videoUrl: reel.videoUrl,
+      })),
+    [reels]
+  );
+
+  const activeSlides = useMemo<Slide[]>(() => {
+    if (category === 'program') return programSlides;
+    return reelSlides;
+  }, [category, programSlides, reelSlides]);
+=======
     if (!events.length) {
       return STATIC_SLIDES.filter((slide) => slide.category === 'program');
     }
@@ -176,6 +259,7 @@ export default function EventsShowcase() {
     if (category === 'program') return programSlides;
     return STATIC_SLIDES.filter((slide) => slide.category === category);
   }, [category, programSlides]);
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
 
   useEffect(() => {
     if (activeSlides.length === 0) {
@@ -215,7 +299,7 @@ export default function EventsShowcase() {
       <Container size="xl" className="relative z-10 space-y-5">
         <div className="flex flex-col gap-1.5">
           <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
-            Programs & Media
+            Programs & Reels
           </Caption>
 
           <H3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">What&apos;s happening now</H3>
