@@ -5,15 +5,25 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
 
 import { BaseModal } from '@/components/modal/Base';
+<<<<<<< HEAD
 import { EventBannerDesktop } from '@/components/assets';
+=======
+import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/components/assets';
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
 import { lightShades } from '@/components/colors/colorScheme';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { Container, Section } from '@/components/layout';
 import { BodySM, Caption, H3, SmallText } from '@/components/text';
 import { apiClient } from '@/lib/api';
+<<<<<<< HEAD
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 
 type ShowcaseCategory = 'program' | 'reel';
+=======
+import type { EventPublic } from '@/lib/apiTypes';
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
+
+type ShowcaseCategory = 'program' | 'media' | 'reel';
 
 type Slide = {
   id: string;
@@ -32,6 +42,7 @@ type Slide = {
   videoUrl?: string;
 };
 
+<<<<<<< HEAD
 const CATEGORY_LABELS: Record<ShowcaseCategory, string> = {
   program: 'Programs & Events',
   reel: 'Reels',
@@ -42,6 +53,63 @@ function formatEventDate(startAt?: string): string {
   const parsed = new Date(startAt);
   if (Number.isNaN(parsed.getTime())) return 'Date to be announced';
 
+=======
+const STATIC_SLIDES: Slide[] = [
+  {
+    id: 'wpc-2026',
+    title: 'Wisdom Power Conference 2026',
+    subtitle: 'Upcoming',
+    description: 'City-wide gathering with worship, word, and miracles. Come expectant.',
+    date: 'March 20, 2026 • 6:00 PM',
+    location: 'Honor Gardens Event Center',
+    imageUrl: EventBannerDesktop.src,
+    cta: 'Save a seat',
+    href: '/events',
+    badge: 'Upcoming',
+    category: 'program',
+    start: '2026-03-20T18:00:00.000Z',
+    end: '2026-03-22T20:00:00.000Z',
+  },
+  {
+    id: 'media-stories',
+    title: 'Media Stories',
+    subtitle: 'Media',
+    description: 'Short testimonies, sermon clips, and behind-the-scenes moments.',
+    date: 'Updated weekly',
+    location: 'Content Hub',
+    imageUrl: hero_bg_1.src,
+    cta: 'View media',
+    href: '/resources',
+    badge: 'Media',
+    category: 'media',
+  },
+  {
+    id: 'highlights-reels',
+    title: 'Highlights & Reels',
+    subtitle: 'Reels',
+    description: 'Watch quick reels from recent services and events.',
+    date: 'Updated weekly',
+    location: 'Media Team',
+    imageUrl: hero_bg_3.src,
+    cta: 'Watch reels',
+    href: '/resources/sermons',
+    badge: 'Reel',
+    category: 'reel',
+  },
+];
+
+const CATEGORY_LABELS: Record<ShowcaseCategory, string> = {
+  program: 'Programs & Events',
+  media: 'Media',
+  reel: 'Reels',
+};
+
+function formatEventDate(startAt?: string): string {
+  if (!startAt) return 'Date to be announced';
+  const parsed = new Date(startAt);
+  if (Number.isNaN(parsed.getTime())) return 'Date to be announced';
+
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
   return parsed.toLocaleString(undefined, {
     weekday: 'short',
     month: 'short',
@@ -76,7 +144,10 @@ export default function EventsShowcase() {
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<EventPublic[]>([]);
+<<<<<<< HEAD
   const [reels, setReels] = useState<ReelPublic[]>([]);
+=======
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   useEffect(() => {
@@ -84,6 +155,7 @@ export default function EventsShowcase() {
 
     const loadEvents = async () => {
       try {
+<<<<<<< HEAD
         const [eventData, reelData] = await Promise.all([
           apiClient.listEvents(),
           apiClient.listReels(),
@@ -91,12 +163,20 @@ export default function EventsShowcase() {
         if (mounted) {
           setEvents(Array.isArray(eventData) ? eventData : []);
           setReels(Array.isArray(reelData) ? reelData : []);
+=======
+        const data = await apiClient.listEvents();
+        if (mounted) {
+          setEvents(Array.isArray(data) ? data : []);
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
         }
       } catch (error) {
         console.warn('Failed to load events showcase', error);
         if (mounted) {
           setEvents([]);
+<<<<<<< HEAD
           setReels([]);
+=======
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
         }
       } finally {
         if (mounted) {
@@ -112,6 +192,7 @@ export default function EventsShowcase() {
   }, []);
 
   const programSlides = useMemo<Slide[]>(() => {
+<<<<<<< HEAD
     return events.map((event) => ({
       id: event.id,
       title: event.title,
@@ -152,6 +233,33 @@ export default function EventsShowcase() {
     if (category === 'program') return programSlides;
     return reelSlides;
   }, [category, programSlides, reelSlides]);
+=======
+    if (!events.length) {
+      return STATIC_SLIDES.filter((slide) => slide.category === 'program');
+    }
+
+    return events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      subtitle: statusFromRange(event.startAt, event.endAt),
+      description: event.description || 'Join us for this gathering.',
+      date: formatEventDate(event.startAt),
+      location: event.location || 'Venue to be announced',
+      imageUrl: event.bannerUrl || event.imageUrl || EventBannerDesktop.src,
+      cta: 'Save a seat',
+      href: event.formSlug ? `/forms/${event.formSlug}` : '/events',
+      badge: statusFromRange(event.startAt, event.endAt),
+      category: 'program',
+      start: event.startAt,
+      end: event.endAt,
+    }));
+  }, [events]);
+
+  const activeSlides = useMemo<Slide[]>(() => {
+    if (category === 'program') return programSlides;
+    return STATIC_SLIDES.filter((slide) => slide.category === category);
+  }, [category, programSlides]);
+>>>>>>> 838f3b953ad76915294df4b1228dbc0bca23775f
 
   useEffect(() => {
     if (activeSlides.length === 0) {
@@ -225,7 +333,7 @@ export default function EventsShowcase() {
               lg:aspect-[16/9] lg:min-h-[340px]
             "
           >
-            {loading ? (
+            {loading && category === 'program' ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-10 w-10 rounded-full border-2 border-white/40 border-t-white animate-spin" />
               </div>
@@ -341,7 +449,9 @@ export default function EventsShowcase() {
               <div className="absolute inset-0 flex items-center justify-center text-white/60 px-6 text-center">
                 {category === 'program'
                   ? 'No approved events available yet.'
-                  : 'No reels available yet.'}
+                  : category === 'media'
+                    ? 'No media stories available yet.'
+                    : 'No reels available yet.'}
               </div>
             )}
           </div>

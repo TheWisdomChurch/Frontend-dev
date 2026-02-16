@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import { useState, useEffect } from 'react';
 
 type ModalStep = 'welcome' | 'confession';
 
@@ -8,96 +7,54 @@ interface UseWelcomeModalProps {
   onClose?: () => void;
 }
 
-export function useWelcomeModal({ delay = 2000, onClose }: UseWelcomeModalProps) {
+const CONFESSION_STORAGE_KEY = 'wc_confession_modal_next_show_v1';
+const CONFESSION_COOLDOWN_MS = 1000 * 60 * 60 * 8;
+
+const getNextAllowedTime = () => {
+  if (typeof window === 'undefined') return 0;
+  const raw = window.localStorage.getItem(CONFESSION_STORAGE_KEY);
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : 0;
+};
+
+const setNextAllowedTime = (nextAllowedAt: number) => {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(CONFESSION_STORAGE_KEY, String(nextAllowedAt));
+};
+
+export function useWelcomeModal({ delay = 2200, onClose }: UseWelcomeModalProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>('welcome');
   const [mounted, setMounted] = useState(false);
-  
-  const modalRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
 
-  // Check if popup should be shown
   useEffect(() => {
     setMounted(true);
-    const showTimer = setTimeout(() => {
-      setIsVisible(true);
-    }, delay);
 
-    return () => clearTimeout(showTimer);
+    const now = Date.now();
+    const nextAllowedAt = getNextAllowedTime();
+    if (nextAllowedAt > now) return;
+
+    const showTimer = window.setTimeout(() => {
+      setIsVisible(true);
+      setCurrentStep('welcome');
+    }, Math.max(0, delay));
+
+    return () => window.clearTimeout(showTimer);
   }, [delay]);
 
-  // Handle modal animations and body scroll
-  useEffect(() => {
-    if (isVisible && modalRef.current) {
-      document.body.style.overflow = 'hidden';
-
-      gsap.fromTo(
-        modalRef.current,
-        { opacity: 0, scale: 0.9, y: 20 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-      );
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isVisible]);
-
-  // Animate step transitions
-  const animateStepTransition = (newStep: ModalStep) => {
-    if (!contentRef.current) return;
-
-    const tl = gsap.timeline();
-
-    tl.to(contentRef.current, {
-      opacity: 0,
-      x: -20,
-      duration: 0.25,
-      ease: 'power2.inOut',
-    })
-      .add(() => setCurrentStep(newStep))
-      .fromTo(
-        contentRef.current,
-        { x: 20, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
-      );
-  };
-
-  // Handle modal close
-  const handleClose = () => {
-    if (modalRef.current) {
-      gsap.to(modalRef.current, {
-        opacity: 0,
-        scale: 0.9,
-        y: 20,
-        duration: 0.3,
-        ease: 'power2.in',
-        onComplete: () => {
-          setIsVisible(false);
-          onClose?.();
-        },
-      });
-    }
-  };
-
-  // Navigate to confession
-  const showConfession = () => {
-    animateStepTransition('confession');
-  };
-
-  // Navigate to welcome
-  const showWelcome = () => {
-    animateStepTransition('welcome');
+  const closeAndPersist = () => {
+    setNextAllowedTime(Date.now() + CONFESSION_COOLDOWN_MS);
+    setIsVisible(false);
+    onClose?.();
   };
 
   return {
     isVisible,
     currentStep,
     mounted,
-    modalRef,
-    contentRef,
-    handleClose,
-    showConfession,
-    showWelcome,
+    handleClose: closeAndPersist,
+    showConfession: () => setCurrentStep('confession'),
+    showWelcome: () => setCurrentStep('welcome'),
   };
 }
+

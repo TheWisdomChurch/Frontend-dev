@@ -51,17 +51,6 @@ export type EventPublic = {
   formSlug?: string | null;
 };
 
-export type ReelPublic = {
-  id: string;
-  title: string;
-  thumbnail: string;
-  videoUrl: string;
-  duration?: string;
-  eventId?: string;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
 export type Testimonial = {
   id: number | string;
   firstName?: string;
