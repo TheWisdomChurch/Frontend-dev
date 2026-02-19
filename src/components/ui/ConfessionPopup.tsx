@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ArrowLeft, BookOpen, Church, HeartHandshake, Sparkles } from 'lucide-react';
 import { BaseModal } from '@/components/modal/Base';
 import CustomButton from '@/components/utils/buttons/CustomButton';
-import { BaseText, BodySM, Caption, H3 } from '@/components/text';
+import { BaseText, BodyMD, Caption, H3 } from '@/components/text';
 import { PlayfairText } from '@/components/text/FontText';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { confessionContent } from '@/lib/data';
@@ -43,8 +43,8 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
       forceBottomSheet
     >
       {currentStep === 'welcome' ? (
-        <div className="space-y-5">
-          <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-5">
+        <div className="space-y-5 text-white">
+          <div className="rounded-2xl border border-white/20 bg-black/45 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.35)]">
             <div className="mb-4 flex items-center gap-3">
               <div className="rounded-full border border-white/15 bg-black/40 p-3">
                 <Image
@@ -62,10 +62,10 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
                 <H3 className="text-white">We are Equipped and Empowered</H3>
               </div>
             </div>
-            <BodySM className="leading-relaxed text-white/80">
+            <BodyMD className="leading-relaxed text-white/90">
               You are in a place of worship, truth, and transformation. Before you continue,
               take a moment with our confession and align your words with faith.
-            </BodySM>
+            </BodyMD>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -76,7 +76,7 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
             ].map(item => (
               <div
                 key={item.label}
-                className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-4 text-center"
+                className="rounded-xl border border-white/15 bg-white/[0.06] px-3 py-4 text-center"
               >
                 <div
                   className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full"
@@ -121,8 +121,8 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
           </div>
         </div>
       ) : (
-        <div className="space-y-5">
-          <div className="rounded-2xl border border-white/15 bg-black/35 p-5">
+        <div className="space-y-5 text-white">
+          <div className="rounded-2xl border border-white/20 bg-black/55 p-5">
             <PlayfairText
               as="p"
               className="text-center text-sm italic leading-relaxed sm:text-base"
@@ -133,15 +133,15 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
             </PlayfairText>
           </div>
 
-          <div className="max-h-[42vh] space-y-3 overflow-y-auto rounded-2xl border border-white/12 bg-white/[0.03] p-4">
+          <div className="max-h-[44vh] space-y-3 overflow-y-auto rounded-2xl border border-white/15 bg-white/[0.06] p-4">
             {confessionContent
               .split('\n\n')
               .map(paragraph => paragraph.trim())
               .filter(Boolean)
               .map((paragraph, index) => (
-                <BodySM key={`${paragraph.slice(0, 20)}-${index}`} className="leading-relaxed text-white/82">
+                <BodyMD key={`${paragraph.slice(0, 20)}-${index}`} className="leading-relaxed text-white/90">
                   {paragraph}
-                </BodySM>
+                </BodyMD>
               ))}
           </div>
 
@@ -176,7 +176,7 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
             </CustomButton>
           </div>
 
-          <BaseText className="text-center text-xs text-white/55">
+          <BaseText className="text-center text-xs text-white/70">
             This confession appears periodically and can always be revisited.
           </BaseText>
         </div>
@@ -184,4 +184,3 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
     </BaseModal>
   );
 }
-

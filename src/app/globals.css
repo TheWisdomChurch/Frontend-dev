@@ -26,6 +26,8 @@
   /* Font Family */
   --font-sans: var(--font-worksans);
   --font-serif: var(--font-playfair);
+  --font-ui-fallback:
+    'Inter', 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* FIXED RESET - Less aggressive */
@@ -62,13 +64,13 @@ body {
 html {
   scroll-behavior: smooth;
   height: 100%;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 body {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), var(--font-ui-fallback);
   line-height: 1.65;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
   font-weight: 400;
   color: var(--color-text, #111827);
   background-color: var(--color-pageBackground, #ffffff);
@@ -83,9 +85,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), var(--font-ui-fallback);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.012em;
 }
 
 .page-shell {
@@ -446,7 +448,7 @@ main > * + * {
 
 /* Typography Utilities */
 .font-bricolage {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), var(--font-ui-fallback);
 }
 
 /* Component Base Styles */
@@ -466,7 +468,11 @@ button:focus-visible {
 /* Tone down overly heavy weights for a more readable UI */
 .font-black,
 .font-extrabold {
-  font-weight: 600 !important;
+  font-weight: 700 !important;
+}
+
+.font-extrabold {
+  font-weight: 800 !important;
 }
 
 /* Utility Classes */

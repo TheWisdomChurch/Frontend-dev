@@ -102,9 +102,10 @@ export const BaseModal = memo(function BaseModal({
   const colors = useMemo(() => ({
     background: colorScheme.black,
     text: {
-      primary: colorScheme.primary,
+      primary: colorScheme.white,
       secondary: colorScheme.white,
-      muted: 'rgba(255, 255, 255, 0.7)'
+      muted: 'rgba(255, 255, 255, 0.7)',
+      accent: colorScheme.primary,
     },
     button: {
       background: colorScheme.primary,
@@ -237,41 +238,70 @@ export const BaseModal = memo(function BaseModal({
 
     const modal = modalRef.current;
     const backdrop = backdropRef.current;
+    const revealNodes = modal.querySelectorAll('[data-modal-stagger]');
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(backdrop, { opacity: 1 });
+      gsap.set(modal, { opacity: 1, y: 0, scale: 1 });
+      if (revealNodes.length > 0) {
+        gsap.set(revealNodes, { opacity: 1, y: 0 });
+      }
+      onAnimationComplete?.();
+      return;
+    }
 
     const tl = gsap.timeline({
-      defaults: { ease: 'power3.out', duration: 0.4 },
+      defaults: { ease: 'power3.out', duration: 0.45 },
       onComplete: onAnimationComplete
     });
 
     if (useBottomSheet) {
-      // Bottom sheet animation for mobile/tablet
       tl.fromTo(backdrop, 
         { opacity: 0 },
-        { opacity: 1 }
+        { opacity: 1, duration: 0.36, ease: 'power2.out' }
       )
       .fromTo(modal,
-        { y: '100%', opacity: 0.8 },
-        { y: 0, opacity: 1 },
+        { y: '108%', opacity: 0, scale: 0.98 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.58, ease: 'expo.out' },
         '<'
       );
     } else {
-      // Centered modal animation for desktop
       tl.fromTo(backdrop,
         { opacity: 0 },
-        { opacity: 1 }
+        { opacity: 1, duration: 0.34, ease: 'power2.out' }
       )
       .fromTo(modal,
         { 
-          scale: 0.9, 
+          scale: 0.94,
           opacity: 0,
-          y: 20 
+          y: 26
         },
         { 
           scale: 1, 
           opacity: 1,
-          y: 0 
+          y: 0,
+          duration: 0.5,
+          ease: 'back.out(1.2)'
         },
         '<'
+      );
+    }
+
+    if (revealNodes.length > 0) {
+      tl.fromTo(
+        revealNodes,
+        { opacity: 0, y: 10 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          stagger: 0.05,
+          ease: 'power2.out',
+        },
+        '-=0.24'
       );
     }
 
@@ -286,21 +316,40 @@ export const BaseModal = memo(function BaseModal({
     setIsClosing(true);
     const modal = modalRef.current;
     const backdrop = backdropRef.current;
+    const revealNodes = modal.querySelectorAll('[data-modal-stagger]');
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setIsClosing(false);
+      onClose();
+      return;
+    }
 
     const tl = gsap.timeline({
-      defaults: { ease: 'power2.in', duration: 0.3 },
+      defaults: { ease: 'power2.in', duration: 0.24 },
       onComplete: () => {
         setIsClosing(false);
         onClose();
       }
     });
 
+    if (revealNodes.length > 0) {
+      tl.to(revealNodes, {
+        opacity: 0,
+        y: 8,
+        duration: 0.16,
+        stagger: -0.025,
+      });
+    }
+
     if (useBottomSheet) {
-      tl.to(modal, { y: '100%', opacity: 0.8 })
-        .to(backdrop, { opacity: 0 }, '<');
+      tl.to(modal, { y: '108%', opacity: 0.2, duration: 0.28, ease: 'power3.in' })
+        .to(backdrop, { opacity: 0, duration: 0.22 }, '<');
     } else {
-      tl.to(modal, { scale: 0.95, opacity: 0, y: 20 })
-        .to(backdrop, { opacity: 0 }, '<');
+      tl.to(modal, { scale: 0.96, opacity: 0, y: 24, duration: 0.25, ease: 'power2.in' })
+        .to(backdrop, { opacity: 0, duration: 0.2 }, '<');
     }
   }, [onClose, useBottomSheet, isClosing, preventClose, isLoading]);
 
@@ -471,7 +520,7 @@ export const BaseModal = memo(function BaseModal({
           >
             <div 
               className="w-12 h-1.5 rounded-full"
-              style={{ backgroundColor: colors.text.primary }}
+              style={{ backgroundColor: colors.text.accent }}
             />
           </div>
         )}
@@ -488,7 +537,10 @@ export const BaseModal = memo(function BaseModal({
           >
             {/* Header */}
             {(title || subtitle || showCloseButton) && (
-              <div className={`flex justify-between items-start mb-6 ${useBottomSheet ? 'pt-2' : ''}`}>
+              <div
+                className={`flex justify-between items-start mb-6 ${useBottomSheet ? 'pt-2' : ''}`}
+                data-modal-stagger
+              >
                 <div className="flex-1">
                   {title && (
                     <h2
@@ -532,7 +584,7 @@ export const BaseModal = memo(function BaseModal({
             )}
 
             {/* Content */}
-            <div className={isLoading ? 'opacity-60 pointer-events-none' : ''}>
+            <div className={isLoading ? 'opacity-60 pointer-events-none' : ''} data-modal-stagger>
               {children}
             </div>
           </div>

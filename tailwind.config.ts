@@ -10,10 +10,34 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-worksans)', 'system-ui', 'sans-serif'],
+        sans: [
+          'var(--font-bricolage)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
         serif: ['var(--font-playfair)', 'serif'],
-        body: ['var(--font-worksans)', 'system-ui', 'sans-serif'],
-        headline: ['var(--font-worksans)', 'system-ui', 'sans-serif'],
+        body: [
+          'var(--font-bricolage)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        headline: [
+          'var(--font-bricolage)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
         code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontWeight: {
