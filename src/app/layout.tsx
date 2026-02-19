@@ -207,7 +207,7 @@ export default function RootLayout({
       className={`${bricolageGrotesque.variable} ${worksans.variable} ${playfair.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className={worksans.className}>
+      <body className={`${worksans.className} font-sans`}>
         {/* ✅ Valid JSON-LD only (no <meta> inside JSON.stringify) */}
         <script
           type="application/ld+json"

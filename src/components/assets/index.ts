@@ -21,6 +21,7 @@ import WhatWedo_4 from './prayer_gathering.svg';
 import WisdomeHouseLogo from './OIP.webp';
 import EventBannerMobile from './mobile.jpg.jpeg';
 import EventBannerDesktop from './Container.png';
+import videoBg from './VideoBg.mp4';
 
 import avatar from './avatar.png'
 // Associate Pastors
@@ -106,4 +107,5 @@ export {
   Dept_4,
   ProvidusBank,
   KeystoneBank,
+  videoBg,
 };

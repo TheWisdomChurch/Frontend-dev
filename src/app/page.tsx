@@ -46,13 +46,12 @@ const ResourceSection = dynamic(() => import('@/components/ui/Homepage/Resource'
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
   const [showConfessionPopup, setShowConfessionPopup] = useState(true);
   const { colorScheme } = useTheme();
 
-  const eventStorageKey = 'wc_event_ad_seen_v1';
-  const autoOpenDelayMs = 1400;
+  const eventStorageKey = 'wc_event_ad_next_show_session_v2';
+  const autoOpenDelayMs = 1200;
   const closeCooldownMs = 1000 * 60 * 20;
   const remindCooldownMs = 1000 * 60 * 45;
 
@@ -68,7 +67,7 @@ export default function Home() {
       time: '6:00 PM Daily',
       location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
       image: '/HEADER.png',
-      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wisdom-power-conference26',
+      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
       ctaLabel: 'Register now',
       note: 'You will be returned to the main website after you finish.',
     }),
@@ -76,37 +75,23 @@ export default function Home() {
   );
 
   useEffect(() => {
-    const checkFonts = () => {
-      if (document.fonts && typeof document.fonts.check === 'function') {
-        document.fonts.ready.then(() => {
-          setFontsLoaded(true);
-        });
-      } else {
-        setTimeout(() => setFontsLoaded(true), 1000);
-      }
-    };
-
-    checkFonts();
-  }, []);
-
-  useEffect(() => {
-    if (!fontsLoaded) return;
-
     const now = Date.now();
     const nextAllowedRaw =
-      typeof window !== 'undefined' ? localStorage.getItem(eventStorageKey) : null;
+      typeof window !== 'undefined'
+        ? window.sessionStorage.getItem(eventStorageKey)
+        : null;
     const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
 
-    if (nextAllowed && now < nextAllowed) {
+    if (Number.isFinite(nextAllowed) && now < nextAllowed) {
       setNextAdAt(nextAllowed);
       return;
     }
 
     setNextAdAt(now + autoOpenDelayMs);
-  }, [autoOpenDelayMs, eventStorageKey, fontsLoaded]);
+  }, [autoOpenDelayMs, eventStorageKey]);
 
   useEffect(() => {
-    if (!fontsLoaded || nextAdAt === null) return;
+    if (nextAdAt === null) return;
 
     const timeLeft = nextAdAt - Date.now();
     if (timeLeft <= 0) {
@@ -119,12 +104,12 @@ export default function Home() {
     }, timeLeft);
 
     return () => window.clearTimeout(timer);
-  }, [fontsLoaded, nextAdAt]);
+  }, [nextAdAt]);
 
   const persistAdCooldown = (cooldownMs: number) => {
     const nextAllowedAt = Date.now() + cooldownMs;
     if (typeof window !== 'undefined') {
-      localStorage.setItem(eventStorageKey, String(nextAllowedAt));
+      window.sessionStorage.setItem(eventStorageKey, String(nextAllowedAt));
     }
     setNextAdAt(nextAllowedAt);
   };

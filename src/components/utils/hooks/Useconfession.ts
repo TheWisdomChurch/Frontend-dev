@@ -7,19 +7,16 @@ interface UseWelcomeModalProps {
   onClose?: () => void;
 }
 
-const CONFESSION_STORAGE_KEY = 'wc_confession_modal_next_show_v1';
-const CONFESSION_COOLDOWN_MS = 1000 * 60 * 60 * 8;
+const CONFESSION_SESSION_KEY = 'wc_confession_modal_seen_session_v3';
 
-const getNextAllowedTime = () => {
-  if (typeof window === 'undefined') return 0;
-  const raw = window.localStorage.getItem(CONFESSION_STORAGE_KEY);
-  const value = Number(raw);
-  return Number.isFinite(value) ? value : 0;
+const hasSeenThisSession = () => {
+  if (typeof window === 'undefined') return false;
+  return window.sessionStorage.getItem(CONFESSION_SESSION_KEY) === '1';
 };
 
-const setNextAllowedTime = (nextAllowedAt: number) => {
+const markSeenThisSession = () => {
   if (typeof window === 'undefined') return;
-  window.localStorage.setItem(CONFESSION_STORAGE_KEY, String(nextAllowedAt));
+  window.sessionStorage.setItem(CONFESSION_SESSION_KEY, '1');
 };
 
 export function useWelcomeModal({ delay = 2200, onClose }: UseWelcomeModalProps) {
@@ -30,9 +27,7 @@ export function useWelcomeModal({ delay = 2200, onClose }: UseWelcomeModalProps)
   useEffect(() => {
     setMounted(true);
 
-    const now = Date.now();
-    const nextAllowedAt = getNextAllowedTime();
-    if (nextAllowedAt > now) return;
+    if (hasSeenThisSession()) return;
 
     const showTimer = window.setTimeout(() => {
       setIsVisible(true);
@@ -43,7 +38,7 @@ export function useWelcomeModal({ delay = 2200, onClose }: UseWelcomeModalProps)
   }, [delay]);
 
   const closeAndPersist = () => {
-    setNextAllowedTime(Date.now() + CONFESSION_COOLDOWN_MS);
+    markSeenThisSession();
     setIsVisible(false);
     onClose?.();
   };
@@ -57,4 +52,3 @@ export function useWelcomeModal({ delay = 2200, onClose }: UseWelcomeModalProps)
     showWelcome: () => setCurrentStep('welcome'),
   };
 }
-
