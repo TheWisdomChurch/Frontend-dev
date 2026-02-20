@@ -24,7 +24,7 @@ while IFS= read -r -d '' file; do
 
   case "$file" in
     *.ts|*.tsx|*.js|*.jsx|*.json|*.md|*.mdx|*.css|*.scss|*.html|*.yml|*.yaml)
-      if rg -n "^(<<<<<<<|=======|>>>>>>>)" -- "$file" >/dev/null 2>&1; then
+      if rg -n "^(<<<<<<< .*$|=======$|>>>>>>> .*$)" -- "$file" >/dev/null 2>&1; then
         echo "[pre-commit] Conflict marker found in $file"
         FOUND_CONFLICT_MARKER=1
       fi

@@ -4,8 +4,8 @@ import { useState, useCallback, useEffect, JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { 
-  Loader2, 
+import {
+  Loader2,
   Check,
   Users,
   Music,
@@ -36,63 +36,136 @@ import {
   Church,
   Palette,
   ChevronRight,
-  Info
+  Info,
 } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import React from 'react';
 import { BaseModal } from './Base';
-import type { DepartmentType, JoinFormData, JoinUsModalProps } from '@/lib/types';
+import type {
+  DepartmentType,
+  JoinFormData,
+  JoinUsModalProps,
+} from '@/lib/types';
 
 // Department configuration
-const DEPARTMENT_CONFIG: Record<DepartmentType, {
-  title: string;
-  description: string;
-  icon: JSX.Element;
-  roles: Array<{
-    id: string;
-    label: string;
+const DEPARTMENT_CONFIG: Record<
+  DepartmentType,
+  {
+    title: string;
     description: string;
-    icon?: JSX.Element;
-  }>;
-  skills?: string[];
-  commitment?: string;
-}> = {
-  'Ushers': {
+    icon: JSX.Element;
+    roles: Array<{
+      id: string;
+      label: string;
+      description: string;
+      icon?: JSX.Element;
+    }>;
+    skills?: string[];
+    commitment?: string;
+  }
+> = {
+  Ushers: {
     title: 'Ushers Department',
     description: 'Welcome and guide attendees with warmth and excellence',
     icon: <DoorOpen className="w-5 h-5" />,
     roles: [
-      { id: 'greeter', label: 'Greeter', description: 'Welcome people at the entrance', icon: <UserCheck className="w-4 h-4" /> },
-      { id: 'seating', label: 'Seating Assistant', description: 'Help people find seats', icon: <MapPin className="w-4 h-4" /> },
-      { id: 'information', label: 'Information Desk', description: 'Answer questions and provide guidance', icon: <Bell className="w-4 h-4" /> },
-      { id: 'special_assistance', label: 'Special Assistance', description: 'Help elderly and disabled attendees', icon: <Heart className="w-4 h-4" /> },
+      {
+        id: 'greeter',
+        label: 'Greeter',
+        description: 'Welcome people at the entrance',
+        icon: <UserCheck className="w-4 h-4" />,
+      },
+      {
+        id: 'seating',
+        label: 'Seating Assistant',
+        description: 'Help people find seats',
+        icon: <MapPin className="w-4 h-4" />,
+      },
+      {
+        id: 'information',
+        label: 'Information Desk',
+        description: 'Answer questions and provide guidance',
+        icon: <Bell className="w-4 h-4" />,
+      },
+      {
+        id: 'special_assistance',
+        label: 'Special Assistance',
+        description: 'Help elderly and disabled attendees',
+        icon: <Heart className="w-4 h-4" />,
+      },
     ],
     skills: ['Communication', 'Patience', 'Organization', 'Hospitality'],
     commitment: '2-4 hours per week',
   },
   'Media Team': {
     title: 'Media Department',
-    description: 'Capture and broadcast the move of God through visuals and sound',
+    description:
+      'Capture and broadcast the move of God through visuals and sound',
     icon: <Video className="w-5 h-5" />,
     roles: [
-      { id: 'camera', label: 'Camera Operator', description: 'Operate video cameras during services', icon: <Video className="w-4 h-4" /> },
-      { id: 'sound', label: 'Sound Engineer', description: 'Manage audio equipment and mixing', icon: <Mic className="w-4 h-4" /> },
-      { id: 'lighting', label: 'Lighting Technician', description: 'Control stage and venue lighting', icon: <Sparkles className="w-4 h-4" /> },
-      { id: 'livestream', label: 'Livestream Operator', description: 'Manage online broadcasting', icon: <Globe className="w-4 h-4" /> },
+      {
+        id: 'camera',
+        label: 'Camera Operator',
+        description: 'Operate video cameras during services',
+        icon: <Video className="w-4 h-4" />,
+      },
+      {
+        id: 'sound',
+        label: 'Sound Engineer',
+        description: 'Manage audio equipment and mixing',
+        icon: <Mic className="w-4 h-4" />,
+      },
+      {
+        id: 'lighting',
+        label: 'Lighting Technician',
+        description: 'Control stage and venue lighting',
+        icon: <Sparkles className="w-4 h-4" />,
+      },
+      {
+        id: 'livestream',
+        label: 'Livestream Operator',
+        description: 'Manage online broadcasting',
+        icon: <Globe className="w-4 h-4" />,
+      },
     ],
-    skills: ['Technical Skills', 'Attention to Detail', 'Creativity', 'Teamwork'],
+    skills: [
+      'Technical Skills',
+      'Attention to Detail',
+      'Creativity',
+      'Teamwork',
+    ],
     commitment: '3-5 hours per week',
   },
-  'Choir': {
+  Choir: {
     title: 'Choir & Worship Team',
     description: 'Lead powerful worship and create heavenly atmospheres',
     icon: <Music className="w-5 h-5" />,
     roles: [
-      { id: 'singer', label: 'Vocalist', description: 'Sing in the choir or worship team', icon: <Mic className="w-4 h-4" /> },
-      { id: 'instrumentalist', label: 'Instrumentalist', description: 'Play musical instruments', icon: <Music className="w-4 h-4" /> },
-      { id: 'worship_leader', label: 'Worship Leader', description: 'Lead worship sessions', icon: <Sparkles className="w-4 h-4" /> },
-      { id: 'choir_director', label: 'Choir Director', description: 'Direct and train choir members', icon: <Award className="w-4 h-4" /> },
+      {
+        id: 'singer',
+        label: 'Vocalist',
+        description: 'Sing in the choir or worship team',
+        icon: <Mic className="w-4 h-4" />,
+      },
+      {
+        id: 'instrumentalist',
+        label: 'Instrumentalist',
+        description: 'Play musical instruments',
+        icon: <Music className="w-4 h-4" />,
+      },
+      {
+        id: 'worship_leader',
+        label: 'Worship Leader',
+        description: 'Lead worship sessions',
+        icon: <Sparkles className="w-4 h-4" />,
+      },
+      {
+        id: 'choir_director',
+        label: 'Choir Director',
+        description: 'Direct and train choir members',
+        icon: <Award className="w-4 h-4" />,
+      },
     ],
     skills: ['Musical Talent', 'Worship Heart', 'Team Player', 'Commitment'],
     commitment: '4-6 hours per week',
@@ -102,10 +175,30 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     description: 'Nurture young hearts and teach them the ways of God',
     icon: <School className="w-5 h-5" />,
     roles: [
-      { id: 'teacher', label: 'Sunday School Teacher', description: 'Teach Bible lessons to children', icon: <BookOpen className="w-4 h-4" /> },
-      { id: 'assistant', label: 'Teacher\'s Assistant', description: 'Assist with classroom activities', icon: <Users className="w-4 h-4" /> },
-      { id: 'activity_leader', label: 'Activity Leader', description: 'Lead games and crafts', icon: <Sparkles className="w-4 h-4" /> },
-      { id: 'safety', label: 'Safety Monitor', description: 'Ensure child safety and security', icon: <Shield className="w-4 h-4" /> },
+      {
+        id: 'teacher',
+        label: 'Sunday School Teacher',
+        description: 'Teach Bible lessons to children',
+        icon: <BookOpen className="w-4 h-4" />,
+      },
+      {
+        id: 'assistant',
+        label: "Teacher's Assistant",
+        description: 'Assist with classroom activities',
+        icon: <Users className="w-4 h-4" />,
+      },
+      {
+        id: 'activity_leader',
+        label: 'Activity Leader',
+        description: 'Lead games and crafts',
+        icon: <Sparkles className="w-4 h-4" />,
+      },
+      {
+        id: 'safety',
+        label: 'Safety Monitor',
+        description: 'Ensure child safety and security',
+        icon: <Shield className="w-4 h-4" />,
+      },
     ],
     skills: ['Patience', 'Creativity', 'Love for Children', 'Teaching Ability'],
     commitment: '2-3 hours per week',
@@ -115,12 +208,37 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     description: 'Empower the next generation to walk in purpose and power',
     icon: <Sparkles className="w-5 h-5" />,
     roles: [
-      { id: 'mentor', label: 'Youth Mentor', description: 'Mentor and guide young people', icon: <UserCheck className="w-4 h-4" /> },
-      { id: 'activity_coordinator', label: 'Activity Coordinator', description: 'Plan youth events and activities', icon: <Calendar className="w-4 h-4" /> },
-      { id: 'small_group_leader', label: 'Small Group Leader', description: 'Lead Bible study groups', icon: <Users className="w-4 h-4" /> },
-      { id: 'outreach', label: 'Outreach Coordinator', description: 'Plan community outreach events', icon: <Globe className="w-4 h-4" /> },
+      {
+        id: 'mentor',
+        label: 'Youth Mentor',
+        description: 'Mentor and guide young people',
+        icon: <UserCheck className="w-4 h-4" />,
+      },
+      {
+        id: 'activity_coordinator',
+        label: 'Activity Coordinator',
+        description: 'Plan youth events and activities',
+        icon: <Calendar className="w-4 h-4" />,
+      },
+      {
+        id: 'small_group_leader',
+        label: 'Small Group Leader',
+        description: 'Lead Bible study groups',
+        icon: <Users className="w-4 h-4" />,
+      },
+      {
+        id: 'outreach',
+        label: 'Outreach Coordinator',
+        description: 'Plan community outreach events',
+        icon: <Globe className="w-4 h-4" />,
+      },
     ],
-    skills: ['Relatability', 'Leadership', 'Communication', 'Passion for Youth'],
+    skills: [
+      'Relatability',
+      'Leadership',
+      'Communication',
+      'Passion for Youth',
+    ],
     commitment: '3-5 hours per week',
   },
   'Technical Team': {
@@ -128,12 +246,37 @@ const DEPARTMENT_CONFIG: Record<DepartmentType, {
     description: 'Ensure seamless operations behind the scenes with excellence',
     icon: <Target className="w-5 h-5" />,
     roles: [
-      { id: 'projection', label: 'Projection Operator', description: 'Manage slides and media presentation', icon: <Video className="w-4 h-4" /> },
-      { id: 'it_support', label: 'IT Support', description: 'Maintain computers and network systems', icon: <Target className="w-4 h-4" /> },
-      { id: 'equipment', label: 'Equipment Manager', description: 'Maintain and setup technical equipment', icon: <Briefcase className="w-4 h-4" /> },
-      { id: 'broadcast', label: 'Broadcast Technician', description: 'Manage recording and broadcasting', icon: <Globe className="w-4 h-4" /> },
+      {
+        id: 'projection',
+        label: 'Projection Operator',
+        description: 'Manage slides and media presentation',
+        icon: <Video className="w-4 h-4" />,
+      },
+      {
+        id: 'it_support',
+        label: 'IT Support',
+        description: 'Maintain computers and network systems',
+        icon: <Target className="w-4 h-4" />,
+      },
+      {
+        id: 'equipment',
+        label: 'Equipment Manager',
+        description: 'Maintain and setup technical equipment',
+        icon: <Briefcase className="w-4 h-4" />,
+      },
+      {
+        id: 'broadcast',
+        label: 'Broadcast Technician',
+        description: 'Manage recording and broadcasting',
+        icon: <Globe className="w-4 h-4" />,
+      },
     ],
-    skills: ['Technical Skills', 'Problem Solving', 'Attention to Detail', 'Reliability'],
+    skills: [
+      'Technical Skills',
+      'Problem Solving',
+      'Attention to Detail',
+      'Reliability',
+    ],
     commitment: '3-5 hours per week',
   },
 };
@@ -168,52 +311,97 @@ const ModernModal = ({
 // Experience levels
 const EXPERIENCE_LEVELS = [
   { id: 'beginner', label: 'Beginner', description: 'No prior experience' },
-  { id: 'some', label: 'Some Experience', description: '1-2 years in church ministry' },
-  { id: 'experienced', label: 'Experienced', description: '3+ years in church ministry' },
-  { id: 'leader', label: 'Leader', description: 'Leadership experience in ministry' },
+  {
+    id: 'some',
+    label: 'Some Experience',
+    description: '1-2 years in church ministry',
+  },
+  {
+    id: 'experienced',
+    label: 'Experienced',
+    description: '3+ years in church ministry',
+  },
+  {
+    id: 'leader',
+    label: 'Leader',
+    description: 'Leadership experience in ministry',
+  },
 ];
 
 // Availability options
 const AVAILABILITY = [
-  { id: 'sunday', label: 'Sunday Services', icon: <Church className="w-4 h-4" /> },
-  { id: 'midweek', label: 'Midweek Services', icon: <Calendar className="w-4 h-4" /> },
-  { id: 'special', label: 'Special Events', icon: <Star className="w-4 h-4" /> },
-  { id: 'flexible', label: 'Flexible Schedule', icon: <Clock className="w-4 h-4" /> },
-  { id: 'full_time', label: 'Full-time Ministry', icon: <Heart className="w-4 h-4" /> },
+  {
+    id: 'sunday',
+    label: 'Sunday Services',
+    icon: <Church className="w-4 h-4" />,
+  },
+  {
+    id: 'midweek',
+    label: 'Midweek Services',
+    icon: <Calendar className="w-4 h-4" />,
+  },
+  {
+    id: 'special',
+    label: 'Special Events',
+    icon: <Star className="w-4 h-4" />,
+  },
+  {
+    id: 'flexible',
+    label: 'Flexible Schedule',
+    icon: <Clock className="w-4 h-4" />,
+  },
+  {
+    id: 'full_time',
+    label: 'Full-time Ministry',
+    icon: <Heart className="w-4 h-4" />,
+  },
 ];
 
 // Define validation schema
+const DEPARTMENT_VALUES = [
+  'Ushers',
+  'Media Team',
+  'Choir',
+  'Children Ministry',
+  'Youth Ministry',
+  'Technical Team',
+] as const;
+
 const joinFormSchema = z.object({
   // Personal Info
-  firstName: z.string()
+  firstName: z
+    .string()
     .min(2, 'First name must be at least 2 characters')
     .max(50, 'First name too long'),
-  lastName: z.string()
+  lastName: z
+    .string()
     .min(2, 'Last name must be at least 2 characters')
     .max(50, 'Last name too long'),
-  email: z.string()
-    .email('Invalid email address'),
-  phone: z.string()
-    .min(10, 'Enter a valid phone number'),
-  
+  email: z.string().email('Invalid email address'),
+  phone: z.string().min(10, 'Enter a valid phone number'),
+
   // Department Info
-  department: z.string(),
+  department: z.enum(DEPARTMENT_VALUES),
   role: z.string().min(1, 'Please select a role'),
-  
+
   // Experience & Availability
   experience: z.string().min(1, 'Please select your experience level'),
-  availability: z.array(z.string()).min(1, 'Select at least one availability option'),
-  
+  availability: z
+    .array(z.string())
+    .min(1, 'Select at least one availability option'),
+
   // Additional Info
-  occupation: z.string()
+  occupation: z
+    .string()
     .min(2, 'Occupation is required')
     .max(100, 'Occupation too long'),
-  whyJoin: z.string()
+  whyJoin: z
+    .string()
     .min(20, 'Please share why you want to join (minimum 20 characters)')
     .max(500, 'Response too long (max 500 characters)'),
   spiritualGifts: z.string().optional(),
   previousMinistry: z.string().optional(),
-  
+
   // Agreement
   agreeToTerms: z.boolean().refine(val => val === true, {
     message: 'You must agree to the terms and conditions',
@@ -222,7 +410,6 @@ const joinFormSchema = z.object({
     message: 'You must agree to attend required training',
   }),
 });
-
 
 export const JoinUsModal = ({
   department,
@@ -234,7 +421,9 @@ export const JoinUsModal = ({
   const { colorScheme } = useTheme();
   const { open } = useServiceUnavailable();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [step, setStep] = useState<'personal' | 'department' | 'availability'>('personal');
+  const [step, setStep] = useState<'personal' | 'department' | 'availability'>(
+    'personal'
+  );
   const [selectedRole, setSelectedRole] = useState<string>('');
 
   const departmentConfig = DEPARTMENT_CONFIG[department];
@@ -312,7 +501,7 @@ export const JoinUsModal = ({
   // Handle next step with validation
   const handleNextStep = async () => {
     let isValid = false;
-    
+
     switch (step) {
       case 'personal':
         isValid = await trigger(['firstName', 'lastName', 'email', 'phone']);
@@ -321,7 +510,13 @@ export const JoinUsModal = ({
         isValid = await trigger(['role', 'experience']);
         break;
       case 'availability':
-        isValid = await trigger(['availability', 'occupation', 'whyJoin', 'agreeToTerms', 'agreeToTraining']);
+        isValid = await trigger([
+          'availability',
+          'occupation',
+          'whyJoin',
+          'agreeToTerms',
+          'agreeToTraining',
+        ]);
         break;
     }
 
@@ -348,15 +543,19 @@ export const JoinUsModal = ({
   const progressSteps = [
     { id: 'personal', label: 'Personal', icon: <User className="w-4 h-4" /> },
     { id: 'department', label: 'Role', icon: departmentConfig.icon },
-    { id: 'availability', label: 'Details', icon: <Calendar className="w-4 h-4" /> },
+    {
+      id: 'availability',
+      label: 'Details',
+      icon: <Calendar className="w-4 h-4" />,
+    },
   ];
 
   if (!mounted) return null;
 
   return (
-    <ModernModal 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <ModernModal
+      isOpen={isOpen}
+      onClose={onClose}
       title={`Join ${departmentConfig.title}`}
       subtitle={departmentConfig.description}
     >
@@ -378,26 +577,32 @@ export const JoinUsModal = ({
                   </div>
                 </div>
                 {index < progressSteps.length - 1 && (
-                  <div className={`w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 rounded-full ${
-                    step === progressStep.id || 
-                    (index === 0 && step === 'department') ||
-                    (index === 0 && step === 'availability') ||
-                    (index === 1 && step === 'availability')
-                      ? 'bg-amber-500' 
-                      : 'bg-slate-700'
-                  }`} />
+                  <div
+                    className={`w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 rounded-full ${
+                      step === progressStep.id ||
+                      (index === 0 && step === 'department') ||
+                      (index === 0 && step === 'availability') ||
+                      (index === 1 && step === 'availability')
+                        ? 'bg-amber-500'
+                        : 'bg-slate-700'
+                    }`}
+                  />
                 )}
               </div>
             ))}
           </div>
-          
+
           {/* Progress Bar */}
           <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500"
-              style={{ 
-                width: step === 'personal' ? '33%' : 
-                       step === 'department' ? '66%' : '100%'
+              style={{
+                width:
+                  step === 'personal'
+                    ? '33%'
+                    : step === 'department'
+                      ? '66%'
+                      : '100%',
               }}
             />
           </div>
@@ -408,16 +613,21 @@ export const JoinUsModal = ({
           {step === 'personal' && (
             <div className="space-y-4">
               <div className="mb-4">
-                <h3 className="text-lg font-bold text-white mb-2">Personal Information</h3>
+                <h3 className="text-lg font-bold text-white mb-2">
+                  Personal Information
+                </h3>
                 <p className="text-slate-400 text-sm">
                   Tell us about yourself. All fields are required.
                 </p>
               </div>
-              
+
               {/* Name Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-slate-400 text-sm font-medium mb-2">
+                  <label
+                    htmlFor="firstName"
+                    className="block text-slate-400 text-sm font-medium mb-2"
+                  >
                     First Name
                   </label>
                   <input
@@ -433,9 +643,12 @@ export const JoinUsModal = ({
                     </p>
                   )}
                 </div>
-                
+
                 <div>
-                  <label htmlFor="lastName" className="block text-slate-400 text-sm font-medium mb-2">
+                  <label
+                    htmlFor="lastName"
+                    className="block text-slate-400 text-sm font-medium mb-2"
+                  >
                     Last Name
                   </label>
                   <input
@@ -456,7 +669,10 @@ export const JoinUsModal = ({
               {/* Contact Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="email" className="block text-slate-400 text-sm font-medium mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-slate-400 text-sm font-medium mb-2"
+                  >
                     Email Address
                   </label>
                   <div className="relative">
@@ -475,9 +691,12 @@ export const JoinUsModal = ({
                     </p>
                   )}
                 </div>
-                
+
                 <div>
-                  <label htmlFor="phone" className="block text-slate-400 text-sm font-medium mb-2">
+                  <label
+                    htmlFor="phone"
+                    className="block text-slate-400 text-sm font-medium mb-2"
+                  >
                     Phone Number
                   </label>
                   <div className="relative">
@@ -507,20 +726,28 @@ export const JoinUsModal = ({
               <div className="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-4 sm:p-6">
                 <div className="flex items-center gap-4">
                   <div className="p-3 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20">
-                    {React.cloneElement(departmentConfig.icon, { className: "w-6 h-6 text-amber-400" })}
+                    {React.cloneElement(departmentConfig.icon, {
+                      className: 'w-6 h-6 text-amber-400',
+                    })}
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white">{departmentConfig.title}</h3>
-                    <p className="text-slate-400 text-sm mt-1">{departmentConfig.description}</p>
+                    <h3 className="text-lg font-bold text-white">
+                      {departmentConfig.title}
+                    </h3>
+                    <p className="text-slate-400 text-sm mt-1">
+                      {departmentConfig.description}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Role Selection */}
               <div>
-                <h4 className="text-white font-medium mb-4">Select Your Role</h4>
+                <h4 className="text-white font-medium mb-4">
+                  Select Your Role
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {departmentConfig.roles.map((role) => (
+                  {departmentConfig.roles.map(role => (
                     <button
                       key={role.id}
                       type="button"
@@ -539,9 +766,13 @@ export const JoinUsModal = ({
                           {role.icon || departmentConfig.icon}
                         </div>
                         <div className="flex-1">
-                          <div className={`font-semibold text-sm ${
-                            selectedRole === role.id ? 'text-amber-400' : 'text-white'
-                          }`}>
+                          <div
+                            className={`font-semibold text-sm ${
+                              selectedRole === role.id
+                                ? 'text-amber-400'
+                                : 'text-white'
+                            }`}
+                          >
                             {role.label}
                           </div>
                           <div className="text-xs text-slate-400 mt-1">
@@ -566,7 +797,9 @@ export const JoinUsModal = ({
 
               {/* Experience Level */}
               <div>
-                <h4 className="text-white font-medium mb-4">Ministry Experience Level</h4>
+                <h4 className="text-white font-medium mb-4">
+                  Ministry Experience Level
+                </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {EXPERIENCE_LEVELS.map(level => (
                     <button
@@ -600,13 +833,17 @@ export const JoinUsModal = ({
                 <div className="flex items-start gap-3">
                   <Target className="w-5 h-5 text-amber-400 mt-0.5" />
                   <div>
-                    <h4 className="text-white font-medium mb-2">Department Requirements</h4>
+                    <h4 className="text-white font-medium mb-2">
+                      Department Requirements
+                    </h4>
                     <div className="space-y-3">
                       <div>
-                        <div className="text-xs text-slate-400 mb-1">Required Skills:</div>
+                        <div className="text-xs text-slate-400 mb-1">
+                          Required Skills:
+                        </div>
                         <div className="flex flex-wrap gap-1.5">
                           {departmentConfig.skills?.map((skill, index) => (
-                            <span 
+                            <span
                               key={index}
                               className="px-2 py-1 text-xs bg-amber-500/20 text-amber-300 rounded-full"
                             >
@@ -617,7 +854,9 @@ export const JoinUsModal = ({
                       </div>
                       <div className="flex items-center gap-2 text-sm text-slate-400">
                         <Clock className="w-4 h-4" />
-                        <span>Time Commitment: {departmentConfig.commitment}</span>
+                        <span>
+                          Time Commitment: {departmentConfig.commitment}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -630,7 +869,9 @@ export const JoinUsModal = ({
           {step === 'availability' && (
             <div className="space-y-6">
               <div className="mb-4">
-                <h3 className="text-lg font-bold text-white mb-2">Availability & Details</h3>
+                <h3 className="text-lg font-bold text-white mb-2">
+                  Availability & Details
+                </h3>
                 <p className="text-slate-400 text-sm">
                   Tell us when you can serve and share more about yourself.
                 </p>
@@ -656,11 +897,13 @@ export const JoinUsModal = ({
                         }`}
                       >
                         <div className="flex flex-col items-center gap-2">
-                          <div className={`p-2 rounded-lg ${
-                            isSelected 
-                              ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white' 
-                              : 'bg-slate-800 text-slate-400'
-                          }`}>
+                          <div
+                            className={`p-2 rounded-lg ${
+                              isSelected
+                                ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white'
+                                : 'bg-slate-800 text-slate-400'
+                            }`}
+                          >
                             {option.icon}
                           </div>
                           <div className="font-medium text-sm text-white">
@@ -681,7 +924,10 @@ export const JoinUsModal = ({
               {/* Occupation & Spiritual Gifts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="occupation" className="block text-slate-400 text-sm font-medium mb-2">
+                  <label
+                    htmlFor="occupation"
+                    className="block text-slate-400 text-sm font-medium mb-2"
+                  >
                     Occupation / Profession
                   </label>
                   <input
@@ -697,9 +943,12 @@ export const JoinUsModal = ({
                     </p>
                   )}
                 </div>
-                
+
                 <div>
-                  <label htmlFor="spiritualGifts" className="block text-slate-400 text-sm font-medium mb-2">
+                  <label
+                    htmlFor="spiritualGifts"
+                    className="block text-slate-400 text-sm font-medium mb-2"
+                  >
                     Spiritual Gifts (Optional)
                   </label>
                   <input
@@ -714,7 +963,10 @@ export const JoinUsModal = ({
 
               {/* Why Join */}
               <div>
-                <label htmlFor="whyJoin" className="block text-slate-400 text-sm font-medium mb-2">
+                <label
+                  htmlFor="whyJoin"
+                  className="block text-slate-400 text-sm font-medium mb-2"
+                >
                   Why do you want to join this ministry?
                 </label>
                 <textarea
@@ -742,7 +994,10 @@ export const JoinUsModal = ({
 
               {/* Previous Ministry */}
               <div>
-                <label htmlFor="previousMinistry" className="block text-slate-400 text-sm font-medium mb-2">
+                <label
+                  htmlFor="previousMinistry"
+                  className="block text-slate-400 text-sm font-medium mb-2"
+                >
                   Previous Ministry Experience (Optional)
                 </label>
                 <textarea
@@ -764,12 +1019,16 @@ export const JoinUsModal = ({
                     className="w-4 h-4 mt-1 text-amber-500 focus:ring-amber-500 border-slate-600 rounded bg-slate-800"
                   />
                   <div>
-                    <label htmlFor="agreeToTerms" className="text-sm font-medium text-white">
+                    <label
+                      htmlFor="agreeToTerms"
+                      className="text-sm font-medium text-white"
+                    >
                       I agree to the terms and conditions *
                     </label>
                     <p className="text-xs text-slate-400 mt-1">
-                      By checking this box, I commit to serving faithfully, upholding church values, 
-                      and being accountable to ministry leadership.
+                      By checking this box, I commit to serving faithfully,
+                      upholding church values, and being accountable to ministry
+                      leadership.
                     </p>
                     {errors.agreeToTerms && (
                       <p className="mt-2 text-xs text-red-400">
@@ -787,12 +1046,15 @@ export const JoinUsModal = ({
                     className="w-4 h-4 mt-1 text-amber-500 focus:ring-amber-500 border-slate-600 rounded bg-slate-800"
                   />
                   <div>
-                    <label htmlFor="agreeToTraining" className="text-sm font-medium text-white">
+                    <label
+                      htmlFor="agreeToTraining"
+                      className="text-sm font-medium text-white"
+                    >
                       I agree to attend required training *
                     </label>
                     <p className="text-xs text-slate-400 mt-1">
-                      I understand that ministry training is mandatory and commit to attending 
-                      all scheduled training sessions.
+                      I understand that ministry training is mandatory and
+                      commit to attending all scheduled training sessions.
                     </p>
                     {errors.agreeToTraining && (
                       <p className="mt-2 text-xs text-red-400">
@@ -808,7 +1070,9 @@ export const JoinUsModal = ({
                 <div className="flex items-start gap-3">
                   <MessageSquare className="w-5 h-5 text-amber-400 mt-0.5" />
                   <div>
-                    <h4 className="text-white font-medium mb-2">What happens after you apply?</h4>
+                    <h4 className="text-white font-medium mb-2">
+                      What happens after you apply?
+                    </h4>
                     <ul className="space-y-1.5 text-sm text-slate-400">
                       <li className="flex items-center gap-2">
                         <Check className="w-3.5 h-3.5 text-amber-400" />
@@ -840,7 +1104,7 @@ export const JoinUsModal = ({
               <ChevronRight className="w-4 h-4 rotate-180" />
               Back
             </button>
-            
+
             <button
               type="button"
               onClick={handleNextStep}

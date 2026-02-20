@@ -8,11 +8,11 @@ import toast from 'react-hot-toast';
 import { BaseModal, modalStyles } from './Base';
 import { SuccessModal } from './SuccessModal';
 import apiClient, { mapValidationErrors } from '@/lib/api';
-import { workforceRegistrationSchema } from '@/lib/validation';
-import type {
-  WorkforceRegistrationData,
-  WorkforceRegistrationModalProps,
-} from '@/lib/types';
+import {
+  workforceRegistrationSchema,
+  type WorkforceRegistrationFormData,
+} from '@/lib/validation';
+import type { WorkforceRegistrationModalProps } from '@/lib/types';
 
 const LEADERSHIP_TITLES = [
   'Deacon',
@@ -64,7 +64,7 @@ export const WorkforceRegistrationModal = ({
     setError,
     reset,
     formState: { errors, isValid },
-  } = useForm<WorkforceRegistrationData>({
+  } = useForm<WorkforceRegistrationFormData>({
     resolver,
     mode: 'onChange',
     defaultValues: {
@@ -86,7 +86,7 @@ export const WorkforceRegistrationModal = ({
 
   const submitHandler = onSubmit ?? apiClient.applyWorkforceServing;
 
-  const onSubmitForm = async (data: WorkforceRegistrationData) => {
+  const onSubmitForm = async (data: WorkforceRegistrationFormData) => {
     setIsSubmitting(true);
     try {
       await submitHandler({
@@ -100,7 +100,7 @@ export const WorkforceRegistrationModal = ({
     } catch (error) {
       const fieldErrors = mapValidationErrors(error);
       if (fieldErrors) {
-        const fieldMap: Record<string, keyof WorkforceRegistrationData> = {
+        const fieldMap: Record<string, keyof WorkforceRegistrationFormData> = {
           first_name: 'firstName',
           last_name: 'lastName',
           leadership_category: 'leadershipCategory',
@@ -111,10 +111,10 @@ export const WorkforceRegistrationModal = ({
         };
         Object.entries(fieldErrors).forEach(([field, message]) => {
           const mappedField =
-            fieldMap[field] ?? (field as keyof WorkforceRegistrationData);
+            fieldMap[field] ?? (field as keyof WorkforceRegistrationFormData);
           setError(mappedField, {
             type: 'server',
-            message,
+            message: String(message),
           });
         });
       } else {
@@ -159,7 +159,9 @@ export const WorkforceRegistrationModal = ({
                 {...register('firstName')}
               />
               {errors.firstName && (
-                <p className={modalStyles.errorText}>{errors.firstName.message}</p>
+                <p className={modalStyles.errorText}>
+                  {errors.firstName.message}
+                </p>
               )}
             </div>
             <div>
@@ -175,7 +177,9 @@ export const WorkforceRegistrationModal = ({
                 {...register('lastName')}
               />
               {errors.lastName && (
-                <p className={modalStyles.errorText}>{errors.lastName.message}</p>
+                <p className={modalStyles.errorText}>
+                  {errors.lastName.message}
+                </p>
               )}
             </div>
             <div>
@@ -245,7 +249,9 @@ export const WorkforceRegistrationModal = ({
                 {...register('department')}
               />
               {errors.department && (
-                <p className={modalStyles.errorText}>{errors.department.message}</p>
+                <p className={modalStyles.errorText}>
+                  {errors.department.message}
+                </p>
               )}
             </div>
             <div>
