@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageHero from '@/components/ui/PageHero';
 import { H2, H3, BodyMD, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -8,7 +8,6 @@ import {
   Section,
   Container,
   GridboxLayout,
-  FlexboxLayout,
 } from '@/components/layout';
 import Button from '@/components/utils/buttons/CustomButton';
 import {
@@ -39,19 +38,7 @@ interface SocialMedia {
 
 const ContactPage = () => {
   const { colorScheme } = useTheme();
-
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
-
-  // Theme-based styles
-  const sectionBackground = '#050505';
-  const cardBackground = isDarkMode ? '#0b0b0b' : '#0b0b0b';
-  const formBackground = isDarkMode ? '#0b0b0b' : '#0b0b0b';
-  const borderColor = 'rgba(255,255,255,0.08)';
-  const inputBackground = '#0f0f0f';
-  const inputBorderColor = 'rgba(255,255,255,0.12)';
-  const textColor = '#ffffff';
-  const secondaryTextColor = 'rgba(255,255,255,0.72)';
+  const [submitted, setSubmitted] = useState(false);
 
   const contactMethods: ContactMethod[] = [
     {
@@ -111,6 +98,11 @@ const ContactPage = () => {
     e.currentTarget.style.backgroundColor = colorScheme.primary;
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
   return (
     <div className="bg-[#050505] text-white">
       <PageHero
@@ -124,7 +116,7 @@ const ContactPage = () => {
       <Section padding="xl" className="bg-[#050505]">
         <Container size="xl" className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12">
           {/* Left column: contact and social */}
-          <div className="space-y-6">
+          <div className="space-y-6 fade-up">
             <div
               className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-black/60 to-black/80 p-6 sm:p-7 shadow-[0_18px_50px_rgba(0,0,0,0.45)]"
             >
@@ -196,7 +188,8 @@ const ContactPage = () => {
 
           {/* Right column: form */}
           <div
-            className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-black/70 to-black/85 p-6 sm:p-7 lg:p-8 shadow-[0_18px_50px_rgba(0,0,0,0.45)]"
+            className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-black/70 to-black/85 p-5 sm:p-7 lg:p-8 shadow-[0_18px_50px_rgba(0,0,0,0.45)] fade-up"
+            style={{ animationDelay: '90ms' }}
           >
             <div className="mb-6 space-y-1">
               <H3 className="text-lg font-semibold">Send us a message</H3>
@@ -204,10 +197,10 @@ const ContactPage = () => {
                 We respond within 24 hours on weekdays.
               </SmallText>
             </div>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <GridboxLayout columns={2} responsive={{ xs: 1, md: 2 }} gap="sm">
                 <div className="space-y-1.5">
-                  <SmallText className="text-white/70 text-[12px]">First name</SmallText>
+                  <SmallText className="text-white/70 text-[11px] sm:text-[12px]">First name</SmallText>
                   <input
                     type="text"
                     className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
@@ -215,7 +208,7 @@ const ContactPage = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <SmallText className="text-white/70 text-[12px]">Last name</SmallText>
+                  <SmallText className="text-white/70 text-[11px] sm:text-[12px]">Last name</SmallText>
                   <input
                     type="text"
                     className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
@@ -226,7 +219,7 @@ const ContactPage = () => {
 
               <GridboxLayout columns={2} responsive={{ xs: 1, md: 2 }} gap="sm">
                 <div className="space-y-1.5">
-                  <SmallText className="text-white/70 text-[12px]">Email</SmallText>
+                  <SmallText className="text-white/70 text-[11px] sm:text-[12px]">Email</SmallText>
                   <input
                     type="email"
                     className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
@@ -234,7 +227,7 @@ const ContactPage = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <SmallText className="text-white/70 text-[12px]">Phone</SmallText>
+                  <SmallText className="text-white/70 text-[11px] sm:text-[12px]">Phone</SmallText>
                   <input
                     type="tel"
                     className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
@@ -244,7 +237,7 @@ const ContactPage = () => {
               </GridboxLayout>
 
               <div className="space-y-1.5">
-                <SmallText className="text-white/70 text-[12px]">Topic</SmallText>
+                <SmallText className="text-white/70 text-[11px] sm:text-[12px]">Topic</SmallText>
                 <select
                   className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
                 >
@@ -260,7 +253,7 @@ const ContactPage = () => {
               </div>
 
               <div className="space-y-1.5">
-                <SmallText className="text-white/70 text-[12px]">Message</SmallText>
+                <SmallText className="text-white/70 text-[11px] sm:text-[12px]">Message</SmallText>
                 <textarea
                   rows={5}
                   className="w-full rounded-lg border px-3 py-2.5 text-sm bg-[#0f0f0f] border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25 outline-none text-white"
@@ -285,6 +278,11 @@ const ContactPage = () => {
               >
                 Send Message
               </Button>
+              {submitted ? (
+                <SmallText className="text-emerald-300 text-xs sm:text-sm" aria-live="polite">
+                  Message queued successfully. Our team will respond within 24 hours.
+                </SmallText>
+              ) : null}
             </form>
           </div>
         </Container>

@@ -69,10 +69,10 @@ const SpecialPage = () => {
             justify="center"
             align="center"
             gap="lg"
-            className="text-center"
+            className="text-center fade-up"
           >
             <H1
-              className="text-5xl md:text-7xl font-black mb-8 leading-tight"
+              className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 md:mb-8 leading-tight"
               style={{ color: colorScheme.black }}
             >
               Every Service at{' '}
@@ -86,7 +86,7 @@ const SpecialPage = () => {
               style={{ background: colorScheme.primaryGradient }}
             ></div>
             <H3
-              className="text-xl md:text-2xl leading-relaxed"
+              className="text-base sm:text-lg md:text-xl leading-relaxed"
               style={{ color: colorScheme.black }}
             >
               From our weekly worship gatherings to annual celebrations, every
@@ -111,12 +111,12 @@ const SpecialPage = () => {
             align="center"
             gap="lg"
           >
-            <div className="text-center mb-16">
+            <div className="text-center mb-12 md:mb-16 fade-up">
               <H2 className="mb-6" style={{ color: colorScheme.heading }}>
                 Weekly Services Schedule
               </H2>
               <p
-                className="text-xl max-w-2xl mx-auto"
+                className="text-base sm:text-lg max-w-2xl mx-auto"
                 style={{ color: colorScheme.textSecondary }}
               >
                 Join us throughout the week for powerful times of worship,
@@ -137,14 +137,14 @@ const SpecialPage = () => {
               {weeklyServices.map((day, index) => (
                 <div
                   key={day.day}
-                  className="rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 border"
+                  className="rounded-2xl p-5 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-500 border fade-up"
                   style={{
                     backgroundColor: colorScheme.card,
                     borderColor: colorScheme.border,
                   }}
                 >
                   <h3
-                    className="text-2xl font-black mb-6 text-center"
+                    className="text-xl sm:text-2xl font-bold mb-5 md:mb-6 text-center"
                     style={{ color: colorScheme.heading }}
                   >
                     {day.day}
@@ -161,7 +161,7 @@ const SpecialPage = () => {
                       >
                         <div className="flex justify-between items-start mb-2">
                           <span
-                            className="text-lg font-bold"
+                            className="text-base sm:text-lg font-semibold"
                             style={{ color: colorScheme.text }}
                           >
                             {service.name}
