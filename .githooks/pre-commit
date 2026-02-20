@@ -1,66 +1,53 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo ""
-echo "🔍 Running pre-commit checks..."
-echo ""
-
-ERRORS=0
-
-# ------------------------------------------------------------
-# 1. TYPE SCRIPT CHECK (Skip if there are no TypeScript files)
-# ------------------------------------------------------------
-echo "▸ TypeScript check..."
-
-# Get staged TypeScript files
-STAGED_TS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx)$')
-
-if [ -z "$STAGED_TS_FILES" ]; then
-    echo "   ✓ No TypeScript files to check"
-else
-    if npx tsc --noEmit --skipLibCheck 2>/dev/null; then
-        echo "   ✓ TypeScript OK"
-    else
-        echo "   ✗ TypeScript errors found"
-        echo "   ℹ Run: npx tsc --noEmit --skipLibCheck"
-        ERRORS=1
-    fi
+if [[ "${SKIP_GIT_HOOKS:-0}" == "1" ]]; then
+  echo "[pre-commit] SKIP_GIT_HOOKS=1, skipping checks."
+  exit 0
 fi
 
 echo ""
+echo "[pre-commit] Running staged-file quality gates..."
 
-# ------------------------------------------------------------
-# 2. PRETTIER CHECK (Optional - Comment out if not needed)
-# ------------------------------------------------------------
-# echo "▸ Code formatting..."
-# 
-# STAGED_FORMAT_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx|css|md|json)$')
-# 
-# if [ -n "$STAGED_FORMAT_FILES" ]; then
-#     if npx prettier --check $STAGED_FORMAT_FILES --loglevel error 2>/dev/null; then
-#         echo "   ✓ Formatting OK"
-#     else
-#         echo "   ⚠ Formatting issues (not blocking)"
-#         echo "   ℹ Run: npx prettier --write $STAGED_FORMAT_FILES"
-#     fi
-# else
-#     echo "   ✓ No files to format"
-# fi
-# 
-# echo ""
-
-# ------------------------------------------------------------
-# FINAL DECISION
-# ------------------------------------------------------------
-if [ $ERRORS -eq 0 ]; then
-    echo "✅ All checks passed! Ready to commit."
-    echo ""
-    exit 0
-else
-    echo "❌ Commit blocked due to TypeScript errors."
-    echo ""
-    echo "Quick fixes:"
-    echo "  1. Fix TypeScript: npx tsc --noEmit --skipLibCheck"
-    echo "  2. Bypass (emergency): git commit --no-verify -m \"Your message\""
-    echo ""
-    exit 1
+STAGED_FILES="$(git diff --cached --name-only --diff-filter=ACMR || true)"
+if [[ -z "${STAGED_FILES}" ]]; then
+  echo "[pre-commit] No staged files. Skipping."
+  exit 0
 fi
+
+echo "[pre-commit] Checking for merge conflict markers..."
+FOUND_CONFLICT_MARKER=0
+while IFS= read -r -d '' file; do
+  if [[ ! -f "$file" ]]; then
+    continue
+  fi
+
+  case "$file" in
+    *.ts|*.tsx|*.js|*.jsx|*.json|*.md|*.mdx|*.css|*.scss|*.html|*.yml|*.yaml)
+      if rg -n "^(<<<<<<<|=======|>>>>>>>)" -- "$file" >/dev/null 2>&1; then
+        echo "[pre-commit] Conflict marker found in $file"
+        FOUND_CONFLICT_MARKER=1
+      fi
+      ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if [[ "${FOUND_CONFLICT_MARKER}" == "1" ]]; then
+  echo "[pre-commit] Resolve conflicts before committing."
+  exit 1
+fi
+echo "[pre-commit] Conflict marker check passed."
+
+echo "[pre-commit] Running lint-staged (Prettier + ESLint on staged files)..."
+node ./node_modules/lint-staged/bin/lint-staged.js
+echo "[pre-commit] lint-staged passed."
+
+if git diff --cached --name-only --diff-filter=ACMR | rg -q '\.(ts|tsx)$'; then
+  echo "[pre-commit] Running TypeScript check..."
+  node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck
+  echo "[pre-commit] TypeScript check passed."
+else
+  echo "[pre-commit] No staged TypeScript files. Skipping type-check."
+fi
+
+echo "[pre-commit] All checks passed."

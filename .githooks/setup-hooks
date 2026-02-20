@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ ! -d .git ]]; then
+  echo "[hooks:setup] Not a git repository root."
+  exit 1
+fi
+
+chmod +x .githooks/pre-commit
+chmod +x .githooks/pre-push
+chmod +x .githooks/setup-hook 2>/dev/null || true
+
+git config core.hooksPath .githooks
+
+echo "[hooks:setup] core.hooksPath set to .githooks"
+echo "[hooks:setup] Enabled hooks: pre-commit, pre-push"
