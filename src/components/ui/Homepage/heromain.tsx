@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -39,12 +45,22 @@ type Slide = Omit<(typeof defaultSlides)[number], 'image'> & {
 };
 
 function isStaticImageData(x: any): x is StaticImageData {
-  return !!x && typeof x === 'object' && typeof x.src === 'string' && 'height' in x && 'width' in x;
+  return (
+    !!x &&
+    typeof x === 'object' &&
+    typeof x.src === 'string' &&
+    'height' in x &&
+    'width' in x
+  );
 }
 
 function isSimpleImageObject(
   x: any
-): x is { src: string | StaticImageData; alt?: string; objectPosition?: string } {
+): x is {
+  src: string | StaticImageData;
+  alt?: string;
+  objectPosition?: string;
+} {
   return !!x && typeof x === 'object' && 'src' in x;
 }
 
@@ -52,7 +68,10 @@ function isSimpleImageObject(
  * Normalize slide.image into something safe for Next/Image + a guaranteed alt.
  * Also returns a preferred objectPosition if provided.
  */
-function normalizeImage(image: SlideImage, fallbackAlt: string): {
+function normalizeImage(
+  image: SlideImage,
+  fallbackAlt: string
+): {
   src: string | StaticImageData;
   alt: string;
   objectPosition: string;
@@ -76,7 +95,11 @@ function normalizeImage(image: SlideImage, fallbackAlt: string): {
   }
 
   // fallback
-  return { src: '/images/placeholder.jpg', alt: fallbackAlt, objectPosition: 'center' };
+  return {
+    src: '/images/placeholder.jpg',
+    alt: fallbackAlt,
+    objectPosition: 'center',
+  };
 }
 
 /** You used this earlier; define it so TS stops complaining */
@@ -131,7 +154,9 @@ const HeroSection = ({
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slideList: Slide[] = useMemo(() => {
-    const s = (slides as Slide[])?.length ? (slides as Slide[]) : (defaultSlides as any as Slide[]);
+    const s = (slides as Slide[])?.length
+      ? (slides as Slide[])
+      : (defaultSlides as any as Slide[]);
     return s;
   }, [slides]);
 
@@ -141,7 +166,7 @@ const HeroSection = ({
     label: 'Upcoming',
     title: 'Wisdom Power Conference 26',
     date: 'Mar 21 - 23',
-    time: 'Morning session 9:00 PM WAT & Evening Session 5:00 Pm',
+    time: 'Morning Session • Evening Session',
     location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
     ctaLabel: 'Reserve a seat',
     ctaTarget: '#programs',
@@ -156,21 +181,24 @@ const HeroSection = ({
   useEffect(() => {
     if (slideList.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slideList.length);
+      setCurrentSlide(prev => (prev + 1) % slideList.length);
     }, 7000);
     return () => clearInterval(interval);
   }, [slideList.length]);
 
   const scrollToNextSection = useCallback(() => {
     const nextSection = heroRef.current?.nextElementSibling;
-    if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (nextSection)
+      nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   const handleUnavailable = useCallback(
     (title?: string, message?: string) => {
       open({
         title: title || 'Service not available yet',
-        message: message || 'We are polishing this experience for production. Please check back soon.',
+        message:
+          message ||
+          'We are polishing this experience for production. Please check back soon.',
         actionLabel: 'Okay, thanks',
       });
     },
@@ -183,7 +211,10 @@ const HeroSection = ({
       return;
     }
 
-    if (typeof upcoming.ctaTarget === 'string' && upcoming.ctaTarget.startsWith('#')) {
+    if (
+      typeof upcoming.ctaTarget === 'string' &&
+      upcoming.ctaTarget.startsWith('#')
+    ) {
       const target = document.getElementById(upcoming.ctaTarget.slice(1));
       if (target) target.scrollIntoView({ behavior: 'smooth' });
       else handleUnavailable('Reservations opening soon');
@@ -210,7 +241,9 @@ const HeroSection = ({
     const fetchLatest = async () => {
       setVideoLoading(true);
       try {
-        const res = await fetch('/api/sermons?sort=newest', { cache: 'force-cache' });
+        const res = await fetch('/api/sermons?sort=newest', {
+          cache: 'force-cache',
+        });
         if (!res.ok) return;
         const data: YouTubeVideo[] = await res.json();
         if (mounted && data.length) setLatestVideo(data[0]);
@@ -231,12 +264,14 @@ const HeroSection = ({
   useEffect(() => {
     if (!heroRef.current) return;
 
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
       const parallaxEls = gsap.utils.toArray<HTMLElement>('[data-parallax]');
-      parallaxEls.forEach((el) => {
+      parallaxEls.forEach(el => {
         const speed = Number(el.dataset.parallax ?? 0.2);
         gsap.to(el, {
           yPercent: speed * 20,
@@ -264,7 +299,10 @@ const HeroSection = ({
     >
       {/* Background Slides (✅ fixed alt typing + src normalization) */}
       {slideList.map((slide, index) => {
-        const img = normalizeImage(slide.image, (slide as any)?.title || `Slide ${index + 1}`);
+        const img = normalizeImage(
+          slide.image,
+          (slide as any)?.title || `Slide ${index + 1}`
+        );
 
         return (
           <div
@@ -284,7 +322,9 @@ const HeroSection = ({
                 className="object-cover"
                 style={{
                   // if your custom object provides objectPosition use it; else default
-                  objectPosition: img.objectPosition || (isSimpleImage(slide.image) ? 'center' : 'center 28%'),
+                  objectPosition:
+                    img.objectPosition ||
+                    (isSimpleImage(slide.image) ? 'center' : 'center 28%'),
                 }}
               />
 
@@ -327,7 +367,10 @@ const HeroSection = ({
                 />
                 <span
                   className="flex items-center gap-2 uppercase tracking-[0.16em] font-medium text-[0.62rem] sm:text-[0.7rem] md:text-[0.78rem] leading-tight"
-                  style={{ color: '#fff', textShadow: `0 2px 10px rgba(0,0,0,0.45)` }}
+                  style={{
+                    color: '#fff',
+                    textShadow: `0 2px 10px rgba(0,0,0,0.45)`,
+                  }}
                 >
                   <span
                     className="inline-block text-transparent bg-clip-text"
@@ -356,7 +399,8 @@ const HeroSection = ({
               className="leading-tight tracking-tight font-medium text-center sm:text-left"
               style={{
                 color: '#FFFFFF',
-                textShadow: '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
+                textShadow:
+                  '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
               }}
               useThemeColor={false}
             >
@@ -380,7 +424,8 @@ const HeroSection = ({
                 className="text-center sm:text-left"
                 style={{
                   color: colorScheme.primary,
-                  textShadow: '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
+                  textShadow:
+                    '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
                 }}
                 useThemeColor={false}
                 weight="medium"
@@ -405,7 +450,7 @@ const HeroSection = ({
                 className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
                 style={{
                   background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                  color: colorScheme.buttonText || '#000000',
+                  color: '#FFFFFF',
                   boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
                 }}
               >
@@ -435,7 +480,10 @@ const HeroSection = ({
           </div>
 
           {/* Cards */}
-          <div ref={cardsRef} className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-5">
+          <div
+            ref={cardsRef}
+            className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-5"
+          >
             <div
               className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-4 sm:p-5 flex flex-col gap-3"
               data-parallax="0.12"
@@ -452,7 +500,9 @@ const HeroSection = ({
                   <p className="text-[9px] uppercase tracking-[0.16em] text-white/70 font-medium">
                     {upcoming.label}
                   </p>
-                  <p className="text-sm text-white font-medium">{upcoming.title}</p>
+                  <p className="text-sm text-white font-medium">
+                    {upcoming.title}
+                  </p>
                 </div>
               </div>
 
@@ -475,7 +525,11 @@ const HeroSection = ({
                   curvature="full"
                   elevated
                   onClick={handleUpcomingCta}
-                  className="px-4 py-2 text-[11px] font-medium bg-white text-black border border-white/30 hover:scale-[1.02]"
+                  className="px-4 py-2 text-[11px] font-medium border border-white/20 hover:scale-[1.02]"
+                  style={{
+                    background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
+                    color: '#FFFFFF',
+                  }}
                 >
                   {upcoming.ctaLabel ?? 'Reserve a seat'}
                 </CustomButton>
@@ -492,8 +546,12 @@ const HeroSection = ({
                   <PlayCircle className="w-5 h-5 text-white" />
                 </div>
                 <div className="leading-tight">
-                  <p className="text-[13px] text-white font-medium">Watch live stream</p>
-                  <p className="text-[10px] text-white/60">Latest message from YouTube</p>
+                  <p className="text-[13px] text-white font-medium">
+                    Watch live stream
+                  </p>
+                  <p className="text-[10px] text-white/60">
+                    Latest message from YouTube
+                  </p>
                 </div>
               </div>
 
@@ -518,15 +576,23 @@ const HeroSection = ({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-[13px] font-medium line-clamp-2">{latestVideo.title}</p>
-                    <p className="text-white/60 text-[11px]">Tap to watch now</p>
+                    <p className="text-white text-[13px] font-medium line-clamp-2">
+                      {latestVideo.title}
+                    </p>
+                    <p className="text-white/60 text-[11px]">
+                      Tap to watch now
+                    </p>
                   </div>
 
                   <a
                     href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-[11px] font-medium hover:scale-[1.04] transition shadow-lg self-start sm:self-auto"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium hover:scale-[1.04] transition shadow-lg self-start sm:self-auto"
+                    style={{
+                      background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
+                      color: '#FFFFFF',
+                    }}
                   >
                     <PlayCircle className="w-4 h-4" /> Play
                   </a>
@@ -549,17 +615,23 @@ const HeroSection = ({
 
       {/* Slide Indicators */}
       {slideList.length > 1 && (
-        <div className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2">
+        <div className="absolute bottom-11 sm:bottom-14 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-2 backdrop-blur">
           {slideList.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-200 ${
-                currentSlide === index ? 'scale-110' : 'scale-90'
+              className={`h-2.5 w-2.5 rounded-full transition-all duration-200 ${
+                currentSlide === index ? 'scale-110' : 'scale-95'
               }`}
               style={{
-                backgroundColor: currentSlide === index ? colorScheme.primary : 'rgba(255,255,255,0.3)',
-                boxShadow: currentSlide === index ? `0 0 6px ${colorScheme.primary}` : 'none',
+                backgroundColor:
+                  currentSlide === index
+                    ? colorScheme.primary
+                    : 'rgba(255,255,255,0.3)',
+                boxShadow:
+                  currentSlide === index
+                    ? `0 0 6px ${colorScheme.primary}`
+                    : 'none',
               }}
               aria-label={`Go to slide ${index + 1}`}
             />
