@@ -206,8 +206,15 @@ export interface WorkforceRegistrationData {
   lastName: string;
   email?: string;
   phone?: string;
+  title?: string;
   department: string;
+  leadershipCategory?: string;
+  birthMonth?: string;
+  anniversaryMonth?: string;
+  isExistingMember?: boolean;
+  currentAssignment?: string;
   birthday?: string; // DD/MM
+  registrationType?: 'new' | 'serving';
   notes?: string;
 }
 
@@ -219,12 +226,13 @@ export interface WorkforceRegistrationModalProps {
 }
 
 export type LeadershipRole =
+  | 'senior_pastor'
   | 'associate_pastor'
   | 'deacon'
   | 'deaconess'
   | 'reverend';
 
-export type LeadershipStatus = 'pending' | 'approved';
+export type LeadershipStatus = 'pending' | 'approved' | 'declined';
 
 export interface LeadershipMember {
   id: string;
@@ -236,6 +244,12 @@ export interface LeadershipMember {
   status: LeadershipStatus;
   bio?: string | null;
   imageUrl?: string | null;
+  birthday?: string;
+  anniversary?: string;
+  birthdayMonth?: number;
+  birthdayDay?: number;
+  anniversaryMonth?: number;
+  anniversaryDay?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -248,6 +262,8 @@ export interface LeadershipApplicationRequest {
   role: LeadershipRole;
   bio?: string;
   imageUrl?: string;
+  birthday?: string; // DD/MM
+  anniversary?: string; // DD/MM/YYYY
 }
 
 export interface EventRegistrationEvent {
