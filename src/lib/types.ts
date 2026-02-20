@@ -60,7 +60,13 @@ export interface GivingOption {
   title: string;
   description: string;
   icon: LucideIcon;
-  color: string;
+  color?: string;
+  accounts: Array<{
+    bank: string;
+    accountNumber: string;
+    accountName: string;
+    image?: StaticImageData;
+  }>;
 }
 
 export interface Photo {
@@ -150,8 +156,6 @@ export interface SeriesGroup {
   description: string;
   color: string;
 }
-
-
 
 export interface GroupedSeriesData {
   name: string;

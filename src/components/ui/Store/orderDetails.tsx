@@ -64,8 +64,8 @@ interface OrderDetails {
     zipCode?: string;
   };
   bankDetails?: {
-    customerAccountName: string;
-    customerBankName: string;
+    customerAccountName?: string;
+    customerBankName?: string;
     paymentSlipUrl?: string;
   };
 }
@@ -615,8 +615,9 @@ const OrderConfirmation = () => {
                           className="text-sm mt-1"
                           style={{ color: labelColor }}
                         >
-                          Includes â‚¦{orderDetails.deliveryFee.toLocaleString()}{' '}
-                          delivery fee
+                          Includes â‚¦
+                          {orderDetails.deliveryFee.toLocaleString()} delivery
+                          fee
                         </Caption>
                       )}
                     </div>
@@ -1009,4 +1010,3 @@ const OrderConfirmation = () => {
 };
 
 export default OrderConfirmation;
-

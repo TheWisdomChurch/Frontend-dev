@@ -50,7 +50,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const handleAddToCart = () => {
     dispatch(
       addToCart({
-        ...product,
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
         selectedSize,
         selectedColor,
         quantity,
@@ -89,7 +92,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
           <BodyMD className="text-white/80">{product.description}</BodyMD>
 
           <div className="flex items-center gap-3">
-            <MediumText className="text-xl text-white">{product.price}</MediumText>
+            <MediumText className="text-xl text-white">
+              {product.price}
+            </MediumText>
             {product.originalPrice && (
               <RegularText className="line-through text-white/40">
                 {product.originalPrice}
@@ -147,7 +152,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <span className="min-w-[32px] text-center text-white">{quantity}</span>
+              <span className="min-w-[32px] text-center text-white">
+                {quantity}
+              </span>
               <button
                 type="button"
                 onClick={() => setQuantity(q => q + 1)}

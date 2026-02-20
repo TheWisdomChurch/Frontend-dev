@@ -16,11 +16,11 @@ export type PageHeroProps = {
   chips?: string[];
   compact?: boolean;
 
-  /** ✅ NEW: optional hero background image (e.g. hero_bg_2.src) */
   backgroundImage?: string;
 
-  /** ✅ NEW: safe optional flags so callers won’t error */
   showButtons?: boolean;
+  primaryButtonText?: string;
+  secondaryButtonText?: string;
   showScrollIndicator?: boolean;
 };
 
@@ -32,8 +32,9 @@ export default function PageHero({
   chips,
   compact = false,
   backgroundImage,
-  // not used here yet, but supported so callers compile
   showButtons,
+  primaryButtonText,
+  secondaryButtonText,
   showScrollIndicator,
 }: PageHeroProps) {
   const { colorScheme } = useTheme();
@@ -104,7 +105,10 @@ export default function PageHero({
           </Caption>
         </div>
 
-        <div className="space-y-2 max-w-3xl fade-up text-center sm:text-left" style={{ animationDelay: '70ms' }}>
+        <div
+          className="space-y-2 max-w-3xl fade-up text-center sm:text-left"
+          style={{ animationDelay: '70ms' }}
+        >
           <H2
             className={
               compact
@@ -141,12 +145,17 @@ export default function PageHero({
         </div>
 
         {chips?.length ? (
-          <div className="flex flex-wrap gap-2 fade-up justify-center sm:justify-start" style={{ animationDelay: '120ms' }}>
-            {chips.map((chip) => (
+          <div
+            className="flex flex-wrap gap-2 fade-up justify-center sm:justify-start"
+            style={{ animationDelay: '120ms' }}
+          >
+            {chips.map(chip => (
               <span
                 key={chip}
                 className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-medium border border-white/15 bg-white/5 text-white"
-                style={{ boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}` }}
+                style={{
+                  boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}`,
+                }}
               >
                 {chip}
               </span>
@@ -154,9 +163,13 @@ export default function PageHero({
           </div>
         ) : null}
 
-        {/* If you ever want to implement these, you can add UI here.
-            For now they exist only to satisfy callers safely. */}
-        {showButtons || showScrollIndicator ? null : null}
+        {/* Reserved props to keep hero API stable across pages. */}
+        {showButtons ||
+        primaryButtonText ||
+        secondaryButtonText ||
+        showScrollIndicator
+          ? null
+          : null}
       </Container>
     </Section>
   );

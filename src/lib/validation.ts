@@ -78,6 +78,10 @@ export const eventRegistrationSchema = z
     }
   });
 
-export type WorkforceRegistrationFormData = z.infer<typeof workforceRegistrationSchema>;
+export type WorkforceRegistrationFormData = z.input<
+  typeof workforceRegistrationSchema
+>;
 export type ReminderFormSchema = z.infer<typeof reminderSchema>;
-export type EventRegistrationFormSchema = z.infer<typeof eventRegistrationSchema>;
+export type EventRegistrationFormSchema = z.infer<
+  typeof eventRegistrationSchema
+>;
