@@ -1,9 +1,9 @@
 {
-  "*.{ts,tsx}": [
-    "prettier --write",
-    "eslint --fix"
+  "*.{js,jsx,ts,tsx}": [
+    "node ./node_modules/prettier/bin/prettier.cjs --write",
+    "node ./node_modules/eslint/bin/eslint.js --fix --max-warnings 0"
   ],
-  "*.{json,md,mdx,css,html,yml,yaml}": [
-    "prettier --write"
+  "*.{json,md,mdx,css,scss,html,yml,yaml}": [
+    "node ./node_modules/prettier/bin/prettier.cjs --write"
   ]
 }

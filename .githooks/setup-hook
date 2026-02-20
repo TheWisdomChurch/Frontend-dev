@@ -1,55 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo ""
-echo "${CYAN}╔══════════════════════════════════════════════════╗${NC}"
-echo "${CYAN}║           GIT HOOKS SETUP                        ║${NC}"
-echo "${CYAN}╚══════════════════════════════════════════════════╝${NC}"
-echo ""
-
-# Colors
-CYAN='\033[0;36m'
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m'
-
-# Create directory
-mkdir -p .githooks
-echo "${GREEN}✓${NC} Created .githooks directory"
-
-# Copy pre-commit hook from project if exists
-if [ -f "scripts/pre-commit" ]; then
-    cp scripts/pre-commit .githooks/pre-commit
-    echo "${GREEN}✓${NC} Copied pre-commit hook from scripts/"
-elif [ ! -f ".githooks/pre-commit" ]; then
-    echo "${RED}⚠${NC} No pre-commit hook found. Creating basic one..."
-    cat > .githooks/pre-commit << 'EOF'
-#!/bin/sh
-echo "⚠️  Pre-commit hook not fully configured."
-echo "Run: npm run hooks:setup"
-exit 0
-EOF
-fi
-
-# Make executable
-chmod +x .githooks/pre-commit
-echo "${GREEN}✓${NC} Made hook executable"
-
-# Configure Git
-git config core.hooksPath .githooks
-echo "${GREEN}✓${NC} Configured Git to use .githooks"
-
-# Verify
-HOOKS_PATH=$(git config --get core.hooksPath)
-echo "${GREEN}✓${NC} Git hooks path: $HOOKS_PATH"
-
-echo ""
-echo "${GREEN}✅ Setup complete!${NC}"
-echo ""
-echo "The following checks will run on commit:"
-echo "  ${CYAN}•${NC} TypeScript type validation"
-echo "  ${CYAN}•${NC} ESLint code quality (staged files only)"
-echo "  ${CYAN}•${NC} Prettier formatting (auto-fix)"
-echo "  ${CYAN}•${NC} Quick build check"
-echo ""
-echo "Test with: ${CYAN}git add . && git commit -m 'Test hooks'${NC}"
-echo ""
+# Backward-compatible entrypoint. Prefer setup-hooks.
+exec ./.githooks/setup-hooks
