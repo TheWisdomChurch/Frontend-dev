@@ -35,11 +35,11 @@ const Container: React.FC<ContainerProps> = ({
   const paddingClasses = {
     none: 'px-0',
     xs: 'px-4', // Mobile first
-    sm: 'px-4 sm:px-6',
-    md: 'px-4 sm:px-6',
-    lg: 'px-4 sm:px-8',
-    xl: 'px-4 sm:px-12',
-    '2xl': 'px-4 sm:px-16',
+    sm: 'px-4 sm:px-6 md:px-8',
+    md: 'px-4 sm:px-6 md:px-8',
+    lg: 'px-4 sm:px-8 md:px-10',
+    xl: 'px-4 sm:px-10 md:px-12',
+    '2xl': 'px-4 sm:px-12 md:px-16',
   };
 
   // Background colors
@@ -53,7 +53,7 @@ const Container: React.FC<ContainerProps> = ({
   };
 
   const containerClasses = [
-    'w-full',
+    'w-full min-w-0',
     sizeClasses[size],
     paddingClasses[padding],
     centered ? 'mx-auto' : '',

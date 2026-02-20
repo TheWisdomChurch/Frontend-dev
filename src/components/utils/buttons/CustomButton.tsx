@@ -66,11 +66,11 @@ const Button: React.FC<ButtonProps> = ({
 
   // Size styles
   const sizeStyles = {
-    xs: 'px-2.5 py-1.5 text-[11px] min-h-[28px]',
-    sm: 'px-3 py-[7px] text-xs min-h-[32px]',
-    md: 'px-3.5 py-2 text-sm min-h-[36px]',
-    lg: 'px-5 py-2.5 text-[15px] min-h-[42px]',
-    xl: 'px-6 py-3 text-base min-h-[48px]',
+    xs: 'px-2.5 py-1.5 text-[11px] sm:text-xs min-h-[28px] sm:min-h-[30px]',
+    sm: 'px-3 py-[7px] text-[11px] sm:text-xs min-h-[32px]',
+    md: 'px-3.5 py-2 text-xs sm:text-sm min-h-[36px] sm:min-h-[38px]',
+    lg: 'px-4 py-2.5 text-sm sm:text-[15px] min-h-[42px]',
+    xl: 'px-5 py-3 text-sm sm:text-base min-h-[46px] sm:min-h-[48px]',
     icon: 'p-2 min-h-[auto]',
   };
 
@@ -213,7 +213,7 @@ const Button: React.FC<ButtonProps> = ({
         ${disabled || loading ? variantStyles.disabled : ''}
         ${className}
         transform transition-all duration-300 ease-out
-        font-medium tracking-wide
+        font-medium tracking-[0.02em] sm:tracking-[0.04em]
         overflow-hidden relative
         disabled:cursor-not-allowed
         disabled:transform-none
@@ -231,7 +231,7 @@ const Button: React.FC<ButtonProps> = ({
 
       {/* Content container - FIXED: Simplified structure */}
       <div
-        className={`flex items-center justify-center gap-2 ${loading ? 'opacity-70' : ''}`}
+        className={`flex items-center justify-center gap-2 text-center leading-tight ${loading ? 'opacity-70' : ''}`}
       >
         {/* Loading spinner */}
         {loading && (
@@ -264,7 +264,7 @@ const Button: React.FC<ButtonProps> = ({
         )}
 
         {/* Children */}
-        <span className="whitespace-nowrap">{children}</span>
+        <span className="whitespace-normal sm:whitespace-nowrap">{children}</span>
 
         {/* Right Icon */}
         {!loading && rightIcon && (

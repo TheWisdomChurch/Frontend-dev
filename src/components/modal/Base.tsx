@@ -77,7 +77,7 @@ export const BaseModal = memo(function BaseModal({
   loadingText = 'Loading...',
   initialFocusRef,
   onAnimationComplete,
-  forceBottomSheet = true,
+  forceBottomSheet = false,
 }: BaseModalProps) {
   const { colorScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -97,7 +97,7 @@ export const BaseModal = memo(function BaseModal({
   }, [windowSize.width]);
 
   // Use bottom sheet on mobile for consistency; allow forced sheet on larger screens
-  const useBottomSheet = forceBottomSheet || viewport === 'mobile';
+  const useBottomSheet = viewport === 'mobile' || forceBottomSheet;
 
   const colors = useMemo(() => ({
     background: colorScheme.black,

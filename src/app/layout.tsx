@@ -17,7 +17,7 @@ import ClientScrollToTop from '@/components/layout/ClientscrollTop';
 import ScrollHandler from '@/components/layout/ClientScrollHandler';
 import AppStartupLoader from '@/components/providers/AppStartupLoader';
 import CookieConsentBanner from '@/components/ui/CookieConsentBanner';
-import './globals.css';
+import './globals.scss';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
 const SITE_NAME = 'The Wisdom Church';
