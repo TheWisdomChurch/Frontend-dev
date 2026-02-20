@@ -5,12 +5,22 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Users, Video, Music, Baby, Cpu, Users2, ArrowRight, Sparkles } from 'lucide-react';
+import {
+  Users,
+  Video,
+  Music,
+  Baby,
+  Cpu,
+  Users2,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react';
 
 import { Section, Container } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
+import { BaseModal } from '@/components/modal/Base';
 import { H2, BodySM, SmallText, Caption } from '@/components/text';
 import { Workforce_bg } from '@/components/assets';
 import { apiClient } from '@/lib/api';
@@ -71,30 +81,17 @@ export default function JoinWisdomHouse() {
   const [existing, setExisting] = useState(false);
   const [selectedDept, setSelectedDept] = useState<string>('');
 
-  const departmentOptions = useMemo(() => departments.map((d) => d.title), []);
-
-  // lock body scroll when modal is open
-  useEffect(() => {
-    if (openModal) {
-      const originalBody = document.body.style.overflow;
-      const originalHtml = document.documentElement.style.overflow;
-
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-
-      return () => {
-        document.body.style.overflow = originalBody;
-        document.documentElement.style.overflow = originalHtml;
-      };
-    }
-  }, [openModal]);
+  const departmentOptions = useMemo(() => departments.map(d => d.title), []);
 
   /* ----------------------- Quick signup (compact form) ---------------------- */
   const quickSchema = z.object({
     name: z
       .string()
       .min(2, 'Enter your full name')
-      .refine((val) => val.trim().split(/\s+/).length >= 2, 'Enter first and last name'),
+      .refine(
+        val => val.trim().split(/\s+/).length >= 2,
+        'Enter first and last name'
+      ),
     email: z.string().email('Enter a valid email'),
     team: z.string().min(1, 'Select a team'),
   });
@@ -116,7 +113,7 @@ export default function JoinWisdomHouse() {
     return { firstName, lastName };
   };
 
-  const onQuickSubmit = handleQuickSubmit(async (values) => {
+  const onQuickSubmit = handleQuickSubmit(async values => {
     try {
       setQuickSubmitting(true);
       const { firstName, lastName } = splitName(values.name);
@@ -166,7 +163,10 @@ export default function JoinWisdomHouse() {
       fullName: z
         .string()
         .min(3, 'Full name is required')
-        .refine((val) => val.trim().split(/\s+/).length >= 2, 'Enter first and last name'),
+        .refine(
+          val => val.trim().split(/\s+/).length >= 2,
+          'Enter first and last name'
+        ),
       phoneCode: z.string().min(2),
       phone: z.string().min(7, 'Phone number is required'),
       email: z.string().email('Valid email required'),
@@ -227,16 +227,18 @@ export default function JoinWisdomHouse() {
 
   const marriedValue = watch('married');
 
-  const onModalSubmit = handleModalSubmit(async (values) => {
+  const onModalSubmit = handleModalSubmit(async values => {
     try {
       setModalSubmitting(true);
       const { firstName, lastName } = splitName(values.fullName);
       const notesParts: string[] = [];
       if (existing) notesParts.push('Existing worker: yes');
-      if (values.occupation) notesParts.push(`Occupation: ${values.occupation}`);
+      if (values.occupation)
+        notesParts.push(`Occupation: ${values.occupation}`);
       if (values.married === 'yes') {
         if (values.spouse) notesParts.push(`Spouse: ${values.spouse}`);
-        if (values.anniversary) notesParts.push(`Anniversary: ${values.anniversary}`);
+        if (values.anniversary)
+          notesParts.push(`Anniversary: ${values.anniversary}`);
       }
       if (values.about) notesParts.push(`About: ${values.about}`);
 
@@ -314,13 +316,14 @@ export default function JoinWisdomHouse() {
             </div>
 
             <H2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-tight">
-              Join the <span style={{ color: colorScheme.primary }}>Wisdom Church</span>{' '}
+              Join the{' '}
+              <span style={{ color: colorScheme.primary }}>Wisdom Church</span>{' '}
               workforce
             </H2>
 
             <BodySM className="text-white/75 max-w-2xl">
-              Serving together is worship. Hospitality, music, media, prayer, and
-              tech—pick a lane, get trained, and build the body with joy.
+              Serving together is worship. Hospitality, music, media, prayer,
+              and tech—pick a lane, get trained, and build the body with joy.
             </BodySM>
 
             <div className="flex items-center gap-4 text-white/70 text-sm">
@@ -385,13 +388,12 @@ export default function JoinWisdomHouse() {
                 className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
               >
                 <option value="">Select a team</option>
-                {departments.map((dept) => (
+                {departments.map(dept => (
                   <option key={dept.title} value={dept.title}>
                     {dept.title}
                   </option>
                 ))}
               </select>
-
               {quickErrors.team && (
                 <span className="text-xs text-amber-300">
                   {quickErrors.team.message}
@@ -408,7 +410,11 @@ export default function JoinWisdomHouse() {
               className="w-full"
               disabled={quickSubmitting}
             >
-              {quickSubmitting ? 'Submitting...' : submitted ? 'We will reach out!' : 'Quick signup'}
+              {quickSubmitting
+                ? 'Submitting...'
+                : submitted
+                  ? 'We will reach out!'
+                  : 'Quick signup'}
             </CustomButton>
 
             <CustomButton
@@ -430,13 +436,15 @@ export default function JoinWisdomHouse() {
         </div>
 
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {departments.map((dept) => {
+          {departments.map(dept => {
             const Icon = dept.icon;
             return (
               <div
                 key={dept.title}
                 className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col gap-3 shadow-xl transition-transform duration-300 hover:-translate-y-1 cursor-pointer"
-                style={{ boxShadow: `0 10px 30px ${colorScheme.opacity.primary10}` }}
+                style={{
+                  boxShadow: `0 10px 30px ${colorScheme.opacity.primary10}`,
+                }}
                 onClick={() => handleOpenModal(dept.title)}
               >
                 <div
@@ -452,11 +460,15 @@ export default function JoinWisdomHouse() {
                   <SmallText weight="bold" className="text-white">
                     {dept.title}
                   </SmallText>
-                  <Caption className="text-white/70">{dept.description}</Caption>
+                  <Caption className="text-white/70">
+                    {dept.description}
+                  </Caption>
                 </div>
 
                 <div className="relative z-10 flex items-center justify-between pt-2">
-                  <Caption className="text-white/60">Tap to choose above</Caption>
+                  <Caption className="text-white/60">
+                    Tap to choose above
+                  </Caption>
                   <ArrowRight className="w-4 h-4 text-white/70" />
                 </div>
               </div>
@@ -464,253 +476,221 @@ export default function JoinWisdomHouse() {
           })}
         </div>
 
-        {/* ✅ MODAL */}
-        {openModal && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center p-0">
-            <div
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => setOpenModal(false)}
-            />
-
-            <div className="relative w-full max-w-2xl bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-t-3xl rounded-b-none border border-white/12 shadow-2xl max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-center pt-3 pb-2">
-                <span className="h-1.5 w-12 rounded-full bg-white/30" />
-              </div>
-              <div className="sticky top-0 z-10 bg-slate-950/90 backdrop-blur-md border-b border-white/10 px-5 sm:px-8 py-4 sm:py-5 flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/70">
-                    Join the Wisdom Church Workforce
-                  </p>
-                  <h3 className="text-lg sm:text-xl font-semibold text-white">
-                    “Two are better than one...”
-                  </h3>
-                  <p className="text-xs text-white/70">
-                    Ecclesiastes 4:9 — Together we build, pray, and serve.
-                  </p>
-                </div>
-
-                <button
-                  className="text-white/70 hover:text-white"
-                  onClick={() => setOpenModal(false)}
-                  aria-label="Close"
-                  type="button"
-                >
-                  ×
-                </button>
-              </div>
-
-              <form onSubmit={onModalSubmit} className="p-5 sm:p-8 space-y-5">
-                <div className="flex items-center gap-3">
-                  <label className="inline-flex items-center gap-2 text-sm text-white/80 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={existing}
-                      onChange={(e) => setExisting(e.target.checked)}
-                      className="accent-yellow-400 h-4 w-4"
-                    />
-                    Already serving? Update my details
-                  </label>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label className="text-sm text-white/80 space-y-1">
-                    Full Name
-                    <input
-                      type="text"
-                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                      {...register('fullName')}
-                    />
-                    {errors.fullName && (
-                      <span className="text-xs text-amber-300">
-                        {errors.fullName.message}
-                      </span>
-                    )}
-                  </label>
-
-                  <label className="text-sm text-white/80 space-y-1">
-                    Contact Phone
-                    <div className="flex gap-2">
-                      <select
-                        className="w-24 rounded-xl bg-black/30 border border-white/20 text-white px-2 py-2"
-                        {...register('phoneCode')}
-                      >
-                        {countryCodes.map((c) => (
-                          <option key={c.code} value={c.code}>
-                            {c.code} {c.label}
-                          </option>
-                        ))}
-                      </select>
-
-                      <input
-                        type="tel"
-                        className="flex-1 rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                        placeholder="812 345 6789"
-                        {...register('phone')}
-                      />
-                    </div>
-
-                    {errors.phone && (
-                      <span className="text-xs text-amber-300">
-                        {errors.phone.message}
-                      </span>
-                    )}
-                  </label>
-
-                  <label className="text-sm text-white/80 space-y-1">
-                    Contact Email
-                    <input
-                      type="email"
-                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                      {...register('email')}
-                    />
-                    {errors.email && (
-                      <span className="text-xs text-amber-300">
-                        {errors.email.message}
-                      </span>
-                    )}
-                  </label>
-
-                  <label className="text-sm text-white/80 space-y-1">
-                    Birthday (DD/MM)
-                    <input
-                      type="text"
-                      placeholder="15/08"
-                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                      {...register('birthday')}
-                    />
-                    {errors.birthday && (
-                      <span className="text-xs text-amber-300">
-                        {errors.birthday.message}
-                      </span>
-                    )}
-                  </label>
-
-                  <label className="text-sm text-white/80 space-y-1">
-                    Occupation
-                    <input
-                      type="text"
-                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                      {...register('occupation')}
-                    />
-                  </label>
-
-                  <label className="text-sm text-white/80 space-y-1">
-                    Department
-                    <select
-                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                      value={selectedDept}
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        setSelectedDept(v);
-                        setValue('department', v, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      <option value="">Select department</option>
-                      {departmentOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-
-                    {errors.department && (
-                      <span className="text-xs text-amber-300">
-                        {errors.department.message}
-                      </span>
-                    )}
-                  </label>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label className="text-sm text-white/80 space-y-1">
-                    Married?
-                    <select
-                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                      {...register('married')}
-                    >
-                      <option value="no">No</option>
-                      <option value="yes">Yes</option>
-                    </select>
-                  </label>
-
-                  {marriedValue === 'yes' && (
-                    <>
-                      <label className="text-sm text-white/80 space-y-1">
-                        Spouse Name
-                        <input
-                          type="text"
-                          className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                          {...register('spouse')}
-                        />
-                        {errors.spouse && (
-                          <span className="text-xs text-amber-300">
-                            {errors.spouse.message}
-                          </span>
-                        )}
-                      </label>
-
-                      <label className="text-sm text-white/80 space-y-1">
-                        Wedding Anniversary
-                        <input
-                          type="date"
-                          className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
-                          {...register('anniversary')}
-                        />
-                        {errors.anniversary && (
-                          <span className="text-xs text-amber-300">
-                            {errors.anniversary.message}
-                          </span>
-                        )}
-                      </label>
-                    </>
-                  )}
-                </div>
-
-                <label className="text-sm text-white/80 space-y-1 block">
-                  Tell us about yourself (max 100 words)
-                  <textarea
-                    maxLength={800}
-                    className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2 min-h-[110px]"
-                    placeholder="Share a short story (max 100 words)"
-                    {...register('about')}
-                  />
-                  {errors.about && (
-                    <span className="text-xs text-amber-300">
-                      {errors.about.message}
-                    </span>
-                  )}
-                </label>
-
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <CustomButton
-                    variant="primary"
-                    size="md"
-                    curvature="xl"
-                    className="w-full sm:w-auto"
-                    type="submit"
-                    disabled={modalSubmitting}
-                  >
-                    {modalSubmitting ? 'Submitting...' : 'Submit details'}
-                  </CustomButton>
-
-                  <CustomButton
-                    variant="ghost"
-                    size="sm"
-                    curvature="xl"
-                    className="text-white w-full sm:w-auto"
-                    onClick={() => setOpenModal(false)}
-                    type="button"
-                  >
-                    Cancel
-                  </CustomButton>
-                </div>
-              </form>
+        <BaseModal
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+          title="Join the Wisdom Church Workforce"
+          subtitle="Ecclesiastes 4:9 — Together we build, pray, and serve."
+          maxWidth="max-w-2xl"
+        >
+          <form onSubmit={onModalSubmit} className="space-y-5 pb-4">
+            <div className="flex items-center gap-3">
+              <label className="inline-flex items-center gap-2 text-sm text-white/80 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={existing}
+                  onChange={e => setExisting(e.target.checked)}
+                  className="accent-yellow-400 h-4 w-4"
+                />
+                Already serving? Update my details
+              </label>
             </div>
-          </div>
-        )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="text-sm text-white/80 space-y-1">
+                Full Name
+                <input
+                  type="text"
+                  className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                  {...register('fullName')}
+                />
+                {errors.fullName && (
+                  <span className="text-xs text-amber-300">
+                    {errors.fullName.message}
+                  </span>
+                )}
+              </label>
+
+              <label className="text-sm text-white/80 space-y-1">
+                Contact Phone
+                <div className="flex gap-2">
+                  <select
+                    className="w-24 rounded-xl bg-black/30 border border-white/20 text-white px-2 py-2"
+                    {...register('phoneCode')}
+                  >
+                    {countryCodes.map(c => (
+                      <option key={c.code} value={c.code}>
+                        {c.code} {c.label}
+                      </option>
+                    ))}
+                  </select>
+
+                  <input
+                    type="tel"
+                    className="flex-1 rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                    placeholder="812 345 6789"
+                    {...register('phone')}
+                  />
+                </div>
+                {errors.phone && (
+                  <span className="text-xs text-amber-300">
+                    {errors.phone.message}
+                  </span>
+                )}
+              </label>
+
+              <label className="text-sm text-white/80 space-y-1">
+                Contact Email
+                <input
+                  type="email"
+                  className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <span className="text-xs text-amber-300">
+                    {errors.email.message}
+                  </span>
+                )}
+              </label>
+
+              <label className="text-sm text-white/80 space-y-1">
+                Birthday (DD/MM)
+                <input
+                  type="text"
+                  placeholder="15/08"
+                  className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                  {...register('birthday')}
+                />
+                {errors.birthday && (
+                  <span className="text-xs text-amber-300">
+                    {errors.birthday.message}
+                  </span>
+                )}
+              </label>
+
+              <label className="text-sm text-white/80 space-y-1">
+                Occupation
+                <input
+                  type="text"
+                  className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                  {...register('occupation')}
+                />
+              </label>
+
+              <label className="text-sm text-white/80 space-y-1">
+                Department
+                <select
+                  className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                  value={selectedDept}
+                  onChange={e => {
+                    const v = e.target.value;
+                    setSelectedDept(v);
+                    setValue('department', v, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    });
+                  }}
+                >
+                  <option value="">Select department</option>
+                  {departmentOptions.map(opt => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+                {errors.department && (
+                  <span className="text-xs text-amber-300">
+                    {errors.department.message}
+                  </span>
+                )}
+              </label>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="text-sm text-white/80 space-y-1">
+                Married?
+                <select
+                  className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                  {...register('married')}
+                >
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </label>
+
+              {marriedValue === 'yes' && (
+                <>
+                  <label className="text-sm text-white/80 space-y-1">
+                    Spouse Name
+                    <input
+                      type="text"
+                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                      {...register('spouse')}
+                    />
+                    {errors.spouse && (
+                      <span className="text-xs text-amber-300">
+                        {errors.spouse.message}
+                      </span>
+                    )}
+                  </label>
+
+                  <label className="text-sm text-white/80 space-y-1">
+                    Wedding Anniversary
+                    <input
+                      type="date"
+                      className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2"
+                      {...register('anniversary')}
+                    />
+                    {errors.anniversary && (
+                      <span className="text-xs text-amber-300">
+                        {errors.anniversary.message}
+                      </span>
+                    )}
+                  </label>
+                </>
+              )}
+            </div>
+
+            <label className="text-sm text-white/80 space-y-1 block">
+              Tell us about yourself (max 100 words)
+              <textarea
+                maxLength={800}
+                className="w-full rounded-xl bg-black/30 border border-white/20 text-white px-3 py-2 min-h-[110px]"
+                placeholder="Share a short story (max 100 words)"
+                {...register('about')}
+              />
+              {errors.about && (
+                <span className="text-xs text-amber-300">
+                  {errors.about.message}
+                </span>
+              )}
+            </label>
+
+            <div className="flex flex-wrap gap-3 pt-2">
+              <CustomButton
+                variant="primary"
+                size="md"
+                curvature="xl"
+                className="w-full sm:w-auto"
+                type="submit"
+                disabled={modalSubmitting}
+              >
+                {modalSubmitting ? 'Submitting...' : 'Submit details'}
+              </CustomButton>
+
+              <CustomButton
+                variant="ghost"
+                size="sm"
+                curvature="xl"
+                className="text-white w-full sm:w-auto"
+                onClick={() => setOpenModal(false)}
+                type="button"
+              >
+                Cancel
+              </CustomButton>
+            </div>
+          </form>
+        </BaseModal>
       </Container>
     </Section>
   );
