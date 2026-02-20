@@ -1,0 +1,144 @@
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes fade-up-keyframe {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wave-sheen {
+  0% {
+    background-position: 0% 50%;
+    transform: translateY(0);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: translateY(-2px);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-dots {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  50% {
+    background-position: 80px 60px, -90px -70px;
+  }
+  100% {
+    background-position: 0 0, 0 0;
+  }
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: fade-up-keyframe 0.6s ease-out forwards;
+}
+
+.loading-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.wave-tagline {
+  gap: 0.08em;
+}
+
+.wave-char {
+  background-size: 180% 180%;
+  animation: wave-sheen 5.5s ease-in-out infinite;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wave-char:nth-child(3n) {
+  animation-delay: 0.4s;
+}
+
+.wave-char:nth-child(4n) {
+  animation-delay: 0.7s;
+}
+
+.hero-matte {
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.04) 0%, transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.035) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65));
+}
+
+.hero-animated {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-size: 140px 140px, 220px 220px;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.035) 1.2px, transparent 1.2px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  animation: hero-dots 22s linear infinite;
+}
+
+.hero-title-glow {
+  text-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.6),
+    0 6px 24px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(255, 255, 255, 0.12);
+  letter-spacing: 0.01em;
+}
+
+.card-hover-content {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card-hover:hover .card-hover-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .card-hover-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .slide-content {
+    transform: none !important;
+  }
+
+  .hero-section {
+    touch-action: pan-y;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

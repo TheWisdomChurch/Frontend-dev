@@ -88,7 +88,7 @@ export default function ResourcesPage() {
               <Link
                 key={item.title}
                 href={item.href}
-                className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 flex items-start gap-3 hover:-translate-y-1 transition"
+                className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 flex items-start gap-3 hover:-translate-y-1 transition fade-up"
               >
                 <div className="h-10 w-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: colorScheme.opacity.primary10 }}>
                   {item.icon}
@@ -106,7 +106,7 @@ export default function ResourcesPage() {
       {/* Library */}
       <Section padding="lg" className="bg-[#0a0a0a]">
         <Container size="xl" className="space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 fade-up">
             <div>
               <H2 className="text-xl sm:text-2xl font-semibold">Resource library</H2>
               <SmallText className="text-white/65 text-[12px]">Browse by category or search.</SmallText>
@@ -116,7 +116,7 @@ export default function ResourcesPage() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-3 py-1.25 rounded-full text-[12px] font-semibold border transition ${
+                  className={`px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-semibold border transition ${
                     activeCategory === cat ? 'bg-white text-black border-white' : 'bg-white/5 text-white border-white/10'
                   }`}
                 >
@@ -126,7 +126,7 @@ export default function ResourcesPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 fade-up" style={{ animationDelay: '80ms' }}>
             <input
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
@@ -142,7 +142,7 @@ export default function ResourcesPage() {
                 key={resource.title}
                 href={resource.path}
                 onClick={e => handleLiveServiceClick(e, resource.isLiveService)}
-                className="rounded-2xl border border-white/10 bg-[#0f0f0f] p-4 sm:p-5 flex flex-col gap-3 hover:-translate-y-1 transition"
+                className="rounded-2xl border border-white/10 bg-[#0f0f0f] p-4 sm:p-5 flex flex-col gap-3 hover:-translate-y-1 transition fade-up"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>

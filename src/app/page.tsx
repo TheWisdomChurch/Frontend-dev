@@ -46,13 +46,12 @@ const ResourceSection = dynamic(() => import('@/components/ui/Homepage/Resource'
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
   const [showConfessionPopup, setShowConfessionPopup] = useState(true);
   const { colorScheme } = useTheme();
 
-  const eventStorageKey = 'wc_event_ad_seen_v1';
-  const autoOpenDelayMs = 1400;
+  const eventStorageKey = 'wc_event_ad_next_show_session_v2';
+  const autoOpenDelayMs = 1200;
   const closeCooldownMs = 1000 * 60 * 20;
   const remindCooldownMs = 1000 * 60 * 45;
 
@@ -68,7 +67,7 @@ export default function Home() {
       time: '6:00 PM Daily',
       location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
       image: '/HEADER.png',
-      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wisdom-power-conference26',
+      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
       ctaLabel: 'Register now',
       note: 'You will be returned to the main website after you finish.',
     }),
@@ -76,37 +75,23 @@ export default function Home() {
   );
 
   useEffect(() => {
-    const checkFonts = () => {
-      if (document.fonts && typeof document.fonts.check === 'function') {
-        document.fonts.ready.then(() => {
-          setFontsLoaded(true);
-        });
-      } else {
-        setTimeout(() => setFontsLoaded(true), 1000);
-      }
-    };
-
-    checkFonts();
-  }, []);
-
-  useEffect(() => {
-    if (!fontsLoaded) return;
-
     const now = Date.now();
     const nextAllowedRaw =
-      typeof window !== 'undefined' ? localStorage.getItem(eventStorageKey) : null;
+      typeof window !== 'undefined'
+        ? window.sessionStorage.getItem(eventStorageKey)
+        : null;
     const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
 
-    if (nextAllowed && now < nextAllowed) {
+    if (Number.isFinite(nextAllowed) && now < nextAllowed) {
       setNextAdAt(nextAllowed);
       return;
     }
 
     setNextAdAt(now + autoOpenDelayMs);
-  }, [autoOpenDelayMs, eventStorageKey, fontsLoaded]);
+  }, [autoOpenDelayMs, eventStorageKey]);
 
   useEffect(() => {
-    if (!fontsLoaded || nextAdAt === null) return;
+    if (nextAdAt === null) return;
 
     const timeLeft = nextAdAt - Date.now();
     if (timeLeft <= 0) {
@@ -119,12 +104,12 @@ export default function Home() {
     }, timeLeft);
 
     return () => window.clearTimeout(timer);
-  }, [fontsLoaded, nextAdAt]);
+  }, [nextAdAt]);
 
   const persistAdCooldown = (cooldownMs: number) => {
     const nextAllowedAt = Date.now() + cooldownMs;
     if (typeof window !== 'undefined') {
-      localStorage.setItem(eventStorageKey, String(nextAllowedAt));
+      window.sessionStorage.setItem(eventStorageKey, String(nextAllowedAt));
     }
     setNextAdAt(nextAllowedAt);
   };
@@ -197,7 +182,8 @@ export default function Home() {
             type="button"
             aria-label="Open conference registration ad"
             onClick={() => setShowModal(true)}
-            className="fixed bottom-5 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-4 py-2.5 text-xs font-medium text-white shadow-2xl backdrop-blur-lg transition hover:-translate-y-0.5 hover:bg-black sm:text-sm"
+            className="fixed bottom-4 right-4 sm:bottom-5 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 sm:px-4 py-2.5 text-[11px] sm:text-sm font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+            style={{ animation: 'fade-up-keyframe 0.5s ease-out' }}
           >
             <Megaphone className="h-4 w-4" style={{ color: colorScheme.primary }} />
             <span>WPC 2026</span>

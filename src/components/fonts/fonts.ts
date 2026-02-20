@@ -4,6 +4,11 @@ import localFont from 'next/font/local';
 export const bricolageGrotesque = localFont({
   src: [
     {
+      path: './BricolageGrotesque-ExtraLight.ttf',
+      weight: '300',
+      style: 'normal',
+    },
+    {
       path: './BricolageGrotesque-Regular.ttf',
       weight: '400',
       style: 'normal',
@@ -23,9 +28,15 @@ export const bricolageGrotesque = localFont({
       weight: '700',
       style: 'normal',
     },
+    {
+      path: './BricolageGrotesque-ExtraBold.ttf',
+      weight: '800',
+      style: 'normal',
+    },
   ],
   variable: '--font-bricolage',
   display: 'swap',
+  fallback: ['Inter', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
 });
 
 export const worksans = localFont({
@@ -48,6 +59,7 @@ export const worksans = localFont({
   ],
   variable: '--font-worksans',
   display: 'swap',
+  fallback: ['Inter', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
 });
 
 export const playfair = localFont({
@@ -70,4 +82,5 @@ export const playfair = localFont({
   ],
   variable: '--font-playfair',
   display: 'swap',
+  fallback: ['Georgia', 'Times New Roman', 'serif'],
 });

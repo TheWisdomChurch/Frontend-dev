@@ -32,7 +32,7 @@ export default function AboutUsPage() {
       <Section padding="lg" className="bg-[#050505]">
         <Container size="xl" className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center">
-            <div className="space-y-3 order-2 lg:order-1">
+            <div className="space-y-3 order-2 lg:order-1 fade-up">
               <Caption className="uppercase tracking-[0.2em] text-[11px]" style={{ color: colorScheme.primary }}>
                 Who we are
               </Caption>
@@ -42,7 +42,7 @@ export default function AboutUsPage() {
               <BodyMD className="text-white/75 leading-relaxed text-[15px] sm:text-base">
                 The Wisdom House is a Spirit-filled assembly committed to raising complete believers—men, women, and children—rooted in Christ, empowered by His wisdom, and established in faith. We are a trans-generational movement pursuing obedience and excellence in every facet of life.
               </BodyMD>
-              <GridboxLayout columns={2} gap="sm" responsive={{ xs: 2, md: 2, lg: 2 }}>
+              <GridboxLayout columns={2} gap="sm" responsive={{ xs: 1, sm: 2, md: 2, lg: 2 }}>
                 {[
                   { label: 'Core', value: 'Obedience & service' },
                   { label: 'Focus', value: 'Word & Power' },
@@ -62,7 +62,7 @@ export default function AboutUsPage() {
               </GridboxLayout>
             </div>
 
-            <div className="relative w-full max-w-[520px] mx-auto order-1 lg:order-2">
+            <div className="relative w-full max-w-[520px] mx-auto order-1 lg:order-2 fade-up" style={{ animationDelay: '80ms' }}>
               <div
                 className="relative mx-auto aspect-square w-full rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-black/40 to-black/60 overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
                 style={{ boxShadow: `0 24px 70px ${colorScheme.opacity.primary10}` }}
@@ -96,7 +96,7 @@ export default function AboutUsPage() {
       {/* Vision / Mission */}
       <Section padding="lg" className="bg-[#0b0b0b]">
         <Container size="xl" className="space-y-10">
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 fade-up">
             <Caption className="uppercase tracking-[0.2em] text-xs" style={{ color: colorScheme.primary }}>
               Vision & mission
             </Caption>
@@ -106,13 +106,13 @@ export default function AboutUsPage() {
           </div>
 
           <GridboxLayout columns={2} gap="lg" responsive={{ xs: 1, md: 2 }}>
-            <div className="rounded-2xl border border-white/12 bg-white/5 p-6 space-y-3 shadow-lg">
+            <div className="rounded-2xl border border-white/12 bg-white/5 p-6 space-y-3 shadow-lg fade-up">
               <Caption className="text-white/70">Our Vision</Caption>
               <BodyMD className="text-white/80 leading-relaxed">
                 To equip a people with the Wisdom and Power of God, for their establishment in the faith and for manifesting greatness in every facet of life.
               </BodyMD>
             </div>
-            <div className="rounded-2xl border border-white/12 bg-white/5 p-6 space-y-3 shadow-lg">
+            <div className="rounded-2xl border border-white/12 bg-white/5 p-6 space-y-3 shadow-lg fade-up" style={{ animationDelay: '90ms' }}>
               <Caption className="text-white/70">Our Mission</Caption>
               <BodyMD className="text-white/80 leading-relaxed">
                 {missionStatement}
@@ -157,7 +157,7 @@ export default function AboutUsPage() {
             ].map(item => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-2 shadow-lg"
+                className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-2 shadow-lg fade-up"
                 style={{ boxShadow: `0 12px 30px ${colorScheme.opacity.primary10}` }}
               >
                 <BodySM className="text-white font-semibold">{item.title}</BodySM>
@@ -171,7 +171,7 @@ export default function AboutUsPage() {
       {/* Newsletter / stay in the flow */}
       <Section padding="lg" className="bg-[#0b0b0b]">
         <Container size="lg" className="space-y-4">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 shadow-2xl">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 shadow-2xl fade-up">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
               <div className="space-y-1.5">
                 <Caption className="uppercase tracking-[0.18em] text-[11px]" style={{ color: colorScheme.primary }}>

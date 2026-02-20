@@ -108,8 +108,8 @@ export default function PageHero({
           <H2
             className={
               compact
-                ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-semibold text-white leading-tight'
-                : 'text-2xl sm:text-3xl md:text-[2.4rem] font-semibold text-white leading-tight'
+                ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-semibold text-white leading-tight text-balance'
+                : 'text-2xl sm:text-3xl md:text-[2.4rem] font-semibold text-white leading-tight text-balance'
             }
           >
             {title}
@@ -119,8 +119,8 @@ export default function PageHero({
             <BodySM
               className={
                 compact
-                  ? 'text-white/80 text-sm sm:text-base leading-relaxed'
-                  : 'text-white/80 text-sm sm:text-base leading-relaxed'
+                  ? 'text-white/80 text-sm sm:text-base leading-relaxed text-balance'
+                  : 'text-white/80 text-sm sm:text-base leading-relaxed text-balance'
               }
             >
               {subtitle}
@@ -131,8 +131,8 @@ export default function PageHero({
             <BodySM
               className={
                 compact
-                  ? 'text-white/65 text-xs sm:text-sm leading-relaxed'
-                  : 'text-white/65 text-xs sm:text-sm leading-relaxed'
+                  ? 'text-white/65 text-xs sm:text-sm leading-relaxed text-balance'
+                  : 'text-white/65 text-xs sm:text-sm leading-relaxed text-balance'
               }
             >
               {note}

@@ -75,22 +75,24 @@ export default function EventsPage() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
       <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-amber-300">Wisdom House</p>
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4 fade-up">
+            <div>
+            <p className="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-amber-300">
+              Wisdom House
+            </p>
             <h1 className="mt-2 text-3xl font-black sm:text-4xl">Events & Programs</h1>
             <p className="mt-3 max-w-2xl text-sm text-neutral-300 sm:text-base">
               Live data from your backend. Publish in admin, and it appears here automatically.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="rounded-full border border-neutral-700 px-4 py-2 text-sm text-neutral-300">
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <span className="w-full sm:w-auto text-center rounded-full border border-neutral-700 px-4 py-2 text-sm text-neutral-300">
               {upcomingCount} upcoming
             </span>
             <Link
               href="/events/calendar"
-              className="rounded-full bg-amber-300 px-5 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-amber-200"
+              className="w-full sm:w-auto text-center rounded-full bg-amber-300 px-5 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-amber-200"
             >
               Open calendar
             </Link>
@@ -113,7 +115,7 @@ export default function EventsPage() {
             {events.map((event) => (
               <article
                 key={event.id}
-                className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900/70"
+                className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900/70 fade-up"
               >
                 <div className="relative h-44 w-full bg-neutral-900">
                   <img

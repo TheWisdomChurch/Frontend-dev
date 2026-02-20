@@ -1,0 +1,9 @@
+@use '../styles/tokens';
+@use '../styles/base';
+@use '../styles/theme';
+@use '../styles/motion';
+@use '../styles/utilities';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

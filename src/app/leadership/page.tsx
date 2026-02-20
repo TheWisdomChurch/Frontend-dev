@@ -156,7 +156,7 @@ export default function LeadershipPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       <Section padding="lg" className="relative overflow-hidden" style={{ background: '#070707' }}>
-        <Container size="xl" className="relative z-10 space-y-6">
+        <Container size="xl" className="relative z-10 space-y-6 fade-up">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em]">
             Leadership
           </div>
@@ -172,7 +172,7 @@ export default function LeadershipPage() {
 
       <Section padding="lg" className="relative overflow-hidden bg-[#0b0b0b]">
         <Container size="xl" className="space-y-8">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 fade-up">
             <H3 className="text-2xl sm:text-3xl font-bold">Meet the leadership</H3>
             <Caption className="text-white/60">
               Approved leaders are displayed here. Applications are reviewed by church leadership.
@@ -197,7 +197,7 @@ export default function LeadershipPage() {
                     {group.items.map((leader) => (
                       <div
                         key={leader.id}
-                        className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl shadow-xl"
+                        className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl shadow-xl fade-up"
                       >
                         <div className="flex items-center gap-4">
                           {leader.imageUrl ? (
@@ -241,7 +241,7 @@ export default function LeadershipPage() {
 
       <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
         <Container size="xl" className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8">
-          <div className="space-y-3">
+          <div className="space-y-3 fade-up">
             <H3 className="text-2xl sm:text-3xl font-bold">Leadership registration</H3>
             <BodySM className="text-white/70">
               This form is for Senior Pastor, Associate Pastor, Reverend, Deacon, and Deaconness
@@ -251,10 +251,11 @@ export default function LeadershipPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-4"
+            className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-5 sm:p-7 shadow-2xl space-y-4 fade-up"
+            style={{ animationDelay: '80ms' }}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-sm text-white/80 space-y-1">
+              <label className="text-xs sm:text-sm text-white/80 space-y-1">
                 First name
                 <input
                   name="firstName"
@@ -264,7 +265,7 @@ export default function LeadershipPage() {
                 />
               </label>
 
-              <label className="text-sm text-white/80 space-y-1">
+              <label className="text-xs sm:text-sm text-white/80 space-y-1">
                 Last name
                 <input
                   name="lastName"
@@ -276,7 +277,7 @@ export default function LeadershipPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-sm text-white/80 space-y-1">
+              <label className="text-xs sm:text-sm text-white/80 space-y-1">
                 Email
                 <input
                   type="email"
@@ -287,7 +288,7 @@ export default function LeadershipPage() {
                 />
               </label>
 
-              <label className="text-sm text-white/80 space-y-1">
+              <label className="text-xs sm:text-sm text-white/80 space-y-1">
                 Phone
                 <input
                   name="phone"
@@ -298,7 +299,7 @@ export default function LeadershipPage() {
               </label>
             </div>
 
-            <label className="text-sm text-white/80 space-y-1">
+            <label className="text-xs sm:text-sm text-white/80 space-y-1">
               Role
               <select
                 name="role"

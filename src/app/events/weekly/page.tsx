@@ -91,7 +91,7 @@ const WeeklyPage = () => {
 
       {/* Weekly Schedule */}
       <PageSection tone="surface" padding="xl">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 fade-up">
           <H2>Our Weekly Schedule</H2>
           <BodyMD className="text-muted mt-3 max-w-2xl mx-auto">
             We have multiple service times and gatherings throughout the week
@@ -101,12 +101,12 @@ const WeeklyPage = () => {
 
         <div className="max-w-6xl mx-auto space-y-6">
           {weeklyServices.map((daySchedule, index) => (
-            <div key={index} className="page-card-muted p-6">
+            <div key={index} className="page-card-muted p-5 sm:p-6 fade-up">
               <H3 className="text-center mb-4">{daySchedule.day}</H3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {daySchedule.services.map((service, serviceIndex) => (
-                  <div key={serviceIndex} className="page-card p-5">
+                  <div key={serviceIndex} className="page-card p-4 sm:p-5">
                     <div className="text-center mb-3">
                       <span className="inline-block px-3 py-1 rounded-full text-[11px] font-medium border border-muted text-muted">
                         {service.type}
@@ -140,7 +140,7 @@ const WeeklyPage = () => {
       {/* What to Expect Section */}
       <PageSection tone="muted" padding="xl">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 fade-up">
             <H2>What to Expect</H2>
             <BodyMD className="text-muted mt-3">
               Your first visit to Wisdom House
