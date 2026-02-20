@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { WisdomeHouseLogo, videoBg } from '@/components/assets';
+import { WisdomeHouseLogo } from '@/components/assets';
 
 interface LoaderProps {
   label?: string;
@@ -25,7 +25,7 @@ export default function Loader({
         preload="auto"
         aria-hidden="true"
       >
-        <source src={videoBg} type="video/mp4" />
+        <source src="/videos/videoBg.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(2,6,12,0.85),rgba(8,16,20,0.72)_40%,rgba(2,6,12,0.9))]" />
       <div className="loader-ambient loader-ambient-top" />
