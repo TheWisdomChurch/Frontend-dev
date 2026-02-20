@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+import { useMemo } from 'react';
 import Image from 'next/image';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -47,6 +48,18 @@ export default function OnlineGiving() {
     nextCard,
   } = useOnlineGiving();
   useIntersectionObserver(setIsVisible, sectionRef);
+  const particles = useMemo(
+    () =>
+      [...Array(15)].map((_, i) => ({
+        id: i,
+        size: Math.random() * 100 + 50,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        delay: i * 0.5,
+        duration: Math.random() * 10 + 15,
+      })),
+    []
+  );
   // Add ref to card
   const addCardRef = (el: HTMLDivElement | null, index: number) => {
     cardsRef.current[index] = el;
@@ -65,6 +78,10 @@ export default function OnlineGiving() {
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+          animation: float 16s ease-in-out infinite;
         }
        
         @keyframes glow {
@@ -165,18 +182,18 @@ export default function OnlineGiving() {
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
           {/* Floating particles */}
-          {[...Array(15)].map((_, i) => (
+          {particles.map((particle) => (
             <div
-              key={i}
+              key={particle.id}
               className="absolute rounded-full animate-float"
               style={{
                 background: `radial-gradient(circle, ${colorScheme.primary}30, transparent 70%)`,
-                width: `${Math.random() * 100 + 50}px`,
-                height: `${Math.random() * 100 + 50}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${i * 0.5}s`,
-                animationDuration: `${Math.random() * 10 + 15}s`,
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                animationDelay: `${particle.delay}s`,
+                animationDuration: `${particle.duration}s`,
                 filter: 'blur(20px)',
                 opacity: 0.1,
               }}
@@ -240,8 +257,11 @@ export default function OnlineGiving() {
               style={{ color: '#a0a0a0' }}
               useThemeColor={false}
             >
-              “As each has purposed in his heart, let him give—not grudgingly or under compulsion—for God loves a cheerful giver.”
-— 2 Corinthians 9:7
+              <span>
+                As each has purposed in his heart, let him give not grudgingly or under compulsion.
+              </span>
+              <br />
+              <span>God loves a cheerful giver. 2 Corinthians 9:7</span>
               <Gift className="w-4 h-4 inline-block ml-2 opacity-70" />
             </BodySM>
           </FlexboxLayout>

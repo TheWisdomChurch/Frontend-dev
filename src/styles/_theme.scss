@@ -1,0 +1,108 @@
+.page-shell,
+.page-section {
+  background-color: var(--color-pageBackground, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-section-muted {
+  background-color: var(--color-backgroundSecondary, #f7f7f7);
+  color: var(--color-text, #111827);
+}
+
+.page-surface {
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.page-surface-strong {
+  background-color: var(--color-surfaceVariant, #f3f4f6);
+  color: var(--color-text, #111827);
+}
+
+.page-card {
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+  background-color: var(--color-surface, #ffffff);
+}
+
+.page-card-muted {
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+  background-color: var(--color-surfaceVariant, #f3f4f6);
+}
+
+.text-muted {
+  color: var(--color-textSecondary, #6b7280);
+}
+
+.text-subtle {
+  color: var(--color-textTertiary, #9ca3af);
+}
+
+.text-accent {
+  color: var(--color-primary, #f7de12);
+}
+
+.border-muted {
+  border-color: var(--color-border, #e5e7eb);
+}
+
+.input-base {
+  width: 100%;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 0.625rem;
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text, #111827);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-base::placeholder {
+  color: var(--color-textTertiary, #9ca3af);
+}
+
+.input-base:focus {
+  outline: none;
+  border-color: var(--color-primary, #f7de12);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary, #f7de12) 20%, transparent);
+}
+
+.bg-white {
+  background-color: var(--color-surface, #ffffff) !important;
+}
+
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: var(--color-surfaceVariant, #f3f4f6) !important;
+}
+
+.text-gray-900,
+.text-gray-800 {
+  color: var(--color-text, #111827) !important;
+}
+
+.text-gray-700,
+.text-gray-600 {
+  color: var(--color-textSecondary, #6b7280) !important;
+}
+
+.text-gray-500,
+.text-gray-400,
+.text-gray-300 {
+  color: var(--color-textTertiary, #9ca3af) !important;
+}
+
+.border-gray-200,
+.border-gray-300 {
+  border-color: var(--color-border, #e5e7eb) !important;
+}
+
+.font-black {
+  font-weight: 700 !important;
+}
+
+.font-extrabold {
+  font-weight: 800 !important;
+}

@@ -3,7 +3,7 @@
 
 import React, { forwardRef } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import { worksans, playfair } from '../fonts/fonts';
+import { bricolageGrotesque, worksans, playfair } from '../fonts/fonts';
 
 // ADD "black" to FontWeight type
 type FontWeight =
@@ -79,7 +79,7 @@ export interface BaseTextProps {
 }
 
 const fontFamilyMap: Record<string, string> = {
-  bricolage: worksans.className,
+  bricolage: bricolageGrotesque.className,
   worksans: worksans.className,
   playfair: playfair.className,
 };
@@ -137,64 +137,64 @@ const variantMap: Record<
   hero: {
     fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
     weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'worksans',
+    fontFamily: 'bricolage',
     lineHeight: '1.2',
   },
   // Headings with progressive scaling
   h1: {
     fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
     weight: { base: 'semibold', sm: 'semibold', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'worksans',
+    fontFamily: 'bricolage',
     lineHeight: '1.25',
   },
   h2: {
     fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
     weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'worksans',
+    fontFamily: 'bricolage',
     lineHeight: '1.35',
   },
   h3: {
     fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
     weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'worksans',
+    fontFamily: 'bricolage',
     lineHeight: '1.4',
   },
   h4: {
     fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
     weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'worksans',
+    fontFamily: 'bricolage',
     lineHeight: '1.45',
   },
   h5: {
     fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
     weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'worksans',
+    fontFamily: 'bricolage',
     lineHeight: '1.5',
   },
   h6: {
     fontSize: { base: 'xs', sm: 'sm', md: 'base', lg: 'lg' },
     weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'worksans',
+    fontFamily: 'bricolage',
     lineHeight: '1.5',
   },
   // Body text - consistent readability
   'body-xl': {
-    fontSize: { base: 'lg', sm: 'lg', md: 'xl', lg: 'xl' },
+    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: 'xl' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
-    lineHeight: '1.6',
+    lineHeight: '1.55',
   },
   'body-lg': {
-    fontSize: { base: 'base', sm: 'base', md: 'lg', lg: 'lg' },
+    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'lg' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
-    lineHeight: '1.6',
+    lineHeight: '1.55',
   },
   'body-md': {
-    fontSize: { base: 'sm', sm: 'sm', md: 'base', lg: 'base' },
+    fontSize: { base: 'xs', sm: 'sm', md: 'base', lg: 'base' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
-    lineHeight: '1.6',
+    lineHeight: '1.55',
   },
   'body-sm': {
     fontSize: { base: 'xs', sm: 'xs', md: 'sm', lg: 'sm' },
@@ -203,10 +203,10 @@ const variantMap: Record<
     lineHeight: '1.5',
   },
   'body-responsive': {
-    fontSize: { base: 'sm', sm: 'sm', md: 'base', lg: 'base' },
+    fontSize: { base: 'xs', sm: 'sm', md: 'base', lg: 'base' },
     weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
     fontFamily: 'worksans',
-    lineHeight: '1.6',
+    lineHeight: '1.55',
   },
   'body-xs': {
     fontSize: { base: 'xs', sm: 'xs', md: 'xs', lg: 'xs' },
@@ -324,7 +324,7 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
     const finalFontFamily =
       variantSettings?.fontFamily || fontFamily || 'worksans';
     const resolvedFontFamily =
-      fontFamilyMap[finalFontFamily] || worksans.className;
+      fontFamilyMap[finalFontFamily] || bricolageGrotesque.className;
     const responsiveClasses = buildResponsiveClasses();
     const finalLineHeight = lineHeight || variantSettings?.lineHeight;
 

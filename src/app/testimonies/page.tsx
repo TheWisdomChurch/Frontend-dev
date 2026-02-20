@@ -181,7 +181,7 @@ export default function TestimoniesPage() {
 
       <PageSection tone="surface" padding="xl">
         <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 items-start">
-          <div className="space-y-5">
+          <div className="space-y-5 fade-up">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full page-card-muted flex items-center justify-center">
                 <Quote className="w-5 h-5 text-accent" />
@@ -216,7 +216,7 @@ export default function TestimoniesPage() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="page-card p-6 sm:p-8 space-y-4">
+          <form onSubmit={handleSubmit} className="page-card p-5 sm:p-8 space-y-4 fade-up" style={{ animationDelay: '90ms' }}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className={labelClass} htmlFor="firstName">
@@ -277,7 +277,7 @@ export default function TestimoniesPage() {
                 className="input-base min-h-[180px]"
                 placeholder="Tell us what God has done in your life..."
               />
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-subtle">
                 {characterCount}/{MAX_TESTIMONY_LEN}
               </div>
             </div>
@@ -293,11 +293,11 @@ export default function TestimoniesPage() {
                 onChange={handleImageChange}
                 className="input-base file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white file:bg-gray-900"
               />
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-subtle">
                 Max size: {MAX_IMAGE_SIZE_MB}MB. Formats: JPG, PNG, WEBP.
               </div>
               {imageName ? (
-                <div className="text-xs text-gray-600">Selected: {imageName}</div>
+                <div className="text-xs text-muted">Selected: {imageName}</div>
               ) : null}
               {imageError ? (
                 <div className="text-xs text-red-600">{imageError}</div>
@@ -316,7 +316,7 @@ export default function TestimoniesPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-xs sm:text-sm text-muted">
                 <input
                   type="checkbox"
                   name="anonymous"
@@ -326,7 +326,7 @@ export default function TestimoniesPage() {
                 />
                 Share anonymously
               </label>
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-xs sm:text-sm text-muted">
                 <input
                   type="checkbox"
                   name="allowSharing"
@@ -336,7 +336,7 @@ export default function TestimoniesPage() {
                 />
                 Allow public sharing
               </label>
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-xs sm:text-sm text-muted">
                 <input
                   type="checkbox"
                   name="agreeToTerms"

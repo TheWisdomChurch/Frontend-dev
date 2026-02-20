@@ -17,7 +17,7 @@ import ClientScrollToTop from '@/components/layout/ClientscrollTop';
 import ScrollHandler from '@/components/layout/ClientScrollHandler';
 import AppStartupLoader from '@/components/providers/AppStartupLoader';
 import CookieConsentBanner from '@/components/ui/CookieConsentBanner';
-import './globals.css';
+import './globals.scss';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
 const SITE_NAME = 'The Wisdom Church';
@@ -207,7 +207,7 @@ export default function RootLayout({
       className={`${bricolageGrotesque.variable} ${worksans.variable} ${playfair.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className={worksans.className}>
+      <body className={`${worksans.className} font-sans`}>
         {/* ✅ Valid JSON-LD only (no <meta> inside JSON.stringify) */}
         <script
           type="application/ld+json"
