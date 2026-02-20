@@ -118,16 +118,16 @@ const Upcoming = () => {
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
             {/* Bold Header */}
-            <div className="text-center mb-12 md:mb-16">
+            <div className="text-center mb-12 md:mb-16 fade-up">
               <BaseText
                 fontFamily="bricolage"
                 weight="black"
-                className="text-4xl md:text-6xl lg:text-7xl text-gray-900 mb-4 md:mb-6 tracking-tight"
+                className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-gray-900 mb-4 md:mb-6 tracking-tight"
               >
                 UPCOMING <span className="text-yellow-500">EVENTS</span>
               </BaseText>
               <div className="w-20 h-1 md:w-24 md:h-2 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mb-4 md:mb-6 rounded-full"></div>
-              <BodyMD className="text-lg md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <BodyMD className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Discover transformative experiences and spiritual gatherings
                 designed to uplift and inspire your journey
               </BodyMD>
@@ -164,7 +164,7 @@ const Upcoming = () => {
 
               {/* Content Column */}
               <div className="space-y-6 md:space-y-8">
-                <H2 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 leading-tight">
+                <H2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
                   7 Nights of <span className="text-yellow-500">Lifting</span>
                 </H2>
                 <div className="space-y-4">
@@ -183,13 +183,13 @@ const Upcoming = () => {
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
                   <button
                     onClick={openLiftingModal}
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-black text-base md:text-lg hover:shadow-xl lg:hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg"
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:shadow-xl lg:hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg"
                   >
                     Register to Attend
                   </button>
                   <button
                     onClick={() => openReminderModal('lifting')}
-                    className="border-2 border-gray-300 text-gray-700 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
+                    className="border-2 border-gray-300 text-gray-700 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
                   >
                     Remind Me Later
                   </button>
@@ -211,7 +211,7 @@ const Upcoming = () => {
               <H2 className="mb-4 md:mb-6 text-3xl md:text-4xl lg:text-5xl font-black">
                 Event <span className="text-yellow-400">Calendar</span>
               </H2>
-              <BodyMD className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto">
+              <BodyMD className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto">
                 Browse through our interactive calendar to stay updated with all
                 upcoming events and gatherings
               </BodyMD>

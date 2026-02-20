@@ -75,7 +75,7 @@ export default function EventsPage() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
       <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4 fade-up">
             <div>
             <p className="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-amber-300">
               Wisdom House
@@ -115,7 +115,7 @@ export default function EventsPage() {
             {events.map((event) => (
               <article
                 key={event.id}
-                className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900/70"
+                className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900/70 fade-up"
               >
                 <div className="relative h-44 w-full bg-neutral-900">
                   <img

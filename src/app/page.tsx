@@ -182,7 +182,8 @@ export default function Home() {
             type="button"
             aria-label="Open conference registration ad"
             onClick={() => setShowModal(true)}
-            className="fixed bottom-5 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-4 py-2.5 text-xs font-medium text-white shadow-2xl backdrop-blur-lg transition hover:-translate-y-0.5 hover:bg-black sm:text-sm"
+            className="fixed bottom-4 right-4 sm:bottom-5 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 sm:px-4 py-2.5 text-[11px] sm:text-sm font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+            style={{ animation: 'fade-up-keyframe 0.5s ease-out' }}
           >
             <Megaphone className="h-4 w-4" style={{ color: colorScheme.primary }} />
             <span>WPC 2026</span>
