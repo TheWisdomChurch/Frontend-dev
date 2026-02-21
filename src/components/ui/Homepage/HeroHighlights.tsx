@@ -1,17 +1,10 @@
 // components/ui/Homepage/HeroHighlights.tsx
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
+import React, { useCallback, useMemo, useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import {
-  CalendarClock,
-  Radio,
-  Users,
-  ArrowRight,
-  Clock,
-  MapPin,
-} from 'lucide-react';
+import { CalendarClock, ArrowRight, Clock, MapPin } from 'lucide-react';
 
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
@@ -19,6 +12,7 @@ import { BaseModal } from '@/components/modal/Base';
 import { Container } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
+import { Dept_1, Dept_2, Dept_3 } from '@/components/assets';
 
 /* =============================================================================
    Data
@@ -44,8 +38,7 @@ const highlights = [
     meta: 'In-person gathering',
     detail: 'Sundays • 9:00 AM (WAT)',
     description: 'Stay in faith',
-    icon: CalendarClock,
-    href: '/contact',
+    image: Dept_1,
     actionLabel: 'Plan a visit',
   },
   {
@@ -54,8 +47,7 @@ const highlights = [
     meta: 'Join our online family',
     detail: 'YouTube + Mixlr every service',
     description: 'Stream our service from anywhere.',
-    icon: Radio,
-    href: '/resources/sermons',
+    image: Dept_2,
     actionLabel: 'Watch now',
   },
   {
@@ -64,8 +56,7 @@ const highlights = [
     meta: 'Creative, worship & outreach',
     detail: 'Join a team this month',
     description: 'Put your gifts to work by serving',
-    icon: Users,
-    href: '#join',
+    image: Dept_3,
     actionLabel: 'Join a team',
   },
 ] as const;
@@ -104,7 +95,9 @@ function ModalShell({
       maxWidth="max-w-2xl"
     >
       <div className="space-y-4">
-        <p className="text-[10px] uppercase tracking-[0.18em] text-white/60">Quick form</p>
+        <p className="text-[10px] uppercase tracking-[0.18em] text-white/60">
+          Quick form
+        </p>
         {children}
       </div>
     </BaseModal>
@@ -182,7 +175,8 @@ export default function HeroHighlights() {
   const showUnavailable = useCallback(() => {
     serviceUnavailable.open({
       title: 'Service not available yet',
-      message: 'We are polishing this experience for production. Please check back soon.',
+      message:
+        'We are polishing this experience for production. Please check back soon.',
       actionLabel: 'Okay, thanks',
     });
   }, [serviceUnavailable]);
@@ -236,15 +230,17 @@ export default function HeroHighlights() {
       <Container size="xl" className="relative py-4 sm:py-5 md:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
           {highlights.map((item, index) => {
-            const Icon = item.icon;
-
             return (
               <motion.article
                 key={item.key}
                 className={cardBase}
                 initial={{ y: 18, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.06 * index, duration: 0.45, ease: 'easeOut' }}
+                transition={{
+                  delay: 0.06 * index,
+                  duration: 0.45,
+                  ease: 'easeOut',
+                }}
                 whileHover={{ translateY: -4, transition: { duration: 0.2 } }}
               >
                 <div
@@ -265,19 +261,35 @@ export default function HeroHighlights() {
                       </h3>
                     </div>
 
-                    <span
-                      className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl border border-white/20 shadow-inner shrink-0"
+                    <motion.div
+                      className="relative h-11 w-16 sm:h-12 sm:w-20 rounded-xl overflow-hidden border border-white/20 shadow-inner shrink-0"
                       style={{
-                        background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark ?? colorScheme.primary} 100%)`,
-                        boxShadow: `0 16px 26px ${colorScheme.opacity?.primary25 ?? 'rgba(251,191,36,0.25)'}`,
+                        transform: 'rotate(-10deg)',
+                        boxShadow: `0 14px 26px ${colorScheme.opacity?.primary20 ?? 'rgba(251,191,36,0.20)'}`,
+                      }}
+                      animate={{ y: [0, -3, 0], rotate: [-10, -7, -10] }}
+                      transition={{
+                        duration: 4.2,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                        delay: index * 0.35,
                       }}
                       aria-hidden="true"
                     >
-                      <Icon className="h-5 w-5 text-black" />
-                    </span>
+                      <Image
+                        src={item.image}
+                        alt={`${item.title} preview`}
+                        fill
+                        sizes="(max-width: 640px) 64px, 80px"
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/35" />
+                    </motion.div>
                   </div>
 
-                  <p className="text-[11px] sm:text-sm font-medium text-white">{item.detail}</p>
+                  <p className="text-[11px] sm:text-sm font-medium text-white">
+                    {item.detail}
+                  </p>
                   <p className="text-[12px] sm:text-sm leading-relaxed text-white/70">
                     {item.description}
                   </p>
@@ -301,19 +313,13 @@ export default function HeroHighlights() {
                     </CustomButton>
 
                     <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/70">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: colorScheme.primary }} />
+                      <span
+                        className="h-2 w-2 rounded-full"
+                        style={{ backgroundColor: colorScheme.primary }}
+                      />
                       <span>Always on mission</span>
                     </div>
                   </div>
-
-                  {/* <div className="pt-1">
-                    <Link
-                      href={item.href}
-                      className="text-[11px] sm:text-xs text-white/55 hover:text-white/80 inline-flex items-center gap-2"
-                    >
-                      Open page <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div> */}
                 </div>
               </motion.article>
             );
@@ -336,7 +342,7 @@ export default function HeroHighlights() {
               placeholder="Full name"
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={visit.name}
-              onChange={(e) => setVisit((p) => ({ ...p, name: e.target.value }))}
+              onChange={e => setVisit(p => ({ ...p, name: e.target.value }))}
               required
             />
             <input
@@ -344,7 +350,7 @@ export default function HeroHighlights() {
               placeholder="Email address"
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={visit.email}
-              onChange={(e) => setVisit((p) => ({ ...p, email: e.target.value }))}
+              onChange={e => setVisit(p => ({ ...p, email: e.target.value }))}
               required
             />
           </div>
@@ -355,12 +361,14 @@ export default function HeroHighlights() {
               placeholder="Phone (optional)"
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={visit.phone}
-              onChange={(e) => setVisit((p) => ({ ...p, phone: e.target.value }))}
+              onChange={e => setVisit(p => ({ ...p, phone: e.target.value }))}
             />
             <select
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={visit.attendance}
-              onChange={(e) => setVisit((p) => ({ ...p, attendance: e.target.value }))}
+              onChange={e =>
+                setVisit(p => ({ ...p, attendance: e.target.value }))
+              }
               aria-label="Number of attendees"
             >
               <option value="1">1 person</option>
@@ -379,23 +387,31 @@ export default function HeroHighlights() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="space-y-1">
-                <span className="text-[11px] uppercase tracking-[0.16em] text-white/60">Date</span>
+                <span className="text-[11px] uppercase tracking-[0.16em] text-white/60">
+                  Date
+                </span>
                 <input
                   type="date"
                   className="w-full rounded-2xl bg-black/30 border border-white/12 px-4 py-3 text-white text-sm outline-none focus:border-primary"
                   value={visit.date}
-                  onChange={(e) => setVisit((p) => ({ ...p, date: e.target.value }))}
+                  onChange={e =>
+                    setVisit(p => ({ ...p, date: e.target.value }))
+                  }
                   required
                 />
               </label>
 
               <label className="space-y-1">
-                <span className="text-[11px] uppercase tracking-[0.16em] text-white/60">Time</span>
+                <span className="text-[11px] uppercase tracking-[0.16em] text-white/60">
+                  Time
+                </span>
                 <input
                   type="time"
                   className="w-full rounded-2xl bg-black/30 border border-white/12 px-4 py-3 text-white text-sm outline-none focus:border-primary"
                   value={visit.time}
-                  onChange={(e) => setVisit((p) => ({ ...p, time: e.target.value }))}
+                  onChange={e =>
+                    setVisit(p => ({ ...p, time: e.target.value }))
+                  }
                   required
                 />
               </label>
@@ -415,7 +431,7 @@ export default function HeroHighlights() {
             placeholder="Notes (optional) — kids, first time, prayer request, accessibility needs…"
             className="w-full min-h-[96px] rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary resize-none"
             value={visit.notes}
-            onChange={(e) => setVisit((p) => ({ ...p, notes: e.target.value }))}
+            onChange={e => setVisit(p => ({ ...p, notes: e.target.value }))}
           />
 
           <button
@@ -425,7 +441,9 @@ export default function HeroHighlights() {
             Confirm appointment <ArrowRight className="w-4 h-4" />
           </button>
 
-          <p className="text-white/50 text-xs">We confirm by email and send a reminder. No spam, ever.</p>
+          <p className="text-white/50 text-xs">
+            We confirm by email and send a reminder. No spam, ever.
+          </p>
         </form>
       </ModalShell>
 
@@ -441,7 +459,7 @@ export default function HeroHighlights() {
             placeholder="Full name"
             className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
             value={watch.name}
-            onChange={(e) => setWatch((p) => ({ ...p, name: e.target.value }))}
+            onChange={e => setWatch(p => ({ ...p, name: e.target.value }))}
             required
           />
           <input
@@ -449,7 +467,7 @@ export default function HeroHighlights() {
             placeholder="Email address"
             className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
             value={watch.email}
-            onChange={(e) => setWatch((p) => ({ ...p, email: e.target.value }))}
+            onChange={e => setWatch(p => ({ ...p, email: e.target.value }))}
             required
           />
           <button
@@ -458,7 +476,9 @@ export default function HeroHighlights() {
           >
             Notify me <ArrowRight className="w-4 h-4" />
           </button>
-          <p className="text-white/50 text-xs">Service reminders only. No spam.</p>
+          <p className="text-white/50 text-xs">
+            Service reminders only. No spam.
+          </p>
         </form>
       </ModalShell>
 
@@ -475,7 +495,7 @@ export default function HeroHighlights() {
               placeholder="Full name"
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={join.name}
-              onChange={(e) => setJoin((p) => ({ ...p, name: e.target.value }))}
+              onChange={e => setJoin(p => ({ ...p, name: e.target.value }))}
               required
             />
             <input
@@ -483,7 +503,7 @@ export default function HeroHighlights() {
               placeholder="Email address"
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={join.email}
-              onChange={(e) => setJoin((p) => ({ ...p, email: e.target.value }))}
+              onChange={e => setJoin(p => ({ ...p, email: e.target.value }))}
               required
             />
           </div>
@@ -494,17 +514,22 @@ export default function HeroHighlights() {
               placeholder="Phone (optional)"
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={join.phone}
-              onChange={(e) => setJoin((p) => ({ ...p, phone: e.target.value }))}
+              onChange={e => setJoin(p => ({ ...p, phone: e.target.value }))}
             />
 
             <select
               className="w-full rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary"
               value={join.department}
-              onChange={(e) => setJoin((p) => ({ ...p, department: e.target.value as Department }))}
+              onChange={e =>
+                setJoin(p => ({
+                  ...p,
+                  department: e.target.value as Department,
+                }))
+              }
               required
               aria-label="Select department"
             >
-              {departments.map((d) => (
+              {departments.map(d => (
                 <option key={d} value={d}>
                   {d}
                 </option>
@@ -516,7 +541,7 @@ export default function HeroHighlights() {
             placeholder="Any experience? (optional) — music instrument, camera, design, admin, teaching…"
             className="w-full min-h-[96px] rounded-2xl bg-white/5 border border-white/15 px-4 py-3 text-white text-sm outline-none focus:border-primary resize-none"
             value={join.experience}
-            onChange={(e) => setJoin((p) => ({ ...p, experience: e.target.value }))}
+            onChange={e => setJoin(p => ({ ...p, experience: e.target.value }))}
           />
 
           <button
@@ -526,7 +551,9 @@ export default function HeroHighlights() {
             Send interest <ArrowRight className="w-4 h-4" />
           </button>
 
-          <p className="text-white/50 text-xs">We’ll reach out by email (or phone if provided). No spam.</p>
+          <p className="text-white/50 text-xs">
+            We’ll reach out by email (or phone if provided). No spam.
+          </p>
         </form>
       </ModalShell>
     </section>
