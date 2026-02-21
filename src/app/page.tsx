@@ -19,30 +19,45 @@ const EventsShowcase = dynamic(
   () => import('@/components/ui/Homepage/EventsShowcase'),
   { ssr: true, loading: () => null }
 );
-const SeniorPastor = dynamic(() => import('@/components/ui/Homepage/SeniorPastor'), {
-  ssr: true,
-  loading: () => null,
-});
+const SeniorPastor = dynamic(
+  () => import('@/components/ui/Homepage/SeniorPastor'),
+  {
+    ssr: true,
+    loading: () => null,
+  }
+);
 // const AssociatePastors = dynamic(
 //   () => import('@/components/ui/Homepage/AssociatePastors'),
 //   { ssr: true, loading: () => <div className="min-h-[220px]" /> }
 // );
-const JoinWisdomHouse = dynamic(() => import('@/components/ui/Homepage/JoinUs'), {
-  ssr: true,
-  loading: () => null,
-});
-const Testimonial = dynamic(() => import('@/components/ui/Homepage/Testimonials'), {
-  ssr: true,
-  loading: () => null,
-});
-const OnlineGiving = dynamic(() => import('@/components/ui/Homepage/OnlineGiving'), {
-  ssr: true,
-  loading: () => null,
-});
-const ResourceSection = dynamic(() => import('@/components/ui/Homepage/Resource'), {
-  ssr: true,
-  loading: () => null,
-});
+const JoinWisdomHouse = dynamic(
+  () => import('@/components/ui/Homepage/JoinUs'),
+  {
+    ssr: true,
+    loading: () => null,
+  }
+);
+const Testimonial = dynamic(
+  () => import('@/components/ui/Homepage/Testimonials'),
+  {
+    ssr: true,
+    loading: () => null,
+  }
+);
+const OnlineGiving = dynamic(
+  () => import('@/components/ui/Homepage/OnlineGiving'),
+  {
+    ssr: true,
+    loading: () => null,
+  }
+);
+const ResourceSection = dynamic(
+  () => import('@/components/ui/Homepage/Resource'),
+  {
+    ssr: true,
+    loading: () => null,
+  }
+);
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -64,7 +79,7 @@ export default function Home() {
         'Join three days of worship, impartation, and encounters designed to refresh your spirit and strengthen your walk.',
       startAt: '2026-03-20T18:00:00Z',
       endAt: '2026-03-22T20:00:00Z',
-      time: '6:00 PM Daily',
+      time: 'Morning Session • Evening Session',
       location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
       image: '/HEADER.png',
       registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
@@ -185,7 +200,10 @@ export default function Home() {
             className="fixed bottom-4 right-4 sm:bottom-5 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 sm:px-4 py-2.5 text-[11px] sm:text-sm font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
             style={{ animation: 'fade-up-keyframe 0.5s ease-out' }}
           >
-            <Megaphone className="h-4 w-4" style={{ color: colorScheme.primary }} />
+            <Megaphone
+              className="h-4 w-4"
+              style={{ color: colorScheme.primary }}
+            />
             <span>WPC 2026</span>
           </button>
         )}

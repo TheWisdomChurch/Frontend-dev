@@ -10,10 +10,11 @@ export type HeroSectionProps = {
   description?: string;
   chips?: string[];
 
-  /** ✅ add this so LeadersPage can pass it */
   backgroundImage?: string;
 
   showButtons?: boolean;
+  primaryButtonText?: string;
+  secondaryButtonText?: string;
   showScrollIndicator?: boolean;
 };
 
@@ -24,6 +25,8 @@ export default function HeroSection({
   chips,
   backgroundImage,
   showButtons,
+  primaryButtonText,
+  secondaryButtonText,
   showScrollIndicator,
 }: HeroSectionProps) {
   return (
@@ -32,9 +35,10 @@ export default function HeroSection({
       subtitle={subtitle}
       note={description}
       chips={chips}
-      /** ✅ forward it (PageHero must accept it or ignore it) */
       backgroundImage={backgroundImage}
       showButtons={showButtons}
+      primaryButtonText={primaryButtonText}
+      secondaryButtonText={secondaryButtonText}
       showScrollIndicator={showScrollIndicator}
     />
   );

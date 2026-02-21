@@ -6,6 +6,7 @@ import { RootState, AppDispatch } from '@/lib/store';
 import {
   setSelectedSeries,
   setSelectedPreacher,
+  setSelectedYear,
   setSortBy,
   setSearchTerm,
   loadMoreVideos,
@@ -49,6 +50,7 @@ export const useSermonUtil = () => {
           searchTerm: '',
           selectedSeries: 'all',
           selectedPreacher: 'all',
+          selectedYear: 'all',
           sortBy: 'newest' as const,
         }
   );

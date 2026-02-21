@@ -22,12 +22,9 @@ import {
 } from './types';
 
 import {
- 
   hero_bg_1,
   hero_bg_2,
   hero_bg_3,
-
-
   Associate_1,
   Associate_2,
   ProvidusBank,
@@ -38,8 +35,8 @@ import {
   // Dept_4,
   // What_to_expect_images
   WhatWedo_1,
-   WhatWeDo_3,
-WhatWedo_2,
+  WhatWeDo_3,
+  WhatWedo_2,
   WhatWedo_4,
   Img_1,
   Children_head,
@@ -59,7 +56,7 @@ import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 export const defaultSlides: Slide[] = [
   {
     title: 'Welcome to The Wisdom Church',
-    subtitle: "Equiping and Empowering for greatness",
+    subtitle: 'Equiping and Empowering for greatness',
     // description:
     //   'Where lives are transformed through faith.',
     image: {
@@ -70,7 +67,7 @@ export const defaultSlides: Slide[] = [
       label: 'Upcoming',
       title: 'Wisdom Power Conference',
       date: 'Mar 20 - 22',
-      time: 'Morning Session: 9:00 AM & Evening Session: 5:00 Pm',
+      time: 'Morning Session • Evening Session',
       location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
       ctaLabel: 'Reserve a seat',
       ctaTarget: '#programs',
@@ -150,7 +147,6 @@ export const testimonialsData: Testimonial[] = [
   },
 ];
 
-
 export const testimonialFormFields = {
   maxImageSize: 5 * 1024 * 1024, // 5MB
   maxTestimonyLength: 1000,
@@ -208,7 +204,6 @@ export const navLinks: NavLink[] = [
 ];
 
 export const leaders: Leader[] = [
- 
   {
     id: 1,
     name: 'Rev. Victor Jimba',
@@ -272,7 +267,7 @@ export const whatWeDoData: ServiceBox[] = [
     image: WhatWedo_1,
     imageAlt: 'Worship service',
   },
-    {
+  {
     id: 2,
     title: 'Expect the power of prayer',
     description:
@@ -282,7 +277,7 @@ export const whatWeDoData: ServiceBox[] = [
     gradient: 'from-purple-900 to-purple-700',
     imageOpacity: 60,
   },
-   {
+  {
     id: 3,
     title: 'Expect Powerful Worship',
     description:
@@ -300,8 +295,6 @@ export const whatWeDoData: ServiceBox[] = [
     gradient: 'from-blue-900 to-blue-700',
     imageOpacity: 60,
   },
- 
-
 ];
 
 export const missionStatement = `At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit.
@@ -316,7 +309,7 @@ export const pastorsData: Leader[] = [
     description:
       'Provides overall spiritual leadership and vision for the church.',
   },
-    {
+  {
     id: 2,
     name: 'Pst. Mrs Kehinde Ayilara',
     role: 'Senior Pastor',
@@ -324,7 +317,7 @@ export const pastorsData: Leader[] = [
     description:
       'Assist in discipleship, mentorship, and faith-building activities',
   },
-    {
+  {
     id: 3,
     name: 'Rev. Victor Jimba',
     role: 'Resident Pastor',
@@ -340,7 +333,7 @@ export const pastorsData: Leader[] = [
     image: Associate_1,
     description:
       'Assist in discipleship, mentorship, and faith-building activities',
-  }
+  },
 ];
 export const deaconsData: Leader[] = [
   {

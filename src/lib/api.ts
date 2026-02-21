@@ -9,7 +9,12 @@ import type {
   CreateTestimonialRequest,
 } from './apiTypes';
 
-import type { WorkforceRegistrationData } from './types';
+import type {
+  LeadershipApplicationRequest,
+  LeadershipMember,
+  LeadershipRole,
+  WorkforceRegistrationData,
+} from './types';
 import { trackApiRequestStart, trackApiRequestEnd } from './apiActivity';
 
 /* ============================================================================
@@ -69,16 +74,35 @@ export function isApiError(err: unknown): err is ApiError {
   return typeof err === 'object' && err !== null && 'statusCode' in err;
 }
 
-export function mapValidationErrors(err: unknown): Record<string, string> | null {
-  if (!isApiError(err) || !Array.isArray(err.validationErrors) || err.validationErrors.length === 0) {
-    return null;
-  }
+export function mapValidationErrors(
+  err: unknown
+): Record<string, string> | null {
   const mapped: Record<string, string> = {};
-  err.validationErrors.forEach((entry) => {
-    if (!entry.field || mapped[entry.field]) return;
-    mapped[entry.field] = entry.message;
-  });
-  return mapped;
+
+  if (isApiError(err) && Array.isArray(err.validationErrors)) {
+    for (const item of err.validationErrors) {
+      if (item?.field && item?.message) {
+        mapped[item.field] = item.message;
+      }
+    }
+  }
+
+  const details = isApiError(err) ? err.details : undefined;
+  if (isRecord(details)) {
+    const rawErrors = details.errors;
+    if (Array.isArray(rawErrors)) {
+      for (const raw of rawErrors) {
+        if (!isRecord(raw)) continue;
+        const field = typeof raw.field === 'string' ? raw.field : '';
+        const message = typeof raw.message === 'string' ? raw.message : '';
+        if (field && message && !mapped[field]) {
+          mapped[field] = message;
+        }
+      }
+    }
+  }
+
+  return Object.keys(mapped).length ? mapped : null;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -98,7 +122,9 @@ function getMessageFromPayload(payload: unknown): string | undefined {
  * Expects backend payload like:
  * { errors: [{ field: "firstName", message: "...", code: "required" }, ...] }
  */
-function extractValidationErrors(payload: unknown): ValidationFieldError[] | undefined {
+function extractValidationErrors(
+  payload: unknown
+): ValidationFieldError[] | undefined {
   if (!isRecord(payload)) return undefined;
 
   const raw = (payload as Record<string, unknown>).errors;
@@ -114,7 +140,9 @@ function extractValidationErrors(payload: unknown): ValidationFieldError[] | und
         ? item.message.trim()
         : 'Invalid value';
     const code =
-      typeof item.code === 'string' && item.code.trim() ? item.code.trim() : undefined;
+      typeof item.code === 'string' && item.code.trim()
+        ? item.code.trim()
+        : undefined;
 
     if (field) normalized.push({ field, code, message });
   }
@@ -155,6 +183,37 @@ function unwrapData<T>(res: any): T {
   return res as T;
 }
 
+function toQueryString(params: Record<string, unknown>): string {
+  const qp = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') return;
+    qp.set(key, String(value));
+  });
+
+  const query = qp.toString();
+  return query ? `?${query}` : '';
+}
+
+function extractArrayData<T>(res: any): T[] {
+  const data = unwrapData<any>(res);
+
+  if (Array.isArray(data)) {
+    return data as T[];
+  }
+
+  if (isRecord(data)) {
+    const candidates = [data.items, data.results, data.rows];
+    for (const candidate of candidates) {
+      if (Array.isArray(candidate)) {
+        return candidate as T[];
+      }
+    }
+  }
+
+  return [];
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_V1_BASE_URL}${path}`;
 
@@ -177,7 +236,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
     const json = await safeParseJson(res);
     const payload =
-      json ?? ({ message: await res.text().catch(() => '') } as Record<string, any>);
+      json ??
+      ({ message: await res.text().catch(() => '') } as Record<string, any>);
 
     if (!res.ok) {
       const validationErrors = extractValidationErrors(payload);
@@ -208,59 +268,32 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     lastName,
     email,
     phone,
+    title,
     department,
+    leadershipCategory,
+    birthMonth,
+    anniversaryMonth,
+    isExistingMember,
+    currentAssignment,
     birthday,
     notes,
-    title,
-    leadershipCategory,
-    currentAssignment,
-    isExistingMember,
   } = payload;
-
-  const notesParts: string[] = [];
-  if (notes?.trim()) notesParts.push(notes.trim());
-  if (title?.trim()) notesParts.push(`Title: ${title.trim()}`);
-  if (leadershipCategory?.trim()) notesParts.push(`Category: ${leadershipCategory.trim()}`);
-  if (currentAssignment?.trim()) notesParts.push(`Assignment: ${currentAssignment.trim()}`);
-  if (typeof isExistingMember === 'boolean') {
-    notesParts.push(`Existing worker: ${isExistingMember ? 'yes' : 'no'}`);
-  }
 
   return {
     firstName,
     lastName,
     email,
     phone,
+    title,
     department,
+    leadershipCategory,
+    birthMonth,
+    anniversaryMonth,
+    isExistingMember,
+    currentAssignment,
     birthday,
-    notes: notesParts.length > 0 ? notesParts.join('\n') : undefined,
+    notes,
   };
-}
-
-function toQueryString(params?: Record<string, unknown>): string {
-  if (!params) return '';
-  const cleaned: Record<string, string> = {};
-  Object.entries(params).forEach(([key, value]) => {
-    if (value === undefined || value === null || value === '') return;
-    cleaned[key] = String(value);
-  });
-  const qs = new URLSearchParams(cleaned).toString();
-  return qs ? `?${qs}` : '';
-}
-
-function extractArrayData<T>(payload: any): T[] {
-  if (Array.isArray(payload)) return payload as T[];
-  if (!payload || typeof payload !== 'object') return [];
-
-  const topData = (payload as any).data;
-  if (Array.isArray(topData)) return topData as T[];
-  if (topData && typeof topData === 'object') {
-    if (Array.isArray((topData as any).items)) return (topData as any).items as T[];
-    if (Array.isArray((topData as any).data)) return (topData as any).data as T[];
-  }
-
-  if (Array.isArray((payload as any).items)) return (payload as any).items as T[];
-  return [];
 }
 
 function asNonEmptyString(value: unknown): string | undefined {
@@ -269,7 +302,10 @@ function asNonEmptyString(value: unknown): string | undefined {
   return trimmed.length ? trimmed : undefined;
 }
 
-function parseEventDate(date?: string, time?: string): { startAt?: string; endAt?: string } {
+function parseEventDate(
+  date?: string,
+  time?: string
+): { startAt?: string; endAt?: string } {
   if (!date) return {};
 
   const baseDate = date.includes('T') ? date : `${date}T00:00:00`;
@@ -280,7 +316,10 @@ function parseEventDate(date?: string, time?: string): { startAt?: string; endAt
     const parsedWithTime = new Date(`${date} ${time}`);
     if (!Number.isNaN(parsedWithTime.getTime())) {
       const end = new Date(parsedWithTime.getTime() + 2 * 60 * 60 * 1000);
-      return { startAt: parsedWithTime.toISOString(), endAt: end.toISOString() };
+      return {
+        startAt: parsedWithTime.toISOString(),
+        endAt: end.toISOString(),
+      };
     }
   }
 
@@ -307,7 +346,8 @@ function mapBackendEvent(input: unknown): EventPublic | null {
   if (!id || !title) return null;
 
   const description =
-    asNonEmptyString(input.description) ?? asNonEmptyString(input.shortDescription);
+    asNonEmptyString(input.description) ??
+    asNonEmptyString(input.shortDescription);
   const date = asNonEmptyString(input.date);
   const time = asNonEmptyString(input.time);
   const location = asNonEmptyString(input.location);
@@ -332,12 +372,40 @@ function mapBackendEvent(input: unknown): EventPublic | null {
   };
 }
 
+function mapBackendReel(input: unknown): ReelPublic | null {
+  if (!isRecord(input)) return null;
+
+  const id = asNonEmptyString(input.id);
+  const title = asNonEmptyString(input.title);
+  if (!id || !title) return null;
+
+  return {
+    id,
+    title,
+    description: asNonEmptyString(input.description),
+    thumbnailUrl:
+      asNonEmptyString(input.thumbnailUrl) ??
+      asNonEmptyString(input.thumbnail) ??
+      asNonEmptyString(input.imageUrl),
+    videoUrl:
+      asNonEmptyString(input.videoUrl) ??
+      asNonEmptyString(input.video_url) ??
+      asNonEmptyString(input.url),
+    publishedAt:
+      asNonEmptyString(input.publishedAt) ??
+      asNonEmptyString(input.createdAt) ??
+      asNonEmptyString(input.created_at),
+  };
+}
+
 function normalizeTestimonial(raw: any): Testimonial {
   const firstName = raw?.firstName ?? raw?.first_name;
   const lastName = raw?.lastName ?? raw?.last_name;
 
-  const isAnonymous = raw?.isAnonymous ?? raw?.is_anonymous ?? raw?.anonymous ?? false;
-  const isApproved = raw?.isApproved ?? raw?.is_approved ?? raw?.approved ?? undefined;
+  const isAnonymous =
+    raw?.isAnonymous ?? raw?.is_anonymous ?? raw?.anonymous ?? false;
+  const isApproved =
+    raw?.isApproved ?? raw?.is_approved ?? raw?.approved ?? undefined;
 
   const imageUrl =
     raw?.imageUrl ?? raw?.image_url ?? raw?.image ?? raw?.imageURL ?? null;
@@ -348,7 +416,9 @@ function normalizeTestimonial(raw: any): Testimonial {
   const fullName =
     raw?.fullName ??
     raw?.full_name ??
-    (firstName || lastName ? `${firstName ?? ''} ${lastName ?? ''}`.trim() : undefined);
+    (firstName || lastName
+      ? `${firstName ?? ''} ${lastName ?? ''}`.trim()
+      : undefined);
 
   return {
     id: raw?.id,
@@ -361,44 +431,6 @@ function normalizeTestimonial(raw: any): Testimonial {
     isApproved,
     createdAt,
     updatedAt,
-  };
-}
-
-function mapBackendReel(input: unknown): ReelPublic | null {
-  if (!isRecord(input)) return null;
-
-  const id = asNonEmptyString(input.id);
-  const title = asNonEmptyString(input.title) ?? 'Reel';
-  if (!id) return null;
-
-  const thumbnail =
-    asNonEmptyString(input.thumbnail) ??
-    asNonEmptyString(input.thumbnailUrl) ??
-    asNonEmptyString(input.thumbnail_url);
-  const videoUrl =
-    asNonEmptyString(input.videoUrl) ??
-    asNonEmptyString(input.video_url) ??
-    asNonEmptyString(input.url);
-  if (!videoUrl) return null;
-
-  return {
-    id,
-    title,
-    thumbnail: thumbnail ?? '',
-    videoUrl,
-    duration:
-      asNonEmptyString(input.duration) ??
-      asNonEmptyString(input.length) ??
-      asNonEmptyString(input.videoDuration),
-    eventId:
-      asNonEmptyString(input.eventId) ??
-      asNonEmptyString(input.event_id),
-    createdAt:
-      asNonEmptyString(input.createdAt) ??
-      asNonEmptyString(input.created_at),
-    updatedAt:
-      asNonEmptyString(input.updatedAt) ??
-      asNonEmptyString(input.updated_at),
   };
 }
 
@@ -447,21 +479,31 @@ export const apiClient = {
     return unwrapData<PublicFormPayload>(res);
   },
 
-  async submitPublicForm(slug: string, body: PublicFormSubmissionRequest): Promise<any> {
-    const res = await request<any>(`/forms/${encodeURIComponent(slug)}/submissions`, {
-      method: 'POST',
-      body: JSON.stringify(body),
-    });
+  async submitPublicForm(
+    slug: string,
+    body: PublicFormSubmissionRequest
+  ): Promise<any> {
+    const res = await request<any>(
+      `/forms/${encodeURIComponent(slug)}/submissions`,
+      {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }
+    );
     return unwrapData<any>(res);
   },
 
   async listApprovedTestimonials(): Promise<Testimonial[]> {
-    const res = await request<any>(`/testimonials?approved=true`, { method: 'GET' });
+    const res = await request<any>(`/testimonials?approved=true`, {
+      method: 'GET',
+    });
     const data = unwrapData<any>(res);
     return Array.isArray(data) ? data.map(normalizeTestimonial) : [];
   },
 
-  async submitTestimonial(payload: CreateTestimonialRequest): Promise<Testimonial> {
+  async submitTestimonial(
+    payload: CreateTestimonialRequest
+  ): Promise<Testimonial> {
     const res = await request<any>('/testimonials', {
       method: 'POST',
       body: JSON.stringify(payload),
@@ -484,11 +526,14 @@ export const apiClient = {
     return unwrapData<any>(res);
   },
 
-  async applyWorkforceServing(payload: WorkforceRegistrationData): Promise<any> {
+  async applyWorkforceServing(
+    payload: WorkforceRegistrationData
+  ): Promise<any> {
     const body = {
       ...mapWorkforcePayload(payload),
       status: 'serving',
     };
+
     const res = await request<any>('/workforce/serving/register', {
       method: 'POST',
       body: JSON.stringify(body),
@@ -525,9 +570,12 @@ export const apiClient = {
     return unwrapData<any>(res);
   },
 
-  async uploadLeadershipImage(file: File): Promise<{ url: string; key?: string }> {
+  async uploadLeadershipImage(
+    file: File
+  ): Promise<{ url: string; key?: string }> {
     const form = new FormData();
     form.append('file', file);
+
     try {
       const res = await request<any>('/leadership/upload-image', {
         method: 'POST',
