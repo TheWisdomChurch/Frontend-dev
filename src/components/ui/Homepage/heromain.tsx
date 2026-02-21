@@ -54,9 +54,7 @@ function isStaticImageData(x: any): x is StaticImageData {
   );
 }
 
-function isSimpleImageObject(
-  x: any
-): x is {
+function isSimpleImageObject(x: any): x is {
   src: string | StaticImageData;
   alt?: string;
   objectPosition?: string;
@@ -615,29 +613,40 @@ const HeroSection = ({
 
       {/* Slide Indicators */}
       {slideList.length > 1 && (
-        <div className="absolute bottom-11 sm:bottom-14 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-2 backdrop-blur">
+        <div className="absolute bottom-11 sm:bottom-14 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-2.5 py-1.5 backdrop-blur-md">
           {slideList.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`h-2.5 w-2.5 rounded-full transition-all duration-200 ${
-                currentSlide === index ? 'scale-110' : 'scale-95'
-              }`}
+              className="rounded-full border border-white/25 transition-all duration-300 ease-out"
               style={{
+                width: currentSlide === index ? '12px' : '4px',
+                height: '4px',
                 backgroundColor:
                   currentSlide === index
                     ? colorScheme.primary
-                    : 'rgba(255,255,255,0.3)',
+                    : 'rgba(255,255,255,0.22)',
                 boxShadow:
                   currentSlide === index
-                    ? `0 0 6px ${colorScheme.primary}`
+                    ? `0 0 8px ${colorScheme.opacity.primary30}`
                     : 'none',
               }}
               aria-label={`Go to slide ${index + 1}`}
+              aria-current={currentSlide === index}
             />
           ))}
         </div>
       )}
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20">
+        <div
+          className="mx-auto h-px w-[min(94%,1200px)] rounded-full opacity-90"
+          style={{
+            backgroundImage: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary} 50%, transparent 100%)`,
+            boxShadow: `0 0 10px ${colorScheme.opacity.primary30}`,
+          }}
+        />
+      </div>
 
       {/* Scroll Indicators */}
       <ScrollIndicators
