@@ -8,7 +8,14 @@ const tsRoot = fileURLToPath(new URL('.', import.meta.url));
 
 export default [
   {
-    ignores: ['node_modules/**', '.next/**', 'dist/**', '*.config.js', '*.config.ts'],
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'dist/**',
+      'next-env.d.ts',
+      '*.config.js',
+      '*.config.ts',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

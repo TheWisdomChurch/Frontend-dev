@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${SKIP_GIT_HOOKS:-0}" == "1" ]]; then
+  echo "[pre-push] SKIP_GIT_HOOKS=1, skipping checks."
+  exit 0
+fi
+
+if [[ ! -d node_modules ]]; then
+  echo "[pre-push] node_modules not found. Run npm install first."
+  exit 1
+fi
+
+echo ""
+echo "[pre-push] Running repository validation checks..."
+
+echo "[pre-push] TypeScript..."
+node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck
+echo "[pre-push] TypeScript passed."
+
+echo "[pre-push] ESLint..."
+node ./node_modules/eslint/bin/eslint.js . --max-warnings 0 --no-warn-ignored
+echo "[pre-push] ESLint passed."
+
+if [[ "${SKIP_PREPUSH_BUILD:-0}" == "1" ]]; then
+  echo "[pre-push] SKIP_PREPUSH_BUILD=1, skipping production build."
+  exit 0
+fi
+
+echo "[pre-push] Production build..."
+node ./node_modules/next/dist/bin/next build
+echo "[pre-push] Build passed."
+
+echo "[pre-push] All checks passed."

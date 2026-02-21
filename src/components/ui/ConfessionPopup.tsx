@@ -1,7 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowLeft, BookOpen, Church, HeartHandshake, Sparkles } from 'lucide-react';
+import {
+  ArrowLeft,
+  BookOpen,
+  Church,
+  HeartHandshake,
+  Sparkles,
+} from 'lucide-react';
 import { BaseModal } from '@/components/modal/Base';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { BaseText, BodyMD, Caption, H3 } from '@/components/text';
@@ -16,7 +22,10 @@ interface WelcomeModalProps {
   delay?: number;
 }
 
-export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalProps) {
+export default function ConfessionPopup({
+  onClose,
+  delay = 2400,
+}: WelcomeModalProps) {
   const { colorScheme } = useTheme();
   const {
     isVisible,
@@ -40,7 +49,6 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
           : 'Speak this over your week with bold faith.'
       }
       maxWidth="max-w-2xl"
-      forceBottomSheet
     >
       {currentStep === 'welcome' ? (
         <div className="space-y-5 text-white">
@@ -63,8 +71,9 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
               </div>
             </div>
             <BodyMD className="leading-relaxed text-white/90">
-              You are in a place of worship, truth, and transformation. Before you continue,
-              take a moment with our confession and align your words with faith.
+              You are in a place of worship, truth, and transformation. Before
+              you continue, take a moment with our confession and align your
+              words with faith.
             </BodyMD>
           </div>
 
@@ -82,7 +91,10 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
                   className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full"
                   style={{ background: `${colorScheme.primary}24` }}
                 >
-                  <item.icon className="h-4 w-4" style={{ color: colorScheme.primary }} />
+                  <item.icon
+                    className="h-4 w-4"
+                    style={{ color: colorScheme.primary }}
+                  />
                 </div>
                 <Caption className="text-white/80">{item.label}</Caption>
               </div>
@@ -113,7 +125,7 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
               className="h-11 w-full text-sm font-medium"
               style={{
                 background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                color: colorScheme.black,
+                color: '#FFFFFF',
               }}
             >
               Continue
@@ -129,7 +141,8 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
               style={{ color: '#ffffff' }}
               weight="regular"
             >
-              We begin to prosper, we continue to prosper, until we become very prosperous.
+              We begin to prosper, we continue to prosper, until we become very
+              prosperous.
             </PlayfairText>
           </div>
 
@@ -139,7 +152,10 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
               .map(paragraph => paragraph.trim())
               .filter(Boolean)
               .map((paragraph, index) => (
-                <BodyMD key={`${paragraph.slice(0, 20)}-${index}`} className="leading-relaxed text-white/90">
+                <BodyMD
+                  key={`${paragraph.slice(0, 20)}-${index}`}
+                  className="leading-relaxed text-white/90"
+                >
                   {paragraph}
                 </BodyMD>
               ))}
@@ -169,7 +185,7 @@ export default function ConfessionPopup({ onClose, delay = 2400 }: WelcomeModalP
               className="h-11 w-full text-sm font-medium"
               style={{
                 background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                color: colorScheme.black,
+                color: '#FFFFFF',
               }}
             >
               I Believe It

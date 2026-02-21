@@ -17,6 +17,8 @@
     "hooks:setup": "./.githooks/setup-hooks || (echo 'Making setup executable...' && chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks)",
     "hooks:test": "echo 'Creating test commit...' && touch .hook-test && git add .hook-test && git commit -m 'Testing git hooks' && rm .hook-test || echo 'Commit failed (hooks working!)'",
     "hooks:dry-run": "./.githooks/pre-commit",
+    "hooks:dry-run:commit": "./.githooks/pre-commit",
+    "hooks:dry-run:push": "./.githooks/pre-push",
     "ci:validate": "npm run type-check && npm run lint && npm run build",
     "docker:dev": "docker-compose up app-dev",
     "docker:prod": "docker-compose up app-prod",
@@ -95,11 +97,11 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix --max-warnings 0"
+      "node ./node_modules/prettier/bin/prettier.cjs --write",
+      "node ./node_modules/eslint/bin/eslint.js --fix --max-warnings 0 --no-warn-ignored"
     ],
-    "*.{json,md,mdx,css,html,yml,yaml}": [
-      "prettier --write"
+    "*.{json,md,mdx,css,scss,html,yml,yaml}": [
+      "node ./node_modules/prettier/bin/prettier.cjs --write"
     ]
   }
 }

@@ -4,7 +4,7 @@ import withPWA from 'next-pwa';
 const nextConfig: NextConfig = {
   // ✅ CRITICAL: Add this for Docker production build
   output: 'standalone',
-  
+
   // ✅ Keep typescript and eslint config
   typescript: {
     ignoreBuildErrors: true,
@@ -62,7 +62,7 @@ const nextConfig: NextConfig = {
         aggregateTimeout: 300,
         ignored: /node_modules/,
       };
-      
+
       // Disable SWC in Docker for better performance
       if (process.env.DOCKER_ENV === 'true') {
         config.experiments = {
@@ -105,9 +105,13 @@ const nextConfig: NextConfig = {
 
 // Wrap with PWA config (disable in dev to avoid issues)
 const enablePwa = false;
-export default withPWA({
+const withPwa = withPWA({
   dest: 'public',
   register: false,
   skipWaiting: false,
   disable: !enablePwa,
-})(nextConfig);
+});
+
+export default (withPwa as unknown as (config: NextConfig) => NextConfig)(
+  nextConfig
+);

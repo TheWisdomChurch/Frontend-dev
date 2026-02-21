@@ -34,7 +34,11 @@ const formatDate = (iso?: string) => {
   if (!iso) return '';
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '';
-  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
 };
 
 const formatDateRange = (startAt?: string, endAt?: string) => {
@@ -43,7 +47,8 @@ const formatDateRange = (startAt?: string, endAt?: string) => {
 
   const start = new Date(startAt);
   const end = new Date(endAt);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return formatDate(startAt);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()))
+    return formatDate(startAt);
 
   const startMonth = start.toLocaleDateString('en-US', { month: 'long' });
   const endMonth = end.toLocaleDateString('en-US', { month: 'long' });
@@ -58,7 +63,12 @@ const formatDateRange = (startAt?: string, endAt?: string) => {
   return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${year}`;
 };
 
-export default function EventAdModal({ event, open, onClose, onRemindLater }: Props) {
+export default function EventAdModal({
+  event,
+  open,
+  onClose,
+  onRemindLater,
+}: Props) {
   const { colorScheme } = useTheme();
   const dateRange = useMemo(
     () => formatDateRange(event.startAt, event.endAt),
@@ -93,7 +103,10 @@ export default function EventAdModal({ event, open, onClose, onRemindLater }: Pr
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-white/70">
-            <Sparkles className="h-3.5 w-3.5" style={{ color: colorScheme.primary }} />
+            <Sparkles
+              className="h-3.5 w-3.5"
+              style={{ color: colorScheme.primary }}
+            />
             Conference Registration
           </div>
 
@@ -119,19 +132,28 @@ export default function EventAdModal({ event, open, onClose, onRemindLater }: Pr
             <div className="flex flex-wrap gap-3 text-sm text-white/70">
               {dateRange && (
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" style={{ color: colorScheme.primary }} />
+                  <Calendar
+                    className="h-4 w-4"
+                    style={{ color: colorScheme.primary }}
+                  />
                   <span>{dateRange}</span>
                 </div>
               )}
               {event.time && (
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" style={{ color: colorScheme.primary }} />
+                  <Clock
+                    className="h-4 w-4"
+                    style={{ color: colorScheme.primary }}
+                  />
                   <span>{event.time}</span>
                 </div>
               )}
               {event.location && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" style={{ color: colorScheme.primary }} />
+                  <MapPin
+                    className="h-4 w-4"
+                    style={{ color: colorScheme.primary }}
+                  />
                   <span>{event.location}</span>
                 </div>
               )}
@@ -141,7 +163,9 @@ export default function EventAdModal({ event, open, onClose, onRemindLater }: Pr
 
         <div className="rounded-2xl border border-white/10 bg-[#0b0b0b] p-5 sm:p-6 space-y-4">
           <div className="space-y-2">
-            <BodyMD className="text-white font-semibold">{event.headline}</BodyMD>
+            <BodyMD className="text-white font-semibold">
+              {event.headline}
+            </BodyMD>
             <BodySM className="text-white/70">
               If you have not registered for WPC 2026, secure your seat now.
             </BodySM>
@@ -156,14 +180,16 @@ export default function EventAdModal({ event, open, onClose, onRemindLater }: Pr
             className="w-full"
             style={{
               background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-              color: colorScheme.black,
+              color: '#FFFFFF',
             }}
           >
             {event.ctaLabel ?? 'Register now'}
           </Button>
 
           <div className="flex items-center justify-between text-[11px] text-white/50">
-            <span>{event.note ?? 'Registration takes less than 2 minutes.'}</span>
+            <span>
+              {event.note ?? 'Registration takes less than 2 minutes.'}
+            </span>
             {onRemindLater && (
               <button
                 type="button"
