@@ -15,6 +15,7 @@ export type PageHeroProps = {
   note?: string;
   chips?: string[];
   compact?: boolean;
+  variant?: 'default' | 'about';
 
   backgroundImage?: string;
 
@@ -31,6 +32,7 @@ export default function PageHero({
   note,
   chips,
   compact = false,
+  variant = 'default',
   backgroundImage,
   showButtons,
   primaryButtonText,
@@ -38,6 +40,11 @@ export default function PageHero({
   showScrollIndicator,
 }: PageHeroProps) {
   const { colorScheme } = useTheme();
+  const isAboutVariant = variant === 'about';
+  const visualChips =
+    chips && chips.length
+      ? chips.slice(0, 4)
+      : ['Word & Power', 'Excellence', 'Generations', 'Nations'];
 
   const overlay = useMemo(
     () =>
@@ -50,7 +57,11 @@ export default function PageHero({
   return (
     <Section
       padding="none"
-      className="relative overflow-hidden bg-[#050505] min-h-[58vh] sm:min-h-[62vh] lg:min-h-[68vh] flex items-center"
+      className={`relative overflow-hidden bg-[#050505] flex items-center ${
+        isAboutVariant
+          ? 'min-h-[68vh] sm:min-h-[72vh] lg:min-h-[76vh]'
+          : 'min-h-[58vh] sm:min-h-[62vh] lg:min-h-[68vh]'
+      }`}
     >
       {/* Optional background image */}
       {backgroundImage ? (
@@ -75,8 +86,27 @@ export default function PageHero({
         style={{ background: overlay, filter: 'blur(60px)' }}
       />
 
+      {isAboutVariant ? (
+        <div
+          className="absolute inset-0 z-[-15] opacity-40"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+            backgroundSize: '30px 30px',
+            maskImage:
+              'radial-gradient(circle at 50% 40%, black 35%, transparent 85%)',
+            WebkitMaskImage:
+              'radial-gradient(circle at 50% 40%, black 35%, transparent 85%)',
+          }}
+        />
+      ) : null}
+
       {/* Watermark */}
-      <div className="absolute inset-0 -z-20 hidden sm:flex items-center justify-center opacity-10">
+      <div
+        className={`absolute inset-0 -z-20 hidden sm:flex items-center justify-center ${
+          isAboutVariant ? 'opacity-[0.06]' : 'opacity-10'
+        }`}
+      >
         <Image
           src={WisdomeHouseLogo}
           alt="Wisdom House watermark"
@@ -89,87 +119,187 @@ export default function PageHero({
 
       <Container
         size="xl"
-        className="relative z-10 flex flex-col gap-4 sm:gap-5 lg:gap-6 px-4 sm:px-6 md:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20"
+        className={`relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20 ${
+          isAboutVariant
+            ? 'grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-6 sm:gap-8 lg:gap-10'
+            : 'flex flex-col gap-4 sm:gap-5 lg:gap-6'
+        }`}
       >
-        <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 w-fit backdrop-blur fade-up">
-          <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg overflow-hidden border border-white/15 bg-black/60">
-            <Image
-              src={WisdomeHouseLogo}
-              alt="The Wisdom House"
-              fill
-              className="object-contain p-1.5"
-            />
-          </div>
-          <Caption className="text-white/80 uppercase tracking-[0.2em] text-[10px] sm:text-[11px]">
-            {eyebrow}
-          </Caption>
-        </div>
-
         <div
-          className="space-y-2 max-w-3xl fade-up text-center sm:text-left"
-          style={{ animationDelay: '70ms' }}
+          className={`space-y-4 sm:space-y-5 ${isAboutVariant ? 'max-w-3xl' : ''}`}
         >
-          <H2
-            className={
-              compact
-                ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-semibold text-white leading-tight text-balance'
-                : 'text-2xl sm:text-3xl md:text-[2.4rem] font-semibold text-white leading-tight text-balance'
-            }
+          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 w-fit backdrop-blur fade-up">
+            <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg overflow-hidden border border-white/15 bg-black/60">
+              <Image
+                src={WisdomeHouseLogo}
+                alt="The Wisdom House"
+                fill
+                className="object-contain p-1.5"
+              />
+            </div>
+            <Caption className="text-white/80 uppercase tracking-[0.2em] text-[10px] sm:text-[11px]">
+              {eyebrow}
+            </Caption>
+          </div>
+
+          <div
+            className={`space-y-2 max-w-3xl fade-up ${
+              isAboutVariant ? 'text-left' : 'text-center sm:text-left'
+            }`}
+            style={{ animationDelay: '70ms' }}
           >
-            {title}
-          </H2>
-
-          {subtitle ? (
-            <BodySM
+            <H2
               className={
                 compact
-                  ? 'text-white/80 text-sm sm:text-base leading-relaxed text-balance'
-                  : 'text-white/80 text-sm sm:text-base leading-relaxed text-balance'
+                  ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-semibold text-white leading-tight text-balance'
+                  : isAboutVariant
+                    ? 'text-[1.95rem] sm:text-3xl md:text-[2.55rem] lg:text-[2.8rem] font-semibold text-white leading-[1.08] text-balance'
+                    : 'text-2xl sm:text-3xl md:text-[2.4rem] font-semibold text-white leading-tight text-balance'
               }
             >
-              {subtitle}
-            </BodySM>
+              {title}
+            </H2>
+
+            {subtitle ? (
+              <BodySM className="text-white/80 text-sm sm:text-base leading-relaxed text-balance">
+                {subtitle}
+              </BodySM>
+            ) : null}
+
+            {note ? (
+              <BodySM className="text-white/65 text-xs sm:text-sm leading-relaxed text-balance max-w-2xl">
+                {note}
+              </BodySM>
+            ) : null}
+          </div>
+
+          {chips?.length ? (
+            <div
+              className={`fade-up ${
+                isAboutVariant
+                  ? 'grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-2.5'
+                  : 'flex flex-wrap gap-2 justify-center sm:justify-start'
+              }`}
+              style={{ animationDelay: '120ms' }}
+            >
+              {chips.map(chip => (
+                <span
+                  key={chip}
+                  className={`rounded-full font-medium border border-white/15 bg-white/5 text-white ${
+                    isAboutVariant
+                      ? 'px-3 py-2 text-[11px] sm:px-2.5 sm:py-1 sm:text-[11px] text-center'
+                      : 'px-2.5 py-1 text-[10px] sm:text-[11px]'
+                  }`}
+                  style={{
+                    boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}`,
+                  }}
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
           ) : null}
 
-          {note ? (
-            <BodySM
-              className={
-                compact
-                  ? 'text-white/65 text-xs sm:text-sm leading-relaxed text-balance'
-                  : 'text-white/65 text-xs sm:text-sm leading-relaxed text-balance'
-              }
-            >
-              {note}
-            </BodySM>
-          ) : null}
+          {/* Reserved props to keep hero API stable across pages. */}
+          {showButtons ||
+          primaryButtonText ||
+          secondaryButtonText ||
+          showScrollIndicator
+            ? null
+            : null}
         </div>
 
-        {chips?.length ? (
-          <div
-            className="flex flex-wrap gap-2 fade-up justify-center sm:justify-start"
-            style={{ animationDelay: '120ms' }}
-          >
-            {chips.map(chip => (
-              <span
-                key={chip}
-                className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-medium border border-white/15 bg-white/5 text-white"
+        {isAboutVariant ? (
+          <div className="relative fade-up" style={{ animationDelay: '160ms' }}>
+            <div
+              className="relative rounded-3xl border border-white/10 p-3 sm:p-4 overflow-hidden"
+              style={{
+                background:
+                  'linear-gradient(155deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, rgba(0,0,0,0.16) 100%)',
+                boxShadow: `0 24px 60px ${colorScheme.opacity.black50}`,
+              }}
+            >
+              <div
+                className="absolute inset-0 opacity-80"
                 style={{
-                  boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}`,
+                  background: `radial-gradient(circle at 88% 18%, ${colorScheme.opacity.primary20} 0%, transparent 42%)`,
                 }}
-              >
-                {chip}
-              </span>
-            ))}
+              />
+
+              <div className="relative rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <Caption
+                    className="uppercase tracking-[0.18em] text-[10px] sm:text-[11px]"
+                    style={{ color: colorScheme.primary }}
+                  >
+                    About The House
+                  </Caption>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] text-white/70">
+                    Mobile-first
+                  </span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4">
+                  <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl overflow-hidden border border-white/15 bg-black/70">
+                    <Image
+                      src={WisdomeHouseLogo}
+                      alt="The Wisdom House logo"
+                      fill
+                      className="object-contain p-2 sm:p-2.5"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-white font-semibold text-sm sm:text-base leading-tight">
+                      Equipped & Empowered for Greatness
+                    </p>
+                    <p className="text-white/65 text-xs sm:text-sm leading-relaxed">
+                      A trans-generational movement building complete believers
+                      through wisdom, power, and excellence.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  {visualChips.map(chip => (
+                    <div
+                      key={chip}
+                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-2"
+                    >
+                      <p className="text-white text-xs sm:text-sm font-medium leading-tight">
+                        {chip}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 relative h-14 sm:h-16 rounded-xl overflow-hidden border border-white/10 bg-black/35">
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `linear-gradient(120deg, transparent 0%, ${colorScheme.opacity.primary20} 35%, transparent 70%)`,
+                    }}
+                  />
+                  <div
+                    className="absolute -left-6 top-1/2 h-[2px] w-24 sm:w-28 -translate-y-1/2 rotate-[22deg]"
+                    style={{ backgroundColor: colorScheme.primary }}
+                  />
+                  <div
+                    className="absolute -right-5 top-1/2 h-[2px] w-20 sm:w-24 -translate-y-1/2 -rotate-[18deg]"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.55)' }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-between px-3 sm:px-4">
+                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.16em] text-white/70">
+                      Identity
+                    </span>
+                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.16em] text-white/70">
+                      Purpose
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : null}
-
-        {/* Reserved props to keep hero API stable across pages. */}
-        {showButtons ||
-        primaryButtonText ||
-        secondaryButtonText ||
-        showScrollIndicator
-          ? null
-          : null}
       </Container>
     </Section>
   );
