@@ -294,7 +294,7 @@ export default function HeroHighlights() {
                     {item.description}
                   </p>
 
-                  <div className="flex items-center justify-between pt-1">
+                  <div className="flex items-center justify-between gap-3 pt-1">
                     <CustomButton
                       variant="outline"
                       size="sm"
@@ -312,13 +312,40 @@ export default function HeroHighlights() {
                       {item.actionLabel}
                     </CustomButton>
 
-                    <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/70">
-                      <span
-                        className="h-2 w-2 rounded-full"
-                        style={{ backgroundColor: colorScheme.primary }}
+                    <motion.div
+                      className="relative h-8 w-14 sm:h-10 sm:w-20 shrink-0"
+                      animate={{ y: [0, -1.5, 0] }}
+                      transition={{
+                        duration: 3.8,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                        delay: index * 0.2,
+                      }}
+                      aria-hidden="true"
+                    >
+                      <div
+                        className="absolute inset-0 overflow-hidden border border-white/20 bg-white/5"
+                        style={{
+                          clipPath: 'polygon(100% 0, 0 100%, 100% 100%)',
+                          boxShadow: `0 10px 20px ${colorScheme.opacity?.black50 ?? 'rgba(0,0,0,0.35)'}`,
+                        }}
+                      >
+                        <Image
+                          src={item.image}
+                          alt=""
+                          fill
+                          sizes="(max-width: 640px) 56px, 80px"
+                          className="object-cover scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/15 to-white/20" />
+                      </div>
+                      <div
+                        className="absolute -bottom-0.5 right-0 h-[2px] w-7 sm:w-10 rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg, transparent, ${colorScheme.primary})`,
+                        }}
                       />
-                      <span>Always on mission</span>
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               </motion.article>

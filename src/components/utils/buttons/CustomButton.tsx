@@ -174,10 +174,27 @@ const Button: React.FC<ButtonProps> = ({
   const widthStyle = fullWidth ? 'w-full' : '';
   const elevationStyle = elevated ? 'shadow-md hover:shadow-lg' : '';
 
+  const colorUtilityPattern =
+    /\b(?:[a-z-]+:)*text-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-[0-9]{2,3})?(?:\/[0-9]{1,3})?\b/;
+  const bgUtilityPattern =
+    /\b(?:[a-z-]+:)*bg-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-[0-9]{2,3})?(?:\/[0-9]{1,3})?\b/;
+  const borderUtilityPattern =
+    /\b(?:[a-z-]+:)*border-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-[0-9]{2,3})?(?:\/[0-9]{1,3})?\b/;
+
+  const hasTextColorOverride = colorUtilityPattern.test(className);
+  const hasBackgroundOverride = bgUtilityPattern.test(className);
+  const hasBorderOverride = borderUtilityPattern.test(className);
+
   const buttonStyles: React.CSSProperties = {
-    backgroundColor: variantStyles.backgroundColor,
-    color: variantStyles.color,
-    border: variantStyles.border,
+    ...(!hasBackgroundOverride || style?.backgroundColor
+      ? { backgroundColor: variantStyles.backgroundColor }
+      : {}),
+    ...(!hasTextColorOverride || style?.color
+      ? { color: variantStyles.color }
+      : {}),
+    ...(!hasBorderOverride || style?.border
+      ? { border: variantStyles.border }
+      : {}),
     ...style,
   };
 
@@ -264,7 +281,9 @@ const Button: React.FC<ButtonProps> = ({
         )}
 
         {/* Children */}
-        <span className="whitespace-normal sm:whitespace-nowrap">{children}</span>
+        <span className="whitespace-normal sm:whitespace-nowrap">
+          {children}
+        </span>
 
         {/* Right Icon */}
         {!loading && rightIcon && (
