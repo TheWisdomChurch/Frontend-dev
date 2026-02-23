@@ -232,11 +232,8 @@ export default function PageHero({
                     className="uppercase tracking-[0.18em] text-[10px] sm:text-[11px]"
                     style={{ color: colorScheme.primary }}
                   >
-                    About The House
+                    {eyebrow}
                   </Caption>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] text-white/70">
-                    Mobile-first
-                  </span>
                 </div>
 
                 <div className="mt-4 grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4">
@@ -250,12 +247,13 @@ export default function PageHero({
                   </div>
                   <div className="space-y-1">
                     <p className="text-white font-semibold text-sm sm:text-base leading-tight">
-                      Equipped & Empowered for Greatness
+                      {subtitle || title}
                     </p>
-                    <p className="text-white/65 text-xs sm:text-sm leading-relaxed">
-                      A trans-generational movement building complete believers
-                      through wisdom, power, and excellence.
-                    </p>
+                    {note ? (
+                      <p className="text-white/65 text-xs sm:text-sm leading-relaxed line-clamp-3">
+                        {note}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
 
@@ -289,10 +287,10 @@ export default function PageHero({
                   />
                   <div className="absolute inset-0 flex items-center justify-between px-3 sm:px-4">
                     <span className="text-[10px] sm:text-xs uppercase tracking-[0.16em] text-white/70">
-                      Identity
+                      {visualChips[0] || 'Wisdom'}
                     </span>
                     <span className="text-[10px] sm:text-xs uppercase tracking-[0.16em] text-white/70">
-                      Purpose
+                      {visualChips[1] || 'Power'}
                     </span>
                   </div>
                 </div>
