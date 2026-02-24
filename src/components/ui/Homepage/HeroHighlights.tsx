@@ -313,7 +313,7 @@ export default function HeroHighlights() {
                     </CustomButton>
 
                     <motion.div
-                      className="relative h-8 w-14 sm:h-10 sm:w-20 shrink-0"
+                      className="relative h-8 w-20 sm:h-10 sm:w-28 shrink-0"
                       animate={{ y: [0, -1.5, 0] }}
                       transition={{
                         duration: 3.8,
@@ -326,7 +326,7 @@ export default function HeroHighlights() {
                       <div
                         className="absolute inset-0 overflow-hidden border border-white/20 bg-white/5"
                         style={{
-                          clipPath: 'polygon(100% 0, 0 100%, 100% 100%)',
+                          clipPath: 'polygon(0 0, 100% 0, 82% 100%, 0 100%)',
                           boxShadow: `0 10px 20px ${colorScheme.opacity?.black50 ?? 'rgba(0,0,0,0.35)'}`,
                         }}
                       >
@@ -335,12 +335,13 @@ export default function HeroHighlights() {
                           alt=""
                           fill
                           sizes="(max-width: 640px) 56px, 80px"
-                          className="object-cover scale-110"
+                          className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/15 to-white/20" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-white/15" />
+                        <div className="absolute inset-y-0 right-0 w-[18%] bg-gradient-to-l from-black/35 to-transparent" />
                       </div>
                       <div
-                        className="absolute -bottom-0.5 right-0 h-[2px] w-7 sm:w-10 rounded-full"
+                        className="absolute -bottom-0.5 right-0 h-[2px] w-10 sm:w-14 rounded-full"
                         style={{
                           background: `linear-gradient(90deg, transparent, ${colorScheme.primary})`,
                         }}
