@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Sparkles, Clock, X } from 'lucide-react';
-import { BaseModal } from '@/components/modal/Base';
+import { BaseModal } from '@/components/ui/modals/Base';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import type { ServiceUnavailableSheetProps } from '@/lib/types';

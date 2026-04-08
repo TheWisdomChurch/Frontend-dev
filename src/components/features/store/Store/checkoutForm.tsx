@@ -7,7 +7,13 @@ import { useAppSelector, useAppDispatch } from '@/components/utils/hooks/redux';
 import { clearCart } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/utils/buttons';
-import { FlexboxLayout } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { H3, H4, BaseText, SmallText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { storeClient } from '@/lib/api/storeClient';

@@ -15,7 +15,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUpcomingEvents } from '@/components/utils/hooks/UpcomingHooks';
 
-import { ReminderModal } from '@/components/modal/reminderModal';
+import { ReminderModal } from '@/components/ui/modals/reminderModal';
 
 import Image from 'next/image';
 

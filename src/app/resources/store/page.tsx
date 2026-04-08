@@ -10,7 +10,7 @@ import {
   filterProducts,
 } from '@/lib/store/slices/productSlice';
 
-import ProductModal from '@/components/modal/storeModals/ProductModal';
+import ProductModal from '@/components/features/store/modals/ProductModal';
 import HeroSection from '@/components/features/hero/PageHero';
 import { H3, H4, BaseText, SmallText, Caption } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';

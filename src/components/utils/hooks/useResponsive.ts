@@ -1,17 +1,17 @@
 // hooks/useResponsive.ts
 import { useMemo } from 'react';
-import { getHeroResponsiveStyles,responsive } from '@/lib/responsivee';
+import { getHeroResponsiveStyles, responsive } from '@/lib/responsivee';
 
 export function useResponsive() {
   const heroStyles = useMemo(() => getHeroResponsiveStyles(), []);
-  
+
   return {
     // Main responsive config
     config: responsive,
-    
+
     // Hero section specific styles
     hero: heroStyles,
-    
+
     // Helper to combine all hero classes
     getHeroClasses: () => ({
       title: Object.values(heroStyles.title).join(' '),
@@ -20,14 +20,14 @@ export function useResponsive() {
       button: Object.values(heroStyles.button).join(' '),
       container: Object.values(heroStyles.container).join(' '),
     }),
-    
+
     // Get specific hero style
-    getHeroStyle: <T extends keyof typeof responsive['hero']>(key: T) => {
+    getHeroStyle: <T extends keyof (typeof responsive)['hero']>(key: T) => {
       const style = heroStyles[key];
       if (typeof style === 'string') {
         return style;
       }
       return Object.values(style).join(' ');
-    }
+    },
   };
 }

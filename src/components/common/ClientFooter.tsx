@@ -1,7 +1,7 @@
 // components/layout/ClientFooter.tsx
 'use client';
 
-import Footer from '@/components/layout/footer';
+import Footer from '@/components/common/Footer';
 
 export default function ClientFooter() {
   return <Footer />;

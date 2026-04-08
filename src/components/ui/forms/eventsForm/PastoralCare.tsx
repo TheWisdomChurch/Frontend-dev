@@ -12,8 +12,14 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { H2, H3, BodyMD, BodyLG, Caption } from '@/components/text';
-import { Section, Container } from '@/components/layout';
-import { BaseModal } from '@/components/modal/Base';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
+import { BaseModal } from '@/components/ui/modals/Base';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
 interface PastoralCareFormData {

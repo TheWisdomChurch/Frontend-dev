@@ -16,11 +16,17 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { Section, Container } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
-import { BaseModal } from '@/components/modal/Base';
+import { BaseModal } from '@/components/ui/modals/Base';
 import { H2, BodySM, SmallText, Caption } from '@/components/text';
 import { Workforce_bg } from '@/components/assets';
 import { apiClient } from '@/lib/api';

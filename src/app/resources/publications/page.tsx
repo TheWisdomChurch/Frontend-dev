@@ -1,7 +1,13 @@
 import HeroSection from '@/components/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/components/text';
 import { hero_bg_3 } from '@/components/assets';
-import { PageSection } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 
 const PublicationPage = () => {
   const publications = [

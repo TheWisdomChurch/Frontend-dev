@@ -8,7 +8,13 @@ import { Bishop } from '@/components/assets';
 import { H1, P } from '@/components/text';
 import Button from '@/components/utils/buttons/CustomButton';
 import { useSeniorPastor } from '@/components/utils/hooks/useSeniorPastor';
-import { Section, Container, FlexboxLayout } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { cn } from '@/lib/cn';
 import { gsap } from 'gsap';
 import { useTheme } from '@/components/contexts/ThemeContext';

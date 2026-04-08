@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import Image, { type StaticImageData } from 'next/image';
 import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { BaseModal } from '@/components/modal/Base';
+import { BaseModal } from '@/components/ui/modals/Base';
 import { Button } from '@/components/utils/buttons';
 import { BodySM, BodyMD } from '@/components/text';
 

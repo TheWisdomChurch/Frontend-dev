@@ -28,12 +28,16 @@ export const animatePosterCard = (element: HTMLElement, index: number) => {
 export const animatePosterHover = (card: HTMLElement) => {
   const timeline = gsap.timeline();
 
-  timeline.to(card, {
-    scale: 1.08,
-    y: -15,
-    duration: 0.4,
-    ease: 'power2.out',
-  }, 0);
+  timeline.to(
+    card,
+    {
+      scale: 1.08,
+      y: -15,
+      duration: 0.4,
+      ease: 'power2.out',
+    },
+    0
+  );
 
   timeline.to(
     card,
@@ -46,20 +50,28 @@ export const animatePosterHover = (card: HTMLElement) => {
 
   const overlay = card.querySelector('.poster-overlay');
   if (overlay) {
-    timeline.to(overlay, {
-      opacity: 1,
-      backdropFilter: 'blur(8px)',
-      duration: 0.4,
-    }, 0);
+    timeline.to(
+      overlay,
+      {
+        opacity: 1,
+        backdropFilter: 'blur(8px)',
+        duration: 0.4,
+      },
+      0
+    );
   }
 
   const badge = card.querySelector('.poster-badge');
   if (badge) {
-    timeline.to(badge, {
-      y: -10,
-      duration: 0.4,
-      ease: 'power2.out',
-    }, 0);
+    timeline.to(
+      badge,
+      {
+        y: -10,
+        duration: 0.4,
+        ease: 'power2.out',
+      },
+      0
+    );
   }
 
   return timeline;
@@ -68,12 +80,16 @@ export const animatePosterHover = (card: HTMLElement) => {
 export const animatePosterHoverReverse = (card: HTMLElement) => {
   const timeline = gsap.timeline();
 
-  timeline.to(card, {
-    scale: 1,
-    y: 0,
-    duration: 0.4,
-    ease: 'power2.out',
-  }, 0);
+  timeline.to(
+    card,
+    {
+      scale: 1,
+      y: 0,
+      duration: 0.4,
+      ease: 'power2.out',
+    },
+    0
+  );
 
   timeline.to(
     card,
@@ -86,20 +102,28 @@ export const animatePosterHoverReverse = (card: HTMLElement) => {
 
   const overlay = card.querySelector('.poster-overlay');
   if (overlay) {
-    timeline.to(overlay, {
-      opacity: 0,
-      backdropFilter: 'blur(0px)',
-      duration: 0.4,
-    }, 0);
+    timeline.to(
+      overlay,
+      {
+        opacity: 0,
+        backdropFilter: 'blur(0px)',
+        duration: 0.4,
+      },
+      0
+    );
   }
 
   const badge = card.querySelector('.poster-badge');
   if (badge) {
-    timeline.to(badge, {
-      y: 0,
-      duration: 0.4,
-      ease: 'power2.out',
-    }, 0);
+    timeline.to(
+      badge,
+      {
+        y: 0,
+        duration: 0.4,
+        ease: 'power2.out',
+      },
+      0
+    );
   }
 
   return timeline;
@@ -172,11 +196,15 @@ export const animateFormExit = (form: HTMLElement) => {
   }
 
   if (backdrop) {
-    timeline.to(backdrop, {
-      opacity: 0,
-      duration: 0.3,
-      ease: 'power2.in',
-    }, '-=0.2');
+    timeline.to(
+      backdrop,
+      {
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+      },
+      '-=0.2'
+    );
   }
 
   return timeline;
@@ -205,11 +233,15 @@ export const animateReelCard = (element: HTMLElement, index: number) => {
 export const animateReelHover = (reel: HTMLElement) => {
   const timeline = gsap.timeline();
 
-  timeline.to(reel, {
-    scale: 1.05,
-    duration: 0.3,
-    ease: 'power2.out',
-  }, 0);
+  timeline.to(
+    reel,
+    {
+      scale: 1.05,
+      duration: 0.3,
+      ease: 'power2.out',
+    },
+    0
+  );
 
   timeline.to(
     reel,
@@ -222,12 +254,16 @@ export const animateReelHover = (reel: HTMLElement) => {
 
   const playButton = reel.querySelector('.reel-play-button');
   if (playButton) {
-    timeline.to(playButton, {
-      scale: 1.15,
-      opacity: 1,
-      duration: 0.3,
-      ease: 'back.out(1.5)',
-    }, 0);
+    timeline.to(
+      playButton,
+      {
+        scale: 1.15,
+        opacity: 1,
+        duration: 0.3,
+        ease: 'back.out(1.5)',
+      },
+      0
+    );
   }
 
   return timeline;
@@ -236,11 +272,15 @@ export const animateReelHover = (reel: HTMLElement) => {
 export const animateReelHoverReverse = (reel: HTMLElement) => {
   const timeline = gsap.timeline();
 
-  timeline.to(reel, {
-    scale: 1,
-    duration: 0.3,
-    ease: 'power2.out',
-  }, 0);
+  timeline.to(
+    reel,
+    {
+      scale: 1,
+      duration: 0.3,
+      ease: 'power2.out',
+    },
+    0
+  );
 
   timeline.to(
     reel,
@@ -253,11 +293,15 @@ export const animateReelHoverReverse = (reel: HTMLElement) => {
 
   const playButton = reel.querySelector('.reel-play-button');
   if (playButton) {
-    timeline.to(playButton, {
-      scale: 1,
-      opacity: 0.8,
-      duration: 0.3,
-    }, 0);
+    timeline.to(
+      playButton,
+      {
+        scale: 1,
+        opacity: 0.8,
+        duration: 0.3,
+      },
+      0
+    );
   }
 
   return timeline;

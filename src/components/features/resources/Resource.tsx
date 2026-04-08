@@ -3,7 +3,13 @@
 
 import React, { type ElementType, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Section, Container } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { resourceLinks } from '@/lib/data';

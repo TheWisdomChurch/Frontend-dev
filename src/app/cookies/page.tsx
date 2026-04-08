@@ -1,6 +1,12 @@
 // app/cookies/page.tsx
 import { BodyMD, BodySM, H2, H3 } from '@/components/text';
-import { PageSection } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 
 export default function CookiesPage() {
   return (
@@ -32,7 +38,10 @@ export default function CookiesPage() {
             <H3 className="mb-2">Your choices</H3>
             <ul className="list-disc list-inside space-y-1 text-sm text-muted">
               <li>You can clear cookies in your browser at any time.</li>
-              <li>You may request deletion of your submitted data via the Contact page.</li>
+              <li>
+                You may request deletion of your submitted data via the Contact
+                page.
+              </li>
             </ul>
           </div>
           <div className="page-card p-5">

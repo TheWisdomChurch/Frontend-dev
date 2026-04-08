@@ -21,7 +21,7 @@ import CustomButton from '../../utils/buttons/CustomButton';
 import { Section, Container } from '../../layout';
 import type { ColorScheme } from '../../colors/colorScheme';
 
-import { defaultSlides } from '@/lib/data';
+import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { renderTitle, renderSubtitle } from '@/components/utils/heroTextUtil';
 import { useWaveTextAnimation } from '@/components/utils/hooks/mainHeroHooks/useWaveText';
 import type { YouTubeVideo } from '@/lib/types';
@@ -31,18 +31,8 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
 
-/* ----------------------------------------------------------------------------
-   Types (fix StaticImageData alt errors)
+/* Types (simplified for backend structure)
 ----------------------------------------------------------------------------- */
-type SlideImage =
-  | string
-  | StaticImageData
-  | { src: string; alt?: string; objectPosition?: string }
-  | { src: StaticImageData; alt?: string; objectPosition?: string };
-
-type Slide = Omit<(typeof defaultSlides)[number], 'image'> & {
-  image: SlideImage;
-};
 
 function isStaticImageData(x: any): x is StaticImageData {
   return (
@@ -54,60 +44,36 @@ function isStaticImageData(x: any): x is StaticImageData {
   );
 }
 
-function isSimpleImageObject(x: any): x is {
-  src: string | StaticImageData;
-  alt?: string;
+/**
+ * Normalize slide.image for Next/Image
+ */
+function normalizeImage(image: any): {
+  src: string;
+  alt: string;
   objectPosition?: string;
 } {
-  return !!x && typeof x === 'object' && 'src' in x;
-}
-
-/**
- * Normalize slide.image into something safe for Next/Image + a guaranteed alt.
- * Also returns a preferred objectPosition if provided.
- */
-function normalizeImage(
-  image: SlideImage,
-  fallbackAlt: string
-): {
-  src: string | StaticImageData;
-  alt: string;
-  objectPosition: string;
-} {
-  // 1) string URL
   if (typeof image === 'string') {
-    return { src: image, alt: fallbackAlt, objectPosition: 'center' };
+    return { src: image, alt: 'Slide image' };
   }
 
-  // 2) Static import
   if (isStaticImageData(image)) {
-    return { src: image, alt: fallbackAlt, objectPosition: 'center' };
+    return { src: image.src, alt: 'Slide image' };
   }
 
-  // 3) object {src, alt?, objectPosition?}
-  if (isSimpleImageObject(image)) {
-    const src = (image as any).src as string | StaticImageData;
-    const alt = (image as any).alt || fallbackAlt;
-    const objectPosition = (image as any).objectPosition || 'center';
-    return { src, alt, objectPosition };
+  if (typeof image === 'object' && 'src' in image) {
+    const src =
+      typeof image.src === 'string' ? image.src : image.src?.src || '';
+    return {
+      src: src || '/images/placeholder.jpg',
+      alt: image.alt || 'Slide image',
+      objectPosition: image.objectPosition,
+    };
   }
 
-  // fallback
-  return {
-    src: '/images/placeholder.jpg',
-    alt: fallbackAlt,
-    objectPosition: 'center',
-  };
+  return { src: '/images/placeholder.jpg', alt: 'Slide image' };
 }
 
-/** You used this earlier; define it so TS stops complaining */
-function isSimpleImage(image: SlideImage): boolean {
-  // "simple" == not providing special objectPosition etc.
-  return typeof image === 'string' || isStaticImageData(image);
-}
-
-/* ----------------------------------------------------------------------------
-   Props
+/* Props
 ----------------------------------------------------------------------------- */
 interface HeroSectionProps {
   primaryButtonText?: string;
@@ -116,11 +82,13 @@ interface HeroSectionProps {
   onSecondaryButtonClick?: () => void;
   showWaveText?: boolean;
   colorScheme?: ColorScheme;
-  slides?: Slide[];
+  slides?: HeroSlide[]; // Backend-driven slides
 }
 
 /* ----------------------------------------------------------------------------
    Component
+----------------------------------------------------------------------------- */
+/* Component
 ----------------------------------------------------------------------------- */
 const HeroSection = ({
   primaryButtonText = 'Join Our Community',
@@ -129,11 +97,17 @@ const HeroSection = ({
   onSecondaryButtonClick,
   showWaveText = true,
   colorScheme: externalColorScheme,
-  slides = defaultSlides as any,
+  slides: externalSlides,
 }: HeroSectionProps) => {
   const { colorScheme: themeColors } = useTheme();
   const colorScheme = externalColorScheme || themeColors;
   const { open } = useServiceUnavailable();
+
+  // Fetch backend hero content
+  const { slides: backendSlides, loading: contentLoading } = useHeroContent();
+
+  // Use external slides if provided, otherwise use backend slides
+  const slidesToUse = externalSlides || backendSlides;
 
   // Refs
   const heroRef = useRef<HTMLDivElement>(null!);
@@ -151,12 +125,9 @@ const HeroSection = ({
   // Slider state
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const slideList: Slide[] = useMemo(() => {
-    const s = (slides as Slide[])?.length
-      ? (slides as Slide[])
-      : (defaultSlides as any as Slide[]);
-    return s;
-  }, [slides]);
+  const slideList: HeroSlide[] = useMemo(() => {
+    return slidesToUse && slidesToUse.length > 0 ? slidesToUse : [];
+  }, [slidesToUse]);
 
   const currentSlideData = slideList[currentSlide] ?? slideList[0];
 

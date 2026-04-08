@@ -14,7 +14,13 @@ import {
 import { useRouter } from 'next/navigation';
 import Button from '@/components/utils/buttons/CustomButton';
 import { BaseText, LightText } from '@/components/text';
-import { FlexboxLayout } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
 
 const CartSidebar: React.FC = () => {
