@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import Image from 'next/image';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import GivingModal from '@/components/modal/GivingModal';
+import GivingModal from '@/components/ui/modals/GivingModal';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { ChevronLeft, ChevronRight, Phone, Sparkles, Gift } from 'lucide-react';
 import { useOnlineGiving } from '@/components/utils/hooks/Onlinegiving';

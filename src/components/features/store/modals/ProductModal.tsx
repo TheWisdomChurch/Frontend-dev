@@ -13,10 +13,16 @@ import {
   MediumText,
   Caption,
 } from '@/components/text';
-import { FlexboxLayout } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useWindowSize } from '@/components/utils/hooks/useWindowSize';
-import { BaseModal } from '@/components/modal/Base';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
+import { BaseModal } from '@/components/ui/modals/Base';
 import type { ProductModalProps } from '@/lib/types';
 
 const ProductModal: React.FC<ProductModalProps> = ({

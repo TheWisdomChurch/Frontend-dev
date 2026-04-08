@@ -4,32 +4,50 @@
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Section, Container } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { pastorsData, ministryLeadersData } from '@/lib/data';
+import { useLeadership } from '@/hooks/useLeadership';
+import { pastorsData } from '@/lib/data';
 import { ArrowRight, Sparkles, Users } from 'lucide-react';
 
-type Leader = (typeof pastorsData)[number];
+type Leader = (typeof pastorsData)[number] & { name?: string; image?: any };
 
 function LeaderCard({ leader, accent }: { leader: Leader; accent: string }) {
+  // Map backend LeadershipMember to UI format
+  const displayName =
+    (leader as any).name ||
+    `${(leader as any).firstName || ''} ${(leader as any).lastName || ''}`.trim() ||
+    'Leader';
+  const displayImage = (leader as any).image || (leader as any).imageUrl;
+  const displayRole = (leader as any).role;
+  const displayDescription = (leader as any).description || (leader as any).bio;
+
   return (
     <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl group">
       <div className="relative h-64 md:h-72">
-        <Image
-          src={leader.image}
-          alt={leader.name}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        {displayImage && (
+          <Image
+            src={displayImage}
+            alt={displayName}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
         <div
           className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold text-black"
           style={{ background: accent }}
         >
-          {leader.role}
+          {displayRole || 'Leadership'}
         </div>
       </div>
 
@@ -37,9 +55,11 @@ function LeaderCard({ leader, accent }: { leader: Leader; accent: string }) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <SmallText weight="bold" className="text-white text-lg">
-              {leader.name}
+              {displayName}
             </SmallText>
-            <Caption className="text-white/60">{leader.description}</Caption>
+            {displayDescription && (
+              <Caption className="text-white/60">{displayDescription}</Caption>
+            )}
           </div>
           <Sparkles className="w-5 h-5 text-white/40" />
         </div>
@@ -58,9 +78,10 @@ function LeaderCard({ leader, accent }: { leader: Leader; accent: string }) {
 export default function AssociatePastors() {
   const { colorScheme } = useTheme();
   const router = useRouter();
+  const { leaders } = useLeadership();
 
   const primary = colorScheme.primary;
-  const highlights = useMemo(() => pastorsData.slice(0, 4), []);
+  const highlights = useMemo(() => leaders.slice(0, 4), [leaders]);
 
   return (
     <Section
@@ -91,37 +112,53 @@ export default function AssociatePastors() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {highlights.map(item => (
-            <div
-              key={item.id}
-              className="rounded-2xl border border-white/15 bg-[#111] p-4 space-y-3 shadow-xl"
-            >
-              <div className="relative w-full h-44 sm:h-48 md:h-52 lg:h-60 rounded-xl overflow-hidden border border-white/10">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                  style={{ objectPosition: 'center 18%' }}
-                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 25vw"
-                />
+          {highlights.map(item => {
+            // Map backend LeadershipMember to UI format
+            const displayName =
+              (item as any).name ||
+              `${(item as any).firstName || ''} ${(item as any).lastName || ''}`.trim() ||
+              'Leader';
+            const displayImage = (item as any).image || (item as any).imageUrl;
+            const displayRole = (item as any).role;
+            const displayDescription =
+              (item as any).description || (item as any).bio;
+
+            return (
+              <div
+                key={item.id}
+                className="rounded-2xl border border-white/15 bg-[#111] p-4 space-y-3 shadow-xl"
+              >
+                <div className="relative w-full h-44 sm:h-48 md:h-52 lg:h-60 rounded-xl overflow-hidden border border-white/10">
+                  {displayImage && (
+                    <Image
+                      src={displayImage}
+                      alt={displayName}
+                      fill
+                      className="object-cover"
+                      style={{ objectPosition: 'center 18%' }}
+                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 25vw"
+                    />
+                  )}
+                </div>
+                <div className="space-y-1">
+                  <SmallText
+                    weight="medium"
+                    className="text-white text-[14px] sm:text-base"
+                  >
+                    {displayName}
+                  </SmallText>
+                  <Caption className="text-white/65 text-sm">
+                    {displayRole || 'Leader'}
+                  </Caption>
+                </div>
+                {displayDescription && (
+                  <Caption className="text-white/60 text-sm line-clamp-3">
+                    {displayDescription}
+                  </Caption>
+                )}
               </div>
-              <div className="space-y-1">
-                <SmallText
-                  weight="medium"
-                  className="text-white text-[14px] sm:text-base"
-                >
-                  {item.name}
-                </SmallText>
-                <Caption className="text-white/65 text-sm">{item.role}</Caption>
-              </div>
-              {item.description && (
-                <Caption className="text-white/60 text-sm line-clamp-3">
-                  {item.description}
-                </Caption>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="flex justify-center lg:justify-end pt-2">

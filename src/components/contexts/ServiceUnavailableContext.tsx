@@ -1,8 +1,14 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import ServiceUnavailableSheet from '@/components/modal/ServiceUnavailableSheet';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
+import ServiceUnavailableSheet from '@/components/ui/modals/ServiceUnavailableSheet';
 
 type ServiceUnavailableOptions = {
   title?: string;
@@ -14,11 +20,18 @@ type ServiceUnavailableContextValue = {
   open: (options?: ServiceUnavailableOptions) => void;
 };
 
-const ServiceUnavailableContext = createContext<ServiceUnavailableContextValue | null>(null);
+const ServiceUnavailableContext =
+  createContext<ServiceUnavailableContextValue | null>(null);
 
-export function ServiceUnavailableProvider({ children }: { children: ReactNode }) {
+export function ServiceUnavailableProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [options, setOptions] = useState<ServiceUnavailableOptions | undefined>(undefined);
+  const [options, setOptions] = useState<ServiceUnavailableOptions | undefined>(
+    undefined
+  );
 
   const open = useCallback((nextOptions?: ServiceUnavailableOptions) => {
     setOptions(nextOptions);
@@ -48,7 +61,9 @@ export function ServiceUnavailableProvider({ children }: { children: ReactNode }
 export function useServiceUnavailable() {
   const ctx = useContext(ServiceUnavailableContext);
   if (!ctx) {
-    throw new Error('useServiceUnavailable must be used within ServiceUnavailableProvider');
+    throw new Error(
+      'useServiceUnavailable must be used within ServiceUnavailableProvider'
+    );
   }
   return ctx;
 }

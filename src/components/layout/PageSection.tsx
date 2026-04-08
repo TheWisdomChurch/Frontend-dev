@@ -1,6 +1,6 @@
 import React from 'react';
-import Section from './section';
-import Container from './containerBox';
+import Section from './Section';
+import Container from './Container';
 
 type Tone = 'page' | 'muted' | 'surface' | 'surface-strong' | 'none';
 

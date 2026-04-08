@@ -3,14 +3,15 @@
 
 import Image from 'next/image';
 import { useMemo } from 'react';
-import { WisdomeHouseLogo } from '../assets';
-import { useTheme } from '../contexts/ThemeContext';
-import { Caption, H2, BodySM } from '../text';
-import { Section, Container } from '../layout';
+import { WisdomeHouseLogo } from '@/components/assets';
+import { useTheme } from '@/components/contexts/ThemeContext';
+import { Caption, H2, BodySM } from '@/components/text';
+import { Section, Container } from '@/components/layout';
 
 export type PageHeroProps = {
   title: string;
   subtitle?: string;
+  description?: string;
   eyebrow?: string;
   note?: string;
   chips?: string[];
@@ -28,6 +29,7 @@ export type PageHeroProps = {
 export default function PageHero({
   title,
   subtitle,
+  description,
   eyebrow = 'The Wisdom House Church',
   note,
   chips,
@@ -41,6 +43,7 @@ export default function PageHero({
 }: PageHeroProps) {
   const { colorScheme } = useTheme();
   const isAboutVariant = variant === 'about';
+  const supportingCopy = note ?? description;
   const visualChips =
     chips && chips.length
       ? chips.slice(0, 4)
@@ -166,9 +169,9 @@ export default function PageHero({
               </BodySM>
             ) : null}
 
-            {note ? (
+            {supportingCopy ? (
               <BodySM className="text-white/65 text-xs sm:text-sm leading-relaxed text-balance max-w-2xl">
-                {note}
+                {supportingCopy}
               </BodySM>
             ) : null}
           </div>

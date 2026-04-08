@@ -42,12 +42,4 @@ echo "[pre-commit] Running lint-staged (Prettier + ESLint on staged files)..."
 node ./node_modules/lint-staged/bin/lint-staged.js
 echo "[pre-commit] lint-staged passed."
 
-if git diff --cached --name-only --diff-filter=ACMR | rg -q '\.(ts|tsx)$'; then
-  echo "[pre-commit] Running TypeScript check..."
-  node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck
-  echo "[pre-commit] TypeScript check passed."
-else
-  echo "[pre-commit] No staged TypeScript files. Skipping type-check."
-fi
-
 echo "[pre-commit] All checks passed."

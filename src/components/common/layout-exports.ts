@@ -1,5 +1,5 @@
-export { default as FlexboxLayout } from './flexboxLayout';
-export { default as GridboxLayout } from './GridboxLayout';
-export { default as Container } from './containerBox';
-export { default as Section } from './section';
-export { default as PageSection } from './pageSection';
+export { default as FlexboxLayout } from '../layout/Flexbox';
+export { default as GridboxLayout } from '../layout/Gridbox';
+export { default as Container } from '../layout/Container';
+export { default as Section } from '../layout/Section';
+export { default as PageSection } from '../layout/PageSection';

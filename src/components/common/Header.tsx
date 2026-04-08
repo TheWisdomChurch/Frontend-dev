@@ -21,7 +21,7 @@ import { extendedNavLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/components/assets';
 import { cn } from '@/lib/cn';
 import { BricolageText, Caption, SmallText } from '../text';
-import JoinCommunityModal from '../modal/joinUsModal';
+import JoinCommunityModal from '@/components/ui/modals/joinUsModal';
 import { useHeader } from '../utils/hooks/header';
 
 const iconMap = {

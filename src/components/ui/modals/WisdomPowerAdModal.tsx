@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { EventRegistrationModal } from '@/components/modal/FormModal';
+import { EventRegistrationModal } from '@/components/ui/modals/FormModal';
 import type { WisdomPowerAdModalProps } from '@/lib/types';
 import { EventBannerDesktop } from '@/components/assets';
 

@@ -8,8 +8,14 @@ import { CalendarClock, ArrowRight, Clock, MapPin } from 'lucide-react';
 
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { lightShades } from '@/components/colors/colorScheme';
-import { BaseModal } from '@/components/modal/Base';
-import { Container } from '@/components/layout';
+import { BaseModal } from '@/components/ui/modals/Base';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { Dept_1, Dept_2, Dept_3 } from '@/components/assets';

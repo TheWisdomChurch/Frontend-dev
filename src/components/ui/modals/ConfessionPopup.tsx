@@ -8,7 +8,7 @@ import {
   HeartHandshake,
   Sparkles,
 } from 'lucide-react';
-import { BaseModal } from '@/components/modal/Base';
+import { BaseModal } from '@/components/ui/modals/Base';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { BaseText, BodyMD, Caption, H3 } from '@/components/text';
 import { PlayfairText } from '@/components/text/FontText';

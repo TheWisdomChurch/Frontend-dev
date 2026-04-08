@@ -19,14 +19,14 @@ export function useWindowSize(): WindowSize {
         height: window.innerHeight,
       });
     }
-    
+
     // Initial call
     handleResize();
-    
+
     window.addEventListener('resize', handleResize);
-    
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
+
   return windowSize;
 }

@@ -4,11 +4,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
 
-import { BaseModal } from '@/components/modal/Base';
+import { BaseModal } from '@/components/ui/modals/Base';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/components/assets';
 import { lightShades } from '@/components/colors/colorScheme';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { Container, Section } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout'; // Legacy: from '@/components/layout/index';
 import { BodySM, Caption, H3, SmallText } from '@/components/text';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
