@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import HeroSection from '@/components/features/hero/PageHero';
 import { H1, H2, H3, SmallText } from '@/components/text';
 import { hero_bg_1, WisdomeHouseLogo } from '@/components/assets'; // Fixed: removed extra 'e'
 import { useSpecialEvents } from '@/components/utils/hooks/useSpecial';
@@ -558,8 +558,6 @@ const SpecialPage = () => {
           </FlexboxLayout>
         </Container>
       </Section>
-
-
     </div>
   );
 };

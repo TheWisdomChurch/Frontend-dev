@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { WisdomeHouseLogo } from '@/components/assets';
 
 interface LoaderProps {
@@ -10,29 +11,57 @@ interface LoaderProps {
 export default function Loader({
   label = 'Equipped Empowered for Greatness',
 }: LoaderProps) {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+
+  useEffect(() => {
+    // Simulate minimum display time for professionalism
+    const timer = setTimeout(() => {
+      setVideoLoaded(true);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div
-      className="fixed inset-0 z-[11000] flex items-center justify-center overflow-hidden bg-[#030303]"
+      className="fixed inset-0 z-[1100] flex items-center justify-center overflow-hidden bg-[#030303]"
       role="status"
       aria-live="polite"
     >
-      <video
-        className="absolute inset-0 h-full w-full object-cover opacity-70"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-      >
-        <source src="/videos/videoBg.mp4" type="video/mp4" />
-      </video>
+      {/* Background Video with fallback */}
+      <div className="absolute inset-0 h-full w-full overflow-hidden">
+        {!videoError && (
+          <video
+            className="absolute inset-0 h-full w-full object-cover opacity-60"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            onCanPlay={() => setVideoLoaded(true)}
+            onError={() => setVideoError(true)}
+            aria-hidden="true"
+          >
+            <source src="/videos/videoBg.mp4" type="video/mp4" />
+            <source src="/videos/videoBg.webm" type="video/webm" />
+          </video>
+        )}
+        {/* Fallback gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e14] via-[#030303] to-[#000000]" />
+      </div>
+
+      {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(2,6,12,0.85),rgba(8,16,20,0.72)_40%,rgba(2,6,12,0.9))]" />
+
+      {/* Animated Background Effects */}
+      <div className="absolute inset-0 loader-grid" />
       <div className="loader-ambient loader-ambient-top" />
       <div className="loader-ambient loader-ambient-bottom" />
-      <div className="loader-grid" />
 
+      {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center px-6 text-center">
+        {/* Loader Animation Stage */}
         <div className="loader-stage relative mb-6 h-28 w-28 sm:h-32 sm:w-32">
           <span className="loader-orbit loader-orbit-fast" />
           <span className="loader-orbit loader-orbit-slow" />
@@ -49,15 +78,21 @@ export default function Loader({
           </div>
         </div>
 
+        {/* Loading Text */}
         <p className="max-w-xs text-sm font-semibold tracking-[0.08em] text-white sm:text-base">
           {label}
         </p>
 
-        <div className="loader-progress" aria-hidden="true">
+        {/* Progress Bar */}
+        <div
+          className="loader-progress mt-6 h-1 w-32 overflow-hidden rounded-full bg-gray-700"
+          aria-hidden="true"
+        >
           <span className="loader-progress-fill" />
         </div>
 
-        <div className="mt-4 flex items-center gap-2" aria-hidden="true">
+        {/* Animated Beads */}
+        <div className="mt-6 flex items-center gap-2" aria-hidden="true">
           <span className="loader-bead h-1.5 w-1.5 rounded-full bg-[#f7de12]" />
           <span className="loader-bead h-1.5 w-1.5 rounded-full bg-[#f7de12]" />
           <span className="loader-bead h-1.5 w-1.5 rounded-full bg-[#f7de12]" />
@@ -70,8 +105,16 @@ export default function Loader({
           position: absolute;
           inset: 0;
           background-image:
-            linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            linear-gradient(
+              to right,
+              rgba(255, 255, 255, 0.03) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to bottom,
+              rgba(255, 255, 255, 0.03) 1px,
+              transparent 1px
+            );
           background-size: 50px 50px;
           mask-image: radial-gradient(circle at center, black, transparent 75%);
           animation: gridDrift 10s linear infinite;
@@ -89,14 +132,22 @@ export default function Loader({
         .loader-ambient-top {
           top: -10vw;
           left: -8vw;
-          background: radial-gradient(circle, rgba(247, 222, 18, 0.35), transparent 70%);
+          background: radial-gradient(
+            circle,
+            rgba(247, 222, 18, 0.35),
+            transparent 70%
+          );
           animation: ambientFloat 6s ease-in-out infinite;
         }
 
         .loader-ambient-bottom {
           right: -10vw;
           bottom: -10vw;
-          background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 70%);
+          background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.16),
+            transparent 70%
+          );
           animation: ambientFloat 6s ease-in-out infinite reverse;
         }
 
@@ -112,8 +163,16 @@ export default function Loader({
           justify-content: center;
           border-radius: 999px;
           background:
-            radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.8) 60%),
-            linear-gradient(135deg, rgba(247, 222, 18, 0.26), rgba(0, 0, 0, 0.85));
+            radial-gradient(
+              circle at 35% 30%,
+              rgba(255, 255, 255, 0.2),
+              rgba(0, 0, 0, 0.8) 60%
+            ),
+            linear-gradient(
+              135deg,
+              rgba(247, 222, 18, 0.26),
+              rgba(0, 0, 0, 0.85)
+            );
           border: 1px solid rgba(255, 255, 255, 0.24);
           box-shadow:
             0 0 0 1px rgba(247, 222, 18, 0.25),
@@ -166,7 +225,12 @@ export default function Loader({
           width: 40%;
           height: 100%;
           border-radius: 999px;
-          background: linear-gradient(90deg, rgba(247, 222, 18, 0.08), #f7de12, rgba(247, 222, 18, 0.08));
+          background: linear-gradient(
+            90deg,
+            rgba(247, 222, 18, 0.08),
+            #f7de12,
+            rgba(247, 222, 18, 0.08)
+          );
           animation: progressSweep 1.8s ease-in-out infinite;
         }
 

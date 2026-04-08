@@ -1,0 +1,187 @@
+// Color System
+// Unified color palette used throughout the application
+// Includes primary colors, semantic colors, and neutral colors
+
+// ========================================
+// PRIMARY COLORS
+// ========================================
+$primary: #f7de12;
+$primary-light: #f9e755;
+$primary-lighter: #fbf0a1;
+$primary-dark: #d4bc0f;
+$primary-darker: #b5a00d;
+
+// ========================================
+// SECONDARY COLORS
+// ========================================
+$secondary: #ffb81c; // Orange
+$secondary-light: #ffc94d;
+$secondary-dark: #e6a817;
+
+// ========================================
+// SEMANTIC COLORS
+// ========================================
+// Success
+$success: #10b981;
+$success-light: #d1fae5;
+$success-dark: #059669;
+
+// Error / Danger
+$error: #ef4444;
+$error-light: #fee2e2;
+$error-dark: #dc2626;
+
+// Warning
+$warning: #f59e0b;
+$warning-light: #fef3c7;
+$warning-dark: #d97706;
+
+// Info
+$info: #3b82f6;
+$info-light: #dbeafe;
+$info-dark: #1d4ed8;
+
+// ========================================
+// NEUTRAL COLORS (Grayscale)
+// ========================================
+$white: #ffffff;
+$black: #000000;
+
+// Gray Scale (10 steps)
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-150: #ececf1;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+
+// ========================================
+// BACKGROUND COLORS
+// ========================================
+$bg-primary: $black;
+$bg-secondary: $gray-900;
+$bg-tertiary: $gray-800;
+$bg-light: $white;
+$bg-light-secondary: $gray-50;
+
+// ========================================
+// TEXT COLORS
+// ========================================
+$text-primary: $white;
+$text-secondary: $gray-300;
+$text-tertiary: $gray-400;
+$text-light: $black;
+$text-light-secondary: $gray-700;
+
+// ========================================
+// BORDER COLORS
+// ========================================
+$border-light: $gray-700;
+$border-dark: $gray-600;
+$border-subtle: rgba($white, 0.1);
+
+// ========================================
+// OVERLAY COLORS
+// ========================================
+$overlay-dark: rgba($black, 0.5);
+$overlay-darker: rgba($black, 0.7);
+$overlay-light: rgba($white, 0.1);
+
+// ========================================
+// UTILITY COLOR VARIABLES
+// ========================================
+// For component variants
+$color-positive: $success;
+$color-negative: $error;
+$color-neutral: $gray-500;
+$color-warning: $warning;
+$color-info: $info;
+$color-accent: $primary;
+
+// ========================================
+// OPACITY HELPERS
+// ========================================
+@function color-opacity($color, $opacity) {
+  @return rgba($color, $opacity);
+}
+
+// Color with different opacity levels
+$primary-op-10: rgba($primary, 0.1);
+$primary-op-20: rgba($primary, 0.2);
+$primary-op-30: rgba($primary, 0.3);
+$primary-op-50: rgba($primary, 0.5);
+$primary-op-70: rgba($primary, 0.7);
+
+$secondary-op-10: rgba($secondary, 0.1);
+$secondary-op-20: rgba($secondary, 0.2);
+$secondary-op-30: rgba($secondary, 0.3);
+
+$white-op-5: rgba($white, 0.05);
+$white-op-10: rgba($white, 0.1);
+$white-op-20: rgba($white, 0.2);
+$white-op-30: rgba($white, 0.3);
+$white-op-50: rgba($white, 0.5);
+
+// ========================================
+// UTILITY CLASSES
+// ========================================
+.text-primary {
+  color: $text-primary;
+}
+
+.text-secondary {
+  color: $text-secondary;
+}
+
+.text-tertiary {
+  color: $text-tertiary;
+}
+
+.text-accent {
+  color: $primary;
+}
+
+.text-success {
+  color: $success;
+}
+
+.text-error {
+  color: $error;
+}
+
+.text-warning {
+  color: $warning;
+}
+
+.bg-primary {
+  background-color: $bg-primary;
+}
+
+.bg-secondary {
+  background-color: $bg-secondary;
+}
+
+.bg-accent {
+  background-color: $primary;
+}
+
+.bg-success {
+  background-color: $success;
+}
+
+.bg-error {
+  background-color: $error;
+}
+
+.border-primary {
+  border-color: $border-light;
+}
+
+.border-accent {
+  border-color: $primary;
+}

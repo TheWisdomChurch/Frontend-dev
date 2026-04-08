@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import HeroSection from '@/components/features/hero/PageHero';
 import {
   H2,
   H3,
@@ -14,8 +14,6 @@ import { hero_bg_2, NL } from '@/components/assets';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUpcomingEvents } from '@/components/utils/hooks/UpcomingHooks';
-
-
 
 import { ReminderModal } from '@/components/modal/reminderModal';
 
@@ -607,7 +605,6 @@ const Upcoming = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };

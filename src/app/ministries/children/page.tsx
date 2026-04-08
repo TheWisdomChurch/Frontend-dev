@@ -6,7 +6,7 @@ import { hero_bg_1 } from '@/components/assets';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { Section, Container } from '@/components/layout';
 import { H2, H3, BodyMD, BodySM, Caption } from '@/components/text';
-import PageHero from '@/components/ui/PageHero';
+import PageHero from '@/components/features/hero/PageHero';
 
 const CHILDREN_PROGRAMS = [
   {

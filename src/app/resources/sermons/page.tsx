@@ -4,7 +4,15 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
-import { H2, BaseText, BodyMD, SemiBoldText, Caption, SmallText, H1 } from '@/components/text';
+import {
+  H2,
+  BaseText,
+  BodyMD,
+  SemiBoldText,
+  Caption,
+  SmallText,
+  H1,
+} from '@/components/text';
 import SermonUtil from '@/components/ui/Sermons';
 import Button from '@/components/utils/buttons/CustomButton';
 import {
@@ -15,7 +23,7 @@ import {
 } from '@/components/layout';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { Youtube } from 'lucide-react';
-import PageHero from '@/components/ui/PageHero';
+import PageHero from '@/components/features/hero/PageHero';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -64,7 +72,12 @@ const SermonPage = () => {
         title="Sermons & Teachings"
         subtitle="Catch up on every message"
         note="Transformative messages from Sundays, conferences, and midweek gatherings. Practical biblical teaching for daily life."
-        chips={['Platform: YouTube', 'Format: Video + Audio', 'New: Weekly uploads', 'Live: Sun & Thu']}
+        chips={[
+          'Platform: YouTube',
+          'Format: Video + Audio',
+          'New: Weekly uploads',
+          'Live: Sun & Thu',
+        ]}
       />
 
       <SermonUtil />

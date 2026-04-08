@@ -1,3 +1,14 @@
+// Import unified design system
+@import '../styles/colors';
+@import '../styles/typography';
+@import '../styles/spacing';
+@import '../styles/buttons';
+
+// Import legacy design system files
+@import '../styles/variables';
+@import '../styles/animations';
+
+// Import existing style files
 @use '../styles/tokens';
 @use '../styles/base';
 @use '../styles/theme';

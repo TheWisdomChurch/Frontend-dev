@@ -1,4 +1,4 @@
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import HeroSection from '@/components/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/components/text';
 import { hero_bg_3 } from '@/components/assets';
 import { PageSection } from '@/components/layout';
@@ -120,8 +120,8 @@ const PublicationPage = () => {
                 <H3 className="mb-3">Get Started Today</H3>
                 <BodyMD className="text-muted mb-5">
                   All our publications are available free of charge. Download
-                  instantly or request printed copies for yourself or your
-                  small group.
+                  instantly or request printed copies for yourself or your small
+                  group.
                 </BodyMD>
                 <ul className="space-y-2 text-muted text-sm">
                   <li>✓ No cost, no registration required</li>
@@ -140,7 +140,10 @@ const PublicationPage = () => {
                     'Small Group Leader Guide',
                     'Family Devotional Kit',
                   ].map((item, index) => (
-                    <button key={index} className="w-full text-left page-card p-3 text-sm">
+                    <button
+                      key={index}
+                      className="w-full text-left page-card p-3 text-sm"
+                    >
                       {item}
                     </button>
                   ))}

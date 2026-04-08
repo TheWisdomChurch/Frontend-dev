@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { H3, BodyMD, BodySM } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
 import { PageSection } from '@/components/layout';
-import PageHero from '@/components/ui/PageHero';
+import PageHero from '@/components/features/hero/PageHero';
 import { Quote, Eye } from 'lucide-react';
 import apiClient from '@/lib/api';
 import { BaseModal } from '@/components/modal/Base';
@@ -13,7 +13,9 @@ import { testimonialFormFields } from '@/lib/data';
 
 const BREAKPOINT_MD = 768;
 const MAX_TESTIMONY_LEN = testimonialFormFields.maxTestimonyLength;
-const MAX_IMAGE_SIZE_MB = Math.floor(testimonialFormFields.maxImageSize / (1024 * 1024));
+const MAX_IMAGE_SIZE_MB = Math.floor(
+  testimonialFormFields.maxImageSize / (1024 * 1024)
+);
 
 /* -------------------- hooks -------------------- */
 function useMediaQuery(query: string) {
@@ -54,7 +56,9 @@ export default function TestimoniesPage() {
 
   const characterCount = formData.testimony.length;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
@@ -68,7 +72,8 @@ export default function TestimoniesPage() {
     new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(String(reader.result ?? ''));
-      reader.onerror = () => reject(new Error('Unable to read selected image.'));
+      reader.onerror = () =>
+        reject(new Error('Unable to read selected image.'));
       reader.readAsDataURL(file);
     });
 
@@ -216,7 +221,11 @@ export default function TestimoniesPage() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="page-card p-5 sm:p-8 space-y-4 fade-up" style={{ animationDelay: '90ms' }}>
+          <form
+            onSubmit={handleSubmit}
+            className="page-card p-5 sm:p-8 space-y-4 fade-up"
+            style={{ animationDelay: '90ms' }}
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className={labelClass} htmlFor="firstName">
@@ -355,7 +364,11 @@ export default function TestimoniesPage() {
         </div>
       </PageSection>
 
-      <BaseModal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Testimony">
+      <BaseModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Testimony"
+      >
         <p>{modalMessage}</p>
       </BaseModal>
     </>

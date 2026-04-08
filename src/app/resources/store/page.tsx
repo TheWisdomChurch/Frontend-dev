@@ -11,7 +11,7 @@ import {
 } from '@/lib/store/slices/productSlice';
 
 import ProductModal from '@/components/modal/storeModals/ProductModal';
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import HeroSection from '@/components/features/hero/PageHero';
 import { H3, H4, BaseText, SmallText, Caption } from '@/components/text';
 import { hero_bg_1 } from '@/components/assets';
 
@@ -954,4 +954,3 @@ const StorePage = () => {
 };
 
 export default StorePage;
-
