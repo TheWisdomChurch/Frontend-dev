@@ -1,3 +1,9 @@
+@use '../styles/tokens';
+@use '../styles/base';
+@use '../styles/theme';
+@use '../styles/motion';
+@use '../styles/utilities';
+
 // Import unified design system
 @import '../styles/colors';
 @import '../styles/typography';
@@ -7,13 +13,6 @@
 // Import legacy design system files
 @import '../styles/variables';
 @import '../styles/animations';
-
-// Import existing style files
-@use '../styles/tokens';
-@use '../styles/base';
-@use '../styles/theme';
-@use '../styles/motion';
-@use '../styles/utilities';
 
 @tailwind base;
 @tailwind components;

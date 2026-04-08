@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as ZodResolvers from '@hookform/resolvers/zod';
 import {
   Users,
   Video,
@@ -30,6 +30,8 @@ import { BaseModal } from '@/components/ui/modals/Base';
 import { H2, BodySM, SmallText, Caption } from '@/components/text';
 import { Workforce_bg } from '@/components/assets';
 import { apiClient } from '@/lib/api';
+
+const { zodResolver } = ZodResolvers;
 
 const departments = [
   {
@@ -119,31 +121,33 @@ export default function JoinWisdomHouse() {
     return { firstName, lastName };
   };
 
-  const onQuickSubmit = handleQuickSubmit(async values => {
-    try {
-      setQuickSubmitting(true);
-      const { firstName, lastName } = splitName(values.name);
-      await apiClient.applyWorkforceNew({
-        firstName,
-        lastName,
-        email: values.email,
-        department: values.team,
-        registrationType: 'new',
-        notes: 'Quick signup',
-      });
-      setSubmitted(true);
-      resetQuick();
-      setTimeout(() => setSubmitted(false), 2400);
-    } catch (err: any) {
-      open({
-        title: 'Unable to submit',
-        message: err?.message || 'Please try again shortly.',
-        actionLabel: 'Got it',
-      });
-    } finally {
-      setQuickSubmitting(false);
+  const onQuickSubmit = handleQuickSubmit(
+    async (values: z.infer<typeof quickSchema>) => {
+      try {
+        setQuickSubmitting(true);
+        const { firstName, lastName } = splitName(values.name);
+        await apiClient.applyWorkforceNew({
+          firstName,
+          lastName,
+          email: values.email,
+          department: values.team,
+          registrationType: 'new',
+          notes: 'Quick signup',
+        });
+        setSubmitted(true);
+        resetQuick();
+        setTimeout(() => setSubmitted(false), 2400);
+      } catch (err: any) {
+        open({
+          title: 'Unable to submit',
+          message: err?.message || 'Please try again shortly.',
+          actionLabel: 'Got it',
+        });
+      } finally {
+        setQuickSubmitting(false);
+      }
     }
-  });
+  );
 
   const handleOpenModal = (dept?: string) => {
     const v = dept || '';
@@ -233,7 +237,7 @@ export default function JoinWisdomHouse() {
 
   const marriedValue = watch('married');
 
-  const onModalSubmit = handleModalSubmit(async values => {
+  const onModalSubmit = handleModalSubmit(async (values: ModalValues) => {
     try {
       setModalSubmitting(true);
       const { firstName, lastName } = splitName(values.fullName);

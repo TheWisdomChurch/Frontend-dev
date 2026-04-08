@@ -15,11 +15,13 @@ declare module 'gsap' {
 }
 
 declare module 'gsap/ScrollTrigger' {
+  export const ScrollTrigger: any;
   const ScrollTrigger: any;
   export default ScrollTrigger;
 }
 
 declare module 'gsap/ScrollToPlugin' {
+  export const ScrollToPlugin: any;
   const ScrollToPlugin: any;
   export default ScrollToPlugin;
 }

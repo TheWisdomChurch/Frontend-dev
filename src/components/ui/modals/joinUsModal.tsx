@@ -2,7 +2,7 @@
 
 import { communityLinks } from '@/lib/data';
 import Image from 'next/image';
-import { WisdomeHouseLogo } from '../assets';
+import { WisdomeHouseLogo } from '@/components/assets';
 import { BaseModal } from './Base';
 import type { JoinCommunityModalProps } from '@/lib/types';
 

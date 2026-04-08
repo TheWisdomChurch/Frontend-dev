@@ -83,7 +83,7 @@ export default function MinistryPage() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const revealNodes = gsap.utils.toArray<HTMLElement>('[data-reveal]');
+      const revealNodes = gsap.utils.toArray('[data-reveal]') as HTMLElement[];
       revealNodes.forEach((node, index) => {
         gsap.fromTo(
           node,
@@ -99,25 +99,27 @@ export default function MinistryPage() {
         );
       });
 
-      gsap.utils.toArray<HTMLElement>('[data-stagger-group]').forEach(group => {
-        const items = group.querySelectorAll<HTMLElement>(
-          '[data-stagger-item]'
-        );
-        if (!items.length) return;
+      (gsap.utils.toArray('[data-stagger-group]') as HTMLElement[]).forEach(
+        (group: HTMLElement) => {
+          const items = group.querySelectorAll<HTMLElement>(
+            '[data-stagger-item]'
+          );
+          if (!items.length) return;
 
-        gsap.fromTo(
-          items,
-          { opacity: 0, y: 22 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.55,
-            stagger: 0.08,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: group, start: 'top 84%' },
-          }
-        );
-      });
+          gsap.fromTo(
+            items,
+            { opacity: 0, y: 22 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.55,
+              stagger: 0.08,
+              ease: 'power2.out',
+              scrollTrigger: { trigger: group, start: 'top 84%' },
+            }
+          );
+        }
+      );
     }, pageRef);
 
     return () => ctx.revert();

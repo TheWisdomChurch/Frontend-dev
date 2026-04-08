@@ -44,20 +44,27 @@ function isStaticImageData(x: any): x is StaticImageData {
   );
 }
 
+function isSimpleImage(image: any): boolean {
+  return typeof image === 'string' || isStaticImageData(image);
+}
+
 /**
  * Normalize slide.image for Next/Image
  */
-function normalizeImage(image: any): {
+function normalizeImage(
+  image: any,
+  fallbackAlt = 'Slide image'
+): {
   src: string;
   alt: string;
   objectPosition?: string;
 } {
   if (typeof image === 'string') {
-    return { src: image, alt: 'Slide image' };
+    return { src: image, alt: fallbackAlt };
   }
 
   if (isStaticImageData(image)) {
-    return { src: image.src, alt: 'Slide image' };
+    return { src: image.src, alt: fallbackAlt };
   }
 
   if (typeof image === 'object' && 'src' in image) {
@@ -65,12 +72,12 @@ function normalizeImage(image: any): {
       typeof image.src === 'string' ? image.src : image.src?.src || '';
     return {
       src: src || '/images/placeholder.jpg',
-      alt: image.alt || 'Slide image',
+      alt: image.alt || fallbackAlt,
       objectPosition: image.objectPosition,
     };
   }
 
-  return { src: '/images/placeholder.jpg', alt: 'Slide image' };
+  return { src: '/images/placeholder.jpg', alt: fallbackAlt };
 }
 
 /* Props
@@ -239,8 +246,10 @@ const HeroSection = ({
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      const parallaxEls = gsap.utils.toArray<HTMLElement>('[data-parallax]');
-      parallaxEls.forEach(el => {
+      const parallaxEls = gsap.utils.toArray(
+        '[data-parallax]'
+      ) as HTMLElement[];
+      parallaxEls.forEach((el: HTMLElement) => {
         const speed = Number(el.dataset.parallax ?? 0.2);
         gsap.to(el, {
           yPercent: speed * 20,

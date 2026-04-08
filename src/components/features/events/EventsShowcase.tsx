@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import * as FramerMotion from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
 
 import { BaseModal } from '@/components/ui/modals/Base';
@@ -18,6 +18,8 @@ import {
 import { BodySM, Caption, H3, SmallText } from '@/components/text';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
+
+const { AnimatePresence, motion } = FramerMotion;
 
 type ShowcaseCategory = 'program' | 'media' | 'reel';
 

@@ -2,11 +2,13 @@
 'use client';
 
 import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import * as FramerMotion from 'framer-motion';
 import { Laptop2, Moon, Sun } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTheme, ThemeMode } from '@/components/contexts/ThemeContext';
 import { cn } from '@/lib/cn';
+
+const { AnimatePresence, motion } = FramerMotion;
 
 type ThemeToggleProps = {
   size?: 'sm' | 'md';
