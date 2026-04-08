@@ -6,7 +6,7 @@ import { hero_bg_3 } from '@/components/assets';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { Section, Container } from '@/components/layout';
 import { BodyMD, BodySM, H2, H3, Caption } from '@/components/text';
-import PageHero from '@/components/ui/PageHero';
+import PageHero from '@/components/features/hero/PageHero';
 
 const WomenPage = () => {
   const { colorScheme } = useTheme();
