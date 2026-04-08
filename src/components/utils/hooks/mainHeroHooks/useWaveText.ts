@@ -53,7 +53,7 @@ export const useWaveTextAnimation = (
     waveAnimation.to(
       chars,
       {
-        y: i => Math.sin(i * 0.5 + waveAnimation.time()) * 1,
+        y: (i: number) => Math.sin(i * 0.5 + waveAnimation.time()) * 1,
         duration: 3,
         ease: 'sine.inOut',
       },

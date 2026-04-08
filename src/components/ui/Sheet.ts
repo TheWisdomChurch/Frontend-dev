@@ -3,8 +3,6 @@ export {
   SheetContent,
   SheetTrigger,
   SheetOverlay,
-  SheetPortal,
-  SheetClose,
   SheetHeader,
   SheetFooter,
   SheetTitle,

@@ -4,7 +4,7 @@ import { BaseModal, modalStyles } from './Base';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as ZodResolvers from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
@@ -27,6 +27,8 @@ import type {
 } from '@/lib/types';
 import type { EventRegistrationFormSchema } from '@/lib/validation';
 import { SuccessModal } from './SuccessModal';
+
+const { zodResolver } = ZodResolvers;
 
 const VOLUNTEER_ROLES = [
   {

@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as ZodResolvers from '@hookform/resolvers/zod';
 import {
   Loader2,
   Check,
@@ -47,6 +47,8 @@ import type {
   JoinFormData,
   JoinUsModalProps,
 } from '@/lib/types';
+
+const { zodResolver } = ZodResolvers;
 
 // Department configuration
 const DEPARTMENT_CONFIG: Record<
@@ -458,7 +460,7 @@ export const JoinUsModal = ({
   const toggleAvailability = (id: string) => {
     const current = selectedAvailability;
     const newAvailability = current.includes(id)
-      ? current.filter(item => item !== id)
+      ? current.filter((item: string) => item !== id)
       : [...current, id];
     setValue('availability', newAvailability);
   };

@@ -14,7 +14,7 @@ export const useHeroAnimation = (
     gsap.killTweensOf('.slide-content');
     gsap.killTweensOf('.wave-char');
     gsap.killTweensOf('.scroll-indicator');
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
   }, []);
 
   useEffect(() => {

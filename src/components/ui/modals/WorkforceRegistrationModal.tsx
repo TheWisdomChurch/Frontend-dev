@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as ZodResolvers from '@hookform/resolvers/zod';
 import { Loader2, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { BaseModal, modalStyles } from './Base';
@@ -13,6 +13,8 @@ import {
   type WorkforceRegistrationFormData,
 } from '@/lib/validation';
 import type { WorkforceRegistrationModalProps } from '@/lib/types';
+
+const { zodResolver } = ZodResolvers;
 
 const LEADERSHIP_TITLES = [
   'Deacon',

@@ -5,13 +5,15 @@ import { BaseModal, modalStyles } from './Base';
 import { Calendar, MapPin, Clock, Loader2 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as ZodResolvers from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { reminderSchema } from '@/lib/validation';
 import { SuccessModal } from './SuccessModal';
 import type { ReminderModalProps } from '@/lib/types';
 import type { ReminderFormSchema } from '@/lib/validation';
+
+const { zodResolver } = ZodResolvers;
 
 export const ReminderModal = ({
   event,
