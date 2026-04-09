@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
-import { useAppDispatch, useAppSelector } from '@/components/utils/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/shared/utils/hooks/redux';
 import { toggleCart } from '@/lib/store/slices/cartSlice';
 import {
   setProducts,
@@ -10,10 +10,10 @@ import {
   filterProducts,
 } from '@/lib/store/slices/productSlice';
 
-import ProductModal from '@/components/features/store/modals/ProductModal';
-import HeroSection from '@/components/features/hero/PageHero';
-import { H3, H4, BaseText, SmallText, Caption } from '@/components/text';
-import { hero_bg_1 } from '@/components/assets';
+import ProductModal from '@/features/store/modals/ProductModal';
+import HeroSection from '@/features/hero/PageHero';
+import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
+import { hero_bg_1 } from '@/shared/assets';
 
 import { gsap } from 'gsap';
 import {
@@ -26,15 +26,15 @@ import {
   Tag,
   Bell,
 } from 'lucide-react';
-import { Button } from '@/components/utils/buttons';
+import { Button } from '@/shared/utils/buttons';
 import {
   Section,
   Container,
   GridboxLayout,
   FlexboxLayout,
-} from '@/components/layout';
-import CartSidebar from '@/components/ui/Store/CartSidebar';
-import { useTheme } from '@/components/contexts/ThemeContext';
+} from '@/shared/layout';
+import CartSidebar from '@/shared/ui/Store/CartSidebar';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import Image from 'next/image';
 import { merchandise } from '@/lib/data';
 import { Product } from '@/lib/types';

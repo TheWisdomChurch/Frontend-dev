@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { BodyMD, H2 } from '@/components/text';
+import { BodyMD, H2 } from '@/shared/text';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
+} from '@/shared/layout';
 
 export default function NotFound() {
   return (

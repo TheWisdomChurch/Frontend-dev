@@ -6,55 +6,55 @@ import Link from 'next/link';
 import { Heart, Users, BookOpen, Calendar, Zap } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Header from '@/components/ui/Layout/Header';
-import Footer from '@/components/ui/Layout/Footer';
-import HeroSection from '@/components/ui/Homepage/HeroSection';
-import SectionContainer from '@/components/ui/Sections/SectionContainer';
-import BaseCard from '@/components/ui/Cards/BaseCard';
-import PrimaryButton from '@/components/ui/Buttons/PrimaryButton';
+import Header from '@/shared/ui/Layout/Header';
+import Footer from '@/shared/ui/Layout/Footer';
+import HeroSection from '@/shared/ui/Homepage/HeroSection';
+import SectionContainer from '@/shared/ui/Sections/SectionContainer';
+import BaseCard from '@/shared/ui/Cards/BaseCard';
+import PrimaryButton from '@/shared/ui/Buttons/PrimaryButton';
 
-const WhatWeDo = dynamic(() => import('@/components/ui/Homepage/WhatWeDo'), {
+const WhatWeDo = dynamic(() => import('@/shared/ui/Homepage/WhatWeDo'), {
   ssr: true,
   loading: () => null,
 });
 const EventsShowcase = dynamic(
-  () => import('@/components/ui/Homepage/EventsShowcase'),
+  () => import('@/shared/ui/Homepage/EventsShowcase'),
   { ssr: true, loading: () => null }
 );
 const SeniorPastor = dynamic(
-  () => import('@/components/ui/Homepage/SeniorPastor'),
+  () => import('@/shared/ui/Homepage/SeniorPastor'),
   {
     ssr: true,
     loading: () => null,
   }
 );
 // const AssociatePastors = dynamic(
-//   () => import('@/components/ui/Homepage/AssociatePastors'),
+//   () => import('@/shared/ui/Homepage/AssociatePastors'),
 //   { ssr: true, loading: () => <div className="min-h-[220px]" /> }
 // );
 const JoinWisdomHouse = dynamic(
-  () => import('@/components/ui/Homepage/JoinUs'),
+  () => import('@/shared/ui/Homepage/JoinUs'),
   {
     ssr: true,
     loading: () => null,
   }
 );
 const Testimonial = dynamic(
-  () => import('@/components/ui/Homepage/Testimonials'),
+  () => import('@/shared/ui/Homepage/Testimonials'),
   {
     ssr: true,
     loading: () => null,
   }
 );
 const OnlineGiving = dynamic(
-  () => import('@/components/ui/Homepage/OnlineGiving'),
+  () => import('@/shared/ui/Homepage/OnlineGiving'),
   {
     ssr: true,
     loading: () => null,
   }
 );
 const ResourceSection = dynamic(
-  () => import('@/components/ui/Homepage/Resource'),
+  () => import('@/shared/ui/Homepage/Resource'),
   {
     ssr: true,
     loading: () => null,

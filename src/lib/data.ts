@@ -50,13 +50,13 @@ import {
   Deacon_1,
   Deacon_2,
   Bishop,
-} from '@/components/assets';
+} from '@/shared/assets';
 import { Instagram, MessageCircle, Youtube } from 'lucide-react';
 
 export const defaultSlides: Slide[] = [
   {
     title: 'Welcome to The Wisdom Church',
-    subtitle: 'Equiping and Empowering for greatness',
+    subtitle: 'Equipping and empowering for greatness.',
     // description:
     //   'Where lives are transformed through faith.',
     image: {
@@ -68,7 +68,7 @@ export const defaultSlides: Slide[] = [
       title: 'Wisdom Power Conference',
       date: 'Mar 20 - 22',
       time: 'Morning Session • Evening Session',
-      location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
+      location: 'Honor Gardens, Alasia opposite Dominion City Headquarters',
       ctaLabel: 'Reserve a seat',
       ctaTarget: '#programs',
     },
@@ -86,7 +86,7 @@ export const defaultSlides: Slide[] = [
       title: '7 Nights of Lifting',
       date: 'Nov 20 - 27',
       time: '6 PM',
-      location: 'Honors Garden Event Center',
+      location: 'Honor Gardens Event Center',
       ctaLabel: 'Plan a visit',
       ctaTarget: '#programs',
     },

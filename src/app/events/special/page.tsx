@@ -2,17 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import HeroSection from '@/components/features/hero/PageHero';
-import { H1, H2, H3, SmallText } from '@/components/text';
-import { hero_bg_1, WisdomeHouseLogo } from '@/components/assets'; // Fixed: removed extra 'e'
-import { useSpecialEvents } from '@/components/utils/hooks/useSpecial';
+import HeroSection from '@/features/hero/PageHero';
+import { H1, H2, H3, SmallText } from '@/shared/text';
+import { hero_bg_1, WisdomeHouseLogo } from '@/shared/assets'; // Fixed: removed extra 'e'
+import { useSpecialEvents } from '@/shared/utils/hooks/useSpecial';
 import {
   Section,
   Container,
   GridboxLayout,
   FlexboxLayout,
-} from '@/components/layout';
-import { useTheme } from '@/components/contexts/ThemeContext';
+} from '@/shared/layout';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import Image from 'next/image';
 
 const SpecialPage = () => {

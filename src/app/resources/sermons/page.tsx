@@ -12,18 +12,18 @@ import {
   Caption,
   SmallText,
   H1,
-} from '@/components/text';
-import SermonUtil from '@/components/ui/Sermons';
-import Button from '@/components/utils/buttons/CustomButton';
+} from '@/shared/text';
+import SermonUtil from '@/shared/ui/Sermons';
+import Button from '@/shared/utils/buttons/CustomButton';
 import {
   Section,
   Container,
   GridboxLayout,
   FlexboxLayout,
-} from '@/components/layout';
-import { useTheme } from '@/components/contexts/ThemeContext';
+} from '@/shared/layout';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import { Youtube } from 'lucide-react';
-import PageHero from '@/components/features/hero/PageHero';
+import PageHero from '@/features/hero/PageHero';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();

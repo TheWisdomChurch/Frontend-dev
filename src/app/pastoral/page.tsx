@@ -1,8 +1,8 @@
 // app/pastoral-care/page.tsx
 'use client';
 
-import PageHero from '@/components/features/hero/PageHero';
-import PastoralCareUnit from '@/components/ui/eventsForm/PastoralCare';
+import PageHero from '@/features/hero/PageHero';
+import PastoralCareUnit from '@/shared/ui/eventsForm/PastoralCare';
 
 const PastoralCarePage = () => {
   return (

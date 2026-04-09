@@ -3,13 +3,13 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { WisdomeHouseLogo } from '@/components/assets';
-import { Section, Container } from '@/components/layout';
-import { H2, H3, BodySM, BodyMD, Caption } from '@/components/text';
-import PageHero from '@/components/features/hero/PageHero';
+import { WisdomeHouseLogo } from '@/shared/assets';
+import { Section, Container } from '@/shared/layout';
+import { H2, H3, BodySM, BodyMD, Caption } from '@/shared/text';
+import PageHero from '@/features/hero/PageHero';
 import { missionStatement } from '@/lib/data';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import { BaseModal } from '@/components/ui/modals/Base';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { BaseModal } from '@/shared/ui/modals/Base';
 
 export default function AboutUsPage() {
   const { colorScheme } = useTheme();

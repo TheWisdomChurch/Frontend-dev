@@ -2,10 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import nextDynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import Header from '@/components/common/Header';
-import Footer from '@/components/common/Footer';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,62 +10,48 @@ export const dynamic = 'force-dynamic';
 // DYNAMIC IMPORTS - Using reorganized feature components
 // ============================================================================
 
-const HeroMain = nextDynamic(
-  () => import('@/components/features/hero/HeroMain'),
-  {
-    ssr: false,
-    loading: () => null,
-  }
-);
+const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
+  ssr: false,
+  loading: () => null,
+});
 
-const HeroHighlights = nextDynamic(
-  () => import('@/components/features/hero/HeroHighlights'),
-  {
-    ssr: false,
-    loading: () => null,
-  }
-);
-
-const WhatWeDo = nextDynamic(() => import('@/components/features/WhatWeDo'), {
+const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
   ssr: true,
   loading: () => null,
 });
 
 const EventsShowcase = nextDynamic(
-  () => import('@/components/features/events/EventsShowcase'),
+  () => import('@/features/events/EventsShowcase'),
   { ssr: false, loading: () => null }
 );
 
 const SeniorPastor = nextDynamic(
-  () => import('@/components/features/leadership/SeniorPastor'),
+  () => import('@/features/leadership/SeniorPastor'),
   { ssr: true, loading: () => null }
 );
 
-const JoinUs = nextDynamic(
-  () => import('@/components/features/events/JoinUs'),
-  {
-    ssr: false,
-    loading: () => null,
-  }
-);
+const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
+  ssr: false,
+  loading: () => null,
+});
 
 const Testimonials = nextDynamic(
-  () => import('@/components/features/testimonials/Testimonials'),
+  () => import('@/features/testimonials/Testimonials'),
   { ssr: true, loading: () => null }
 );
 
 const OnlineGiving = nextDynamic(
-  () => import('@/components/features/events/OnlineGiving'),
+  () => import('@/features/events/OnlineGiving'),
   { ssr: true, loading: () => null }
 );
 
 const ResourceSection = nextDynamic(
-  () => import('@/components/features/resources/Resource'),
+  () => import('@/features/resources/Resource'),
   { ssr: true, loading: () => null }
 );
 
 const EventAdModal = nextDynamic(
-  () => import('@/components/ui/modals/EventAdModal'),
+  () => import('@/shared/ui/modals/EventAdModal'),
   {
     ssr: false,
     loading: () => null,
@@ -76,7 +59,7 @@ const EventAdModal = nextDynamic(
 );
 
 const ConfessionPopup = nextDynamic(
-  () => import('@/components/ui/modals/ConfessionPopup'),
+  () => import('@/shared/ui/modals/ConfessionPopup'),
   {
     ssr: false,
     loading: () => null,
@@ -184,78 +167,33 @@ export default function Home() {
         data-parallax-global="0.2"
       />
 
-      <Header />
-
       <main className="flex-1 w-full">
         <div className="flex flex-col">
           {/* Hero Section with video background */}
           <HeroMain />
 
-          {/* Hero Highlights Section */}
-          <section
-            className="relative border-t border-white/10 bg-[#0b0b0b]"
-            data-gsap="reveal"
-          >
-            <HeroHighlights />
-          </section>
-
           {/* What We Do Section */}
-          <section
-            className="relative border-t border-white/10 bg-[#080808]"
-            data-gsap="reveal"
-          >
-            <WhatWeDo />
-          </section>
+          <WhatWeDo />
 
           {/* Events Showcase - Fetches from API */}
-          <section
-            className="relative border-t border-white/10 bg-[#0b0b0b]"
-            data-gsap="reveal"
-          >
-            <EventsShowcase />
-          </section>
+          <EventsShowcase />
 
           {/* Senior Pastor Message Section */}
-          <section
-            className="relative border-t border-white/10 bg-[#080808]"
-            data-gsap="reveal"
-          >
-            <SeniorPastor />
-          </section>
+          <SeniorPastor />
 
           {/* Call to Action - Join Us */}
           <div id="join">
-            <section
-              className="relative border-t border-white/10 bg-[#0b0b0b]"
-              data-gsap="reveal"
-            >
-              <JoinUs />
-            </section>
+            <JoinUs />
           </div>
 
           {/* Testimonials Section - Fetches from API */}
-          <section
-            className="relative border-t border-white/10 bg-[#080808]"
-            data-gsap="reveal"
-          >
-            <Testimonials />
-          </section>
+          <Testimonials />
 
           {/* Online Giving Section */}
-          <section
-            className="relative border-t border-white/10 bg-[#0b0b0b]"
-            data-gsap="reveal"
-          >
-            <OnlineGiving />
-          </section>
+          <OnlineGiving />
 
           {/* Resources Section */}
-          <section
-            className="relative border-t border-white/10 bg-[#080808]"
-            data-gsap="reveal"
-          >
-            <ResourceSection />
-          </section>
+          <ResourceSection />
         </div>
 
         {/* Event Advertisement Modal */}
@@ -288,8 +226,6 @@ export default function Home() {
           />
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }
