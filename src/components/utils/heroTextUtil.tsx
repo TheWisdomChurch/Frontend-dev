@@ -16,15 +16,16 @@ interface CustomColorScheme {
 }
 
 export const renderTitle = (
-  title: string,
+  title: string | undefined | null,
   colorScheme: ColorScheme | CustomColorScheme
 ): ReactNode => {
+  const safeTitle = title ?? '';
   // Use optional chaining and fallback values
   const primaryColor = colorScheme.primary || '#000000';
   const shadowColor = colorScheme.opacity?.primary40 || 'rgba(0,0,0,0.4)';
 
-  if (title.includes('Wisdom House Church')) {
-    const parts = title.split('Wisdom House Church');
+  if (safeTitle.includes('Wisdom House Church')) {
+    const parts = safeTitle.split('Wisdom House Church');
     return (
       <>
         {parts[0]}
@@ -45,8 +46,8 @@ export const renderTitle = (
     );
   }
 
-  if (title.includes('Vibrant Community')) {
-    const parts = title.split('Vibrant Community');
+  if (safeTitle.includes('Vibrant Community')) {
+    const parts = safeTitle.split('Vibrant Community');
     return (
       <>
         {parts[0]}
@@ -67,8 +68,8 @@ export const renderTitle = (
     );
   }
 
-  if (title.includes('Lasting Relationships')) {
-    const parts = title.split('Lasting Relationships');
+  if (safeTitle.includes('Lasting Relationships')) {
+    const parts = safeTitle.split('Lasting Relationships');
     return (
       <>
         {parts[0]}
@@ -89,12 +90,15 @@ export const renderTitle = (
     );
   }
 
-  return title;
+  return safeTitle;
 };
 
-export const renderSubtitle = (subtitle: string): ReactNode => {
-  if (subtitle.includes("God's Transforming Power")) {
-    const parts = subtitle.split("God's Transforming Power");
+export const renderSubtitle = (
+  subtitle: string | undefined | null
+): ReactNode => {
+  const safeSubtitle = subtitle ?? '';
+  if (safeSubtitle.includes("God's Transforming Power")) {
+    const parts = safeSubtitle.split("God's Transforming Power");
     return (
       <>
         {parts[0]}
@@ -114,8 +118,8 @@ export const renderSubtitle = (subtitle: string): ReactNode => {
     );
   }
 
-  if (subtitle.includes('Spiritual Journey')) {
-    const parts = subtitle.split('Spiritual Journey');
+  if (safeSubtitle.includes('Spiritual Journey')) {
+    const parts = safeSubtitle.split('Spiritual Journey');
     return (
       <>
         {parts[0]}
@@ -135,7 +139,7 @@ export const renderSubtitle = (subtitle: string): ReactNode => {
     );
   }
 
-  if (subtitle.includes('Connect With Believers')) {
+  if (safeSubtitle.includes('Connect With Believers')) {
     return (
       <BaseText
         fontFamily="playfair"
@@ -151,5 +155,5 @@ export const renderSubtitle = (subtitle: string): ReactNode => {
     );
   }
 
-  return subtitle;
+  return safeSubtitle;
 };

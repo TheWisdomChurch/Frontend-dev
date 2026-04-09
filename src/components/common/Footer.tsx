@@ -44,7 +44,7 @@ const contactInfo = [
   { Icon: Mail, title: 'Email', text: 'Wisdomhousehq@gmail.com' },
 ];
 const quickLinks = [
-  { href: '/about/mission', label: 'About Us' },
+  { href: '/about', label: 'About Us' },
   { href: '/events/upcoming', label: 'Events & Programs' },
   { href: '/resources/sermons', label: 'Sermons' },
   { href: '/resources/store', label: 'Store' },
