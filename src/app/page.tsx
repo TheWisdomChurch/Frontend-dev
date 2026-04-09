@@ -1,65 +1,73 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // DYNAMIC IMPORTS - Using reorganized feature components
 // ============================================================================
 
-const HeroMain = dynamic(() => import('@/components/features/hero/HeroMain'), {
-  ssr: true,
-  loading: () => null,
-});
-
-const HeroHighlights = dynamic(
-  () => import('@/components/features/hero/HeroHighlights'),
+const HeroMain = nextDynamic(
+  () => import('@/components/features/hero/HeroMain'),
   {
-    ssr: true,
+    ssr: false,
     loading: () => null,
   }
 );
 
-const WhatWeDo = dynamic(() => import('@/components/features/WhatWeDo'), {
+const HeroHighlights = nextDynamic(
+  () => import('@/components/features/hero/HeroHighlights'),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const WhatWeDo = nextDynamic(() => import('@/components/features/WhatWeDo'), {
   ssr: true,
   loading: () => null,
 });
 
-const EventsShowcase = dynamic(
+const EventsShowcase = nextDynamic(
   () => import('@/components/features/events/EventsShowcase'),
-  { ssr: true, loading: () => null }
+  { ssr: false, loading: () => null }
 );
 
-const SeniorPastor = dynamic(
+const SeniorPastor = nextDynamic(
   () => import('@/components/features/leadership/SeniorPastor'),
   { ssr: true, loading: () => null }
 );
 
-const JoinUs = dynamic(() => import('@/components/features/events/JoinUs'), {
-  ssr: true,
-  loading: () => null,
-});
+const JoinUs = nextDynamic(
+  () => import('@/components/features/events/JoinUs'),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
 
-const Testimonials = dynamic(
+const Testimonials = nextDynamic(
   () => import('@/components/features/testimonials/Testimonials'),
   { ssr: true, loading: () => null }
 );
 
-const OnlineGiving = dynamic(
+const OnlineGiving = nextDynamic(
   () => import('@/components/features/events/OnlineGiving'),
   { ssr: true, loading: () => null }
 );
 
-const ResourceSection = dynamic(
+const ResourceSection = nextDynamic(
   () => import('@/components/features/resources/Resource'),
   { ssr: true, loading: () => null }
 );
 
-const EventAdModal = dynamic(
+const EventAdModal = nextDynamic(
   () => import('@/components/ui/modals/EventAdModal'),
   {
     ssr: false,
@@ -67,7 +75,7 @@ const EventAdModal = dynamic(
   }
 );
 
-const ConfessionPopup = dynamic(
+const ConfessionPopup = nextDynamic(
   () => import('@/components/ui/modals/ConfessionPopup'),
   {
     ssr: false,
