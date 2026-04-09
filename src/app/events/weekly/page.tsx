@@ -1,15 +1,15 @@
+'use client';
+
 import HeroSection from '@/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
 import { hero_bg_3 } from '@/shared/assets';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+import { Container, Section } from '@/shared/layout';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { CalendarClock, MapPin } from 'lucide-react';
+import { cn } from '@/lib/cn';
 
 const WeeklyPage = () => {
+  const { colorScheme } = useTheme();
   const weeklyServices = [
     {
       day: 'Sunday',
@@ -83,11 +83,11 @@ const WeeklyPage = () => {
   ];
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#050505] text-white">
       <HeroSection
         title="Weekly Services"
-        subtitle="Regular Gatherings for Worship & Growth"
-        description="Join us throughout the week for services, studies, and fellowship opportunities designed to help you grow in your faith and connect with others."
+        subtitle="Regular gatherings for worship, teaching, and community."
+        description="Join us throughout the week for services, studies, and fellowship designed to help you grow in faith and build lasting relationships."
         backgroundImage={hero_bg_3.src}
         showButtons={true}
         primaryButtonText="Plan Your Visit"
@@ -96,60 +96,88 @@ const WeeklyPage = () => {
       />
 
       {/* Weekly Schedule */}
-      <PageSection tone="surface" padding="xl">
-        <div className="text-center mb-8 fade-up">
-          <H2>Our Weekly Schedule</H2>
-          <BodyMD className="text-muted mt-3 max-w-2xl mx-auto">
-            We have multiple service times and gatherings throughout the week to
-            fit your schedule
-          </BodyMD>
-        </div>
+      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-55"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+            maskImage:
+              'radial-gradient(circle at 50% 30%, black 35%, transparent 90%)',
+            WebkitMaskImage:
+              'radial-gradient(circle at 50% 30%, black 35%, transparent 90%)',
+          }}
+        />
+        <Container size="xl" className="relative z-10 space-y-6 sm:space-y-8">
+          <div className="text-center mb-4 fade-up">
+            <H2>Our Weekly Schedule</H2>
+            <BodyMD className="text-white/70 mt-3 max-w-2xl mx-auto">
+              Multiple service times and gatherings to fit your schedule.
+            </BodyMD>
+          </div>
 
-        <div className="max-w-6xl mx-auto space-y-6">
-          {weeklyServices.map((daySchedule, index) => (
-            <div key={index} className="page-card-muted p-5 sm:p-6 fade-up">
-              <H3 className="text-center mb-4">{daySchedule.day}</H3>
+          <div className="max-w-6xl mx-auto space-y-6">
+            {weeklyServices.map((daySchedule, index) => (
+              <div
+                key={index}
+                className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 sm:p-6 fade-up"
+              >
+                <H3 className="text-center mb-4">{daySchedule.day}</H3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {daySchedule.services.map((service, serviceIndex) => (
-                  <div key={serviceIndex} className="page-card p-4 sm:p-5">
-                    <div className="text-center mb-3">
-                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-medium border border-muted text-muted">
-                        {service.type}
-                      </span>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {daySchedule.services.map((service, serviceIndex) => (
+                    <div
+                      key={serviceIndex}
+                      className={cn(
+                        'rounded-2xl border border-white/10 bg-black/40 p-4 sm:p-5',
+                        'shadow-[0_12px_30px_rgba(0,0,0,0.25)]'
+                      )}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/70">
+                          {service.type}
+                        </span>
+                        <span className="text-[11px] text-white/60">
+                          {service.location}
+                        </span>
+                      </div>
 
-                    <H3 className="text-center mb-1">{service.name}</H3>
+                      <H3 className="mb-1 text-base sm:text-lg">
+                        {service.name}
+                      </H3>
 
-                    <div className="text-center mb-3">
-                      <BodySM className="text-accent font-medium">
-                        {service.time}
+                      <div className="flex items-center gap-2 text-xs sm:text-sm text-white/75 mb-3">
+                        <CalendarClock className="h-4 w-4 text-white/60" />
+                        <span style={{ color: colorScheme.primary }}>
+                          {service.time}
+                        </span>
+                      </div>
+
+                      <BodySM className="text-white/65 mb-3">
+                        {service.description}
                       </BodySM>
+
+                      <div className="flex items-center gap-2 text-xs text-white/60">
+                        <MapPin className="h-4 w-4 text-white/50" />
+                        <span>{service.location}</span>
+                      </div>
                     </div>
-
-                    <BodySM className="text-muted text-center mb-3">
-                      {service.description}
-                    </BodySM>
-
-                    <BodySM className="text-subtle text-center">
-                      <span className="font-medium">Location:</span>{' '}
-                      {service.location}
-                    </BodySM>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </PageSection>
+            ))}
+          </div>
+        </Container>
+      </Section>
 
       {/* What to Expect Section */}
-      <PageSection tone="muted" padding="xl">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8 fade-up">
+      <Section padding="lg" className="relative overflow-hidden bg-[#080808]">
+        <Container size="xl" className="space-y-6 sm:space-y-8">
+          <div className="text-center fade-up">
             <H2>What to Expect</H2>
-            <BodyMD className="text-muted mt-3">
-              Your first visit to Wisdom House
+            <BodyMD className="text-white/70 mt-3">
+              Your first visit to Wisdom House.
             </BodyMD>
           </div>
 
@@ -158,42 +186,45 @@ const WeeklyPage = () => {
               {
                 title: 'Welcoming Atmosphere',
                 description:
-                  'Friendly greeters will welcome you and help you find your way around our campus.',
+                  'Friendly greeters will welcome you and help you find your way around the campus.',
               },
               {
-                title: 'Casual Dress',
+                title: 'Come As You Are',
                 description:
-                  'Come as you are! Most people dress casually, so wear whatever feels comfortable.',
+                  'Most people dress casually, so wear what makes you comfortable.',
               },
               {
                 title: 'Engaging Worship',
                 description:
-                  "Our services feature contemporary worship music that's both uplifting and meaningful.",
+                  'A worship experience that is uplifting, sincere, and Christ-centered.',
               },
               {
                 title: 'Practical Teaching',
                 description:
-                  'Messages that connect biblical truth to everyday life in relevant, applicable ways.',
+                  'Messages that connect biblical truth to everyday life.',
               },
               {
-                title: "Safe Children's Ministry",
+                title: "Secure Children's Ministry",
                 description:
-                  'Secure check-in and age-appropriate programs for children from infants to 5th grade.',
+                  'Safe check‑in and age‑appropriate care for infants through 5th grade.',
               },
               {
                 title: 'No Pressure',
                 description:
-                  "We won't single you out or pressure you to give. Just come and experience God's presence.",
+                  'No spotlight, no pressure—just a space to encounter God.',
               },
             ].map((item, index) => (
-              <div key={index} className="page-card p-5">
+              <div
+                key={index}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 fade-up"
+              >
                 <H3 className="mb-2">{item.title}</H3>
-                <BodySM className="text-muted">{item.description}</BodySM>
+                <BodySM className="text-white/65">{item.description}</BodySM>
               </div>
             ))}
           </div>
-        </div>
-      </PageSection>
+        </Container>
+      </Section>
     </div>
   );
 };

@@ -68,10 +68,10 @@ const BlogPage = () => {
   ];
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#050505] text-white">
       <HeroSection
         title="Blog"
-        subtitle="Insights for Your Spiritual Journey"
+        subtitle="Insights for your spiritual journey"
         description="Practical wisdom, biblical insights, and encouraging stories to help you grow in your faith and navigate life's challenges."
         backgroundImage={hero_bg_2.src}
         showButtons={true}
@@ -82,7 +82,7 @@ const BlogPage = () => {
 
       {/* Blog Posts Grid */}
       <PageSection tone="surface" padding="xl">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 fade-up">
           <H2>Recent Articles</H2>
           <BodyMD className="text-muted mt-3">
             Fresh content to encourage and equip you

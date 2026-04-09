@@ -62,10 +62,10 @@ const PublicationPage = () => {
   ];
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#050505] text-white">
       <HeroSection
         title="Publications"
-        subtitle="Resources for Spiritual Growth"
+        subtitle="Resources for spiritual growth"
         description="Access our collection of digital and print resources designed to support your faith journey, from daily devotionals to in-depth study materials."
         backgroundImage={hero_bg_3.src}
         showButtons={true}
@@ -76,7 +76,7 @@ const PublicationPage = () => {
 
       {/* Publications Grid */}
       <PageSection tone="surface" padding="xl">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 fade-up">
           <H2>Available Resources</H2>
           <BodyMD className="text-muted mt-3">
             Free resources to support your spiritual growth

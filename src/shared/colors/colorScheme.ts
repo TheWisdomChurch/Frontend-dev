@@ -198,10 +198,10 @@ export const darkShades: ColorScheme = {
   heading: '#FFFFFF',
 
   background: '#050505',
-  backgroundSecondary: '#0B0C10',
-  surface: '#0F1115',
-  surfaceVariant: '#15171C',
-  card: '#101217',
+  backgroundSecondary: '#0A0B0F',
+  surface: '#0D1014',
+  surfaceVariant: '#141820',
+  card: '#0E1116',
   body: '#050505',
   footer: '#060606',
   pageBackground: '#050505',
@@ -211,9 +211,9 @@ export const darkShades: ColorScheme = {
   buttonHover: '#FFE27F',
   buttonActive: '#C8A731',
 
-  border: '#1F2229',
-  borderLight: '#2A2E36',
-  borderDark: '#121418',
+  border: '#23262F',
+  borderLight: '#2E323C',
+  borderDark: '#0E1014',
 
   gray: baseGrayScale,
 
@@ -276,10 +276,10 @@ export const lightShades: ColorScheme = {
   subtleText: '#6B7280',
   heading: '#000000',
 
-  background: '#FAFAF7',
-  backgroundSecondary: '#F4F3EE',
+  background: '#FBFAF6',
+  backgroundSecondary: '#F3F1EA',
   surface: '#FFFFFF',
-  surfaceVariant: '#F1F0EA',
+  surfaceVariant: '#EEECE6',
   card: '#FFFFFF',
   body: '#FAFAF7',
   footer: '#F4F3EE',
@@ -290,9 +290,9 @@ export const lightShades: ColorScheme = {
   buttonHover: '#F8E08A',
   buttonActive: '#C8A128',
 
-  border: '#E0E0DA',
-  borderLight: '#EFEDE7',
-  borderDark: '#D6D4CE',
+  border: '#E3E0D8',
+  borderLight: '#F1EFE8',
+  borderDark: '#D9D6CF',
 
   gray: baseGrayScale,
 
@@ -328,7 +328,7 @@ export const lightShades: ColorScheme = {
   overlay: 'rgba(0, 0, 0, 0.7)',
   backdrop: 'rgba(0, 0, 0, 0.4)',
 
-  tertiary: '#F1F0EA',
+  tertiary: '#EEECE6',
   onTertiary: '#000000',
   onPrimary: '#000000',
   onSecondary: '#000000',
