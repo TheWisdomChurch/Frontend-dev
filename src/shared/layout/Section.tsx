@@ -47,12 +47,12 @@ const Section = forwardRef<HTMLElement, SectionProps>(
     // REMOVED all vertical padding - only apply when explicitly requested
     const paddingClasses = {
       none: '',
-      xs: 'py-6 sm:py-8',
-      sm: 'py-8 sm:py-10',
-      md: 'py-10 sm:py-12 lg:py-14',
-      lg: 'py-12 sm:py-16 lg:py-20',
-      xl: 'py-16 sm:py-20 lg:py-24',
-      '2xl': 'py-20 sm:py-24 lg:py-28',
+      xs: 'py-8 sm:py-10',
+      sm: 'py-10 sm:py-12',
+      md: 'py-12 sm:py-16 lg:py-20',
+      lg: 'py-16 sm:py-20 lg:py-24',
+      xl: 'py-20 sm:py-24 lg:py-28',
+      '2xl': 'py-24 sm:py-28 lg:py-32',
     };
 
     // Background colors

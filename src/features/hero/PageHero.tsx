@@ -111,7 +111,7 @@ export default function PageHero({
           )}
         >
           <div
-            className={cn('space-y-5 sm:space-y-6 text-center lg:text-left')}
+            className={cn('space-y-6 sm:space-y-7 text-center lg:text-left')}
           >
             <div className="flex justify-center lg:justify-start fade-up">
               <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-4 py-2 w-fit backdrop-blur">
@@ -156,7 +156,7 @@ export default function PageHero({
             </div>
 
             {chips?.length ? (
-              <div className="flex flex-wrap gap-2.5 justify-center lg:justify-start fade-up">
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start fade-up">
                 {chips.map(chip => (
                   <span
                     key={chip}
@@ -223,7 +223,7 @@ export default function PageHero({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {visualChips.map(chip => (
                     <div
                       key={chip}
