@@ -511,7 +511,6 @@ export const BaseModal = memo(function BaseModal({
       className={`fixed inset-0 z-[9999] ${useBottomSheet ? 'flex items-end justify-center p-4' : 'flex items-center justify-center p-4'}`}
       onClick={handleBackdropClick}
       role="presentation"
-      aria-hidden="true"
       style={{
         backgroundColor: colors.backdrop,
         backdropFilter: 'blur(8px)',
@@ -539,7 +538,7 @@ export const BaseModal = memo(function BaseModal({
           w-full overflow-hidden border shadow-2xl
           ${responsive.modal[viewport]}
           ${useBottomSheet ? 'rounded-t-3xl rounded-b-none pb-safe-bottom' : 'rounded-2xl'}
-          max-h-[92vh]
+          max-h-[88vh] sm:max-h-[92vh]
           ${maxWidth}
           ${isLoading ? 'opacity-80' : ''}
           transition-transform duration-300 ease-out
@@ -577,10 +576,10 @@ export const BaseModal = memo(function BaseModal({
           </div>
         )}
 
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full min-h-0">
           <div
             className={`
-              overflow-y-auto flex-1
+              overflow-y-auto flex-1 min-h-0
               ${useBottomSheet ? 'px-6' : responsive.padding[viewport]}
               ${useBottomSheet ? 'pb-6' : ''}
               ${responsive.gap[viewport]}

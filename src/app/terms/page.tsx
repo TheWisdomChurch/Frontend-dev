@@ -58,7 +58,7 @@ const sections: Section[] = [
     title: '8. Privacy & Cookies',
     body: 'Our data practices are described in our Privacy Policy and Cookies Policy. By using the Services, you consent to our collection and use of information as described there.',
     links: [
-      { href: '/privacy', label: 'Privacy Policy' },
+      { href: '/terms', label: 'Privacy Policy' },
       { href: '/cookies', label: 'Cookies Policy' },
     ],
   },
