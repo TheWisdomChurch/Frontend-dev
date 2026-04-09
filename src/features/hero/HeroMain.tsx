@@ -234,7 +234,7 @@ const HeroSection = ({
       fullHeight={false}
       perf="none"
       className={cn(
-        'relative w-full min-h-[70vh] sm:min-h-[78vh] lg:min-h-[86vh] overflow-hidden bg-[#050505]'
+        'relative w-full min-h-[78vh] sm:min-h-[84vh] lg:min-h-[90vh] overflow-hidden bg-[#050505]'
       )}
     >
       {heroImage?.src ? (
@@ -251,28 +251,35 @@ const HeroSection = ({
         </div>
       ) : null}
 
-      <div className="absolute inset-0 -z-20 bg-black/65 sm:bg-black/60" />
+      <div className="absolute inset-0 -z-20 bg-black/60 sm:bg-black/55" />
+      <div
+        className="absolute inset-0 -z-15"
+        style={{
+          background:
+            'linear-gradient(130deg, rgba(6,6,6,0.92) 0%, rgba(15,17,22,0.82) 38%, rgba(6,6,6,0.95) 100%)',
+        }}
+      />
       <div
         className="absolute inset-0 -z-10 opacity-70"
         style={{
-          background: `radial-gradient(circle at 18% 20%, ${colorScheme.opacity.primary20} 0%, transparent 45%), radial-gradient(circle at 80% 8%, ${colorScheme.opacity.primary15} 0%, transparent 40%)`,
+          background: `radial-gradient(circle at 18% 20%, ${colorScheme.opacity.primary20} 0%, transparent 45%), radial-gradient(circle at 80% 8%, ${colorScheme.opacity.primary10} 0%, transparent 40%)`,
           filter: 'blur(40px)',
         }}
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/25 via-black/55 to-black/90" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/20 via-black/55 to-black/90" />
 
       <Container
         size="xl"
         className={cn(
-          'relative z-20 flex items-center px-4 sm:px-6 md:px-8 lg:px-10 pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-16 lg:pb-20'
+          'relative z-20 flex items-center px-4 sm:px-6 md:px-8 lg:px-10 pt-32 sm:pt-36 lg:pt-40 pb-20 sm:pb-24 lg:pb-28'
         )}
       >
         <div className="w-full">
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div className="space-y-5 text-center lg:text-left fade-up">
+          <div className="grid gap-10 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div className="space-y-7 text-center lg:text-left fade-up">
               {showWaveText && (
                 <div className="flex justify-center lg:justify-start">
-                  <div className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-2 text-[0.6rem] uppercase tracking-[0.18em] text-white/80">
+                  <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2.5 text-[0.6rem] uppercase tracking-[0.18em] text-white/80">
                     <span
                       className="h-2 w-2 rounded-full"
                       style={{ backgroundColor: colorScheme.primary }}
@@ -291,7 +298,7 @@ const HeroSection = ({
                 }}
                 useThemeColor={false}
               >
-                <span className="block text-[1.75rem] xs:text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.1rem] xl:text-[3.5rem]">
+                <span className="block text-[1.85rem] xs:text-[2.2rem] sm:text-4xl md:text-5xl lg:text-[3.2rem] xl:text-[3.6rem]">
                   {renderTitle((currentSlideData as any)?.title, colorScheme)}
                 </span>
               </H1>
@@ -315,23 +322,23 @@ const HeroSection = ({
               ) : null}
 
               {heroDescription ? (
-                <p className="text-[0.9rem] sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                <p className="text-[0.92rem] sm:text-base md:text-[1.05rem] text-white/70 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                   {heroDescription}
                 </p>
               ) : null}
 
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start">
                 <CustomButton
                   variant="primary"
                   size="md"
                   curvature="xl"
                   elevated
                   onClick={handlePrimaryClick}
-                  className="w-full sm:w-auto px-5 py-2.5 text-[0.74rem] sm:text-sm font-medium tracking-wide"
+                  className="w-full sm:w-auto px-6 py-3 text-[0.75rem] sm:text-sm font-medium tracking-wide"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                     color: '#FFFFFF',
-                    boxShadow: `0 10px 26px ${colorScheme.opacity.primary25}`,
+                    boxShadow: `0 10px 26px ${colorScheme.opacity.primary20}`,
                   }}
                 >
                   {primaryButtonText}
@@ -342,7 +349,7 @@ const HeroSection = ({
                   size="md"
                   curvature="xl"
                   onClick={handleSecondaryClick}
-                  className="w-full sm:w-auto px-5 py-2.5 text-[0.74rem] sm:text-sm font-medium tracking-wide"
+                  className="w-full sm:w-auto px-6 py-3 text-[0.75rem] sm:text-sm font-medium tracking-wide"
                   style={{
                     borderColor: 'rgba(255,255,255,0.35)',
                     color: '#FFFFFF',
@@ -354,8 +361,8 @@ const HeroSection = ({
               </div>
             </div>
 
-            <div className="space-y-4 fade-up">
-              <div className="rounded-3xl border border-white/15 bg-black/70 backdrop-blur-xl p-5 sm:p-6 space-y-3">
+            <div className="grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-1 fade-up">
+              <div className="rounded-2xl border border-white/15 bg-black/70 backdrop-blur-xl p-6 sm:p-7 space-y-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-[0.6rem] uppercase tracking-[0.18em] text-white/60">
@@ -366,7 +373,7 @@ const HeroSection = ({
                     </p>
                   </div>
                   <div
-                    className="h-9 w-9 rounded-2xl flex items-center justify-center border border-white/30"
+                    className="h-10 w-10 rounded-xl flex items-center justify-center border border-white/30"
                     style={{ background: colorScheme.primary }}
                   >
                     <CalendarClock className="w-4 h-4 text-black" />
@@ -391,7 +398,7 @@ const HeroSection = ({
                   curvature="full"
                   elevated
                   onClick={handleUpcomingCta}
-                  className="px-4 py-2 text-[0.72rem] sm:text-[11px] font-medium border border-white/20"
+                  className="px-5 py-2.5 text-[0.72rem] sm:text-[11px] font-medium border border-white/20"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                     color: '#FFFFFF',
@@ -401,9 +408,9 @@ const HeroSection = ({
                 </CustomButton>
               </div>
 
-              <div className="rounded-3xl border border-white/12 bg-black/55 backdrop-blur-xl p-5 sm:p-6 space-y-3">
+              <div className="rounded-2xl border border-white/12 bg-black/55 backdrop-blur-xl p-6 sm:p-7 space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="h-9 w-9 rounded-2xl border border-white/25 flex items-center justify-center shrink-0">
+                  <div className="h-10 w-10 rounded-xl border border-white/25 flex items-center justify-center shrink-0">
                     <PlayCircle className="w-4 h-4 text-white" />
                   </div>
                   <div>
