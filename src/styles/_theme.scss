@@ -1,22 +1,22 @@
 .page-shell,
 .page-section {
-  background-color: var(--color-pageBackground, #ffffff);
-  color: var(--color-text, #111827);
+  background-color: var(--color-pageBackground, #050505);
+  color: var(--color-text, #f5f6f7);
 }
 
 .page-section-muted {
-  background-color: var(--color-backgroundSecondary, #f7f7f7);
-  color: var(--color-text, #111827);
+  background-color: var(--color-backgroundSecondary, #0b0c10);
+  color: var(--color-text, #f5f6f7);
 }
 
 .page-surface {
-  background-color: var(--color-surface, #ffffff);
-  color: var(--color-text, #111827);
+  background-color: var(--color-surface, #0f1115);
+  color: var(--color-text, #f5f6f7);
 }
 
 .page-surface-strong {
-  background-color: var(--color-surfaceVariant, #f3f4f6);
-  color: var(--color-text, #111827);
+  background-color: var(--color-surfaceVariant, #15171c);
+  color: var(--color-text, #f5f6f7);
 }
 
 .page-card {
@@ -56,7 +56,9 @@
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
   line-height: 1.4;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .input-base::placeholder {
@@ -66,7 +68,8 @@
 .input-base:focus {
   outline: none;
   border-color: var(--color-primary, #f7de12);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary, #f7de12) 20%, transparent);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-primary, #f7de12) 20%, transparent);
 }
 
 .bg-white {

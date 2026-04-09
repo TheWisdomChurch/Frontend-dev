@@ -44,8 +44,8 @@ export default function AboutUsPage() {
     <div className="min-h-screen bg-[#050505]">
       <PageHero
         title="About Us"
-        subtitle="A trans-generational movement of greatness"
-        note="Discover the heart, identity, and purpose of The Wisdom House Church — a vibrant, Spirit-filled family raising complete believers."
+        subtitle="A trans-generational movement of faith and excellence"
+        note="Discover the heart, identity, and purpose of The Wisdom House Church — a Spirit-filled family raising complete believers."
         chips={['Word & Power', 'Excellence', 'Generations', 'Nations']}
         variant="about"
       />
@@ -77,7 +77,7 @@ export default function AboutUsPage() {
                 </Caption>
 
                 <H2 className="text-2xl sm:text-3xl lg:text-[2.1rem] font-semibold text-white leading-[1.08] text-balance">
-                  A house of light, transformation, and greatness.
+                  A house of light, transformation, and purpose.
                 </H2>
 
                 <BodyMD className="text-white/75 leading-relaxed text-[15px] sm:text-base max-w-2xl">

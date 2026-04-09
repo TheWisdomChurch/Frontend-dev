@@ -96,9 +96,13 @@ export default function PageHero({
           'relative z-10 px-4 sm:px-6 md:px-8 lg:px-10 pt-24 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 lg:pb-20'
         )}
       >
-        <div className={cn('grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end')}>
-          <div className={cn('space-y-4 sm:space-y-5 text-center lg:text-left')}>
-            <div className="flex justify-center lg:justify-start">
+        <div
+          className={cn('grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end')}
+        >
+          <div
+            className={cn('space-y-4 sm:space-y-5 text-center lg:text-left')}
+          >
+            <div className="flex justify-center lg:justify-start fade-up">
               <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 w-fit backdrop-blur">
                 <div className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-lg overflow-hidden border border-white/15 bg-black/60">
                   <Image
@@ -114,7 +118,7 @@ export default function PageHero({
               </div>
             </div>
 
-            <div className={cn('space-y-2 max-w-3xl mx-auto lg:mx-0')}>
+            <div className={cn('space-y-2 max-w-3xl mx-auto lg:mx-0 fade-up')}>
               <H2
                 className={
                   compact
@@ -141,7 +145,7 @@ export default function PageHero({
             </div>
 
             {chips?.length ? (
-              <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+              <div className="flex flex-wrap gap-2 justify-center lg:justify-start fade-up">
                 {chips.map(chip => (
                   <span
                     key={chip}
@@ -165,7 +169,7 @@ export default function PageHero({
               : null}
           </div>
 
-          <div className="relative">
+          <div className="relative fade-up">
             <div
               className="relative rounded-3xl border border-white/12 bg-black/60 backdrop-blur-xl p-5 sm:p-6"
               style={{

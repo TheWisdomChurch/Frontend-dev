@@ -85,7 +85,7 @@ export const useSpecialEvents = () => {
       time: '5PM Daily',
       description:
         'Join us for a powerful 7 Nights of Lifting service celebrating the resurrection of Jesus Christ. Special music, message of hope, and family activities.',
-      location: 'Honors Gardens, opposite Dominion Church , Alasia Bus Stop',
+      location: 'Honor Gardens, opposite Dominion City, Alasia Bus Stop',
       type: 'celebration',
       image: '/images/easter-service.jpg',
     },

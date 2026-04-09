@@ -21,6 +21,7 @@ import type { ColorScheme } from '@/shared/colors/colorScheme';
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { renderTitle, renderSubtitle } from '@/shared/utils/heroTextUtil';
 import type { YouTubeVideo } from '@/lib/types';
+import { cn } from '@/lib/cn';
 
 /* Types (simplified for backend structure)
 ----------------------------------------------------------------------------- */
@@ -232,7 +233,9 @@ const HeroSection = ({
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative w-full min-h-[70vh] sm:min-h-[78vh] lg:min-h-[86vh] overflow-hidden bg-[#050505]"
+      className={cn(
+        'relative w-full min-h-[70vh] sm:min-h-[78vh] lg:min-h-[86vh] overflow-hidden bg-[#050505]'
+      )}
     >
       {heroImage?.src ? (
         <div className="absolute inset-0 -z-30">
@@ -260,11 +263,13 @@ const HeroSection = ({
 
       <Container
         size="xl"
-        className="relative z-20 flex items-center px-4 sm:px-6 md:px-8 lg:px-10 pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-16 lg:pb-20"
+        className={cn(
+          'relative z-20 flex items-center px-4 sm:px-6 md:px-8 lg:px-10 pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-16 lg:pb-20'
+        )}
       >
         <div className="w-full">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div className="space-y-5 text-center lg:text-left">
+            <div className="space-y-5 text-center lg:text-left fade-up">
               {showWaveText && (
                 <div className="flex justify-center lg:justify-start">
                   <div className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-2 text-[0.6rem] uppercase tracking-[0.18em] text-white/80">
@@ -349,7 +354,7 @@ const HeroSection = ({
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 fade-up">
               <div className="rounded-3xl border border-white/15 bg-black/70 backdrop-blur-xl p-5 sm:p-6 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
