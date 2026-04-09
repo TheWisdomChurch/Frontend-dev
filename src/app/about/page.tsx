@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import { WisdomeHouseLogo } from '@/components/assets';
 import { Section, Container } from '@/components/layout';
 import { H2, H3, BodySM, BodyMD, Caption } from '@/components/text';
-import PageHero from '@/components/ui/PageHero';
+import PageHero from '@/components/features/hero/PageHero';
 import { missionStatement } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { BaseModal } from '@/components/modal/Base';
+import { BaseModal } from '@/components/ui/modals/Base';
 
 export default function AboutUsPage() {
   const { colorScheme } = useTheme();

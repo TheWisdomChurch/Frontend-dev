@@ -29,6 +29,7 @@
     "docker:down": "docker-compose down"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.4.0",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-brands-svg-icons": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
@@ -94,14 +95,5 @@
     "sass": "^1.97.3",
     "tailwindcss": "^3.4.0",
     "typescript": "^5"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "node ./node_modules/prettier/bin/prettier.cjs --write",
-      "node ./node_modules/eslint/bin/eslint.js --fix --max-warnings 0 --no-warn-ignored"
-    ],
-    "*.{json,md,mdx,css,scss,html,yml,yaml}": [
-      "node ./node_modules/prettier/bin/prettier.cjs --write"
-    ]
   }
 }

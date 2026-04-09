@@ -1,0 +1,469 @@
+// src/styles/_variables.scss
+// Design System Tokens - All typography, spacing, colors, and animations
+
+// ============================================================================
+// COLOR PALETTE
+// ============================================================================
+
+// Primary Colors
+$color-primary: #f7de12;
+$color-primary-dark: #d4bc0f;
+$color-primary-light: #f9e755;
+
+// Secondary Colors
+$color-secondary: #1f2937;
+$color-secondary-light: #374151;
+$color-secondary-lighter: #4b5563;
+
+// Accent & Status Colors
+$color-accent: #f7de12;
+$color-error: #ef4444;
+$color-success: #10b981;
+$color-warning: #f59e0b;
+$color-info: #3b82f6;
+
+// Neutral Colors
+$color-white: #ffffff;
+$color-black: #000000;
+$color-background: #000000;
+$color-background-secondary: #030303;
+
+// Gray Scale
+$color-gray-50: #f9fafb;
+$color-gray-100: #f3f4f6;
+$color-gray-200: #e5e7eb;
+$color-gray-300: #d1d5db;
+$color-gray-400: #9ca3af;
+$color-gray-500: #6b7280;
+$color-gray-600: #4b5563;
+$color-gray-700: #374151;
+$color-gray-800: #1f2937;
+$color-gray-900: #111827;
+
+// Text Colors
+$color-text-primary: #ffffff;
+$color-text-secondary: #d1d5db;
+$color-text-tertiary: #9ca3af;
+$color-text-muted: #6b7280;
+$color-text-inverted: #000000;
+
+// Background Variants
+$color-surface: #030303;
+$color-surface-light: #1f2937;
+$color-surface-lighter: #374151;
+$color-card: #030303;
+$color-overlay: rgba(0, 0, 0, 0.85);
+$color-overlay-light: rgba(0, 0, 0, 0.5);
+
+// Borders
+$color-border: #e5e7eb;
+$color-border-light: #f3f4f6;
+$color-border-dark: #374151;
+
+// ============================================================================
+// TYPOGRAPHY
+// ============================================================================
+
+// Font Families
+$font-sans: 'Bricolage', 'Inter', 'SF Pro Text', 'Segoe UI', sans-serif;
+$font-serif: 'Playfair Display', 'Georgia', serif;
+$font-mono: 'SF Mono', 'Menlo', 'monospace';
+$font-body: 'Inter', 'SF Pro Text', 'Segoe UI', sans-serif;
+
+// Font Sizes
+$text-display-large: 64px;
+$text-display: 56px;
+$text-headline-1: 48px;
+$text-headline-2: 36px;
+$text-headline-3: 32px;
+$text-headline-4: 28px;
+$text-headline-5: 24px;
+$text-title-1: 20px;
+$text-title-2: 18px;
+$text-body-large: 18px;
+$text-body: 16px;
+$text-body-small: 14px;
+$text-caption: 12px;
+$text-label: 12px;
+
+// Font Weights
+$font-weight-thin: 100;
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+$font-weight-black: 900;
+
+// Line Heights
+$line-height-dense: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+$line-height-loose: 2;
+
+// Letter Spacing
+$letter-spacing-tight: -0.02em;
+$letter-spacing-normal: 0;
+$letter-spacing-wide: 0.02em;
+$letter-spacing-wider: 0.05em;
+$letter-spacing-widest: 0.1em;
+
+// ============================================================================
+// SPACING SYSTEM (8px base)
+// ============================================================================
+
+$spacing-0: 0;
+$spacing-1: 4px;
+$spacing-2: 8px;
+$spacing-3: 12px;
+$spacing-4: 16px;
+$spacing-5: 20px;
+$spacing-6: 24px;
+$spacing-7: 28px;
+$spacing-8: 32px;
+$spacing-9: 36px;
+$spacing-10: 40px;
+$spacing-12: 48px;
+$spacing-14: 56px;
+$spacing-16: 64px;
+$spacing-20: 80px;
+$spacing-24: 96px;
+$spacing-28: 112px;
+$spacing-32: 128px;
+$spacing-36: 144px;
+
+// Common spacing shortcuts
+$gap-xs: $spacing-2;
+$gap-sm: $spacing-4;
+$gap-md: $spacing-6;
+$gap-lg: $spacing-8;
+$gap-xl: $spacing-12;
+$gap-2xl: $spacing-16;
+
+$padding-xs: $spacing-2;
+$padding-sm: $spacing-4;
+$padding-md: $spacing-6;
+$padding-lg: $spacing-8;
+$padding-xl: $spacing-12;
+$padding-2xl: $spacing-16;
+
+$margin-xs: $spacing-2;
+$margin-sm: $spacing-4;
+$margin-md: $spacing-6;
+$margin-lg: $spacing-8;
+$margin-xl: $spacing-12;
+$margin-2xl: $spacing-16;
+
+// ============================================================================
+// BORDER RADIUS
+// ============================================================================
+
+$radius-none: 0;
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-2xl: 24px;
+$radius-full: 9999px;
+
+// ============================================================================
+// SHADOWS
+// ============================================================================
+
+$shadow-none: none;
+$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm:
+  0 1px 3px 0 rgba(0, 0, 0, 0.1),
+  0 1px 2px -1px rgba(0, 0, 0, 0.1);
+$shadow-md:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$shadow-lg:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$shadow-xl:
+  0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  0 8px 10px -6px rgba(0, 0, 0, 0.1);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+// Glow shadows (for dark theme)
+$shadow-glow-sm: 0 0 10px rgba(247, 222, 18, 0.2);
+$shadow-glow-md: 0 0 20px rgba(247, 222, 18, 0.3);
+$shadow-glow-lg: 0 0 40px rgba(247, 222, 18, 0.4);
+
+// ============================================================================
+// TRANSITIONS & TIMING
+// ============================================================================
+
+// Durations
+$duration-fast: 150ms;
+$duration-normal: 300ms;
+$duration-slow: 500ms;
+$duration-slower: 800ms;
+
+// Easing Functions
+$ease-out: cubic-bezier(0.24, 0, 0.8, 1);
+$ease-in: cubic-bezier(0.24, 0, 0.8, 1);
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-linear: linear;
+$ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+// ============================================================================
+// Z-INDEX SCALE
+// ============================================================================
+
+$z-hidden: -1;
+$z-base: 0;
+$z-dropdown: 100;
+$z-sticky: 200;
+$z-fixed: 300;
+$z-modal-backdrop: 400;
+$z-modal: 500;
+$z-popover: 600;
+$z-tooltip: 700;
+$z-loader: 999;
+$z-loader-high: 1100;
+
+// ============================================================================
+// BREAKPOINTS (Mobile First)
+// ============================================================================
+
+$breakpoint-mobile: 320px;
+$breakpoint-tablet: 641px;
+$breakpoint-desktop: 1025px;
+$breakpoint-wide: 1441px;
+$breakpoint-ultrawide: 1920px;
+
+// Media Query Mixins
+@mixin media-mobile {
+  @media (min-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+@mixin media-tablet {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin media-tablet-max {
+  @media (max-width: $breakpoint-desktop - 1) {
+    @content;
+  }
+}
+
+@mixin media-desktop {
+  @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+@mixin media-wide {
+  @media (min-width: $breakpoint-wide) {
+    @content;
+  }
+}
+
+@mixin media-ultrawide {
+  @media (min-width: $breakpoint-ultrawide) {
+    @content;
+  }
+}
+
+@mixin media-touch {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+@mixin media-no-touch {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin media-reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// ============================================================================
+// TYPOGRAPHY MIXINS
+// ============================================================================
+
+@mixin typography-display-large {
+  font-family: $font-sans;
+  font-size: $text-display-large;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-dense;
+  letter-spacing: $letter-spacing-tight;
+}
+
+@mixin typography-display {
+  font-family: $font-sans;
+  font-size: $text-display;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-dense;
+  letter-spacing: $letter-spacing-tight;
+}
+
+@mixin typography-headline-1 {
+  font-family: $font-sans;
+  font-size: $text-headline-1;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-dense;
+  letter-spacing: $letter-spacing-tight;
+}
+
+@mixin typography-headline-2 {
+  font-family: $font-sans;
+  font-size: $text-headline-2;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-dense;
+  letter-spacing: $letter-spacing-tight;
+}
+
+@mixin typography-headline-3 {
+  font-family: $font-sans;
+  font-size: $text-headline-3;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-tight;
+}
+
+@mixin typography-headline-4 {
+  font-family: $font-sans;
+  font-size: $text-headline-4;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-normal;
+}
+
+@mixin typography-title-1 {
+  font-family: $font-sans;
+  font-size: $text-title-1;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-normal;
+}
+
+@mixin typography-body-large {
+  font-family: $font-body;
+  font-size: $text-body-large;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-normal;
+}
+
+@mixin typography-body {
+  font-family: $font-body;
+  font-size: $text-body;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-normal;
+}
+
+@mixin typography-body-small {
+  font-family: $font-body;
+  font-size: $text-body-small;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-normal;
+}
+
+@mixin typography-caption {
+  font-family: $font-body;
+  font-size: $text-caption;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-wide;
+}
+
+// ============================================================================
+// UTILITY MIXINS
+// ============================================================================
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin absolute-cover {
+  position: absolute;
+  inset: 0;
+}
+
+@mixin fixed-cover {
+  position: fixed;
+  inset: 0;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin gradient-text($color-start, $color-end) {
+  background: linear-gradient(135deg, $color-start, $color-end);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin glass-morphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// ============================================================================
+// GRADIENTS
+// ============================================================================
+
+$gradient-primary-to-dark: linear-gradient(
+  135deg,
+  $color-primary,
+  $color-primary-dark
+);
+$gradient-dark-to-black: linear-gradient(135deg, $color-gray-900, $color-black);
+$gradient-overlay: linear-gradient(
+  135deg,
+  rgba(2, 6, 12, 0.85),
+  rgba(8, 16, 20, 0.72) 40%,
+  rgba(2, 6, 12, 0.9)
+);
+$gradient-glow: linear-gradient(
+  135deg,
+  rgba(247, 222, 18, 0.2),
+  rgba(247, 222, 18, 0.05)
+);

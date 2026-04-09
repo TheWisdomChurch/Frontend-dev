@@ -1,75 +1,105 @@
-// app/page.tsx
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import dynamic from 'next/dynamic';
-import HeroSection from '@/components/ui/Homepage/heromain';
-import HeroHighlights from '@/components/ui/Homepage/HeroHighlights';
-import EventAdModal from '@/components/ui/Homepage/EventAdModal';
-import ConfessionPopup from '@/components/ui/ConfessionPopup';
-import MobileDebug from '@/components/utils/mobileDebug';
+import React, { useEffect, useState, useMemo } from 'react';
+import nextDynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { Megaphone } from 'lucide-react';
+import Header from '@/components/common/Header';
+import Footer from '@/components/common/Footer';
 
-const WhatWeDo = dynamic(() => import('@/components/ui/Homepage/WhatWeDo'), {
+export const dynamic = 'force-dynamic';
+
+// ============================================================================
+// DYNAMIC IMPORTS - Using reorganized feature components
+// ============================================================================
+
+const HeroMain = nextDynamic(
+  () => import('@/components/features/hero/HeroMain'),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const HeroHighlights = nextDynamic(
+  () => import('@/components/features/hero/HeroHighlights'),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const WhatWeDo = nextDynamic(() => import('@/components/features/WhatWeDo'), {
   ssr: true,
   loading: () => null,
 });
-const EventsShowcase = dynamic(
-  () => import('@/components/ui/Homepage/EventsShowcase'),
+
+const EventsShowcase = nextDynamic(
+  () => import('@/components/features/events/EventsShowcase'),
+  { ssr: false, loading: () => null }
+);
+
+const SeniorPastor = nextDynamic(
+  () => import('@/components/features/leadership/SeniorPastor'),
   { ssr: true, loading: () => null }
 );
-const SeniorPastor = dynamic(
-  () => import('@/components/ui/Homepage/SeniorPastor'),
+
+const JoinUs = nextDynamic(
+  () => import('@/components/features/events/JoinUs'),
   {
-    ssr: true,
-    loading: () => null,
-  }
-);
-// const AssociatePastors = dynamic(
-//   () => import('@/components/ui/Homepage/AssociatePastors'),
-//   { ssr: true, loading: () => <div className="min-h-[220px]" /> }
-// );
-const JoinWisdomHouse = dynamic(
-  () => import('@/components/ui/Homepage/JoinUs'),
-  {
-    ssr: true,
-    loading: () => null,
-  }
-);
-const Testimonial = dynamic(
-  () => import('@/components/ui/Homepage/Testimonials'),
-  {
-    ssr: true,
-    loading: () => null,
-  }
-);
-const OnlineGiving = dynamic(
-  () => import('@/components/ui/Homepage/OnlineGiving'),
-  {
-    ssr: true,
-    loading: () => null,
-  }
-);
-const ResourceSection = dynamic(
-  () => import('@/components/ui/Homepage/Resource'),
-  {
-    ssr: true,
+    ssr: false,
     loading: () => null,
   }
 );
 
+const Testimonials = nextDynamic(
+  () => import('@/components/features/testimonials/Testimonials'),
+  { ssr: true, loading: () => null }
+);
+
+const OnlineGiving = nextDynamic(
+  () => import('@/components/features/events/OnlineGiving'),
+  { ssr: true, loading: () => null }
+);
+
+const ResourceSection = nextDynamic(
+  () => import('@/components/features/resources/Resource'),
+  { ssr: true, loading: () => null }
+);
+
+const EventAdModal = nextDynamic(
+  () => import('@/components/ui/modals/EventAdModal'),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const ConfessionPopup = nextDynamic(
+  () => import('@/components/ui/modals/ConfessionPopup'),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+// ============================================================================
+// HOMEPAGE COMPONENT
+// ============================================================================
+
 export default function Home() {
+  const { colorScheme } = useTheme();
+
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
   const [showConfessionPopup, setShowConfessionPopup] = useState(true);
-  const { colorScheme } = useTheme();
 
   const eventStorageKey = 'wc_event_ad_next_show_session_v2';
   const autoOpenDelayMs = 1200;
   const closeCooldownMs = 1000 * 60 * 20;
   const remindCooldownMs = 1000 * 60 * 45;
 
+  // Event advertising modal data
   const eventAd = useMemo(
     () => ({
       id: 'wpc-2026',
@@ -89,6 +119,7 @@ export default function Home() {
     []
   );
 
+  // Initialize modal timing on mount
   useEffect(() => {
     const now = Date.now();
     const nextAllowedRaw =
@@ -105,6 +136,7 @@ export default function Home() {
     setNextAdAt(now + autoOpenDelayMs);
   }, [autoOpenDelayMs, eventStorageKey]);
 
+  // Setup modal auto-open timer
   useEffect(() => {
     if (nextAdAt === null) return;
 
@@ -121,6 +153,7 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [nextAdAt]);
 
+  // Cooldown persistence for modal
   const persistAdCooldown = (cooldownMs: number) => {
     const nextAllowedAt = Date.now() + cooldownMs;
     if (typeof window !== 'undefined') {
@@ -141,50 +174,67 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505]">
+      {/* Animated background gradient */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-80"
         style={{
-          background: `radial-gradient(circle at 20% 20%, ${colorScheme.opacity.primary20} 0%, transparent 45%), radial-gradient(circle at 80% 10%, ${colorScheme.opacity.primary10} 0%, transparent 40%), radial-gradient(circle at 50% 90%, ${colorScheme.opacity.primary10} 0%, transparent 40%)`,
+          background: `radial-gradient(circle at 20% 20%, ${colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.2)'} 0%, transparent 45%), radial-gradient(circle at 80% 10%, ${colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'} 0%, transparent 40%), radial-gradient(circle at 50% 90%, ${colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'} 0%, transparent 40%)`,
           filter: 'blur(60px)',
         }}
         data-parallax-global="0.2"
       />
-      <main className="flex-1 w-full">
-        {process.env.NODE_ENV === 'development' && <MobileDebug />}
 
+      <Header />
+
+      <main className="flex-1 w-full">
         <div className="flex flex-col">
-          <HeroSection />
+          {/* Hero Section with video background */}
+          <HeroMain />
+
+          {/* Hero Highlights Section */}
           <div data-gsap="reveal">
             <HeroHighlights />
           </div>
+
+          {/* What We Do Section */}
           <div data-gsap="reveal">
             <WhatWeDo />
           </div>
+
+          {/* Events Showcase - Fetches from API */}
           <div data-gsap="reveal">
             <EventsShowcase />
           </div>
+
+          {/* Senior Pastor Message Section */}
           <div data-gsap="reveal">
             <SeniorPastor />
           </div>
-          {/* <div data-gsap="reveal">
-            <AssociatePastors />
-          </div> */}
+
+          {/* Call to Action - Join Us */}
           <div id="join">
             <div data-gsap="reveal">
-              <JoinWisdomHouse />
+              <JoinUs />
             </div>
           </div>
+
+          {/* Testimonials Section - Fetches from API */}
           <div data-gsap="reveal">
-            <Testimonial />
+            <Testimonials />
           </div>
+
+          {/* Online Giving Section */}
           <div data-gsap="reveal">
             <OnlineGiving />
           </div>
+
+          {/* Resources Section */}
           <div data-gsap="reveal">
             <ResourceSection />
           </div>
         </div>
 
+        {/* Event Advertisement Modal */}
         <EventAdModal
           open={showModal}
           event={eventAd}
@@ -192,6 +242,7 @@ export default function Home() {
           onRemindLater={handleRemindLater}
         />
 
+        {/* WPC 2026 Float Button */}
         {!showModal && (
           <button
             type="button"
@@ -200,14 +251,12 @@ export default function Home() {
             className="fixed bottom-4 right-4 sm:bottom-5 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 sm:px-4 py-2.5 text-[11px] sm:text-sm font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
             style={{ animation: 'fade-up-keyframe 0.5s ease-out' }}
           >
-            <Megaphone
-              className="h-4 w-4"
-              style={{ color: colorScheme.primary }}
-            />
+            <span className="text-lg">📢</span>
             <span>WPC 2026</span>
           </button>
         )}
 
+        {/* Confession Popup */}
         {!showModal && showConfessionPopup && (
           <ConfessionPopup
             onClose={() => setShowConfessionPopup(false)}
@@ -215,6 +264,8 @@ export default function Home() {
           />
         )}
       </main>
+
+      <Footer />
     </div>
   );
 }

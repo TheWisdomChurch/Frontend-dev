@@ -6,17 +6,19 @@ import {
   playfair,
 } from '@/components/fonts/fonts';
 
+import MetaPixel from '@/components/analytics/MetaPixel';
+import ClientHeader from '@/components/common/ClientHeader';
+import ClientFooter from '@/components/common/ClientFooter';
+import ClientScrollToTop from '@/components/common/ClientscrollTop';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import ScrollHandler from '@/components/common/ClientScrollHandler';
 import { ThemeProvider } from '@/components/contexts/ThemeContext';
 import { ServiceUnavailableProvider } from '@/components/contexts/ServiceUnavailableContext';
 import { HeaderProvider } from '@/components/providers/NavProviders';
 import ReduxProvider from '@/components/providers/ReduxProvider';
-import ErrorBoundary from '@/components/layout/ErrorBoundary';
-import ClientHeader from '@/components/layout/ClientHeader';
-import ClientFooter from '@/components/layout/ClientFooter';
-import ClientScrollToTop from '@/components/layout/ClientscrollTop';
-import ScrollHandler from '@/components/layout/ClientScrollHandler';
 import AppStartupLoader from '@/components/providers/AppStartupLoader';
 import CookieConsentBanner from '@/components/ui/CookieConsentBanner';
+import { cn } from '@/lib/cn';
 import './globals.scss';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
@@ -130,11 +132,11 @@ export const metadata: Metadata = {
 
   // ✅ Verification: token ONLY (NOT .html filename)
   verification: {
-  google: '06pkcDIlRljdgVWZrLV9a9tqH7FJ5xp9lMfhho7LaRU',
-},
-other: {
-  'msvalidate.01': 'CDC0BA45440A0A1BB38769D83C132EBB',
-},
+    google: '06pkcDIlRljdgVWZrLV9a9tqH7FJ5xp9lMfhho7LaRU',
+  },
+  other: {
+    'msvalidate.01': 'CDC0BA45440A0A1BB38769D83C132EBB',
+  },
 };
 
 export const viewport: Viewport = {
@@ -204,15 +206,21 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bricolageGrotesque.variable} ${worksans.variable} ${playfair.variable} antialiased`}
+      className={cn(
+        bricolageGrotesque.variable,
+        worksans.variable,
+        playfair.variable,
+        'antialiased'
+      )}
       suppressHydrationWarning
     >
-      <body className={`${worksans.className} font-sans`}>
+      <body className={cn(worksans.className, 'font-sans')}>
         {/* ✅ Valid JSON-LD only (no <meta> inside JSON.stringify) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
+        <MetaPixel />
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

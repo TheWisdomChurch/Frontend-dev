@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { BaseModal } from '@/components/modal/Base';
+import { BaseModal } from '@/components/ui/modals/Base';
 import { Button } from '@/components/utils/buttons';
 import { BodySM, Caption } from '@/components/text';
 
@@ -58,7 +58,8 @@ export default function CookieConsentBanner() {
   const [mounted, setMounted] = useState(false);
   const [bannerVisible, setBannerVisible] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [preferences, setPreferences] = useState<CookiePreferences>(basePreferences);
+  const [preferences, setPreferences] =
+    useState<CookiePreferences>(basePreferences);
 
   useEffect(() => {
     setMounted(true);
@@ -80,7 +81,9 @@ export default function CookieConsentBanner() {
     );
   };
 
-  const applyPreferences = (next: Omit<CookiePreferences, 'updatedAt' | 'version'>) => {
+  const applyPreferences = (
+    next: Omit<CookiePreferences, 'updatedAt' | 'version'>
+  ) => {
     const payload: CookiePreferences = {
       ...next,
       essential: true,
@@ -94,7 +97,8 @@ export default function CookieConsentBanner() {
   };
 
   const preferencesSummary = useMemo(() => {
-    if (!preferences.analytics && !preferences.marketing) return 'Essential only';
+    if (!preferences.analytics && !preferences.marketing)
+      return 'Essential only';
     if (preferences.analytics && preferences.marketing) return 'All cookies';
     if (preferences.analytics) return 'Essential + analytics';
     return 'Essential + marketing';
@@ -110,15 +114,21 @@ export default function CookieConsentBanner() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1">
-                  <ShieldCheck className="h-3.5 w-3.5" style={{ color: colorScheme.primary }} />
+                  <ShieldCheck
+                    className="h-3.5 w-3.5"
+                    style={{ color: colorScheme.primary }}
+                  />
                   <Caption className="uppercase tracking-[0.12em] text-white/70">
                     Cookie Settings
                   </Caption>
                 </div>
                 <BodySM className="max-w-xl leading-relaxed text-white/80">
-                  We use cookies for essential site functionality and optional analytics.
-                  Choose what you want to allow. See our{' '}
-                  <Link href="/cookies" className="underline underline-offset-4">
+                  We use cookies for essential site functionality and optional
+                  analytics. Choose what you want to allow. See our{' '}
+                  <Link
+                    href="/cookies"
+                    className="underline underline-offset-4"
+                  >
                     Cookies & Privacy
                   </Link>{' '}
                   page for details.
@@ -191,21 +201,24 @@ export default function CookieConsentBanner() {
             {
               key: 'essential',
               title: 'Essential cookies',
-              description: 'Required for navigation, forms, and secure sessions.',
+              description:
+                'Required for navigation, forms, and secure sessions.',
               enabled: true,
               locked: true,
             },
             {
               key: 'analytics',
               title: 'Analytics cookies',
-              description: 'Help us understand usage so we can improve performance.',
+              description:
+                'Help us understand usage so we can improve performance.',
               enabled: preferences.analytics,
               locked: false,
             },
             {
               key: 'marketing',
               title: 'Marketing cookies',
-              description: 'Used for campaign performance and engagement tracking.',
+              description:
+                'Used for campaign performance and engagement tracking.',
               enabled: preferences.marketing,
               locked: false,
             },
@@ -224,18 +237,30 @@ export default function CookieConsentBanner() {
                 aria-pressed={item.enabled}
                 onClick={() => {
                   if (item.key === 'analytics') {
-                    setPreferences(prev => ({ ...prev, analytics: !prev.analytics }));
+                    setPreferences(prev => ({
+                      ...prev,
+                      analytics: !prev.analytics,
+                    }));
                   }
                   if (item.key === 'marketing') {
-                    setPreferences(prev => ({ ...prev, marketing: !prev.marketing }));
+                    setPreferences(prev => ({
+                      ...prev,
+                      marketing: !prev.marketing,
+                    }));
                   }
                 }}
                 className={`relative h-6 w-11 rounded-full border transition-all ${
-                  item.locked ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'
+                  item.locked
+                    ? 'cursor-not-allowed opacity-60'
+                    : 'cursor-pointer'
                 }`}
                 style={{
-                  backgroundColor: item.enabled ? colorScheme.primary : 'rgba(255,255,255,0.14)',
-                  borderColor: item.enabled ? colorScheme.primary : 'rgba(255,255,255,0.24)',
+                  backgroundColor: item.enabled
+                    ? colorScheme.primary
+                    : 'rgba(255,255,255,0.14)',
+                  borderColor: item.enabled
+                    ? colorScheme.primary
+                    : 'rgba(255,255,255,0.24)',
                 }}
               >
                 <span
@@ -291,4 +316,3 @@ export default function CookieConsentBanner() {
     </>
   );
 }
-

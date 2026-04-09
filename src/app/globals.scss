@@ -4,6 +4,16 @@
 @use '../styles/motion';
 @use '../styles/utilities';
 
+// Import unified design system
+@import '../styles/colors';
+@import '../styles/typography';
+@import '../styles/spacing';
+@import '../styles/buttons';
+
+// Import legacy design system files
+@import '../styles/variables';
+@import '../styles/animations';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -15,11 +15,12 @@ echo ""
 echo "[pre-push] Running repository validation checks..."
 
 echo "[pre-push] TypeScript..."
-node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck
+mkdir -p .cache/tsc
+node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck --incremental --tsBuildInfoFile .cache/tsc/pre-push.tsbuildinfo
 echo "[pre-push] TypeScript passed."
 
 echo "[pre-push] ESLint..."
-node ./node_modules/eslint/bin/eslint.js . --max-warnings 0 --no-warn-ignored
+node ./node_modules/eslint/bin/eslint.js . --cache --cache-location .cache/eslint/ --max-warnings 0 --no-warn-ignored
 echo "[pre-push] ESLint passed."
 
 if [[ "${SKIP_PREPUSH_BUILD:-0}" == "1" ]]; then
@@ -28,7 +29,9 @@ if [[ "${SKIP_PREPUSH_BUILD:-0}" == "1" ]]; then
 fi
 
 echo "[pre-push] Production build..."
-node ./node_modules/next/dist/bin/next build
+# This machine's native SWC path is crashing with a low-level bus error.
+# Force the wasm fallback so pre-push still validates the real production build.
+NEXT_TEST_WASM=1 node ./node_modules/next/dist/bin/next build --no-lint
 echo "[pre-push] Build passed."
 
 echo "[pre-push] All checks passed."

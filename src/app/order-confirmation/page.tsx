@@ -6,7 +6,13 @@ import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { gsap } from 'gsap';
 import { CheckCircle, ShoppingBag, Home } from 'lucide-react';
-import { Section, Container, FlexboxLayout } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { H2, BaseText, LightText } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -147,4 +153,3 @@ const OrderConfirmationPage = () => {
 };
 
 export default OrderConfirmationPage;
-

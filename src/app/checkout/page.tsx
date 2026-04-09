@@ -5,7 +5,13 @@ import { useAppSelector } from '@/components/utils/hooks/redux';
 import CheckoutForm from '@/components/ui/Store/checkoutForm';
 import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
-import { Section, Container, FlexboxLayout } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { H2, LightText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ShoppingBag } from 'lucide-react';

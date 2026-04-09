@@ -4,8 +4,14 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/components/text';
-import { Section, Container } from '@/components/layout';
-import PageHero from '@/components/ui/PageHero';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
+import PageHero from '@/components/features/hero/PageHero';
 import { resourceLinks } from '@/lib/data';
 import { Radio, Sparkles, X, Youtube, Bell, Search } from 'lucide-react';
 

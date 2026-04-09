@@ -1,0 +1,205 @@
+// Spacing System
+// Unified spacing scale based on 8px base unit
+// Ensures consistent padding, margin, and gaps across the entire application
+
+// Base Unit
+$space-unit: 8px;
+
+// Spacing Scale
+$space-0: 0;
+$space-1: $space-unit * 1; // 8px
+$space-2: $space-unit * 2; // 16px
+$space-3: $space-unit * 3; // 24px
+$space-4: $space-unit * 4; // 32px
+$space-5: $space-unit * 5; // 40px
+$space-6: $space-unit * 6; // 48px
+$space-7: $space-unit * 7; // 56px
+$space-8: $space-unit * 8; // 64px
+$space-9: $space-unit * 9; // 72px
+$space-10: $space-unit * 10; // 80px
+$space-12: $space-unit * 12; // 96px
+$space-14: $space-unit * 14; // 112px
+$space-16: $space-unit * 16; // 128px
+$space-20: $space-unit * 20; // 160px
+
+// Common Spacing Shortcuts
+$padding-xs: $space-1;
+$padding-sm: $space-2;
+$padding-md: $space-3;
+$padding-lg: $space-4;
+$padding-xl: $space-6;
+$padding-2xl: $space-8;
+
+$margin-xs: $space-1;
+$margin-sm: $space-2;
+$margin-md: $space-3;
+$margin-lg: $space-4;
+$margin-xl: $space-6;
+$margin-2xl: $space-8;
+
+$gap-xs: $space-1;
+$gap-sm: $space-2;
+$gap-md: $space-3;
+$gap-lg: $space-4;
+$gap-xl: $space-6;
+
+// Component Spacing
+$component-padding-sm: $space-2;
+$component-padding-md: $space-3;
+$component-padding-lg: $space-4;
+
+$component-margin-sm: $space-2;
+$component-margin-md: $space-3;
+$component-margin-lg: $space-4;
+
+// Section Spacing (vertical rhythm)
+$section-spacing-sm: $space-6;
+$section-spacing-md: $space-8;
+$section-spacing-lg: $space-10;
+$section-spacing-xl: $space-12;
+
+// Utility Classes
+.p-0 {
+  padding: $space-0;
+}
+.p-1 {
+  padding: $space-1;
+}
+.p-2 {
+  padding: $space-2;
+}
+.p-3 {
+  padding: $space-3;
+}
+.p-4 {
+  padding: $space-4;
+}
+.p-6 {
+  padding: $space-6;
+}
+.p-8 {
+  padding: $space-8;
+}
+
+.px-2 {
+  padding-left: $space-2;
+  padding-right: $space-2;
+}
+.px-3 {
+  padding-left: $space-3;
+  padding-right: $space-3;
+}
+.px-4 {
+  padding-left: $space-4;
+  padding-right: $space-4;
+}
+.px-6 {
+  padding-left: $space-6;
+  padding-right: $space-6;
+}
+
+.py-2 {
+  padding-top: $space-2;
+  padding-bottom: $space-2;
+}
+.py-3 {
+  padding-top: $space-3;
+  padding-bottom: $space-3;
+}
+.py-4 {
+  padding-top: $space-4;
+  padding-bottom: $space-4;
+}
+.py-6 {
+  padding-top: $space-6;
+  padding-bottom: $space-6;
+}
+.py-8 {
+  padding-top: $space-8;
+  padding-bottom: $space-8;
+}
+
+.m-0 {
+  margin: $space-0;
+}
+.m-1 {
+  margin: $space-1;
+}
+.m-2 {
+  margin: $space-2;
+}
+.m-3 {
+  margin: $space-3;
+}
+.m-4 {
+  margin: $space-4;
+}
+.m-6 {
+  margin: $space-6;
+}
+.m-8 {
+  margin: $space-8;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mt-2 {
+  margin-top: $space-2;
+}
+.mt-3 {
+  margin-top: $space-3;
+}
+.mt-4 {
+  margin-top: $space-4;
+}
+.mt-6 {
+  margin-top: $space-6;
+}
+.mt-8 {
+  margin-top: $space-8;
+}
+
+.mb-2 {
+  margin-bottom: $space-2;
+}
+.mb-3 {
+  margin-bottom: $space-3;
+}
+.mb-4 {
+  margin-bottom: $space-4;
+}
+.mb-6 {
+  margin-bottom: $space-6;
+}
+.mb-8 {
+  margin-bottom: $space-8;
+}
+
+.gap-2 {
+  gap: $space-2;
+}
+.gap-3 {
+  gap: $space-3;
+}
+.gap-4 {
+  gap: $space-4;
+}
+.gap-6 {
+  gap: $space-6;
+}
+
+// Responsive Section Spacing
+@media (max-width: 768px) {
+  .section-spacing-sm {
+    margin: $space-4 0;
+  }
+  .section-spacing-md {
+    margin: $space-6 0;
+  }
+  .section-spacing-lg {
+    margin: $space-8 0;
+  }
+}
