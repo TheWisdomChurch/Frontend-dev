@@ -29,23 +29,19 @@ const CartSidebar: React.FC = () => {
   const { items, total, itemCount, isCartOpen } = useAppSelector(
     state => state.cart
   );
-  const { colorScheme } = useTheme();
+  const { colorScheme, isDark } = useTheme();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const isDarkMode = colorScheme.background === '#000000';
-
   // Theme-based styles
-  const sidebarBackground = isDarkMode ? colorScheme.black : colorScheme.white;
-  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode ? colorScheme.border : colorScheme.borderLight;
-  const itemBackground = isDarkMode
-    ? colorScheme.surface
+  const sidebarBackground = isDark ? '#0b0c10' : colorScheme.white;
+  const textColor = colorScheme.text;
+  const secondaryTextColor = colorScheme.textSecondary;
+  const borderColor = isDark ? 'rgba(255,255,255,0.12)' : colorScheme.border;
+  const itemBackground = isDark
+    ? 'rgba(255,255,255,0.04)'
     : colorScheme.backgroundSecondary;
-  const hoverBackground = isDarkMode
+  const hoverBackground = isDark
     ? colorScheme.opacity.white10
     : colorScheme.opacity.black10;
 
@@ -200,9 +196,9 @@ const CartSidebar: React.FC = () => {
                         backgroundColor: 'transparent',
                       }}
                       onMouseEnter={e => {
-                        e.currentTarget.style.backgroundColor = isDarkMode
+                        e.currentTarget.style.backgroundColor = isDark
                           ? colorScheme.opacity.error10
-                          : colorScheme.opacity.error5;
+                          : colorScheme.opacity.error20;
                       }}
                       onMouseLeave={e => {
                         e.currentTarget.style.backgroundColor = 'transparent';

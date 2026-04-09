@@ -32,19 +32,17 @@ const SeriesCard = ({
   isUngrouped = false,
   onClick,
 }: SeriesCardProps) => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
-      cardBackground: isDarkMode ? colorScheme.white : colorScheme.surface,
-      textColor: isDarkMode ? colorScheme.black : colorScheme.white,
+      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
+      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
       secondaryTextColor: isDarkMode
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
-      borderColor: isDarkMode
-        ? colorScheme.primary
-        : `${colorScheme.primary}40`,
+      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );
@@ -200,21 +198,21 @@ interface SermonCardProps {
 }
 
 const SermonCardComponent = ({ video }: SermonCardProps) => {
-  const { colorScheme } = useTheme();
+  const { colorScheme, isDark } = useTheme();
   const [showPlayer, setShowPlayer] = useState(false);
 
-  const isDarkMode = colorScheme.background === '#000000';
+  const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
-      cardBackground: isDarkMode ? colorScheme.white : colorScheme.surface,
-      textColor: isDarkMode ? colorScheme.black : colorScheme.white,
+      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
+      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
       secondaryTextColor: isDarkMode
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
-      borderColor: isDarkMode ? colorScheme.border : `${colorScheme.primary}40`,
-      modalBackground: isDarkMode ? colorScheme.white : '#000000f0',
-      modalTextColor: isDarkMode ? colorScheme.black : colorScheme.white,
+      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      modalBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
+      modalTextColor: isDarkMode ? colorScheme.text : colorScheme.heading,
     }),
     [isDarkMode, colorScheme]
   );
@@ -308,8 +306,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             className="text-xs px-2 py-1 rounded font-medium"
             style={{
               backgroundColor: isDarkMode
-                ? colorScheme.surface
-                : colorScheme.black,
+                ? colorScheme.surfaceVariant
+                : colorScheme.opacity.black10,
               color: themeStyles.secondaryTextColor,
             }}
           >
@@ -372,18 +370,18 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
                 style={{
                   color: themeStyles.modalTextColor,
                   backgroundColor: isDarkMode
-                    ? colorScheme.opacity.black10
-                    : colorScheme.opacity.white10,
+                    ? colorScheme.opacity.white10
+                    : colorScheme.opacity.black10,
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.opacity.black20
-                    : colorScheme.opacity.white20;
+                    ? colorScheme.opacity.white20
+                    : colorScheme.opacity.black20;
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.opacity.black10
-                    : colorScheme.opacity.white10;
+                    ? colorScheme.opacity.white10
+                    : colorScheme.opacity.black10;
                 }}
               >
                 <span className="text-2xl leading-none">×</span>
@@ -457,20 +455,16 @@ const SearchFiltersComponent = ({
   handleResetFilters,
   filteredVideos,
 }: SearchFiltersProps) => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
-      cardBackground: isDarkMode ? colorScheme.white : colorScheme.surface,
-      textColor: isDarkMode ? colorScheme.black : colorScheme.white,
-      borderColor: isDarkMode
-        ? colorScheme.primary
-        : `${colorScheme.primary}40`,
-      inputBackground: isDarkMode ? colorScheme.white : colorScheme.surface,
-      inputBorderColor: isDarkMode
-        ? colorScheme.borderLight
-        : colorScheme.border,
+      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
+      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
+      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      inputBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
+      inputBorderColor: isDarkMode ? colorScheme.border : colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );
@@ -517,9 +511,9 @@ const SearchFiltersComponent = ({
               onChange={e => handleSeriesFilterChange(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               style={{
-                backgroundColor: colorScheme.white,
+                backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
-                color: colorScheme.black,
+                color: themeStyles.textColor,
               }}
             >
               {seriesOptions.map((series: string) => (
@@ -545,9 +539,9 @@ const SearchFiltersComponent = ({
               onChange={e => handlePreacherChange(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               style={{
-                backgroundColor: colorScheme.white,
+                backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
-                color: colorScheme.black,
+                color: themeStyles.textColor,
               }}
             >
               {preacherOptions.map((preacher: string) => (
@@ -569,9 +563,9 @@ const SearchFiltersComponent = ({
               onChange={e => handleYearChange(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               style={{
-                backgroundColor: colorScheme.white,
+                backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
-                color: colorScheme.black,
+                color: themeStyles.textColor,
               }}
             >
               {yearOptions.map((year: string) => (
@@ -617,8 +611,8 @@ const QuickFilters = ({
   onSelectGroup,
   onReset,
 }: QuickFiltersProps) => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
   const chips = useMemo(
     () => [
       'Monday Morning Prayers',
@@ -697,8 +691,8 @@ const ResultsToolbar = ({
   onSortChange,
   onClear,
 }: ResultsToolbarProps) => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
   const activeFilters = [
     searchTerm ? `Search: "${searchTerm}"` : null,
     selectedSeries !== 'all'
@@ -720,7 +714,7 @@ const ResultsToolbar = ({
           <BaseText
             className="text-sm font-semibold"
             style={{
-              color: isDarkMode ? colorScheme.white : colorScheme.black,
+              color: isDarkMode ? colorScheme.text : colorScheme.heading,
             }}
           >
             Results: {filteredCount} of {totalCount}
@@ -743,7 +737,7 @@ const ResultsToolbar = ({
             <label
               className="text-xs sm:text-sm font-semibold"
               style={{
-                color: isDarkMode ? colorScheme.white : colorScheme.black,
+                color: isDarkMode ? colorScheme.text : colorScheme.heading,
               }}
             >
               Sort by
@@ -755,9 +749,11 @@ const ResultsToolbar = ({
               }
               className="px-3 py-2 border rounded-lg text-xs sm:text-sm"
               style={{
-                backgroundColor: colorScheme.white,
+                backgroundColor: isDarkMode
+                  ? colorScheme.surface
+                  : colorScheme.white,
                 borderColor: `${colorScheme.primary}40`,
-                color: colorScheme.black,
+                color: isDarkMode ? colorScheme.text : colorScheme.heading,
               }}
             >
               <option value="newest">Newest</option>
@@ -793,6 +789,7 @@ const MobileHorizontalScroll = ({
   groupedSeries,
   handleGroupClick,
 }: MobileHorizontalScrollProps) => {
+  const { colorScheme, isDark } = useTheme();
   const _horizontalScrollRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -813,7 +810,11 @@ const MobileHorizontalScroll = ({
       <div className="text-center mt-2">
         <LightText
           className="text-sm md:text-base"
-          style={{ color: '#000000' }}
+          style={{
+            color: isDark
+              ? colorScheme.textSecondary
+              : colorScheme.textTertiary,
+          }}
         >
           ← Scroll horizontally →
         </LightText>
@@ -855,33 +856,41 @@ interface MobileHorizontalGridProps {
 const MobileHorizontalGrid = ({
   displayedVideos,
   horizontalGridRef,
-}: MobileHorizontalGridProps) => (
-  <div className="block lg:hidden">
-    <div
-      ref={horizontalGridRef}
-      className="flex space-x-4 pb-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pl-4"
-    >
-      {displayedVideos.map((video: YouTubeVideo) => (
-        <div
-          key={video.id}
-          className="sermon-card flex-shrink-0 w-[280px] snap-start"
-        >
-          <SermonCardComponent video={video} />
-        </div>
-      ))}
-    </div>
-    {displayedVideos.length > 1 && (
-      <div className="text-center mt-2">
-        <LightText
-          className="text-sm md:text-base"
-          style={{ color: '#000000' }}
-        >
-          ← Scroll horizontally →
-        </LightText>
+}: MobileHorizontalGridProps) => {
+  const { colorScheme, isDark } = useTheme();
+
+  return (
+    <div className="block lg:hidden">
+      <div
+        ref={horizontalGridRef}
+        className="flex space-x-4 pb-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pl-4"
+      >
+        {displayedVideos.map((video: YouTubeVideo) => (
+          <div
+            key={video.id}
+            className="sermon-card flex-shrink-0 w-[280px] snap-start"
+          >
+            <SermonCardComponent video={video} />
+          </div>
+        ))}
       </div>
-    )}
-  </div>
-);
+      {displayedVideos.length > 1 && (
+        <div className="text-center mt-2">
+          <LightText
+            className="text-sm md:text-base"
+            style={{
+              color: isDark
+                ? colorScheme.textSecondary
+                : colorScheme.textTertiary,
+            }}
+          >
+            ← Scroll horizontally →
+          </LightText>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface DesktopSermonsGridProps {
   displayedVideos: YouTubeVideo[];
@@ -914,8 +923,8 @@ interface CuratedSectionsProps {
 }
 
 const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
 
   const curatedGroups = useMemo(
     () => [
@@ -970,7 +979,7 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                 <BaseText
                   className="text-lg sm:text-xl font-semibold"
                   style={{
-                    color: isDarkMode ? colorScheme.white : colorScheme.black,
+                    color: isDarkMode ? colorScheme.text : colorScheme.heading,
                   }}
                 >
                   {section.title}
@@ -1033,18 +1042,20 @@ const FeaturedSection = ({
   handleWatchSeries,
   handleViewMore,
 }: FeaturedSectionProps) => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
-      sectionBackground: colorScheme.white,
-      textColor: colorScheme.black,
+      sectionBackground: isDarkMode
+        ? colorScheme.background
+        : colorScheme.backgroundSecondary,
+      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
       secondaryTextColor: isDarkMode
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
-      cardBackground: colorScheme.white,
-      borderColor: isDarkMode ? colorScheme.border : `${colorScheme.primary}40`,
+      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
+      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );
@@ -1153,8 +1164,8 @@ const FeaturedSection = ({
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.black
-                              : colorScheme.surface,
+                              ? colorScheme.surfaceVariant
+                              : colorScheme.opacity.black10,
                             color: colorScheme.primary,
                           }}
                         >
@@ -1250,8 +1261,8 @@ const FeaturedSection = ({
                           className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.black
-                              : colorScheme.surface,
+                              ? colorScheme.surfaceVariant
+                              : colorScheme.opacity.black10,
                             color: colorScheme.primary,
                           }}
                         >
@@ -1317,8 +1328,8 @@ const FeaturedSection = ({
                         className="text-xs md:text-sm px-3 py-1 rounded font-medium"
                         style={{
                           backgroundColor: isDarkMode
-                            ? colorScheme.black
-                            : colorScheme.surface,
+                            ? colorScheme.surfaceVariant
+                            : colorScheme.opacity.black10,
                           color: themeStyles.secondaryTextColor,
                         }}
                       >
@@ -1333,7 +1344,9 @@ const FeaturedSection = ({
                           className={`flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer group border ${
                             currentVideo?.id === video.id
                               ? 'border-primary/30 shadow-sm'
-                              : 'border-gray-200 hover:bg-gray-50'
+                              : isDarkMode
+                                ? 'border-white/10 hover:bg-white/5'
+                                : 'border-gray-200 hover:bg-gray-50'
                           }`}
                           style={{
                             backgroundColor:
@@ -1471,8 +1484,8 @@ const FeaturedSection = ({
 // ============================================
 
 const SermonUtil = () => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
 
   const [isClient, setIsClient] = useState(false);
 
@@ -1538,17 +1551,17 @@ const SermonUtil = () => {
 
   const themeStyles = useMemo(
     () => ({
-      sectionBackground: isDarkMode ? colorScheme.black : colorScheme.white,
-      textColor: isDarkMode ? colorScheme.white : colorScheme.black,
+      sectionBackground: isDarkMode
+        ? colorScheme.background
+        : colorScheme.backgroundSecondary,
+      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
       secondaryTextColor: isDarkMode
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
-      cardBackground: isDarkMode ? colorScheme.white : colorScheme.surface,
-      borderColor: isDarkMode ? colorScheme.border : `${colorScheme.primary}40`,
-      inputBackground: isDarkMode ? colorScheme.white : colorScheme.surface,
-      inputBorderColor: isDarkMode
-        ? colorScheme.borderLight
-        : colorScheme.border,
+      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
+      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      inputBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
+      inputBorderColor: isDarkMode ? colorScheme.border : colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );

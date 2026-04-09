@@ -22,13 +22,6 @@ import OrderConfirmation from '@/shared/ui/Store/orderDetails';
 const SimpleConfirmation = () => {
   const { colorScheme } = useTheme();
 
-  const isDarkMode = colorScheme.background === '#000000';
-  const sectionBackground = isDarkMode ? colorScheme.black : colorScheme.white;
-  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-
   useEffect(() => {
     gsap.fromTo(
       '.confirmation-element',
@@ -38,15 +31,8 @@ const SimpleConfirmation = () => {
   }, []);
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: sectionBackground }}
-    >
-      <Section
-        padding="xl"
-        fullHeight={false}
-        style={{ backgroundColor: sectionBackground }}
-      >
+    <div className="min-h-screen bg-[#050505] text-white">
+      <Section padding="xl" fullHeight={false} className="bg-[#050505]">
         <Container size="xl">
           <FlexboxLayout
             direction="column"
@@ -62,21 +48,21 @@ const SimpleConfirmation = () => {
 
             <H2
               className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight confirmation-element"
-              style={{ color: textColor }}
+              style={{ color: colorScheme.text }}
             >
               Order Confirmed!
             </H2>
 
             <LightText
               className="text-xl confirmation-element"
-              style={{ color: secondaryTextColor }}
+              style={{ color: colorScheme.textSecondary }}
             >
               Thank you for your purchase
             </LightText>
 
             <BaseText
               className="confirmation-element max-w-md"
-              style={{ color: secondaryTextColor }}
+              style={{ color: colorScheme.textSecondary }}
             >
               Your order has been successfully processed. You will receive a
               confirmation email shortly with your order details and tracking
@@ -91,15 +77,15 @@ const SimpleConfirmation = () => {
                 leftIcon={<ShoppingBag className="w-5 h-5" />}
                 onClick={() => (window.location.href = '/resources/store')}
                 style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
+                  background: colorScheme.primaryGradient,
+                  color: colorScheme.onPrimary,
                 }}
                 onMouseEnter={(e: any) => {
-                  e.currentTarget.style.backgroundColor =
-                    colorScheme.primaryDark;
+                  e.currentTarget.style.backgroundColor = colorScheme.primary;
                 }}
                 onMouseLeave={(e: any) => {
-                  e.currentTarget.style.backgroundColor = colorScheme.primary;
+                  e.currentTarget.style.background =
+                    colorScheme.primaryGradient;
                 }}
               >
                 Continue Shopping
@@ -116,9 +102,8 @@ const SimpleConfirmation = () => {
                   color: colorScheme.primary,
                 }}
                 onMouseEnter={(e: any) => {
-                  e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.opacity.primary10
-                    : colorScheme.opacity.primary5;
+                  e.currentTarget.style.backgroundColor =
+                    colorScheme.opacity.primary10;
                 }}
                 onMouseLeave={(e: any) => {
                   e.currentTarget.style.backgroundColor = 'transparent';

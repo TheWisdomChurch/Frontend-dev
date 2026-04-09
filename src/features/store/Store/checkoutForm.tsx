@@ -306,7 +306,7 @@ const CheckoutForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { items, total } = useAppSelector(state => state.cart);
-  const { colorScheme } = useTheme();
+  const { colorScheme, isDark } = useTheme();
 
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -337,21 +337,19 @@ const CheckoutForm = () => {
 
   const [orderId] = useState(generateOrderId());
 
-  const isDarkMode = colorScheme.background === '#000000';
-
   // Theme-based styles
-  const cardBackground = isDarkMode ? colorScheme.surface : colorScheme.white;
-  const inputBackground = isDarkMode
-    ? colorScheme.surfaceVariant
+  const cardBackground = isDark ? 'rgba(255,255,255,0.04)' : colorScheme.white;
+  const inputBackground = isDark
+    ? 'rgba(255,255,255,0.04)'
     : colorScheme.gray[50];
-  const inputBorderColor = isDarkMode
-    ? colorScheme.border
+  const inputBorderColor = isDark
+    ? 'rgba(255,255,255,0.14)'
     : colorScheme.borderLight;
-  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const labelColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode ? colorScheme.border : colorScheme.borderLight;
+  const textColor = colorScheme.text;
+  const labelColor = colorScheme.textSecondary;
+  const borderColor = isDark
+    ? 'rgba(255,255,255,0.14)'
+    : colorScheme.borderLight;
 
   // Delivery fee (10% of total, min 1000)
   const deliveryFee = Math.max(1000, total * 0.1);
@@ -773,7 +771,7 @@ const CheckoutForm = () => {
                       className="text-sm"
                       style={{ color: method.color }}
                     >
-                      + â‚¦{method.fee.toLocaleString()} fee
+                      + NGN {method.fee.toLocaleString()} fee
                     </Caption>
                   )}
                 </button>
@@ -788,9 +786,9 @@ const CheckoutForm = () => {
               <div
                 className="p-6 rounded-2xl"
                 style={{
-                  backgroundColor: isDarkMode
+                  backgroundColor: isDark
                     ? colorScheme.opacity.info10
-                    : colorScheme.opacity.info5,
+                    : colorScheme.opacity.info20,
                   border: `1px solid ${colorScheme.info}40`,
                 }}
               >
@@ -841,9 +839,9 @@ const CheckoutForm = () => {
                   <div
                     className="p-4 rounded-xl mt-2"
                     style={{
-                      backgroundColor: isDarkMode
+                      backgroundColor: isDark
                         ? colorScheme.opacity.warning10
-                        : colorScheme.opacity.warning5,
+                        : colorScheme.opacity.warning20,
                       border: `1px solid ${colorScheme.warning}40`,
                     }}
                   >
@@ -871,7 +869,7 @@ const CheckoutForm = () => {
                         />
                         <span>
                           Transfer the exact amount:{' '}
-                          <strong>â‚¦{grandTotal.toLocaleString()}</strong>
+                          <strong>NGN {grandTotal.toLocaleString()}</strong>
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
@@ -1071,9 +1069,9 @@ const CheckoutForm = () => {
             <div
               className="p-6 rounded-2xl mb-6"
               style={{
-                backgroundColor: isDarkMode
+                backgroundColor: isDark
                   ? colorScheme.opacity.warning10
-                  : colorScheme.opacity.warning5,
+                  : colorScheme.opacity.warning20,
                 border: `1px solid ${colorScheme.warning}40`,
               }}
             >
@@ -1126,7 +1124,7 @@ const CheckoutForm = () => {
                       weight="semibold"
                       style={{ color: colorScheme.warning }}
                     >
-                      Delivery Fee: â‚¦{deliveryFee.toLocaleString()} added to
+                      Delivery Fee: NGN {deliveryFee.toLocaleString()} added to
                       your total
                     </Caption>
                   </FlexboxLayout>
@@ -1256,12 +1254,12 @@ const CheckoutForm = () => {
                     {item.name}
                   </BaseText>
                   <Caption className="text-sm" style={{ color: labelColor }}>
-                    {item.selectedSize} â€¢ {item.selectedColor} â€¢ Qty:{' '}
+                    {item.selectedSize} | {item.selectedColor} | Qty:{' '}
                     {item.quantity}
                   </Caption>
                 </div>
                 <BaseText weight="bold" style={{ color: textColor }}>
-                  â‚¦
+                  NGN{' '}
                   {(
                     parseFloat(item.price.replace(/[^\d.]/g, '')) *
                     item.quantity
@@ -1277,7 +1275,7 @@ const CheckoutForm = () => {
               <FlexboxLayout justify="between">
                 <Caption style={{ color: labelColor }}>Subtotal</Caption>
                 <BaseText weight="semibold">
-                  â‚¦{total.toLocaleString()}
+                  NGN {total.toLocaleString()}
                 </BaseText>
               </FlexboxLayout>
 
@@ -1285,7 +1283,7 @@ const CheckoutForm = () => {
                 <FlexboxLayout justify="between">
                   <Caption style={{ color: labelColor }}>Delivery Fee</Caption>
                   <BaseText weight="semibold">
-                    â‚¦{deliveryFee.toLocaleString()}
+                    NGN {deliveryFee.toLocaleString()}
                   </BaseText>
                 </FlexboxLayout>
               )}
@@ -1304,14 +1302,14 @@ const CheckoutForm = () => {
                     className="text-2xl"
                     style={{ color: colorScheme.primary }}
                   >
-                    â‚¦{grandTotal.toLocaleString()}
+                    NGN {grandTotal.toLocaleString()}
                   </BaseText>
                   {formData.paymentMethod === 'delivery' && (
                     <Caption
                       className="text-sm mt-1"
                       style={{ color: labelColor }}
                     >
-                      Includes â‚¦{deliveryFee.toLocaleString()} delivery fee
+                      Includes NGN {deliveryFee.toLocaleString()} delivery fee
                     </Caption>
                   )}
                 </div>
@@ -1353,7 +1351,7 @@ const CheckoutForm = () => {
               Confirming Your Order...
             </FlexboxLayout>
           ) : (
-            `Confirm Order - â‚¦${grandTotal.toLocaleString()}`
+            `Confirm Order - NGN ${grandTotal.toLocaleString()}`
           )}
         </Button>
         {/* Form validation notice */}

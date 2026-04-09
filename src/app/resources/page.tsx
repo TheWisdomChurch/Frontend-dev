@@ -74,8 +74,7 @@ const quickActions = [
 ] as const;
 
 export default function ResourcesPage() {
-  const { colorScheme } = useTheme();
-  const isDark = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
 
   const [activeCategory, setActiveCategory] = useState<Category>('all');
   const [searchTerm, setSearchTerm] = useState('');
