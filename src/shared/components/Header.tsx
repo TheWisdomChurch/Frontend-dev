@@ -66,7 +66,7 @@ export default function Header() {
           aria-hidden
         />
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="h-16 flex items-center gap-3">
+          <div className="h-[72px] flex items-center gap-4">
             {/* Logo on Left */}
             <Link
               href="/"
@@ -88,34 +88,12 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* White Divider */}
-              <div className="hidden md:block h-4 w-px bg-white/20 mx-1" />
-
-              {/* Ultra Compact Stacked Logo Text */}
-              <div className="hidden md:flex flex-col leading-[0.82] -space-y-0.5">
-                <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[7px]">
-                  The
-                </Caption>
-                <Caption
-                  weight="semibold"
-                  className="text-[9px] tracking-tight leading-none"
-                  style={{ color: colorScheme.primary }}
-                >
-                  Wisdom
-                </Caption>
-                <Caption
-                  weight="semibold"
-                  className="text-[9px] tracking-tight leading-none"
-                  style={{ color: colorScheme.primary }}
-                >
-                  Church
-                </Caption>
-              </div>
+              {/* Wordmark moved to right section for cleaner spacing */}
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center justify-center flex-1">
-              <div className="flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
+              <div className="flex items-center gap-1.5 bg-black/35 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/10">
                 {extendedNavLinks.map(link => {
                   const isActive = isLinkActive(link.href);
                   const Icon = iconMap[link.icon as keyof typeof iconMap];
@@ -131,7 +109,7 @@ export default function Header() {
                       onMouseDown={handleNavMouseDown}
                       onMouseUp={handleNavMouseUp}
                       className={cn(
-                        'flex items-center gap-1.5 px-2.5 py-1 text-[12px] font-semibold transition-all duration-300 rounded-full group relative',
+                        'flex items-center gap-2 px-3 py-1.5 text-[13px] font-semibold transition-all duration-300 rounded-full group relative',
                         isActive
                           ? 'text-white bg-primary shadow-md'
                           : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -144,7 +122,7 @@ export default function Header() {
                       {Icon && (
                         <Icon className="w-2.5 h-2.5 transition-transform group-hover:scale-110" />
                       )}
-                      <span className="text-[11px]">{link.label}</span>
+                      <span className="text-[12px]">{link.label}</span>
 
                       {/* Active indicator */}
                       {isActive && (
@@ -157,11 +135,23 @@ export default function Header() {
             </nav>
 
             {/* Right Section */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="hidden lg:flex flex-col items-end mr-1">
+                <Caption className="text-white/60 tracking-[0.28em] uppercase text-[8px]">
+                  The
+                </Caption>
+                <Caption
+                  weight="semibold"
+                  className="text-[12px] leading-none tracking-tight"
+                  style={{ color: colorScheme.primary }}
+                >
+                  Wisdom Church
+                </Caption>
+              </div>
               {/* Desktop Join Us Button */}
               <Button
                 onClick={openCommunityModal}
-                className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-full transition-all duration-300 hover:scale-105"
+                className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 text-[12px] font-medium rounded-full transition-all duration-300 hover:scale-105"
                 style={{
                   backgroundImage: `linear-gradient(120deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                   color: '#000000',

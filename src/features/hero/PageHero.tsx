@@ -64,8 +64,8 @@ export default function PageHero({
       className={cn(
         'relative overflow-hidden bg-[#050505] flex items-center',
         isAboutVariant
-          ? 'min-h-[64vh] sm:min-h-[70vh] lg:min-h-[74vh]'
-          : 'min-h-[58vh] sm:min-h-[64vh] lg:min-h-[68vh]'
+          ? 'min-h-[70vh] sm:min-h-[76vh] lg:min-h-[80vh]'
+          : 'min-h-[64vh] sm:min-h-[70vh] lg:min-h-[74vh]'
       )}
     >
       {/* Optional background image */}
@@ -84,6 +84,15 @@ export default function PageHero({
         </div>
       ) : null}
 
+      {/* Linear gradient wash */}
+      <div
+        className="absolute inset-0 -z-20"
+        style={{
+          background:
+            'linear-gradient(135deg, rgba(6,6,6,0.92) 0%, rgba(15,17,22,0.82) 40%, rgba(6,6,6,0.96) 100%)',
+        }}
+      />
+
       {/* Glow overlay */}
       <div
         className="absolute inset-0 -z-10 opacity-60 sm:opacity-75"
@@ -93,18 +102,20 @@ export default function PageHero({
       <Container
         size="xl"
         className={cn(
-          'relative z-10 px-4 sm:px-6 md:px-8 lg:px-10 pt-24 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 lg:pb-20'
+          'relative z-10 px-4 sm:px-6 md:px-8 lg:px-10 pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-20 lg:pb-24'
         )}
       >
         <div
-          className={cn('grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end')}
+          className={cn(
+            'grid gap-10 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end'
+          )}
         >
           <div
-            className={cn('space-y-4 sm:space-y-5 text-center lg:text-left')}
+            className={cn('space-y-6 sm:space-y-7 text-center lg:text-left')}
           >
             <div className="flex justify-center lg:justify-start fade-up">
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 w-fit backdrop-blur">
-                <div className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-lg overflow-hidden border border-white/15 bg-black/60">
+              <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-4 py-2 w-fit backdrop-blur">
+                <div className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-md overflow-hidden border border-white/15 bg-black/60">
                   <Image
                     src={WisdomeHouseLogo}
                     alt="The Wisdom House"
@@ -118,14 +129,14 @@ export default function PageHero({
               </div>
             </div>
 
-            <div className={cn('space-y-2 max-w-3xl mx-auto lg:mx-0 fade-up')}>
+            <div className={cn('space-y-3 max-w-3xl mx-auto lg:mx-0 fade-up')}>
               <H2
                 className={
                   compact
-                    ? 'text-2xl sm:text-3xl md:text-[2.05rem] font-semibold text-white leading-tight text-balance'
+                    ? 'text-[1.9rem] sm:text-3xl md:text-[2.2rem] font-semibold text-white leading-tight text-balance'
                     : isAboutVariant
-                      ? 'text-[2rem] sm:text-3xl md:text-[2.55rem] lg:text-[2.8rem] font-semibold text-white leading-[1.08] text-balance'
-                      : 'text-2xl sm:text-3xl md:text-[2.4rem] font-semibold text-white leading-tight text-balance'
+                      ? 'text-[2.1rem] sm:text-3xl md:text-[2.7rem] lg:text-[3rem] font-semibold text-white leading-[1.08] text-balance'
+                      : 'text-[2rem] sm:text-3xl md:text-[2.5rem] font-semibold text-white leading-tight text-balance'
                 }
               >
                 {title}
@@ -145,11 +156,11 @@ export default function PageHero({
             </div>
 
             {chips?.length ? (
-              <div className="flex flex-wrap gap-2 justify-center lg:justify-start fade-up">
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start fade-up">
                 {chips.map(chip => (
                   <span
                     key={chip}
-                    className="rounded-full font-medium border border-white/15 bg-white/5 text-white px-2.5 py-1 text-[10px] sm:text-[11px]"
+                    className="rounded-full font-medium border border-white/15 bg-white/5 text-white px-3 py-1.5 text-[10px] sm:text-[11px]"
                     style={{
                       boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}`,
                     }}
@@ -171,7 +182,7 @@ export default function PageHero({
 
           <div className="relative fade-up">
             <div
-              className="relative rounded-3xl border border-white/12 bg-black/60 backdrop-blur-xl p-5 sm:p-6"
+              className="relative rounded-2xl border border-white/12 bg-black/60 backdrop-blur-xl p-6 sm:p-7"
               style={{
                 boxShadow: `0 24px 60px ${colorScheme.opacity.black50}`,
               }}
@@ -192,7 +203,7 @@ export default function PageHero({
                 </Caption>
 
                 <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4">
-                  <div className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-2xl overflow-hidden border border-white/15 bg-black/70">
+                  <div className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-xl overflow-hidden border border-white/15 bg-black/70">
                     <Image
                       src={WisdomeHouseLogo}
                       alt="The Wisdom House logo"
@@ -212,11 +223,11 @@ export default function PageHero({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {visualChips.map(chip => (
                     <div
                       key={chip}
-                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-2"
+                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-2.5"
                     >
                       <p className="text-white text-xs sm:text-sm font-medium leading-tight">
                         {chip}
