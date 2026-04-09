@@ -79,7 +79,7 @@ interface OrderDetails {
 const OrderConfirmation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { colorScheme } = useTheme();
+  const { colorScheme, isDark } = useTheme();
   const cartItems = useAppSelector(state => state.cart.items);
   const cartTotal = useAppSelector(state => state.cart.total);
 
@@ -92,15 +92,15 @@ const OrderConfirmation = () => {
   const orderId = searchParams.get('orderId');
   const amount = searchParams.get('amount');
 
-  const isDarkMode = colorScheme.background === '#000000';
+  const isDarkMode = isDark;
 
   // Theme-based styles
-  const cardBackground = isDarkMode ? colorScheme.surface : colorScheme.white;
-  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
+  const cardBackground = isDarkMode ? colorScheme.card : colorScheme.surface;
+  const textColor = isDarkMode ? colorScheme.text : colorScheme.heading;
   const labelColor = isDarkMode
     ? colorScheme.textSecondary
     : colorScheme.textTertiary;
-  const borderColor = isDarkMode ? colorScheme.border : colorScheme.borderLight;
+  const borderColor = isDarkMode ? colorScheme.border : colorScheme.border;
   const successColor = colorScheme.success;
   const warningColor = colorScheme.warning;
   const infoColor = colorScheme.info;
@@ -242,11 +242,11 @@ const OrderConfirmation = () => {
         Payment Status: ${orderDetails?.paymentStatus.toUpperCase()}
         
         Items:
-        ${orderDetails?.items.map(item => `${item.name} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - â‚¦${(parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity).toLocaleString()}`).join('\n')}
+        ${orderDetails?.items.map(item => `${item.name} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - NGN ${(parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity).toLocaleString()}`).join('\n')}
         
-        Subtotal: â‚¦${orderDetails?.subtotal.toLocaleString()}
-        ${orderDetails?.deliveryFee ? `Delivery Fee: â‚¦${orderDetails.deliveryFee.toLocaleString()}` : ''}
-        Total: â‚¦${orderDetails?.total.toLocaleString()}
+        Subtotal: NGN ${orderDetails?.subtotal.toLocaleString()}
+        ${orderDetails?.deliveryFee ? `Delivery Fee: NGN ${orderDetails.deliveryFee.toLocaleString()}` : ''}
+        Total: NGN ${orderDetails?.total.toLocaleString()}
         
         Thank you for your order!
         =====================
@@ -571,7 +571,7 @@ const OrderConfirmation = () => {
                       </div>
                     </div>
                     <BaseText weight="bold" style={{ color: textColor }}>
-                      â‚¦
+                      NGN{' '}
                       {(
                         parseFloat(item.price.replace(/[^\d.]/g, '')) *
                         item.quantity
@@ -585,7 +585,7 @@ const OrderConfirmation = () => {
                 <FlexboxLayout justify="between">
                   <Caption style={{ color: labelColor }}>Subtotal</Caption>
                   <BaseText weight="semibold">
-                    â‚¦{orderDetails.subtotal.toLocaleString()}
+                    NGN {orderDetails.subtotal.toLocaleString()}
                   </BaseText>
                 </FlexboxLayout>
 
@@ -595,7 +595,7 @@ const OrderConfirmation = () => {
                       Delivery Fee
                     </Caption>
                     <BaseText weight="semibold">
-                      â‚¦{orderDetails.deliveryFee.toLocaleString()}
+                      NGN {orderDetails.deliveryFee.toLocaleString()}
                     </BaseText>
                   </FlexboxLayout>
                 )}
@@ -614,14 +614,14 @@ const OrderConfirmation = () => {
                         className="text-2xl"
                         style={{ color: colorScheme.primary }}
                       >
-                        â‚¦{orderDetails.total.toLocaleString()}
+                        NGN {orderDetails.total.toLocaleString()}
                       </BaseText>
                       {orderDetails.deliveryFee > 0 && (
                         <Caption
                           className="text-sm mt-1"
                           style={{ color: labelColor }}
                         >
-                          Includes â‚¦
+                          Includes NGN{' '}
                           {orderDetails.deliveryFee.toLocaleString()} delivery
                           fee
                         </Caption>
@@ -751,7 +751,7 @@ const OrderConfirmation = () => {
                     style={{
                       backgroundColor: isDarkMode
                         ? colorScheme.opacity.info10
-                        : colorScheme.opacity.info5,
+                        : colorScheme.opacity.info20,
                       border: `1px solid ${infoColor}40`,
                     }}
                   >

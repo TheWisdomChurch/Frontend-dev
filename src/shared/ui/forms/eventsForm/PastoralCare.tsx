@@ -37,8 +37,8 @@ interface PastoralCareFormData {
 }
 
 const PastoralCareUnit = () => {
-  const { colorScheme } = useTheme();
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
+  const isDarkMode = isDark;
 
   const [formData, setFormData] = useState<PastoralCareFormData>({
     title: '',
@@ -205,10 +205,10 @@ const PastoralCareUnit = () => {
           <div
             className="rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl border"
             style={{
-              background: isDarkMode ? colorScheme.surface : '#0b0b0b',
+              background: isDarkMode ? colorScheme.surface : colorScheme.white,
               borderColor: isDarkMode
                 ? colorScheme.border
-                : 'rgba(255,255,255,0.08)',
+                : colorScheme.borderLight,
             }}
           >
             {/* Form Header */}
