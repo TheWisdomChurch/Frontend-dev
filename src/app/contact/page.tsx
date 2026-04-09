@@ -47,8 +47,8 @@ const ContactPage = () => {
       title: 'Visit Us',
       description: 'Come worship with us in person',
       details: [
-        'Honors gardens, opposite Dominion Church Headquarters',
-        'Alasia bus stop, Lekki Epe expressway',
+        'Honor Gardens, opposite Dominion City Headquarters',
+        'Alasia bus stop, Lekki-Epe Expressway',
         'Lagos, Nigeria',
         'Sunday Services: 9:00 AM',
       ],

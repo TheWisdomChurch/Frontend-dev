@@ -61,7 +61,7 @@ const SpecialPage = () => {
         ref={headerRef}
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: colorScheme.text }}
+        style={{ backgroundColor: colorScheme.background }}
       >
         <Container size="xl">
           <FlexboxLayout
@@ -73,7 +73,7 @@ const SpecialPage = () => {
           >
             <H1
               className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 md:mb-8 leading-tight"
-              style={{ color: colorScheme.black }}
+              style={{ color: colorScheme.heading }}
             >
               Every Service at{' '}
               <span style={{ color: colorScheme.primary }}>
@@ -87,7 +87,7 @@ const SpecialPage = () => {
             ></div>
             <H3
               className="text-base sm:text-lg md:text-xl leading-relaxed"
-              style={{ color: colorScheme.black }}
+              style={{ color: colorScheme.textSecondary }}
             >
               From our weekly worship gatherings to annual celebrations, every
               moment at Wisdom House is an opportunity to encounter God's
@@ -470,7 +470,7 @@ const SpecialPage = () => {
       <Section
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: colorScheme.text }}
+        style={{ backgroundColor: colorScheme.background }}
       >
         <Container size="xl">
           <FlexboxLayout
@@ -480,12 +480,12 @@ const SpecialPage = () => {
             gap="lg"
             className="text-center"
           >
-            <H2 className="mb-1" style={{ color: colorScheme.black }}>
+            <H2 className="mb-1" style={{ color: colorScheme.heading }}>
               Annual Traditions
             </H2>
             <SmallText
               className="text-xl mb-4"
-              style={{ color: colorScheme.primaryDark }}
+              style={{ color: colorScheme.textSecondary }}
             >
               These are some of our beloved annual events that bring our church
               family together
