@@ -1,13 +1,13 @@
-import HeroSection from '@/components/features/hero/PageHero';
-import { BodyMD, BodySM, H2, H3 } from '@/components/text';
-import { hero_bg_3 } from '@/components/assets';
+import HeroSection from '@/features/hero/PageHero';
+import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
+import { hero_bg_3 } from '@/shared/assets';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
+} from '@/shared/layout';
 
 const WeeklyPage = () => {
   const weeklyServices = [

@@ -2,17 +2,17 @@
 
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { hero_bg_2 } from '@/components/assets';
-import { useTheme } from '@/components/contexts/ThemeContext';
+import { hero_bg_2 } from '@/shared/assets';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import { BodyMD, BodySM, H2, H3, Caption } from '@/components/text';
-import PageHero from '@/components/features/hero/PageHero';
+} from '@/shared/layout';
+import { BodyMD, BodySM, H2, H3, Caption } from '@/shared/text';
+import PageHero from '@/features/hero/PageHero';
 
 const YouthPage = () => {
   const { colorScheme } = useTheme();

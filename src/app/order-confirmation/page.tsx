@@ -12,11 +12,11 @@ import {
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import { H2, BaseText, LightText } from '@/components/text';
-import { Button } from '@/components/utils/buttons';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import OrderConfirmation from '@/components/ui/Store/orderDetails';
+} from '@/shared/layout';
+import { H2, BaseText, LightText } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import OrderConfirmation from '@/shared/ui/Store/orderDetails';
 
 // Simple confirmation page component
 const SimpleConfirmation = () => {

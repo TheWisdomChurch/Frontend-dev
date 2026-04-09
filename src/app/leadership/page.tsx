@@ -8,10 +8,10 @@ import {
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import { H2, H3, BodyLG, BodySM, Caption, SmallText } from '@/components/text';
-import CustomButton from '@/components/utils/buttons/CustomButton';
-import { useTheme } from '@/components/contexts/ThemeContext';
+} from '@/shared/layout';
+import { H2, H3, BodyLG, BodySM, Caption, SmallText } from '@/shared/text';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import { apiClient } from '@/lib/api';
 import type {
   LeadershipApplicationRequest,

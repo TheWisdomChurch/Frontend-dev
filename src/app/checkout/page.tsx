@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useAppSelector } from '@/components/utils/hooks/redux';
-import CheckoutForm from '@/components/ui/Store/checkoutForm';
+import { useAppSelector } from '@/shared/utils/hooks/redux';
+import CheckoutForm from '@/shared/ui/Store/checkoutForm';
 import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import {
@@ -11,9 +11,9 @@ import {
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import { H2, LightText } from '@/components/text';
-import { useTheme } from '@/components/contexts/ThemeContext';
+} from '@/shared/layout';
+import { H2, LightText } from '@/shared/text';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import { ShoppingBag } from 'lucide-react';
 
 const CheckoutPage = () => {

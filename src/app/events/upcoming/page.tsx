@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import HeroSection from '@/components/features/hero/PageHero';
+import HeroSection from '@/features/hero/PageHero';
 import {
   H2,
   H3,
@@ -9,19 +9,19 @@ import {
   LightText,
   BodyMD,
   SemiBoldText,
-} from '@/components/text';
-import { hero_bg_2, NL } from '@/components/assets';
+} from '@/shared/text';
+import { hero_bg_2, NL } from '@/shared/assets';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useUpcomingEvents } from '@/components/utils/hooks/UpcomingHooks';
+import { useUpcomingEvents } from '@/shared/utils/hooks/UpcomingHooks';
 
-import { ReminderModal } from '@/components/ui/modals/reminderModal';
+import { ReminderModal } from '@/shared/ui/modals/reminderModal';
 
 import Image from 'next/image';
 
 // Import your images - you'll need to add these to your assets
-// import conferenceVideo from '@/components/assets/videos/conference-bg.mp4';
-// import liftingImage from '@/components/assets/images/lifting-event.jpg';
+// import conferenceVideo from '@/shared/assets/videos/conference-bg.mp4';
+// import liftingImage from '@/shared/assets/images/lifting-event.jpg';
 
 const Upcoming = () => {
   const {
