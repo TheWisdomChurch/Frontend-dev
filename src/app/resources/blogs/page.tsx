@@ -1,13 +1,13 @@
-import HeroSection from '@/components/features/hero/PageHero';
-import { BodyMD, BodySM, H2, H3 } from '@/components/text';
-import { hero_bg_2 } from '@/components/assets';
+import HeroSection from '@/features/hero/PageHero';
+import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
+import { hero_bg_2 } from '@/shared/assets';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
+} from '@/shared/layout';
 
 const BlogPage = () => {
   const blogPosts = [
@@ -68,10 +68,10 @@ const BlogPage = () => {
   ];
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#050505] text-white">
       <HeroSection
         title="Blog"
-        subtitle="Insights for Your Spiritual Journey"
+        subtitle="Insights for your spiritual journey"
         description="Practical wisdom, biblical insights, and encouraging stories to help you grow in your faith and navigate life's challenges."
         backgroundImage={hero_bg_2.src}
         showButtons={true}
@@ -82,7 +82,7 @@ const BlogPage = () => {
 
       {/* Blog Posts Grid */}
       <PageSection tone="surface" padding="xl">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 fade-up">
           <H2>Recent Articles</H2>
           <BodyMD className="text-muted mt-3">
             Fresh content to encourage and equip you

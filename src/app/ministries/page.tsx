@@ -7,25 +7,19 @@ import Image, { type StaticImageData } from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronRight } from 'lucide-react';
-import {
-  Children_head,
-  Dept_1,
-  Dept_2,
-  Dept_3,
-  Dept_4,
-} from '@/components/assets';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import { H2, H3, BodyLG, BodyMD, Caption } from '@/components/text';
+import { Children_head, Dept_1, Dept_2, Dept_3, Dept_4 } from '@/shared/assets';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { H2, H3, BodyLG, BodyMD, Caption } from '@/shared/text';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import PageHero from '@/components/features/hero/PageHero';
+} from '@/shared/layout';
+import PageHero from '@/features/hero/PageHero';
 import { Ministries } from '@/lib/data';
-import CustomButton from '@/components/utils/buttons/CustomButton';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 
 gsap.registerPlugin(ScrollTrigger);
 

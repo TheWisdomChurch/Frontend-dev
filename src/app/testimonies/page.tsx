@@ -2,19 +2,19 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { H3, BodyMD, BodySM } from '@/components/text';
-import { Button } from '@/components/utils/buttons';
+import { H3, BodyMD, BodySM } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import PageHero from '@/components/features/hero/PageHero';
+} from '@/shared/layout';
+import PageHero from '@/features/hero/PageHero';
 import { Quote, Eye } from 'lucide-react';
 import apiClient from '@/lib/api';
-import { BaseModal } from '@/components/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Base';
 import { testimonialFormFields } from '@/lib/data';
 
 const BREAKPOINT_MD = 768;

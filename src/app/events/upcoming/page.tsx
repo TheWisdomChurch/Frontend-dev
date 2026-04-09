@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import HeroSection from '@/components/features/hero/PageHero';
+import HeroSection from '@/features/hero/PageHero';
 import {
   H2,
   H3,
@@ -9,19 +9,19 @@ import {
   LightText,
   BodyMD,
   SemiBoldText,
-} from '@/components/text';
-import { hero_bg_2, NL } from '@/components/assets';
+} from '@/shared/text';
+import { hero_bg_2, NL } from '@/shared/assets';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useUpcomingEvents } from '@/components/utils/hooks/UpcomingHooks';
+import { useUpcomingEvents } from '@/shared/utils/hooks/UpcomingHooks';
 
-import { ReminderModal } from '@/components/ui/modals/reminderModal';
+import { ReminderModal } from '@/shared/ui/modals/reminderModal';
 
 import Image from 'next/image';
 
 // Import your images - you'll need to add these to your assets
-// import conferenceVideo from '@/components/assets/videos/conference-bg.mp4';
-// import liftingImage from '@/components/assets/images/lifting-event.jpg';
+// import conferenceVideo from '@/shared/assets/videos/conference-bg.mp4';
+// import liftingImage from '@/shared/assets/images/lifting-event.jpg';
 
 const Upcoming = () => {
   const {
@@ -80,7 +80,7 @@ const Upcoming = () => {
   } = useUpcomingEvents();
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
       {/* Toast Container */}
       <ToastContainer
         position="top-right"
@@ -92,7 +92,7 @@ const Upcoming = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark"
         className="mt-16"
       />
 
@@ -108,10 +108,10 @@ const Upcoming = () => {
       {/* Happening This Month Section - Updated with Image */}
       {/* Happening This Month Section - Updated with Image */}
       {/* Happening This Month Section - Updated with Image */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+      <section className="py-16 md:py-20 bg-gradient-to-br from-[#070707] to-[#0b0b0b] relative overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute top-0 left-0 w-48 h-48 md:w-72 md:h-72 bg-yellow-200 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-20"></div>
-        <div className="absolute bottom-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-blue-200 rounded-full translate-x-1/3 translate-y-1/3 opacity-20"></div>
+        <div className="absolute top-0 left-0 w-48 h-48 md:w-72 md:h-72 bg-amber-500/20 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-20"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-sky-500/15 rounded-full translate-x-1/3 translate-y-1/3 opacity-20"></div>
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
@@ -120,12 +120,12 @@ const Upcoming = () => {
               <BaseText
                 fontFamily="bricolage"
                 weight="black"
-                className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-gray-900 mb-4 md:mb-6 tracking-tight"
+                className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white mb-4 md:mb-6 tracking-tight"
               >
                 UPCOMING <span className="text-yellow-500">EVENTS</span>
               </BaseText>
               <div className="w-20 h-1 md:w-24 md:h-2 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mb-4 md:mb-6 rounded-full"></div>
-              <BodyMD className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <BodyMD className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed">
                 Discover transformative experiences and spiritual gatherings
                 designed to uplift and inspire your journey
               </BodyMD>
@@ -145,15 +145,15 @@ const Upcoming = () => {
                       priority
                     />
                     {/* Optional: Add a subtle border or background if needed */}
-                    <div className="absolute inset-0 border-2 border-gray-200 rounded-2xl lg:rounded-3xl pointer-events-none"></div>
+                    <div className="absolute inset-0 border-2 border-white/10 rounded-2xl lg:rounded-3xl pointer-events-none"></div>
                   </div>
 
                   {/* Text below the image instead of overlay */}
-                  <div className="bg-white p-4 md:p-6 text-center">
-                    <SemiBoldText className="text-xl md:text-2xl lg:text-3xl text-gray-900 mb-2">
+                  <div className="bg-black/50 p-4 md:p-6 text-center">
+                    <SemiBoldText className="text-xl md:text-2xl lg:text-3xl text-white mb-2">
                       7 Nights of Lifting
                     </SemiBoldText>
-                    <BodyMD className="text-gray-600 text-sm md:text-base">
+                    <BodyMD className="text-white/70 text-sm md:text-base">
                       Transformative Nights of Worship & Prayer
                     </BodyMD>
                   </div>
@@ -162,17 +162,17 @@ const Upcoming = () => {
 
               {/* Content Column */}
               <div className="space-y-6 md:space-y-8">
-                <H2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                <H2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
                   7 Nights of <span className="text-yellow-500">Lifting</span>
                 </H2>
                 <div className="space-y-4">
-                  <BodyMD className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
+                  <BodyMD className="text-base md:text-lg lg:text-xl text-white/70 leading-relaxed">
                     Join us for seven powerful nights of worship, prayer, and
                     spiritual elevation. Each night features special guests,
                     anointed worship, and life-changing messages that will lift
                     your spirit and strengthen your faith.
                   </BodyMD>
-                  <BodyMD className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
+                  <BodyMD className="text-base md:text-lg lg:text-xl text-white/70 leading-relaxed">
                     Don't miss this transformative experience where we come
                     together as a community to seek God's presence and power in
                     our lives.
@@ -181,13 +181,13 @@ const Upcoming = () => {
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
                   <button
                     onClick={openLiftingModal}
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:shadow-xl lg:hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg"
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:shadow-xl lg:hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg"
                   >
                     Register to Attend
                   </button>
                   <button
                     onClick={() => openReminderModal('lifting')}
-                    className="border-2 border-gray-300 text-gray-700 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
+                    className="border-2 border-white/15 text-white/70 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:bg-white/10 hover:border-white/30 transition-all duration-300"
                   >
                     Remind Me Later
                   </button>
@@ -201,7 +201,7 @@ const Upcoming = () => {
       {/* Professional Calendar Section - Made More Compact */}
       <section
         ref={calendarRef}
-        className="py-12 md:py-16 bg-gray-900 text-white"
+        className="py-12 md:py-16 bg-black/50 text-white"
       >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
@@ -209,23 +209,23 @@ const Upcoming = () => {
               <H2 className="mb-4 md:mb-6 text-3xl md:text-4xl lg:text-5xl font-black">
                 Event <span className="text-yellow-400">Calendar</span>
               </H2>
-              <BodyMD className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto">
+              <BodyMD className="text-base sm:text-lg md:text-xl text-white/70 mb-6 md:mb-8 max-w-2xl mx-auto">
                 Browse through our interactive calendar to stay updated with all
                 upcoming events and gatherings
               </BodyMD>
 
               {/* Calendar Controls */}
-              <div className="flex flex-col sm:flex-row items-center justify-between mb-6 bg-gray-800 rounded-xl md:rounded-2xl shadow-xl p-4 md:p-6 gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-6 bg-white/5 rounded-xl md:rounded-2xl shadow-xl p-4 md:p-6 gap-4">
                 <div className="flex items-center gap-2 md:gap-4">
                   <button
                     onClick={() => navigateYear('prev')}
-                    className="p-2 md:p-3 hover:bg-gray-700 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
+                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
                   >
                     <span className="text-xl md:text-2xl">‹‹</span>
                   </button>
                   <button
                     onClick={() => navigateMonth('prev')}
-                    className="p-2 md:p-3 hover:bg-gray-700 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
+                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
                   >
                     <span className="text-xl md:text-2xl">‹</span>
                   </button>
@@ -234,7 +234,7 @@ const Upcoming = () => {
                 <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-6">
                   <button
                     onClick={() => setView(view === 'month' ? 'year' : 'month')}
-                    className="bg-yellow-400 text-gray-900 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-yellow-500 transition-all duration-300 hover:scale-105 shadow-lg text-sm md:text-base"
+                    className="bg-yellow-400 text-white px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-yellow-500 transition-all duration-300 hover:scale-105 shadow-lg text-sm md:text-base"
                   >
                     {view === 'month' ? 'Month View' : 'Year View'}
                   </button>
@@ -252,13 +252,13 @@ const Upcoming = () => {
                 <div className="flex items-center gap-2 md:gap-4">
                   <button
                     onClick={() => navigateMonth('next')}
-                    className="p-2 md:p-3 hover:bg-gray-700 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
+                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
                   >
                     <span className="text-xl md:text-2xl">›</span>
                   </button>
                   <button
                     onClick={() => navigateYear('next')}
-                    className="p-2 md:p-3 hover:bg-gray-700 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
+                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
                   >
                     <span className="text-xl md:text-2xl">››</span>
                   </button>
@@ -273,8 +273,8 @@ const Upcoming = () => {
                     onClick={() => selectYear(year)}
                     className={`px-3 md:px-4 lg:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold transition-all duration-300 text-sm md:text-base ${
                       currentDate.getFullYear() === year
-                        ? 'bg-yellow-400 text-gray-900 shadow-lg scale-105'
-                        : 'bg-gray-800 text-gray-300 border border-gray-600 hover:bg-gray-700 hover:scale-105'
+                        ? 'bg-yellow-400 text-white shadow-lg scale-105'
+                        : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:scale-105'
                     }`}
                   >
                     {year}
@@ -292,12 +292,12 @@ const Upcoming = () => {
                     <div
                       key={month}
                       onClick={() => selectMonth(index)}
-                      className={`bg-gray-800 rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 transform hover:scale-105 ${
+                      className={`bg-white/5 rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 transform hover:scale-105 ${
                         currentDate.getMonth() === index
                           ? 'border-yellow-400 bg-yellow-400 bg-opacity-10'
                           : hasEvents
                             ? 'border-green-500 hover:border-green-400 bg-green-400 bg-opacity-5'
-                            : 'border-gray-700 hover:border-gray-600'
+                            : 'border-white/10 hover:border-white/10'
                       }`}
                     >
                       <BaseText
@@ -313,12 +313,12 @@ const Upcoming = () => {
                             {currentMonthEvents.length} event
                             {currentMonthEvents.length > 1 ? 's' : ''}
                           </span>
-                          <BodyMD className="text-xs text-gray-400">
+                          <BodyMD className="text-xs text-white/50">
                             Click to view events
                           </BodyMD>
                         </div>
                       ) : (
-                        <BodyMD className="text-xs text-gray-500">
+                        <BodyMD className="text-xs text-white/60">
                           No events scheduled
                         </BodyMD>
                       )}
@@ -328,14 +328,14 @@ const Upcoming = () => {
               </div>
             ) : (
               /* Month View - More Compact */
-              <div className="bg-gray-800 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl overflow-hidden">
+              <div className="bg-white/5 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl overflow-hidden">
                 {/* Calendar Header */}
-                <div className="grid grid-cols-7 bg-gray-900 border-b border-gray-700">
+                <div className="grid grid-cols-7 bg-black/50 border-b border-white/10">
                   {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(
                     day => (
                       <div
                         key={day}
-                        className="p-2 md:p-3 lg:p-4 text-center font-black text-gray-300 text-xs md:text-sm uppercase tracking-wider"
+                        className="p-2 md:p-3 lg:p-4 text-center font-black text-white/70 text-xs md:text-sm uppercase tracking-wider"
                       >
                         {day}
                       </div>
@@ -344,14 +344,14 @@ const Upcoming = () => {
                 </div>
 
                 {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-1 bg-gray-700 p-1 md:p-2">
+                <div className="grid grid-cols-7 gap-1 bg-white/5 p-1 md:p-2">
                   {calendarGrid.map((day, index) => (
                     <div
                       key={index}
                       className={`min-h-20 md:min-h-24 p-1 md:p-2 rounded-lg md:rounded-xl transition-all duration-300 ${
                         !day.isCurrentMonth
-                          ? 'bg-gray-900 text-gray-600'
-                          : 'bg-gray-800 hover:bg-gray-750 text-white'
+                          ? 'bg-black/50 text-white/70'
+                          : 'bg-white/5 hover:bg-white/10 text-white'
                       } ${
                         day.isToday
                           ? 'bg-yellow-400 bg-opacity-20 border-2 border-yellow-400'
@@ -368,7 +368,7 @@ const Upcoming = () => {
                           day.isToday
                             ? 'text-yellow-400'
                             : !day.isCurrentMonth
-                              ? 'text-gray-600'
+                              ? 'text-white/70'
                               : 'text-white'
                         }`}
                       >
@@ -385,7 +385,7 @@ const Upcoming = () => {
                           </div>
                         ))}
                         {day.events.length > 2 && (
-                          <div className="text-xs text-gray-400 bg-gray-700 px-1 py-0.5 rounded text-center">
+                          <div className="text-xs text-white/50 bg-white/5 px-1 py-0.5 rounded text-center">
                             +{day.events.length - 2} more
                           </div>
                         )}
@@ -399,7 +399,7 @@ const Upcoming = () => {
             {/* Current Month Events List - More Compact Cards */}
             <div
               ref={eventsRef}
-              className="mt-8 md:mt-12 bg-gray-800 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl p-6 md:p-8 lg:p-10"
+              className="mt-8 md:mt-12 bg-white/5 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl p-6 md:p-8 lg:p-10"
             >
               <H3 className="mb-6 text-2xl md:text-3xl font-black text-center">
                 Events for{' '}
@@ -413,7 +413,7 @@ const Upcoming = () => {
                   {currentMonthEvents.map(event => (
                     <div
                       key={event.id}
-                      className="event-card bg-gradient-to-br from-gray-750 to-gray-800 rounded-xl md:rounded-2xl p-4 md:p-6 border-l-4 border-yellow-400 hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
+                      className="event-card bg-gradient-to-br from-[#0b0b0b] to-[#111111] rounded-xl md:rounded-2xl p-4 md:p-6 border-l-4 border-yellow-400 hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
                       onClick={() => handleEventClick(event)}
                     >
                       <div className="flex items-start justify-between mb-3">
@@ -436,13 +436,13 @@ const Upcoming = () => {
                         {event.title}
                       </BaseText>
                       {event.description && (
-                        <BodyMD className="text-gray-300 mb-3 md:mb-4 leading-relaxed text-sm md:text-base line-clamp-2">
+                        <BodyMD className="text-white/70 mb-3 md:mb-4 leading-relaxed text-sm md:text-base line-clamp-2">
                           {event.description}
                         </BodyMD>
                       )}
-                      <div className="space-y-1 md:space-y-2 text-gray-300 text-sm">
+                      <div className="space-y-1 md:space-y-2 text-white/70 text-sm">
                         <div className="flex items-center">
-                          <SemiBoldText className="w-12 md:w-16 text-gray-400 text-xs md:text-sm">
+                          <SemiBoldText className="w-12 md:w-16 text-white/50 text-xs md:text-sm">
                             Date:
                           </SemiBoldText>
                           <BodyMD className="text-xs md:text-sm">
@@ -455,7 +455,7 @@ const Upcoming = () => {
                           </BodyMD>
                         </div>
                         <div className="flex items-center">
-                          <SemiBoldText className="w-12 md:w-16 text-gray-400 text-xs md:text-sm">
+                          <SemiBoldText className="w-12 md:w-16 text-white/50 text-xs md:text-sm">
                             Time:
                           </SemiBoldText>
                           <BodyMD className="text-xs md:text-sm">
@@ -463,7 +463,7 @@ const Upcoming = () => {
                           </BodyMD>
                         </div>
                         <div className="flex items-center">
-                          <SemiBoldText className="w-12 md:w-16 text-gray-400 text-xs md:text-sm">
+                          <SemiBoldText className="w-12 md:w-16 text-white/50 text-xs md:text-sm">
                             Where:
                           </SemiBoldText>
                           <BodyMD className="text-xs md:text-sm">
@@ -471,7 +471,7 @@ const Upcoming = () => {
                           </BodyMD>
                         </div>
                       </div>
-                      <button className="w-full mt-3 md:mt-4 bg-yellow-400 text-gray-900 py-2 md:py-3 rounded-lg md:rounded-xl font-black hover:bg-yellow-500 transition-all duration-300 hover:scale-105 shadow-lg text-sm md:text-base">
+                      <button className="w-full mt-3 md:mt-4 bg-yellow-400 text-white py-2 md:py-3 rounded-lg md:rounded-xl font-black hover:bg-yellow-500 transition-all duration-300 hover:scale-105 shadow-lg text-sm md:text-base">
                         Add to Calendar
                       </button>
                     </div>
@@ -483,12 +483,12 @@ const Upcoming = () => {
                   <BaseText
                     fontFamily="bricolage"
                     weight="bold"
-                    className="text-lg md:text-xl lg:text-2xl text-gray-400 mb-2 md:mb-3"
+                    className="text-lg md:text-xl lg:text-2xl text-white/50 mb-2 md:mb-3"
                   >
                     No events scheduled for {months[currentDate.getMonth()]}{' '}
                     {currentDate.getFullYear()}
                   </BaseText>
-                  <BodyMD className="text-gray-500 text-sm md:text-base">
+                  <BodyMD className="text-white/60 text-sm md:text-base">
                     Check back later for updates or browse other months.
                   </BodyMD>
                 </div>
@@ -534,7 +534,7 @@ const Upcoming = () => {
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10 py-16 md:py-24 lg:py-32">
           <div className="max-w-4xl lg:max-w-5xl mx-auto text-center">
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 border border-white border-opacity-20 shadow-2xl">
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 border border-white/10 shadow-2xl">
               <H2 className="mb-4 md:mb-6 text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight">
                 WISDOM POWER <span className="text-yellow-400">CONFERENCE</span>{' '}
                 2026
@@ -548,13 +548,13 @@ const Upcoming = () => {
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
                 <button
                   onClick={openConferenceModal}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 md:px-12 lg:px-16 py-3 md:py-4 lg:py-6 rounded-xl md:rounded-2xl font-black text-base md:text-lg lg:text-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 shadow-xl"
+                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 md:px-12 lg:px-16 py-3 md:py-4 lg:py-6 rounded-xl md:rounded-2xl font-black text-base md:text-lg lg:text-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 shadow-xl"
                 >
                   Register for Event
                 </button>
                 <button
                   onClick={() => openReminderModal('conference')}
-                  className="border-2 border-white text-white px-8 md:px-12 lg:px-16 py-3 md:py-4 lg:py-6 rounded-xl md:rounded-2xl font-bold text-base md:text-lg lg:text-xl hover:bg-white hover:bg-opacity-10 transition-all duration-500"
+                  className="border-2 border-white/30 text-white px-8 md:px-12 lg:px-16 py-3 md:py-4 lg:py-6 rounded-xl md:rounded-2xl font-bold text-base md:text-lg lg:text-xl hover:bg-white/10 transition-all duration-500"
                 >
                   Remind Me Later
                 </button>
@@ -567,35 +567,35 @@ const Upcoming = () => {
       {/* Newsletter Section - More Compact */}
       <section
         ref={newsletterRef}
-        className="py-16 md:py-20 lg:py-24 bg-gradient-to-br from-white to-gray-100"
+        className="py-16 md:py-20 lg:py-24 bg-gradient-to-br from-[#060606] to-[#0b0b0b]"
       >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl lg:max-w-4xl mx-auto text-center">
-            <H2 className="mb-4 md:mb-6 text-3xl md:text-4xl lg:text-5xl font-black text-gray-900">
+            <H2 className="mb-4 md:mb-6 text-3xl md:text-4xl lg:text-5xl font-black text-white">
               Stay <span className="text-yellow-500">Updated</span>
             </H2>
-            <BodyMD className="text-lg md:text-xl text-gray-600 mb-8 md:mb-10 lg:mb-12 max-w-2xl mx-auto leading-relaxed">
+            <BodyMD className="text-lg md:text-xl text-white/70 mb-8 md:mb-10 lg:mb-12 max-w-2xl mx-auto leading-relaxed">
               Get the latest news and updates about our upcoming programs and
               events delivered to your inbox
             </BodyMD>
 
-            <div className="bg-white rounded-xl md:rounded-2xl lg:rounded-3xl p-6 md:p-8 lg:p-10 shadow-xl border border-gray-200">
+            <div className="bg-white/5 rounded-xl md:rounded-2xl lg:rounded-3xl p-6 md:p-8 lg:p-10 shadow-xl border border-white/10">
               <form className="max-w-2xl mx-auto">
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
                   <input
                     type="email"
                     placeholder="Enter your email address"
-                    className="flex-1 px-4 md:px-6 py-3 md:py-4 rounded-lg md:rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900 placeholder-gray-500 text-base md:text-lg font-semibold transition-all duration-300"
+                    className="flex-1 px-4 md:px-6 py-3 md:py-4 rounded-lg md:rounded-xl border-2 border-white/10 focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-white/40 text-base md:text-lg font-semibold transition-all duration-300"
                     required
                   />
                   <button
                     type="submit"
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 md:px-8 lg:px-10 py-3 md:py-4 rounded-lg md:rounded-xl font-black text-base md:text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg whitespace-nowrap"
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 md:px-8 lg:px-10 py-3 md:py-4 rounded-lg md:rounded-xl font-black text-base md:text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg whitespace-nowrap"
                   >
                     Subscribe Now
                   </button>
                 </div>
-                <BodyMD className="text-xs md:text-sm text-gray-500">
+                <BodyMD className="text-xs md:text-sm text-white/60">
                   By subscribing, you agree to receive updates about our events
                   and programs. You can unsubscribe at any time. We respect your
                   privacy.

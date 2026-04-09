@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
-import { useAppDispatch, useAppSelector } from '@/components/utils/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/shared/utils/hooks/redux';
 import { toggleCart } from '@/lib/store/slices/cartSlice';
 import {
   setProducts,
@@ -10,10 +10,10 @@ import {
   filterProducts,
 } from '@/lib/store/slices/productSlice';
 
-import ProductModal from '@/components/features/store/modals/ProductModal';
-import HeroSection from '@/components/features/hero/PageHero';
-import { H3, H4, BaseText, SmallText, Caption } from '@/components/text';
-import { hero_bg_1 } from '@/components/assets';
+import ProductModal from '@/features/store/modals/ProductModal';
+import HeroSection from '@/features/hero/PageHero';
+import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
+import { hero_bg_1 } from '@/shared/assets';
 
 import { gsap } from 'gsap';
 import {
@@ -26,15 +26,15 @@ import {
   Tag,
   Bell,
 } from 'lucide-react';
-import { Button } from '@/components/utils/buttons';
+import { Button } from '@/shared/utils/buttons';
 import {
   Section,
   Container,
   GridboxLayout,
   FlexboxLayout,
-} from '@/components/layout';
-import CartSidebar from '@/components/ui/Store/CartSidebar';
-import { useTheme } from '@/components/contexts/ThemeContext';
+} from '@/shared/layout';
+import CartSidebar from '@/shared/ui/Store/CartSidebar';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import Image from 'next/image';
 import { merchandise } from '@/lib/data';
 import { Product } from '@/lib/types';
@@ -44,27 +44,22 @@ const StorePage = () => {
   const dispatch = useAppDispatch();
   const { filteredProducts, filters } = useAppSelector(state => state.products);
   const { itemCount } = useAppSelector(state => state.cart);
-  const { colorScheme } = useTheme();
-
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
 
   // Theme-based styles
-  const sectionBackground = isDarkMode ? colorScheme.white : colorScheme.white;
-  const textColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const secondaryTextColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const cardBackground = isDarkMode ? colorScheme.black : colorScheme.white;
-  const cardTextColor = isDarkMode ? colorScheme.white : colorScheme.black;
-  const borderColor = isDarkMode
-    ? colorScheme.border
-    : colorScheme.primary + '40';
-  const inputBackground = isDarkMode ? colorScheme.white : colorScheme.surface;
-  const inputBorderColor = isDarkMode
-    ? colorScheme.borderLight
+  const sectionBackground = colorScheme.background;
+  const textColor = colorScheme.text;
+  const secondaryTextColor = colorScheme.textSecondary;
+  const cardBackground = isDark ? 'rgba(255,255,255,0.04)' : colorScheme.white;
+  const cardTextColor = colorScheme.text;
+  const borderColor = isDark ? 'rgba(255,255,255,0.12)' : colorScheme.border;
+  const inputBackground = isDark
+    ? 'rgba(255,255,255,0.04)'
+    : colorScheme.surface;
+  const inputBorderColor = isDark
+    ? 'rgba(255,255,255,0.14)'
     : colorScheme.border;
-  const imageBackground = isDarkMode ? colorScheme.white : colorScheme.white; // White background for images
+  const imageBackground = 'rgba(0,0,0,0.35)';
 
   const [showSearchAlert, setShowSearchAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -258,7 +253,7 @@ const StorePage = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#050505] text-white">
       <HeroSection
         title="Wisdom House Store"
         subtitle="Wear Your Faith, Share The Message"
@@ -273,7 +268,11 @@ const StorePage = () => {
       {/* Cart FAB - Fixed to bottom right instead of top */}
       <button
         onClick={() => dispatch(toggleCart())}
-        className="fixed bottom-6 right-6 z-50 bg-yellow-400 text-gray-900 rounded-full p-4 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 group"
+        className="fixed bottom-6 right-6 z-50 rounded-full p-4 shadow-2xl transition-all duration-300 transform hover:scale-110 group"
+        style={{
+          background: colorScheme.primaryGradient,
+          color: colorScheme.black,
+        }}
       >
         <FlexboxLayout align="center" gap="sm">
           <ShoppingBag className="w-6 h-6" />
@@ -301,7 +300,7 @@ const StorePage = () => {
             <H4
               weight="medium"
               smWeight="semibold"
-              className="text-base sm:text-lg md:text-xl text-gray-800 dark:text-gray-200 tracking-wide"
+              className="text-base sm:text-lg md:text-xl text-white/80 tracking-wide"
               useThemeColor={false}
             >
               Discover Our Collection
@@ -315,7 +314,7 @@ const StorePage = () => {
               {/* Subtle backdrop glow */}
               <div className="absolute -inset-3 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 rounded-3xl blur-xl opacity-50" />
 
-              <div className="relative bg-white/80 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg overflow-hidden">
+              <div className="relative bg-black/60 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg overflow-hidden">
                 <FlexboxLayout
                   direction="column"
                   responsiveDirection={{ md: 'row' }}
@@ -326,7 +325,7 @@ const StorePage = () => {
                   {/* Search Input - Clean & Compact */}
                   <div className="flex-1 w-full">
                     <div className="relative group">
-                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 pointer-events-none z-10" />
+                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-white/50 pointer-events-none z-10" />
 
                       <input
                         type="text"
@@ -334,17 +333,17 @@ const StorePage = () => {
                         value={filters.searchTerm}
                         onChange={e => handleSearch(e.target.value)}
                         className="w-full pl-11 sm:pl-12 pr-10 py-3 sm:py-3.5 
-                             bg-transparent border border-gray-300/70 dark:border-gray-600/70 
+                             bg-transparent border border-white/10 
                              rounded-xl sm:rounded-2xl text-sm sm:text-base 
                              focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20
-                             transition-all duration-300 placeholder:text-gray-400"
+                             transition-all duration-300 placeholder:text-white/40"
                       />
 
                       {/* Clear button */}
                       {filters.searchTerm && (
                         <button
                           onClick={() => handleSearch('')}
-                          className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition"
+                          className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/65 dark:hover:text-white/60 transition"
                         >
                           <X className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
@@ -358,13 +357,13 @@ const StorePage = () => {
                   {/* Category Filter - Matches your design system */}
                   <div className="w-full md:w-64 lg:w-72">
                     <div className="relative">
-                      <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 pointer-events-none z-10" />
+                      <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-white/50 pointer-events-none z-10" />
 
                       <select
                         value={filters.selectedCategory}
                         onChange={e => handleCategoryClick(e.target.value)}
                         className="w-full pl-11 sm:pl-12 pr-10 py-3 sm:py-3.5 
-                             bg-gray-50/50 dark:bg-gray-800/50 border border-gray-300/70 dark:border-gray-600/70 
+                             bg-white/5 border border-white/10 
                              rounded-xl sm:rounded-2xl text-sm sm:text-base appearance-none cursor-pointer
                              focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20
                              transition-all duration-300"
@@ -384,7 +383,7 @@ const StorePage = () => {
                       {/* Custom arrow */}
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                         <svg
-                          className="w-4 h-4 text-gray-500"
+                          className="w-4 h-4 text-white/50"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -406,18 +405,18 @@ const StorePage = () => {
             {/* Compact Alert - Matches your Caption style */}
             {showSearchAlert && (
               <div className="mt-5 max-w-4xl mx-auto animate-in fade-in slide-in-from-top duration-400">
-                <div className="flex items-center gap-3 p-4 rounded-xl bg-yellow-50/80 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-yellow-500/10  border border-yellow-500/20 ">
                   <div className="flex-shrink-0 w-9 h-9 rounded-full bg-yellow-100 dark:bg-yellow-900/40 flex items-center justify-center">
                     <Search className="w-4 h-4 text-yellow-700 dark:text-yellow-400" />
                   </div>
                   <div className="flex-1">
                     <Caption
-                      className="text-sm font-medium text-yellow-800 dark:text-yellow-300"
+                      className="text-sm font-medium text-yellow-200 "
                       useThemeColor={false}
                     >
                       {alertMessage}
                     </Caption>
-                    <SmallText className="text-xs text-yellow-700/80 dark:text-yellow-400/70 mt-0.5">
+                    <SmallText className="text-xs text-yellow-200/70  mt-0.5">
                       Try different keywords or browse categories
                     </SmallText>
                   </div>
@@ -439,9 +438,7 @@ const StorePage = () => {
         padding="lg"
         fullHeight={false}
         style={{
-          backgroundColor: isDarkMode
-            ? colorScheme.surface
-            : colorScheme.backgroundSecondary,
+          backgroundColor: colorScheme.backgroundSecondary,
         }}
       >
         <Container size="xl">
@@ -454,7 +451,7 @@ const StorePage = () => {
                     onClick={() => handleCategoryClick(category.value)}
                     className={`category-card px-6 py-4 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 text-base sm:text-lg ${
                       filters.selectedCategory === category.value
-                        ? 'bg-yellow-400 text-gray-900 shadow-lg'
+                        ? 'bg-yellow-400 text-white shadow-lg'
                         : 'shadow-md'
                     }`}
                     style={{
@@ -505,7 +502,7 @@ const StorePage = () => {
                     ?.name}
             </H3>
             <Caption
-              className="text-base sm:text-lg leading-relaxed text-gray-600 mt-2"
+              className="text-base sm:text-lg leading-relaxed text-white/65 mt-2"
               useThemeColor={false}
               style={{ color: secondaryTextColor }}
             >
@@ -607,7 +604,7 @@ const StorePage = () => {
                         </div>
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <ShoppingBag className="w-12 h-12 text-gray-400" />
+                          <ShoppingBag className="w-12 h-12 text-white/50" />
                         </div>
                       )}
 
@@ -691,9 +688,9 @@ const StorePage = () => {
                         <span
                           className="px-3 py-1 rounded-full"
                           style={{
-                            backgroundColor: isDarkMode
-                              ? colorScheme.opacity.black10
-                              : colorScheme.opacity.white10,
+                            backgroundColor: isDark
+                              ? colorScheme.opacity.white10
+                              : colorScheme.opacity.black10,
                             color: secondaryTextColor,
                           }}
                         >
@@ -702,9 +699,9 @@ const StorePage = () => {
                         <span
                           className="px-3 py-1 rounded-full"
                           style={{
-                            backgroundColor: isDarkMode
-                              ? colorScheme.opacity.black10
-                              : colorScheme.opacity.white10,
+                            backgroundColor: isDark
+                              ? colorScheme.opacity.white10
+                              : colorScheme.opacity.black10,
                             color: secondaryTextColor,
                           }}
                         >
@@ -713,9 +710,9 @@ const StorePage = () => {
                         <span
                           className="px-3 py-1 rounded-full"
                           style={{
-                            backgroundColor: isDarkMode
-                              ? colorScheme.opacity.black10
-                              : colorScheme.opacity.white10,
+                            backgroundColor: isDark
+                              ? colorScheme.opacity.white10
+                              : colorScheme.opacity.black10,
                             color: secondaryTextColor,
                           }}
                         >
@@ -758,9 +755,8 @@ const StorePage = () => {
                             color: cardTextColor,
                           }}
                           onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                            e.currentTarget.style.backgroundColor = isDarkMode
-                              ? colorScheme.opacity.black10
-                              : colorScheme.opacity.white10;
+                            e.currentTarget.style.backgroundColor =
+                              colorScheme.opacity.white10;
                           }}
                           onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
                             e.currentTarget.style.backgroundColor =
@@ -784,9 +780,7 @@ const StorePage = () => {
         padding="2xl"
         fullHeight={false}
         style={{
-          backgroundColor: isDarkMode
-            ? colorScheme.surface
-            : colorScheme.backgroundSecondary,
+          backgroundColor: colorScheme.backgroundSecondary,
         }}
       >
         <Container size="xl">
@@ -796,9 +790,7 @@ const StorePage = () => {
               <div
                 className="p-3.5 rounded-2xl"
                 style={{
-                  backgroundColor: isDarkMode
-                    ? `${colorScheme.primary}10`
-                    : `${colorScheme.primary}08`,
+                  backgroundColor: `${colorScheme.primary}12`,
                 }}
               >
                 <Tag
@@ -814,13 +806,11 @@ const StorePage = () => {
               smWeight="black"
               className="text-2xl sm:text-3xl lg:text-4xl leading-tight tracking-tight"
               style={{
-                color: isDarkMode
-                  ? textColor || '#ffffff'
-                  : textColor || '#111111', // Force dark text on light backgrounds
+                color: textColor || '#ffffff',
               }}
               useThemeColor={false}
             >
-              Never Miss our offers
+              Never miss our offers
             </H3>
 
             {/* Subtitle */}
@@ -832,7 +822,7 @@ const StorePage = () => {
               Get exclusive discounts, new arrivals, and faith-inspired deals in
               your inbox.
               <strong className="block mt-1.5">
-                Join now â€” get 10% off instantly.
+                Join now — get 10% off instantly.
               </strong>
             </Caption>
 
@@ -843,9 +833,7 @@ const StorePage = () => {
                 <div
                   className="p-7 rounded-2xl border backdrop-blur-sm"
                   style={{
-                    backgroundColor: isDarkMode
-                      ? `${colorScheme.success}10`
-                      : `${colorScheme.success}05`,
+                    backgroundColor: `${colorScheme.success}12`,
                     borderColor: `${colorScheme.success}30`,
                   }}
                 >
@@ -873,7 +861,7 @@ const StorePage = () => {
                 >
                   {/* Email Input */}
                   <div className="flex-1 relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400 pointer-events-none" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 pointer-events-none" />
                     <input
                       type="email"
                       value={email}
@@ -882,7 +870,7 @@ const StorePage = () => {
                       required
                       className="w-full pl-12 pr-4 py-3 rounded-xl text-base
                            border focus:outline-none focus:ring-2 focus:ring-yellow-400/30
-                           transition-all duration-200 placeholder:text-gray-400"
+                           transition-all duration-200 placeholder:text-white/40"
                       style={{
                         backgroundColor: inputBackground,
                         borderColor: inputBorderColor,
@@ -891,7 +879,7 @@ const StorePage = () => {
                     />
                   </div>
 
-                  {/* Perfectly Sized Button â€” Mobile & Desktop */}
+                  {/* Perfectly Sized Button - Mobile & Desktop */}
                   <Button
                     type="submit"
                     variant="primary"
@@ -933,7 +921,7 @@ const StorePage = () => {
                 style={{ color: secondaryTextColor }}
                 useThemeColor={false}
               >
-                No spam â€¢ Unsubscribe anytime â€¢ 100% private
+                No spam | Unsubscribe anytime | 100% private
               </Caption>
             </div>
           </div>

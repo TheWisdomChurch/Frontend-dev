@@ -9,9 +9,9 @@ import {
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import { H2, H3, BodyMD, BodySM, SmallText } from '@/components/text';
-import { EventBannerDesktop, EventBannerMobile } from '@/components/assets';
+} from '@/shared/layout';
+import { H2, H3, BodyMD, BodySM, SmallText } from '@/shared/text';
+import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient from '@/lib/api';
 import { PublicFormPayload, EventPublic, PublicFormField } from '@/lib';
 import { Calendar, MapPin } from 'lucide-react';

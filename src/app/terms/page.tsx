@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import type { JSX } from 'react';
-import { BodyMD, BodySM, Caption, H2, H3 } from '@/components/text';
+import { BodyMD, BodySM, Caption, H2, H3 } from '@/shared/text';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
+} from '@/shared/layout';
 
 type Section = {
   title: string;

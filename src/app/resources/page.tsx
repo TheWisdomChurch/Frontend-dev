@@ -2,16 +2,16 @@
 
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useTheme } from '@/components/contexts/ThemeContext';
-import { H2, H3, BodyMD, Caption, SmallText } from '@/components/text';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import PageHero from '@/components/features/hero/PageHero';
+} from '@/shared/layout';
+import PageHero from '@/features/hero/PageHero';
 import { resourceLinks } from '@/lib/data';
 import { Radio, Sparkles, X, Youtube, Bell, Search } from 'lucide-react';
 
@@ -74,8 +74,7 @@ const quickActions = [
 ] as const;
 
 export default function ResourcesPage() {
-  const { colorScheme } = useTheme();
-  const isDark = colorScheme.background === '#000000';
+  const { colorScheme, isDark } = useTheme();
 
   const [activeCategory, setActiveCategory] = useState<Category>('all');
   const [searchTerm, setSearchTerm] = useState('');

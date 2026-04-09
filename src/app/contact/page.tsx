@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import PageHero from '@/components/features/hero/PageHero';
-import { H2, H3, BodyMD, SmallText, Caption } from '@/components/text';
-import { useTheme } from '@/components/contexts/ThemeContext';
+import PageHero from '@/features/hero/PageHero';
+import { H2, H3, BodyMD, SmallText, Caption } from '@/shared/text';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
-import Button from '@/components/utils/buttons/CustomButton';
+} from '@/shared/layout';
+import Button from '@/shared/utils/buttons/CustomButton';
 import {
   MapPin,
   Phone,
@@ -47,8 +47,8 @@ const ContactPage = () => {
       title: 'Visit Us',
       description: 'Come worship with us in person',
       details: [
-        'Honors gardens, opposite Dominion Church Headquarters',
-        'Alasia bus stop, Lekki Epe expressway',
+        'Honor Gardens, opposite Dominion City Headquarters',
+        'Alasia bus stop, Lekki-Epe Expressway',
         'Lagos, Nigeria',
         'Sunday Services: 9:00 AM',
       ],
