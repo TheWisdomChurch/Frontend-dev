@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import * as FramerMotion from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Play } from 'lucide-react';
 
 import { BaseModal } from '@/components/ui/modals/Base';
@@ -11,15 +10,15 @@ import { useTheme } from '@/components/contexts/ThemeContext';
 import {
   Container,
   Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
+  // PageSection,
+  // FlexboxLayout,
+  // Gridbox,
 } from '@/components/layout'; // Legacy: from '@/components/layout/index';
 import { BodySM, Caption, H3, SmallText } from '@/components/text';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 
-const { AnimatePresence, motion } = FramerMotion;
+import { AnimatePresence, motion } from '@/lib/safe-motion';
 
 type ShowcaseCategory = 'program' | 'media' | 'reel';
 
