@@ -177,7 +177,7 @@ export default function Testimonials() {
       id="stories"
       padding="xl"
       className="relative overflow-hidden"
-      style={{ background: '#0b0b0b' }}
+      style={{ background: '#070707' }}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-80"
@@ -193,15 +193,15 @@ export default function Testimonials() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2.5">
             <Caption
-              className="uppercase tracking-[0.2em] text-xs"
+              className="uppercase tracking-[0.22em] text-[0.62rem]"
               style={{ color: primary }}
             >
               Stories of transformation
             </Caption>
-            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
+            <H3 className="text-[1.4rem] sm:text-2xl font-semibold text-white leading-tight">
               God is moving in our house
             </H3>
-            <BodySM className="text-white/75 max-w-2xl">
+            <BodySM className="text-white/70 max-w-2xl text-[0.82rem] sm:text-sm">
               Real moments of healing, provision, and restoration from the
               Wisdom House community.
             </BodySM>
@@ -237,8 +237,8 @@ export default function Testimonials() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-5 items-start">
-          <article className="relative overflow-hidden rounded-3xl border border-white/12 bg-[#101010] p-6 sm:p-7 shadow-2xl min-h-[340px]">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5 items-start">
+          <article className="relative overflow-hidden rounded-3xl border border-white/12 bg-[#101010] p-5 sm:p-6 shadow-2xl min-h-[320px]">
             <Quote
               className="absolute -top-6 -right-6 h-20 w-20 text-white/10"
               data-parallax-global="0.18"
@@ -265,7 +265,10 @@ export default function Testimonials() {
               </div>
 
               <div className="text-left">
-                <SmallText weight="semibold" className="text-white text-base">
+                <SmallText
+                  weight="semibold"
+                  className="text-white text-[0.95rem]"
+                >
                   {current.fullName}
                 </SmallText>
                 {current.role ? (
@@ -279,7 +282,7 @@ export default function Testimonials() {
               </div>
             </div>
 
-            <p className="text-white/85 text-base leading-relaxed mb-4">
+            <p className="text-white/85 text-[0.9rem] sm:text-[0.98rem] leading-relaxed mb-4">
               “{current.testimony}”
             </p>
 
@@ -296,7 +299,7 @@ export default function Testimonials() {
             </div>
 
             <div className="mt-5 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white/70 text-sm">
+              <div className="flex items-center gap-2 text-white/70 text-[0.78rem] sm:text-sm">
                 <span
                   className="h-2 w-2 rounded-full"
                   style={{ background: primary }}

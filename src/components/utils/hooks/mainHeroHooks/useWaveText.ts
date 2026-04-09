@@ -12,7 +12,9 @@ export const useWaveTextAnimation = (
     if (!showWaveText) return;
 
     const text = waveTextRef.current;
+    if (!text) return;
     const chars = text.querySelectorAll('.wave-char');
+    if (!chars.length) return;
 
     // Reset all characters
     gsap.set(chars, {
