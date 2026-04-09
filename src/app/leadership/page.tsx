@@ -2,12 +2,22 @@
 
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { Section, Container } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { H2, H3, BodyLG, BodySM, Caption, SmallText } from '@/components/text';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { apiClient } from '@/lib/api';
-import type { LeadershipApplicationRequest, LeadershipMember, LeadershipRole } from '@/lib/types';
+import type {
+  LeadershipApplicationRequest,
+  LeadershipMember,
+  LeadershipRole,
+} from '@/lib/types';
 
 const ROLE_LABELS: Record<LeadershipRole, string> = {
   senior_pastor: 'Senior Pastor',
@@ -54,16 +64,17 @@ export default function LeadershipPage() {
   const [form, setForm] = useState<LeadershipApplicationRequest>(emptyForm);
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
-    null
-  );
+  const [submitMessage, setSubmitMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
     apiClient
       .listLeadership()
-      .then((items) => {
+      .then(items => {
         if (!active) return;
         setLeaders(Array.isArray(items) ? items : []);
         setLoadError(null);
@@ -84,17 +95,21 @@ export default function LeadershipPage() {
 
   const grouped = useMemo(
     () =>
-      ROLE_ORDER.map((role) => ({
+      ROLE_ORDER.map(role => ({
         role,
         label: ROLE_LABELS[role],
-        items: leaders.filter((leader) => leader.role === role),
+        items: leaders.filter(leader => leader.role === role),
       })),
     [leaders]
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,7 +117,10 @@ export default function LeadershipPage() {
     setSubmitMessage(null);
 
     if (!form.firstName.trim() || !form.lastName.trim()) {
-      setSubmitMessage({ type: 'error', text: 'First and last name are required.' });
+      setSubmitMessage({
+        type: 'error',
+        text: 'First and last name are required.',
+      });
       return;
     }
     if (form.birthday && !ddmm.test(form.birthday)) {
@@ -110,11 +128,17 @@ export default function LeadershipPage() {
       return;
     }
     if (form.anniversary && !ddmmyyyy.test(form.anniversary)) {
-      setSubmitMessage({ type: 'error', text: 'Wedding anniversary must use DD/MM/YYYY.' });
+      setSubmitMessage({
+        type: 'error',
+        text: 'Wedding anniversary must use DD/MM/YYYY.',
+      });
       return;
     }
     if (profileImage && profileImage.size > 5 * 1024 * 1024) {
-      setSubmitMessage({ type: 'error', text: 'Profile image must be 5MB or less.' });
+      setSubmitMessage({
+        type: 'error',
+        text: 'Profile image must be 5MB or less.',
+      });
       return;
     }
 
@@ -155,7 +179,11 @@ export default function LeadershipPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <Section padding="lg" className="relative overflow-hidden" style={{ background: '#070707' }}>
+      <Section
+        padding="lg"
+        className="relative overflow-hidden"
+        style={{ background: '#070707' }}
+      >
         <Container size="xl" className="relative z-10 space-y-6 fade-up">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em]">
             Leadership
@@ -164,8 +192,9 @@ export default function LeadershipPage() {
             Leadership at Wisdom Church
           </H2>
           <BodyLG className="text-white/75 max-w-3xl">
-            Our leaders steward the vision, care for the people, and build healthy ministries. Meet the
-            team and apply if you have been called into leadership.
+            Our leaders steward the vision, care for the people, and build
+            healthy ministries. Meet the team and apply if you have been called
+            into leadership.
           </BodyLG>
         </Container>
       </Section>
@@ -173,28 +202,35 @@ export default function LeadershipPage() {
       <Section padding="lg" className="relative overflow-hidden bg-[#0b0b0b]">
         <Container size="xl" className="space-y-8">
           <div className="flex flex-col gap-2 fade-up">
-            <H3 className="text-2xl sm:text-3xl font-bold">Meet the leadership</H3>
+            <H3 className="text-2xl sm:text-3xl font-bold">
+              Meet the leadership
+            </H3>
             <Caption className="text-white/60">
-              Approved leaders are displayed here. Applications are reviewed by church leadership.
+              Approved leaders are displayed here. Applications are reviewed by
+              church leadership.
             </Caption>
           </div>
 
-          {loading && <BodySM className="text-white/60">Loading leadership...</BodySM>}
+          {loading && (
+            <BodySM className="text-white/60">Loading leadership...</BodySM>
+          )}
           {loadError && <BodySM className="text-red-300">{loadError}</BodySM>}
 
           {!loading &&
             !loadError &&
-            grouped.map((group) => (
+            grouped.map(group => (
               <div key={group.role} className="space-y-4">
                 <SmallText className="text-white/70 uppercase tracking-[0.2em] text-xs">
                   {group.label}
                 </SmallText>
 
                 {group.items.length === 0 ? (
-                  <Caption className="text-white/50">No approved leaders yet.</Caption>
+                  <Caption className="text-white/50">
+                    No approved leaders yet.
+                  </Caption>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {group.items.map((leader) => (
+                    {group.items.map(leader => (
                       <div
                         key={leader.id}
                         className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl shadow-xl fade-up"
@@ -221,7 +257,9 @@ export default function LeadershipPage() {
                             <SmallText weight="bold" className="text-white">
                               {leader.firstName} {leader.lastName}
                             </SmallText>
-                            <Caption className="text-white/60">{ROLE_LABELS[leader.role]}</Caption>
+                            <Caption className="text-white/60">
+                              {ROLE_LABELS[leader.role]}
+                            </Caption>
                           </div>
                         </div>
 
@@ -240,12 +278,17 @@ export default function LeadershipPage() {
       </Section>
 
       <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <Container size="xl" className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8">
+        <Container
+          size="xl"
+          className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8"
+        >
           <div className="space-y-3 fade-up">
-            <H3 className="text-2xl sm:text-3xl font-bold">Leadership registration</H3>
+            <H3 className="text-2xl sm:text-3xl font-bold">
+              Leadership registration
+            </H3>
             <BodySM className="text-white/70">
-              This form is for Senior Pastor, Associate Pastor, Reverend, Deacon, and Deaconness
-              leadership categories.
+              This form is for Senior Pastor, Associate Pastor, Reverend,
+              Deacon, and Deaconness leadership categories.
             </BodySM>
           </div>
 
@@ -307,7 +350,7 @@ export default function LeadershipPage() {
                 onChange={handleChange}
                 className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
               >
-                {ROLE_ORDER.map((role) => (
+                {ROLE_ORDER.map(role => (
                   <option key={role} value={role}>
                     {ROLE_LABELS[role]}
                   </option>
@@ -344,7 +387,7 @@ export default function LeadershipPage() {
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/jpg,image/webp"
-                onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
+                onChange={e => setProfileImage(e.target.files?.[0] || null)}
                 className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
               />
             </label>
@@ -363,7 +406,9 @@ export default function LeadershipPage() {
             {submitMessage && (
               <Caption
                 className={`${
-                  submitMessage.type === 'success' ? 'text-emerald-300' : 'text-red-300'
+                  submitMessage.type === 'success'
+                    ? 'text-emerald-300'
+                    : 'text-red-300'
                 }`}
               >
                 {submitMessage.text}

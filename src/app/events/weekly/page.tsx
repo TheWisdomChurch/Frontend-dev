@@ -1,7 +1,13 @@
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import HeroSection from '@/components/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/components/text';
 import { hero_bg_3 } from '@/components/assets';
-import { PageSection } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 
 const WeeklyPage = () => {
   const weeklyServices = [
@@ -94,8 +100,8 @@ const WeeklyPage = () => {
         <div className="text-center mb-8 fade-up">
           <H2>Our Weekly Schedule</H2>
           <BodyMD className="text-muted mt-3 max-w-2xl mx-auto">
-            We have multiple service times and gatherings throughout the week
-            to fit your schedule
+            We have multiple service times and gatherings throughout the week to
+            fit your schedule
           </BodyMD>
         </div>
 

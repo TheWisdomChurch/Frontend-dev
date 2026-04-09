@@ -6,48 +6,48 @@ export const responsive = {
   heading: {
     mobile: 'text-lg',
     tablet: 'text-xl',
-    desktop: 'text-2xl'
+    desktop: 'text-2xl',
   },
   body: {
     mobile: 'text-xs',
     tablet: 'text-sm',
-    desktop: 'text-base'
+    desktop: 'text-base',
   },
   price: {
     mobile: 'text-lg',
     tablet: 'text-xl',
-    desktop: 'text-2xl'
+    desktop: 'text-2xl',
   },
-  
+
   // Components
   button: {
     mobile: 'py-2.5 text-sm',
     tablet: 'py-3 text-base',
-    desktop: 'py-3.5 text-base'
+    desktop: 'py-3.5 text-base',
   },
   modal: {
     mobile: 'max-h-[85vh]',
     tablet: 'max-h-[90vh] max-w-2xl',
-    desktop: 'max-h-[90vh] max-w-3xl'
+    desktop: 'max-h-[90vh] max-w-3xl',
   },
   image: {
     mobile: 'h-56',
     tablet: 'h-64',
-    desktop: 'h-72'
+    desktop: 'h-72',
   },
-  
+
   // Spacing
   padding: {
     mobile: 'p-4',
     tablet: 'p-6',
-    desktop: 'p-8'
+    desktop: 'p-8',
   },
   gap: {
     mobile: 'gap-3',
     tablet: 'gap-4',
-    desktop: 'gap-5'
+    desktop: 'gap-5',
   },
-  
+
   // Hero Section Specific Styles
   hero: {
     title: {
@@ -56,7 +56,7 @@ export const responsive = {
       sm: 'sm:text-4xl',
       md: 'md:text-5xl',
       lg: 'lg:text-6xl',
-      xl: 'xl:text-7xl'
+      xl: 'xl:text-7xl',
     },
     subtitle: {
       base: 'text-sm',
@@ -64,7 +64,7 @@ export const responsive = {
       sm: 'sm:text-lg',
       md: 'md:text-xl',
       lg: 'lg:text-2xl',
-      xl: 'xl:text-3xl'
+      xl: 'xl:text-3xl',
     },
     description: {
       base: 'text-xs',
@@ -72,28 +72,28 @@ export const responsive = {
       sm: 'sm:text-base',
       md: 'md:text-lg',
       lg: 'lg:text-xl',
-      xl: 'xl:text-2xl'
+      xl: 'xl:text-2xl',
     },
     button: {
       base: 'text-xs px-4 py-2.5',
       xs: 'xs:text-sm xs:px-5 xs:py-3',
       sm: 'sm:text-base sm:px-6 sm:py-3.5',
-      md: 'md:text-lg md:px-7 md:py-4'
+      md: 'md:text-lg md:px-7 md:py-4',
     },
     container: {
       base: 'px-3',
       xs: 'xs:px-4',
       sm: 'sm:px-5',
       md: 'md:px-6',
-      lg: 'lg:px-8'
+      lg: 'lg:px-8',
     },
     spacing: {
       titleBottom: 'mb-2',
       subtitleBottom: 'mb-3',
       descriptionBottom: 'mb-4',
-      buttonsGap: 'gap-2'
-    }
-  }
+      buttonsGap: 'gap-2',
+    },
+  },
 } as const;
 
 // Types
@@ -121,27 +121,26 @@ export function getResponsiveValue<T extends ResponsiveKey>(
   viewport: ViewportSize
 ): string {
   const value = responsive[key];
-  
+
   if (isResponsiveRecord(value)) {
     return value[viewport];
   }
-  
+
   // For hero values which have a different structure
   return JSON.stringify(value);
 }
 
 // Helper function to get hero responsive value
-export function getHeroResponsiveValue<T extends keyof typeof responsive['hero']>(
-  key: T,
-  viewport?: ViewportSize
-): string | Record<string, string> {
+export function getHeroResponsiveValue<
+  T extends keyof (typeof responsive)['hero'],
+>(key: T, viewport?: ViewportSize): string | Record<string, string> {
   const value = responsive.hero[key];
-  
+
   // If it's a string (like spacing values), return as is
   if (typeof value === 'string') {
     return value;
   }
-  
+
   // If it's an object and we have a viewport, try to get that specific value
   if (viewport && typeof value === 'object' && value !== null) {
     const viewportValue = (value as Record<string, string>)[viewport];
@@ -149,7 +148,7 @@ export function getHeroResponsiveValue<T extends keyof typeof responsive['hero']
       return viewportValue;
     }
   }
-  
+
   // Otherwise return the entire object
   return value as Record<string, string>;
 }
@@ -166,14 +165,14 @@ export const breakpoints = {
   md: 768,
   lg: 1024,
   xl: 1280,
-  '2xl': 1536
+  '2xl': 1536,
 } as const;
 
 export type Breakpoint = keyof typeof breakpoints;
 
 // Type-safe responsive configuration
 export type ResponsiveConfigType = {
-  [K in ResponsiveKey]: K extends 'hero' 
-    ? typeof responsive['hero']
+  [K in ResponsiveKey]: K extends 'hero'
+    ? (typeof responsive)['hero']
     : ResponsiveRecord;
 };

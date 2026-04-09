@@ -1,10 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import PageHero from '@/components/ui/PageHero';
+import PageHero from '@/components/features/hero/PageHero';
 import { H2, H3, BodyMD, SmallText, Caption } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { Section, Container } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import Button from '@/components/utils/buttons/CustomButton';
 import {
   MapPin,

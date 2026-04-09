@@ -4,9 +4,15 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { hero_bg_2 } from '@/components/assets';
 import { useTheme } from '@/components/contexts/ThemeContext';
-import { Section, Container } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { BodyMD, BodySM, H2, H3, Caption } from '@/components/text';
-import PageHero from '@/components/ui/PageHero';
+import PageHero from '@/components/features/hero/PageHero';
 
 const YouthPage = () => {
   const { colorScheme } = useTheme();

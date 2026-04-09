@@ -1,7 +1,13 @@
-import HeroSection from '@/components/ui/Homepage/Herosection';
+import HeroSection from '@/components/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/components/text';
 import { hero_bg_2 } from '@/components/assets';
-import { PageSection } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 
 const BlogPage = () => {
   const blogPosts = [
@@ -102,9 +108,7 @@ const BlogPage = () => {
 
                   <H3 className="mb-2">{post.title}</H3>
 
-                  <BodySM className="text-muted mb-4">
-                    {post.excerpt}
-                  </BodySM>
+                  <BodySM className="text-muted mb-4">{post.excerpt}</BodySM>
 
                   <div className="flex items-center justify-between">
                     <BodySM className="text-subtle">By {post.author}</BodySM>
@@ -136,9 +140,7 @@ const BlogPage = () => {
               'Bible Study',
             ].map((category, index) => (
               <button key={index} className="page-card p-4">
-                <BodySM className="font-medium text-muted">
-                  {category}
-                </BodySM>
+                <BodySM className="font-medium text-muted">{category}</BodySM>
               </button>
             ))}
           </div>

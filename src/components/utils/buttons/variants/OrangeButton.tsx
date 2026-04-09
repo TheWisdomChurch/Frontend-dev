@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import Button, { ButtonProps } from '../CustomButton';
 
-const OrangeButton : React.FC<ButtonProps> = (props) => (
+const OrangeButton: React.FC<ButtonProps> = props => (
   <Button variant="accent-orange" {...props} />
 );
 

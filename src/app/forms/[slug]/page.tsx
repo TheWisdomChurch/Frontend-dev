@@ -3,11 +3,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Section, Container } from '@/components/layout';
+import {
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/components/layout';
 import { H2, H3, BodyMD, BodySM, SmallText } from '@/components/text';
 import { EventBannerDesktop, EventBannerMobile } from '@/components/assets';
 import apiClient from '@/lib/api';
-import { PublicFormPayload, EventPublic,PublicFormField } from '@/lib';
+import { PublicFormPayload, EventPublic, PublicFormField } from '@/lib';
 import { Calendar, MapPin } from 'lucide-react';
 
 const fieldBaseClass =
@@ -88,15 +94,24 @@ export default function PublicFormPage() {
     setAnswers(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleCheckboxOption = (key: string, optionValue: string, checked: boolean) => {
+  const handleCheckboxOption = (
+    key: string,
+    optionValue: string,
+    checked: boolean
+  ) => {
     setAnswers(prev => {
       const current = Array.isArray(prev[key]) ? prev[key] : [];
       if (checked) return { ...prev, [key]: [...current, optionValue] };
-      return { ...prev, [key]: current.filter((item: string) => item !== optionValue) };
+      return {
+        ...prev,
+        [key]: current.filter((item: string) => item !== optionValue),
+      };
     });
   };
 
-  const handleSubmit = async (eventSubmit: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    eventSubmit: React.FormEvent<HTMLFormElement>
+  ) => {
     eventSubmit.preventDefault();
     if (!formSlug || !form) return;
 
@@ -208,14 +223,18 @@ export default function PublicFormPage() {
                         <label key={field.key} className="space-y-2">
                           <span className={labelClass}>
                             {field.label}
-                            {field.required && <span className="text-yellow-300"> *</span>}
+                            {field.required && (
+                              <span className="text-yellow-300"> *</span>
+                            )}
                           </span>
                           <textarea
                             className={`${fieldBaseClass} min-h-[120px]`}
                             placeholder={field.placeholder}
                             required={field.required}
                             value={value || ''}
-                            onChange={e => handleChange(field.key, e.target.value)}
+                            onChange={e =>
+                              handleChange(field.key, e.target.value)
+                            }
                           />
                         </label>
                       );
@@ -226,13 +245,17 @@ export default function PublicFormPage() {
                         <label key={field.key} className="space-y-2">
                           <span className={labelClass}>
                             {field.label}
-                            {field.required && <span className="text-yellow-300"> *</span>}
+                            {field.required && (
+                              <span className="text-yellow-300"> *</span>
+                            )}
                           </span>
                           <select
                             className={fieldBaseClass}
                             required={field.required}
                             value={value || ''}
-                            onChange={e => handleChange(field.key, e.target.value)}
+                            onChange={e =>
+                              handleChange(field.key, e.target.value)
+                            }
                           >
                             <option value="" disabled>
                               {field.placeholder || 'Select an option'}
@@ -252,7 +275,9 @@ export default function PublicFormPage() {
                         <fieldset key={field.key} className="space-y-2">
                           <legend className={labelClass}>
                             {field.label}
-                            {field.required && <span className="text-yellow-300"> *</span>}
+                            {field.required && (
+                              <span className="text-yellow-300"> *</span>
+                            )}
                           </legend>
                           <div className="flex flex-wrap gap-3">
                             {field.options?.map(option => (
@@ -265,7 +290,9 @@ export default function PublicFormPage() {
                                   name={field.key}
                                   value={option.value}
                                   checked={value === option.value}
-                                  onChange={e => handleChange(field.key, e.target.value)}
+                                  onChange={e =>
+                                    handleChange(field.key, e.target.value)
+                                  }
                                   required={field.required}
                                   className="accent-yellow-400"
                                 />
@@ -283,7 +310,9 @@ export default function PublicFormPage() {
                         <fieldset key={field.key} className="space-y-2">
                           <legend className={labelClass}>
                             {field.label}
-                            {field.required && <span className="text-yellow-300"> *</span>}
+                            {field.required && (
+                              <span className="text-yellow-300"> *</span>
+                            )}
                           </legend>
                           <div className="flex flex-wrap gap-3">
                             {field.options.map(option => (
@@ -295,7 +324,11 @@ export default function PublicFormPage() {
                                   type="checkbox"
                                   checked={currentValues.includes(option.value)}
                                   onChange={e =>
-                                    handleCheckboxOption(field.key, option.value, e.target.checked)
+                                    handleCheckboxOption(
+                                      field.key,
+                                      option.value,
+                                      e.target.checked
+                                    )
                                   }
                                   className="accent-yellow-400"
                                 />
@@ -316,24 +349,31 @@ export default function PublicFormPage() {
                           <input
                             type="checkbox"
                             checked={Boolean(value)}
-                            onChange={e => handleChange(field.key, e.target.checked)}
+                            onChange={e =>
+                              handleChange(field.key, e.target.checked)
+                            }
                             className="accent-yellow-400"
                           />
                           <span>
                             {field.label}
-                            {field.required && <span className="text-yellow-300"> *</span>}
+                            {field.required && (
+                              <span className="text-yellow-300"> *</span>
+                            )}
                           </span>
                         </label>
                       );
                     }
 
-                    const inputType = field.type === 'number' ? 'number' : field.type;
+                    const inputType =
+                      field.type === 'number' ? 'number' : field.type;
 
                     return (
                       <label key={field.key} className="space-y-2">
                         <span className={labelClass}>
                           {field.label}
-                          {field.required && <span className="text-yellow-300"> *</span>}
+                          {field.required && (
+                            <span className="text-yellow-300"> *</span>
+                          )}
                         </span>
                         <input
                           type={inputType}
@@ -341,7 +381,9 @@ export default function PublicFormPage() {
                           placeholder={field.placeholder}
                           required={field.required}
                           value={value || ''}
-                          onChange={e => handleChange(field.key, e.target.value)}
+                          onChange={e =>
+                            handleChange(field.key, e.target.value)
+                          }
                         />
                       </label>
                     );
