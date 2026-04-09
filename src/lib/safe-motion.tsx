@@ -1,13 +1,33 @@
 import React from 'react';
 
 type MotionComponent = React.ComponentType<any>;
+type MotionRecord = Record<string, MotionComponent>;
+
+const fallbackCache = new Map<string, MotionComponent>();
+const createFallback = (tag: string): MotionComponent => {
+  const existing = fallbackCache.get(tag);
+  if (existing) {
+    return existing;
+  }
+  const Component = React.forwardRef<HTMLElement, Record<string, unknown>>(
+    (props, ref) =>
+      React.createElement(tag, {
+        ...props,
+        ref,
+      })
+  );
+  Component.displayName = `FallbackMotion.${tag}`;
+  fallbackCache.set(tag, Component);
+  return Component;
+};
 
 const fallbackMotion = new Proxy(
   {},
   {
-    get: (_target, prop) => prop as unknown as MotionComponent,
+    get: (_target, prop) =>
+      createFallback(typeof prop === 'string' ? prop : 'div'),
   }
-) as Record<string, MotionComponent>;
+) as MotionRecord;
 
 let framer: any = {};
 try {
