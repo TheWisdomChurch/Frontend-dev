@@ -1,12 +1,12 @@
 // app/cookies/page.tsx
-import { BodyMD, BodySM, H2, H3 } from '@/components/text';
+import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
 import {
   Container,
   Section,
   PageSection,
   FlexboxLayout,
   Gridbox,
-} from '@/components/layout';
+} from '@/shared/layout';
 
 export default function CookiesPage() {
   return (

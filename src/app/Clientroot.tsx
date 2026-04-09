@@ -1,13 +1,13 @@
 // app/ClientRoot.tsx
 'use client';
 
-import { ThemeProvider } from '@/components/contexts/ThemeContext';
-import { HeaderProvider } from '@/components/providers/NavProviders';
-import ReduxProvider from '@/components/providers/ReduxProvider';
-import ClientHeader from '@/components/common/ClientHeader';
-import ClientFooter from '@/components/common/ClientFooter';
-import ClientScrollToTop from '@/components/common/ClientscrollTop';
-import ScrollHandler from '@/components/common/ClientScrollHandler';
+import { ThemeProvider } from '@/shared/contexts/ThemeContext';
+import { HeaderProvider } from '@/shared/providers/NavProviders';
+import ReduxProvider from '@/shared/providers/ReduxProvider';
+import ClientHeader from '@/shared/components/ClientHeader';
+import ClientFooter from '@/shared/components/ClientFooter';
+import ClientScrollToTop from '@/shared/components/ClientscrollTop';
+import ScrollHandler from '@/shared/components/ClientScrollHandler';
 
 export default function ClientRoot({
   children,

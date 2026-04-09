@@ -12,36 +12,38 @@ import {
   Caption,
   SmallText,
   H1,
-} from '@/components/text';
-import SermonUtil from '@/components/ui/Sermons';
-import Button from '@/components/utils/buttons/CustomButton';
+} from '@/shared/text';
+import SermonUtil from '@/shared/ui/Sermons';
+import Button from '@/shared/utils/buttons/CustomButton';
 import {
   Section,
   Container,
   GridboxLayout,
   FlexboxLayout,
-} from '@/components/layout';
-import { useTheme } from '@/components/contexts/ThemeContext';
+} from '@/shared/layout';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import { Youtube } from 'lucide-react';
-import PageHero from '@/components/features/hero/PageHero';
+import PageHero from '@/features/hero/PageHero';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { colorScheme } = useTheme();
+  const { colorScheme, isDark } = useTheme();
 
-  // Determine if we're in dark mode based on background color
-  const isDarkMode = colorScheme.background === '#000000';
+  // Use resolved theme flag instead of hard-coded color checks
+  const isDarkMode = isDark;
 
   // Memoize theme-based styles to prevent recalculation on each render
   const themeStyles = {
-    sectionBackground: isDarkMode ? colorScheme.white : colorScheme.black,
-    textColor: isDarkMode ? colorScheme.black : colorScheme.white,
-    secondaryTextColor: isDarkMode
-      ? colorScheme.textSecondary
-      : colorScheme.textTertiary,
-    cardBackground: isDarkMode ? colorScheme.black : colorScheme.white,
-    cardTextColor: isDarkMode ? colorScheme.white : colorScheme.black,
-    borderColor: isDarkMode ? colorScheme.border : `${colorScheme.primary}40`,
+    sectionBackground: isDarkMode
+      ? colorScheme.backgroundSecondary
+      : colorScheme.backgroundSecondary,
+    textColor: colorScheme.text,
+    secondaryTextColor: colorScheme.textSecondary,
+    cardBackground: isDarkMode ? 'rgba(255,255,255,0.04)' : colorScheme.white,
+    cardTextColor: colorScheme.text,
+    borderColor: isDarkMode
+      ? 'rgba(255,255,255,0.12)'
+      : `${colorScheme.primary}40`,
   };
 
   // Single useEffect for data fetching
@@ -67,7 +69,7 @@ const SermonPage = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#050505] text-white">
       <PageHero
         title="Sermons & Teachings"
         subtitle="Catch up on every message"

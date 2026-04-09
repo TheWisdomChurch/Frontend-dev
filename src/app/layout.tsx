@@ -1,23 +1,19 @@
 // app/layout.tsx
 import type { Metadata, Viewport } from 'next';
-import {
-  bricolageGrotesque,
-  worksans,
-  playfair,
-} from '@/components/fonts/fonts';
+import { bricolageGrotesque, worksans, playfair } from '@/shared/fonts/fonts';
 
-import MetaPixel from '@/components/analytics/MetaPixel';
-import ClientHeader from '@/components/common/ClientHeader';
-import ClientFooter from '@/components/common/ClientFooter';
-import ClientScrollToTop from '@/components/common/ClientscrollTop';
-import ErrorBoundary from '@/components/common/ErrorBoundary';
-import ScrollHandler from '@/components/common/ClientScrollHandler';
-import { ThemeProvider } from '@/components/contexts/ThemeContext';
-import { ServiceUnavailableProvider } from '@/components/contexts/ServiceUnavailableContext';
-import { HeaderProvider } from '@/components/providers/NavProviders';
-import ReduxProvider from '@/components/providers/ReduxProvider';
-import AppStartupLoader from '@/components/providers/AppStartupLoader';
-import CookieConsentBanner from '@/components/ui/CookieConsentBanner';
+import MetaPixel from '@/shared/analytics/MetaPixel';
+import ClientHeader from '@/shared/components/ClientHeader';
+import ClientFooter from '@/shared/components/ClientFooter';
+import ClientScrollToTop from '@/shared/components/ClientscrollTop';
+import ErrorBoundary from '@/shared/components/ErrorBoundary';
+import ScrollHandler from '@/shared/components/ClientScrollHandler';
+import { ThemeProvider } from '@/shared/contexts/ThemeContext';
+import { ServiceUnavailableProvider } from '@/shared/contexts/ServiceUnavailableContext';
+import { HeaderProvider } from '@/shared/providers/NavProviders';
+import ReduxProvider from '@/shared/providers/ReduxProvider';
+import AppStartupLoader from '@/shared/providers/AppStartupLoader';
+import CookieConsentBanner from '@/shared/ui/CookieConsentBanner';
 import { cn } from '@/lib/cn';
 import './globals.scss';
 
