@@ -10,6 +10,7 @@ import {
   Gridbox,
 } from '@/shared/layout';
 import { H2, H3, BodyLG, BodySM, Caption, SmallText } from '@/shared/text';
+import PageHero from '@/features/hero/PageHero';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import { apiClient } from '@/lib/api';
@@ -179,25 +180,13 @@ export default function LeadershipPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <Section
-        padding="lg"
-        className="relative overflow-hidden"
-        style={{ background: '#070707' }}
-      >
-        <Container size="xl" className="relative z-10 space-y-6 fade-up">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em]">
-            Leadership
-          </div>
-          <H2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
-            Leadership at Wisdom Church
-          </H2>
-          <BodyLG className="text-white/75 max-w-3xl">
-            Our leaders steward the vision, care for the people, and build
-            healthy ministries. Meet the team and apply if you have been called
-            into leadership.
-          </BodyLG>
-        </Container>
-      </Section>
+      <PageHero
+        title="Leadership"
+        subtitle="Stewarding vision, people, and purpose."
+        note="Our leaders serve with humility and excellence. Meet the team and apply if you sense a call to leadership."
+        chips={['Pastors', 'Deacons', 'Teams', 'Service']}
+        compact
+      />
 
       <Section padding="lg" className="relative overflow-hidden bg-[#0b0b0b]">
         <Container size="xl" className="space-y-8">
