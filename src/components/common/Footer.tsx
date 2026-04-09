@@ -92,12 +92,45 @@ function Footer() {
         <div className="absolute inset-0" style={gradientStyle} />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.9fr_0.95fr_1.1fr] gap-10 lg:gap-8 xl:gap-10 mb-12">
-          {/* Brand + Contact */}
-          <div className="space-y-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-14">
+        <div className="mb-10 rounded-3xl border border-white/10 bg-white/[0.03] p-5 sm:p-7 lg:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-2">
+              <BodyLG className="text-base sm:text-lg font-medium text-white">
+                Build your week around purpose.
+              </BodyLG>
+              <Caption className="text-white/60">
+                Join service updates, sermons, and upcoming programs.
+              </Caption>
+            </div>
+            <form
+              onSubmit={handleSubscribe}
+              className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2"
+            >
+              <input
+                type="email"
+                placeholder="Email address"
+                className="w-full sm:w-64 px-3.5 py-2.5 rounded-full bg-white/5 border border-white/15 focus:border-primary focus:outline-none transition placeholder:text-white/35 text-white text-sm"
+              />
+              <button
+                type="submit"
+                style={{
+                  backgroundColor: colorScheme.primary,
+                  color: colorScheme.black,
+                }}
+                className="h-10 rounded-full px-5 text-[12px] font-medium hover:opacity-90 transition-all flex items-center justify-center gap-1.5"
+              >
+                Subscribe
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr_1fr] gap-10 lg:gap-12">
+          <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="relative w-11 h-11 rounded-lg overflow-hidden ring-1 ring-white/15">
+              <div className="relative w-11 h-11 rounded-2xl overflow-hidden ring-1 ring-white/15">
                 <Image
                   src={WisdomeHouseLogo}
                   alt="The Wisdom House Church"
@@ -125,7 +158,7 @@ function Footer() {
             <div className="space-y-3">
               {contactInfo.map((item, i) => (
                 <div key={i} className="flex gap-3">
-                  <div className="h-9 w-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+                  <div className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
                     <item.Icon
                       className="w-4 h-4"
                       style={{ color: colorScheme.primary }}
@@ -144,12 +177,11 @@ function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-5">
+          <div className="space-y-6">
             <BodySM className="text-xs uppercase tracking-[0.18em] text-white/60">
               Quick Links
             </BodySM>
-            <ul className="space-y-2.5">
+            <ul className="grid grid-cols-2 gap-y-2.5 gap-x-6">
               {quickLinks.map(link => (
                 <li key={link.href}>
                   <Link
@@ -165,114 +197,82 @@ function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
 
-          {/* Service Times */}
-          <div className="space-y-5">
-            <BodySM className="text-xs uppercase tracking-[0.18em] text-white/60">
-              Service Times
-            </BodySM>
             <div className="space-y-3">
-              {serviceTimes.map(s => (
-                <div
-                  key={s.day}
-                  className={`rounded-lg border px-3.5 py-3 ${
-                    s.highlight
-                      ? 'border-white/20 bg-white/10'
-                      : 'border-white/10 bg-white/5'
-                  }`}
-                >
-                  <BodySM
-                    className="text-[12px] text-white/85 mb-1"
-                    style={{
-                      color: s.highlight ? colorScheme.primary : undefined,
-                    }}
+              <BodySM className="text-xs uppercase tracking-[0.18em] text-white/60">
+                Service Times
+              </BodySM>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {serviceTimes.map(s => (
+                  <div
+                    key={s.day}
+                    className={`rounded-2xl border px-3.5 py-3 ${
+                      s.highlight
+                        ? 'border-white/20 bg-white/10'
+                        : 'border-white/10 bg-white/5'
+                    }`}
                   >
-                    {s.day}
-                  </BodySM>
-                  <Caption className="text-white/60">{s.time}</Caption>
-                </div>
-              ))}
+                    <BodySM
+                      className="text-[12px] text-white/85 mb-1"
+                      style={{
+                        color: s.highlight ? colorScheme.primary : undefined,
+                      }}
+                    >
+                      {s.day}
+                    </BodySM>
+                    <Caption className="text-white/60">{s.time}</Caption>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Newsletter + Social */}
-          <div className="space-y-7">
-            <div className="space-y-3">
-              <BodyLG className="text-sm font-medium text-white">
-                Stay Inspired
-              </BodyLG>
-              <Caption className="text-white/60 leading-relaxed">
-                Get weekly sermons, event updates, and devotionals.
-              </Caption>
-            </div>
-
-            <form onSubmit={handleSubscribe} className="space-y-3">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white/5 border border-white/15 focus:border-primary focus:outline-none transition placeholder:text-white/35 text-white text-sm"
-              />
-              <button
-                type="submit"
-                style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
-                }}
-                className="w-full h-10 rounded-lg text-[12px] font-medium hover:opacity-90 transition-all flex items-center justify-center gap-1.5"
-              >
-                Subscribe
-                <ArrowRight className="w-3 h-3" />
-              </button>
-            </form>
-
-            <div className="pt-4 border-t border-white/10">
-              <BodyMD className="text-xs uppercase tracking-[0.18em] text-white/60 mb-3">
-                Follow Us
-              </BodyMD>
-              <div className="flex items-center gap-2.5">
-                {socialLinks.map((social, i) => {
-                  const isDormant = social.href === '#';
-                  return (
-                    <a
-                      key={i}
-                      href={social.href}
-                      target={isDormant ? undefined : '_blank'}
-                      rel={isDormant ? undefined : 'noopener noreferrer'}
-                      onClick={
-                        isDormant
-                          ? event =>
-                              openDormant(event, {
-                                title: `${social.label} opening soon`,
-                                message:
-                                  'We are activating this social channel. Please check back shortly.',
-                                actionLabel: 'Got it',
-                              })
-                          : undefined
-                      }
-                      className="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all"
-                      aria-label={social.label}
-                    >
-                      <social.Icon
-                        className="w-4 h-4"
-                        style={{ color: colorScheme.primary }}
-                      />
-                    </a>
-                  );
-                })}
-              </div>
+          <div className="space-y-6">
+            <BodySM className="text-xs uppercase tracking-[0.18em] text-white/60">
+              Connect
+            </BodySM>
+            <div className="flex items-center gap-2.5">
+              {socialLinks.map((social, i) => {
+                const isDormant = social.href === '#';
+                return (
+                  <a
+                    key={i}
+                    href={social.href}
+                    target={isDormant ? undefined : '_blank'}
+                    rel={isDormant ? undefined : 'noopener noreferrer'}
+                    onClick={
+                      isDormant
+                        ? event =>
+                            openDormant(event, {
+                              title: `${social.label} opening soon`,
+                              message:
+                                'We are activating this social channel. Please check back shortly.',
+                              actionLabel: 'Got it',
+                            })
+                        : undefined
+                    }
+                    className="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all"
+                    aria-label={social.label}
+                  >
+                    <social.Icon
+                      className="w-4 h-4"
+                      style={{ color: colorScheme.primary }}
+                    />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10">
+        <div className="pt-8 border-t border-white/10 mt-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <Caption className="text-white/45 text-center md:text-left">
               © {currentYear} The Wisdom House Church. All Rights Reserved.
             </Caption>
             <div className="flex items-center gap-6">
               <Link
-                href="/privacy"
+                href="/terms"
                 className="text-white/60 hover:text-white transition-colors"
               >
                 <Caption>Privacy Policy</Caption>

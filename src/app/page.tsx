@@ -192,46 +192,70 @@ export default function Home() {
           <HeroMain />
 
           {/* Hero Highlights Section */}
-          <div data-gsap="reveal">
+          <section
+            className="relative border-t border-white/10 bg-[#0b0b0b]"
+            data-gsap="reveal"
+          >
             <HeroHighlights />
-          </div>
+          </section>
 
           {/* What We Do Section */}
-          <div data-gsap="reveal">
+          <section
+            className="relative border-t border-white/10 bg-[#080808]"
+            data-gsap="reveal"
+          >
             <WhatWeDo />
-          </div>
+          </section>
 
           {/* Events Showcase - Fetches from API */}
-          <div data-gsap="reveal">
+          <section
+            className="relative border-t border-white/10 bg-[#0b0b0b]"
+            data-gsap="reveal"
+          >
             <EventsShowcase />
-          </div>
+          </section>
 
           {/* Senior Pastor Message Section */}
-          <div data-gsap="reveal">
+          <section
+            className="relative border-t border-white/10 bg-[#080808]"
+            data-gsap="reveal"
+          >
             <SeniorPastor />
-          </div>
+          </section>
 
           {/* Call to Action - Join Us */}
           <div id="join">
-            <div data-gsap="reveal">
+            <section
+              className="relative border-t border-white/10 bg-[#0b0b0b]"
+              data-gsap="reveal"
+            >
               <JoinUs />
-            </div>
+            </section>
           </div>
 
           {/* Testimonials Section - Fetches from API */}
-          <div data-gsap="reveal">
+          <section
+            className="relative border-t border-white/10 bg-[#080808]"
+            data-gsap="reveal"
+          >
             <Testimonials />
-          </div>
+          </section>
 
           {/* Online Giving Section */}
-          <div data-gsap="reveal">
+          <section
+            className="relative border-t border-white/10 bg-[#0b0b0b]"
+            data-gsap="reveal"
+          >
             <OnlineGiving />
-          </div>
+          </section>
 
           {/* Resources Section */}
-          <div data-gsap="reveal">
+          <section
+            className="relative border-t border-white/10 bg-[#080808]"
+            data-gsap="reveal"
+          >
             <ResourceSection />
-          </div>
+          </section>
         </div>
 
         {/* Event Advertisement Modal */}

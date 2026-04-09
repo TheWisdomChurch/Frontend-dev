@@ -3,13 +3,7 @@
 
 import React, { type ElementType, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/components/layout';
+import { Container, Section } from '@/components/layout';
 import { Caption, H3, BodySM, SmallText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { resourceLinks } from '@/lib/data';
@@ -132,22 +126,22 @@ export default function ResourceSection() {
       id="resources"
       padding="lg"
       className="relative overflow-hidden"
-      style={{ background: '#0b0b0b' }}
+      style={{ background: '#070707' }}
     >
       <Container size="xl" className="relative z-10 space-y-6">
         {/* HEADER */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-3">
             <Caption
-              className="uppercase tracking-[0.2em] text-xs"
+              className="uppercase tracking-[0.22em] text-[0.62rem]"
               style={{ color: colorScheme.primary }}
             >
               Resources & Media
             </Caption>
-            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
+            <H3 className="text-[1.4rem] sm:text-2xl font-semibold text-white leading-tight">
               Streams, sermons, events, and pastoral care
             </H3>
-            <BodySM className="text-white/75 max-w-3xl">
+            <BodySM className="text-white/70 max-w-3xl text-[0.82rem] sm:text-sm">
               Catch up on sermons, join a live service, register for events, or
               request pastoral moments.
             </BodySM>
@@ -155,7 +149,7 @@ export default function ResourceSection() {
 
           <Link
             href="/resources"
-            className="inline-flex items-center gap-2 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/20 hover:bg-white/10"
+            className="inline-flex items-center gap-2 text-white text-[0.78rem] sm:text-sm font-semibold px-4 py-2 rounded-full border border-white/20 hover:bg-white/10"
           >
             View all resources <ArrowRight className="w-4 h-4" />
           </Link>
@@ -163,7 +157,7 @@ export default function ResourceSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-4">
           {/* LEFT: Latest video */}
-          <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#111] p-5 sm:p-6 shadow-2xl space-y-4">
+          <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-[#111] p-5 sm:p-6 shadow-2xl space-y-4">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/0 to-white/10" />
             <div className="relative flex items-center gap-3 text-white/80 text-sm">
               <span
@@ -179,7 +173,7 @@ export default function ResourceSection() {
                 <H3 className="text-lg sm:text-xl font-semibold text-white">
                   Latest from YouTube
                 </H3>
-                <BodySM className="text-white/70">
+                <BodySM className="text-white/70 text-[0.82rem] sm:text-sm">
                   Stream Sundays & Thursdays. Turn on reminders so you never
                   miss a moment.
                 </BodySM>
@@ -203,7 +197,7 @@ export default function ResourceSection() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <SmallText className="text-white line-clamp-2">
+                      <SmallText className="text-white line-clamp-2 text-[0.8rem] sm:text-sm">
                         {recentVideo.title}
                       </SmallText>
                       <Caption className="text-white/60">
@@ -218,7 +212,7 @@ export default function ResourceSection() {
                         href={recentVideoUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white text-black text-xs font-semibold hover:scale-[1.04] transition shadow-lg shrink-0"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white text-black text-[0.7rem] sm:text-xs font-semibold hover:scale-[1.04] transition shadow-lg shrink-0"
                       >
                         <PlayCircle className="w-4 h-4" /> Play
                       </Link>
@@ -240,7 +234,7 @@ export default function ResourceSection() {
               <div className="flex flex-wrap gap-2">
                 <Link
                   href="/resources/sermons"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 text-white text-sm hover:bg-white/10"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 text-white text-[0.78rem] sm:text-sm hover:bg-white/10"
                 >
                   <PlayCircle className="w-4 h-4" /> Watch now
                 </Link>
@@ -264,7 +258,7 @@ export default function ResourceSection() {
           </div>
 
           {/* RIGHT: Subscribe */}
-          <div className="rounded-3xl border border-white/15 bg-[#111] p-5 shadow-2xl space-y-4">
+          <div className="rounded-3xl border border-white/12 bg-[#111] p-5 shadow-2xl space-y-4">
             <div className="flex items-center gap-2 text-white/70 text-sm mb-3">
               <Radio className="w-4 h-4" />
               Live notification
@@ -278,7 +272,7 @@ export default function ResourceSection() {
                 onChange={e =>
                   setSubscriber(prev => ({ ...prev, name: e.target.value }))
                 }
-                className="w-full rounded-xl bg-black/60 border border-white/15 text-white px-3 py-2 text-sm outline-none focus:border-primary"
+                className="w-full rounded-xl bg-black/60 border border-white/15 text-white px-3 py-2 text-[0.8rem] outline-none focus:border-primary"
               />
               <input
                 type="email"
@@ -288,12 +282,12 @@ export default function ResourceSection() {
                 onChange={e =>
                   setSubscriber(prev => ({ ...prev, email: e.target.value }))
                 }
-                className="w-full rounded-xl bg-black/40 border border-white/15 text-white px-3 py-2 text-sm outline-none focus:border-primary"
+                className="w-full rounded-xl bg-black/40 border border-white/15 text-white px-3 py-2 text-[0.8rem] outline-none focus:border-primary"
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-black font-semibold text-sm hover:scale-[1.02] transition disabled:opacity-60"
+                className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-black font-semibold text-[0.8rem] hover:scale-[1.02] transition disabled:opacity-60"
               >
                 {submitting ? 'Sending...' : 'Notify me when live'}{' '}
                 <ArrowRight className="w-4 h-4" />
@@ -333,16 +327,19 @@ export default function ResourceSection() {
                     <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/15">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <SmallText weight="bold" className="text-white text-lg">
+                    <SmallText
+                      weight="bold"
+                      className="text-white text-[0.95rem] sm:text-lg"
+                    >
                       {card.title}
                     </SmallText>
                   </div>
 
-                  <BodySM className="text-white/70 leading-relaxed">
+                  <BodySM className="text-white/70 leading-relaxed text-[0.82rem] sm:text-sm">
                     {card.description}
                   </BodySM>
 
-                  <div className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+                  <div className="inline-flex items-center gap-2 text-[0.78rem] sm:text-sm font-semibold text-white">
                     {card.actionText || 'Open'}{' '}
                     <ArrowRight className="w-4 h-4" />
                   </div>
