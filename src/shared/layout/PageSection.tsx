@@ -31,10 +31,10 @@ const toneClassMap: Record<Tone, string> = {
 const PageSection: React.FC<PageSectionProps> = ({
   children,
   tone = 'page',
-  padding = 'lg',
+  padding = 'xl',
   container = true,
   containerSize = 'xl',
-  containerPadding = 'lg',
+  containerPadding = 'xl',
   className = '',
   containerClassName = '',
   id,

@@ -237,19 +237,19 @@ const HeroSection = ({
         'relative w-full min-h-[78vh] sm:min-h-[84vh] lg:min-h-[90vh] overflow-hidden bg-[#050505]'
       )}
     >
-      {heroImage?.src ? (
-        <div className="absolute inset-0 -z-30">
-          <Image
-            src={heroImage.src}
-            alt={heroImage.alt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-            style={{ objectPosition: heroImage.objectPosition || 'center' }}
-          />
-        </div>
-      ) : null}
+      <div className="absolute inset-0 -z-30">
+        <video
+          className="h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={heroImage?.src}
+        >
+          <source src="/videos/videoBg.mp4" type="video/mp4" />
+        </video>
+      </div>
 
       <div className="absolute inset-0 -z-20 bg-black/60 sm:bg-black/55" />
       <div
@@ -276,7 +276,7 @@ const HeroSection = ({
       >
         <div className="w-full">
           <div className="grid gap-10 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div className="space-y-7 text-center lg:text-left fade-up">
+            <div className="space-y-8 text-center lg:text-left fade-up">
               {showWaveText && (
                 <div className="flex justify-center lg:justify-start">
                   <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2.5 text-[0.6rem] uppercase tracking-[0.18em] text-white/80">
@@ -361,7 +361,7 @@ const HeroSection = ({
               </div>
             </div>
 
-            <div className="grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-1 fade-up">
+            <div className="grid gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-1 fade-up">
               <div className="rounded-2xl border border-white/15 bg-black/70 backdrop-blur-xl p-6 sm:p-7 space-y-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
