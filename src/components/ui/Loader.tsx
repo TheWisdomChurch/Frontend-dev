@@ -33,18 +33,18 @@ export default function Loader({
       <div className="absolute inset-0 h-full w-full overflow-hidden">
         {!videoError && (
           <video
-            className="absolute inset-0 h-full w-full object-cover opacity-60"
+            className="absolute inset-0 h-full w-full object-cover opacity-55"
             autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             onCanPlay={() => setVideoLoaded(true)}
             onError={() => setVideoError(true)}
             aria-hidden="true"
           >
-            <source src="/videos/videoBg.mp4" type="video/mp4" />
-            <source src="/videos/videoBg.webm" type="video/webm" />
+            <source src="/videos/loader-bg.webm" type="video/webm" />
+            <source src="/videos/loader-bg.mp4" type="video/mp4" />
           </video>
         )}
         {/* Fallback gradient */}
