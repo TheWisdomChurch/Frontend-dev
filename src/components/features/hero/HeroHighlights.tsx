@@ -3,7 +3,6 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import Image from 'next/image';
-import * as FramerMotion from 'framer-motion';
 import { CalendarClock, ArrowRight, Clock, MapPin } from 'lucide-react';
 
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -20,7 +19,7 @@ import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
 import { Dept_1, Dept_2, Dept_3 } from '@/components/assets';
 
-const { motion } = FramerMotion;
+import { motion } from '@/lib/safe-motion';
 
 /* =============================================================================
    Data
@@ -140,6 +139,10 @@ type JoinState = {
 };
 
 export default function HeroHighlights() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   const { colorScheme = lightShades } = useTheme();
   const serviceUnavailable = useServiceUnavailable();
 
