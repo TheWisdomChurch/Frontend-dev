@@ -14,12 +14,7 @@ import {
 } from '@/components/utils/functionUtils/contactUtils';
 import { H2, BaseText, BodySM, Caption, H3 } from '@/components/text';
 import Button from '@/components/utils/buttons/CustomButton';
-import {
-  Section,
-  Container,
-  GridboxLayout,
-  FlexboxLayout,
-} from '@/components/layout';
+import { Section, Container } from '@/components/layout';
 import { WisdomeHouseLogo } from '@/components/assets';
 export default function OnlineGiving() {
   const { colorScheme } = useTheme();
@@ -67,8 +62,8 @@ export default function OnlineGiving() {
 
   const cardShell =
     'giving-card rounded-2xl border border-white/12 bg-white/5 backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 ease-out';
-  const cardTitle = 'text-[15px] font-medium text-white';
-  const cardDesc = 'text-[13px] text-white/70 leading-relaxed';
+  const cardTitle = 'text-[0.92rem] font-medium text-white';
+  const cardDesc = 'text-[0.8rem] text-white/70 leading-relaxed';
   const cardCtaWrap = 'giving-cta-wrap mt-4 min-h-10';
   const cardButton =
     'giving-cta w-full h-10 text-[12px] sm:text-[13px] font-medium border border-white/20 bg-white/5 text-white hover:bg-white/10 transition-all duration-300';
@@ -191,9 +186,9 @@ export default function OnlineGiving() {
         fullHeight={false}
         className="overflow-hidden relative"
         style={{
-          backgroundColor: '#000000',
+          backgroundColor: '#070707',
           backgroundImage:
-            'radial-gradient(circle at 20% 50%, rgba(0, 40, 100, 0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 50%, rgba(0, 40, 100, 0.08) 0%, transparent 55%)',
         }}
       >
         {/* Animated background elements */}
@@ -239,13 +234,7 @@ export default function OnlineGiving() {
         )}
         <Container size="xl" className="relative z-10 py-10 sm:py-14 lg:py-16">
           {/* Header - Not too big but bold */}
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="sm"
-            className="text-center mb-10 sm:mb-12 px-4"
-          >
+          <div className="text-center mb-10 sm:mb-12 px-4 space-y-3">
             {/* Logo with subtle animation */}
             <div className="mb-4 relative">
               <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-white/20 shadow-xl mx-auto">
@@ -261,7 +250,7 @@ export default function OnlineGiving() {
             </div>
             {/* Title with gradient */}
             <H2
-              className="text-xl sm:text-2xl lg:text-3xl font-semibold leading-tight tracking-tight"
+              className="text-[1.35rem] sm:text-2xl lg:text-3xl font-semibold leading-tight tracking-tight"
               style={{
                 color: '#FFFFFF',
                 textShadow: '0 2px 10px rgba(0,0,0,0.3)',
@@ -274,7 +263,7 @@ export default function OnlineGiving() {
             </H2>
             {/* Subtitle */}
             <BodySM
-              className="max-w-lg text-center leading-relaxed mt-3 px-4 opacity-90 text-sm sm:text-base"
+              className="max-w-lg text-center leading-relaxed mt-3 px-4 opacity-90 text-[0.82rem] sm:text-sm"
               style={{ color: '#a0a0a0' }}
               useThemeColor={false}
             >
@@ -286,14 +275,10 @@ export default function OnlineGiving() {
               <span>God loves a cheerful giver. 2 Corinthians 9:7</span>
               <Gift className="w-4 h-4 inline-block ml-2 opacity-70" />
             </BodySM>
-          </FlexboxLayout>
+          </div>
           {/* Desktop - Movie Premiere 3D Layout (Coverflow-style with zoom effect) */}
           <div className="hidden lg:block">
-            <FlexboxLayout
-              justify="between"
-              align="center"
-              className="mb-6 px-4"
-            >
+            <div className="mb-6 px-4 flex items-center justify-between">
               <button
                 onClick={previousCard}
                 className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition"
@@ -301,7 +286,7 @@ export default function OnlineGiving() {
                 <ChevronLeft className="w-5 h-5 text-white" />
               </button>
               <BodySM
-                className="font-medium text-sm"
+                className="font-medium text-[0.78rem]"
                 style={{ color: '#9ca3af' }}
                 useThemeColor={false}
               >
@@ -313,7 +298,7 @@ export default function OnlineGiving() {
               >
                 <ChevronRight className="w-5 h-5 text-white" />
               </button>
-            </FlexboxLayout>
+            </div>
             <div className="relative h-[400px] w-full overflow-hidden perspective-1000">
               <div className="w-full h-full flex items-center justify-center preserve-3d relative">
                 {OnlinegivingOptions.map((option, index) => {
@@ -413,7 +398,7 @@ export default function OnlineGiving() {
           </div>
           {/* Tablet (768px - 1023px) - Modified Grid Layout */}
           <div className="hidden md:block lg:hidden">
-            <GridboxLayout columns={2} gap="lg" className="w-full mb-12">
+            <div className="grid grid-cols-2 gap-6 w-full mb-12">
               {OnlinegivingOptions.map((option, index) => (
                 <div
                   key={option.title}
@@ -463,12 +448,12 @@ export default function OnlineGiving() {
                   </div>
                 </div>
               ))}
-            </GridboxLayout>
+            </div>
           </div>
           {/* Mobile - Keep original but refined */}
           <div className="md:hidden px-4">
-            <FlexboxLayout direction="column" gap="md">
-              <FlexboxLayout justify="between" align="center" className="mb-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={scrollLeft}
                   className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition"
@@ -476,7 +461,7 @@ export default function OnlineGiving() {
                   <ChevronLeft className="w-5 h-5 text-white" />
                 </button>
                 <BodySM
-                  className="font-medium text-sm"
+                  className="font-medium text-[0.78rem]"
                   style={{ color: '#9ca3af' }}
                   useThemeColor={false}
                 >
@@ -488,7 +473,7 @@ export default function OnlineGiving() {
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
                 </button>
-              </FlexboxLayout>
+              </div>
               <div
                 ref={scrollContainerRef}
                 className="flex gap-5 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
@@ -538,7 +523,7 @@ export default function OnlineGiving() {
                 ))}
                 <div className="flex-shrink-0 w-4" />
               </div>
-            </FlexboxLayout>
+            </div>
           </div>
           {/* Other Ways to Give - Refined */}
           <div
@@ -550,14 +535,14 @@ export default function OnlineGiving() {
           >
             <div className="max-w-lg mx-auto bg-gradient-to-br from-gray-900/50 to-black/50 rounded-2xl p-6 border border-white/10 text-center backdrop-blur-sm">
               <H3
-                className="text-center mb-4 text-lg font-semibold"
+                className="text-center mb-4 text-[1.1rem] font-semibold"
                 style={{ color: '#ffffff' }}
                 useThemeColor={false}
               >
                 Other Ways to Give
               </H3>
               <Caption
-                className="mb-6 text-white/70 text-sm leading-relaxed"
+                className="mb-6 text-white/70 text-[0.82rem] sm:text-sm leading-relaxed"
                 useThemeColor={false}
               >
                 Give by mail, in person during services, or set up recurring
@@ -570,7 +555,7 @@ export default function OnlineGiving() {
                   size="sm"
                   curvature="full"
                   leftIcon={<Phone className="w-4 h-4" />}
-                  className="h-11 w-full px-4 text-[13px] sm:text-sm font-medium hover:scale-[1.01] transition"
+                  className="h-11 w-full px-4 text-[0.8rem] sm:text-sm font-medium hover:scale-[1.01] transition"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: '#000000',
@@ -582,7 +567,7 @@ export default function OnlineGiving() {
                   variant="outline"
                   size="sm"
                   curvature="full"
-                  className="h-11 w-full px-4 text-[13px] sm:text-sm font-medium border hover:bg-white/10 transition"
+                  className="h-11 w-full px-4 text-[0.8rem] sm:text-sm font-medium border hover:bg-white/10 transition"
                   style={{
                     borderColor: colorScheme.primary,
                     color: '#FFFFFF',

@@ -16,13 +16,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/components/layout';
+import { Container, Section } from '@/components/layout';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
@@ -307,7 +301,7 @@ export default function JoinWisdomHouse() {
       background="custom"
       className="relative overflow-hidden"
       style={{
-        backgroundImage: `linear-gradient(185deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.94) 50%, rgba(0,0,0,0.96) 100%), url(${Workforce_bg.src})`,
+        backgroundImage: `linear-gradient(185deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.96) 50%, rgba(0,0,0,0.98) 100%), url(${Workforce_bg.src})`,
         backgroundSize: 'cover, cover',
         backgroundRepeat: 'no-repeat, no-repeat',
         backgroundPosition: 'center center, center center',
@@ -315,28 +309,28 @@ export default function JoinWisdomHouse() {
         backgroundColor: '#050505',
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/75 to-black/85 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/75 to-black/85 pointer-events-none" />
 
-      <Container size="xl" className="relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-start">
+      <Container size="xl" className="relative z-10 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 items-start">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/25 bg-white/5 text-white text-xs uppercase tracking-[0.18em]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/25 bg-white/5 text-white text-[0.62rem] uppercase tracking-[0.2em]">
               <Sparkles className="w-3.5 h-3.5" />
               “Two are better than one” — Ecclesiastes 4:9
             </div>
 
-            <H2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-tight">
+            <H2 className="text-[1.4rem] sm:text-3xl lg:text-4xl font-semibold text-white leading-tight">
               Join the{' '}
               <span style={{ color: colorScheme.primary }}>Wisdom Church</span>{' '}
               workforce
             </H2>
 
-            <BodySM className="text-white/75 max-w-2xl">
+            <BodySM className="text-white/70 max-w-2xl text-[0.82rem] sm:text-sm">
               Serving together is worship. Hospitality, music, media, prayer,
               and tech—pick a lane, get trained, and build the body with joy.
             </BodySM>
 
-            <div className="flex items-center gap-4 text-white/70 text-sm">
+            <div className="flex flex-col gap-2 text-white/70 text-[0.78rem] sm:text-sm">
               <div className="flex items-center gap-2">
                 <span
                   className="h-2 w-2 rounded-full"
@@ -357,17 +351,19 @@ export default function JoinWisdomHouse() {
           {/* ✅ QUICK SIGNUP FORM */}
           <form
             onSubmit={onQuickSubmit}
-            className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-4"
+            className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-5 sm:p-6 shadow-2xl space-y-4"
           >
-            <SmallText className="text-white/80">Quick signup</SmallText>
+            <SmallText className="text-white/80 text-[0.78rem]">
+              Quick signup
+            </SmallText>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-sm text-white/80 space-y-1">
+              <label className="text-[0.78rem] text-white/80 space-y-1">
                 Full Name
                 <input
                   type="text"
                   {...registerQuick('name')}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 text-[0.82rem] outline-none focus:border-primary"
                 />
                 {quickErrors.name && (
                   <span className="text-xs text-amber-300">
@@ -376,12 +372,12 @@ export default function JoinWisdomHouse() {
                 )}
               </label>
 
-              <label className="text-sm text-white/80 space-y-1">
+              <label className="text-[0.78rem] text-white/80 space-y-1">
                 Email
                 <input
                   type="email"
                   {...registerQuick('email')}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 text-[0.82rem] outline-none focus:border-primary"
                 />
                 {quickErrors.email && (
                   <span className="text-xs text-amber-300">
@@ -391,11 +387,11 @@ export default function JoinWisdomHouse() {
               </label>
             </div>
 
-            <label className="text-sm text-white/80 space-y-1">
+            <label className="text-[0.78rem] text-white/80 space-y-1">
               Preferred Team
               <select
                 {...registerQuick('team')}
-                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
+                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 text-[0.82rem] outline-none focus:border-primary"
               >
                 <option value="">Select a team</option>
                 {departments.map(dept => (
@@ -417,7 +413,7 @@ export default function JoinWisdomHouse() {
               size="md"
               curvature="xl"
               elevated
-              className="w-full"
+              className="w-full text-[0.82rem]"
               disabled={quickSubmitting}
             >
               {quickSubmitting
@@ -432,7 +428,7 @@ export default function JoinWisdomHouse() {
               variant="outline"
               size="sm"
               curvature="xl"
-              className="w-full text-white border-white/30 hover:border-white/60"
+              className="w-full text-white border-white/30 hover:border-white/60 text-[0.78rem]"
               style={{ color: '#ffffff' }}
               onClick={() => handleOpenModal()}
             >
@@ -467,16 +463,19 @@ export default function JoinWisdomHouse() {
                 </div>
 
                 <div className="relative z-10 space-y-1">
-                  <SmallText weight="bold" className="text-white">
+                  <SmallText
+                    weight="bold"
+                    className="text-white text-[0.85rem]"
+                  >
                     {dept.title}
                   </SmallText>
-                  <Caption className="text-white/70">
+                  <Caption className="text-white/70 text-[0.7rem]">
                     {dept.description}
                   </Caption>
                 </div>
 
                 <div className="relative z-10 flex items-center justify-between pt-2">
-                  <Caption className="text-white/60">
+                  <Caption className="text-white/60 text-[0.7rem]">
                     Tap to choose above
                   </Caption>
                   <ArrowRight className="w-4 h-4 text-white/70" />

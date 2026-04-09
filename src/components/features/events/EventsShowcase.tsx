@@ -214,7 +214,7 @@ export default function EventsShowcase() {
     <Section
       padding="md"
       className="relative overflow-hidden"
-      style={{ background: '#0a0a0a' }}
+      style={{ background: '#070707' }}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-80"
@@ -226,32 +226,32 @@ export default function EventsShowcase() {
         data-parallax-global="0.25"
       />
 
-      <Container size="xl" className="relative z-10 space-y-5">
-        <div className="flex flex-col gap-1.5">
+      <Container size="xl" className="relative z-10 space-y-8">
+        <div className="flex flex-col gap-3 animate-slide-in-up">
           <Caption
-            className="uppercase tracking-[0.2em] text-xs"
+            className="uppercase tracking-[0.22em] text-[0.62rem]"
             style={{ color: colorScheme.primary }}
           >
             Programs & Media
           </Caption>
 
-          <H3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">
+          <H3 className="text-[1.55rem] sm:text-3xl font-semibold text-white leading-tight">
             What&apos;s happening now
           </H3>
 
-          <BodySM className="text-white/75 max-w-3xl text-sm sm:text-base">
-            Live programs and recent reels, powered by your backend data.
+          <BodySM className="text-white/70 max-w-2xl text-[0.9rem] sm:text-base leading-relaxed">
+            Live programs and recent reels from your backend.
           </BodySM>
 
-          <div className="flex flex-wrap items-center gap-2 pt-1">
+          <div className="flex flex-wrap items-center gap-2 pt-2">
             {(Object.keys(CATEGORY_LABELS) as ShowcaseCategory[]).map(cat => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
+                className={`px-3.5 py-2 rounded-full text-[0.74rem] sm:text-sm font-semibold border transition ${
                   category === cat
                     ? 'bg-white text-black border-white'
-                    : 'border-white/25 text-white hover:bg-white/10'
+                    : 'border-white/20 text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 {CATEGORY_LABELS[cat]}
@@ -260,12 +260,12 @@ export default function EventsShowcase() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-3 sm:gap-4 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 items-stretch">
           <div
             className="
-              relative overflow-hidden rounded-3xl border border-white/15 bg-[#111] shadow-2xl
-              h-[420px] sm:h-[480px] lg:h-auto
-              lg:aspect-[16/9] lg:min-h-[340px]
+              relative overflow-hidden rounded-3xl border border-white/12 bg-[#111] shadow-2xl hover-lift
+              h-[380px] sm:h-[440px] lg:h-auto
+              lg:aspect-[16/9] lg:min-h-[320px]
             "
           >
             {loading && category === 'program' ? (
@@ -313,8 +313,8 @@ export default function EventsShowcase() {
                   <div
                     className="
                       absolute inset-0 flex flex-col justify-end lg:justify-center
-                      px-4 py-5 sm:px-7 sm:py-6 lg:px-10
-                      gap-2.5 sm:gap-3
+                      px-4 py-5 sm:px-7 sm:py-6 lg:px-9
+                      gap-2 sm:gap-3
                       max-w-none lg:max-w-2xl
                     "
                   >
@@ -328,15 +328,15 @@ export default function EventsShowcase() {
                       {current.badge}
                     </div>
 
-                    <SmallText className="text-white/70 text-sm line-clamp-1">
+                    <SmallText className="text-white/70 text-[0.9rem] sm:text-base line-clamp-1">
                       {current.subtitle}
                     </SmallText>
 
-                    <H3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white leading-tight">
+                    <H3 className="text-[1.6rem] sm:text-3xl lg:text-[2.2rem] font-semibold text-white leading-tight">
                       {current.title}
                     </H3>
 
-                    <BodySM className="text-white/80 text-sm sm:text-base line-clamp-3 sm:line-clamp-4">
+                    <BodySM className="text-white/80 text-[0.9rem] sm:text-base leading-relaxed line-clamp-3 sm:line-clamp-4">
                       {current.description}
                     </BodySM>
 
@@ -358,7 +358,7 @@ export default function EventsShowcase() {
                       {current.category === 'reel' ? (
                         <button
                           onClick={() => setReelModal(current)}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
+                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-[0.82rem] sm:text-sm font-semibold hover:scale-[1.02] transition"
                         >
                           {current.cta} <Play className="w-4 h-4" />
                         </button>
@@ -366,7 +366,7 @@ export default function EventsShowcase() {
                         current.href && (
                           <a
                             href={current.href}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-[0.82rem] sm:text-sm font-semibold hover:scale-[1.02] transition"
                           >
                             {current.cta} <ArrowRight className="w-4 h-4" />
                           </a>
@@ -380,7 +380,7 @@ export default function EventsShowcase() {
                               (prev + 1) % Math.max(activeSlides.length, 1)
                           )
                         }
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-[0.82rem] sm:text-sm font-semibold hover:bg-white/10 transition"
                       >
                         Next <ArrowRight className="w-4 h-4" />
                       </button>
@@ -404,6 +404,7 @@ export default function EventsShowcase() {
               flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1
               lg:grid lg:grid-cols-1 lg:gap-2.5 lg:overflow-visible lg:pb-0 lg:mx-0 lg:px-0
               scroll-smooth
+              stagger-children
             "
           >
             {activeSlides.map((slide, idx) => (
@@ -411,8 +412,8 @@ export default function EventsShowcase() {
                 key={`${slide.id}-${idx}`}
                 onClick={() => setActive(idx)}
                 className={`
-                  relative overflow-hidden rounded-2xl border border-white/15 p-3.5 sm:p-4 text-left
-                  transition-transform duration-200
+                  relative overflow-hidden rounded-2xl border border-white/12 p-3.5 sm:p-4 text-left
+                  transition-transform duration-200 hover-lift stagger-item
                   ${idx === active ? 'bg-[#161616] shadow-xl' : 'bg-[#0f0f0f]'}
                   min-w-[280px] sm:min-w-[340px] lg:min-w-0
                 `}
@@ -441,7 +442,7 @@ export default function EventsShowcase() {
                     <SmallText weight="bold" className="text-white truncate">
                       {slide.title}
                     </SmallText>
-                    <Caption className="text-white/60 line-clamp-2">
+                    <Caption className="text-white/60 line-clamp-2 text-[0.78rem] sm:text-[0.85rem] leading-relaxed">
                       {slide.description}
                     </Caption>
                   </div>
