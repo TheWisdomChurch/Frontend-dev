@@ -1,365 +1,134 @@
-'use client';
+import {
+  BookOpenCheck,
+  CalendarDays,
+  HeartHandshake,
+  Sparkles,
+  Users,
+} from 'lucide-react';
 
-import Link from 'next/link';
-import VideoBg from '@/shared/components/VideoBg';
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import MinistryDetailPage from '@/shared/components/site/MinistryDetailPage';
+
+const config = {
+  hero: {
+    title:
+      'A youth ministry built for conviction, community, and confident Christian living.',
+    subtitle:
+      'Our youth ministry helps teenagers and young adults grow in scripture, build healthy friendships, and develop a confident life of faith.',
+    note: 'We want young people to encounter Jesus clearly, think biblically, and become stable disciples who can lead with wisdom in their generation.',
+    chips: ['Ages 13-25', 'Discipleship', 'Leadership', 'Community'],
+  },
+  stats: [
+    {
+      label: 'Age focus',
+      value: 'Teenagers and young adults',
+      detail:
+        'Designed for a stage of life where identity, conviction, and direction matter deeply.',
+      icon: Users,
+    },
+    {
+      label: 'Core rhythm',
+      value: 'Teaching and community',
+      detail:
+        'Gatherings are structured around scripture, worship, conversation, and connection.',
+      icon: BookOpenCheck,
+    },
+    {
+      label: 'Leadership aim',
+      value: 'Grounded young leaders',
+      detail:
+        'We want young people to grow into service, responsibility, and spiritual maturity.',
+      icon: Sparkles,
+    },
+    {
+      label: 'Connection flow',
+      value: 'Weekly engagement',
+      detail:
+        'The ministry works best when young people stay connected beyond one event or service.',
+      icon: CalendarDays,
+    },
+  ],
+  mission: {
+    eyebrow: 'Youth mission',
+    title:
+      'Young people need more than energy. They need formation, truth, and healthy community.',
+    description:
+      'The youth ministry exists to help young people build a strong spiritual foundation early, ask honest questions, and develop a life of faith that is steady under pressure.',
+    points: [
+      'Create a safe environment for spiritual growth and real conversation.',
+      'Teach biblical truth in a way that is practical and intellectually honest.',
+      'Help young people build friendships that reinforce healthy discipleship.',
+      'Develop leadership, responsibility, and a heart for service.',
+    ],
+    panelTitle: 'What young people often need most',
+    panelBody:
+      'Clarity, belonging, and guidance matter in this season of life. The ministry is designed to give all three in a church context that takes growth seriously.',
+    panelItems: [
+      'Clear biblical teaching',
+      'Consistent community touchpoints',
+      'Trusted leaders and mentors',
+      'Real opportunities to serve',
+    ],
+  },
+  programs: [
+    {
+      title: 'Scripture-centered gatherings',
+      description:
+        'Teaching moments designed to connect faith with pressure points young people actually face.',
+      icon: BookOpenCheck,
+    },
+    {
+      title: 'Community and conversations',
+      description:
+        'Space for fellowship, friendship, accountability, and honest questions without performance.',
+      icon: Users,
+    },
+    {
+      title: 'Prayer and worship moments',
+      description:
+        'Times set aside for spiritual encounter, worship response, and growing in personal devotion.',
+      icon: Sparkles,
+    },
+    {
+      title: 'Leadership development',
+      description:
+        'Practical responsibility that helps young people move from attendance into service and ownership.',
+      icon: HeartHandshake,
+    },
+  ],
+  pathways: [
+    {
+      title: 'Start by attending consistently',
+      description:
+        'Come often enough to understand the culture, hear the teaching emphasis, and begin building trust.',
+    },
+    {
+      title: 'Meet leaders and peers',
+      description:
+        'Healthy connection matters. We want young people known by name, not only counted in attendance.',
+    },
+    {
+      title: 'Join a discipleship rhythm',
+      description:
+        'Move from inspiration alone into regular learning, prayer, accountability, and growth.',
+    },
+    {
+      title: 'Step into service',
+      description:
+        'As maturity grows, young people should find practical ways to contribute and lead well.',
+    },
+  ],
+  cta: {
+    title:
+      'If you are ready to connect with the youth ministry, start the conversation here.',
+    description:
+      'We can help you or your family understand the youth pathway and what the first next step should look like.',
+    primaryHref: '/contact',
+    primaryLabel: 'Join the youth ministry',
+    secondaryHref: '/events/upcoming',
+    secondaryLabel: 'See upcoming events',
+  },
+};
 
 export default function YouthPage() {
-  const pageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    gsap.from('.youth-hero-title', {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-    });
-  }, []);
-
-  return (
-    <div ref={pageRef}>
-      <section className="hero" style={{ minHeight: '80vh' }}>
-        <VideoBg
-          src="/videos/hero.mp4"
-          overlay={true}
-          overlayOpacity={0.35}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
-        <div className="hero-grid" />
-
-        <div className="hero-content" style={{ maxWidth: '900px' }}>
-          <div className="hero-tag">
-            <span className="hero-tag-dot" />
-            Ages 13-25
-          </div>
-
-          <h1 className="hero-title youth-hero-title">
-            Rise Up
-            <br />
-            <em>Young Voices</em>
-          </h1>
-
-          <p className="hero-sub">
-            Empowering young people to grow in faith, develop leadership, and
-            make a kingdom impact in their generation.
-          </p>
-
-          <button
-            onClick={() => (window.location.href = '/contact')}
-            className="btn-primary"
-            style={{ marginTop: '2rem', cursor: 'pointer' }}
-          >
-            Get Involved
-          </button>
-        </div>
-      </section>
-
-      <div className="times-bar">
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Youth Service</div>
-            <div className="time-val">Sundays · 10:30 AM</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Age Group</div>
-            <div className="time-val">13 - 25 Years</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Location</div>
-            <div className="time-val">Honor Gardens Main Hall</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Leaders</div>
-            <div className="time-val">Pastor David & Team</div>
-          </div>
-        </div>
-      </div>
-
-      <section>
-        <span className="section-tag">Our Purpose</span>
-        <h2 className="section-title" style={{ marginBottom: '2rem' }}>
-          Youth Ministry
-          <br />
-          <em>Vision</em>
-        </h2>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '3rem',
-            alignItems: 'center',
-            marginBottom: '4rem',
-          }}
-        >
-          <div style={{ fontSize: '80px', textAlign: 'center' }}>🎯</div>
-
-          <div>
-            <p
-              style={{
-                color: 'var(--text-muted)',
-                fontSize: '16px',
-                lineHeight: '1.8',
-                marginBottom: '2rem',
-              }}
-            >
-              Our Youth Ministry is dedicated to creating a safe, vibrant, and
-              Christ-centered community where young people can grow in their
-              faith, develop their gifts, and become leaders who impact their
-              generation. We believe that every young person has unique
-              potential and purpose in God's kingdom.
-            </p>
-
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
-            >
-              {[
-                'Build strong biblical foundation',
-                'Develop leadership and character',
-                'Create authentic community',
-                'Equip young people for service',
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    gap: '1rem',
-                    alignItems: 'flex-start',
-                  }}
-                >
-                  <div
-                    style={{
-                      color: 'var(--gold)',
-                      fontSize: '24px',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    ✓
-                  </div>
-                  <span style={{ color: 'var(--text)', fontSize: '15px' }}>
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        style={{
-          background: 'var(--charcoal)',
-          borderTop: '0.5px solid var(--border)',
-        }}
-      >
-        <span className="section-tag">What We Do</span>
-        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
-          Youth
-          <br />
-          <em>Activities & Events</em>
-        </h2>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem',
-          }}
-        >
-          {[
-            {
-              title: 'Cell Groups',
-              icon: '👥',
-              desc: 'Small group meetings for Bible study, prayer, and fellowship',
-            },
-            {
-              title: 'Worship & Service',
-              icon: '🎵',
-              desc: 'Lead worship, serve in church, and grow spiritually',
-            },
-            {
-              title: 'Outreach Programs',
-              icon: '🤝',
-              desc: 'Community service and mission opportunities',
-            },
-            {
-              title: 'Youth Conferences',
-              icon: '📚',
-              desc: 'Annual conferences for spiritual growth and networking',
-            },
-            {
-              title: 'Leadership Training',
-              icon: '🏆',
-              desc: 'Develop skills and prepare for ministry roles',
-            },
-            {
-              title: 'Social Events',
-              icon: '🎉',
-              desc: 'Fun activities and events to build community',
-            },
-          ].map((activity, idx) => (
-            <div
-              key={idx}
-              className="expect-card"
-              style={{ textAlign: 'center' }}
-            >
-              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
-                {activity.icon}
-              </div>
-              <div className="expect-title">{activity.title}</div>
-              <p
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-muted)',
-                  lineHeight: '1.6',
-                }}
-              >
-                {activity.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <span className="section-tag">Meet the Leaders</span>
-        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
-          Youth
-          <br />
-          <em>Leadership Team</em>
-        </h2>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem',
-          }}
-        >
-          {[
-            { name: 'Pastor David Obi', role: 'Youth Pastor', icon: '👔' },
-            {
-              name: 'Tunde Adeyemi',
-              role: 'Assistant Youth Pastor',
-              icon: '👨‍💼',
-            },
-            { name: 'Joy Akande', role: "Women's Coordinator", icon: '👩‍💼' },
-          ].map((leader, idx) => (
-            <div
-              key={idx}
-              className="expect-card"
-              style={{ textAlign: 'center' }}
-            >
-              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
-                {leader.icon}
-              </div>
-              <div className="expect-title">{leader.name}</div>
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--gold-light)',
-                  marginBottom: '1rem',
-                  fontWeight: '500',
-                }}
-              >
-                {leader.role}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="event-banner">
-          <div>
-            <div className="event-tag">🚀 Ready to Join?</div>
-            <div className="event-title">
-              Become Part of Our Youth Community
-            </div>
-            <div className="event-desc">
-              Experience faith, friendship, and purpose with young people who
-              are passionate about following Jesus.
-            </div>
-          </div>
-          <Link href="/contact" className="btn-primary">
-            Get Started
-          </Link>
-        </div>
-      </section>
-
-      <footer>
-        <div className="footer-top">
-          <div>
-            <div className="nav-logo">
-              <div className="nav-logo-icon">W</div>
-              <span className="nav-logo-text">The Wisdom Church</span>
-            </div>
-            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
-              Youth Ministry - Empowering the next generation.
-            </p>
-          </div>
-          <div>
-            <div className="footer-col-title">Quick Links</div>
-            <ul className="footer-links">
-              <li>
-                <Link href="/ministries">Ministries</Link>
-              </li>
-              <li>
-                <Link href="/events">Events</Link>
-              </li>
-              <li>
-                <Link href="/contact">Contact</Link>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <div className="footer-col-title">Contact</div>
-            <div className="footer-contact-item">
-              Youth Office
-              <br />
-              0706 999 5400
-            </div>
-            <div className="footer-contact-item">youth@wisdomhq.org</div>
-          </div>
-          <div>
-            <div className="footer-col-title">Connect</div>
-            <div className="footer-contact-item">
-              Sundays · 10:30 AM
-              <br />
-              Honor Gardens
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
-          <div className="footer-bottom-links">
-            <Link href="/terms">Terms of Service</Link>
-            <Link href="/cookies">Privacy Policy</Link>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+  return <MinistryDetailPage config={config} />;
 }
