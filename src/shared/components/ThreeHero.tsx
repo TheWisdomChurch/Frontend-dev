@@ -6,8 +6,82 @@
 
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import { useEffect, useRef } from 'react';
+import * as ThreeNamespace from 'three';
+
+interface ThreeSceneLike {
+  add: (object: ThreePointsLike) => void;
+  remove: (object: ThreePointsLike) => void;
+}
+
+interface ThreeCameraLike {
+  position: { z: number };
+  aspect: number;
+  updateProjectionMatrix: () => void;
+}
+
+interface ThreeRendererLike {
+  domElement: HTMLCanvasElement;
+  setSize: (width: number, height: number) => void;
+  setClearColor: (color: string, alpha?: number) => void;
+  setPixelRatio: (ratio: number) => void;
+  render: (scene: ThreeSceneLike, camera: ThreeCameraLike) => void;
+  dispose: () => void;
+}
+
+interface ThreeAttributeLike {
+  array: ArrayLike<number>;
+  needsUpdate: boolean;
+}
+
+interface ThreeGeometryLike {
+  setAttribute: (name: string, attribute: ThreeAttributeLike) => void;
+  getAttribute: (name: string) => ThreeAttributeLike;
+  dispose: () => void;
+}
+
+interface ThreeMaterialLike {
+  dispose: () => void;
+}
+
+interface ThreePointsLike {
+  rotation: {
+    x: number;
+    y: number;
+  };
+}
+
+interface ThreeModuleLike {
+  Scene: new () => ThreeSceneLike;
+  PerspectiveCamera: new (
+    fov: number,
+    aspect: number,
+    near: number,
+    far: number
+  ) => ThreeCameraLike;
+  WebGLRenderer: new (options: {
+    antialias: boolean;
+    alpha: boolean;
+  }) => ThreeRendererLike;
+  BufferGeometry: new () => ThreeGeometryLike;
+  BufferAttribute: new (
+    array: Float32Array,
+    itemSize: number
+  ) => ThreeAttributeLike;
+  PointsMaterial: new (options: {
+    color: string;
+    size: number;
+    transparent: boolean;
+    opacity: number;
+    sizeAttenuation: boolean;
+  }) => ThreeMaterialLike;
+  Points: new (
+    geometry: ThreeGeometryLike,
+    material: ThreeMaterialLike
+  ) => ThreePointsLike;
+}
+
+const THREE = ThreeNamespace as unknown as ThreeModuleLike;
 
 interface ThreeHeroProps {
   backgroundColor?: string;
@@ -25,42 +99,39 @@ export default function ThreeHero({
   height = '100vh',
 }: ThreeHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  // @ts-expect-error - THREE namespace types not properly recognized
-  const sceneRef = useRef<THREE.Scene | null>(null);
-  // @ts-expect-error - THREE namespace types not properly recognized
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  // @ts-expect-error - THREE namespace types not properly recognized
-  const particlesRef = useRef<THREE.Points | null>(null);
+  const sceneRef = useRef<ThreeSceneLike | null>(null);
+  const rendererRef = useRef<ThreeRendererLike | null>(null);
+  const particlesRef = useRef<ThreePointsLike | null>(null);
   const animationIdRef = useRef<number>(0);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    // @ts-expect-error - THREE namespace types not properly recognized
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // @ts-expect-error - THREE namespace types not properly recognized
+    const initialWidth = container.clientWidth || window.innerWidth;
+    const initialHeight = container.clientHeight || window.innerHeight;
+
     const camera = new THREE.PerspectiveCamera(
       75,
-      window.innerWidth / window.innerHeight,
+      initialWidth / initialHeight,
       0.1,
       1000
     );
     camera.position.z = 100;
 
-    // @ts-expect-error - THREE namespace types not properly recognized
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(initialWidth, initialHeight);
     renderer.setClearColor(backgroundColor, 1);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    containerRef.current.appendChild(renderer.domElement);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // ========================================
     // PARTICLE SYSTEM
     // ========================================
-    // @ts-expect-error - THREE namespace types not properly recognized
     const particleGeometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const velocities = new Float32Array(particleCount * 3);
@@ -77,11 +148,9 @@ export default function ThreeHero({
 
     particleGeometry.setAttribute(
       'position',
-      // @ts-expect-error - THREE namespace types not properly recognized
       new THREE.BufferAttribute(positions, 3)
     );
 
-    // @ts-expect-error - THREE namespace types not properly recognized
     const particleMaterial = new THREE.PointsMaterial({
       color: particleColor,
       size: 2,
@@ -90,7 +159,6 @@ export default function ThreeHero({
       sizeAttenuation: true,
     });
 
-    // @ts-expect-error - THREE namespace types not properly recognized
     const particles = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particles);
     particlesRef.current = particles;
@@ -107,8 +175,8 @@ export default function ThreeHero({
         particlesRef.current.rotation.y += 0.0001;
 
         // Update particle positions for wave effect
-        const positions = particleGeometry.attributes.position
-          .array as Float32Array;
+        const positionAttribute = particleGeometry.getAttribute('position');
+        const positions = positionAttribute.array as Float32Array;
         for (let i = 0; i < particleCount * 3; i += 3) {
           positions[i] += velocities[i];
           positions[i + 1] += velocities[i + 1];
@@ -119,7 +187,7 @@ export default function ThreeHero({
           if (Math.abs(positions[i + 1]) > 200) velocities[i + 1] *= -1;
           if (Math.abs(positions[i + 2]) > 200) velocities[i + 2] *= -1;
         }
-        particleGeometry.attributes.position.needsUpdate = true;
+        positionAttribute.needsUpdate = true;
       }
 
       renderer.render(scene, camera);
@@ -131,12 +199,12 @@ export default function ThreeHero({
     // HANDLE WINDOW RESIZE
     // ========================================
     const handleResize = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const width = container.clientWidth || window.innerWidth;
+      const containerHeight = container.clientHeight || window.innerHeight;
 
-      camera.aspect = width / height;
+      camera.aspect = width / containerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
+      renderer.setSize(width, containerHeight);
     };
 
     window.addEventListener('resize', handleResize);
@@ -149,15 +217,16 @@ export default function ThreeHero({
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
-      if (
-        containerRef.current &&
-        renderer.domElement.parentNode === containerRef.current
-      ) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (renderer.domElement.parentNode === container) {
+        container.removeChild(renderer.domElement);
       }
+      scene.remove(particles);
       particleGeometry.dispose();
       particleMaterial.dispose();
       renderer.dispose();
+      particlesRef.current = null;
+      rendererRef.current = null;
+      sceneRef.current = null;
     };
   }, [backgroundColor, particleColor, particleCount, animationSpeed]);
 
