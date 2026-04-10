@@ -13,7 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 
-import HeroMain from '@/features/hero/HeroMain';
+import SliderHero from '@/features/hero/SliderHero';
 import { missionStatement } from '@/lib/data';
 import { Container, Section } from '@/shared/layout';
 import { BodyMD, Caption, H3 } from '@/shared/text';
@@ -154,16 +154,7 @@ export default function Home() {
         color: 'var(--color-text-primary)',
       }}
     >
-      <HeroMain
-        primaryButtonText="Plan Your Visit"
-        secondaryButtonText="Watch Messages"
-        onPrimaryButtonClick={() => {
-          window.location.href = '/contact';
-        }}
-        onSecondaryButtonClick={() => {
-          window.location.href = '/resources/sermons';
-        }}
-      />
+      <SliderHero />
 
       {/* Quick Guides Section */}
       <Section
@@ -355,13 +346,13 @@ export default function Home() {
                     backgroundColor: 'rgba(215, 187, 117, 0.06)',
                     border: '1px solid var(--color-border-light)',
                   }}
-                  onMouseEnter={e => {
+                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.currentTarget.style.backgroundColor =
                       'rgba(215, 187, 117, 0.12)';
                     e.currentTarget.style.borderColor = 'var(--color-gold)';
                     e.currentTarget.style.transform = 'translateY(-4px)';
                   }}
-                  onMouseLeave={e => {
+                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.currentTarget.style.backgroundColor =
                       'rgba(215, 187, 117, 0.06)';
                     e.currentTarget.style.borderColor =

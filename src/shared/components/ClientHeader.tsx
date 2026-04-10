@@ -3,14 +3,12 @@
 
 import dynamic from 'next/dynamic';
 
-// Dynamically import Header to avoid SSR issues
-const Header = dynamic(() => import('@/shared/components/Header'), {
+// Dynamically import Navigation to avoid SSR issues
+const Navigation = dynamic(() => import('@/shared/components/Navigation'), {
   ssr: false,
-  loading: () => (
-    <header className="w-full bg-white dark:bg-gray-900 h-16 border-b border-gray-200 dark:border-gray-700" />
-  ),
+  loading: () => <header className="w-full h-16 sm:h-20" />,
 });
 
 export default function ClientHeader() {
-  return <Header />;
+  return <Navigation />;
 }
