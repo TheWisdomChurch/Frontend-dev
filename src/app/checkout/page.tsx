@@ -9,19 +9,24 @@ import { Container, Section, FlexboxLayout } from '@/shared/layout';
 import { H2, LightText } from '@/shared/text';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import { ShoppingBag } from 'lucide-react';
+import { useAnalyticsTracking } from '@/shared/analytics/useTracking';
 
 const CheckoutPage = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
   const { colorScheme } = useTheme();
+  const { trackFormStart } = useAnalyticsTracking();
 
   useEffect(() => {
+    // ✅ Track checkout page view
+    trackFormStart('checkout');
+
     gsap.fromTo(
       '.checkout-section',
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 0.8, stagger: 0.2 }
     );
-  }, []);
+  }, [trackFormStart]);
 
   // If cart is empty, show empty cart message
   if (items.length === 0) {

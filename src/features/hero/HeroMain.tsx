@@ -276,9 +276,9 @@ const HeroSection = ({
       >
         <div className="w-full">
           <div className="grid gap-10 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div className="space-y-8 text-center lg:text-left fade-up">
+            <div className="space-y-8 text-left fade-up">
               {showWaveText && (
-                <div className="flex justify-center lg:justify-start">
+                <div className="flex justify-start">
                   <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2.5 text-[0.6rem] uppercase tracking-[0.18em] text-white/80">
                     <span
                       className="h-2 w-2 rounded-full"
@@ -305,7 +305,7 @@ const HeroSection = ({
 
               {(currentSlideData as any)?.subtitle ? (
                 <H2
-                  className="text-center lg:text-left"
+                  className="text-left"
                   style={{
                     color: colorScheme.primary,
                     textShadow:
@@ -322,12 +322,12 @@ const HeroSection = ({
               ) : null}
 
               {heroDescription ? (
-                <p className="text-[0.92rem] sm:text-base md:text-[1.05rem] text-white/70 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                <p className="text-[0.95rem] sm:text-base md:text-[1.05rem] text-white/70 leading-relaxed max-w-2xl">
                   {heroDescription}
                 </p>
               ) : null}
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-start">
                 <CustomButton
                   variant="primary"
                   size="md"
@@ -424,8 +424,8 @@ const HeroSection = ({
                 </div>
 
                 {latestVideo ? (
-                  <div className="flex items-center gap-3">
-                    <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-white/15">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="relative h-36 sm:h-16 w-full sm:w-24 rounded-xl overflow-hidden border border-white/15">
                       <img
                         src={
                           latestVideo.thumbnail ||
@@ -441,7 +441,7 @@ const HeroSection = ({
                       <div className="absolute inset-0 bg-black/30" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-[0.8rem] sm:text-[12px] font-medium line-clamp-2">
+                      <p className="text-white text-[0.9rem] sm:text-[12px] font-medium leading-snug line-clamp-2">
                         {latestVideo.title}
                       </p>
                     </div>
@@ -449,7 +449,7 @@ const HeroSection = ({
                       href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-[0.7rem] sm:text-[11px] font-medium shadow-lg"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-[0.75rem] sm:text-[11px] font-medium shadow-lg w-full sm:w-auto"
                       style={{
                         background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                         color: '#FFFFFF',
