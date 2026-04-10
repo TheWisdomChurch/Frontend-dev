@@ -29,7 +29,7 @@ export default function WhatWeDo() {
             }}
             className="transition-transform duration-700 ease-out group-hover:scale-110"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            quality={90}
+            quality={80}
           />
           <div
             className="absolute inset-0"

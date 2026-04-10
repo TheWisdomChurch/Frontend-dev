@@ -203,6 +203,40 @@ export const navLinks: NavLink[] = [
   { href: '/generate', label: 'Generate' },
 ];
 
+export const calendarEvents = [
+  {
+    id: 'sunday-worship',
+    title: 'Sunday Worship Experience',
+    date: 'Every Sunday',
+    time: '9:00 AM',
+    location: 'Honor Gardens, Lekki-Epe Expressway',
+    description: 'Spirit-filled worship, prayer, and the word.',
+    category: 'Worship',
+    slug: 'weekly',
+  },
+  {
+    id: 'midweek-service',
+    title: 'Midweek Word & Prayer',
+    date: 'Every Thursday',
+    time: '6:00 PM',
+    location: 'Wisdom Church Auditorium',
+    description: 'Focused teaching, prayer, and spiritual refreshing.',
+    category: 'Midweek',
+    slug: 'weekly',
+  },
+  {
+    id: 'power-conference',
+    title: 'Wisdom Power Conference 2026',
+    date: 'Mar 21 - 23, 2026',
+    time: 'Morning & Evening Sessions',
+    location: 'Honor Gardens, Alasia, Lagos',
+    description:
+      'A gathering for worship, teaching, and prophetic impartation.',
+    category: 'Conference',
+    slug: 'upcoming',
+  },
+];
+
 export const leaders: Leader[] = [
   {
     id: 1,

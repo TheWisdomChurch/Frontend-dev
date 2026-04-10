@@ -1,32 +1,31 @@
 'use client';
 
-import { testimonialData } from '@/lib/data';
+import { testimonialsData } from '@/lib/data';
 import { Section, Container } from '@/shared/layout';
 import { StarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function Testimonials() {
+  const data = testimonialsData ?? [];
   const [activeIndex, setActiveIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
 
   useEffect(() => {
-    if (!autoplay) return;
+    if (!autoplay || data.length === 0) return;
     const timer = setInterval(() => {
-      setActiveIndex(prev => (prev + 1) % testimonialData.length);
+      setActiveIndex(prev => (prev + 1) % data.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [autoplay]);
+  }, [autoplay, data.length]);
 
   const handlePrev = () => {
     setAutoplay(false);
-    setActiveIndex(prev =>
-      prev === 0 ? testimonialData.length - 1 : prev - 1
-    );
+    setActiveIndex(prev => (prev === 0 ? data.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
     setAutoplay(false);
-    setActiveIndex(prev => (prev + 1) % testimonialData.length);
+    setActiveIndex(prev => (prev + 1) % data.length);
   };
 
   return (
@@ -70,7 +69,7 @@ export default function Testimonials() {
               border: '1px solid var(--color-border-light)',
             }}
           >
-            {testimonialData.length > 0 && (
+            {data.length > 0 && (
               <div className="space-y-6">
                 {/* Star Rating */}
                 <div className="flex gap-1">
@@ -91,7 +90,7 @@ export default function Testimonials() {
                   className="text-lg sm:text-xl leading-relaxed italic"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  "{testimonialData[activeIndex].quote}"
+                  "{data[activeIndex].quote}"
                 </blockquote>
 
                 {/* Testimonial Author */}
@@ -110,13 +109,13 @@ export default function Testimonials() {
                       className="font-semibold"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      {testimonialData[activeIndex].author}
+                      {data[activeIndex].author}
                     </p>
                     <p
                       className="text-sm"
                       style={{ color: 'var(--color-text-secondary)' }}
                     >
-                      {testimonialData[activeIndex].role}
+                      {data[activeIndex].role}
                     </p>
                   </div>
                 </div>
@@ -167,7 +166,7 @@ export default function Testimonials() {
 
             {/* Dots Indicator */}
             <div className="flex gap-2">
-              {testimonialData.map((_, idx) => (
+              {data.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => {

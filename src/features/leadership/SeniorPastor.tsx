@@ -37,7 +37,7 @@ export default function SeniorPastor() {
                 alt="Bishop Gabriel Ayilara | Senior Pastor"
                 fill
                 className="object-cover"
-                quality={90}
+                quality={80}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
