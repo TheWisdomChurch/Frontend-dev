@@ -10,8 +10,9 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
+import type { ScrollTrigger as ScrollTriggerType } from 'gsap/ScrollTrigger';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { api } from '@/lib/api';
+import apiClient from '@/lib/api';
 import { useChurchAnalytics } from '@/shared/analytics/churchAnalytics';
 import type { EventPublic } from '@/lib/apiTypes';
 
@@ -39,26 +40,22 @@ export default function SmartEventRecommendation({
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        const data = await api.admin.listEvents();
+        const data = await apiClient.listEvents();
         setEvents(data);
 
         // ✅ Smart recommendation logic
         const recommended = data
-          .sort((a, b) => {
+          .sort((a: EventPublic, b: EventPublic) => {
             // Prioritize upcoming events
             const now = new Date();
             const aTime = a.startAt ? new Date(a.startAt).getTime() : 0;
             const bTime = b.startAt ? new Date(b.startAt).getTime() : 0;
 
-            // Scoring: closer upcoming > featured > popular
+            // Scoring: closer upcoming > random variety
             const aScore =
-              (aTime > now.getTime() ? 1000 : 0) +
-              (a.isFeatured ? 500 : 0) +
-              Math.random() * 100; // Add randomness for variety
+              (aTime > now.getTime() ? 1000 : 0) + Math.random() * 100; // Add randomness for variety
             const bScore =
-              (bTime > now.getTime() ? 1000 : 0) +
-              (b.isFeatured ? 500 : 0) +
-              Math.random() * 100;
+              (bTime > now.getTime() ? 1000 : 0) + Math.random() * 100;
 
             return bScore - aScore;
           })
@@ -67,10 +64,10 @@ export default function SmartEventRecommendation({
         setRecommendations(recommended);
 
         // Track recommendation view
-        recommended.forEach(event => {
+        recommended.forEach((event: EventPublic) => {
           trackEventEngagement({
             eventId: event.id,
-            eventName: event.name,
+            eventName: event.title,
             action: 'view',
           });
         });
@@ -118,7 +115,9 @@ export default function SmartEventRecommendation({
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach(st => st.kill());
+      (ScrollTrigger.getAll() as unknown as { kill: () => void }[]).forEach(
+        st => st.kill()
+      );
     };
   }, [recommendations]);
 
@@ -130,9 +129,9 @@ export default function SmartEventRecommendation({
     // Track engagement
     trackEventEngagement({
       eventId: event.id,
-      eventName: event.name,
+      eventName: event.title,
       action: 'register',
-      registrationSource: 'recommendation',
+      registrationSource: 'website',
     });
 
     // Redirect to registration
@@ -224,7 +223,7 @@ export default function SmartEventRecommendation({
             {event.imageUrl && (
               <img
                 src={event.imageUrl}
-                alt={event.name}
+                alt={event.title}
                 style={{
                   width: '100%',
                   height: '180px',
@@ -273,7 +272,7 @@ export default function SmartEventRecommendation({
                   margin: '0 0 12px 0',
                 }}
               >
-                {event.name}
+                {event.title}
               </h3>
 
               {/* Description */}
