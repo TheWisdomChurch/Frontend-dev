@@ -3,17 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { bricolageGrotesque, worksans, playfair } from '@/shared/fonts/fonts';
 
 import MetaPixel from '@/shared/analytics/MetaPixel';
-import ClientHeader from '@/shared/components/ClientHeader';
-import ClientFooter from '@/shared/components/ClientFooter';
-import ClientScrollToTop from '@/shared/components/ClientscrollTop';
-import ErrorBoundary from '@/shared/components/ErrorBoundary';
-import ScrollHandler from '@/shared/components/ClientScrollHandler';
-import { ThemeProvider } from '@/shared/contexts/ThemeContext';
-import { ServiceUnavailableProvider } from '@/shared/contexts/ServiceUnavailableContext';
-import { HeaderProvider } from '@/shared/providers/NavProviders';
-import ReduxProvider from '@/shared/providers/ReduxProvider';
-import AppStartupLoader from '@/shared/providers/AppStartupLoader';
-import CookieConsentBanner from '@/shared/ui/CookieConsentBanner';
+import { Providers } from './providers';
 import { cn } from '@/lib/cn';
 import './globals.scss';
 
@@ -142,31 +132,6 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-// Client wrapper component — UNCHANGED
-function ClientLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <ReduxProvider>
-      <ThemeProvider>
-        <ServiceUnavailableProvider>
-          <HeaderProvider>
-            <ErrorBoundary>
-              <AppStartupLoader />
-              <ScrollHandler />
-              <ClientHeader />
-              <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
-                {children}
-              </main>
-              <ClientFooter />
-              <ClientScrollToTop />
-              <CookieConsentBanner />
-            </ErrorBoundary>
-          </HeaderProvider>
-        </ServiceUnavailableProvider>
-      </ThemeProvider>
-    </ReduxProvider>
-  );
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -217,7 +182,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
         <MetaPixel />
-        <ClientLayout>{children}</ClientLayout>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

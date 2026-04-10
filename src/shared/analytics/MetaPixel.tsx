@@ -1,30 +1,70 @@
-import Script from 'next/script';
+'use client';
+
+import { useEffect } from 'react';
 
 const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
+/**
+ * MetaPixel Component
+ * Injects Facebook Pixel script and initializes tracking
+ * Works in conjunction with AnalyticsProvider for consent management
+ *
+ * Usage: Include in layout.tsx root
+ */
 export default function MetaPixel() {
+  // If no pixel ID, component renders nothing
   if (!metaPixelId) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        '[MetaPixel] Missing NEXT_PUBLIC_META_PIXEL_ID in environment'
+      );
+    }
     return null;
   }
 
-  const initScript = `
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '${metaPixelId}');
-    fbq('track', 'PageView');
-  `;
+  useEffect(() => {
+    // Initialize fbq function early (before script loads)
+    if (!window.fbq) {
+      window.fbq = function (...args: unknown[]) {
+        if (window._fbq) {
+          window._fbq.push(args);
+        } else {
+          window._fbq = [args];
+        }
+      };
+      window._fbq = window._fbq || [];
+    }
+
+    // Inject Facebook Pixel script
+    const loadScript = () => {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      script.onload = () => {
+        if (window.fbq) {
+          // Initialize pixel (basic init - AnalyticsProvider handles detailed config)
+          window.fbq('init', metaPixelId);
+
+          // ✅ Initial PageView tracked (AnalyticsProvider tracks subsequent ones)
+          window.fbq('track', 'PageView');
+
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[MetaPixel] Initialized:', metaPixelId);
+          }
+        }
+      };
+      script.onerror = () => {
+        console.warn('[MetaPixel] Failed to load Facebook Pixel script');
+      };
+      document.head.appendChild(script);
+    };
+
+    loadScript();
+  }, []);
 
   return (
     <>
-      <Script id="meta-pixel-base" strategy="afterInteractive">
-        {initScript}
-      </Script>
+      {/* Noscript fallback for browsers with JavaScript disabled */}
       <noscript>
         <img
           alt=""

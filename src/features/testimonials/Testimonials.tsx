@@ -189,30 +189,30 @@ export default function Testimonials() {
         data-parallax-global="0.2"
       />
 
-      <Container size="xl" className="relative z-10 space-y-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div className="space-y-2.5">
+      <Container size="xl" className="relative z-10 space-y-12">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="space-y-3">
             <Caption
               className="uppercase tracking-[0.22em] text-[0.62rem]"
               style={{ color: primary }}
             >
               Stories of transformation
             </Caption>
-            <H3 className="text-[1.4rem] sm:text-2xl font-semibold text-white leading-tight">
+            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
               God is moving in our house
             </H3>
-            <BodySM className="text-white/70 max-w-2xl text-[0.82rem] sm:text-sm">
+            <BodySM className="text-white/70 max-w-2xl text-sm sm:text-base">
               Real moments of healing, provision, and restoration from the
               Wisdom House community.
             </BodySM>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={() =>
                 setActive(prev => (prev - 1 + items.length) % items.length)
               }
-              className="p-2 rounded-full border border-white/15 hover:border-white/40 transition-all duration-200"
+              className="p-2.5 rounded-full border border-white/15 hover:border-white/40 transition-all duration-200"
               aria-label="Previous testimonial"
               type="button"
             >

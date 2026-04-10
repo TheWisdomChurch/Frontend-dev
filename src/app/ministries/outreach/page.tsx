@@ -1,148 +1,371 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
-import { hero_bg_2 } from '@/shared/assets';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
-import PageHero from '@/features/hero/PageHero';
+import VideoBg from '@/shared/components/VideoBg';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 
-const OutreachPage = () => {
-  const { colorScheme } = useTheme();
+export default function OutreachPage() {
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.from('.outreach-hero-title', {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <PageHero
-        title="Outreach Ministry"
-        subtitle="Serving Our Community, Sharing God's Love"
-        note="Extending the love of Christ beyond our walls through practical service, community partnerships, and mission opportunities."
-        backgroundImage={hero_bg_2.src}
-        chips={[
-          'Making a Difference Together',
-          'Local Outreach',
-          'Global Missions',
-          'Upcoming Projects',
-        ]}
-      />
-
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-55"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-            backgroundSize: '34px 34px',
-            maskImage:
-              'radial-gradient(circle at 50% 30%, black 40%, transparent 92%)',
-            WebkitMaskImage:
-              'radial-gradient(circle at 50% 30%, black 40%, transparent 92%)',
-          }}
+    <div ref={pageRef}>
+      <section className="hero" style={{ minHeight: '80vh' }}>
+        <VideoBg
+          src="/videos/hero.mp4"
+          overlay={true}
+          overlayOpacity={0.35}
+          autoPlay={true}
+          muted={true}
+          loop={true}
         />
+        <div className="hero-grid" />
 
-        <Container size="xl" className="relative z-10 space-y-5 sm:space-y-6">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-black transition hover:brightness-110"
-              style={{ backgroundColor: colorScheme.primary }}
-            >
-              Volunteer Opportunities
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/events"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              Upcoming Projects
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+        <div className="hero-content" style={{ maxWidth: '900px' }}>
+          <div className="hero-tag">
+            <span className="hero-tag-dot" />
+            Community Care & Impact
           </div>
 
-          <div
-            className="rounded-2xl sm:rounded-3xl border border-white/10 p-5 sm:p-6 lg:p-7"
-            style={{
-              background:
-                'linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.02) 44%, rgba(0,0,0,0.2) 100%)',
-              boxShadow: '0 18px 44px rgba(0,0,0,0.34)',
-            }}
+          <h1 className="hero-title outreach-hero-title">
+            Love in
+            <br />
+            <em>Action</em>
+          </h1>
+
+          <p className="hero-sub">
+            Extending God's love beyond our walls through community service,
+            humanitarian aid, and transformative outreach programs.
+          </p>
+
+          <button
+            onClick={() => (window.location.href = '/contact')}
+            className="btn-primary"
+            style={{ marginTop: '2rem', cursor: 'pointer' }}
           >
-            <H2 className="text-xl sm:text-2xl font-semibold mb-2 leading-tight">
-              Making a Difference Together
-            </H2>
-            <BodyMD className="text-white/70 text-sm sm:text-base leading-relaxed">
-              Local and global opportunities to serve and share the Gospel
-            </BodyMD>
-          </div>
+            Get Involved
+          </button>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
-            {[
-              {
-                title: 'Local Outreach',
-                projects: [
-                  'Monthly Food Distribution',
-                  'Homeless Shelter Meals',
-                  'School Supply Drives',
-                  'Community Clean-up Days',
-                ],
-              },
-              {
-                title: 'Global Missions',
-                projects: [
-                  'Annual Mission Trips',
-                  'International Orphan Support',
-                  'Clean Water Projects',
-                  'Bible Distribution',
-                ],
-              },
-            ].map(category => (
-              <section
-                key={category.title}
-                className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-5 sm:p-6"
+      <div className="times-bar">
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Outreach Projects</div>
+            <div className="time-val">Monthly Community Service</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Focus Areas</div>
+            <div className="time-val">6 Major Initiatives</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Partnership</div>
+            <div className="time-val">NGOs & Community Organizations</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Leader</div>
+            <div className="time-val">Pastor Grace Okafor</div>
+          </div>
+        </div>
+      </div>
+
+      <section>
+        <span className="section-tag">Our Vision</span>
+        <h2 className="section-title" style={{ marginBottom: '2rem' }}>
+          Outreach Ministry
+          <br />
+          <em>Impact</em>
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '3rem',
+            alignItems: 'center',
+            marginBottom: '4rem',
+          }}
+        >
+          <div style={{ fontSize: '80px', textAlign: 'center' }}>🤝</div>
+
+          <div>
+            <p
+              style={{
+                color: 'var(--text-muted)',
+                fontSize: '16px',
+                lineHeight: '1.8',
+                marginBottom: '2rem',
+              }}
+            >
+              Our Outreach Ministry demonstrates Christ's compassion by meeting
+              the physical, emotional, and spiritual needs of our community. We
+              believe in serving the vulnerable, voiceless, and
+              marginalized—living out God's mandate to care for the least among
+              us.
+            </p>
+
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+            >
+              {[
+                'Community development projects',
+                'Healthcare initiatives and clinics',
+                'Education and skills training',
+                'Relief and humanitarian aid',
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'flex-start',
+                  }}
+                >
+                  <div
+                    style={{
+                      color: 'var(--gold)',
+                      fontSize: '24px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    ✓
+                  </div>
+                  <span style={{ color: 'var(--text)', fontSize: '15px' }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        style={{
+          background: 'var(--charcoal)',
+          borderTop: '0.5px solid var(--border)',
+        }}
+      >
+        <span className="section-tag">Our Initiatives</span>
+        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
+          Outreach Programs
+          <br />
+          <em>& Projects</em>
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem',
+          }}
+        >
+          {[
+            {
+              title: 'Medical Outreach',
+              icon: '🏥',
+              desc: 'Free medical clinics and health awareness campaigns',
+            },
+            {
+              title: 'Education Support',
+              icon: '🎓',
+              desc: 'Scholarships, tutoring, and skills training programs',
+            },
+            {
+              title: 'Food Relief',
+              icon: '🍲',
+              desc: 'Food banks and meal programs for vulnerable families',
+            },
+            {
+              title: 'Shelter Support',
+              icon: '🏠',
+              desc: 'Housing assistance and community development projects',
+            },
+            {
+              title: 'Disaster Relief',
+              icon: '🆘',
+              desc: 'Emergency response and humanitarian assistance',
+            },
+            {
+              title: "Women's Empowerment",
+              icon: '💪',
+              desc: 'Vocational training and economic empowerment programs',
+            },
+          ].map((program, idx) => (
+            <div
+              key={idx}
+              className="expect-card"
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
+                {program.icon}
+              </div>
+              <div className="expect-title">{program.title}</div>
+              <p
                 style={{
-                  background:
-                    'linear-gradient(150deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 45%, rgba(0,0,0,0.18) 100%)',
-                  boxShadow: '0 14px 34px rgba(0,0,0,0.26)',
+                  fontSize: '14px',
+                  color: 'var(--text-muted)',
+                  lineHeight: '1.6',
                 }}
               >
-                <div
-                  className="absolute inset-x-0 top-0 h-px opacity-75"
-                  style={{
-                    background: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary}55 50%, transparent 100%)`,
-                  }}
-                />
-                <H3 className="text-center text-base sm:text-lg font-semibold mb-4 leading-tight">
-                  {category.title}
-                </H3>
-                <ul className="space-y-2.5">
-                  {category.projects.map(project => (
-                    <li
-                      key={project}
-                      className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5"
-                    >
-                      <span
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: colorScheme.primary }}
-                      />
-                      <BodySM className="text-white/75 text-xs sm:text-sm leading-relaxed">
-                        {project}
-                      </BodySM>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ))}
+                {program.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <span className="section-tag">Leadership</span>
+        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
+          Outreach Ministry
+          <br />
+          <em>Leaders</em>
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem',
+          }}
+        >
+          {[
+            {
+              name: 'Pastor Grace Okafor',
+              role: 'Outreach Ministry Director',
+              icon: '👩‍💼',
+            },
+            {
+              name: 'Brother Femi Adebayo',
+              role: 'Community Projects Lead',
+              icon: '👨‍💼',
+            },
+            {
+              name: 'Sister Cynthia Omoniya',
+              role: "Women's & Health Programs",
+              icon: '👩‍⚕️',
+            },
+          ].map((leader, idx) => (
+            <div
+              key={idx}
+              className="expect-card"
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
+                {leader.icon}
+              </div>
+              <div className="expect-title">{leader.name}</div>
+              <div
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--gold-light)',
+                  marginBottom: '1rem',
+                  fontWeight: '500',
+                }}
+              >
+                {leader.role}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div className="event-banner">
+          <div>
+            <div className="event-tag">❤️ Make a Difference</div>
+            <div className="event-title">Join Our Outreach Ministry</div>
+            <div className="event-desc">
+              Serve your community and extend God's love through hands-on
+              ministry and compassionate service.
+            </div>
           </div>
-        </Container>
-      </Section>
+          <Link href="/contact" className="btn-primary">
+            Volunteer Today
+          </Link>
+        </div>
+      </section>
+
+      <footer>
+        <div className="footer-top">
+          <div>
+            <div className="nav-logo">
+              <div className="nav-logo-icon">W</div>
+              <span className="nav-logo-text">The Wisdom Church</span>
+            </div>
+            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
+              Outreach Ministry - Love in action.
+            </p>
+          </div>
+          <div>
+            <div className="footer-col-title">Quick Links</div>
+            <ul className="footer-links">
+              <li>
+                <Link href="/ministries">Ministries</Link>
+              </li>
+              <li>
+                <Link href="/events">Events</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div className="footer-col-title">Contact</div>
+            <div className="footer-contact-item">
+              Outreach Office
+              <br />
+              0706 999 5404
+            </div>
+            <div className="footer-contact-item">outreach@wisdomhq.org</div>
+          </div>
+          <div>
+            <div className="footer-col-title">Connect</div>
+            <div className="footer-contact-item">
+              Monthly Projects
+              <br />
+              Community-Wide
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
+          <div className="footer-bottom-links">
+            <Link href="/terms">Terms of Service</Link>
+            <Link href="/cookies">Privacy Policy</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
-};
-
-export default OutreachPage;
+}

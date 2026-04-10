@@ -1,424 +1,527 @@
 'use client';
 
-import React, { useState } from 'react';
-import PageHero from '@/features/hero/PageHero';
-import { H2, H3, BodyMD, SmallText, Caption } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import Button from '@/shared/utils/buttons/CustomButton';
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Instagram,
-  Facebook,
-  Youtube,
-  LucideIcon,
-  ArrowUpRight,
-} from 'lucide-react';
+import Link from 'next/link';
+import VideoBg from '@/shared/components/VideoBg';
+import { useState, useEffect } from 'react';
+import { useNotification } from '@/shared/contexts/NotificationContext';
+import { useAnalyticsTracking } from '@/shared/analytics/useTracking';
 
-interface ContactMethod {
-  title: string;
-  description: string;
-  details: string[];
-  icon: LucideIcon;
-  link?: string;
-}
+export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
 
-interface SocialMedia {
-  platform: string;
-  handle: string;
-  url: string;
-  icon: LucideIcon;
-}
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error'
+  >('idle');
+  const { notify } = useNotification();
+  const { trackFormStart, trackFormComplete, trackFormError } =
+    useAnalyticsTracking();
 
-const ContactPage = () => {
-  const { colorScheme } = useTheme();
-  const [submitted, setSubmitted] = useState(false);
+  // Track form page view
+  useEffect(() => {
+    trackFormStart('contact_form');
+  }, [trackFormStart]);
 
-  const contactMethods: ContactMethod[] = [
-    {
-      title: 'Visit Us',
-      description: 'Come worship with us in person',
-      details: [
-        'Honor Gardens, opposite Dominion City Headquarters',
-        'Alasia bus stop, Lekki-Epe Expressway',
-        'Lagos, Nigeria',
-        'Sunday Services: 9:00 AM',
-      ],
-      icon: MapPin,
-    },
-    {
-      title: 'Call Us',
-      description: 'Speak with our church office',
-      details: ['Phone: +234 706 999 5333'],
-      icon: Phone,
-      link: 'https://wa.me/2347069995333',
-    },
-    {
-      title: 'Email Us',
-      description: 'Send us a message anytime',
-      details: ['wisdomhousehq@gmail.com'],
-      icon: Mail,
-      link: 'mailto:wisdomhousehq@gmail.com',
-    },
-  ];
-
-  const socialMedia: SocialMedia[] = [
-    {
-      platform: 'Instagram',
-      handle: '@wisdomhousehq',
-      url: 'https://instagram.com/wisdomhousehq',
-      icon: Instagram,
-    },
-    {
-      platform: 'Facebook',
-      handle: '@wisdomhousehq',
-      url: 'https://facebook.com/wisdomhousehq',
-      icon: Facebook,
-    },
-    {
-      platform: 'YouTube',
-      handle: 'Wisdom House',
-      url: 'https://youtube.com/@wisdomhousehq',
-      icon: Youtube,
-    },
-  ];
-
-  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.backgroundColor = colorScheme.primary;
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      // TODO: Connect to your backend API
+      console.log('Form submitted:', formData);
+
+      // ✅ Track successful form submission
+      trackFormComplete('contact_form', {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        messageLength: formData.message.length,
+      });
+
+      setSubmitStatus('success');
+      notify(
+        "Message sent successfully! We'll get back to you soon.",
+        'success',
+        6000
+      );
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Submission error:', error);
+
+      // ✅ Track form errors
+      trackFormError(
+        'contact_form',
+        (error as Error)?.message || 'Unknown error'
+      );
+
+      setSubmitStatus('error');
+      notify('Failed to send message. Please try again.', 'error', 6000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <PageHero
-        title="Contact Us"
-        subtitle="We'd love to hear from you"
-        note="Whether you’re new or part of the family, reach out and we’ll get back quickly."
-        chips={['Visit', 'Call', 'Email', 'Connect']}
-        compact
-      />
-
-      <Section padding="xl" className="relative overflow-hidden bg-[#050505]">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-60"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)',
-            backgroundSize: '34px 34px',
-            maskImage:
-              'radial-gradient(circle at 50% 40%, black 40%, transparent 92%)',
-            WebkitMaskImage:
-              'radial-gradient(circle at 50% 40%, black 40%, transparent 92%)',
-          }}
+    <>
+      {/* Hero */}
+      <section className="hero" style={{ minHeight: '80vh' }}>
+        <VideoBg
+          src="/videos/hero.mp4"
+          overlay={true}
+          overlayOpacity={0.35}
+          autoPlay={true}
+          muted={true}
+          loop={true}
         />
-        <div
-          className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"
-          style={{ background: `${colorScheme.primary}1a` }}
-        />
+        <div className="hero-grid" />
 
-        <Container size="xl" className="relative z-10">
-          <div className="grid grid-cols-1 xl:grid-cols-[0.94fr_1.06fr] gap-5 sm:gap-6 lg:gap-8">
-            <aside className="space-y-4 sm:space-y-5 xl:sticky xl:top-24 h-fit">
-              <div
-                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 lg:p-6"
+        <div className="hero-content">
+          <div className="hero-tag">
+            <span className="hero-tag-dot" />
+            We'd love to hear from you
+          </div>
+
+          <h1 className="hero-title">
+            Get in
+            <br />
+            <em>Touch</em>
+          </h1>
+
+          <p className="hero-sub">
+            Have questions, prayer requests, or want to connect with our
+            community? We're here to serve you.
+          </p>
+        </div>
+      </section>
+
+      {/* Contact Info Bar */}
+      <div className="times-bar">
+        <div className="time-item">
+          <div className="time-icon">📍</div>
+          <div>
+            <div className="time-label">Location</div>
+            <div className="time-val">Honor Gardens, Lekki-Epe, Lagos</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">📞</div>
+          <div>
+            <div className="time-label">Phone</div>
+            <div className="time-val">0706 999 5333</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✉️</div>
+          <div>
+            <div className="time-label">Email</div>
+            <div className="time-val">Wisdomhousehq@gmail.com</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">⏰</div>
+          <div>
+            <div className="time-label">Hours</div>
+            <div className="time-val">Mon-Fri 10 AM - 5 PM</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Form Section */}
+      <section>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <span className="section-tag">Contact Form</span>
+          <h2 className="section-title" style={{ marginBottom: '2rem' }}>
+            Send us a
+            <br />
+            <em>Message</em>
+          </h2>
+
+          <form onSubmit={handleSubmit} style={{ marginBottom: '3rem' }}>
+            {/* Name Field */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label
+                htmlFor="name"
                 style={{
-                  background:
-                    'linear-gradient(150deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.015) 42%, rgba(0,0,0,0.2) 100%)',
-                  boxShadow: '0 16px 42px rgba(0,0,0,0.34)',
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  color: 'var(--text)',
+                  marginBottom: '0.5rem',
                 }}
               >
-                <H2 className="text-lg sm:text-xl font-semibold mb-1.5 leading-tight">
-                  Visit & Reach Us
-                </H2>
-                <BodyMD className="text-white/70 text-xs sm:text-sm leading-relaxed">
-                  Multiple ways to connect with leadership and teams.
-                </BodyMD>
-
-                <div className="mt-4 space-y-3">
-                  {contactMethods.map((method, index) => {
-                    const Icon = method.icon;
-                    return (
-                      <div
-                        key={method.title}
-                        className="relative rounded-xl sm:rounded-2xl border border-white/10 bg-black/30 p-3.5 sm:p-4"
-                      >
-                        <div
-                          className="absolute inset-x-0 top-0 h-px opacity-70"
-                          style={{
-                            background: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary}55 50%, transparent 100%)`,
-                          }}
-                        />
-                        <div className="flex items-start gap-3">
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div
-                              className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl flex items-center justify-center border border-white/10"
-                              style={{
-                                backgroundColor: colorScheme.opacity.primary10,
-                              }}
-                            >
-                              <Icon
-                                className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
-                                style={{ color: colorScheme.primary }}
-                              />
-                            </div>
-                            <div className="hidden sm:block">
-                              <Caption className="text-[10px] tracking-[0.18em] text-white/50">
-                                {String(index + 1).padStart(2, '0')}
-                              </Caption>
-                            </div>
-                          </div>
-
-                          <div className="min-w-0 flex-1">
-                            <H3 className="text-sm sm:text-[15px] font-semibold leading-tight">
-                              {method.title}
-                            </H3>
-                            <SmallText className="mt-1 text-white/65 text-[11px] sm:text-xs leading-relaxed">
-                              {method.description}
-                            </SmallText>
-
-                            <div className="mt-2 space-y-1">
-                              {method.details.map(detail => (
-                                <SmallText
-                                  key={detail}
-                                  className="block text-white/70 text-[11px] sm:text-xs leading-relaxed"
-                                >
-                                  {detail}
-                                </SmallText>
-                              ))}
-                            </div>
-
-                            {method.link ? (
-                              <a
-                                href={method.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold"
-                                style={{ color: colorScheme.primary }}
-                              >
-                                Reach out
-                                <ArrowUpRight className="w-3.5 h-3.5" />
-                              </a>
-                            ) : null}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div
-                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5"
+                Full Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder="Your name"
                 style={{
-                  background:
-                    'linear-gradient(150deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.015) 45%, rgba(0,0,0,0.16) 100%)',
-                }}
-              >
-                <H3 className="text-sm sm:text-base font-semibold mb-3">
-                  Follow us
-                </H3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {socialMedia.map(social => {
-                    const Icon = social.icon;
-                    return (
-                      <a
-                        key={social.platform}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2.5 transition-colors hover:border-white/20"
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div
-                            className="h-8 w-8 rounded-lg flex items-center justify-center border border-white/10"
-                            style={{
-                              backgroundColor: colorScheme.opacity.primary10,
-                            }}
-                          >
-                            <Icon
-                              className="w-4 h-4"
-                              style={{ color: colorScheme.primary }}
-                            />
-                          </div>
-                          <div className="min-w-0">
-                            <SmallText className="block text-white/85 text-[11px] sm:text-xs font-medium truncate">
-                              {social.platform}
-                            </SmallText>
-                            <SmallText className="block text-white/55 text-[10px] sm:text-[11px] truncate">
-                              {social.handle}
-                            </SmallText>
-                          </div>
-                        </div>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-white/50 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-            </aside>
-
-            <div
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 lg:p-6"
-              style={{
-                background:
-                  'linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.02) 42%, rgba(0,0,0,0.22) 100%)',
-                boxShadow: '0 18px 48px rgba(0,0,0,0.36)',
-              }}
-            >
-              <div
-                className="absolute inset-0 opacity-80"
-                style={{
-                  background: `radial-gradient(circle at 92% 10%, ${colorScheme.primary}22 0%, transparent 44%)`,
+                  width: '100%',
+                  background: 'var(--charcoal)',
+                  border: '0.5px solid var(--border)',
+                  borderRadius: '2px',
+                  padding: '12px 14px',
+                  fontSize: '15px',
+                  color: 'var(--text)',
+                  fontFamily: 'var(--font-sans)',
                 }}
               />
+            </div>
 
-              <div className="relative">
-                <div className="mb-5 sm:mb-6 space-y-1">
-                  <H3 className="text-base sm:text-lg font-semibold leading-tight">
-                    Send us a message
-                  </H3>
-                  <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
-                    We respond within 24 hours on weekdays.
-                  </SmallText>
-                </div>
-
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="space-y-1.5">
-                      <SmallText className="text-white/70 text-[11px]">
-                        First name
-                      </SmallText>
-                      <input
-                        type="text"
-                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
-                        placeholder="John"
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <SmallText className="text-white/70 text-[11px]">
-                        Last name
-                      </SmallText>
-                      <input
-                        type="text"
-                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
-                        placeholder="Doe"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="space-y-1.5">
-                      <SmallText className="text-white/70 text-[11px]">
-                        Email
-                      </SmallText>
-                      <input
-                        type="email"
-                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
-                        placeholder="you@example.com"
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <SmallText className="text-white/70 text-[11px]">
-                        Phone
-                      </SmallText>
-                      <input
-                        type="tel"
-                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
-                        placeholder="+234 706 999 5333"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <SmallText className="text-white/70 text-[11px]">
-                      Topic
-                    </SmallText>
-                    <select className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10">
-                      <option value="">Select a topic</option>
-                      <option value="visit">Plan a visit</option>
-                      <option value="pastoral">Pastoral care</option>
-                      <option value="prayer">Prayer request</option>
-                      <option value="serve">Serving / volunteering</option>
-                      <option value="events">Events / bookings</option>
-                      <option value="media">Media / resources</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <SmallText className="text-white/70 text-[11px]">
-                      Message
-                    </SmallText>
-                    <textarea
-                      rows={5}
-                      className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10 resize-y min-h-[120px]"
-                      placeholder="Tell us how we can help..."
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2 text-white/70">
-                    <div
-                      className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: colorScheme.primary }}
-                    />
-                    <SmallText className="text-[11px] sm:text-xs">
-                      We’ll respond by email and phone if provided.
-                    </SmallText>
-                  </div>
-
-                  <div className="flex flex-col items-start gap-2">
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      size="md"
-                      curvature="xl"
-                      className="w-full sm:w-auto px-6 py-2.5 text-sm font-semibold text-black"
-                      style={{
-                        backgroundColor: colorScheme.primary,
-                        color: colorScheme.black,
-                      }}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      Send Message
-                    </Button>
-
-                    {submitted ? (
-                      <SmallText
-                        className="text-emerald-300 text-[11px] sm:text-xs"
-                        aria-live="polite"
-                      >
-                        Message queued successfully. Our team will respond
-                        within 24 hours.
-                      </SmallText>
-                    ) : null}
-                  </div>
-                </form>
+            {/* Email & Phone Row */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '1.5rem',
+                marginBottom: '1.5rem',
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="email"
+                  style={{
+                    display: 'block',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    color: 'var(--text)',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="you@example.com"
+                  style={{
+                    width: '100%',
+                    background: 'var(--charcoal)',
+                    border: '0.5px solid var(--border)',
+                    borderRadius: '2px',
+                    padding: '12px 14px',
+                    fontSize: '15px',
+                    color: 'var(--text)',
+                    fontFamily: 'var(--font-sans)',
+                  }}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="phone"
+                  style={{
+                    display: 'block',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    color: 'var(--text)',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+234..."
+                  style={{
+                    width: '100%',
+                    background: 'var(--charcoal)',
+                    border: '0.5px solid var(--border)',
+                    borderRadius: '2px',
+                    padding: '12px 14px',
+                    fontSize: '15px',
+                    color: 'var(--text)',
+                    fontFamily: 'var(--font-sans)',
+                  }}
+                />
               </div>
             </div>
-          </div>
-        </Container>
-      </Section>
-    </div>
-  );
-};
 
-export default ContactPage;
+            {/* Subject Field */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label
+                htmlFor="subject"
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  color: 'var(--text)',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                Subject
+              </label>
+              <select
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                style={{
+                  width: '100%',
+                  background: 'var(--charcoal)',
+                  border: '0.5px solid var(--border)',
+                  borderRadius: '2px',
+                  padding: '12px 14px',
+                  fontSize: '15px',
+                  color: formData.subject
+                    ? 'var(--text)'
+                    : 'var(--text-subtle)',
+                  fontFamily: 'var(--font-sans)',
+                }}
+              >
+                <option value="">Select a subject...</option>
+                <option value="general">General Inquiry</option>
+                <option value="prayer">Prayer Request</option>
+                <option value="pastoral">Pastoral Care</option>
+                <option value="event">Event Registration</option>
+                <option value="giving">Giving & Donations</option>
+                <option value="ministry">Ministry Involvement</option>
+                <option value="feedback">Feedback & Suggestions</option>
+              </select>
+            </div>
+
+            {/* Message Field */}
+            <div style={{ marginBottom: '2rem' }}>
+              <label
+                htmlFor="message"
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  color: 'var(--text)',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                placeholder="Tell us what's on your heart..."
+                rows={6}
+                style={{
+                  width: '100%',
+                  background: 'var(--charcoal)',
+                  border: '0.5px solid var(--border)',
+                  borderRadius: '2px',
+                  padding: '12px 14px',
+                  fontSize: '15px',
+                  color: 'var(--text)',
+                  fontFamily: 'var(--font-sans)',
+                  resize: 'vertical',
+                }}
+              />
+            </div>
+
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div
+                style={{
+                  background: 'rgba(16, 185, 129, 0.1)',
+                  border: '0.5px solid rgba(16, 185, 129, 0.3)',
+                  borderRadius: '2px',
+                  padding: '12px 14px',
+                  marginBottom: '1.5rem',
+                  color: '#10B981',
+                  fontSize: '14px',
+                }}
+              >
+                ✓ Thank you! Your message has been sent. We'll get back to you
+                soon.
+              </div>
+            )}
+            {submitStatus === 'error' && (
+              <div
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '0.5px solid rgba(239, 68, 68, 0.3)',
+                  borderRadius: '2px',
+                  padding: '12px 14px',
+                  marginBottom: '1.5rem',
+                  color: '#EF4444',
+                  fontSize: '14px',
+                }}
+              >
+                ✗ Something went wrong. Please try again or call us directly.
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-primary"
+              style={{
+                opacity: isSubmitting ? 0.7 : 1,
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* Additional Contact Methods */}
+      <section style={{ background: 'var(--charcoal)' }}>
+        <span className="section-tag">Other Ways to Connect</span>
+        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
+          Reach us through
+          <br />
+          <em>other channels</em>
+        </h2>
+
+        <div className="giving-grid">
+          <div className="giving-card">
+            <div className="giving-icon">📦</div>
+            <div className="giving-title">Prayer Request</div>
+            <div className="giving-desc">
+              Submit prayer requests and let our community pray with you. Your
+              prayers matter to us.
+            </div>
+            <Link href="/forms/prayer" className="giving-btn">
+              Submit Prayer →
+            </Link>
+          </div>
+
+          <div className="giving-card">
+            <div className="giving-icon">🤝</div>
+            <div className="giving-title">Ministry Opportunities</div>
+            <div className="giving-desc">
+              Interested in serving? Explore ways to get involved in our various
+              ministries and programs.
+            </div>
+            <Link href="/ministries" className="giving-btn">
+              Learn More →
+            </Link>
+          </div>
+
+          <div className="giving-card">
+            <div className="giving-icon">👨‍⚖️</div>
+            <div className="giving-title">Pastoral Care</div>
+            <div className="giving-desc">
+              Need pastoral guidance for weddings, counseling, or special
+              occasions? We're here to help.
+            </div>
+            <Link href="/pastoral" className="giving-btn">
+              Request Care →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer>
+        <div className="footer-top">
+          <div>
+            <div className="nav-logo">
+              <div className="nav-logo-icon">W</div>
+              <span className="nav-logo-text">The Wisdom Church</span>
+            </div>
+            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
+              We're here to serve and support your spiritual journey at every
+              step.
+            </p>
+          </div>
+
+          <div>
+            <div className="footer-col-title">Quick Links</div>
+            <ul className="footer-links">
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+              <li>
+                <Link href="/events">Events</Link>
+              </li>
+              <li>
+                <Link href="/resources">Resources</Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="footer-col-title">Service Times</div>
+            <div className="footer-contact-item">
+              Sunday Worship
+              <br />
+              9:00 AM (WAT)
+            </div>
+            <div className="footer-contact-item">
+              Midweek Service
+              <br />
+              Thursday · 6:00 PM
+            </div>
+          </div>
+
+          <div>
+            <div className="footer-col-title">Contact</div>
+            <div className="footer-contact-item">
+              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
+            </div>
+            <div className="footer-contact-item">0706 999 5333</div>
+            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
+          <div className="footer-bottom-links">
+            <Link href="/terms">Privacy Policy</Link>
+            <Link href="/cookies">Terms of Service</Link>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+}
