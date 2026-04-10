@@ -1,334 +1,199 @@
 'use client';
 
-import Link from 'next/link';
-import VideoBg from '@/shared/components/VideoBg';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { HeartHandshake, Sparkles, Users, WandSparkles } from 'lucide-react';
+
+import PageHero from '@/features/hero/PageHero';
+import { Container, Section } from '@/shared/layout';
+import {
+  ActionBanner,
+  StatStrip,
+} from '@/shared/components/site/PublicPageBlocks';
+
+const testimonies = [
+  {
+    id: 1,
+    name: 'Chioma Okonkwo',
+    title: 'Marketing Manager',
+    category: 'faith',
+    quote:
+      'The Wisdom Church helped me grow from inspiration alone into real spiritual discipline. The teaching gave structure to my faith again.',
+  },
+  {
+    id: 2,
+    name: 'David Adeniran',
+    title: 'Software Engineer',
+    category: 'healing',
+    quote:
+      'I came during a difficult season and found both prayer support and a community that stayed present beyond one service.',
+  },
+  {
+    id: 3,
+    name: 'Grace Adeyemi',
+    title: 'Teacher',
+    category: 'family',
+    quote:
+      'Pastoral counsel and consistent fellowship helped my family recover stability and hope in a very practical way.',
+  },
+  {
+    id: 4,
+    name: 'Samuel Olaleye',
+    title: 'Business Owner',
+    category: 'breakthrough',
+    quote:
+      'What changed me most was not only the testimony moment but the steady discipleship that followed it.',
+  },
+  {
+    id: 5,
+    name: 'Ngozi Isubu',
+    title: 'Nurse',
+    category: 'faith',
+    quote:
+      'This church gave me a place to belong while I rebuilt my prayer life and confidence in God’s direction.',
+  },
+  {
+    id: 6,
+    name: 'Tunde Okafor',
+    title: 'Architect',
+    category: 'salvation',
+    quote:
+      'I came searching for answers and found a house where the gospel was clear, personal, and impossible to ignore.',
+  },
+] as const;
+
+const categories = [
+  { id: 'all', label: 'All stories' },
+  { id: 'faith', label: 'Growing in faith' },
+  { id: 'healing', label: 'Healing and restoration' },
+  { id: 'family', label: 'Family stories' },
+  { id: 'breakthrough', label: 'Breakthroughs' },
+] as const;
+
+const stats = [
+  {
+    label: 'Story type',
+    value: 'Real church journeys',
+    detail:
+      'These stories reflect discipleship, care, salvation, healing, and restored hope.',
+    icon: Sparkles,
+  },
+  {
+    label: 'Church impact',
+    value: 'Faith formed in community',
+    detail:
+      'Many testimonies come from what happens after the altar moment, not only during it.',
+    icon: Users,
+  },
+  {
+    label: 'Care pathway',
+    value: 'Prayer and follow-up',
+    detail:
+      'Personal stories often intersect with pastoral care, teaching, and steady support.',
+    icon: HeartHandshake,
+  },
+  {
+    label: 'Encouragement goal',
+    value: 'Strengthen others',
+    detail:
+      'Testimonies remind the church that God is still working in ordinary and difficult seasons.',
+    icon: WandSparkles,
+  },
+];
 
 export default function TestimoniesPage() {
-  const [filterCategory, setFilterCategory] = useState('all');
+  const [activeCategory, setActiveCategory] =
+    useState<(typeof categories)[number]['id']>('all');
 
-  const testimonies = [
-    {
-      id: 1,
-      name: 'Chioma Okonkwo',
-      title: 'Marketing Manager',
-      category: 'faith',
-      quote:
-        "The Wisdom Church transformed my understanding of faith and purpose. I've grown spiritually and found a caring community.",
-      avatar: '👩',
-    },
-    {
-      id: 2,
-      name: 'David Adeniran',
-      title: 'Software Engineer',
-      category: 'healing',
-      quote:
-        "Through the ministry here, I've experienced God's healing and restoration in ways I never thought possible.",
-      avatar: '👨',
-    },
-    {
-      id: 3,
-      name: 'Grace Adeyemi',
-      title: 'Teacher',
-      category: 'family',
-      quote:
-        "My family's relationship has been restored through the counseling and ministry. God's love is real here.",
-      avatar: '👩',
-    },
-    {
-      id: 4,
-      name: 'Samuel Olaleye',
-      title: 'Business Owner',
-      category: 'breakthrough',
-      quote:
-        "God brought breakthrough in my business through the teachings and the community's intercession. Glory to God!",
-      avatar: '👨',
-    },
-    {
-      id: 5,
-      name: 'Ngozi Isubu',
-      title: 'Nurse',
-      category: 'faith',
-      quote:
-        'My faith journey began here at TWC. The pastoral team and worship experience have been life-changing.',
-      avatar: '👩',
-    },
-    {
-      id: 6,
-      name: 'Tunde Okafor',
-      title: 'Architect',
-      category: 'salvation',
-      quote:
-        "I gave my life to Christ here at The Wisdom Church. It's the best decision I've ever made.",
-      avatar: '👨',
-    },
-  ];
-
-  const categories = [
-    { id: 'all', label: 'All Stories' },
-    { id: 'faith', label: 'Growing in Faith' },
-    { id: 'healing', label: 'Healing & Restoration' },
-    { id: 'family', label: 'Family Blessings' },
-    { id: 'breakthrough', label: 'Breakthroughs' },
-  ];
-
-  const filtered =
-    filterCategory === 'all'
-      ? testimonies
-      : testimonies.filter(t => t.category === filterCategory);
+  const filtered = useMemo(() => {
+    if (activeCategory === 'all') return testimonies;
+    return testimonies.filter(
+      testimony => testimony.category === activeCategory
+    );
+  }, [activeCategory]);
 
   return (
-    <>
-      {/* Hero */}
-      <section className="hero" style={{ minHeight: '70vh' }}>
-        <VideoBg
-          src="/videos/hero.mp4"
-          overlay={true}
-          overlayOpacity={0.35}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
-        <div className="hero-grid" />
+    <div className="min-h-screen bg-[#050505] text-white">
+      <PageHero
+        title="Stories of growth, healing, salvation, and real transformation."
+        subtitle="Testimonies help the church remember that God is still working through worship, discipleship, care, and faithful obedience."
+        note="These stories are not here to decorate the website. They are here to strengthen faith, encourage perseverance, and make God’s faithfulness visible."
+        chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
+      />
 
-        <div className="hero-content" style={{ maxWidth: '800px' }}>
-          <div className="hero-tag">
-            <span className="hero-tag-dot" />
-            Real stories, real faith
+      <StatStrip items={stats} />
+
+      <Section padding="lg" className="bg-[#050505]">
+        <Container size="xl" className="space-y-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl space-y-3">
+              <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+                Testimony stories
+              </p>
+              <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+                Filter by the kind of encouragement you need to read right now.
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {categories.map(category => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setActiveCategory(category.id)}
+                  className="rounded-full border px-4 py-2 text-sm font-medium transition"
+                  style={
+                    activeCategory === category.id
+                      ? {
+                          borderColor: 'transparent',
+                          color: '#050505',
+                          background:
+                            'linear-gradient(135deg, #d7bb75, #f0deaa)',
+                        }
+                      : {
+                          borderColor: 'rgba(255,255,255,0.12)',
+                          color: 'rgba(255,255,255,0.72)',
+                          background: 'rgba(255,255,255,0.03)',
+                        }
+                  }
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <h1 className="hero-title">
-            Testimonies of
-            <br />
-            <em>God's faithfulness</em>
-          </h1>
-
-          <p className="hero-sub">
-            Discover how God is working in the lives of our congregation
-            members.
-          </p>
-        </div>
-      </section>
-
-      <div className="times-bar">
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Visitors Impacted</div>
-            <div className="time-val">5,000+</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Salvations This Year</div>
-            <div className="time-val">200+</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Healings Reported</div>
-            <div className="time-val">50+</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Community Served</div>
-            <div className="time-val">1,000+ Lives</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filter Categories */}
-      <section style={{ textAlign: 'center', paddingBottom: '4rem' }}>
-        <div
-          style={{
-            display: 'flex',
-            gap: '1rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '2rem',
-          }}
-        >
-          {categories.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => setFilterCategory(cat.id)}
-              className={
-                filterCategory === cat.id ? 'btn-primary' : 'btn-outline'
-              }
-              style={{ cursor: 'pointer' }}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonies Grid */}
-      <section>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '2rem',
-            marginBottom: '4rem',
-          }}
-        >
-          {filtered.map(testimony => (
-            <div key={testimony.id} className="testimony-card">
-              <div className="testimony-quote">&ldquo;</div>
-              <q style={{ marginBottom: '1.5rem' }}>{testimony.quote}</q>
-              <div
-                style={{
-                  borderTop: '1px solid var(--border)',
-                  paddingTop: '1.5rem',
-                }}
+          <div className="grid gap-4 lg:grid-cols-3">
+            {filtered.map(testimony => (
+              <article
+                key={testimony.id}
+                className="rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(0,0,0,0.22))] p-6"
               >
-                <div
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: 'var(--text)',
-                  }}
-                >
-                  {testimony.name}
+                <p className="text-4xl leading-none text-[#d7bb75]">“</p>
+                <p className="mt-4 text-base leading-relaxed text-white/72">
+                  {testimony.quote}
+                </p>
+                <div className="mt-6 border-t border-white/10 pt-4">
+                  <p className="text-base font-semibold text-white">
+                    {testimony.name}
+                  </p>
+                  <p className="mt-1 text-sm text-white/58">
+                    {testimony.title}
+                  </p>
                 </div>
-                <div
-                  style={{
-                    fontSize: '12px',
-                    color: 'var(--text-muted)',
-                    marginTop: '0.25rem',
-                  }}
-                >
-                  {testimony.title}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Share Your Story */}
-      <section
-        style={{
-          background: 'var(--charcoal)',
-          borderTop: '0.5px solid var(--border)',
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <span className="section-tag">Have a story?</span>
-          <h2 className="section-title" style={{ marginBottom: '1.5rem' }}>
-            Share your
-            <br />
-            <em>testimony with us</em>
-          </h2>
-          <p
-            style={{
-              color: 'var(--text-muted)',
-              marginBottom: '2rem',
-              maxWidth: '500px',
-              margin: '0 auto',
-            }}
-          >
-            Your story can inspire and encourage others. We\'d love to hear how
-            God is working in your life.
-          </p>
-          <Link href="/testimonies#share" className="btn-primary">
-            Submit Your Testimony
-          </Link>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section>
-        <div className="event-banner">
-          <div>
-            <div className="event-tag">⛪ Join Our Community</div>
-            <div className="event-title">Experience God's Transformation</div>
-            <div className="event-desc">
-              Visit us for a service and become part of our growing faith
-              community.
-            </div>
+              </article>
+            ))}
           </div>
-          <Link href="/" className="btn-primary">
-            Find Service Times
-          </Link>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      {/* Footer */}
-      <footer>
-        <div className="footer-top">
-          <div>
-            <div className="nav-logo">
-              <div className="nav-logo-icon">W</div>
-              <span className="nav-logo-text">The Wisdom Church</span>
-            </div>
-            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
-              Testimonies of faith, healing, and transformation through God's
-              grace.
-            </p>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Quick Links</div>
-            <ul className="footer-links">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-              <li>
-                <Link href="/leadership">Leadership</Link>
-              </li>
-              <li>
-                <Link href="/contact">Contact</Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Service Times</div>
-            <div className="footer-contact-item">
-              Sunday Worship
-              <br />
-              9:00 AM (WAT)
-            </div>
-            <div className="footer-contact-item">
-              Midweek Service
-              <br />
-              Thursday · 6:00 PM
-            </div>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Contact</div>
-            <div className="footer-contact-item">
-              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
-            </div>
-            <div className="footer-contact-item">0706 999 5333</div>
-            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
-          <div className="footer-bottom-links">
-            <Link href="/terms">Privacy Policy</Link>
-            <Link href="/cookies">Terms of Service</Link>
-          </div>
-        </div>
-      </footer>
-    </>
+      <ActionBanner
+        eyebrow="Share your story"
+        title="If God has done something meaningful in your life through this church season, we would love to hear it."
+        description="Testimonies encourage people who are still praying, still waiting, and still trying to trust God well."
+        primaryHref="/contact"
+        primaryLabel="Share a testimony"
+        secondaryHref="/events"
+        secondaryLabel="Join a service"
+      />
+    </div>
   );
 }

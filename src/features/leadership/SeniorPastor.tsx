@@ -3,7 +3,7 @@
 import { useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Instagram, Facebook, Twitter, ArrowRight } from 'lucide-react';
+import { ArrowRight, Camera } from 'lucide-react';
 import { Bishop } from '@/shared/assets';
 import { H1, P } from '@/shared/text';
 import Button from '@/shared/utils/buttons/CustomButton';
@@ -143,7 +143,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                 variant="outline"
                 size="sm"
                 curvature="full"
-                leftIcon={<Instagram className="w-4 h-4" />}
+                leftIcon={<Camera className="w-4 h-4" />}
                 className="px-5 py-2.5 text-[0.78rem] sm:text-sm font-semibold"
                 style={{
                   backgroundColor: 'rgba(255,255,255,0.08)',

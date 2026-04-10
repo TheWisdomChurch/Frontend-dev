@@ -1,372 +1,136 @@
-'use client';
+export const dynamic = 'force-dynamic';
 
-import Link from 'next/link';
-import VideoBg from '@/shared/components/VideoBg';
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import {
+  BookOpenCheck,
+  CalendarDays,
+  HeartHandshake,
+  Sparkles,
+  Users,
+} from 'lucide-react';
+
+import MinistryDetailPage from '@/shared/components/site/MinistryDetailPage';
+
+const config = {
+  hero: {
+    title:
+      'A children’s ministry designed for safety, joy, and strong early discipleship.',
+    subtitle:
+      'The children’s ministry helps young hearts encounter Jesus through age-appropriate teaching, consistent care, and engaging church experiences.',
+    note: 'We want parents to trust the environment and children to leave each gathering with a deeper awareness of God’s love and truth.',
+    chips: ['Children', 'Safe care', 'Bible teaching', 'Family support'],
+  },
+  stats: [
+    {
+      label: 'Primary focus',
+      value: 'Children and families',
+      detail:
+        'The ministry serves children while helping parents feel confident in the church environment.',
+      icon: Users,
+    },
+    {
+      label: 'Spiritual base',
+      value: 'Bible-centered learning',
+      detail:
+        'Children are introduced to scripture and Christian truth in accessible ways.',
+      icon: BookOpenCheck,
+    },
+    {
+      label: 'Care standard',
+      value: 'Safe and welcoming',
+      detail:
+        'Environment, supervision, and communication should help families feel at ease.',
+      icon: HeartHandshake,
+    },
+    {
+      label: 'Ministry rhythm',
+      value: 'Consistent weekly care',
+      detail:
+        'Children benefit most where teaching and support are steady and age-aware.',
+      icon: CalendarDays,
+    },
+  ],
+  mission: {
+    eyebrow: 'Children’s mission',
+    title:
+      'Children should experience church as a place of safety, joy, truth, and belonging.',
+    description:
+      'The children’s ministry exists to help young people know God early, feel cared for in church, and build spiritual foundations that support long-term growth.',
+    points: [
+      'Teach biblical truth in engaging and age-appropriate ways.',
+      'Create an environment that feels safe, warm, and structured.',
+      'Support families by reinforcing faith formation from an early age.',
+      'Help children enjoy church while taking God seriously.',
+    ],
+    panelTitle: 'What families usually need',
+    panelBody:
+      'Parents often need a ministry they can trust, and children need a space that is both joyful and spiritually meaningful. The ministry aims to provide both.',
+    panelItems: [
+      'Safe and supervised environments',
+      'Clear communication with families',
+      'Joyful learning moments',
+      'A consistent church rhythm for children',
+    ],
+  },
+  programs: [
+    {
+      title: 'Bible teaching sessions',
+      description:
+        'Scripture-centered moments designed to help children understand God’s truth at their level.',
+      icon: BookOpenCheck,
+    },
+    {
+      title: 'Worship and response',
+      description:
+        'Age-aware worship experiences that help children engage church life with joy and reverence.',
+      icon: Sparkles,
+    },
+    {
+      title: 'Caring supervision',
+      description:
+        'Leaders and volunteers who create a warm environment and take practical safety seriously.',
+      icon: HeartHandshake,
+    },
+    {
+      title: 'Family support touchpoints',
+      description:
+        'A ministry posture that helps parents feel informed, supported, and connected.',
+      icon: Users,
+    },
+  ],
+  pathways: [
+    {
+      title: 'Bring your child consistently',
+      description:
+        'Regular attendance helps children grow familiar with the environment, leaders, and spiritual rhythm.',
+    },
+    {
+      title: 'Meet the ministry team',
+      description:
+        'Parents should feel able to know the people serving their children and understand the environment.',
+    },
+    {
+      title: 'Build a home-and-church rhythm',
+      description:
+        'Children grow best when church teaching and family conversation work together.',
+    },
+    {
+      title: 'Stay connected as your child grows',
+      description:
+        'The ministry should continue helping children transition well into later stages of church life.',
+    },
+  ],
+  cta: {
+    title:
+      'If you want to connect your child to the children’s ministry, reach out here.',
+    description:
+      'We can help your family understand what to expect and how to settle into the ministry environment.',
+    primaryHref: '/contact',
+    primaryLabel: 'Connect my family',
+    secondaryHref: '/events',
+    secondaryLabel: 'See church schedule',
+  },
+};
 
 export default function ChildrenPage() {
-  const pageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    gsap.from('.children-hero-title', {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-    });
-  }, []);
-
-  return (
-    <div ref={pageRef}>
-      <section className="hero" style={{ minHeight: '80vh' }}>
-        <VideoBg
-          src="/videos/hero.mp4"
-          overlay={true}
-          overlayOpacity={0.35}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
-        <div className="hero-grid" />
-
-        <div className="hero-content" style={{ maxWidth: '900px' }}>
-          <div className="hero-tag">
-            <span className="hero-tag-dot" />
-            Ages 0-12
-          </div>
-
-          <h1 className="hero-title children-hero-title">
-            Growing Up in
-            <br />
-            <em>God's Love</em>
-          </h1>
-
-          <p className="hero-sub">
-            A safe, fun, and faith-filled environment where children learn about
-            Jesus, grow in God's Word, and discover their unique purpose.
-          </p>
-
-          <button
-            onClick={() => (window.location.href = '/contact')}
-            className="btn-primary"
-            style={{ marginTop: '2rem', cursor: 'pointer' }}
-          >
-            Enroll Your Child
-          </button>
-        </div>
-      </section>
-
-      <div className="times-bar">
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Children's Service</div>
-            <div className="time-val">Sundays · 9:00 AM</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Grade Groups</div>
-            <div className="time-val">Nursery to Grade 6</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Location</div>
-            <div className="time-val">Children's Wing</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Director</div>
-            <div className="time-val">Sister Iya Okafor</div>
-          </div>
-        </div>
-      </div>
-
-      <section>
-        <span className="section-tag">Our Promise</span>
-        <h2 className="section-title" style={{ marginBottom: '2rem' }}>
-          Children's Ministry
-          <br />
-          <em>Mission</em>
-        </h2>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '3rem',
-            alignItems: 'center',
-            marginBottom: '4rem',
-          }}
-        >
-          <div style={{ fontSize: '80px', textAlign: 'center' }}>👶</div>
-
-          <div>
-            <p
-              style={{
-                color: 'var(--text-muted)',
-                fontSize: '16px',
-                lineHeight: '1.8',
-                marginBottom: '2rem',
-              }}
-            >
-              Our Children's Ministry creates a joyful, safe, and engaging
-              environment where children experience God's love, learn biblical
-              values, and grow spiritually while making wonderful friends and
-              memories.
-            </p>
-
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
-            >
-              {[
-                'Bible stories and teachings',
-                'Fun, age-appropriate activities',
-                'Safe, supervised environment',
-                'Character development',
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    gap: '1rem',
-                    alignItems: 'flex-start',
-                  }}
-                >
-                  <div
-                    style={{
-                      color: 'var(--gold)',
-                      fontSize: '24px',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    ✓
-                  </div>
-                  <span style={{ color: 'var(--text)', fontSize: '15px' }}>
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        style={{
-          background: 'var(--charcoal)',
-          borderTop: '0.5px solid var(--border)',
-        }}
-      >
-        <span className="section-tag">What We Do</span>
-        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
-          Children's Ministry
-          <br />
-          <em>Programs</em>
-        </h2>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem',
-          }}
-        >
-          {[
-            {
-              title: 'Bible Classes',
-              icon: '📚',
-              desc: 'Age-appropriate Bible stories and teachings',
-            },
-            {
-              title: 'Arts & Crafts',
-              icon: '🎨',
-              desc: 'Creative activities reinforcing Bible lessons',
-            },
-            {
-              title: 'Worship Circle',
-              icon: '🎵',
-              desc: 'Kid-friendly worship and praise songs',
-            },
-            {
-              title: 'Games & Activities',
-              icon: '🎮',
-              desc: 'Fun, interactive learning experiences',
-            },
-            {
-              title: 'Seasonal Events',
-              icon: '🎄',
-              desc: 'Special celebrations and holiday programs',
-            },
-            {
-              title: 'Field Trips',
-              icon: '🚌',
-              desc: 'Educational and fun outings for children',
-            },
-          ].map((program, idx) => (
-            <div
-              key={idx}
-              className="expect-card"
-              style={{ textAlign: 'center' }}
-            >
-              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
-                {program.icon}
-              </div>
-              <div className="expect-title">{program.title}</div>
-              <p
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-muted)',
-                  lineHeight: '1.6',
-                }}
-              >
-                {program.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <span className="section-tag">Our Team</span>
-        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
-          Children's Ministry
-          <br />
-          <em>Staff & Volunteers</em>
-        </h2>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem',
-          }}
-        >
-          {[
-            {
-              name: 'Sister Iya Okafor',
-              role: 'Ministry Director',
-              icon: '👩‍🏫',
-            },
-            {
-              name: 'Sister Bimbo Oluwande',
-              role: 'Assistant Director',
-              icon: '👩‍💼',
-            },
-            {
-              name: 'Brother Emeka Eze',
-              role: 'Activities Coordinator',
-              icon: '👨‍💼',
-            },
-          ].map((staff, idx) => (
-            <div
-              key={idx}
-              className="expect-card"
-              style={{ textAlign: 'center' }}
-            >
-              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
-                {staff.icon}
-              </div>
-              <div className="expect-title">{staff.name}</div>
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--gold-light)',
-                  marginBottom: '1rem',
-                  fontWeight: '500',
-                }}
-              >
-                {staff.role}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="event-banner">
-          <div>
-            <div className="event-tag">🌈 Welcome!</div>
-            <div className="event-title">
-              Give Your Child a Loving Faith Community
-            </div>
-            <div className="event-desc">
-              Join hundreds of children discovering God's love in a safe, fun,
-              and nurturing environment.
-            </div>
-          </div>
-          <Link href="/contact" className="btn-primary">
-            Register Now
-          </Link>
-        </div>
-      </section>
-
-      <footer>
-        <div className="footer-top">
-          <div>
-            <div className="nav-logo">
-              <div className="nav-logo-icon">W</div>
-              <span className="nav-logo-text">The Wisdom Church</span>
-            </div>
-            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
-              Children's Ministry - Growing young hearts.
-            </p>
-          </div>
-          <div>
-            <div className="footer-col-title">Quick Links</div>
-            <ul className="footer-links">
-              <li>
-                <Link href="/ministries">Ministries</Link>
-              </li>
-              <li>
-                <Link href="/events">Events</Link>
-              </li>
-              <li>
-                <Link href="/contact">Contact</Link>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <div className="footer-col-title">Contact</div>
-            <div className="footer-contact-item">
-              Children's Office
-              <br />
-              0706 999 5403
-            </div>
-            <div className="footer-contact-item">kids@wisdomhq.org</div>
-          </div>
-          <div>
-            <div className="footer-col-title">Hours</div>
-            <div className="footer-contact-item">
-              Sundays · 9:00 AM
-              <br />
-              Honor Gardens
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
-          <div className="footer-bottom-links">
-            <Link href="/terms">Terms of Service</Link>
-            <Link href="/cookies">Privacy Policy</Link>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+  return <MinistryDetailPage config={config} />;
 }
