@@ -1,141 +1,370 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
-import { hero_bg_3 } from '@/shared/assets';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import { BodyMD, BodySM, H2, H3, Caption } from '@/shared/text';
-import PageHero from '@/features/hero/PageHero';
+import VideoBg from '@/shared/components/VideoBg';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 
-const WomenPage = () => {
-  const { colorScheme } = useTheme();
+export default function WomenPage() {
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.from('.women-hero-title', {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <PageHero
-        title="Women's Ministry"
-        subtitle="Growing Together in Grace"
-        note="A community of women supporting each other through Bible study, prayer, and fellowship as we journey together in faith."
-        backgroundImage={hero_bg_3.src}
-        chips={[
-          'Women of Wisdom',
-          'Bible Studies',
-          'Prayer Groups',
-          'Special Events',
-        ]}
-      />
-
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-50"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-            backgroundSize: '34px 34px',
-            maskImage:
-              'radial-gradient(circle at 50% 30%, black 38%, transparent 92%)',
-            WebkitMaskImage:
-              'radial-gradient(circle at 50% 30%, black 38%, transparent 92%)',
-          }}
+    <div ref={pageRef}>
+      <section className="hero" style={{ minHeight: '80vh' }}>
+        <VideoBg
+          src="/videos/hero.mp4"
+          overlay={true}
+          overlayOpacity={0.35}
+          autoPlay={true}
+          muted={true}
+          loop={true}
         />
+        <div className="hero-grid" />
 
-        <Container size="xl" className="relative z-10 space-y-5 sm:space-y-6">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-black transition hover:brightness-110"
-              style={{ backgroundColor: colorScheme.primary }}
-            >
-              Join Our Next Study
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/events"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              View Events
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+        <div className="hero-content" style={{ maxWidth: '900px' }}>
+          <div className="hero-tag">
+            <span className="hero-tag-dot" />
+            Sisterhood & Strength
           </div>
 
-          <div
-            className="rounded-2xl sm:rounded-3xl border border-white/10 p-5 sm:p-6 lg:p-7"
-            style={{
-              background:
-                'linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.02) 44%, rgba(0,0,0,0.2) 100%)',
-              boxShadow: '0 18px 46px rgba(0,0,0,0.35)',
-            }}
+          <h1 className="hero-title women-hero-title">
+            Women of
+            <br />
+            <em>Purpose</em>
+          </h1>
+
+          <p className="hero-sub">
+            Connecting women in faith, growth, mentorship, and empowerment
+            through Bible study, fellowship, and service.
+          </p>
+
+          <button
+            onClick={() => (window.location.href = '/contact')}
+            className="btn-primary"
+            style={{ marginTop: '2rem', cursor: 'pointer' }}
           >
-            <H2 className="text-xl sm:text-2xl font-semibold mb-2 leading-tight">
-              Women of Wisdom
-            </H2>
-            <BodyMD className="text-white/70 text-sm sm:text-base leading-relaxed">
-              Connecting women of all ages and stages of life
-            </BodyMD>
-          </div>
+            Join Our Community
+          </button>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-            {[
-              {
-                title: 'Bible Studies',
-                description:
-                  "Weekly small group studies exploring God's Word together",
-                day: 'Tuesdays 10:00 AM & 7:00 PM',
-              },
-              {
-                title: 'Prayer Groups',
-                description:
-                  'Intimate gatherings for prayer and spiritual support',
-                day: 'Thursdays 9:30 AM',
-              },
-              {
-                title: 'Special Events',
-                description:
-                  'Retreats, conferences, and fellowship opportunities',
-                day: 'Monthly Gatherings',
-              },
-            ].map(item => (
-              <article
-                key={item.title}
-                className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-5 sm:p-6"
+      <div className="times-bar">
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Women's Meeting</div>
+            <div className="time-val">Monthly · First Saturday</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Bible Study Groups</div>
+            <div className="time-val">Thursdays · 2:00 PM</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Location</div>
+            <div className="time-val">Honor Gardens Fellowship Hall</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Leader</div>
+            <div className="time-val">Sister Funke Okafor</div>
+          </div>
+        </div>
+      </div>
+
+      <section>
+        <span className="section-tag">Our Promise</span>
+        <h2 className="section-title" style={{ marginBottom: '2rem' }}>
+          Women's Ministry
+          <br />
+          <em>Empowerment</em>
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '3rem',
+            alignItems: 'center',
+            marginBottom: '4rem',
+          }}
+        >
+          <div style={{ fontSize: '80px', textAlign: 'center' }}>👩‍🤝‍👩</div>
+
+          <div>
+            <p
+              style={{
+                color: 'var(--text-muted)',
+                fontSize: '16px',
+                lineHeight: '1.8',
+                marginBottom: '2rem',
+              }}
+            >
+              Our Women's Ministry creates a nurturing environment where women
+              can grow in their faith, build meaningful friendships, develop
+              their gifts, and equip themselves to make a powerful impact in
+              their families, church, and communities.
+            </p>
+
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+            >
+              {[
+                'Spiritual growth through Bible study',
+                'Authentic fellowship and mentorship',
+                'Leadership development and training',
+                'Community service and outreach',
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'flex-start',
+                  }}
+                >
+                  <div
+                    style={{
+                      color: 'var(--gold)',
+                      fontSize: '24px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    ✓
+                  </div>
+                  <span style={{ color: 'var(--text)', fontSize: '15px' }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        style={{
+          background: 'var(--charcoal)',
+          borderTop: '0.5px solid var(--border)',
+        }}
+      >
+        <span className="section-tag">Our Initiatives</span>
+        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
+          Women's Ministry
+          <br />
+          <em>Programs</em>
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem',
+          }}
+        >
+          {[
+            {
+              title: 'Bible Study Groups',
+              icon: '📖',
+              desc: 'Weekly and monthly groups diving deep into Scripture',
+            },
+            {
+              title: 'Mentorship Program',
+              icon: '🤝',
+              desc: 'Connecting experienced women with those seeking guidance',
+            },
+            {
+              title: 'Prayer Ministry',
+              icon: '🙏',
+              desc: 'Intercessory prayer and spiritual support network',
+            },
+            {
+              title: 'Conferences & Retreats',
+              icon: '🏨',
+              desc: 'Annual events for spiritual renewal and growth',
+            },
+            {
+              title: 'Community Service',
+              icon: '💝',
+              desc: 'Outreach programs serving widows and vulnerable women',
+            },
+            {
+              title: "Women's Fellowship",
+              icon: '🎉',
+              desc: 'Social events for building authentic friendships',
+            },
+          ].map((program, idx) => (
+            <div
+              key={idx}
+              className="expect-card"
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
+                {program.icon}
+              </div>
+              <div className="expect-title">{program.title}</div>
+              <p
                 style={{
-                  background:
-                    'linear-gradient(150deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.015) 45%, rgba(0,0,0,0.18) 100%)',
-                  boxShadow: '0 14px 34px rgba(0,0,0,0.26)',
+                  fontSize: '14px',
+                  color: 'var(--text-muted)',
+                  lineHeight: '1.6',
                 }}
               >
-                <div
-                  className="absolute inset-x-0 top-0 h-px opacity-80"
-                  style={{
-                    background: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary}55 50%, transparent 100%)`,
-                  }}
-                />
-                <H3 className="text-base sm:text-lg font-semibold mb-2 leading-tight">
-                  {item.title}
-                </H3>
-                <BodySM className="text-white/70 text-xs sm:text-sm mb-3 leading-relaxed">
-                  {item.description}
-                </BodySM>
-                <Caption
-                  className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.14em]"
-                  style={{ color: colorScheme.primary }}
-                >
-                  {item.day}
-                </Caption>
-              </article>
-            ))}
+                {program.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <span className="section-tag">Leadership</span>
+        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
+          Women's Ministry
+          <br />
+          <em>Leaders</em>
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem',
+          }}
+        >
+          {[
+            {
+              name: 'Sister Funke Okafor',
+              role: "Women's Ministry Leader",
+              icon: '👩‍💼',
+            },
+            {
+              name: 'Sister Tina Okafor',
+              role: 'Co-Leader & Mentorship',
+              icon: '👩‍🏫',
+            },
+            {
+              name: 'Sister Bola Adebayo',
+              role: 'Events & Fellowships',
+              icon: '👩‍💻',
+            },
+          ].map((leader, idx) => (
+            <div
+              key={idx}
+              className="expect-card"
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ fontSize: '60px', marginBottom: '1rem' }}>
+                {leader.icon}
+              </div>
+              <div className="expect-title">{leader.name}</div>
+              <div
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--gold-light)',
+                  marginBottom: '1rem',
+                  fontWeight: '500',
+                }}
+              >
+                {leader.role}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div className="event-banner">
+          <div>
+            <div className="event-tag">🌟 You're Invited!</div>
+            <div className="event-title">Join Our Women's Community</div>
+            <div className="event-desc">
+              Connect with purposeful women growing together in faith, love, and
+              service.
+            </div>
           </div>
-        </Container>
-      </Section>
+          <Link href="/contact" className="btn-primary">
+            Connect With Us
+          </Link>
+        </div>
+      </section>
+
+      <footer>
+        <div className="footer-top">
+          <div>
+            <div className="nav-logo">
+              <div className="nav-logo-icon">W</div>
+              <span className="nav-logo-text">The Wisdom Church</span>
+            </div>
+            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
+              Women's Ministry - Growing in faith and purpose.
+            </p>
+          </div>
+          <div>
+            <div className="footer-col-title">Quick Links</div>
+            <ul className="footer-links">
+              <li>
+                <Link href="/ministries">Ministries</Link>
+              </li>
+              <li>
+                <Link href="/events">Events</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div className="footer-col-title">Contact</div>
+            <div className="footer-contact-item">
+              Women's Office
+              <br />
+              0706 999 5401
+            </div>
+            <div className="footer-contact-item">women@wisdomhq.org</div>
+          </div>
+          <div>
+            <div className="footer-col-title">Connect</div>
+            <div className="footer-contact-item">
+              First Saturday Monthly
+              <br />
+              Honor Gardens
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
+          <div className="footer-bottom-links">
+            <Link href="/terms">Terms of Service</Link>
+            <Link href="/cookies">Privacy Policy</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
-};
-
-export default WomenPage;
+}

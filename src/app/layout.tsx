@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { bricolageGrotesque, worksans, playfair } from '@/shared/fonts/fonts';
 
 import MetaPixel from '@/shared/analytics/MetaPixel';
+import { AnalyticsProvider } from '@/shared/providers/AnalyticsProvider';
 import ClientHeader from '@/shared/components/ClientHeader';
 import ClientFooter from '@/shared/components/ClientFooter';
 import ClientScrollToTop from '@/shared/components/ClientscrollTop';
@@ -145,25 +146,31 @@ export const viewport: Viewport = {
 // Client wrapper component — UNCHANGED
 function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ReduxProvider>
-      <ThemeProvider>
-        <ServiceUnavailableProvider>
-          <HeaderProvider>
-            <ErrorBoundary>
-              <AppStartupLoader />
-              <ScrollHandler />
-              <ClientHeader />
-              <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
-                {children}
-              </main>
-              <ClientFooter />
-              <ClientScrollToTop />
-              <CookieConsentBanner />
-            </ErrorBoundary>
-          </HeaderProvider>
-        </ServiceUnavailableProvider>
-      </ThemeProvider>
-    </ReduxProvider>
+    <AnalyticsProvider
+      metaPixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID}
+      gaMeasurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}
+      debug={false}
+    >
+      <ReduxProvider>
+        <ThemeProvider>
+          <ServiceUnavailableProvider>
+            <HeaderProvider>
+              <ErrorBoundary>
+                <AppStartupLoader />
+                <ScrollHandler />
+                <ClientHeader />
+                <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
+                  {children}
+                </main>
+                <ClientFooter />
+                <ClientScrollToTop />
+                <CookieConsentBanner />
+              </ErrorBoundary>
+            </HeaderProvider>
+          </ServiceUnavailableProvider>
+        </ThemeProvider>
+      </ReduxProvider>
+    </AnalyticsProvider>
   );
 }
 

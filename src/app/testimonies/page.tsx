@@ -1,382 +1,334 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { H3, BodyMD, BodySM } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import PageHero from '@/features/hero/PageHero';
-import { Quote, Eye } from 'lucide-react';
-import apiClient from '@/lib/api';
-import { BaseModal } from '@/shared/ui/modals/Base';
-import { testimonialFormFields } from '@/lib/data';
+import Link from 'next/link';
+import VideoBg from '@/shared/components/VideoBg';
+import { useState } from 'react';
 
-const BREAKPOINT_MD = 768;
-const MAX_TESTIMONY_LEN = testimonialFormFields.maxTestimonyLength;
-const MAX_IMAGE_SIZE_MB = Math.floor(
-  testimonialFormFields.maxImageSize / (1024 * 1024)
-);
-
-/* -------------------- hooks -------------------- */
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const update = () => setMatches(media.matches);
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, [query]);
-
-  return matches;
-}
-
-/* -------------------- page -------------------- */
 export default function TestimoniesPage() {
-  const isMobile = useMediaQuery(`(max-width: ${BREAKPOINT_MD - 1}px)`);
+  const [filterCategory, setFilterCategory] = useState('all');
 
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    testimony: '',
-    anonymous: false,
-    allowSharing: true,
-    agreeToTerms: false,
-    email: '',
-  });
+  const testimonies = [
+    {
+      id: 1,
+      name: 'Chioma Okonkwo',
+      title: 'Marketing Manager',
+      category: 'faith',
+      quote:
+        "The Wisdom Church transformed my understanding of faith and purpose. I've grown spiritually and found a caring community.",
+      avatar: '👩',
+    },
+    {
+      id: 2,
+      name: 'David Adeniran',
+      title: 'Software Engineer',
+      category: 'healing',
+      quote:
+        "Through the ministry here, I've experienced God's healing and restoration in ways I never thought possible.",
+      avatar: '👨',
+    },
+    {
+      id: 3,
+      name: 'Grace Adeyemi',
+      title: 'Teacher',
+      category: 'family',
+      quote:
+        "My family's relationship has been restored through the counseling and ministry. God's love is real here.",
+      avatar: '👩',
+    },
+    {
+      id: 4,
+      name: 'Samuel Olaleye',
+      title: 'Business Owner',
+      category: 'breakthrough',
+      quote:
+        "God brought breakthrough in my business through the teachings and the community's intercession. Glory to God!",
+      avatar: '👨',
+    },
+    {
+      id: 5,
+      name: 'Ngozi Isubu',
+      title: 'Nurse',
+      category: 'faith',
+      quote:
+        'My faith journey began here at TWC. The pastoral team and worship experience have been life-changing.',
+      avatar: '👩',
+    },
+    {
+      id: 6,
+      name: 'Tunde Okafor',
+      title: 'Architect',
+      category: 'salvation',
+      quote:
+        "I gave my life to Christ here at The Wisdom Church. It's the best decision I've ever made.",
+      avatar: '👨',
+    },
+  ];
 
-  const [submitting, setSubmitting] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [imageName, setImageName] = useState('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
-  const [imageError, setImageError] = useState('');
+  const categories = [
+    { id: 'all', label: 'All Stories' },
+    { id: 'faith', label: 'Growing in Faith' },
+    { id: 'healing', label: 'Healing & Restoration' },
+    { id: 'family', label: 'Family Blessings' },
+    { id: 'breakthrough', label: 'Breakthroughs' },
+  ];
 
-  const characterCount = formData.testimony.length;
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    if (type === 'checkbox') {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData(prev => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const readFileAsDataUrl = (file: File) =>
-    new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result ?? ''));
-      reader.onerror = () =>
-        reject(new Error('Unable to read selected image.'));
-      reader.readAsDataURL(file);
-    });
-
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      setImageName('');
-      setImagePreview(null);
-      setImageBase64(undefined);
-      setImageError('');
-      return;
-    }
-
-    if (!testimonialFormFields.allowedImageTypes.includes(file.type)) {
-      setImageError('Please upload a JPG, PNG, or WEBP image.');
-      setImageName('');
-      setImagePreview(null);
-      setImageBase64(undefined);
-      e.target.value = '';
-      return;
-    }
-
-    if (file.size > testimonialFormFields.maxImageSize) {
-      setImageError(`Image must be ${MAX_IMAGE_SIZE_MB}MB or less.`);
-      setImageName('');
-      setImagePreview(null);
-      setImageBase64(undefined);
-      e.target.value = '';
-      return;
-    }
-
-    try {
-      const dataUrl = await readFileAsDataUrl(file);
-      setImageName(file.name);
-      setImagePreview(dataUrl);
-      setImageBase64(dataUrl);
-      setImageError('');
-    } catch {
-      setImageError('We could not read that image. Please try another one.');
-      setImageName('');
-      setImagePreview(null);
-      setImageBase64(undefined);
-      e.target.value = '';
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (submitting) return;
-
-    if (!formData.agreeToTerms) {
-      setModalMessage('Please agree to the terms.');
-      setModalOpen(true);
-      return;
-    }
-
-    if (imageError) {
-      setModalMessage(imageError);
-      setModalOpen(true);
-      return;
-    }
-
-    setSubmitting(true);
-
-    try {
-      await apiClient.submitTestimonial({
-        firstName: formData.anonymous ? 'Anonymous' : formData.firstName,
-        lastName: formData.anonymous ? 'Anonymous' : formData.lastName,
-        testimony: formData.testimony.trim(),
-        isAnonymous: formData.anonymous,
-        email: formData.email || undefined,
-        imageBase64,
-        allowSharing: formData.allowSharing,
-        agreeToTerms: formData.agreeToTerms,
-      });
-
-      setModalMessage('Your testimony has been received!');
-      setModalOpen(true);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        testimony: '',
-        anonymous: false,
-        allowSharing: true,
-        agreeToTerms: false,
-        email: '',
-      });
-      setImageName('');
-      setImagePreview(null);
-      setImageBase64(undefined);
-      setImageError('');
-    } catch {
-      setModalMessage('Failed to submit testimony.');
-      setModalOpen(true);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const labelClass = 'text-sm font-medium text-gray-800';
+  const filtered =
+    filterCategory === 'all'
+      ? testimonies
+      : testimonies.filter(t => t.category === filterCategory);
 
   return (
     <>
-      <PageHero
-        title="Stories of Transformation"
-        subtitle="God is moving in our house."
-        note="Share what God has done in your life. Your testimony encourages faith and builds community."
-        compact={isMobile}
-      />
+      {/* Hero */}
+      <section className="hero" style={{ minHeight: '70vh' }}>
+        <VideoBg
+          src="/videos/hero.mp4"
+          overlay={true}
+          overlayOpacity={0.35}
+          autoPlay={true}
+          muted={true}
+          loop={true}
+        />
+        <div className="hero-grid" />
 
-      <PageSection tone="surface" padding="xl">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 items-start">
-          <div className="space-y-5 fade-up">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full page-card-muted flex items-center justify-center">
-                <Quote className="w-5 h-5 text-accent" />
-              </div>
-              <div>
-                <H3 className="mb-1">Share your testimony</H3>
-                <BodySM className="text-muted">
-                  We review every submission with care.
-                </BodySM>
+        <div className="hero-content" style={{ maxWidth: '800px' }}>
+          <div className="hero-tag">
+            <span className="hero-tag-dot" />
+            Real stories, real faith
+          </div>
+
+          <h1 className="hero-title">
+            Testimonies of
+            <br />
+            <em>God's faithfulness</em>
+          </h1>
+
+          <p className="hero-sub">
+            Discover how God is working in the lives of our congregation
+            members.
+          </p>
+        </div>
+      </section>
+
+      <div className="times-bar">
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Visitors Impacted</div>
+            <div className="time-val">5,000+</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Salvations This Year</div>
+            <div className="time-val">200+</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Healings Reported</div>
+            <div className="time-val">50+</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Community Served</div>
+            <div className="time-val">1,000+ Lives</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Filter Categories */}
+      <section style={{ textAlign: 'center', paddingBottom: '4rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            marginBottom: '2rem',
+          }}
+        >
+          {categories.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setFilterCategory(cat.id)}
+              className={
+                filterCategory === cat.id ? 'btn-primary' : 'btn-outline'
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonies Grid */}
+      <section>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '2rem',
+            marginBottom: '4rem',
+          }}
+        >
+          {filtered.map(testimony => (
+            <div key={testimony.id} className="testimony-card">
+              <div className="testimony-quote">&ldquo;</div>
+              <q style={{ marginBottom: '1.5rem' }}>{testimony.quote}</q>
+              <div
+                style={{
+                  borderTop: '1px solid var(--border)',
+                  paddingTop: '1.5rem',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: 'var(--text)',
+                  }}
+                >
+                  {testimony.name}
+                </div>
+                <div
+                  style={{
+                    fontSize: '12px',
+                    color: 'var(--text-muted)',
+                    marginTop: '0.25rem',
+                  }}
+                >
+                  {testimony.title}
+                </div>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <BodyMD className="text-muted">
-              Your story helps others find hope. Keep it honest and concise, and
-              include details that will encourage someone walking a similar
-              path.
-            </BodyMD>
+      {/* Share Your Story */}
+      <section
+        style={{
+          background: 'var(--charcoal)',
+          borderTop: '0.5px solid var(--border)',
+        }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <span className="section-tag">Have a story?</span>
+          <h2 className="section-title" style={{ marginBottom: '1.5rem' }}>
+            Share your
+            <br />
+            <em>testimony with us</em>
+          </h2>
+          <p
+            style={{
+              color: 'var(--text-muted)',
+              marginBottom: '2rem',
+              maxWidth: '500px',
+              margin: '0 auto',
+            }}
+          >
+            Your story can inspire and encourage others. We\'d love to hear how
+            God is working in your life.
+          </p>
+          <Link href="/testimonies#share" className="btn-primary">
+            Submit Your Testimony
+          </Link>
+        </div>
+      </section>
 
-            <div className="page-card-muted p-5 space-y-4">
-              {/* <div className="flex gap-3">
-                <Shield className="w-4 h-4 text-accent mt-0.5" />
-                <BodySM className="text-muted">
-                  We never sell your information. Your privacy matters.
-                </BodySM>
-              </div> */}
-              <div className="flex gap-3">
-                <Eye className="w-4 h-4 text-accent mt-0.5" />
-                <BodySM className="text-muted">
-                  You can choose to stay anonymous or allow public sharing.
-                </BodySM>
-              </div>
+      {/* Call to Action */}
+      <section>
+        <div className="event-banner">
+          <div>
+            <div className="event-tag">⛪ Join Our Community</div>
+            <div className="event-title">Experience God's Transformation</div>
+            <div className="event-desc">
+              Visit us for a service and become part of our growing faith
+              community.
+            </div>
+          </div>
+          <Link href="/" className="btn-primary">
+            Find Service Times
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer>
+        <div className="footer-top">
+          <div>
+            <div className="nav-logo">
+              <div className="nav-logo-icon">W</div>
+              <span className="nav-logo-text">The Wisdom Church</span>
+            </div>
+            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
+              Testimonies of faith, healing, and transformation through God's
+              grace.
+            </p>
+          </div>
+
+          <div>
+            <div className="footer-col-title">Quick Links</div>
+            <ul className="footer-links">
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+              <li>
+                <Link href="/leadership">Leadership</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="footer-col-title">Service Times</div>
+            <div className="footer-contact-item">
+              Sunday Worship
+              <br />
+              9:00 AM (WAT)
+            </div>
+            <div className="footer-contact-item">
+              Midweek Service
+              <br />
+              Thursday · 6:00 PM
             </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="page-card p-5 sm:p-8 space-y-4 fade-up"
-            style={{ animationDelay: '90ms' }}
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className={labelClass} htmlFor="firstName">
-                  First name
-                </label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  disabled={formData.anonymous}
-                  className={`input-base ${formData.anonymous ? 'opacity-60' : ''}`}
-                  placeholder="Jane"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className={labelClass} htmlFor="lastName">
-                  Last name
-                </label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  disabled={formData.anonymous}
-                  className={`input-base ${formData.anonymous ? 'opacity-60' : ''}`}
-                  placeholder="Doe"
-                />
-              </div>
+          <div>
+            <div className="footer-col-title">Contact</div>
+            <div className="footer-contact-item">
+              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
             </div>
-
-            <div className="space-y-1.5">
-              <label className={labelClass} htmlFor="email">
-                Email (optional)
-              </label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="input-base"
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className={labelClass} htmlFor="testimony">
-                Your testimony
-              </label>
-              <textarea
-                id="testimony"
-                name="testimony"
-                value={formData.testimony}
-                onChange={handleChange}
-                rows={isMobile ? 7 : 9}
-                maxLength={MAX_TESTIMONY_LEN}
-                className="input-base min-h-[180px]"
-                placeholder="Tell us what God has done in your life..."
-              />
-              <div className="text-xs text-subtle">
-                {characterCount}/{MAX_TESTIMONY_LEN}
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className={labelClass} htmlFor="testimonialImage">
-                Upload image (optional)
-              </label>
-              <input
-                id="testimonialImage"
-                type="file"
-                accept={testimonialFormFields.allowedImageTypes.join(',')}
-                onChange={handleImageChange}
-                className="input-base file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white file:bg-gray-900"
-              />
-              <div className="text-xs text-subtle">
-                Max size: {MAX_IMAGE_SIZE_MB}MB. Formats: JPG, PNG, WEBP.
-              </div>
-              {imageName ? (
-                <div className="text-xs text-muted">Selected: {imageName}</div>
-              ) : null}
-              {imageError ? (
-                <div className="text-xs text-red-600">{imageError}</div>
-              ) : null}
-              {imagePreview ? (
-                <div className="relative h-20 w-20 overflow-hidden rounded-lg border border-gray-200">
-                  <Image
-                    src={imagePreview}
-                    alt="Selected testimony upload preview"
-                    fill
-                    unoptimized
-                    className="object-cover"
-                  />
-                </div>
-              ) : null}
-            </div>
-
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-xs sm:text-sm text-muted">
-                <input
-                  type="checkbox"
-                  name="anonymous"
-                  checked={formData.anonymous}
-                  onChange={handleChange}
-                  className="h-4 w-4 rounded border-gray-300"
-                />
-                Share anonymously
-              </label>
-              <label className="flex items-center gap-2 text-xs sm:text-sm text-muted">
-                <input
-                  type="checkbox"
-                  name="allowSharing"
-                  checked={formData.allowSharing}
-                  onChange={handleChange}
-                  className="h-4 w-4 rounded border-gray-300"
-                />
-                Allow public sharing
-              </label>
-              <label className="flex items-center gap-2 text-xs sm:text-sm text-muted">
-                <input
-                  type="checkbox"
-                  name="agreeToTerms"
-                  checked={formData.agreeToTerms}
-                  onChange={handleChange}
-                  className="h-4 w-4 rounded border-gray-300"
-                />
-                I agree to the terms
-              </label>
-            </div>
-
-            <Button type="submit" disabled={submitting} fullWidth>
-              {submitting ? 'Submitting…' : 'Submit testimony'}
-            </Button>
-          </form>
+            <div className="footer-contact-item">0706 999 5333</div>
+            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
+          </div>
         </div>
-      </PageSection>
 
-      <BaseModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Testimony"
-      >
-        <p>{modalMessage}</p>
-      </BaseModal>
+        <div className="footer-bottom">
+          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
+          <div className="footer-bottom-links">
+            <Link href="/terms">Privacy Policy</Link>
+            <Link href="/cookies">Terms of Service</Link>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

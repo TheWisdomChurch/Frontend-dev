@@ -212,7 +212,7 @@ export default function EventsShowcase() {
 
   return (
     <Section
-      padding="md"
+      padding="lg"
       className="relative overflow-hidden"
       style={{ background: '#070707' }}
     >
@@ -226,8 +226,8 @@ export default function EventsShowcase() {
         data-parallax-global="0.25"
       />
 
-      <Container size="xl" className="relative z-10 space-y-8">
-        <div className="flex flex-col gap-3 animate-slide-in-up">
+      <Container size="xl" className="relative z-10 space-y-12">
+        <div className="flex flex-col gap-4 animate-slide-in-up">
           <Caption
             className="uppercase tracking-[0.22em] text-[0.62rem]"
             style={{ color: colorScheme.primary }}
@@ -235,7 +235,7 @@ export default function EventsShowcase() {
             Programs & Media
           </Caption>
 
-          <H3 className="text-[1.55rem] sm:text-3xl font-semibold text-white leading-tight">
+          <H3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-tight">
             What&apos;s happening now
           </H3>
 
