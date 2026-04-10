@@ -1,364 +1,225 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
-// components/Header.tsx
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
-import Button from '@/shared/utils/buttons/CustomButton';
-import { Sheet, SheetContent, SheetTrigger } from '@/shared/ui/Sheet';
-import {
-  Menu,
-  Church,
-  Home,
-  Users,
-  Calendar,
-  BookOpen,
-  Phone,
-  X,
-  ChevronRight,
-} from 'lucide-react';
-import { extendedNavLinks } from '@/lib/data';
-import { WisdomeHouseLogo } from '@/shared/assets';
-import { cn } from '@/lib/cn';
-import { BricolageText, Caption, SmallText } from '../text';
-import JoinCommunityModal from '@/shared/ui/modals/joinUsModal';
-import { useHeader } from '../utils/hooks/header';
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import { Menu, X, ArrowRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
-const iconMap = {
-  Home: Home,
-  Users: Users,
-  Calendar: Calendar,
-  BookOpen: BookOpen,
-  Phone: Phone,
-};
+import { extendedNavLinks } from '@/lib/data';
+import { cn } from '@/lib/cn';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { WisdomeHouseLogo } from '@/shared/assets';
+
+const quickLinks = [
+  { label: 'Upcoming Events', href: '/events/upcoming' },
+  { label: 'Watch Sermons', href: '/resources/sermons' },
+  { label: 'Need Prayer?', href: '/pastoral' },
+];
 
 export default function Header() {
-  const {
-    isHeaderScrolled,
-    isSheetOpen,
-    isCommunityModalOpen,
-    colorScheme,
-    setSheetOpen,
-    handleLinkClick,
-    handleNavHover,
-    handleNavMouseDown,
-    handleNavMouseUp,
-    openCommunityModal,
-    closeCommunityModal,
-    isLinkActive,
-    closeAllDropdowns,
-    hoveredNav,
-    setNavItemRef,
-  } = useHeader();
+  const pathname = usePathname();
+  const { colorScheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 18);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  const navItems = useMemo(
+    () =>
+      extendedNavLinks.map(link => ({
+        label: link.label,
+        href: link.href,
+      })),
+    []
+  );
 
   return (
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 w-full border-b border-white/10 transition-all duration-300',
-          isHeaderScrolled
-            ? 'bg-[rgba(6,6,6,0.95)] backdrop-blur-2xl shadow-lg'
-            : 'bg-[rgba(6,6,6,0.82)] backdrop-blur-2xl'
+          'fixed inset-x-0 top-0 z-50 border-b transition-all duration-300',
+          scrolled
+            ? 'border-white/10 bg-[rgba(4,4,5,0.9)] backdrop-blur-2xl'
+            : 'border-transparent bg-[rgba(4,4,5,0.52)] backdrop-blur-xl'
         )}
       >
-        <div
-          className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"
-          aria-hidden
-        />
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="h-[72px] flex items-center gap-4">
-            {/* Logo on Left */}
-            <Link
-              href="/"
-              onClick={closeAllDropdowns}
-              className="flex items-center gap-2 group relative z-10 shrink-0"
-            >
-              <div className="relative">
-                <div className="relative w-8 h-8 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
-                  <div className="absolute inset-0 rounded-full border border-white/20" />
-                  <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
-                    <Image
-                      src={WisdomeHouseLogo}
-                      alt="The Wisdom House"
-                      width={24}
-                      height={24}
-                      className="rounded-full object-cover scale-90 group-hover:scale-95 transition-transform duration-300"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Wordmark moved to right section for cleaner spacing */}
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center justify-center flex-1">
-              <div className="flex items-center gap-1.5 bg-black/35 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/10">
-                {extendedNavLinks.map(link => {
-                  const isActive = isLinkActive(link.href);
-                  const Icon = iconMap[link.icon as keyof typeof iconMap];
-
-                  return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      ref={el => setNavItemRef(link.href, el)}
-                      onClick={e => handleLinkClick(link.href, false, e)}
-                      onMouseEnter={() => handleNavHover(link.href, true)}
-                      onMouseLeave={() => handleNavHover(link.href, false)}
-                      onMouseDown={handleNavMouseDown}
-                      onMouseUp={handleNavMouseUp}
-                      className={cn(
-                        'flex items-center gap-2 px-3 py-1.5 text-[13px] font-semibold transition-all duration-300 rounded-full group relative',
-                        isActive
-                          ? 'text-white bg-primary shadow-md'
-                          : 'text-gray-300 hover:text-white hover:bg-white/5'
-                      )}
-                      style={{
-                        transform:
-                          hoveredNav === link.href ? 'scale(1.05)' : 'scale(1)',
-                      }}
-                    >
-                      {Icon && (
-                        <Icon className="w-2.5 h-2.5 transition-transform group-hover:scale-110" />
-                      )}
-                      <span className="text-[12px]">{link.label}</span>
-
-                      {/* Active indicator */}
-                      {isActive && (
-                        <div className="absolute -bottom-0.5 left-3 right-3 h-[1px] bg-white/80 rounded-full" />
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
-            </nav>
-
-            {/* Right Section */}
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="hidden lg:flex flex-col items-end mr-1">
-                <Caption className="text-white/60 tracking-[0.28em] uppercase text-[8px]">
-                  The
-                </Caption>
-                <Caption
-                  weight="semibold"
-                  className="text-[12px] leading-none tracking-tight"
-                  style={{ color: colorScheme.primary }}
-                >
-                  Wisdom Church
-                </Caption>
-              </div>
-              {/* Desktop Join Us Button */}
-              <Button
-                onClick={openCommunityModal}
-                className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 text-[12px] font-medium rounded-full transition-all duration-300 hover:scale-105"
-                style={{
-                  backgroundImage: `linear-gradient(120deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                  color: '#000000',
-                  boxShadow: `0 10px 30px ${colorScheme.opacity.primary20}`,
-                }}
-              >
-                <div className="flex items-center gap-1.5">
-                  <Church className="w-3 h-3" />
-                  <span>Join Us</span>
-                </div>
-              </Button>
-
-              {/* Mobile/Tablet Menu */}
-              <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
-                <SheetTrigger asChild>
-                  <button
-                    className="lg:hidden flex items-center justify-center p-2 hover:bg-white/10 rounded-lg transition-all duration-300 hover:scale-105"
-                    aria-label="Open menu"
-                  >
-                    <Menu className="w-4 h-4 md:w-4 md:h-4 text-white" />
-                  </button>
-                </SheetTrigger>
-                <SheetContent
-                  side="right"
-                  className="sheet-content w-full max-w-[260px] sm:max-w-[280px] p-0 border-l border-white/20 bg-black/95 backdrop-blur-xl"
-                >
-                  <MobileNavigation
-                    colorScheme={colorScheme}
-                    isLinkActive={isLinkActive}
-                    setSheetOpen={setSheetOpen}
-                    openCommunityModal={openCommunityModal}
-                  />
-                </SheetContent>
-              </Sheet>
+        <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          <Link href="/" className="flex min-w-0 items-center gap-3">
+            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
+              <Image
+                src={WisdomeHouseLogo}
+                alt="The Wisdom Church"
+                width={44}
+                height={44}
+                className="object-cover"
+                priority
+              />
             </div>
+            <div className="min-w-0">
+              <p className="text-[0.62rem] uppercase tracking-[0.24em] text-white/55">
+                The Wisdom Church
+              </p>
+              <p className="truncate text-sm font-semibold text-white sm:text-base">
+                Equipping and empowering for greatness
+              </p>
+            </div>
+          </Link>
+
+          <nav className="hidden flex-1 items-center justify-center lg:flex">
+            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1.5">
+              {navItems.map(item => {
+                const active =
+                  item.href === '/'
+                    ? pathname === '/'
+                    : pathname === item.href ||
+                      pathname.startsWith(`${item.href}/`);
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'rounded-full px-4 py-2 text-sm font-medium transition',
+                      active
+                        ? 'text-black'
+                        : 'text-white/72 hover:bg-white/[0.06] hover:text-white'
+                    )}
+                    style={
+                      active
+                        ? {
+                            background: colorScheme.primaryGradient,
+                            boxShadow: `0 12px 30px ${colorScheme.opacity.primary20}`,
+                          }
+                        : undefined
+                    }
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </nav>
+
+          <div className="ml-auto hidden items-center gap-3 lg:flex">
+            <Link
+              href="/resources/sermons"
+              className="text-sm font-medium text-white/66 transition hover:text-white"
+            >
+              Watch online
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-black transition hover:opacity-90"
+              style={{
+                background: colorScheme.primaryGradient,
+                boxShadow: `0 14px 36px ${colorScheme.opacity.primary20}`,
+              }}
+            >
+              Plan a visit
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setIsOpen(open => !open)}
+            className="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-white transition hover:bg-white/[0.08] lg:hidden"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </header>
 
-      <JoinCommunityModal
-        isOpen={isCommunityModalOpen}
-        onClose={closeCommunityModal}
+      <div
+        className={cn(
+          'fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition lg:hidden',
+          isOpen
+            ? 'pointer-events-auto opacity-100'
+            : 'pointer-events-none opacity-0'
+        )}
+        onClick={() => setIsOpen(false)}
       />
+
+      <aside
+        className={cn(
+          'fixed right-0 top-0 z-50 flex h-screen w-full max-w-sm flex-col border-l border-white/10 bg-[#050505] px-6 pb-8 pt-24 transition-transform duration-300 lg:hidden',
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        )}
+      >
+        <div className="space-y-2">
+          {navItems.map(item => {
+            const active =
+              item.href === '/'
+                ? pathname === '/'
+                : pathname === item.href ||
+                  pathname.startsWith(`${item.href}/`);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium transition',
+                  active
+                    ? 'border-transparent text-black'
+                    : 'border-white/10 bg-white/[0.03] text-white/78 hover:bg-white/[0.06]'
+                )}
+                style={
+                  active
+                    ? { background: colorScheme.primaryGradient }
+                    : undefined
+                }
+              >
+                <span>{item.label}</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-5">
+          <p className="text-[0.68rem] uppercase tracking-[0.2em] text-[#d7bb75]">
+            Quick access
+          </p>
+          <div className="mt-4 grid gap-3">
+            {quickLinks.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/72 transition hover:bg-white/[0.05] hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <Link
+            href="/contact"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-black"
+            style={{ background: colorScheme.primaryGradient }}
+          >
+            Plan your visit
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </aside>
     </>
   );
 }
-
-// Compact Mobile & Tablet Navigation
-const MobileNavigation: React.FC<{
-  colorScheme: any;
-  isLinkActive: (href: string) => boolean;
-  setSheetOpen: (open: boolean) => void;
-  openCommunityModal: () => void;
-}> = ({ colorScheme, isLinkActive, setSheetOpen, openCommunityModal }) => {
-  const { animateClick } = useHeader();
-
-  const handleMobileLinkClick = (e: React.MouseEvent) => {
-    const target = e.currentTarget as HTMLElement;
-    animateClick(target);
-    setTimeout(() => setSheetOpen(false), 200);
-  };
-
-  const handleMobileButtonClick = () => {
-    setSheetOpen(false);
-    setTimeout(openCommunityModal, 200);
-  };
-
-  return (
-    <div className="h-full flex flex-col overflow-hidden">
-      {/* Compact Header */}
-      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-black to-gray-900 p-0.5">
-            <div className="absolute inset-0 rounded-full border border-white/20" />
-            <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
-              <Image
-                src={WisdomeHouseLogo}
-                alt="Logo"
-                width={28}
-                height={28}
-                className="rounded-full object-cover"
-              />
-            </div>
-          </div>
-
-          {/* White Divider */}
-          <div className="h-5 w-px bg-white/20 mx-1" />
-
-          {/* Compact Stacked Text */}
-          <div className="flex flex-col leading-[0.8] -space-y-0.5">
-            <Caption className="text-white opacity-70 tracking-[0.2em] uppercase text-[8px] sm:text-[9px]">
-              The
-            </Caption>
-            <BricolageText
-              weight="semibold"
-              className="text-[10px] sm:text-[11px] tracking-tight leading-none"
-              style={{ color: colorScheme.primary }}
-            >
-              Wisdom
-            </BricolageText>
-            <BricolageText
-              weight="semibold"
-              className="text-[10px] sm:text-[11px] tracking-tight leading-none"
-              style={{ color: colorScheme.primary }}
-            >
-              Church
-            </BricolageText>
-          </div>
-        </div>
-
-        <button
-          onClick={() => setSheetOpen(false)}
-          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
-          aria-label="Close menu"
-        >
-          <X className="w-4 h-4 text-white" />
-        </button>
-      </div>
-
-      {/* Compact Navigation */}
-      <div className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
-        {extendedNavLinks.map(link => {
-          const isActive = isLinkActive(link.href);
-          const Icon = iconMap[link.icon as keyof typeof iconMap];
-
-          return (
-            <Link
-              key={link.label}
-              href={link.href}
-              onClick={handleMobileLinkClick}
-              className={cn(
-                'flex items-center gap-2 p-2 sm:p-2.5 rounded-lg transition-all duration-200 group',
-                isActive
-                  ? 'bg-primary/15 border-l border-primary'
-                  : 'hover:bg-white/5'
-              )}
-            >
-              <div
-                className={cn(
-                  'p-1.5 rounded-lg transition-colors flex-shrink-0',
-                  isActive
-                    ? 'bg-primary text-white'
-                    : 'bg-white/10 text-gray-300 group-hover:text-white group-hover:bg-primary/20'
-                )}
-              >
-                {Icon && <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="font-medium text-white text-[11px] mb-0.5 truncate">
-                  {link.label}
-                </div>
-                <div className="text-[9px] text-gray-400 truncate">
-                  {link.href === '/' && 'Homepage'}
-                  {link.href === '/leadership' && 'Leadership team'}
-                  {link.href === '/events' && 'Events & schedules'}
-                  {link.href === '/teachings' && 'Teachings & resources'}
-                  {link.href === '/contact' && 'Contact & location'}
-                </div>
-              </div>
-
-              <ChevronRight
-                className={cn(
-                  'w-3 h-3 flex-shrink-0',
-                  isActive
-                    ? 'text-primary'
-                    : 'text-gray-500 group-hover:text-white'
-                )}
-              />
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* Compact Footer */}
-      <div className="p-3 sm:p-4 border-t border-white/10">
-        <div className="mb-2">
-          <div className="text-[11px] text-gray-300 mb-0.5">Ready to join?</div>
-          <div className="text-[9px] text-gray-400">
-            Become part of our community
-          </div>
-        </div>
-
-        <Button
-          onClick={handleMobileButtonClick}
-          className="w-full py-2 text-[11px] font-medium rounded-lg transition-all duration-300"
-          style={{
-            backgroundColor: colorScheme.primary,
-            color: '#000000',
-          }}
-        >
-          <div className="flex items-center justify-center gap-1">
-            <Church className="w-2.5 h-2.5" />
-            <span>Join Community</span>
-          </div>
-        </Button>
-
-        <div className="mt-2 pt-2 border-t border-white/5">
-          <Link
-            href="/about"
-            onClick={() => setSheetOpen(false)}
-            className="text-[10px] text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-1"
-          >
-            Learn more <ChevronRight className="w-2.5 h-2.5" />
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};

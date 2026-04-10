@@ -1,283 +1,215 @@
-'use client';
+export const dynamic = 'force-dynamic';
 
-import Link from 'next/link';
-import VideoBg from '@/shared/components/VideoBg';
+import Image from 'next/image';
+import {
+  BookOpenCheck,
+  HeartHandshake,
+  ShieldCheck,
+  Users,
+} from 'lucide-react';
+
+import PageHero from '@/features/hero/PageHero';
+import { Bishop, PstKenny } from '@/shared/assets';
+import { Container, Section } from '@/shared/layout';
+import {
+  ActionBanner,
+  FeatureGrid,
+  SplitSection,
+  StatStrip,
+} from '@/shared/components/site/PublicPageBlocks';
+
+const stats = [
+  {
+    label: 'Leadership posture',
+    value: 'Servant leadership',
+    detail:
+      'The goal is not visibility alone but faithful oversight, teaching, and care.',
+    icon: HeartHandshake,
+  },
+  {
+    label: 'Pastoral focus',
+    value: 'Doctrine and discipleship',
+    detail:
+      'Leadership keeps truth, growth, and healthy church culture aligned.',
+    icon: BookOpenCheck,
+  },
+  {
+    label: 'Church culture',
+    value: 'Excellence with warmth',
+    detail:
+      'We want both sound structure and genuine care in every ministry environment.',
+    icon: ShieldCheck,
+  },
+  {
+    label: 'Leadership outcome',
+    value: 'Equipped people',
+    detail:
+      'Strong leaders should produce strong disciples and strong ministry teams.',
+    icon: Users,
+  },
+];
+
+const leadershipAreas = [
+  {
+    title: 'Teaching and doctrine',
+    description:
+      'Guarding the message of the church and ensuring that preaching, discipleship, and ministry training remain biblically sound.',
+    icon: BookOpenCheck,
+  },
+  {
+    title: 'Pastoral care',
+    description:
+      'Walking with people through prayer, counsel, family needs, transitions, and seasons that require direct support.',
+    icon: HeartHandshake,
+  },
+  {
+    title: 'Culture and standards',
+    description:
+      'Building ministry environments where service is orderly, communication is clear, and hospitality is intentional.',
+    icon: ShieldCheck,
+  },
+  {
+    title: 'Equipping leaders',
+    description:
+      'Developing responsible ministry leaders who can serve others with maturity, humility, and consistency.',
+    icon: Users,
+  },
+];
 
 export default function LeadershipPage() {
-  const leaders = [
-    {
-      name: 'Bishop Gabriel Ayilara',
-      title: 'Senior Pastor',
-      bio: "Bishop Gabriel Ayilara is the Founder and Senior Pastor of The Wisdom Church. With a heart for excellence and a passion for transforming lives through God's Word, Bishop Gabriel leads with wisdom, vision, and biblical authority.",
-      role: 'spiritual-leader',
-    },
-    {
-      name: 'Pastor Kenny Ayilara',
-      title: 'Co-Pastor',
-      bio: 'Co-Pastor Kenny brings years of ministry experience and a deep commitment to discipleship and community outreach. Together with Bishop Gabriel, Pastor Kenny continues to build a legacy of faith and excellence.',
-      role: 'ministry-leader',
-    },
-  ];
-
-  const ministries = [
-    {
-      num: '01',
-      title: 'Youth Ministry',
-      desc: 'Empowering the next generation with faith, purpose, and community.',
-    },
-    {
-      num: '02',
-      title: "Women's Ministry",
-      desc: 'Supporting women in faith, growth, and empowerment.',
-    },
-    {
-      num: '03',
-      title: "Men's Ministry",
-      desc: "Building strong men rooted in God's Word.",
-    },
-    {
-      num: '04',
-      title: 'Outreach & Missions',
-      desc: "Extending God's love through service and community impact.",
-    },
-  ];
-
   return (
-    <>
-      {/* Hero */}
-      <section className="hero" style={{ minHeight: '80vh' }}>
-        <VideoBg
-          src="/videos/hero.mp4"
-          overlay={true}
-          overlayOpacity={0.35}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
-        <div className="hero-grid" />
+    <div className="min-h-screen bg-[#050505] text-white">
+      <PageHero
+        title="Leadership that keeps the church grounded in truth and close to people."
+        subtitle="Wisdom Church leadership exists to teach faithfully, shepherd carefully, and build healthy ministry culture."
+        note="The aim is not only to lead services, but to raise people, guide families, and steward the direction of the house with integrity."
+        chips={[
+          'Servant leadership',
+          'Pastoral care',
+          'Doctrinal clarity',
+          'Team culture',
+        ]}
+      />
 
-        <div className="hero-content" style={{ maxWidth: '800px' }}>
-          <div className="hero-tag">
-            <span className="hero-tag-dot" />
-            Meet our leadership
-          </div>
+      <StatStrip items={stats} />
 
-          <h1 className="hero-title">
-            Led by
-            <br />
-            <em>visionary leaders</em>
-          </h1>
-
-          <p className="hero-sub">
-            Our pastoral team is committed to serving the Wisdom Church
-            community with integrity, wisdom, and a heart for spiritual growth.
-          </p>
-        </div>
-      </section>
-
-      <div className="times-bar">
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Vision</div>
-            <div className="time-val">Complete Believers</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Mission</div>
-            <div className="time-val">Transform Lives</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Culture</div>
-            <div className="time-val">Excellence & Love</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Commitment</div>
-            <div className="time-val">Servant Leadership</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Senior Leadership */}
-      {leaders.map((leader, idx) => (
-        <section
-          key={leader.name}
-          style={{
-            background: idx % 2 === 0 ? 'var(--charcoal)' : 'transparent',
-            borderTop: idx % 2 === 0 ? '0.5px solid var(--border)' : 'none',
-          }}
-        >
-          <div className="pastor-section">
-            <div className="pastor-img-wrap">
-              <div className="pastor-img-frame">
-                <div className="pastor-placeholder">✝</div>
-              </div>
-              <div className="pastor-badge">
-                <div className="pastor-badge-title">
-                  {leader.role === 'spiritual-leader' ? 'Senior' : 'Co'}
-                </div>
-                <div className="pastor-badge-name">
-                  {leader.name.split(' ').pop()}
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <span className="section-tag">
-                {leader.role === 'spiritual-leader' ? 'Leadership' : 'Ministry'}
-              </span>
-              <h2 className="section-title">
-                {leader.name}
-                <br />
-                <em>{leader.title}</em>
-              </h2>
-
-              <p
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-muted)',
-                  lineHeight: '1.8',
-                  marginBottom: '2rem',
-                }}
-              >
-                {leader.bio}
-              </p>
-
-              <Link
-                href={`/leadership/${leader.name.toLowerCase().replace(' ', '-')}`}
-                className="btn-outline"
-              >
-                Learn More About This Leader
-              </Link>
-            </div>
-          </div>
-        </section>
-      ))}
-
-      {/* Ministry Leaders */}
-      <section
-        style={{
-          background: 'var(--charcoal)',
-          borderTop: '0.5px solid var(--border)',
-        }}
-      >
-        <span className="section-tag">Our Ministry Teams</span>
-        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
-          Serving through
-          <br />
-          <em>diverse ministries</em>
-        </h2>
-
-        <div className="expect-grid">
-          {ministries.map(ministry => (
-            <Link
-              key={ministry.num}
-              href={`/ministries`}
-              className="expect-card"
+      <Section padding="lg" className="bg-[#050505]">
+        <Container size="xl" className="grid gap-4 lg:grid-cols-2">
+          {[
+            {
+              image: Bishop,
+              name: 'Bishop Gabriel Ayilara',
+              role: 'Senior Pastor',
+              summary:
+                'Provides spiritual oversight, vision, doctrinal direction, and leadership culture for the church.',
+              highlights: [
+                'Leads the house with a focus on complete believers.',
+                'Shapes doctrine, vision, and ministry standards.',
+                'Keeps preaching, prayer, and pastoral care central.',
+              ],
+            },
+            {
+              image: PstKenny,
+              name: 'Pastor Kenny Ayilara',
+              role: 'Co-Pastor',
+              summary:
+                'Supports church life through discipleship structures, care systems, and practical leadership development.',
+              highlights: [
+                'Strengthens pastoral follow-through and member care.',
+                'Helps coordinate ministry teams and discipleship rhythms.',
+                'Contributes to a strong family and church culture.',
+              ],
+            },
+          ].map(person => (
+            <article
+              key={person.name}
+              className="overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.03]"
             >
-              <div className="expect-num">{ministry.num}</div>
-              <div className="expect-title">{ministry.title}</div>
-              <div className="expect-desc">{ministry.desc}</div>
-            </Link>
+              <div className="relative h-80 border-b border-white/10 bg-black/20">
+                <Image
+                  src={person.image}
+                  alt={person.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
+              <div className="space-y-4 p-6">
+                <div>
+                  <p className="text-[0.66rem] uppercase tracking-[0.2em] text-[#d7bb75]">
+                    {person.role}
+                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">
+                    {person.name}
+                  </h2>
+                </div>
+                <p className="text-base leading-relaxed text-white/68">
+                  {person.summary}
+                </p>
+                <div className="grid gap-3">
+                  {person.highlights.map(item => (
+                    <div
+                      key={item}
+                      className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/68"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </article>
           ))}
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      {/* Call to Action */}
-      <section>
-        <div className="event-banner">
-          <div>
-            <div className="event-tag">📧 Get Connected</div>
-            <div className="event-title">Connect With Our Pastoral Team</div>
-            <div className="event-desc">
-              Whether you need prayer, counsel, or want to get involved in
-              ministry, our team is ready to serve.
-            </div>
-          </div>
-          <Link href="/contact" className="btn-primary">
-            Contact Us
-          </Link>
-        </div>
-      </section>
+      <Section padding="lg" className="border-y border-white/10 bg-[#080808]">
+        <Container size="xl">
+          <SplitSection
+            eyebrow="Leadership philosophy"
+            title="Church leadership should create clarity, care, and faithful momentum."
+            description="Healthy leadership makes it easier for members to trust direction, receive care, and grow in responsibility. It should reduce confusion, not create it."
+            points={[
+              'Teach truth clearly and consistently.',
+              'Stay close enough to people to care well.',
+              'Build ministry systems that are understandable and sustainable.',
+              'Model integrity, prayer, humility, and service.',
+            ]}
+            panelTitle="What leadership is stewarding"
+            panelBody="Leadership is responsible for more than preaching moments. It stewards doctrine, people, ministry systems, and the overall health of the church body."
+            panelItems={[
+              'Worship and service culture',
+              'Discipleship and ministry pathways',
+              'Pastoral care and spiritual oversight',
+              'Volunteer development and team health',
+            ]}
+          />
+        </Container>
+      </Section>
 
-      {/* Footer */}
-      <footer>
-        <div className="footer-top">
-          <div>
-            <div className="nav-logo">
-              <div className="nav-logo-icon">W</div>
-              <span className="nav-logo-text">The Wisdom Church</span>
-            </div>
-            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
-              Our leadership team is committed to serving you with integrity and
-              care.
+      <Section padding="lg" className="bg-[#050505]">
+        <Container size="xl" className="space-y-8">
+          <div className="max-w-3xl space-y-3">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+              Leadership responsibilities
             </p>
+            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+              The leadership team serves the church through four major
+              responsibilities.
+            </h2>
           </div>
+          <FeatureGrid items={leadershipAreas} columns={4} />
+        </Container>
+      </Section>
 
-          <div>
-            <div className="footer-col-title">Quick Links</div>
-            <ul className="footer-links">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-              <li>
-                <Link href="/contact">Contact</Link>
-              </li>
-              <li>
-                <Link href="/ministries">Ministries</Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Service Times</div>
-            <div className="footer-contact-item">
-              Sunday Worship
-              <br />
-              9:00 AM (WAT)
-            </div>
-            <div className="footer-contact-item">
-              Midweek Service
-              <br />
-              Thursday · 6:00 PM
-            </div>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Contact</div>
-            <div className="footer-contact-item">
-              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
-            </div>
-            <div className="footer-contact-item">0706 999 5333</div>
-            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
-          <div className="footer-bottom-links">
-            <Link href="/terms">Privacy Policy</Link>
-            <Link href="/cookies">Terms of Service</Link>
-          </div>
-        </div>
-      </footer>
-    </>
+      <ActionBanner
+        eyebrow="Reach out"
+        title="If you need prayer, guidance, or a conversation with the church team, we are available."
+        description="Leadership is most useful when it is accessible. If you need support, our team can help you take the right next step."
+        primaryHref="/contact"
+        primaryLabel="Contact the church"
+        secondaryHref="/pastoral"
+        secondaryLabel="Explore pastoral care"
+      />
+    </div>
   );
 }
