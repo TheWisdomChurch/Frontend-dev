@@ -1,312 +1,205 @@
-'use client';
+import Image from 'next/image';
+import {
+  BookOpenCheck,
+  HeartHandshake,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from 'lucide-react';
 
-import Link from 'next/link';
-import VideoBg from '@/shared/components/VideoBg';
+import PageHero from '@/features/hero/PageHero';
+import { Bishop, PstKenny } from '@/shared/assets';
+import { Container, Section } from '@/shared/layout';
+import {
+  ActionBanner,
+  FeatureGrid,
+  SplitSection,
+  StatStrip,
+} from '@/shared/components/site/PublicPageBlocks';
+
+const culturePillars = [
+  {
+    title: 'Presence-driven worship',
+    description:
+      'We gather to host the presence of God with reverence, expectation, and joy.',
+    icon: Sparkles,
+  },
+  {
+    title: 'Word-shaped discipleship',
+    description:
+      'Teaching is practical, biblical, and aimed at forming complete believers for daily life.',
+    icon: BookOpenCheck,
+  },
+  {
+    title: 'People-first community',
+    description:
+      'Hospitality, accountability, and care are central to how we build church family.',
+    icon: HeartHandshake,
+  },
+  {
+    title: 'Excellence with integrity',
+    description:
+      'We steward people, systems, and service moments with clarity, order, and consistency.',
+    icon: ShieldCheck,
+  },
+];
+
+const stats = [
+  {
+    label: 'Church vision',
+    value: 'Raise complete believers',
+    detail:
+      'Spiritually mature, biblically grounded, and equipped for purpose.',
+    icon: Sparkles,
+  },
+  {
+    label: 'Church culture',
+    value: 'Word, power, excellence',
+    detail: 'A house shaped by worship, truth, and practical obedience.',
+    icon: BookOpenCheck,
+  },
+  {
+    label: 'Community posture',
+    value: 'Love and discipleship',
+    detail:
+      'We build people, not just programs, and keep care close to ministry.',
+    icon: Users,
+  },
+  {
+    label: 'Location',
+    value: 'Lekki-Epe, Lagos',
+    detail:
+      'A growing church family serving the city with consistency and faith.',
+    icon: HeartHandshake,
+  },
+];
 
 export default function AboutPage() {
-  const culturePillars = [
-    {
-      num: '01',
-      title: 'Presence-driven',
-      desc: 'Spirit-led worship, prayer, and obedience at the core of every gathering.',
-    },
-    {
-      num: '02',
-      title: 'Word-centered',
-      desc: 'Practical, transforming teaching that builds complete believers.',
-    },
-    {
-      num: '03',
-      title: 'People-first',
-      desc: 'Authentic community, hospitality, and service across every generation.',
-    },
-    {
-      num: '04',
-      title: 'Excellence-driven',
-      desc: 'High standards in every detail, honoring God through quality and care.',
-    },
-  ];
-
-  const values = [
-    { label: 'Core', value: 'Obedience & Service' },
-    { label: 'Focus', value: 'Word & Power' },
-    { label: 'Culture', value: 'Excellence & Love' },
-  ];
-
   return (
-    <>
-      {/* Hero */}
-      <section className="hero" style={{ minHeight: '80vh' }}>
-        <VideoBg
-          src="/videos/hero.mp4"
-          overlay={true}
-          overlayOpacity={0.35}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
-        <div className="hero-grid" />
+    <div className="min-h-screen bg-[#050505] text-white">
+      <PageHero
+        title="A church family committed to wisdom, power, and faithful formation."
+        subtitle="The Wisdom Church exists to help people know Christ deeply, grow in truth, and live with conviction in every sphere of life."
+        note="We are building a strong, Spirit-filled church where worship is sincere, teaching is clear, and community is intentional."
+        chips={[
+          'Spirit-filled',
+          'Biblically grounded',
+          'People-focused',
+          'Lagos',
+        ]}
+      />
 
-        <div className="hero-content" style={{ maxWidth: '800px' }}>
-          <div className="hero-tag">
-            <span className="hero-tag-dot" />
-            Learn more about our church
-          </div>
+      <StatStrip items={stats} />
 
-          <h1 className="hero-title">
-            About
-            <br />
-            <em>The Wisdom Church</em>
-          </h1>
+      <Section padding="lg" className="bg-[#050505]">
+        <Container size="xl">
+          <SplitSection
+            eyebrow="Our identity"
+            title="We are building a house where people grow in Christ with clarity and consistency."
+            description="The Wisdom Church is a trans-generational church community committed to forming believers who can stand strong in truth, serve others with grace, and walk boldly in their calling."
+            points={[
+              'Biblical teaching that connects doctrine to everyday living.',
+              'Worship gatherings that make room for prayer, reverence, and joy.',
+              'Pastoral care that stays close to people through real life situations.',
+              'Ministries that help children, youth, families, and professionals find their place.',
+            ]}
+            panelTitle="How we define growth"
+            panelBody="Growth at Wisdom Church is not just attendance. It means being formed in character, conviction, spiritual maturity, and service."
+            panelItems={[
+              'Grow in the Word and prayer life.',
+              'Belong to a caring church family.',
+              'Discover gifts and begin serving.',
+              'Live with purpose in home, work, and city life.',
+            ]}
+          />
+        </Container>
+      </Section>
 
-          <p className="hero-sub">
-            A Spirit-filled family committed to raising complete believers,
-            rooted in Christ, empowered by wisdom, and established in faith
-            across all generations.
-          </p>
-
-          <div className="hero-actions">
-            <Link href="#mission" className="btn-primary">
-              Our Mission
-            </Link>
-            <Link href="#culture" className="btn-outline">
-              Our Culture
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <div className="times-bar">
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Founded</div>
-            <div className="time-val">A Legacy of Faith</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Vision</div>
-            <div className="time-val">Raise Complete Believers</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Leaders</div>
-            <div className="time-val">Bishop Gabriel Ayilara</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Reach</div>
-            <div className="time-val">Growing Community</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mission Section */}
-      <section id="mission">
-        <span className="section-tag">Our Identity</span>
-        <h2 className="section-title">
-          Who we are &
-          <br />
-          <em>what we stand for</em>
-        </h2>
-
-        <p
-          className="section-body"
-          style={{ marginBottom: '3rem', maxWidth: '700px' }}
-        >
-          The Wisdom Church is a trans-generational movement of faith and
-          excellence, committed to spreading the Gospel and empowering believers
-          through the Word of God and the Holy Spirit. We are dedicated to
-          raising complete believers—spiritually mature, practically equipped,
-          and community-minded.
-        </p>
-
-        <div className="expect-grid">
-          {values.map((value, idx) => (
-            <div key={value.label} className="expect-card">
-              <div className="expect-num" style={{ opacity: 0.3 }}>
-                0{idx + 1}
-              </div>
-              <div className="expect-title">{value.label}</div>
-              <div className="expect-desc">{value.value}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Culture Section */}
-      <section id="culture" style={{ background: 'var(--charcoal)' }}>
-        <span className="section-tag">Our Culture</span>
-        <h2 className="section-title">
-          Built on pillars of
-          <br />
-          <em>faith & excellence</em>
-        </h2>
-
-        <p className="section-body" style={{ marginBottom: '3rem' }}>
-          Our church culture is shaped by core values that define how we
-          worship, serve, and relate to one another. These pillars guide every
-          decision and interaction within our community.
-        </p>
-
-        <div className="expect-grid">
-          {culturePillars.map(pillar => (
-            <div key={pillar.num} className="expect-card">
-              <div className="expect-num">{pillar.num}</div>
-              <div className="expect-title">{pillar.title}</div>
-              <div className="expect-desc">{pillar.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Leadership Section */}
-      <section
-        style={{
-          background: 'var(--charcoal)',
-          borderTop: '0.5px solid var(--border)',
-        }}
-      >
-        <div className="pastor-section">
-          <div className="pastor-img-wrap">
-            <div className="pastor-img-frame">
-              <div className="pastor-placeholder">✝</div>
-            </div>
-            <div className="pastor-badge">
-              <div className="pastor-badge-title">Senior Pastor</div>
-              <div className="pastor-badge-name">Bishop Gabriel Ayilara</div>
-            </div>
-          </div>
-
-          <div>
-            <span className="section-tag">Leadership</span>
-            <h2 className="section-title">
-              Servants of the
-              <br />
-              <em>Most High God</em>
+      <Section padding="lg" className="border-y border-white/10 bg-[#080808]">
+        <Container size="xl" className="space-y-8">
+          <div className="max-w-3xl space-y-3">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+              House culture
+            </p>
+            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+              Four commitments shape how we lead, gather, and serve.
             </h2>
+          </div>
+          <FeatureGrid items={culturePillars} columns={4} />
+        </Container>
+      </Section>
 
-            <blockquote className="pastor-quote">
-              "Our leadership is committed to modeling Christ-like service,
-              spiritual integrity, and pastoral care to every member of our
-              congregation."
-            </blockquote>
-
-            <p
-              style={{
-                fontSize: '14px',
-                color: 'var(--text-muted)',
-                lineHeight: '1.8',
-                marginBottom: '2rem',
-              }}
-            >
-              Under the leadership of Bishop Gabriel Ayilara and the pastoral
-              team, The Wisdom Church has grown as a beacon of light in Lagos.
-              Our leaders are dedicated to discipleship, spiritual growth, and
-              community impact. We believe leadership is servant-hood—pouring
-              into lives and equipping believers for their divine purpose.
+      <Section padding="lg" className="bg-[#050505]">
+        <Container size="xl" className="space-y-8">
+          <div className="max-w-3xl space-y-3">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+              Leadership
             </p>
-
-            <Link href="/leadership" className="btn-outline">
-              Meet Our Team
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section>
-        <div className="event-banner">
-          <div>
-            <div className="event-tag">🙏 Join Us</div>
-            <div className="event-title">Become Part of Our Community</div>
-            <div className="event-desc">
-              Experience a church that values faith, excellence, and community.
-              We'd love to meet you!
-            </div>
-          </div>
-          <Link href="#join" className="btn-primary">
-            Plan Your Visit
-          </Link>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer>
-        <div className="footer-top">
-          <div>
-            <div className="nav-logo">
-              <div className="nav-logo-icon">W</div>
-              <span className="nav-logo-text">The Wisdom Church</span>
-            </div>
-            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
-              A trans-generational movement of faith and excellence, raising
-              complete believers across generations.
-            </p>
+            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+              Leadership that keeps doctrine, care, and service aligned.
+            </h2>
           </div>
 
-          <div>
-            <div className="footer-col-title">Quick Links</div>
-            <ul className="footer-links">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/events">Events</Link>
-              </li>
-              <li>
-                <Link href="/resources">Resources</Link>
-              </li>
-              <li>
-                <Link href="/contact">Contact</Link>
-              </li>
-            </ul>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {[
+              {
+                image: Bishop,
+                name: 'Bishop Gabriel Ayilara',
+                role: 'Senior Pastor',
+                description:
+                  'A visionary leader committed to raising complete believers through sound teaching, disciplined leadership, and pastoral care.',
+              },
+              {
+                image: PstKenny,
+                name: 'Pastor Kenny Ayilara',
+                role: 'Co-Pastor',
+                description:
+                  'A steady pastoral voice helping build discipleship pathways, family care structures, and strong ministry culture.',
+              },
+            ].map(person => (
+              <div
+                key={person.name}
+                className="grid gap-5 rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-5 sm:grid-cols-[220px_1fr] sm:p-6"
+              >
+                <div className="relative h-72 overflow-hidden rounded-[1.4rem] border border-white/10 bg-black/20 sm:h-full sm:min-h-[280px]">
+                  <Image
+                    src={person.image}
+                    alt={person.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, 220px"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[0.66rem] uppercase tracking-[0.2em] text-[#d7bb75]">
+                    {person.role}
+                  </p>
+                  <h3 className="text-2xl font-semibold text-white">
+                    {person.name}
+                  </h3>
+                  <p className="text-base leading-relaxed text-white/68">
+                    {person.description}
+                  </p>
+                  <p className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/65">
+                    Wisdom Church leadership is built around discipleship,
+                    doctrinal soundness, and practical care for people.
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
+        </Container>
+      </Section>
 
-          <div>
-            <div className="footer-col-title">Service Times</div>
-            <div className="footer-contact-item">
-              Sunday Worship
-              <br />
-              9:00 AM (WAT)
-            </div>
-            <div className="footer-contact-item">
-              Midweek Service
-              <br />
-              Thursday · 6:00 PM
-            </div>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Contact</div>
-            <div className="footer-contact-item">
-              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
-            </div>
-            <div className="footer-contact-item">0706 999 5333</div>
-            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
-          <div className="footer-bottom-links">
-            <Link href="/terms">Privacy Policy</Link>
-            <Link href="/cookies">Terms of Service</Link>
-          </div>
-        </div>
-      </footer>
-    </>
+      <ActionBanner
+        eyebrow="Visit Wisdom Church"
+        title="Come and experience a church culture built around growth, care, and Christ-centered worship."
+        description="If you are looking for a church home in Lagos, we would love to welcome you, answer your questions, and help you take a clear next step."
+        primaryHref="/contact"
+        primaryLabel="Plan your visit"
+        secondaryHref="/leadership"
+        secondaryLabel="Meet the team"
+      />
+    </div>
   );
 }

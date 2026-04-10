@@ -1,328 +1,189 @@
 'use client';
 
-import Link from 'next/link';
-import VideoBg from '@/shared/components/VideoBg';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { BookOpenCheck, Library, PlayCircle, ShoppingBag } from 'lucide-react';
+
+import PageHero from '@/features/hero/PageHero';
+import { Container, Section } from '@/shared/layout';
+import {
+  ActionBanner,
+  FeatureGrid,
+  SplitSection,
+  StatStrip,
+} from '@/shared/components/site/PublicPageBlocks';
+
+const categories = [
+  { id: 'all', label: 'All resources' },
+  { id: 'watch', label: 'Watch & listen' },
+  { id: 'read', label: 'Read & study' },
+  { id: 'shop', label: 'Store' },
+] as const;
+
+const resourcePages = [
+  {
+    title: 'Sermons & Teachings',
+    description:
+      'Watch recent messages, revisit church teachings, and stay in step with what the house is emphasizing.',
+    icon: PlayCircle,
+    href: '/resources/sermons',
+    badge: 'Video + audio',
+    type: 'watch',
+  },
+  {
+    title: 'Publications',
+    description:
+      'Browse devotionals, newsletters, study guides, and church resources designed for growth and reflection.',
+    icon: BookOpenCheck,
+    href: '/resources/publications',
+    badge: 'Digital resources',
+    type: 'read',
+  },
+  {
+    title: 'Blog',
+    description:
+      'Read short-form articles, biblical reflections, and practical guidance for daily Christian living.',
+    icon: Library,
+    href: '/resources/blogs',
+    badge: 'Articles',
+    type: 'read',
+  },
+  {
+    title: 'Ministry Store',
+    description:
+      'Access church merchandise, practical faith tools, and products connected to the ministry’s message and culture.',
+    icon: ShoppingBag,
+    href: '/resources/store',
+    badge: 'Products',
+    type: 'shop',
+  },
+] as const;
+
+const stats = [
+  {
+    label: 'Main platform',
+    value: 'YouTube sermons',
+    detail:
+      'The easiest place to catch up on full-length messages and service highlights.',
+    icon: PlayCircle,
+  },
+  {
+    label: 'Study support',
+    value: 'Guides and publications',
+    detail:
+      'Resources designed to support personal devotion, group study, and family growth.',
+    icon: BookOpenCheck,
+  },
+  {
+    label: 'Content mix',
+    value: 'Watch, read, revisit',
+    detail:
+      'The library is structured around different ways people learn and stay engaged.',
+    icon: Library,
+  },
+  {
+    label: 'Store access',
+    value: 'Merchandise and tools',
+    detail: 'Practical items tied to ministry, events, and church culture.',
+    icon: ShoppingBag,
+  },
+];
 
 export default function ResourcesPage() {
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeCategory, setActiveCategory] =
+    useState<(typeof categories)[number]['id']>('all');
 
-  const resources = [
-    {
-      id: 1,
-      type: 'sermon',
-      title: 'The Power of Faith',
-      date: 'Jan 15, 2024',
-      icon: '🎙️',
-      desc: 'Powerful message on trusting God',
-    },
-    {
-      id: 2,
-      type: 'blog',
-      title: 'Spiritual Growth Habits',
-      date: 'Jan 10, 2024',
-      icon: '📝',
-      desc: 'Daily practices for spiritual development',
-    },
-    {
-      id: 3,
-      type: 'guide',
-      title: 'Prayer Guide',
-      date: 'Jan 5, 2024',
-      icon: '🙏',
-      desc: 'How to develop a consistent prayer life',
-    },
-    {
-      id: 4,
-      type: 'video',
-      title: 'Bible Study Series',
-      date: 'Dec 28, 2023',
-      icon: '📺',
-      desc: 'In-depth study of book of Romans',
-    },
-    {
-      id: 5,
-      type: 'sermon',
-      title: 'Overcoming Obstacles',
-      date: 'Dec 20, 2023',
-      icon: '🎙️',
-      desc: 'Finding victory through faith',
-    },
-    {
-      id: 6,
-      type: 'publication',
-      title: 'Monthly Newsletter',
-      date: 'Dec 15, 2023',
-      icon: '📰',
-      desc: 'Church updates and spiritual insights',
-    },
-  ];
-
-  const filtered =
-    activeTab === 'all'
-      ? resources
-      : resources.filter(r => r.type === activeTab);
+  const filteredResources = useMemo(() => {
+    if (activeCategory === 'all') return resourcePages;
+    return resourcePages.filter(page => page.type === activeCategory);
+  }, [activeCategory]);
 
   return (
-    <>
-      <section className="hero" style={{ minHeight: '75vh' }}>
-        <VideoBg
-          src="/videos/hero.mp4"
-          overlay={true}
-          overlayOpacity={0.35}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
-        <div className="hero-grid" />
+    <div className="min-h-screen bg-[#050505] text-white">
+      <PageHero
+        title="Resources that help church life continue beyond the service."
+        subtitle="This library brings together messages, articles, publications, and store items in one clearer resource hub."
+        note="The aim is simple: make it easy for people to revisit teaching, keep learning through the week, and access the materials connected to ministry life."
+        chips={['Sermons', 'Articles', 'Publications', 'Store']}
+      />
 
-        <div className="hero-content" style={{ maxWidth: '800px' }}>
-          <div className="hero-tag">
-            <span className="hero-tag-dot" />
-            Spiritual Growth Resources
-          </div>
-          <h1 className="hero-title">
-            Grow in
-            <br />
-            <em>your faith</em>
-          </h1>
-          <p className="hero-sub">
-            Access sermons, Bible studies, teaching resources, and more to
-            deepen your relationship with God.
-          </p>
-        </div>
-      </section>
+      <StatStrip items={stats} />
 
-      <div className="times-bar">
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Sermons Available</div>
-            <div className="time-val">100+</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Bible Studies</div>
-            <div className="time-val">30+</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Books</div>
-            <div className="time-val">15+</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-        <div className="time-item">
-          <div className="time-icon">✦</div>
-          <div>
-            <div className="time-label">Videos</div>
-            <div className="time-val">50+</div>
-          </div>
-        </div>
-      </div>
-
-      <section style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <div
-          style={{
-            display: 'flex',
-            gap: '1rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '2rem',
-          }}
-        >
-          {['all', 'sermon', 'blog', 'guide', 'video'].map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={activeTab === tab ? 'btn-primary' : 'btn-outline'}
-              style={{ cursor: 'pointer', textTransform: 'capitalize' }}
-            >
-              {tab === 'all'
-                ? 'All Resources'
-                : tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '2rem',
-            marginBottom: '4rem',
-          }}
-        >
-          {filtered.map(resource => (
-            <Link
-              key={resource.id}
-              href={`/resources/${resource.type}/${resource.id}`}
-              className="expect-card"
-            >
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
-                {resource.icon}
-              </div>
-              <div className="expect-title">{resource.title}</div>
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-muted)',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                {resource.date}
-              </div>
-              <p
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-muted)',
-                  lineHeight: '1.6',
-                }}
-              >
-                {resource.desc}
+      <Section padding="lg" className="bg-[#050505]">
+        <Container size="xl" className="space-y-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl space-y-3">
+              <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+                Resource pages
               </p>
-            </Link>
-          ))}
-        </div>
-      </section>
+              <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+                Browse by the way you want to learn.
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {categories.map(category => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setActiveCategory(category.id)}
+                  className="rounded-full border px-4 py-2 text-sm font-medium transition"
+                  style={
+                    activeCategory === category.id
+                      ? {
+                          borderColor: 'transparent',
+                          color: '#050505',
+                          background:
+                            'linear-gradient(135deg, #d7bb75, #f0deaa)',
+                        }
+                      : {
+                          borderColor: 'rgba(255,255,255,0.12)',
+                          color: 'rgba(255,255,255,0.72)',
+                          background: 'rgba(255,255,255,0.03)',
+                        }
+                  }
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      <section
-        style={{
-          background: 'var(--charcoal)',
-          borderTop: '0.5px solid var(--border)',
-        }}
-      >
-        <span className="section-tag">Support Ministry</span>
-        <h2 className="section-title" style={{ marginBottom: '2rem' }}>
-          Shop our
-          <br />
-          <em>ministry store</em>
-        </h2>
-        <p
-          style={{
-            color: 'var(--text-muted)',
-            marginBottom: '2rem',
-            maxWidth: '600px',
-          }}
-        >
-          Purchase books, materials, and merchandise to support the ministry and
-          deepen your spiritual journey.
-        </p>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '2rem',
-            marginBottom: '2rem',
-          }}
-        >
-          {[1, 2, 3].map(i => (
-            <div
-              key={i}
-              className="expect-card"
-              style={{ textAlign: 'center' }}
-            >
-              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📚</div>
-              <div className="expect-title">Ministry Resources</div>
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-muted)',
-                  marginBottom: '1rem',
-                }}
-              >
-                Learn more
-              </div>
-              <button className="btn-outline" style={{ cursor: 'pointer' }}>
-                View Store
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
+          <FeatureGrid items={filteredResources} columns={2} />
+        </Container>
+      </Section>
 
-      <section>
-        <div className="event-banner">
-          <div>
-            <div className="event-tag">📚 Learn & Grow</div>
-            <div className="event-title">Subscribe to Updates</div>
-            <div className="event-desc">
-              Get weekly sermon digests, Bible study guides, and resources
-              delivered to your inbox.
-            </div>
-          </div>
-          <Link href="/contact" className="btn-primary">
-            Subscribe Now
-          </Link>
-        </div>
-      </section>
+      <Section padding="lg" className="border-y border-white/10 bg-[#080808]">
+        <Container size="xl">
+          <SplitSection
+            eyebrow="Resource strategy"
+            title="A church resource hub should reduce friction, not create it."
+            description="People should be able to find the latest message, revisit important teachings, and access reading material without searching through disconnected pages."
+            points={[
+              'Use sermons when you want to revisit the current emphasis of the house.',
+              'Use publications when you need structured reading or devotional support.',
+              'Use blog content for shorter reflections and practical encouragement.',
+              'Use the store when you need ministry materials or event-related items.',
+            ]}
+            panelTitle="How this helps the church"
+            panelBody="A clearer resource structure supports discipleship, keeps people connected during the week, and makes church content easier to recommend and revisit."
+            panelItems={[
+              'Better access to archived teaching',
+              'Clearer distinction between media and reading resources',
+              'A usable landing page for first-time visitors',
+              'A simpler route into the store and ministry tools',
+            ]}
+          />
+        </Container>
+      </Section>
 
-      <footer>
-        <div className="footer-top">
-          <div>
-            <div className="nav-logo">
-              <div className="nav-logo-icon">W</div>
-              <span className="nav-logo-text">The Wisdom Church</span>
-            </div>
-            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
-              Resources for spiritual growth and Christian development.
-            </p>
-          </div>
-          <div>
-            <div className="footer-col-title">Quick Links</div>
-            <ul className="footer-links">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-              <li>
-                <Link href="/events">Events</Link>
-              </li>
-              <li>
-                <Link href="/contact">Contact</Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <div className="footer-col-title">Service Times</div>
-            <div className="footer-contact-item">
-              Sunday Worship
-              <br />
-              9:00 AM (WAT)
-            </div>
-            <div className="footer-contact-item">
-              Midweek Service
-              <br />
-              Thursday · 6:00 PM
-            </div>
-          </div>
-          <div>
-            <div className="footer-col-title">Contact</div>
-            <div className="footer-contact-item">
-              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
-            </div>
-            <div className="footer-contact-item">0706 999 5333</div>
-            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
-          <div className="footer-bottom-links">
-            <Link href="/terms">Privacy Policy</Link>
-            <Link href="/cookies">Terms of Service</Link>
-          </div>
-        </div>
-      </footer>
-    </>
+      <ActionBanner
+        eyebrow="Keep growing"
+        title="Choose a resource path for the week and stay engaged beyond Sunday."
+        description="If you want to start somewhere practical, begin with a recent sermon or a publication that supports your current season."
+        primaryHref="/resources/sermons"
+        primaryLabel="Watch a sermon"
+        secondaryHref="/resources/publications"
+        secondaryLabel="Browse publications"
+      />
+    </div>
   );
 }

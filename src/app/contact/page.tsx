@@ -1,10 +1,43 @@
 'use client';
 
-import Link from 'next/link';
-import VideoBg from '@/shared/components/VideoBg';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Clock3, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
+
+import PageHero from '@/features/hero/PageHero';
 import { useNotification } from '@/shared/contexts/NotificationContext';
 import { useAnalyticsTracking } from '@/shared/analytics/useTracking';
+import { Container, Section } from '@/shared/layout';
+import {
+  ActionBanner,
+  StatStrip,
+} from '@/shared/components/site/PublicPageBlocks';
+
+const stats = [
+  {
+    label: 'Location',
+    value: 'Honor Gardens, Lagos',
+    detail: 'Opposite Dominion City, Alasia, Lekki-Epe Expressway.',
+    icon: MapPin,
+  },
+  {
+    label: 'Phone',
+    value: '0706 999 5333',
+    detail: 'Reach the church team directly for guidance or scheduling help.',
+    icon: Phone,
+  },
+  {
+    label: 'Email',
+    value: 'Wisdomhousehq@gmail.com',
+    detail: 'Use email for enquiries, follow-up, or pastoral requests.',
+    icon: Mail,
+  },
+  {
+    label: 'Office rhythm',
+    value: 'Weekday follow-up',
+    detail: 'We aim to respond promptly and route requests to the right team.',
+    icon: Clock3,
+  },
+];
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,39 +47,34 @@ export default function ContactPage() {
     subject: '',
     message: '',
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<
     'idle' | 'success' | 'error'
   >('idle');
+
   const { notify } = useNotification();
   const { trackFormStart, trackFormComplete, trackFormError } =
     useAnalyticsTracking();
 
-  // Track form page view
   useEffect(() => {
     trackFormStart('contact_form');
   }, [trackFormStart]);
 
   const handleChange = (
-    e: React.ChangeEvent<
+    event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = event.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
-      // TODO: Connect to your backend API
-      console.log('Form submitted:', formData);
-
-      // ✅ Track successful form submission
       trackFormComplete('contact_form', {
         name: formData.name,
         email: formData.email,
@@ -56,21 +84,17 @@ export default function ContactPage() {
 
       setSubmitStatus('success');
       notify(
-        "Message sent successfully! We'll get back to you soon.",
+        "Message sent successfully. We'll get back to you soon.",
         'success',
         6000
       );
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       setTimeout(() => setSubmitStatus('idle'), 5000);
     } catch (error) {
-      console.error('Submission error:', error);
-
-      // ✅ Track form errors
       trackFormError(
         'contact_form',
         (error as Error)?.message || 'Unknown error'
       );
-
       setSubmitStatus('error');
       notify('Failed to send message. Please try again.', 'error', 6000);
     } finally {
@@ -79,449 +103,264 @@ export default function ContactPage() {
   };
 
   return (
-    <>
-      {/* Hero */}
-      <section className="hero" style={{ minHeight: '80vh' }}>
-        <VideoBg
-          src="/videos/hero.mp4"
-          overlay={true}
-          overlayOpacity={0.35}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
-        <div className="hero-grid" />
+    <div className="min-h-screen bg-[#050505] text-white">
+      <PageHero
+        title="Need directions, prayer, or a clear next step? Reach the church team here."
+        subtitle="Use this page to plan a visit, ask a question, request support, or start a conversation with Wisdom Church."
+        note="We want contact to feel simple. The goal is to help you reach the right person without confusion or delay."
+        chips={[
+          'Visit info',
+          'Prayer requests',
+          'General enquiries',
+          'Pastoral care',
+        ]}
+      />
 
-        <div className="hero-content">
-          <div className="hero-tag">
-            <span className="hero-tag-dot" />
-            We'd love to hear from you
-          </div>
+      <StatStrip items={stats} />
 
-          <h1 className="hero-title">
-            Get in
-            <br />
-            <em>Touch</em>
-          </h1>
-
-          <p className="hero-sub">
-            Have questions, prayer requests, or want to connect with our
-            community? We're here to serve you.
-          </p>
-        </div>
-      </section>
-
-      {/* Contact Info Bar */}
-      <div className="times-bar">
-        <div className="time-item">
-          <div className="time-icon">📍</div>
-          <div>
-            <div className="time-label">Location</div>
-            <div className="time-val">Honor Gardens, Lekki-Epe, Lagos</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">📞</div>
-          <div>
-            <div className="time-label">Phone</div>
-            <div className="time-val">0706 999 5333</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">✉️</div>
-          <div>
-            <div className="time-label">Email</div>
-            <div className="time-val">Wisdomhousehq@gmail.com</div>
-          </div>
-        </div>
-        <div className="time-sep" />
-
-        <div className="time-item">
-          <div className="time-icon">⏰</div>
-          <div>
-            <div className="time-label">Hours</div>
-            <div className="time-val">Mon-Fri 10 AM - 5 PM</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Contact Form Section */}
-      <section>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <span className="section-tag">Contact Form</span>
-          <h2 className="section-title" style={{ marginBottom: '2rem' }}>
-            Send us a
-            <br />
-            <em>Message</em>
-          </h2>
-
-          <form onSubmit={handleSubmit} style={{ marginBottom: '3rem' }}>
-            {/* Name Field */}
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label
-                htmlFor="name"
-                style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: 'var(--text)',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder="Your name"
-                style={{
-                  width: '100%',
-                  background: 'var(--charcoal)',
-                  border: '0.5px solid var(--border)',
-                  borderRadius: '2px',
-                  padding: '12px 14px',
-                  fontSize: '15px',
-                  color: 'var(--text)',
-                  fontFamily: 'var(--font-sans)',
-                }}
-              />
+      <Section padding="lg" className="bg-[#050505]">
+        <Container
+          size="xl"
+          className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]"
+        >
+          <div className="space-y-5 rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
+            <div className="space-y-3">
+              <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+                Contact form
+              </p>
+              <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+                Send a message and we will route it properly.
+              </h2>
+              <p className="text-base leading-relaxed text-white/68">
+                Use the form for visit planning, ministry questions, pastoral
+                support, or general enquiries.
+              </p>
             </div>
 
-            {/* Email & Phone Row */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '1.5rem',
-                marginBottom: '1.5rem',
-              }}
-            >
-              <div>
-                <label
-                  htmlFor="email"
-                  style={{
-                    display: 'block',
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: 'var(--text)',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
+            <form onSubmit={handleSubmit} className="grid gap-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field
+                  label="Full name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your name"
+                  required
+                />
+                <Field
+                  label="Email address"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
                   placeholder="you@example.com"
-                  style={{
-                    width: '100%',
-                    background: 'var(--charcoal)',
-                    border: '0.5px solid var(--border)',
-                    borderRadius: '2px',
-                    padding: '12px 14px',
-                    fontSize: '15px',
-                    color: 'var(--text)',
-                    fontFamily: 'var(--font-sans)',
-                  }}
+                  type="email"
+                  required
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="phone"
-                  style={{
-                    display: 'block',
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: 'var(--text)',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field
+                  label="Phone number"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+234..."
-                  style={{
-                    width: '100%',
-                    background: 'var(--charcoal)',
-                    border: '0.5px solid var(--border)',
-                    borderRadius: '2px',
-                    padding: '12px 14px',
-                    fontSize: '15px',
-                    color: 'var(--text)',
-                    fontFamily: 'var(--font-sans)',
-                  }}
+                  placeholder="Optional"
+                />
+                <div className="grid gap-2">
+                  <label
+                    htmlFor="subject"
+                    className="text-sm font-medium text-white/78"
+                  >
+                    Subject
+                  </label>
+                  <select
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-[#d7bb75]"
+                    required
+                  >
+                    <option value="">Select a subject</option>
+                    <option value="First visit">First visit</option>
+                    <option value="Prayer request">Prayer request</option>
+                    <option value="Pastoral care">Pastoral care</option>
+                    <option value="Ministry enquiry">Ministry enquiry</option>
+                    <option value="General enquiry">General enquiry</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <label
+                  htmlFor="message"
+                  className="text-sm font-medium text-white/78"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Tell us how we can help"
+                  rows={6}
+                  required
+                  className="rounded-[1.5rem] border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-[#d7bb75]"
                 />
               </div>
-            </div>
 
-            {/* Subject Field */}
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label
-                htmlFor="subject"
-                style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: 'var(--text)',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                Subject
-              </label>
-              <select
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  background: 'var(--charcoal)',
-                  border: '0.5px solid var(--border)',
-                  borderRadius: '2px',
-                  padding: '12px 14px',
-                  fontSize: '15px',
-                  color: formData.subject
-                    ? 'var(--text)'
-                    : 'var(--text-subtle)',
-                  fontFamily: 'var(--font-sans)',
-                }}
-              >
-                <option value="">Select a subject...</option>
-                <option value="general">General Inquiry</option>
-                <option value="prayer">Prayer Request</option>
-                <option value="pastoral">Pastoral Care</option>
-                <option value="event">Event Registration</option>
-                <option value="giving">Giving & Donations</option>
-                <option value="ministry">Ministry Involvement</option>
-                <option value="feedback">Feedback & Suggestions</option>
-              </select>
-            </div>
-
-            {/* Message Field */}
-            <div style={{ marginBottom: '2rem' }}>
-              <label
-                htmlFor="message"
-                style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: 'var(--text)',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                placeholder="Tell us what's on your heart..."
-                rows={6}
-                style={{
-                  width: '100%',
-                  background: 'var(--charcoal)',
-                  border: '0.5px solid var(--border)',
-                  borderRadius: '2px',
-                  padding: '12px 14px',
-                  fontSize: '15px',
-                  color: 'var(--text)',
-                  fontFamily: 'var(--font-sans)',
-                  resize: 'vertical',
-                }}
-              />
-            </div>
-
-            {/* Status Messages */}
-            {submitStatus === 'success' && (
-              <div
-                style={{
-                  background: 'rgba(16, 185, 129, 0.1)',
-                  border: '0.5px solid rgba(16, 185, 129, 0.3)',
-                  borderRadius: '2px',
-                  padding: '12px 14px',
-                  marginBottom: '1.5rem',
-                  color: '#10B981',
-                  fontSize: '14px',
-                }}
-              >
-                ✓ Thank you! Your message has been sent. We'll get back to you
-                soon.
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-white/58">
+                  We treat enquiries with care and route support requests
+                  responsibly.
+                </p>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center justify-center rounded-full bg-[#d7bb75] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isSubmitting ? 'Sending...' : 'Send message'}
+                </button>
               </div>
-            )}
-            {submitStatus === 'error' && (
-              <div
-                style={{
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  border: '0.5px solid rgba(239, 68, 68, 0.3)',
-                  borderRadius: '2px',
-                  padding: '12px 14px',
-                  marginBottom: '1.5rem',
-                  color: '#EF4444',
-                  fontSize: '14px',
-                }}
-              >
-                ✗ Something went wrong. Please try again or call us directly.
+
+              {submitStatus !== 'idle' ? (
+                <div
+                  className="rounded-2xl border px-4 py-3 text-sm"
+                  style={{
+                    borderColor:
+                      submitStatus === 'success'
+                        ? 'rgba(34,197,94,0.35)'
+                        : 'rgba(239,68,68,0.35)',
+                    backgroundColor:
+                      submitStatus === 'success'
+                        ? 'rgba(34,197,94,0.08)'
+                        : 'rgba(239,68,68,0.08)',
+                    color: submitStatus === 'success' ? '#86efac' : '#fca5a5',
+                  }}
+                >
+                  {submitStatus === 'success'
+                    ? 'Your message has been received. The team will follow up shortly.'
+                    : 'There was a problem submitting the form. Please try again.'}
+                </div>
+              ) : null}
+            </form>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                title: 'Visit information',
+                description:
+                  'Need directions, service times, or help planning your first Sunday? We can help you arrive prepared.',
+                icon: MapPin,
+              },
+              {
+                title: 'Prayer and pastoral care',
+                description:
+                  'If your request is spiritual, personal, or time-sensitive, our pastoral team can respond with care and discretion.',
+                icon: ShieldCheck,
+              },
+              {
+                title: 'Ministry and volunteering',
+                description:
+                  'If you want to join a ministry team or learn where you fit, this is the right starting point.',
+                icon: Phone,
+              },
+            ].map(item => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-[1.6rem] border border-white/10 bg-white/[0.03] p-5"
+                >
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
+                    <Icon className="h-5 w-5 text-[#d7bb75]" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/66">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
+
+            <div className="rounded-[1.8rem] border border-white/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25))] p-6">
+              <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+                Direct contact
+              </p>
+              <div className="mt-5 grid gap-3 text-sm text-white/70">
+                <a
+                  href="tel:07069995333"
+                  className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 transition hover:text-white"
+                >
+                  Phone: 0706 999 5333
+                </a>
+                <a
+                  href="mailto:Wisdomhousehq@gmail.com"
+                  className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 transition hover:text-white"
+                >
+                  Email: Wisdomhousehq@gmail.com
+                </a>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                  Address: Honor Gardens, opposite Dominion City, Alasia,
+                  Lekki-Epe Expressway, Lagos
+                </div>
               </div>
-            )}
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-primary"
-              style={{
-                opacity: isSubmitting ? 0.7 : 1,
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              }}
-            >
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </button>
-          </form>
-        </div>
-      </section>
-
-      {/* Additional Contact Methods */}
-      <section style={{ background: 'var(--charcoal)' }}>
-        <span className="section-tag">Other Ways to Connect</span>
-        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
-          Reach us through
-          <br />
-          <em>other channels</em>
-        </h2>
-
-        <div className="giving-grid">
-          <div className="giving-card">
-            <div className="giving-icon">📦</div>
-            <div className="giving-title">Prayer Request</div>
-            <div className="giving-desc">
-              Submit prayer requests and let our community pray with you. Your
-              prayers matter to us.
-            </div>
-            <Link href="/forms/prayer" className="giving-btn">
-              Submit Prayer →
-            </Link>
-          </div>
-
-          <div className="giving-card">
-            <div className="giving-icon">🤝</div>
-            <div className="giving-title">Ministry Opportunities</div>
-            <div className="giving-desc">
-              Interested in serving? Explore ways to get involved in our various
-              ministries and programs.
-            </div>
-            <Link href="/ministries" className="giving-btn">
-              Learn More →
-            </Link>
-          </div>
-
-          <div className="giving-card">
-            <div className="giving-icon">👨‍⚖️</div>
-            <div className="giving-title">Pastoral Care</div>
-            <div className="giving-desc">
-              Need pastoral guidance for weddings, counseling, or special
-              occasions? We're here to help.
-            </div>
-            <Link href="/pastoral" className="giving-btn">
-              Request Care →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer>
-        <div className="footer-top">
-          <div>
-            <div className="nav-logo">
-              <div className="nav-logo-icon">W</div>
-              <span className="nav-logo-text">The Wisdom Church</span>
-            </div>
-            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
-              We're here to serve and support your spiritual journey at every
-              step.
-            </p>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Quick Links</div>
-            <ul className="footer-links">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-              <li>
-                <Link href="/events">Events</Link>
-              </li>
-              <li>
-                <Link href="/resources">Resources</Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="footer-col-title">Service Times</div>
-            <div className="footer-contact-item">
-              Sunday Worship
-              <br />
-              9:00 AM (WAT)
-            </div>
-            <div className="footer-contact-item">
-              Midweek Service
-              <br />
-              Thursday · 6:00 PM
             </div>
           </div>
+        </Container>
+      </Section>
 
-          <div>
-            <div className="footer-col-title">Contact</div>
-            <div className="footer-contact-item">
-              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
-            </div>
-            <div className="footer-contact-item">0706 999 5333</div>
-            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
-          </div>
-        </div>
+      <ActionBanner
+        eyebrow="Need a first next step?"
+        title="If you are trying to plan a visit, ask for prayer, or connect to a ministry, this page is the right entry point."
+        description="The church team will help route you to the right person and make the process clear."
+        primaryHref="/events"
+        primaryLabel="See church rhythm"
+        secondaryHref="/pastoral"
+        secondaryLabel="View pastoral care"
+      />
+    </div>
+  );
+}
 
-        <div className="footer-bottom">
-          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
-          <div className="footer-bottom-links">
-            <Link href="/terms">Privacy Policy</Link>
-            <Link href="/cookies">Terms of Service</Link>
-          </div>
-        </div>
-      </footer>
-    </>
+type FieldProps = {
+  label: string;
+  name: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  type?: string;
+  required?: boolean;
+};
+
+function Field({
+  label,
+  name,
+  value,
+  onChange,
+  placeholder,
+  type = 'text',
+  required = false,
+}: FieldProps) {
+  return (
+    <div className="grid gap-2">
+      <label htmlFor={name} className="text-sm font-medium text-white/78">
+        {label}
+      </label>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-[#d7bb75]"
+      />
+    </div>
   );
 }

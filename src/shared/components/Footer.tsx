@@ -1,294 +1,245 @@
 'use client';
 
-import { memo, useRef, useMemo, useCallback } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
-  Phone,
-  MapPin,
-  Mail,
-  Facebook,
-  Youtube,
-  Instagram,
-  Twitter,
   ArrowRight,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Youtube,
 } from 'lucide-react';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { useDormantAction } from '@/shared/utils/hooks/useDormantAction';
-import { BodySM, BodyMD, Caption, BodyLG } from '@/shared/text';
-import { WisdomeHouseLogo } from '../assets';
 
-// MEMOIZE STATIC DATA & COMPONENTS OUTSIDE
-const currentYear = new Date().getFullYear();
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { WisdomeHouseLogo } from '@/shared/assets';
+
+const siteLinks = [
+  { label: 'About', href: '/about' },
+  { label: 'Ministries', href: '/ministries' },
+  { label: 'Events', href: '/events' },
+  { label: 'Resources', href: '/resources' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const careLinks = [
+  { label: 'Pastoral Care', href: '/pastoral' },
+  { label: 'Testimonies', href: '/testimonies' },
+  { label: 'Upcoming Events', href: '/events/upcoming' },
+  { label: 'Sermons', href: '/resources/sermons' },
+  { label: 'Store', href: '/resources/store' },
+];
+
+const serviceTimes = [
+  'Sunday Worship: 9:00 AM',
+  'Midweek Service: Thursday, 6:00 PM',
+  'Prayer & pastoral support available by request',
+];
+
 const socialLinks = [
   {
-    Icon: Facebook,
-    href: 'https://www.facebook.com/wisdomhousehq',
-    label: 'Facebook',
-  },
-  {
-    Icon: Youtube,
-    href: 'https://www.youtube.com/@wisdomhousehq',
     label: 'YouTube',
+    href: 'https://www.youtube.com/@wisdomhousehq',
+    icon: Youtube,
   },
-  { Icon: Instagram, href: '#', label: 'Instagram' },
-  { Icon: Twitter, href: '#', label: 'Twitter' },
-];
-const contactInfo = [
   {
-    Icon: MapPin,
-    title: 'Location',
-    text: 'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway, Lagos',
+    label: 'Instagram',
+    href: 'https://www.instagram.com/wisdomhousehq',
+    icon: Instagram,
   },
-  { Icon: Phone, title: 'Phone', text: '0706 999 5333' },
-  { Icon: Mail, title: 'Email', text: 'Wisdomhousehq@gmail.com' },
-];
-const quickLinks = [
-  { href: '/about', label: 'About Us' },
-  { href: '/events/upcoming', label: 'Events & Programs' },
-  { href: '/resources/sermons', label: 'Sermons' },
-  { href: '/resources/store', label: 'Store' },
-  { href: '/contact', label: 'Contact Us' },
-];
-const serviceTimes = [
-  { day: 'Sunday Worship', time: '9:00 AM', highlight: true },
-  { day: 'Midweek Service', time: 'Thursday • 6:00 PM', highlight: false },
 ];
 
-// MAIN COMPONENT WITH MEMOIZATION
-function Footer() {
+export default function Footer() {
   const { colorScheme } = useTheme();
-  const footerRef = useRef<HTMLElement>(null);
-  const openDormant = useDormantAction();
 
-  // MEMOIZE VALUES THAT DEPEND ON colorScheme
-  const gradientStyle = useMemo(
-    () => ({
-      background: `radial-gradient(circle at 20% 80%, ${colorScheme.primary}40 0%, transparent 60%)`,
-    }),
-    [colorScheme.primary]
-  );
-
-  // MEMOIZE EVENT HANDLERS
-  const handleSubscribe = useCallback(
-    (e: React.FormEvent) => {
-      openDormant(e, {
-        title: 'Newsletter signup opening soon',
-        message:
-          'We are preparing weekly updates and devotionals. Please check back shortly.',
-        actionLabel: 'Okay, thanks',
-      });
-    },
-    [openDormant]
-  );
-
-  // RENDER LOGIC
   return (
-    <footer
-      ref={footerRef}
-      className="relative overflow-hidden bg-[#050505] text-white"
-    >
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={gradientStyle} />
-      </div>
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#040404] text-white">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          background:
+            'radial-gradient(circle at 15% 18%, rgba(215,187,117,0.14), transparent 28%), radial-gradient(circle at 88% 82%, rgba(215,187,117,0.1), transparent 30%)',
+        }}
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-14">
-        <div className="mb-10 rounded-3xl border border-white/10 bg-white/[0.03] p-5 sm:p-7 lg:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-2">
-              <BodyLG className="text-base sm:text-lg font-medium text-white">
-                Build your week around purpose.
-              </BodyLG>
-              <Caption className="text-white/60">
-                Join service updates, sermons, and upcoming programs.
-              </Caption>
-            </div>
-            <form
-              onSubmit={handleSubscribe}
-              className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2"
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div className="grid gap-8 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+          <div className="space-y-4">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+              Visit Wisdom Church
+            </p>
+            <h2 className="max-w-2xl text-3xl font-semibold leading-tight text-white sm:text-4xl">
+              Build your week around worship, sound teaching, and meaningful
+              community.
+            </h2>
+            <p className="max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
+              Whether you are exploring faith, returning to church, or looking
+              for a place to serve, there is room for you here.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-black transition hover:opacity-90"
+              style={{
+                background: colorScheme.primaryGradient,
+                boxShadow: `0 14px 36px ${colorScheme.opacity.primary20}`,
+              }}
             >
-              <input
-                type="email"
-                placeholder="Email address"
-                className="w-full sm:w-64 px-3.5 py-2.5 rounded-full bg-white/5 border border-white/15 focus:border-primary focus:outline-none transition placeholder:text-white/35 text-white text-sm"
-              />
-              <button
-                type="submit"
-                style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
-                }}
-                className="h-10 rounded-full px-5 text-[12px] font-medium hover:opacity-90 transition-all flex items-center justify-center gap-1.5"
-              >
-                Subscribe
-                <ArrowRight className="w-3 h-3" />
-              </button>
-            </form>
+              Plan your visit
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/resources/sermons"
+              className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+            >
+              Watch online
+            </Link>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr_1fr] gap-10 lg:gap-12">
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr_1fr]">
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="relative w-11 h-11 rounded-2xl overflow-hidden ring-1 ring-white/15">
+              <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
                 <Image
                   src={WisdomeHouseLogo}
-                  alt="The Wisdom House Church"
-                  width={44}
-                  height={44}
+                  alt="The Wisdom Church"
+                  width={48}
+                  height={48}
                   className="object-cover"
-                  loading="lazy"
                 />
               </div>
               <div>
-                <BodySM className="text-sm font-medium text-white">
+                <p className="text-sm font-semibold text-white">
                   The Wisdom Church
-                </BodySM>
-                <Caption className="text-white/60">
-                  Equipping & Empowering for greatness
-                </Caption>
+                </p>
+                <p className="text-sm text-white/58">
+                  Equipping and empowering for greatness
+                </p>
               </div>
             </div>
 
-            <Caption className="text-white/65 leading-relaxed">
-              A Spirit‑filled family helping believers grow in faith, purpose,
-              and community.
-            </Caption>
+            <div className="grid gap-3 text-sm text-white/65">
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#d7bb75]" />
+                <span>
+                  Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe
+                  Expressway, Lagos
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-4 w-4 shrink-0 text-[#d7bb75]" />
+                <a
+                  href="tel:07069995333"
+                  className="transition hover:text-white"
+                >
+                  0706 999 5333
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="h-4 w-4 shrink-0 text-[#d7bb75]" />
+                <a
+                  href="mailto:Wisdomhousehq@gmail.com"
+                  className="transition hover:text-white"
+                >
+                  Wisdomhousehq@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
 
-            <div className="space-y-3">
-              {contactInfo.map((item, i) => (
-                <div key={i} className="flex gap-3">
-                  <div className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-                    <item.Icon
-                      className="w-4 h-4"
-                      style={{ color: colorScheme.primary }}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <BodySM className="text-xs text-white/85">
-                      {item.title}
-                    </BodySM>
-                    <Caption className="text-white/60 break-words leading-relaxed">
-                      {item.text}
-                    </Caption>
-                  </div>
-                </div>
+          <div>
+            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
+              Explore
+            </p>
+            <div className="mt-4 grid gap-3 text-sm text-white/68">
+              {siteLinks.map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition hover:text-white"
+                >
+                  {link.label}
+                </Link>
               ))}
             </div>
           </div>
 
-          <div className="space-y-6">
-            <BodySM className="text-xs uppercase tracking-[0.18em] text-white/60">
-              Quick Links
-            </BodySM>
-            <ul className="grid grid-cols-2 gap-y-2.5 gap-x-6">
-              {quickLinks.map(link => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="group inline-flex items-center gap-2 text-white/70 hover:text-white transition-all"
-                  >
-                    <ArrowRight
-                      className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
-                      style={{ color: colorScheme.primary }}
-                    />
-                    <Caption className="text-[12px]">{link.label}</Caption>
-                  </Link>
-                </li>
+          <div>
+            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
+              Community
+            </p>
+            <div className="mt-4 grid gap-3 text-sm text-white/68">
+              {careLinks.map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition hover:text-white"
+                >
+                  {link.label}
+                </Link>
               ))}
-            </ul>
+            </div>
+          </div>
 
-            <div className="space-y-3">
-              <BodySM className="text-xs uppercase tracking-[0.18em] text-white/60">
+          <div className="space-y-5">
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
                 Service Times
-              </BodySM>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {serviceTimes.map(s => (
+              </p>
+              <div className="mt-4 grid gap-3">
+                {serviceTimes.map(item => (
                   <div
-                    key={s.day}
-                    className={`rounded-2xl border px-3.5 py-3 ${
-                      s.highlight
-                        ? 'border-white/20 bg-white/10'
-                        : 'border-white/10 bg-white/5'
-                    }`}
+                    key={item}
+                    className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/68"
                   >
-                    <BodySM
-                      className="text-[12px] text-white/85 mb-1"
-                      style={{
-                        color: s.highlight ? colorScheme.primary : undefined,
-                      }}
-                    >
-                      {s.day}
-                    </BodySM>
-                    <Caption className="text-white/60">{s.time}</Caption>
+                    {item}
                   </div>
                 ))}
               </div>
             </div>
-          </div>
 
-          <div className="space-y-6">
-            <BodySM className="text-xs uppercase tracking-[0.18em] text-white/60">
-              Connect
-            </BodySM>
-            <div className="flex items-center gap-2.5">
-              {socialLinks.map((social, i) => {
-                const isDormant = social.href === '#';
-                return (
-                  <a
-                    key={i}
-                    href={social.href}
-                    target={isDormant ? undefined : '_blank'}
-                    rel={isDormant ? undefined : 'noopener noreferrer'}
-                    onClick={
-                      isDormant
-                        ? event =>
-                            openDormant(event, {
-                              title: `${social.label} opening soon`,
-                              message:
-                                'We are activating this social channel. Please check back shortly.',
-                              actionLabel: 'Got it',
-                            })
-                        : undefined
-                    }
-                    className="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all"
-                    aria-label={social.label}
-                  >
-                    <social.Icon
-                      className="w-4 h-4"
-                      style={{ color: colorScheme.primary }}
-                    />
-                  </a>
-                );
-              })}
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
+                Connect
+              </p>
+              <div className="mt-4 flex items-center gap-3">
+                {socialLinks.map(link => {
+                  const Icon = link.icon;
+                  return (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={link.label}
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/72 transition hover:border-white/20 hover:bg-white/[0.07] hover:text-white"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 mt-10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <Caption className="text-white/45 text-center md:text-left">
-              © {currentYear} The Wisdom House Church. All Rights Reserved.
-            </Caption>
-            <div className="flex items-center gap-6">
-              <Link
-                href="/terms"
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                <Caption>Privacy Policy</Caption>
-              </Link>
-              <Link
-                href="/terms"
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                <Caption>Terms of Service</Caption>
-              </Link>
-            </div>
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} The Wisdom Church. All rights reserved.
+          </p>
+          <div className="flex items-center gap-5">
+            <Link href="/terms" className="transition hover:text-white/72">
+              Terms
+            </Link>
+            <Link href="/cookies" className="transition hover:text-white/72">
+              Cookies
+            </Link>
           </div>
         </div>
       </div>
     </footer>
   );
 }
-
-export default memo(Footer);

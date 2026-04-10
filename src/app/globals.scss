@@ -218,10 +218,23 @@ nav {
 
 .hero {
   position: relative;
-  min-height: 92vh;
+  min-height: 84vh;
   display: flex;
   align-items: center;
   overflow: hidden;
+  isolation: isolate;
+  padding: 8rem 0 4rem;
+  background: linear-gradient(
+    130deg,
+    rgba(5, 5, 5, 0.94) 0%,
+    rgba(13, 13, 15, 0.82) 42%,
+    rgba(5, 5, 5, 0.96) 100%
+  );
+
+  @media (max-width: 768px) {
+    min-height: 72vh;
+    padding: 7rem 0 3rem;
+  }
 }
 
 .hero-bg {
@@ -244,21 +257,24 @@ nav {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(201, 168, 76, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 76, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
   mask-image: radial-gradient(
     ellipse 80% 80% at 50% 50%,
     black 30%,
     transparent 100%
   );
+  opacity: 0.55;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 0 2rem 0 3rem;
-  max-width: 680px;
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  max-width: 760px;
 
   @media (max-width: 768px) {
     padding: 0 1rem;
@@ -269,13 +285,15 @@ nav {
 .hero-tag {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  border: 0.5px solid var(--border);
-  padding: 6px 14px;
-  border-radius: 2px;
-  margin-bottom: 2rem;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gold);
 }
@@ -299,7 +317,12 @@ nav {
 }
 
 .hero-title {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
+  max-width: 12ch;
+  font-size: clamp(2.8rem, 7vw, 6.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 
   em {
     font-style: italic;
@@ -308,16 +331,16 @@ nav {
 }
 
 .hero-sub {
-  color: var(--text-muted);
-  font-size: 16px;
-  line-height: 1.7;
-  max-width: 460px;
-  margin-bottom: 2.5rem;
+  color: rgba(245, 240, 232, 0.78);
+  font-size: clamp(0.98rem, 1.6vw, 1.15rem);
+  line-height: 1.75;
+  max-width: 56ch;
+  margin-bottom: 2rem;
 }
 
 .hero-actions {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
@@ -456,18 +479,24 @@ nav {
 // ===================================================================
 
 .times-bar {
-  background: var(--charcoal);
-  border-top: 0.5px solid var(--border);
-  border-bottom: 0.5px solid var(--border);
-  padding: 1.2rem 3rem;
-  display: flex;
-  align-items: center;
-  gap: 3rem;
+  background: linear-gradient(
+    180deg,
+    rgba(16, 16, 20, 0.98),
+    rgba(10, 10, 12, 0.98)
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem max(1rem, calc((100vw - 1280px) / 2 + 1rem));
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  align-items: stretch;
+  gap: 0;
   overflow-x: auto;
 
   @media (max-width: 768px) {
-    padding: 1rem 1rem;
-    gap: 1.5rem;
+    grid-auto-columns: minmax(240px, 1fr);
+    padding: 0.75rem 1rem;
   }
 
   &::-webkit-scrollbar {
@@ -488,15 +517,17 @@ nav {
   display: flex;
   align-items: center;
   gap: 12px;
-  white-space: nowrap;
+  white-space: normal;
   flex-shrink: 0;
+  padding: 0.6rem 1rem;
 }
 
 .time-icon {
-  width: 36px;
-  height: 36px;
-  border: 0.5px solid var(--border);
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -505,22 +536,24 @@ nav {
 }
 
 .time-label {
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-size: 10px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(245, 240, 232, 0.52);
 }
 
 .time-val {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--text);
+  line-height: 1.45;
 }
 
 .time-sep {
-  width: 0.5px;
-  height: 36px;
-  background: var(--border);
+  width: 1px;
+  height: auto;
+  min-height: 100%;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 // ===================================================================
@@ -528,27 +561,30 @@ nav {
 // ===================================================================
 
 section {
-  padding: 5rem 3rem;
+  padding: 5rem 1.25rem;
 
   @media (max-width: 768px) {
-    padding: 3rem 1rem;
+    padding: 3.5rem 1rem;
   }
 }
 
 .section-tag {
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 1rem;
+  margin-bottom: 0.9rem;
   display: block;
 }
 
 .section-title {
-  font-size: clamp(32px, 4vw, 52px);
-  font-weight: 300;
-  line-height: 1.1;
+  max-width: 16ch;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
   margin-bottom: 1rem;
+  text-wrap: balance;
 
   em {
     font-style: italic;
@@ -557,10 +593,10 @@ section {
 }
 
 .section-body {
-  color: var(--text-muted);
-  font-size: 15px;
+  color: rgba(245, 240, 232, 0.72);
+  font-size: 0.98rem;
   line-height: 1.8;
-  max-width: 560px;
+  max-width: 62ch;
   margin-bottom: 3rem;
 }
 
@@ -570,19 +606,37 @@ section {
 
 .expect-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 0.5px solid var(--border);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  background: transparent;
+  border: 0;
 }
 
 .expect-card {
-  background: var(--charcoal);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.025) 42%,
+    rgba(0, 0, 0, 0.24) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
   padding: 2rem;
-  transition: background var(--transition-slow);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+  transition:
+    transform var(--transition-slow),
+    border-color var(--transition-slow),
+    background var(--transition-slow);
 
   &:hover {
-    background: var(--card);
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.03) 42%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    border-color: rgba(201, 168, 76, 0.24);
+    transform: translateY(-4px);
   }
 }
 
@@ -596,16 +650,16 @@ section {
 }
 
 .expect-title {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   margin-bottom: 0.75rem;
   color: var(--text);
 }
 
 .expect-desc {
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.7;
+  font-size: 0.92rem;
+  color: rgba(245, 240, 232, 0.68);
+  line-height: 1.75;
 }
 
 // ===================================================================
@@ -685,9 +739,14 @@ section {
 // ===================================================================
 
 .event-banner {
-  background: var(--charcoal);
-  border: 0.5px solid var(--border);
-  border-radius: 2px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 46%,
+    rgba(0, 0, 0, 0.22) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2rem;
   padding: 2.5rem;
   display: flex;
   align-items: center;
@@ -699,12 +758,13 @@ section {
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
+    padding: 1.5rem;
   }
 }
 
 .event-tag {
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 0.5rem;
@@ -712,14 +772,16 @@ section {
 
 .event-title {
   font-family: var(--font-serif);
-  font-size: 28px;
-  font-weight: 300;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.02;
 }
 
 .event-desc {
-  font-size: 13px;
-  color: var(--text-muted);
+  font-size: 0.95rem;
+  color: rgba(245, 240, 232, 0.68);
   margin-top: 0.5rem;
+  line-height: 1.75;
 }
 
 // ===================================================================
@@ -922,8 +984,8 @@ section {
 // ===================================================================
 
 footer {
-  background: var(--charcoal);
-  border-top: 0.5px solid var(--border);
+  background: linear-gradient(180deg, #0b0b0e 0%, #050505 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 4rem 3rem 2rem;
 
   @media (max-width: 768px) {
