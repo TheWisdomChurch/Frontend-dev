@@ -51,7 +51,7 @@ import {
   Deacon_2,
   Bishop,
 } from '@/shared/assets';
-import { Instagram, MessageCircle, Youtube } from 'lucide-react';
+import { Camera, MessageCircle, MonitorPlay } from 'lucide-react';
 
 export const defaultSlides: Slide[] = [
   {
@@ -521,7 +521,7 @@ export const communityLinks = [
     hoverColor: 'hover:from-green-600 hover:to-green-700',
   },
   {
-    icon: Instagram,
+    icon: Camera,
     title: 'Follow Us on Instagram',
     description: 'Stay updated with our latest posts and stories',
     url: 'https://www.instagram.com/wisdomchurchhq',
@@ -529,7 +529,7 @@ export const communityLinks = [
     hoverColor: 'hover:from-pink-600 hover:to-pink-700',
   },
   {
-    icon: Youtube,
+    icon: MonitorPlay,
     title: 'Subscribe to Our YouTube',
     description: 'Watch our sermons and inspirational content',
     url: 'https://www.youtube.com/channel/UCJuXOj075x81CYK-cCuXwdg',

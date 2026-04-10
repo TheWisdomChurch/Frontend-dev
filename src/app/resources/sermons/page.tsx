@@ -22,7 +22,7 @@ import {
   FlexboxLayout,
 } from '@/shared/layout';
 import { useTheme } from '@/shared/contexts/ThemeContext';
-import { Youtube } from 'lucide-react';
+import { MonitorPlay } from 'lucide-react';
 import PageHero from '@/features/hero/PageHero';
 
 const SermonPage = () => {
@@ -64,7 +64,7 @@ const SermonPage = () => {
       platform: 'YouTube' as const,
       description: 'Full video messages with interactive features',
       action: 'Subscribe to Channel',
-      icon: <Youtube className="w-12 h-12" style={{ color: '#FF0000' }} />,
+      icon: <MonitorPlay className="w-12 h-12" style={{ color: '#FF0000' }} />,
     },
   ];
 
@@ -154,7 +154,7 @@ const SermonPage = () => {
                       curvature="full"
                       elevated={true}
                       leftIcon={
-                        <Youtube
+                        <MonitorPlay
                           className="w-5 h-5"
                           style={{ color: 'white' }}
                         />

@@ -4,11 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight,
-  Instagram,
+  Camera,
   Mail,
   MapPin,
+  MonitorPlay,
   Phone,
-  Youtube,
 } from 'lucide-react';
 
 import { useTheme } from '@/shared/contexts/ThemeContext';
@@ -40,12 +40,12 @@ const socialLinks = [
   {
     label: 'YouTube',
     href: 'https://www.youtube.com/@wisdomhousehq',
-    icon: Youtube,
+    icon: MonitorPlay,
   },
   {
     label: 'Instagram',
     href: 'https://www.instagram.com/wisdomhousehq',
-    icon: Instagram,
+    icon: Camera,
   },
 ];
 

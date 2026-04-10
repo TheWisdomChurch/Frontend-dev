@@ -1,12 +1,9 @@
-'use client';
-
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { ArrowRight, Check } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { Container, Section } from '@/shared/layout';
 import { BodyMD, Caption, H2, H3 } from '@/shared/text';
 
@@ -95,8 +92,6 @@ export function SectionHeading({
 }
 
 export function StatStrip({ items }: StatStripProps) {
-  const { colorScheme } = useTheme();
-
   return (
     <Section
       padding="md"
@@ -123,12 +118,9 @@ export function StatStrip({ items }: StatStripProps) {
                 {Icon ? (
                   <div
                     className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10"
-                    style={{ backgroundColor: colorScheme.opacity.primary10 }}
+                    style={{ backgroundColor: 'rgba(201, 168, 76, 0.12)' }}
                   >
-                    <Icon
-                      className="h-4 w-4"
-                      style={{ color: colorScheme.primary }}
-                    />
+                    <Icon className="h-4 w-4 text-[#d7bb75]" />
                   </div>
                 ) : null}
               </div>
@@ -152,7 +144,6 @@ function FeatureCard({
   item: FeatureItem;
   interactive: boolean;
 }) {
-  const { colorScheme } = useTheme();
   const Icon = item.icon;
 
   return (
@@ -161,9 +152,9 @@ function FeatureCard({
         {Icon ? (
           <div
             className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10"
-            style={{ backgroundColor: colorScheme.opacity.primary10 }}
+            style={{ backgroundColor: 'rgba(201, 168, 76, 0.12)' }}
           >
-            <Icon className="h-5 w-5" style={{ color: colorScheme.primary }} />
+            <Icon className="h-5 w-5 text-[#d7bb75]" />
           </div>
         ) : (
           <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04]" />
@@ -236,8 +227,6 @@ export function SplitSection({
   panelItems = [],
   children,
 }: SplitSectionProps) {
-  const { colorScheme } = useTheme();
-
   return (
     <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
       <div className="space-y-5">
@@ -255,12 +244,9 @@ export function SplitSection({
               >
                 <div
                   className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
-                  style={{ backgroundColor: colorScheme.opacity.primary10 }}
+                  style={{ backgroundColor: 'rgba(201, 168, 76, 0.12)' }}
                 >
-                  <Check
-                    className="h-4 w-4"
-                    style={{ color: colorScheme.primary }}
-                  />
+                  <Check className="h-4 w-4 text-[#d7bb75]" />
                 </div>
                 <p className="text-sm leading-relaxed text-white/70">{point}</p>
               </div>
@@ -271,7 +257,7 @@ export function SplitSection({
 
       <div
         className="rounded-[1.8rem] border border-white/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25))] p-6 sm:p-7"
-        style={{ boxShadow: `0 24px 70px ${colorScheme.opacity.black50}` }}
+        style={{ boxShadow: '0 24px 70px rgba(0, 0, 0, 0.5)' }}
       >
         {panelTitle ? (
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d7bb75]">
