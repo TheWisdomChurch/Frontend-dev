@@ -32,6 +32,7 @@ eslint.config.mjs
 # misc
 .DS_Store
 *.pem
+src/archive/
 
 # debug
 npm-debug.log*
