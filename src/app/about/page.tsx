@@ -4,7 +4,7 @@ import Image from 'next/image';
 import {
   BookOpenCheck,
   HeartHandshake,
-  ShieldCheck,
+  Shield,
   Sparkles,
   Users,
 } from 'lucide-react';
@@ -42,7 +42,7 @@ const culturePillars = [
     title: 'Excellence with integrity',
     description:
       'We steward people, systems, and service moments with clarity, order, and consistency.',
-    icon: ShieldCheck,
+    icon: Shield,
   },
 ];
 
