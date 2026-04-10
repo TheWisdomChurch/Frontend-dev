@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import type { ScrollTrigger as ScrollTriggerType } from 'gsap/ScrollTrigger';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,7 +29,9 @@ export function useScrollAnimation(
     animation(Array.from(elements) as HTMLElement[]);
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      (ScrollTrigger.getAll() as unknown as { kill: () => void }[]).forEach(
+        trigger => trigger.kill()
+      );
     };
   }, [selector, animation, config]);
 
