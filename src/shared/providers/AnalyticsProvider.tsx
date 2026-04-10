@@ -1,13 +1,14 @@
 'use client';
 
 import {
+  Suspense,
   useEffect,
   createContext,
   useContext,
   ReactNode,
   useCallback,
   useRef,
-  useState, // ✅ Added useState import
+  useState,
 } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
@@ -49,6 +50,43 @@ export interface AnalyticsContextValue {
 // ----------------------------------------------------------------------
 const AnalyticsContext = createContext<AnalyticsContextValue | null>(null);
 
+function AnalyticsPageTracker({
+  isReady,
+  debug,
+  previousPageRef,
+}: {
+  isReady: boolean;
+  debug: boolean;
+  previousPageRef: React.MutableRefObject<string>;
+}) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (!isReady) return;
+
+    const currentPath =
+      pathname +
+      (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+    if (previousPageRef.current === currentPath) return;
+
+    previousPageRef.current = currentPath;
+
+    const timeout = setTimeout(() => {
+      analyticsCore.trackPageView({
+        page_title: document.title,
+        page_location: window.location.href,
+        page_referrer: document.referrer,
+      });
+      if (debug) console.log('[AnalyticsProvider] Page view:', currentPath);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [pathname, searchParams, isReady, debug, previousPageRef]);
+
+  return null;
+}
+
 // ----------------------------------------------------------------------
 // Provider Component
 // ----------------------------------------------------------------------
@@ -62,8 +100,6 @@ export function AnalyticsProvider({
   gaConfig,
   debug = false,
 }: AnalyticsProviderProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const isReadyRef = useRef(false);
   const [isReady, setIsReady] = useState(false);
   const previousPageRef = useRef<string>('');
@@ -76,8 +112,6 @@ export function AnalyticsProvider({
 
     const initialize = async () => {
       if (debug) console.log('[AnalyticsProvider] Initializing...');
-
-      // ✅ Removed analyticsCore.loadConsentFromStorage() – core loads it automatically
 
       if (coreConfig) {
         if (debug) console.log('[AnalyticsProvider] Core config:', coreConfig);
@@ -117,7 +151,6 @@ export function AnalyticsProvider({
 
       // Register GA4 provider
       if (gaMeasurementId) {
-        // ✅ Fix: GA4 uses `debugMode`, not `debug`
         const gaProvider = getGA4Provider(gaMeasurementId, {
           debugMode: debug,
           ...gaConfig,
@@ -161,32 +194,7 @@ export function AnalyticsProvider({
   ]);
 
   // --------------------------------------------------------------------
-  // 2. Auto-track page views
-  // --------------------------------------------------------------------
-  useEffect(() => {
-    if (!isReady) return;
-
-    const currentPath =
-      pathname +
-      (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-    if (previousPageRef.current === currentPath) return;
-
-    previousPageRef.current = currentPath;
-
-    const timeout = setTimeout(() => {
-      analyticsCore.trackPageView({
-        page_title: document.title,
-        page_location: window.location.href,
-        page_referrer: document.referrer,
-      });
-      if (debug) console.log('[AnalyticsProvider] Page view:', currentPath);
-    }, 100);
-
-    return () => clearTimeout(timeout);
-  }, [pathname, searchParams, isReady, debug]);
-
-  // --------------------------------------------------------------------
-  // 3. Public API methods
+  // 2. Public API methods
   // --------------------------------------------------------------------
   const trackEvent = useCallback(
     (name: string, params?: Record<string, any>) => {
@@ -223,7 +231,7 @@ export function AnalyticsProvider({
   const getConsent = useCallback(() => analyticsCore.getConsent(), []);
 
   // --------------------------------------------------------------------
-  // 4. Context value
+  // 3. Context value
   // --------------------------------------------------------------------
   const contextValue: AnalyticsContextValue = {
     trackEvent,
@@ -235,6 +243,13 @@ export function AnalyticsProvider({
 
   return (
     <AnalyticsContext.Provider value={contextValue}>
+      <Suspense fallback={null}>
+        <AnalyticsPageTracker
+          isReady={isReady}
+          debug={debug}
+          previousPageRef={previousPageRef}
+        />
+      </Suspense>
       {children}
     </AnalyticsContext.Provider>
   );
