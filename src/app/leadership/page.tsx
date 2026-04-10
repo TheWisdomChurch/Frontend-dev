@@ -1,423 +1,283 @@
 'use client';
 
-import type React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import { H2, H3, BodyLG, BodySM, Caption, SmallText } from '@/shared/text';
-import PageHero from '@/features/hero/PageHero';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { apiClient } from '@/lib/api';
-import type {
-  LeadershipApplicationRequest,
-  LeadershipMember,
-  LeadershipRole,
-} from '@/lib/types';
-
-const ROLE_LABELS: Record<LeadershipRole, string> = {
-  senior_pastor: 'Senior Pastor',
-  associate_pastor: 'Associate Pastor',
-  deacon: 'Deacon',
-  deaconess: 'Deaconness',
-  reverend: 'Reverend',
-};
-
-const ROLE_ORDER: LeadershipRole[] = [
-  'senior_pastor',
-  'associate_pastor',
-  'reverend',
-  'deacon',
-  'deaconess',
-];
-
-const ddmm = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])$/;
-const ddmmyyyy = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-
-const emptyForm: LeadershipApplicationRequest = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  role: 'associate_pastor',
-  bio: '',
-  birthday: '',
-  anniversary: '',
-};
-
-function initials(firstName?: string, lastName?: string) {
-  const a = (firstName || '').trim()[0] || '';
-  const b = (lastName || '').trim()[0] || '';
-  return `${a}${b}`.toUpperCase() || 'LC';
-}
+import Link from 'next/link';
+import VideoBg from '@/shared/components/VideoBg';
 
 export default function LeadershipPage() {
-  const { colorScheme } = useTheme();
-  const [leaders, setLeaders] = useState<LeadershipMember[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const leaders = [
+    {
+      name: 'Bishop Gabriel Ayilara',
+      title: 'Senior Pastor',
+      bio: "Bishop Gabriel Ayilara is the Founder and Senior Pastor of The Wisdom Church. With a heart for excellence and a passion for transforming lives through God's Word, Bishop Gabriel leads with wisdom, vision, and biblical authority.",
+      role: 'spiritual-leader',
+    },
+    {
+      name: 'Pastor Kenny Ayilara',
+      title: 'Co-Pastor',
+      bio: 'Co-Pastor Kenny brings years of ministry experience and a deep commitment to discipleship and community outreach. Together with Bishop Gabriel, Pastor Kenny continues to build a legacy of faith and excellence.',
+      role: 'ministry-leader',
+    },
+  ];
 
-  const [form, setForm] = useState<LeadershipApplicationRequest>(emptyForm);
-  const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<{
-    type: 'success' | 'error';
-    text: string;
-  } | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    setLoading(true);
-    apiClient
-      .listLeadership()
-      .then(items => {
-        if (!active) return;
-        setLeaders(Array.isArray(items) ? items : []);
-        setLoadError(null);
-      })
-      .catch((err: any) => {
-        if (!active) return;
-        setLoadError(err?.message || 'Unable to load leadership.');
-        setLeaders([]);
-      })
-      .finally(() => {
-        if (!active) return;
-        setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const grouped = useMemo(
-    () =>
-      ROLE_ORDER.map(role => ({
-        role,
-        label: ROLE_LABELS[role],
-        items: leaders.filter(leader => leader.role === role),
-      })),
-    [leaders]
-  );
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitMessage(null);
-
-    if (!form.firstName.trim() || !form.lastName.trim()) {
-      setSubmitMessage({
-        type: 'error',
-        text: 'First and last name are required.',
-      });
-      return;
-    }
-    if (form.birthday && !ddmm.test(form.birthday)) {
-      setSubmitMessage({ type: 'error', text: 'Birthday must use DD/MM.' });
-      return;
-    }
-    if (form.anniversary && !ddmmyyyy.test(form.anniversary)) {
-      setSubmitMessage({
-        type: 'error',
-        text: 'Wedding anniversary must use DD/MM/YYYY.',
-      });
-      return;
-    }
-    if (profileImage && profileImage.size > 5 * 1024 * 1024) {
-      setSubmitMessage({
-        type: 'error',
-        text: 'Profile image must be 5MB or less.',
-      });
-      return;
-    }
-
-    try {
-      setSubmitting(true);
-      let imageUrl: string | undefined;
-      if (profileImage) {
-        const upload = await apiClient.uploadLeadershipImage(profileImage);
-        imageUrl = upload?.url;
-      }
-
-      await apiClient.applyLeadership({
-        firstName: form.firstName.trim(),
-        lastName: form.lastName.trim(),
-        email: form.email?.trim() || undefined,
-        phone: form.phone?.trim() || undefined,
-        role: form.role,
-        bio: form.bio?.trim() || undefined,
-        birthday: form.birthday?.trim() || undefined,
-        anniversary: form.anniversary?.trim() || undefined,
-        imageUrl,
-      });
-      setForm(emptyForm);
-      setProfileImage(null);
-      setSubmitMessage({
-        type: 'success',
-        text: 'Application submitted. Our leadership team will follow up soon.',
-      });
-    } catch (err: any) {
-      setSubmitMessage({
-        type: 'error',
-        text: err?.message || 'Unable to submit your application.',
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const ministries = [
+    {
+      num: '01',
+      title: 'Youth Ministry',
+      desc: 'Empowering the next generation with faith, purpose, and community.',
+    },
+    {
+      num: '02',
+      title: "Women's Ministry",
+      desc: 'Supporting women in faith, growth, and empowerment.',
+    },
+    {
+      num: '03',
+      title: "Men's Ministry",
+      desc: "Building strong men rooted in God's Word.",
+    },
+    {
+      num: '04',
+      title: 'Outreach & Missions',
+      desc: "Extending God's love through service and community impact.",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <PageHero
-        title="Leadership"
-        subtitle="Stewarding vision, people, and purpose."
-        note="Our leaders serve with humility and excellence. Meet the team and apply if you sense a call to leadership."
-        chips={['Pastors', 'Deacons', 'Teams', 'Service']}
-        compact
-      />
+    <>
+      {/* Hero */}
+      <section className="hero" style={{ minHeight: '80vh' }}>
+        <VideoBg
+          src="/videos/hero.mp4"
+          overlay={true}
+          overlayOpacity={0.35}
+          autoPlay={true}
+          muted={true}
+          loop={true}
+        />
+        <div className="hero-grid" />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#0b0b0b]">
-        <Container size="xl" className="space-y-8">
-          <div className="flex flex-col gap-2 fade-up">
-            <H3 className="text-2xl sm:text-3xl font-bold">
-              Meet the leadership
-            </H3>
-            <Caption className="text-white/60">
-              Approved leaders are displayed here. Applications are reviewed by
-              church leadership.
-            </Caption>
+        <div className="hero-content" style={{ maxWidth: '800px' }}>
+          <div className="hero-tag">
+            <span className="hero-tag-dot" />
+            Meet our leadership
           </div>
 
-          {loading && (
-            <BodySM className="text-white/60">Loading leadership...</BodySM>
-          )}
-          {loadError && <BodySM className="text-red-300">{loadError}</BodySM>}
+          <h1 className="hero-title">
+            Led by
+            <br />
+            <em>visionary leaders</em>
+          </h1>
 
-          {!loading &&
-            !loadError &&
-            grouped.map(group => (
-              <div key={group.role} className="space-y-4">
-                <SmallText className="text-white/70 uppercase tracking-[0.2em] text-xs">
-                  {group.label}
-                </SmallText>
+          <p className="hero-sub">
+            Our pastoral team is committed to serving the Wisdom Church
+            community with integrity, wisdom, and a heart for spiritual growth.
+          </p>
+        </div>
+      </section>
 
-                {group.items.length === 0 ? (
-                  <Caption className="text-white/50">
-                    No approved leaders yet.
-                  </Caption>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {group.items.map(leader => (
-                      <div
-                        key={leader.id}
-                        className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl shadow-xl fade-up"
-                      >
-                        <div className="flex items-center gap-4">
-                          {leader.imageUrl ? (
-                            <img
-                              src={leader.imageUrl}
-                              alt={`${leader.firstName} ${leader.lastName}`}
-                              className="h-14 w-14 rounded-full object-cover border border-white/15"
-                            />
-                          ) : (
-                            <div
-                              className="h-14 w-14 rounded-full flex items-center justify-center text-sm font-semibold"
-                              style={{
-                                background: `linear-gradient(140deg, ${colorScheme.primary} 0%, #1f2937 100%)`,
-                              }}
-                            >
-                              {initials(leader.firstName, leader.lastName)}
-                            </div>
-                          )}
+      <div className="times-bar">
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Vision</div>
+            <div className="time-val">Complete Believers</div>
+          </div>
+        </div>
+        <div className="time-sep" />
 
-                          <div className="space-y-1">
-                            <SmallText weight="bold" className="text-white">
-                              {leader.firstName} {leader.lastName}
-                            </SmallText>
-                            <Caption className="text-white/60">
-                              {ROLE_LABELS[leader.role]}
-                            </Caption>
-                          </div>
-                        </div>
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Mission</div>
+            <div className="time-val">Transform Lives</div>
+          </div>
+        </div>
+        <div className="time-sep" />
 
-                        {leader.bio && (
-                          <Caption className="text-white/65 mt-3 leading-relaxed">
-                            {leader.bio}
-                          </Caption>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-        </Container>
-      </Section>
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Culture</div>
+            <div className="time-val">Excellence & Love</div>
+          </div>
+        </div>
+        <div className="time-sep" />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <Container
-          size="xl"
-          className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8"
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Commitment</div>
+            <div className="time-val">Servant Leadership</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Senior Leadership */}
+      {leaders.map((leader, idx) => (
+        <section
+          key={leader.name}
+          style={{
+            background: idx % 2 === 0 ? 'var(--charcoal)' : 'transparent',
+            borderTop: idx % 2 === 0 ? '0.5px solid var(--border)' : 'none',
+          }}
         >
-          <div className="space-y-3 fade-up">
-            <H3 className="text-2xl sm:text-3xl font-bold">
-              Leadership registration
-            </H3>
-            <BodySM className="text-white/70">
-              This form is for Senior Pastor, Associate Pastor, Reverend,
-              Deacon, and Deaconness leadership categories.
-            </BodySM>
+          <div className="pastor-section">
+            <div className="pastor-img-wrap">
+              <div className="pastor-img-frame">
+                <div className="pastor-placeholder">✝</div>
+              </div>
+              <div className="pastor-badge">
+                <div className="pastor-badge-title">
+                  {leader.role === 'spiritual-leader' ? 'Senior' : 'Co'}
+                </div>
+                <div className="pastor-badge-name">
+                  {leader.name.split(' ').pop()}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <span className="section-tag">
+                {leader.role === 'spiritual-leader' ? 'Leadership' : 'Ministry'}
+              </span>
+              <h2 className="section-title">
+                {leader.name}
+                <br />
+                <em>{leader.title}</em>
+              </h2>
+
+              <p
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--text-muted)',
+                  lineHeight: '1.8',
+                  marginBottom: '2rem',
+                }}
+              >
+                {leader.bio}
+              </p>
+
+              <Link
+                href={`/leadership/${leader.name.toLowerCase().replace(' ', '-')}`}
+                className="btn-outline"
+              >
+                Learn More About This Leader
+              </Link>
+            </div>
+          </div>
+        </section>
+      ))}
+
+      {/* Ministry Leaders */}
+      <section
+        style={{
+          background: 'var(--charcoal)',
+          borderTop: '0.5px solid var(--border)',
+        }}
+      >
+        <span className="section-tag">Our Ministry Teams</span>
+        <h2 className="section-title" style={{ marginBottom: '3rem' }}>
+          Serving through
+          <br />
+          <em>diverse ministries</em>
+        </h2>
+
+        <div className="expect-grid">
+          {ministries.map(ministry => (
+            <Link
+              key={ministry.num}
+              href={`/ministries`}
+              className="expect-card"
+            >
+              <div className="expect-num">{ministry.num}</div>
+              <div className="expect-title">{ministry.title}</div>
+              <div className="expect-desc">{ministry.desc}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section>
+        <div className="event-banner">
+          <div>
+            <div className="event-tag">📧 Get Connected</div>
+            <div className="event-title">Connect With Our Pastoral Team</div>
+            <div className="event-desc">
+              Whether you need prayer, counsel, or want to get involved in
+              ministry, our team is ready to serve.
+            </div>
+          </div>
+          <Link href="/contact" className="btn-primary">
+            Contact Us
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer>
+        <div className="footer-top">
+          <div>
+            <div className="nav-logo">
+              <div className="nav-logo-icon">W</div>
+              <span className="nav-logo-text">The Wisdom Church</span>
+            </div>
+            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
+              Our leadership team is committed to serving you with integrity and
+              care.
+            </p>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-5 sm:p-7 shadow-2xl space-y-4 fade-up"
-            style={{ animationDelay: '80ms' }}
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-xs sm:text-sm text-white/80 space-y-1">
-                First name
-                <input
-                  name="firstName"
-                  value={form.firstName}
-                  onChange={handleChange}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-                />
-              </label>
+          <div>
+            <div className="footer-col-title">Quick Links</div>
+            <ul className="footer-links">
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
+              </li>
+              <li>
+                <Link href="/ministries">Ministries</Link>
+              </li>
+            </ul>
+          </div>
 
-              <label className="text-xs sm:text-sm text-white/80 space-y-1">
-                Last name
-                <input
-                  name="lastName"
-                  value={form.lastName}
-                  onChange={handleChange}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-                />
-              </label>
+          <div>
+            <div className="footer-col-title">Service Times</div>
+            <div className="footer-contact-item">
+              Sunday Worship
+              <br />
+              9:00 AM (WAT)
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-xs sm:text-sm text-white/80 space-y-1">
-                Email
-                <input
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-                />
-              </label>
-
-              <label className="text-xs sm:text-sm text-white/80 space-y-1">
-                Phone
-                <input
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-                />
-              </label>
+            <div className="footer-contact-item">
+              Midweek Service
+              <br />
+              Thursday · 6:00 PM
             </div>
+          </div>
 
-            <label className="text-xs sm:text-sm text-white/80 space-y-1">
-              Role
-              <select
-                name="role"
-                value={form.role}
-                onChange={handleChange}
-                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-              >
-                {ROLE_ORDER.map(role => (
-                  <option key={role} value={role}>
-                    {ROLE_LABELS[role]}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-sm text-white/80 space-y-1">
-                Birthday (DD/MM)
-                <input
-                  name="birthday"
-                  value={form.birthday || ''}
-                  onChange={handleChange}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-                  placeholder="25/12"
-                />
-              </label>
-
-              <label className="text-sm text-white/80 space-y-1">
-                Wedding anniversary (DD/MM/YYYY)
-                <input
-                  name="anniversary"
-                  value={form.anniversary || ''}
-                  onChange={handleChange}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-                  placeholder="16/06/2014"
-                />
-              </label>
+          <div>
+            <div className="footer-col-title">Contact</div>
+            <div className="footer-contact-item">
+              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
             </div>
+            <div className="footer-contact-item">0706 999 5333</div>
+            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
+          </div>
+        </div>
 
-            <label className="text-sm text-white/80 space-y-1 block">
-              Profile image (max 5MB)
-              <input
-                type="file"
-                accept="image/png,image/jpeg,image/jpg,image/webp"
-                onChange={e => setProfileImage(e.target.files?.[0] || null)}
-                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary"
-              />
-            </label>
-
-            <label className="text-sm text-white/80 space-y-1 block">
-              Short bio (optional)
-              <textarea
-                name="bio"
-                value={form.bio}
-                onChange={handleChange}
-                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 outline-none focus:border-primary min-h-[110px]"
-                placeholder="Share your leadership assignment and experience."
-              />
-            </label>
-
-            {submitMessage && (
-              <Caption
-                className={`${
-                  submitMessage.type === 'success'
-                    ? 'text-emerald-300'
-                    : 'text-red-300'
-                }`}
-              >
-                {submitMessage.text}
-              </Caption>
-            )}
-
-            <CustomButton
-              type="submit"
-              variant="primary"
-              size="md"
-              curvature="xl"
-              elevated
-              disabled={submitting}
-              className="w-full"
-            >
-              {submitting ? 'Submitting...' : 'Submit leadership application'}
-            </CustomButton>
-          </form>
-        </Container>
-      </Section>
-    </div>
+        <div className="footer-bottom">
+          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
+          <div className="footer-bottom-links">
+            <Link href="/terms">Privacy Policy</Link>
+            <Link href="/cookies">Terms of Service</Link>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }

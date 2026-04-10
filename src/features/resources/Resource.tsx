@@ -128,20 +128,20 @@ export default function ResourceSection() {
       className="relative overflow-hidden"
       style={{ background: '#070707' }}
     >
-      <Container size="xl" className="relative z-10 space-y-6">
+      <Container size="xl" className="relative z-10 space-y-12">
         {/* HEADER */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div className="space-y-3">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="space-y-4">
             <Caption
               className="uppercase tracking-[0.22em] text-[0.62rem]"
               style={{ color: colorScheme.primary }}
             >
               Resources & Media
             </Caption>
-            <H3 className="text-[1.4rem] sm:text-2xl font-semibold text-white leading-tight">
+            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
               Streams, sermons, events, and pastoral care
             </H3>
-            <BodySM className="text-white/70 max-w-3xl text-[0.82rem] sm:text-sm">
+            <BodySM className="text-white/70 max-w-3xl text-sm sm:text-base">
               Catch up on sermons, join a live service, register for events, or
               request pastoral moments.
             </BodySM>
@@ -149,15 +149,15 @@ export default function ResourceSection() {
 
           <Link
             href="/resources"
-            className="inline-flex items-center gap-2 text-white text-[0.78rem] sm:text-sm font-semibold px-4 py-2 rounded-full border border-white/20 hover:bg-white/10"
+            className="inline-flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-full border border-white/20 hover:bg-white/10"
           >
             View all resources <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8">
           {/* LEFT: Latest video */}
-          <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-[#111] p-5 sm:p-6 shadow-2xl space-y-4">
+          <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#111] p-6 sm:p-7 shadow-2xl space-y-5">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/0 to-white/10" />
             <div className="relative flex items-center gap-3 text-white/80 text-sm">
               <span
@@ -173,7 +173,7 @@ export default function ResourceSection() {
                 <H3 className="text-lg sm:text-xl font-semibold text-white">
                   Latest from YouTube
                 </H3>
-                <BodySM className="text-white/70 text-[0.82rem] sm:text-sm">
+                <BodySM className="text-white/70 text-sm sm:text-base">
                   Stream Sundays & Thursdays. Turn on reminders so you never
                   miss a moment.
                 </BodySM>

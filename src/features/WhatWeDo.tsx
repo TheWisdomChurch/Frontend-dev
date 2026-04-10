@@ -19,7 +19,7 @@ export default function WhatWeDo() {
         ref={el => addToBoxesRef(el, index)}
         className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-[0_22px_60px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(0,0,0,0.45)]"
       >
-        <div className="relative h-48 sm:h-56 lg:h-60 overflow-hidden">
+        <div className="relative h-52 sm:h-60 lg:h-64 overflow-hidden">
           <Image
             src={box.image}
             alt={box.imageAlt}
@@ -36,15 +36,15 @@ export default function WhatWeDo() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/55 to-black/80" />
         </div>
 
-        <div className="relative z-10 px-4 pb-5 pt-4 sm:px-5">
+        <div className="relative z-10 px-5 pb-6 pt-5 sm:px-6">
           <h3
-            className="text-[0.95rem] sm:text-base font-semibold"
+            className="text-base sm:text-lg font-semibold"
             style={{ color: colorScheme.primary }}
           >
             {box.title}
           </h3>
           <BodySM
-            className="mt-2 text-[0.78rem] sm:text-sm leading-relaxed text-white/70"
+            className="mt-3 text-sm sm:text-base leading-relaxed text-white/70"
             useThemeColor={false}
           >
             {box.description}
@@ -64,8 +64,8 @@ export default function WhatWeDo() {
       className="relative overflow-hidden"
     >
       <Container size="xl" className="relative z-10">
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end pt-6 sm:pt-8 lg:pt-10 pb-6">
-          <div className="space-y-4">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end pb-4">
+          <div className="space-y-5">
             <div
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-white/70"
               style={{ color: '#fff' }}
@@ -74,7 +74,7 @@ export default function WhatWeDo() {
             </div>
             <H2
               ref={headingRef}
-              className="leading-tight text-left text-xl sm:text-2xl lg:text-3xl font-semibold"
+              className="leading-tight text-left text-2xl sm:text-3xl lg:text-4xl font-semibold"
               style={{ color: '#FFFFFF' }}
               useThemeColor={false}
               weight="semibold"
@@ -84,7 +84,7 @@ export default function WhatWeDo() {
           </div>
           <div ref={textRef}>
             <BodySM
-              className="leading-relaxed text-[0.78rem] sm:text-sm text-white/70"
+              className="leading-relaxed text-sm sm:text-base text-white/70"
               useThemeColor={false}
             >
               {missionStatement}
@@ -92,7 +92,7 @@ export default function WhatWeDo() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 pb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 pb-2">
           {whatWeDoData.map((box, index) => renderBox(box, index))}
         </div>
       </Container>

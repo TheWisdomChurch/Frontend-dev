@@ -1,445 +1,328 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import PageHero from '@/features/hero/PageHero';
-import { resourceLinks } from '@/lib/data';
-import { Radio, Sparkles, X, Youtube, Bell, Search } from 'lucide-react';
-
-type Category =
-  | 'all'
-  | 'media'
-  | 'live'
-  | 'events'
-  | 'store'
-  | 'care'
-  | 'books';
-
-const categories: Category[] = [
-  'all',
-  'media',
-  'live',
-  'events',
-  'store',
-  'care',
-  'books',
-];
-
-const quickActions = [
-  {
-    title: 'Watch live',
-    desc: 'Sunday & Thursday stream',
-    href: '/resources/sermons',
-    icon: Radio,
-  },
-  {
-    title: 'Latest sermon',
-    desc: 'Catch last gathering',
-    href: '/resources/sermons',
-    icon: Youtube,
-  },
-  {
-    title: 'Events',
-    desc: 'Conferences & programs',
-    href: '/events',
-    icon: Sparkles,
-  },
-  {
-    title: 'Store',
-    desc: 'Merch, books, devotionals',
-    href: '/resources/store',
-    icon: Sparkles,
-  },
-  {
-    title: 'Publications',
-    desc: 'Books & study guides',
-    href: '/resources/publications',
-    icon: Sparkles,
-  },
-  {
-    title: 'Care & Counsel',
-    desc: 'Pastoral support',
-    href: '/pastoral',
-    icon: Bell,
-  },
-] as const;
+import VideoBg from '@/shared/components/VideoBg';
+import { useState } from 'react';
 
 export default function ResourcesPage() {
-  const { colorScheme, isDark } = useTheme();
+  const [activeTab, setActiveTab] = useState('all');
 
-  const [activeCategory, setActiveCategory] = useState<Category>('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showLiveModal, setShowLiveModal] = useState(false);
-  const [email, setEmail] = useState('');
+  const resources = [
+    {
+      id: 1,
+      type: 'sermon',
+      title: 'The Power of Faith',
+      date: 'Jan 15, 2024',
+      icon: '🎙️',
+      desc: 'Powerful message on trusting God',
+    },
+    {
+      id: 2,
+      type: 'blog',
+      title: 'Spiritual Growth Habits',
+      date: 'Jan 10, 2024',
+      icon: '📝',
+      desc: 'Daily practices for spiritual development',
+    },
+    {
+      id: 3,
+      type: 'guide',
+      title: 'Prayer Guide',
+      date: 'Jan 5, 2024',
+      icon: '🙏',
+      desc: 'How to develop a consistent prayer life',
+    },
+    {
+      id: 4,
+      type: 'video',
+      title: 'Bible Study Series',
+      date: 'Dec 28, 2023',
+      icon: '📺',
+      desc: 'In-depth study of book of Romans',
+    },
+    {
+      id: 5,
+      type: 'sermon',
+      title: 'Overcoming Obstacles',
+      date: 'Dec 20, 2023',
+      icon: '🎙️',
+      desc: 'Finding victory through faith',
+    },
+    {
+      id: 6,
+      type: 'publication',
+      title: 'Monthly Newsletter',
+      date: 'Dec 15, 2023',
+      icon: '📰',
+      desc: 'Church updates and spiritual insights',
+    },
+  ];
 
-  const filteredResources = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
-
-    return resourceLinks.filter(resource => {
-      const categoryMatch =
-        activeCategory === 'all' ||
-        (activeCategory === 'media' && resource.path.includes('/sermons')) ||
-        (activeCategory === 'live' && resource.isLiveService) ||
-        (activeCategory === 'events' && resource.path.includes('/events')) ||
-        (activeCategory === 'store' && resource.path.includes('/store')) ||
-        (activeCategory === 'care' && resource.path.includes('/pastoral')) ||
-        (activeCategory === 'books' && resource.path.includes('/publications'));
-
-      if (!term) return categoryMatch;
-
-      const haystack =
-        `${resource.title} ${resource.subtitle} ${resource.description}`.toLowerCase();
-      return categoryMatch && haystack.includes(term);
-    });
-  }, [activeCategory, searchTerm]);
-
-  const handleLiveServiceClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    isLive?: boolean
-  ) => {
-    if (!isLive) return;
-    e.preventDefault();
-    setShowLiveModal(true);
-  };
-
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setEmail('');
-    setShowLiveModal(false);
-  };
+  const filtered =
+    activeTab === 'all'
+      ? resources
+      : resources.filter(r => r.type === activeTab);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <PageHero
-        title="Resource Center"
-        subtitle="Everything you need in one place."
-        note="Live streams, sermons, events, publications, store, and pastoral care — curated for your growth."
-        chips={['Live', 'Sermons', 'Events', 'Store', 'Books', 'Care']}
-        compact
-      />
-
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-50"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-            backgroundSize: '34px 34px',
-            maskImage:
-              'radial-gradient(circle at 50% 34%, black 42%, transparent 92%)',
-            WebkitMaskImage:
-              'radial-gradient(circle at 50% 34%, black 42%, transparent 92%)',
-          }}
+    <>
+      <section className="hero" style={{ minHeight: '75vh' }}>
+        <VideoBg
+          src="/videos/hero.mp4"
+          overlay={true}
+          overlayOpacity={0.35}
+          autoPlay={true}
+          muted={true}
+          loop={true}
         />
-        <div
-          className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"
-          style={{ background: `${colorScheme.primary}14` }}
-        />
+        <div className="hero-grid" />
 
-        <Container size="xl" className="relative z-10 space-y-5 sm:space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {quickActions.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
-                  style={{ boxShadow: '0 12px 28px rgba(0,0,0,0.22)' }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{
-                      background: `radial-gradient(circle at 85% 15%, ${colorScheme.primary}18 0%, transparent 52%)`,
-                    }}
-                  />
-                  <div className="relative flex items-start gap-3">
-                    <div
-                      className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
-                      style={{ backgroundColor: colorScheme.opacity.primary10 }}
-                    >
-                      <Icon
-                        className="w-4 h-4"
-                        style={{ color: colorScheme.primary }}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <Caption className="text-[10px] tracking-[0.18em] text-white/45 mb-1 block">
-                        {String(index + 1).padStart(2, '0')}
-                      </Caption>
-                      <H3 className="text-sm sm:text-[15px] font-semibold leading-tight mb-1">
-                        {item.title}
-                      </H3>
-                      <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
-                        {item.desc}
-                      </SmallText>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+        <div className="hero-content" style={{ maxWidth: '800px' }}>
+          <div className="hero-tag">
+            <span className="hero-tag-dot" />
+            Spiritual Growth Resources
           </div>
-        </Container>
-      </Section>
+          <h1 className="hero-title">
+            Grow in
+            <br />
+            <em>your faith</em>
+          </h1>
+          <p className="hero-sub">
+            Access sermons, Bible studies, teaching resources, and more to
+            deepen your relationship with God.
+          </p>
+        </div>
+      </section>
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#070707]">
-        <Container size="xl" className="space-y-5 sm:space-y-6">
-          <div className="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-4 sm:gap-5 lg:gap-6 items-start">
-            <aside className="xl:sticky xl:top-24 space-y-4">
-              <div
-                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5"
-                style={{
-                  background:
-                    'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.2) 100%)',
-                  boxShadow: '0 16px 40px rgba(0,0,0,0.28)',
-                }}
-              >
-                <H2 className="text-lg sm:text-xl font-semibold mb-1.5 leading-tight">
-                  Resource library
-                </H2>
-                <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
-                  Browse by category or search.
-                </SmallText>
-
-                <div className="mt-4 grid grid-cols-2 gap-2">
-                  {categories.map(cat => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setActiveCategory(cat)}
-                      className={`rounded-xl border px-3 py-2 text-[11px] sm:text-xs font-semibold transition-colors ${
-                        activeCategory === cat
-                          ? 'text-black border-transparent'
-                          : 'text-white border-white/10 bg-white/[0.03] hover:bg-white/[0.06]'
-                      }`}
-                      style={
-                        activeCategory === cat
-                          ? {
-                              backgroundColor: colorScheme.primary,
-                              color: colorScheme.black,
-                            }
-                          : undefined
-                      }
-                    >
-                      {cat === 'all'
-                        ? 'All'
-                        : cat[0].toUpperCase() + cat.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div
-                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5"
-                style={{
-                  background:
-                    'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.18) 100%)',
-                }}
-              >
-                <label className="relative block">
-                  <span className="sr-only">Search resources</span>
-                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" />
-                  <input
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                    placeholder="Search resources..."
-                    className="w-full rounded-xl border border-white/10 bg-black/35 pl-9 pr-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
-                  />
-                </label>
-                <Caption className="text-white/60 text-[11px] mt-2 block">
-                  Showing {filteredResources.length} resources
-                </Caption>
-              </div>
-            </aside>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-              {filteredResources.map(resource => {
-                const Icon = resource.icon || Sparkles;
-                return (
-                  <Link
-                    key={resource.title}
-                    href={resource.path}
-                    onClick={e =>
-                      handleLiveServiceClick(e, resource.isLiveService)
-                    }
-                    className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
-                    style={{
-                      background:
-                        'linear-gradient(150deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.2) 100%)',
-                      boxShadow: '0 16px 36px rgba(0,0,0,0.25)',
-                    }}
-                  >
-                    <div
-                      className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                      style={{
-                        background: `radial-gradient(circle at 86% 12%, ${colorScheme.primary}16 0%, transparent 48%)`,
-                      }}
-                    />
-
-                    <div className="relative flex h-full flex-col gap-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-start gap-3 min-w-0">
-                          <div
-                            className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
-                            style={{
-                              backgroundColor: colorScheme.opacity.primary10,
-                            }}
-                          >
-                            <Icon
-                              className="w-4 h-4"
-                              style={{ color: colorScheme.primary }}
-                            />
-                          </div>
-                          <div className="min-w-0">
-                            <Caption className="text-white/55 text-[10px] sm:text-[11px] block mb-1 leading-tight">
-                              {resource.subtitle}
-                            </Caption>
-                            <H3 className="text-sm sm:text-base font-semibold leading-tight text-white">
-                              {resource.title}
-                            </H3>
-                          </div>
-                        </div>
-                        <span className="text-white/45 text-sm transition-transform duration-300 group-hover:translate-x-0.5">
-                          →
-                        </span>
-                      </div>
-
-                      <BodyMD className="text-white/70 text-xs sm:text-sm leading-relaxed">
-                        {resource.description}
-                      </BodyMD>
-
-                      <div className="mt-auto pt-1">
-                        <Caption
-                          className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.14em]"
-                          style={{ color: colorScheme.primary }}
-                        >
-                          {resource.actionText || 'Read More →'}
-                        </Caption>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      {showLiveModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-0 sm:p-6">
-          <div
-            className="relative w-full max-w-md overflow-hidden rounded-t-3xl sm:rounded-3xl border"
-            style={{
-              background: isDark
-                ? `linear-gradient(145deg, ${colorScheme.surface}ee, ${colorScheme.surfaceVariant}cc)`
-                : 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-              borderColor: isDark ? '#333' : '#E5E7EB',
-              boxShadow: '0 30px 60px rgba(0,0,0,0.65)',
-            }}
-          >
-            <div className="flex justify-center pt-3 pb-1.5 sm:hidden">
-              <span className="h-1.5 w-12 rounded-full bg-black/20" />
-            </div>
-
-            <button
-              onClick={() => setShowLiveModal(false)}
-              className="absolute top-3 right-3 z-10 p-2 rounded-full bg-black/15 hover:bg-black/25 transition-colors"
-              style={{ color: isDark ? '#FFFFFF' : '#000000' }}
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="p-5 sm:p-6 lg:p-7 space-y-4 sm:space-y-5">
-              <div className="text-center space-y-2">
-                <div
-                  className="mx-auto inline-flex items-center justify-center w-12 h-12 rounded-2xl"
-                  style={{ backgroundColor: `${colorScheme.primary}20` }}
-                >
-                  <Radio
-                    className="w-6 h-6"
-                    style={{ color: colorScheme.primary }}
-                  />
-                </div>
-                <H2
-                  className="text-lg sm:text-xl font-semibold leading-tight"
-                  style={{ color: isDark ? '#FFFFFF' : '#000000' }}
-                >
-                  Never miss a live service
-                </H2>
-                <BodyMD
-                  className="text-sm leading-relaxed"
-                  style={{ color: isDark ? colorScheme.textSecondary : '#555' }}
-                >
-                  Get alerts for every stream and access the full video library.
-                </BodyMD>
-              </div>
-
-              <button
-                onClick={() =>
-                  window.open(
-                    'https://www.youtube.com/@wisdomhousehq',
-                    '_blank'
-                  )
-                }
-                className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition hover:scale-[1.01] flex items-center justify-center gap-2"
-                style={{ backgroundColor: '#FF0000', color: 'white' }}
-              >
-                <Youtube className="w-4 h-4" />
-                Subscribe on YouTube
-              </button>
-
-              <form onSubmit={handleEmailSubmit} className="space-y-3">
-                <label
-                  className="block text-xs sm:text-sm font-medium"
-                  style={{ color: isDark ? '#FFFFFF' : '#000000' }}
-                >
-                  Or get email reminders
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition text-sm"
-                  style={{
-                    backgroundColor: isDark ? colorScheme.surface : '#FFFFFF',
-                    borderColor: isDark ? '#333' : '#E5E7EB',
-                    color: isDark ? '#FFFFFF' : '#000000',
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition hover:scale-[1.01]"
-                  style={{
-                    backgroundColor: colorScheme.primary,
-                    color: colorScheme.black,
-                  }}
-                >
-                  Notify me
-                </button>
-              </form>
-
-              <p
-                className="text-[11px] sm:text-xs text-center leading-relaxed"
-                style={{ color: isDark ? colorScheme.textSecondary : '#666' }}
-              >
-                We’ll email you before each live service starts.
-              </p>
-            </div>
+      <div className="times-bar">
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Sermons Available</div>
+            <div className="time-val">100+</div>
           </div>
         </div>
-      )}
-    </div>
+        <div className="time-sep" />
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Bible Studies</div>
+            <div className="time-val">30+</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Books</div>
+            <div className="time-val">15+</div>
+          </div>
+        </div>
+        <div className="time-sep" />
+        <div className="time-item">
+          <div className="time-icon">✦</div>
+          <div>
+            <div className="time-label">Videos</div>
+            <div className="time-val">50+</div>
+          </div>
+        </div>
+      </div>
+
+      <section style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            marginBottom: '2rem',
+          }}
+        >
+          {['all', 'sermon', 'blog', 'guide', 'video'].map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={activeTab === tab ? 'btn-primary' : 'btn-outline'}
+              style={{ cursor: 'pointer', textTransform: 'capitalize' }}
+            >
+              {tab === 'all'
+                ? 'All Resources'
+                : tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '2rem',
+            marginBottom: '4rem',
+          }}
+        >
+          {filtered.map(resource => (
+            <Link
+              key={resource.id}
+              href={`/resources/${resource.type}/${resource.id}`}
+              className="expect-card"
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+                {resource.icon}
+              </div>
+              <div className="expect-title">{resource.title}</div>
+              <div
+                style={{
+                  fontSize: '12px',
+                  color: 'var(--text-muted)',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                {resource.date}
+              </div>
+              <p
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--text-muted)',
+                  lineHeight: '1.6',
+                }}
+              >
+                {resource.desc}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section
+        style={{
+          background: 'var(--charcoal)',
+          borderTop: '0.5px solid var(--border)',
+        }}
+      >
+        <span className="section-tag">Support Ministry</span>
+        <h2 className="section-title" style={{ marginBottom: '2rem' }}>
+          Shop our
+          <br />
+          <em>ministry store</em>
+        </h2>
+        <p
+          style={{
+            color: 'var(--text-muted)',
+            marginBottom: '2rem',
+            maxWidth: '600px',
+          }}
+        >
+          Purchase books, materials, and merchandise to support the ministry and
+          deepen your spiritual journey.
+        </p>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '2rem',
+            marginBottom: '2rem',
+          }}
+        >
+          {[1, 2, 3].map(i => (
+            <div
+              key={i}
+              className="expect-card"
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📚</div>
+              <div className="expect-title">Ministry Resources</div>
+              <div
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--text-muted)',
+                  marginBottom: '1rem',
+                }}
+              >
+                Learn more
+              </div>
+              <button className="btn-outline" style={{ cursor: 'pointer' }}>
+                View Store
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div className="event-banner">
+          <div>
+            <div className="event-tag">📚 Learn & Grow</div>
+            <div className="event-title">Subscribe to Updates</div>
+            <div className="event-desc">
+              Get weekly sermon digests, Bible study guides, and resources
+              delivered to your inbox.
+            </div>
+          </div>
+          <Link href="/contact" className="btn-primary">
+            Subscribe Now
+          </Link>
+        </div>
+      </section>
+
+      <footer>
+        <div className="footer-top">
+          <div>
+            <div className="nav-logo">
+              <div className="nav-logo-icon">W</div>
+              <span className="nav-logo-text">The Wisdom Church</span>
+            </div>
+            <p className="footer-brand-desc" style={{ marginTop: '1rem' }}>
+              Resources for spiritual growth and Christian development.
+            </p>
+          </div>
+          <div>
+            <div className="footer-col-title">Quick Links</div>
+            <ul className="footer-links">
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+              <li>
+                <Link href="/events">Events</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div className="footer-col-title">Service Times</div>
+            <div className="footer-contact-item">
+              Sunday Worship
+              <br />
+              9:00 AM (WAT)
+            </div>
+            <div className="footer-contact-item">
+              Midweek Service
+              <br />
+              Thursday · 6:00 PM
+            </div>
+          </div>
+          <div>
+            <div className="footer-col-title">Contact</div>
+            <div className="footer-contact-item">
+              Honor Gardens, Alasia, Lekki-Epe Expressway, Lagos
+            </div>
+            <div className="footer-contact-item">0706 999 5333</div>
+            <div className="footer-contact-item">Wisdomhousehq@gmail.com</div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026 The Wisdom House Church. All Rights Reserved.</span>
+          <div className="footer-bottom-links">
+            <Link href="/terms">Privacy Policy</Link>
+            <Link href="/cookies">Terms of Service</Link>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }

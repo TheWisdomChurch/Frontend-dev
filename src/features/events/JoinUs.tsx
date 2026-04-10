@@ -311,26 +311,26 @@ export default function JoinWisdomHouse() {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/75 to-black/85 pointer-events-none" />
 
-      <Container size="xl" className="relative z-10 space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 items-start">
-          <div className="space-y-4">
+      <Container size="xl" className="relative z-10 space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-12 items-start">
+          <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/25 bg-white/5 text-white text-[0.62rem] uppercase tracking-[0.2em]">
               <Sparkles className="w-3.5 h-3.5" />
               “Two are better than one” — Ecclesiastes 4:9
             </div>
 
-            <H2 className="text-[1.4rem] sm:text-3xl lg:text-4xl font-semibold text-white leading-tight">
+            <H2 className="text-2xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight">
               Join the{' '}
               <span style={{ color: colorScheme.primary }}>Wisdom Church</span>{' '}
               workforce
             </H2>
 
-            <BodySM className="text-white/70 max-w-2xl text-[0.82rem] sm:text-sm">
+            <BodySM className="text-white/70 max-w-2xl text-sm sm:text-base">
               Serving together is worship. Hospitality, music, media, prayer,
               and tech—pick a lane, get trained, and build the body with joy.
             </BodySM>
 
-            <div className="flex flex-col gap-2 text-white/70 text-[0.78rem] sm:text-sm">
+            <div className="flex flex-col gap-3 text-white/70 text-sm sm:text-base">
               <div className="flex items-center gap-2">
                 <span
                   className="h-2 w-2 rounded-full"
@@ -351,19 +351,19 @@ export default function JoinWisdomHouse() {
           {/* ✅ QUICK SIGNUP FORM */}
           <form
             onSubmit={onQuickSubmit}
-            className="rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-5 sm:p-6 shadow-2xl space-y-4"
+            className="rounded-2xl border border-white/15 bg-white/5 backdrop-blur-xl p-6 sm:p-8 shadow-2xl space-y-5"
           >
-            <SmallText className="text-white/80 text-[0.78rem]">
+            <SmallText className="text-white/80 text-sm">
               Quick signup
             </SmallText>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-[0.78rem] text-white/80 space-y-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <label className="text-sm text-white/80 space-y-2">
                 Full Name
                 <input
                   type="text"
                   {...registerQuick('name')}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 text-[0.82rem] outline-none focus:border-primary"
+                  className="w-full rounded-lg bg-black/40 border border-white/20 text-white px-3 py-2.5 text-sm outline-none focus:border-primary"
                 />
                 {quickErrors.name && (
                   <span className="text-xs text-amber-300">
@@ -372,12 +372,12 @@ export default function JoinWisdomHouse() {
                 )}
               </label>
 
-              <label className="text-[0.78rem] text-white/80 space-y-1">
+              <label className="text-sm text-white/80 space-y-2">
                 Email
                 <input
                   type="email"
                   {...registerQuick('email')}
-                  className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 text-[0.82rem] outline-none focus:border-primary"
+                  className="w-full rounded-lg bg-black/40 border border-white/20 text-white px-3 py-2.5 text-sm outline-none focus:border-primary"
                 />
                 {quickErrors.email && (
                   <span className="text-xs text-amber-300">
@@ -387,11 +387,11 @@ export default function JoinWisdomHouse() {
               </label>
             </div>
 
-            <label className="text-[0.78rem] text-white/80 space-y-1">
+            <label className="text-sm text-white/80 space-y-2">
               Preferred Team
               <select
                 {...registerQuick('team')}
-                className="w-full rounded-xl bg-black/40 border border-white/20 text-white px-3 py-2 text-[0.82rem] outline-none focus:border-primary"
+                className="w-full rounded-lg bg-black/40 border border-white/20 text-white px-3 py-2.5 text-sm outline-none focus:border-primary"
               >
                 <option value="">Select a team</option>
                 {departments.map(dept => (
@@ -413,7 +413,7 @@ export default function JoinWisdomHouse() {
               size="md"
               curvature="xl"
               elevated
-              className="w-full text-[0.82rem]"
+              className="w-full text-sm py-3"
               disabled={quickSubmitting}
             >
               {quickSubmitting
