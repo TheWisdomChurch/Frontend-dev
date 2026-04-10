@@ -5,13 +5,14 @@ import Link from 'next/link';
 import {
   ArrowRight,
   Camera,
+  Globe,
   Mail,
   MapPin,
   MonitorPlay,
-  Phone,
+  PhoneCall,
 } from 'lucide-react';
 
-import { useTheme } from '@/shared/contexts/ThemeContext';
+import { Container } from '@/shared/layout';
 import { WisdomeHouseLogo } from '@/shared/assets';
 
 const siteLinks = [
@@ -31,9 +32,9 @@ const careLinks = [
 ];
 
 const serviceTimes = [
-  'Sunday Worship: 9:00 AM',
-  'Midweek Service: Thursday, 6:00 PM',
-  'Prayer & pastoral support available by request',
+  '🕘 Sunday Worship: 9:00 AM',
+  '🕕 Midweek Service: Thursday, 6:00 PM',
+  '🙏 Prayer & pastoral support available by request',
 ];
 
 const socialLinks = [
@@ -47,32 +48,61 @@ const socialLinks = [
     href: 'https://www.instagram.com/wisdomhousehq',
     icon: Camera,
   },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/wisdomhousehq',
+    icon: Globe,
+  },
 ];
 
 export default function Footer() {
-  const { colorScheme } = useTheme();
-
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#040404] text-white">
+    <footer
+      className="relative overflow-hidden border-t"
+      style={{
+        borderColor: 'var(--color-border-light)',
+        backgroundColor: 'var(--color-bg-deep)',
+        color: 'var(--color-text-primary)',
+      }}
+    >
+      {/* Decorative Gradient Background */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-70"
+        className="pointer-events-none absolute inset-0 opacity-50"
         style={{
           background:
-            'radial-gradient(circle at 15% 18%, rgba(215,187,117,0.14), transparent 28%), radial-gradient(circle at 88% 82%, rgba(215,187,117,0.1), transparent 30%)',
+            'radial-gradient(circle at 12% 20%, rgba(215, 187, 117, 0.1), transparent 32%), radial-gradient(circle at 85% 80%, rgba(215, 187, 117, 0.08), transparent 30%)',
         }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
-        <div className="grid gap-8 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+      <Container size="xl" className="relative py-16 sm:py-20 lg:py-24">
+        {/* Main CTA Section */}
+        <div
+          className="rounded-3xl p-8 sm:p-12 lg:p-14 mb-16 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end"
+          style={{
+            backgroundColor: 'rgba(215, 187, 117, 0.08)',
+            border: '1px solid var(--color-border-light)',
+          }}
+        >
           <div className="space-y-4">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
-              Visit Wisdom Church
+            <p
+              className="text-sm uppercase tracking-widest font-semibold"
+              style={{ color: 'var(--color-gold)' }}
+            >
+              Build Your Week
             </p>
-            <h2 className="max-w-2xl text-3xl font-semibold leading-tight text-white sm:text-4xl">
-              Build your week around worship, sound teaching, and meaningful
-              community.
+            <h2
+              className="font-serif"
+              style={{
+                fontSize: 'clamp(1.75rem, 5vw, 3rem)',
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              Around worship, sound teaching, and meaningful community.
             </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
+            <p
+              className="max-w-2xl text-base leading-relaxed"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
               Whether you are exploring faith, returning to church, or looking
               for a place to serve, there is room for you here.
             </p>
@@ -81,28 +111,29 @@ export default function Footer() {
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-black transition hover:opacity-90"
-              style={{
-                background: colorScheme.primaryGradient,
-                boxShadow: `0 14px 36px ${colorScheme.opacity.primary20}`,
-              }}
+              className="btn-primary inline-flex items-center justify-center gap-2"
             >
               Plan your visit
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/resources/sermons"
-              className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+              className="btn-secondary inline-flex items-center justify-center"
             >
               Watch online
             </Link>
           </div>
         </div>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr_1fr]">
+        {/* Links Grid */}
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr_1fr] mb-12">
+          {/* Brand Section */}
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
+              <div
+                className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border"
+                style={{ borderColor: 'var(--color-border-light)' }}
+              >
                 <Image
                   src={WisdomeHouseLogo}
                   alt="The Wisdom Church"
@@ -112,100 +143,143 @@ export default function Footer() {
                 />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">
+                <p
+                  className="text-xs uppercase tracking-wider font-semibold"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
                   The Wisdom Church
                 </p>
-                <p className="text-sm text-white/58">
-                  Equipping and empowering for greatness
+                <p
+                  className="text-sm font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Experience. Equip. Empower.
                 </p>
               </div>
             </div>
 
-            <div className="grid gap-3 text-sm text-white/65">
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#d7bb75]" />
-                <span>
-                  Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe
-                  Expressway, Lagos
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 shrink-0 text-[#d7bb75]" />
-                <a
-                  href="tel:07069995333"
-                  className="transition hover:text-white"
+            <p
+              className="text-sm leading-relaxed"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              A vibrant, Spirit-filled community committed to raising leaders,
+              strengthening faith, and serving the nations with wisdom and love.
+            </p>
+
+            {/* Service Times */}
+            <div
+              className="space-y-2 pt-4 border-t"
+              style={{ borderColor: 'var(--color-border-light)' }}
+            >
+              {serviceTimes.map((time, idx) => (
+                <p
+                  key={idx}
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-tertiary)' }}
                 >
-                  0706 999 5333
-                </a>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 shrink-0 text-[#d7bb75]" />
-                <a
-                  href="mailto:Wisdomhousehq@gmail.com"
-                  className="transition hover:text-white"
-                >
-                  Wisdomhousehq@gmail.com
-                </a>
-              </div>
+                  {time}
+                </p>
+              ))}
             </div>
           </div>
 
+          {/* Site Links */}
           <div>
-            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
+            <h3
+              className="text-xs font-semibold uppercase tracking-wider mb-4"
+              style={{ color: 'var(--color-gold)' }}
+            >
               Explore
-            </p>
-            <div className="mt-4 grid gap-3 text-sm text-white/68">
+            </h3>
+            <nav className="space-y-3">
               {siteLinks.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="transition hover:text-white"
+                  className="block text-sm transition"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   {link.label}
                 </Link>
               ))}
-            </div>
+            </nav>
           </div>
 
+          {/* Care Links */}
           <div>
-            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
+            <h3
+              className="text-xs font-semibold uppercase tracking-wider mb-4"
+              style={{ color: 'var(--color-gold)' }}
+            >
               Community
-            </p>
-            <div className="mt-4 grid gap-3 text-sm text-white/68">
+            </h3>
+            <nav className="space-y-3">
               {careLinks.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="transition hover:text-white"
+                  className="block text-sm transition"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   {link.label}
                 </Link>
               ))}
-            </div>
+            </nav>
           </div>
 
-          <div className="space-y-5">
-            <div>
-              <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
-                Service Times
-              </p>
-              <div className="mt-4 grid gap-3">
-                {serviceTimes.map(item => (
-                  <div
-                    key={item}
-                    className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/68"
-                  >
-                    {item}
-                  </div>
-                ))}
+          {/* Contact & Social */}
+          <div>
+            <h3
+              className="text-xs font-semibold uppercase tracking-wider mb-4"
+              style={{ color: 'var(--color-gold)' }}
+            >
+              Contact & Connect
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <MapPin
+                  className="h-5 w-5 flex-shrink-0"
+                  style={{ color: 'var(--color-gold)' }}
+                />
+                <p
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  Honor Gardens, opposite Dominion City, Alasia, Lagos
+                </p>
               </div>
-            </div>
+              <div className="flex items-center gap-3">
+                <PhoneCall
+                  className="h-5 w-5 flex-shrink-0"
+                  style={{ color: 'var(--color-gold)' }}
+                />
+                <a
+                  href="tel:+2348000000000"
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  +234 800 000 0000
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail
+                  className="h-5 w-5 flex-shrink-0"
+                  style={{ color: 'var(--color-gold)' }}
+                />
+                <a
+                  href="mailto:info@wisdomchurchhq.org"
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  info@wisdomchurchhq.org
+                </a>
+              </div>
 
-            <div>
-              <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/50">
-                Connect
-              </p>
-              <div className="mt-4 flex items-center gap-3">
+              {/* Social Media */}
+              <div
+                className="pt-4 border-t flex gap-3"
+                style={{ borderColor: 'var(--color-border-light)' }}
+              >
                 {socialLinks.map(link => {
                   const Icon = link.icon;
                   return (
@@ -213,9 +287,13 @@ export default function Footer() {
                       key={link.href}
                       href={link.href}
                       target="_blank"
-                      rel="noreferrer"
-                      aria-label={link.label}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/72 transition hover:border-white/20 hover:bg-white/[0.07] hover:text-white"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg transition"
+                      style={{
+                        backgroundColor: 'rgba(215, 187, 117, 0.1)',
+                        color: 'var(--color-gold)',
+                      }}
+                      title={link.label}
                     >
                       <Icon className="h-4 w-4" />
                     </a>
@@ -226,20 +304,43 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between">
+        {/* Bottom Bar */}
+        <div
+          className="pt-12 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 text-sm"
+          style={{
+            borderColor: 'var(--color-border-light)',
+            color: 'var(--color-text-tertiary)',
+          }}
+        >
           <p>
-            © {new Date().getFullYear()} The Wisdom Church. All rights reserved.
+            &copy; {new Date().getFullYear()} The Wisdom Church. All rights
+            reserved.
           </p>
-          <div className="flex items-center gap-5">
-            <Link href="/terms" className="transition hover:text-white/72">
-              Terms
+          <div className="flex gap-6">
+            <Link
+              href="/terms"
+              className="transition"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              Terms of Service
             </Link>
-            <Link href="/cookies" className="transition hover:text-white/72">
-              Cookies
+            <Link
+              href="/cookies"
+              className="transition"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              Cookie Policy
+            </Link>
+            <Link
+              href="/privacy"
+              className="transition"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              Privacy Policy
             </Link>
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

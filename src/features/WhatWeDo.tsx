@@ -1,25 +1,23 @@
 'use client';
 
+import Image from 'next/image';
 import { whatWeDoData, missionStatement } from '@/lib/data';
 import { ServiceBox } from '@/lib/types';
-import Image from 'next/image';
-import { H2, BodySM } from '@/shared/text';
-import { useWhatWeDo } from '@/shared/utils/hooks/useWhatwedo';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { Section, Container } from '@/shared/layout';
 
 export default function WhatWeDo() {
-  const { sectionRef, headingRef, textRef, addToBoxesRef } = useWhatWeDo();
-  const { colorScheme } = useTheme();
-
   const renderBox = (box: ServiceBox, index: number) => {
     return (
       <div
         key={box.id}
-        ref={el => addToBoxesRef(el, index)}
-        className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-[0_22px_60px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(0,0,0,0.45)]"
+        className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:shadow-lg"
+        style={{
+          backgroundColor: 'rgba(215, 187, 117, 0.06)',
+          border: '1px solid var(--color-border-light)',
+        }}
       >
-        <div className="relative h-52 sm:h-60 lg:h-64 overflow-hidden">
+        {/* Image Section */}
+        <div className="relative h-52 sm:h-56 lg:h-64 overflow-hidden">
           <Image
             src={box.image}
             alt={box.imageAlt}
@@ -27,28 +25,35 @@ export default function WhatWeDo() {
             style={{
               objectFit: 'cover',
               objectPosition: 'center top',
-              ...(box.imageOpacity ? { opacity: box.imageOpacity / 100 } : {}),
+              opacity: box.imageOpacity ? box.imageOpacity / 100 : 0.8,
             }}
             className="transition-transform duration-700 ease-out group-hover:scale-110"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             quality={90}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/55 to-black/80" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(to bottom, rgba(5,5,5,0.2), rgba(5,5,5,0.6), rgba(5,5,5,0.9))',
+            }}
+          />
         </div>
 
-        <div className="relative z-10 px-5 pb-6 pt-5 sm:px-6">
+        {/* Content Section */}
+        <div className="relative z-10 px-6 pb-6 pt-6 sm:px-7">
           <h3
-            className="text-base sm:text-lg font-semibold"
-            style={{ color: colorScheme.primary }}
+            className="text-lg sm:text-xl font-semibold leading-tight mb-3"
+            style={{ color: 'var(--color-gold)' }}
           >
             {box.title}
           </h3>
-          <BodySM
-            className="mt-3 text-sm sm:text-base leading-relaxed text-white/70"
-            useThemeColor={false}
+          <p
+            className="text-sm sm:text-base leading-relaxed"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
             {box.description}
-          </BodySM>
+          </p>
         </div>
       </div>
     );
@@ -57,42 +62,40 @@ export default function WhatWeDo() {
   return (
     <Section
       id="what-we-do"
-      ref={sectionRef}
       padding="lg"
-      fullHeight={false}
-      style={{ background: '#080808' }}
       className="relative overflow-hidden"
+      style={{ backgroundColor: 'var(--color-bg-dark)' }}
     >
       <Container size="xl" className="relative z-10">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end pb-4">
+        {/* Header */}
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end pb-12 sm:pb-16">
           <div className="space-y-5">
-            <div
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-white/70"
-              style={{ color: '#fff' }}
+            <p
+              className="text-sm uppercase tracking-widest font-semibold"
+              style={{ color: 'var(--color-gold)' }}
             >
-              What to expect
-            </div>
-            <H2
-              ref={headingRef}
-              className="leading-tight text-left text-2xl sm:text-3xl lg:text-4xl font-semibold"
-              style={{ color: '#FFFFFF' }}
-              useThemeColor={false}
-              weight="semibold"
+              What to Expect
+            </p>
+            <h2
+              className="font-serif leading-tight"
+              style={{
+                fontSize: 'clamp(1.75rem, 5vw, 3.25rem)',
+                color: 'var(--color-text-primary)',
+              }}
             >
-              Sundays that feel alive in every lane
-            </H2>
+              Sundays That Transform Lives
+            </h2>
           </div>
-          <div ref={textRef}>
-            <BodySM
-              className="leading-relaxed text-sm sm:text-base text-white/70"
-              useThemeColor={false}
-            >
-              {missionStatement}
-            </BodySM>
-          </div>
+          <p
+            className="text-base leading-relaxed"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            {missionStatement}
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 pb-2">
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {whatWeDoData.map((box, index) => renderBox(box, index))}
         </div>
       </Container>

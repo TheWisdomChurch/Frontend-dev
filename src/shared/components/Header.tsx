@@ -2,29 +2,28 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { extendedNavLinks } from '@/lib/data';
 import { cn } from '@/lib/cn';
-import { useTheme } from '@/shared/contexts/ThemeContext';
+import { Container } from '@/shared/layout';
 import { WisdomeHouseLogo } from '@/shared/assets';
 
 const quickLinks = [
   { label: 'Upcoming Events', href: '/events/upcoming' },
   { label: 'Watch Sermons', href: '/resources/sermons' },
-  { label: 'Need Prayer?', href: '/pastoral' },
+  { label: 'Pastoral Care', href: '/pastoral' },
 ];
 
 export default function Header() {
   const pathname = usePathname();
-  const { colorScheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 18);
+    const handleScroll = () => setScrolled(window.scrollY > 16);
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -41,50 +40,131 @@ export default function Header() {
     };
   }, [isOpen]);
 
-  const navItems = useMemo(
-    () =>
-      extendedNavLinks.map(link => ({
-        label: link.label,
-        href: link.href,
-      })),
-    []
-  );
-
   return (
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 border-b transition-all duration-300',
-          scrolled
-            ? 'border-white/10 bg-[rgba(4,4,5,0.9)] backdrop-blur-2xl'
-            : 'border-transparent bg-[rgba(4,4,5,0.52)] backdrop-blur-xl'
+          'fixed inset-x-0 top-0 z-50 border-b transition-all duration-300'
         )}
+        style={{
+          borderColor: scrolled ? 'var(--color-border-light)' : 'transparent',
+          backgroundColor: scrolled
+            ? 'rgba(5, 5, 5, 0.95)'
+            : 'rgba(5, 5, 5, 0.7)',
+          backdropFilter: 'blur(12px)',
+        }}
       >
-        <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
-          <Link href="/" className="flex min-w-0 items-center gap-3">
-            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
-              <Image
-                src={WisdomeHouseLogo}
-                alt="The Wisdom Church"
-                width={44}
-                height={44}
-                className="object-cover"
-                priority
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[0.62rem] uppercase tracking-[0.24em] text-white/55">
-                The Wisdom Church
-              </p>
-              <p className="truncate text-sm font-semibold text-white sm:text-base">
-                Equipping and empowering for greatness
-              </p>
-            </div>
-          </Link>
+        <Container size="xl" className="py-3">
+          <div className="flex items-center gap-4">
+            {/* Logo & Branding */}
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+              <div
+                className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border"
+                style={{ borderColor: 'var(--color-border-light)' }}
+              >
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt="The Wisdom Church"
+                  width={44}
+                  height={44}
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              <div className="hidden sm:block">
+                <p
+                  className="text-xs uppercase tracking-widest font-semibold"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  The Wisdom Church
+                </p>
+                <p
+                  className="text-sm font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Welcome Home
+                </p>
+              </div>
+            </Link>
 
-          <nav className="hidden flex-1 items-center justify-center lg:flex">
-            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1.5">
-              {navItems.map(item => {
+            {/* Desktop Navigation */}
+            <nav className="hidden flex-1 items-center justify-center lg:flex">
+              <div
+                className="flex items-center gap-1 rounded-full p-1.5"
+                style={{
+                  border: '1px solid var(--color-border-light)',
+                  backgroundColor: 'rgba(215, 187, 117, 0.05)',
+                }}
+              >
+                {extendedNavLinks.map(item => {
+                  const active =
+                    item.href === '/'
+                      ? pathname === '/'
+                      : pathname === item.href ||
+                        pathname.startsWith(`${item.href}/`);
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition"
+                      style={{
+                        backgroundColor: active
+                          ? 'var(--color-gold)'
+                          : 'transparent',
+                        color: active
+                          ? 'var(--color-text-inverse)'
+                          : 'var(--color-text-secondary)',
+                      }}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </nav>
+
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
+              <Link
+                href="/contact"
+                className="btn-secondary inline-flex items-center justify-center gap-2 text-xs py-2 px-4"
+              >
+                Get Involved
+                <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="ml-auto lg:hidden p-2 rounded-lg transition"
+              style={{
+                backgroundColor: 'rgba(215, 187, 117, 0.1)',
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+        </Container>
+      </header>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 top-[56px] z-40 overflow-y-auto lg:hidden"
+          style={{
+            backgroundColor: 'var(--color-bg-deep)',
+          }}
+        >
+          <Container size="xl" className="py-8">
+            <nav className="space-y-2">
+              {extendedNavLinks.map(item => {
                 const active =
                   item.href === '/'
                     ? pathname === '/'
@@ -95,131 +175,61 @@ export default function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={cn(
-                      'rounded-full px-4 py-2 text-sm font-medium transition',
-                      active
-                        ? 'text-black'
-                        : 'text-white/72 hover:bg-white/[0.06] hover:text-white'
-                    )}
-                    style={
-                      active
-                        ? {
-                            background: colorScheme.primaryGradient,
-                            boxShadow: `0 12px 30px ${colorScheme.opacity.primary20}`,
-                          }
-                        : undefined
-                    }
+                    className="block px-4 py-3 rounded-lg text-sm font-semibold uppercase tracking-wider transition"
+                    style={{
+                      backgroundColor: active
+                        ? 'rgba(215, 187, 117, 0.15)'
+                        : 'transparent',
+                      color: active
+                        ? 'var(--color-gold)'
+                        : 'var(--color-text-secondary)',
+                    }}
                   >
                     {item.label}
                   </Link>
                 );
               })}
-            </div>
-          </nav>
+            </nav>
 
-          <div className="ml-auto hidden items-center gap-3 lg:flex">
-            <Link
-              href="/resources/sermons"
-              className="text-sm font-medium text-white/66 transition hover:text-white"
+            {/* Mobile Quick Links */}
+            <div
+              className="mt-8 pt-8 border-t"
+              style={{ borderColor: 'var(--color-border-light)' }}
             >
-              Watch online
-            </Link>
+              <p
+                className="text-xs font-semibold uppercase tracking-wider mb-4"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Quick Links
+              </p>
+              <div className="space-y-2">
+                {quickLinks.map(link => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block px-4 py-3 rounded-lg text-sm transition"
+                    style={{
+                      backgroundColor: 'rgba(215, 187, 117, 0.05)',
+                      color: 'var(--color-text-secondary)',
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile CTA */}
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-black transition hover:opacity-90"
-              style={{
-                background: colorScheme.primaryGradient,
-                boxShadow: `0 14px 36px ${colorScheme.opacity.primary20}`,
-              }}
+              className="btn-primary inline-flex items-center justify-center gap-2 w-full mt-8"
             >
-              Plan a visit
+              Plan Your Visit
               <ArrowRight className="h-4 w-4" />
             </Link>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsOpen(open => !open)}
-            className="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-white transition hover:bg-white/[0.08] lg:hidden"
-            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-          >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          </Container>
         </div>
-      </header>
-
-      <div
-        className={cn(
-          'fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition lg:hidden',
-          isOpen
-            ? 'pointer-events-auto opacity-100'
-            : 'pointer-events-none opacity-0'
-        )}
-        onClick={() => setIsOpen(false)}
-      />
-
-      <aside
-        className={cn(
-          'fixed right-0 top-0 z-50 flex h-screen w-full max-w-sm flex-col border-l border-white/10 bg-[#050505] px-6 pb-8 pt-24 transition-transform duration-300 lg:hidden',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        )}
-      >
-        <div className="space-y-2">
-          {navItems.map(item => {
-            const active =
-              item.href === '/'
-                ? pathname === '/'
-                : pathname === item.href ||
-                  pathname.startsWith(`${item.href}/`);
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium transition',
-                  active
-                    ? 'border-transparent text-black'
-                    : 'border-white/10 bg-white/[0.03] text-white/78 hover:bg-white/[0.06]'
-                )}
-                style={
-                  active
-                    ? { background: colorScheme.primaryGradient }
-                    : undefined
-                }
-              >
-                <span>{item.label}</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="mt-8 rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-5">
-          <p className="text-[0.68rem] uppercase tracking-[0.2em] text-[#d7bb75]">
-            Quick access
-          </p>
-          <div className="mt-4 grid gap-3">
-            {quickLinks.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/72 transition hover:bg-white/[0.05] hover:text-white"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-          <Link
-            href="/contact"
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-black"
-            style={{ background: colorScheme.primaryGradient }}
-          >
-            Plan your visit
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </aside>
+      )}
     </>
   );
 }

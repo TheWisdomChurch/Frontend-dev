@@ -17,7 +17,6 @@ import HeroMain from '@/features/hero/HeroMain';
 import { missionStatement } from '@/lib/data';
 import { Container, Section } from '@/shared/layout';
 import { BodyMD, Caption, H3 } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 
 const WhatWeDo = dynamic(() => import('@/features/WhatWeDo'), {
   ssr: true,
@@ -148,15 +147,16 @@ const nextPaths = [
 ];
 
 export default function Home() {
-  const { colorScheme } = useTheme();
-  const primary = colorScheme.primary || '#d9b35f';
-  const primaryGlow = colorScheme.opacity.primary10 || 'rgba(217,179,95,0.1)';
-
   return (
-    <div className="bg-[#050505] text-white">
+    <div
+      style={{
+        backgroundColor: 'var(--color-bg-deep)',
+        color: 'var(--color-text-primary)',
+      }}
+    >
       <HeroMain
         primaryButtonText="Plan Your Visit"
-        secondaryButtonText="Watch a Message"
+        secondaryButtonText="Watch Messages"
         onPrimaryButtonClick={() => {
           window.location.href = '/contact';
         }}
@@ -165,33 +165,57 @@ export default function Home() {
         }}
       />
 
+      {/* Quick Guides Section */}
       <Section
-        padding="md"
-        className="relative overflow-hidden border-y border-white/10 bg-[#070707]"
+        padding="lg"
+        className="relative overflow-hidden border-y"
+        style={{
+          borderColor: 'var(--color-border-light)',
+          backgroundColor: 'var(--color-bg-dark)',
+        }}
       >
-        <Container size="xl" className="grid gap-3 sm:grid-cols-3">
+        <Container size="xl" className="grid gap-5 lg:grid-cols-3">
           {quickGuides.map(item => {
             const Icon = item.icon;
             return (
               <div
                 key={item.label}
-                className="rounded-2xl border border-white/12 bg-black/30 p-4 backdrop-blur-md"
+                className="rounded-2xl p-6 sm:p-7"
+                style={{
+                  backgroundColor: 'rgba(215, 187, 117, 0.06)',
+                  border: '1px solid var(--color-border-light)',
+                }}
               >
-                <div className="mb-3 flex items-center gap-2">
+                <div className="mb-4 flex items-center gap-3">
                   <div
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10"
-                    style={{ backgroundColor: primaryGlow }}
+                    className="flex h-10 w-10 items-center justify-center rounded-lg"
+                    style={{
+                      backgroundColor: 'rgba(215, 187, 117, 0.15)',
+                      border: '1px solid var(--color-border-light)',
+                    }}
                   >
-                    <Icon className="h-4 w-4" style={{ color: primary }} />
+                    <Icon
+                      className="h-5 w-5"
+                      style={{ color: 'var(--color-gold)' }}
+                    />
                   </div>
-                  <Caption className="text-[0.62rem] uppercase tracking-[0.18em] text-white/60">
+                  <p
+                    className="text-xs uppercase tracking-widest font-semibold"
+                    style={{ color: 'var(--color-text-secondary)' }}
+                  >
                     {item.label}
-                  </Caption>
+                  </p>
                 </div>
-                <p className="text-sm font-semibold text-white sm:text-base">
+                <p
+                  className="text-lg font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                   {item.value}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-white/65">
+                <p
+                  className="mt-2 text-sm leading-relaxed"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
                   {item.detail}
                 </p>
               </div>
@@ -200,45 +224,76 @@ export default function Home() {
         </Container>
       </Section>
 
+      {/* Mission & Values Section */}
       <Section
         padding="lg"
-        className="relative overflow-hidden border-b border-white/10 bg-[#080808]"
+        className="relative overflow-hidden border-b"
+        style={{
+          borderColor: 'var(--color-border-light)',
+          backgroundColor: 'var(--color-bg-darker)',
+        }}
       >
-        <Container size="xl" className="space-y-10">
+        <Container size="xl" className="space-y-12 sm:space-y-16">
           <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-            <div className="space-y-4">
-              <Caption
-                className="uppercase tracking-[0.2em] text-[0.62rem]"
-                style={{ color: primary }}
+            <div className="space-y-5">
+              <p
+                className="text-sm uppercase tracking-widest font-semibold"
+                style={{ color: 'var(--color-gold)' }}
               >
-                Who we are
-              </Caption>
-              <H3 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
-                A house of wisdom, power, excellence, and care.
-              </H3>
-              <BodyMD className="max-w-2xl text-base leading-relaxed text-white/70">
+                Who We Are
+              </p>
+              <h2
+                className="font-serif leading-tight"
+                style={{
+                  fontSize: 'clamp(1.75rem, 5vw, 3rem)',
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                A House of Wisdom, Power, Excellence & Care
+              </h2>
+              <p
+                className="max-w-2xl text-base leading-relaxed"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 {missionStatement}
-              </BodyMD>
+              </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            {/* Promise Pillars */}
+            <div className="grid gap-5 sm:grid-cols-3">
               {promisePillars.map(item => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.title}
-                    className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5"
+                    className="rounded-2xl p-6 sm:p-7"
+                    style={{
+                      backgroundColor: 'rgba(215, 187, 117, 0.06)',
+                      border: '1px solid var(--color-border-light)',
+                    }}
                   >
                     <div
-                      className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10"
-                      style={{ backgroundColor: primaryGlow }}
+                      className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg"
+                      style={{
+                        backgroundColor: 'rgba(215, 187, 117, 0.15)',
+                        border: '1px solid var(--color-border-light)',
+                      }}
                     >
-                      <Icon className="h-5 w-5" style={{ color: primary }} />
+                      <Icon
+                        className="h-5 w-5"
+                        style={{ color: 'var(--color-gold)' }}
+                      />
                     </div>
-                    <p className="text-base font-semibold text-white">
+                    <p
+                      className="text-base font-semibold leading-tight mb-2"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
                       {item.title}
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-white/66">
+                    <p
+                      className="text-sm leading-relaxed"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
                       {item.description}
                     </p>
                   </div>
@@ -247,21 +302,39 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.05),rgba(0,0,0,0.22))] p-5 sm:grid-cols-[1.1fr_0.9fr] sm:p-7">
-            <div className="space-y-3">
-              <Caption className="text-[0.62rem] uppercase tracking-[0.18em] text-white/55">
-                First-time guests
-              </Caption>
-              <p className="max-w-2xl text-lg font-semibold leading-snug text-white sm:text-xl">
+          {/* First Visit Info */}
+          <div
+            className="rounded-2xl p-8 sm:p-10 lg:p-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]"
+            style={{
+              backgroundColor: 'rgba(215, 187, 117, 0.08)',
+              border: '1px solid var(--color-border-light)',
+            }}
+          >
+            <div className="space-y-4">
+              <p
+                className="text-sm uppercase tracking-widest font-semibold"
+                style={{ color: 'var(--color-gold)' }}
+              >
+                First-Time Guests
+              </p>
+              <p
+                className="max-w-2xl text-lg sm:text-xl leading-tight font-serif"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 A church website should remove uncertainty. It should help you
                 know what the house is like before you ever arrive.
               </p>
             </div>
-            <div className="grid gap-2">
-              {firstVisitSteps.map(step => (
+            <div className="grid gap-3">
+              {firstVisitSteps.map((step, idx) => (
                 <div
-                  key={step}
-                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white/72"
+                  key={idx}
+                  className="rounded-lg px-4 py-3 text-sm"
+                  style={{
+                    backgroundColor: 'rgba(215, 187, 117, 0.1)',
+                    border: '1px solid var(--color-border-light)',
+                    color: 'var(--color-text-secondary)',
+                  }}
                 >
                   {step}
                 </div>
@@ -269,30 +342,63 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-4">
+          {/* Next Steps Grid */}
+          <div className="grid gap-5 lg:grid-cols-4">
             {nextPaths.map(item => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="group rounded-[1.6rem] border border-white/10 bg-white/[0.03] p-5 transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.06]"
+                  className="group rounded-2xl p-6 sm:p-7 transition-all duration-300 hover:border-opacity-100 hover:shadow-lg"
+                  style={{
+                    backgroundColor: 'rgba(215, 187, 117, 0.06)',
+                    border: '1px solid var(--color-border-light)',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.backgroundColor =
+                      'rgba(215, 187, 117, 0.12)';
+                    e.currentTarget.style.borderColor = 'var(--color-gold)';
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.backgroundColor =
+                      'rgba(215, 187, 117, 0.06)';
+                    e.currentTarget.style.borderColor =
+                      'var(--color-border-light)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
                 >
                   <div
-                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10"
-                    style={{ backgroundColor: primaryGlow }}
+                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg"
+                    style={{
+                      backgroundColor: 'rgba(215, 187, 117, 0.15)',
+                      border: '1px solid var(--color-border-light)',
+                    }}
                   >
-                    <Icon className="h-5 w-5" style={{ color: primary }} />
+                    <Icon
+                      className="h-5 w-5"
+                      style={{ color: 'var(--color-gold)' }}
+                    />
                   </div>
-                  <p className="text-lg font-semibold text-white">
+                  <p
+                    className="text-lg font-semibold leading-tight"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
                     {item.title}
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/66">
+                  <p
+                    className="mt-2 text-sm leading-relaxed"
+                    style={{ color: 'var(--color-text-secondary)' }}
+                  >
                     {item.description}
                   </p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[#d7bb75]">
-                    Open page
-                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  <span
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold transition group-hover:gap-3"
+                    style={{ color: 'var(--color-gold)' }}
+                  >
+                    Explore
+                    <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
               );
@@ -301,6 +407,7 @@ export default function Home() {
         </Container>
       </Section>
 
+      {/* Main Content Sections */}
       <WhatWeDo />
       <EventsShowcase />
       <SeniorPastor />

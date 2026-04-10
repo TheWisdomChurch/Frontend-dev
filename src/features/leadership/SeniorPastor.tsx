@@ -1,159 +1,120 @@
 'use client';
 
-import { useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { ArrowRight, Camera } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { Bishop } from '@/shared/assets';
-import { H1, P } from '@/shared/text';
-import Button from '@/shared/utils/buttons/CustomButton';
-import { useSeniorPastor } from '@/shared/utils/hooks/useSeniorPastor';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import { cn } from '@/lib/cn';
-import { gsap } from 'gsap';
-import { useTheme } from '@/shared/contexts/ThemeContext';
+import { Section, Container } from '@/shared/layout';
 import { seniorPastorData } from '@/lib/data';
 
-interface SeniorPastorProps {
-  className?: string;
-}
+export default function SeniorPastor() {
+  const description =
+    seniorPastorData?.description?.[0] ||
+    'Bishop Gabriel Ayilara leads The Wisdom Church with powerful teaching, fervent prayer, and a heart for raising strong believers and transforming families.';
 
-export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
-  const { colorScheme } = useTheme();
-  const router = useRouter();
-
-  const { sectionRef, isVisible } = useSeniorPastor();
-  const textRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-
-  const summary = useMemo(() => {
-    return (
-      seniorPastorData?.description?.[0]?.replace(/\s+/g, ' ').trim() ||
-      'Bishop Gabriel Ayilara leads The Wisdom House Church with practical teaching, prayer, and a heart for raising strong believers and families.'
-    );
-  }, []);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const ctx = gsap.context(() => {
-      if (textRef.current) {
-        gsap.fromTo(
-          textRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
-        );
-      }
-
-      if (imageRef.current) {
-        gsap.fromTo(
-          imageRef.current,
-          { y: 40, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.9,
-            ease: 'power3.out',
-            delay: 0.1,
-          }
-        );
-      }
-    });
-
-    return () => ctx.revert();
-  }, [isVisible]);
-
-  const goToLeadership = () => router.push('/leadership');
-
-  const primary = colorScheme.primary || '#fbbf24';
+  const vision =
+    seniorPastorData?.vision ||
+    "To build a generation of believers empowered by God's word and committed to spiritual excellence.";
 
   return (
     <Section
-      ref={sectionRef}
-      padding="none"
-      className={cn(
-        'relative w-full overflow-hidden bg-[#070707] text-white',
-        'min-h-[380px] md:min-h-[440px]',
-        className
-      )}
+      padding="lg"
+      className="py-16 sm:py-20 lg:py-24"
+      style={{ backgroundColor: 'var(--color-bg-dark)' }}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.06),_transparent_45%)]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/85" />
-
-      <Container size="xl" className="relative z-10 py-12 sm:py-14 lg:py-16">
-        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div ref={imageRef} className="flex justify-center lg:justify-start">
-            <div className="relative w-full max-w-[240px] sm:max-w-[300px] lg:max-w-[360px] aspect-[3/4] rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
+      <Container size="xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-16 items-center">
+          {/* Image */}
+          <div className="relative order-2 lg:order-1">
+            <div
+              className="rounded-2xl overflow-hidden aspect-[3/4]"
+              style={{
+                border: '1px solid var(--color-border-light)',
+              }}
+            >
               <Image
                 src={Bishop}
-                alt="Bishop Gabriel Ayilara"
+                alt="Bishop Gabriel Ayilara | Senior Pastor"
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 480px"
                 className="object-cover"
-                style={{ objectPosition: 'center 20%' }}
+                quality={90}
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
             </div>
+
+            {/* Decorative Element */}
+            <div
+              className="absolute -bottom-4 -right-4 w-24 h-24 rounded-lg opacity-30"
+              style={{
+                backgroundColor: 'var(--color-gold)',
+              }}
+            />
           </div>
 
-          <div ref={textRef} className="space-y-6">
-            <P className="text-[0.62rem] uppercase tracking-[0.2em] text-white/60">
-              Senior Pastor
-            </P>
-            <div className="space-y-1.5">
-              <H1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white leading-tight">
-                Bishop Gabriel Ayilara
-              </H1>
-              <P className="text-sm sm:text-base text-white/70">
-                The Wisdom House Church
-              </P>
-            </div>
-            <div className="h-px w-16" style={{ background: primary }} />
-            <P className="text-sm sm:text-base text-white/70 leading-relaxed">
-              {summary}
-            </P>
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Button
-                onClick={goToLeadership}
-                variant="primary"
-                size="sm"
-                curvature="full"
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-                className="px-5 py-2.5 text-[0.78rem] sm:text-sm font-semibold shadow-lg"
-                style={{ backgroundColor: primary, color: '#0b0b0b' }}
+          {/* Content */}
+          <div className="order-1 lg:order-2 space-y-7">
+            <div>
+              <p
+                className="text-sm uppercase tracking-widest font-semibold mb-3"
+                style={{ color: 'var(--color-gold)' }}
               >
-                View leadership
-              </Button>
-              <Button
-                onClick={() =>
-                  window.open(
-                    'https://www.instagram.com/gabrielayilara',
-                    '_blank',
-                    'noopener,noreferrer'
-                  )
-                }
-                variant="outline"
-                size="sm"
-                curvature="full"
-                leftIcon={<Camera className="w-4 h-4" />}
-                className="px-5 py-2.5 text-[0.78rem] sm:text-sm font-semibold"
+                Our Leadership
+              </p>
+              <h2
+                className="font-serif leading-tight"
                 style={{
-                  backgroundColor: 'rgba(255,255,255,0.08)',
-                  color: '#fff',
-                  border: '1px solid rgba(255,255,255,0.3)',
+                  fontSize: 'clamp(2rem, 6vw, 3rem)',
+                  color: 'var(--color-text-primary)',
                 }}
               >
-                Instagram
-              </Button>
+                Bishop Gabriel Ayilara
+              </h2>
+              <p
+                className="mt-3 text-sm uppercase tracking-wider font-semibold"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Senior Pastor & Visionary
+              </p>
             </div>
+
+            {/* Description */}
+            <p
+              className="text-base sm:text-lg leading-relaxed"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              {description}
+            </p>
+
+            {/* Vision */}
+            <div
+              className="rounded-xl p-6 sm:p-7"
+              style={{
+                backgroundColor: 'rgba(215, 187, 117, 0.08)',
+                border: '1px solid var(--color-border-light)',
+              }}
+            >
+              <p
+                className="text-xs uppercase tracking-widest font-semibold mb-3"
+                style={{ color: 'var(--color-gold)' }}
+              >
+                His Vision
+              </p>
+              <p
+                className="text-base leading-relaxed"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                "{vision}"
+              </p>
+            </div>
+
+            {/* CTA */}
+            <Link
+              href="/leadership"
+              className="btn-primary inline-flex items-center justify-center gap-2 w-full sm:w-auto"
+            >
+              Meet Our Leadership Team
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </Container>

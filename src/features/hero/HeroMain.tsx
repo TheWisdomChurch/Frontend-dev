@@ -1,242 +1,30 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
-import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';
-import Image, { type StaticImageData } from 'next/image';
+import Link from 'next/link';
+import { CalendarClock, MapPin, PlayCircle, ArrowRight } from 'lucide-react';
 
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
-import { H1, H2 } from '@/shared/text';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { Section, Container } from '@/shared/layout';
-import type { ColorScheme } from '@/shared/colors/colorScheme';
 
-import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
-import { renderTitle, renderSubtitle } from '@/shared/utils/heroTextUtil';
-import type { YouTubeVideo } from '@/lib/types';
-import { cn } from '@/lib/cn';
-
-/* Types (simplified for backend structure)
------------------------------------------------------------------------------ */
-
-function isStaticImageData(x: any): x is StaticImageData {
-  return (
-    !!x &&
-    typeof x === 'object' &&
-    typeof x.src === 'string' &&
-    'height' in x &&
-    'width' in x
-  );
-}
-
-function isSimpleImage(image: any): boolean {
-  return typeof image === 'string' || isStaticImageData(image);
-}
-
-/**
- * Normalize slide.image for Next/Image
- */
-function normalizeImage(
-  image: any,
-  fallbackAlt = 'Slide image'
-): {
-  src: string;
-  alt: string;
-  objectPosition?: string;
-} {
-  if (typeof image === 'string') {
-    return { src: image, alt: fallbackAlt };
-  }
-
-  if (isStaticImageData(image)) {
-    return { src: image.src, alt: fallbackAlt };
-  }
-
-  if (typeof image === 'object' && 'src' in image) {
-    const src =
-      typeof image.src === 'string' ? image.src : image.src?.src || '';
-    return {
-      src: src || '/images/placeholder.jpg',
-      alt: image.alt || fallbackAlt,
-      objectPosition: image.objectPosition,
-    };
-  }
-
-  return { src: '/images/placeholder.jpg', alt: fallbackAlt };
-}
-
-/* Props
------------------------------------------------------------------------------ */
-interface HeroSectionProps {
+interface HeroMainProps {
   primaryButtonText?: string;
   secondaryButtonText?: string;
   onPrimaryButtonClick?: () => void;
   onSecondaryButtonClick?: () => void;
-  showWaveText?: boolean;
-  colorScheme?: ColorScheme;
-  slides?: HeroSlide[]; // Backend-driven slides
 }
 
-/* ----------------------------------------------------------------------------
-   Component
------------------------------------------------------------------------------ */
-/* Component
------------------------------------------------------------------------------ */
-const HeroSection = ({
-  primaryButtonText = 'Join Our Community',
-  secondaryButtonText = 'Watch Live Stream',
+export default function HeroMain({
+  primaryButtonText = 'Plan Your Visit',
+  secondaryButtonText = 'Watch Messages',
   onPrimaryButtonClick,
   onSecondaryButtonClick,
-  showWaveText = true,
-  colorScheme: externalColorScheme,
-  slides: externalSlides,
-}: HeroSectionProps) => {
-  const { colorScheme: themeColors } = useTheme();
-  const colorScheme = externalColorScheme || themeColors;
-  const { open } = useServiceUnavailable();
-
-  // Fetch backend hero content
-  const { slides: backendSlides } = useHeroContent();
-
-  // Use external slides if provided, otherwise use backend slides
-  const slidesToUse = externalSlides || backendSlides;
-
-  // Refs
-  const heroRef = useRef<HTMLDivElement>(null!);
-
-  const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
-  const [videoLoading, setVideoLoading] = useState(false);
-
-  // Slider state
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const slideList: HeroSlide[] = useMemo(() => {
-    return slidesToUse && slidesToUse.length > 0 ? slidesToUse : [];
-  }, [slidesToUse]);
-
-  const currentSlideData = slideList[currentSlide] ?? slideList[0];
-
-  const fallbackUpcoming = {
-    label: 'Upcoming',
-    title: 'Wisdom Power Conference 2026',
-    date: 'Mar 21 - 23',
-    time: 'Morning Session • Evening Session',
-    location: 'Honor Gardens, Alasia opposite Dominion City Headquarters',
-    ctaLabel: 'Reserve a seat',
-    ctaTarget: '#programs',
-  };
-
-  const upcoming = (currentSlideData as any)?.upcoming ?? fallbackUpcoming;
-
-  // Auto-rotate slides
-  useEffect(() => {
-    if (slideList.length <= 1) return;
-    const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % slideList.length);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, [slideList.length]);
-
-  const scrollToNextSection = useCallback(() => {
-    const nextSection = heroRef.current?.nextElementSibling;
-    if (nextSection)
-      nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
-
-  const handleUnavailable = useCallback(
-    (title?: string, message?: string) => {
-      open({
-        title: title || 'Service not available yet',
-        message:
-          message ||
-          'We are polishing this experience for production. Please check back soon.',
-        actionLabel: 'Okay, thanks',
-      });
-    },
-    [open]
-  );
-
-  const handleUpcomingCta = useCallback(() => {
-    if (!upcoming?.ctaTarget) {
-      handleUnavailable('Reservations opening soon');
-      return;
-    }
-
-    if (
-      typeof upcoming.ctaTarget === 'string' &&
-      upcoming.ctaTarget.startsWith('#')
-    ) {
-      const target = document.getElementById(upcoming.ctaTarget.slice(1));
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
-      else handleUnavailable('Reservations opening soon');
-      return;
-    }
-
-    window.location.href = upcoming.ctaTarget;
-  }, [upcoming, handleUnavailable]);
-
-  const handlePrimaryClick = useCallback(() => {
-    if (onPrimaryButtonClick) return onPrimaryButtonClick();
-    handleUnavailable('Join our community');
-  }, [onPrimaryButtonClick, handleUnavailable]);
-
-  const handleSecondaryClick = useCallback(() => {
-    if (onSecondaryButtonClick) return onSecondaryButtonClick();
-    handleUnavailable('Live stream coming soon');
-  }, [onSecondaryButtonClick, handleUnavailable]);
-
-  // Pull newest YouTube video
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchLatest = async () => {
-      setVideoLoading(true);
-      try {
-        const res = await fetch('/api/sermons?sort=newest', {
-          cache: 'force-cache',
-        });
-        if (!res.ok) return;
-        const data: YouTubeVideo[] = await res.json();
-        if (mounted && data.length) setLatestVideo(data[0]);
-      } catch (err) {
-        console.warn('Hero latest video fetch failed', err);
-      } finally {
-        if (mounted) setVideoLoading(false);
-      }
-    };
-
-    fetchLatest();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const heroImage = normalizeImage(
-    (currentSlideData as any)?.image,
-    (currentSlideData as any)?.title || 'Hero image'
-  );
-  const heroDescription =
-    (currentSlideData as any)?.description ||
-    (currentSlideData as any)?.summary ||
-    '';
-
+}: HeroMainProps) {
   return (
     <Section
-      ref={heroRef}
       padding="none"
-      fullHeight={false}
-      perf="none"
-      className={cn(
-        'relative w-full min-h-[78vh] sm:min-h-[84vh] lg:min-h-[90vh] overflow-hidden bg-[#050505]'
-      )}
+      className="relative overflow-hidden pt-24 sm:pt-28 lg:pt-32"
+      style={{ backgroundColor: 'var(--color-bg-deep)' }}
     >
+      {/* Background Video */}
       <div className="absolute inset-0 -z-30">
         <video
           className="h-full w-full object-cover"
@@ -245,300 +33,221 @@ const HeroSection = ({
           loop
           playsInline
           preload="metadata"
-          poster={heroImage?.src}
+          poster="/images/placeholder.jpg"
         >
           <source src="/videos/videoBg.mp4" type="video/mp4" />
         </video>
       </div>
 
-      <div className="absolute inset-0 -z-20 bg-black/60 sm:bg-black/55" />
+      {/* Overlays */}
       <div
-        className="absolute inset-0 -z-15"
+        className="absolute inset-0 -z-20"
+        style={{ backgroundColor: 'rgba(5, 5, 5, 0.65)' }}
+      />
+      <div
+        className="absolute inset-0 -z-10"
         style={{
           background:
-            'linear-gradient(130deg, rgba(6,6,6,0.92) 0%, rgba(15,17,22,0.82) 38%, rgba(6,6,6,0.95) 100%)',
+            'radial-gradient(circle at top, rgba(215, 187, 117, 0.25), transparent 50%)',
         }}
       />
-      <div
-        className="absolute inset-0 -z-10 opacity-70"
-        style={{
-          background: `radial-gradient(circle at 18% 20%, ${colorScheme.opacity.primary20} 0%, transparent 45%), radial-gradient(circle at 80% 8%, ${colorScheme.opacity.primary10} 0%, transparent 40%)`,
-          filter: 'blur(40px)',
-        }}
-      />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/20 via-black/55 to-black/90" />
 
-      <Container
-        size="xl"
-        className={cn(
-          'relative z-20 flex items-center px-4 sm:px-6 md:px-8 lg:px-10 pt-32 sm:pt-36 lg:pt-40 pb-20 sm:pb-24 lg:pb-28'
-        )}
-      >
-        <div className="w-full">
-          <div className="grid gap-10 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div className="space-y-8 text-left fade-up">
-              {showWaveText && (
-                <div className="flex justify-start">
-                  <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2.5 text-[0.6rem] uppercase tracking-[0.18em] text-white/80">
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: colorScheme.primary }}
-                    />
-                    The Wisdom Church
-                  </div>
-                </div>
-              )}
-
-              <H1
-                className="leading-[1.08] tracking-tight font-semibold"
-                style={{
-                  color: '#FFFFFF',
-                  textShadow:
-                    '0 12px 32px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.6)',
-                }}
-                useThemeColor={false}
+      <Container size="xl" className="pb-16 sm:pb-20 lg:pb-24">
+        <div className="grid items-end gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          {/* Main Content */}
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <p
+                className="text-sm uppercase tracking-widest font-semibold"
+                style={{ color: 'var(--color-gold)' }}
               >
-                <span className="block text-[1.85rem] xs:text-[2.2rem] sm:text-4xl md:text-5xl lg:text-[3.2rem] xl:text-[3.6rem]">
-                  {renderTitle((currentSlideData as any)?.title, colorScheme)}
-                </span>
-              </H1>
-
-              {(currentSlideData as any)?.subtitle ? (
-                <H2
-                  className="text-left"
-                  style={{
-                    color: colorScheme.primary,
-                    textShadow:
-                      '0 1px 8px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.35)',
-                  }}
-                  useThemeColor={false}
-                  weight="medium"
-                  smWeight="semibold"
-                >
-                  <span className="block text-[0.92rem] sm:text-base md:text-lg lg:text-xl">
-                    {renderSubtitle((currentSlideData as any)?.subtitle)}
-                  </span>
-                </H2>
-              ) : null}
-
-              {heroDescription ? (
-                <p className="text-[0.95rem] sm:text-base md:text-[1.05rem] text-white/70 leading-relaxed max-w-2xl">
-                  {heroDescription}
-                </p>
-              ) : null}
-
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-start">
-                <CustomButton
-                  variant="primary"
-                  size="md"
-                  curvature="xl"
-                  elevated
-                  onClick={handlePrimaryClick}
-                  className="w-full sm:w-auto px-6 py-3 text-[0.75rem] sm:text-sm font-medium tracking-wide"
-                  style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                    color: '#FFFFFF',
-                    boxShadow: `0 10px 26px ${colorScheme.opacity.primary20}`,
-                  }}
-                >
-                  {primaryButtonText}
-                </CustomButton>
-
-                <CustomButton
-                  variant="outline"
-                  size="md"
-                  curvature="xl"
-                  onClick={handleSecondaryClick}
-                  className="w-full sm:w-auto px-6 py-3 text-[0.75rem] sm:text-sm font-medium tracking-wide"
-                  style={{
-                    borderColor: 'rgba(255,255,255,0.35)',
-                    color: '#FFFFFF',
-                    backgroundColor: 'rgba(255,255,255,0.06)',
-                  }}
-                >
-                  {secondaryButtonText}
-                </CustomButton>
-              </div>
+                Welcome Home
+              </p>
+              <h1
+                className="font-serif leading-tight"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Experience God's Transforming Power
+              </h1>
             </div>
 
-            <div className="grid gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-1 fade-up">
-              <div className="rounded-2xl border border-white/15 bg-black/70 backdrop-blur-xl p-6 sm:p-7 space-y-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-[0.6rem] uppercase tracking-[0.18em] text-white/60">
-                      {upcoming.label}
-                    </p>
-                    <p className="text-sm sm:text-base text-white font-semibold">
-                      {upcoming.title}
-                    </p>
-                  </div>
-                  <div
-                    className="h-10 w-10 rounded-xl flex items-center justify-center border border-white/30"
-                    style={{ background: colorScheme.primary }}
+            <p
+              className="max-w-2xl text-base leading-relaxed sm:text-lg"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              Join a vibrant, Spirit-filled community where worship is powerful,
+              teaching is biblical, and lives are transformed. We're committed
+              to raising leaders, strengthening faith, and serving the nations
+              with wisdom and love.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <button
+                type="button"
+                onClick={onPrimaryButtonClick}
+                className="btn-primary inline-flex items-center justify-center gap-2"
+              >
+                {primaryButtonText}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={onSecondaryButtonClick}
+                className="btn-secondary inline-flex items-center justify-center gap-2"
+              >
+                <PlayCircle className="h-4 w-4" />
+                {secondaryButtonText}
+              </button>
+            </div>
+          </div>
+
+          {/* Info Cards */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div
+              className="rounded-2xl p-6 transition-all duration-300 hover:border-opacity-100"
+              style={{
+                backgroundColor: 'rgba(215, 187, 117, 0.08)',
+                border: '1px solid var(--color-border-light)',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.backgroundColor =
+                  'rgba(215, 187, 117, 0.12)';
+                e.currentTarget.style.borderColor = 'var(--color-gold)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.backgroundColor =
+                  'rgba(215, 187, 117, 0.08)';
+                e.currentTarget.style.borderColor = 'var(--color-border-light)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <CalendarClock
+                  className="h-5 w-5"
+                  style={{ color: 'var(--color-gold)' }}
+                />
+                <div>
+                  <p
+                    className="text-xs font-semibold uppercase tracking-wide"
+                    style={{ color: 'var(--color-text-secondary)' }}
                   >
-                    <CalendarClock className="w-4 h-4 text-black" />
-                  </div>
+                    Sunday Worship
+                  </p>
+                  <p
+                    className="text-sm font-semibold mt-1"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    9:00 AM
+                  </p>
                 </div>
+              </div>
+              <p
+                className="mt-3 text-sm leading-relaxed"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Spirit-filled worship, prayer, and biblical teaching.
+              </p>
+            </div>
 
-                <div className="space-y-2 text-[0.75rem] sm:text-[12px] text-white/80">
-                  <div className="flex items-center gap-2">
-                    <CalendarClock className="w-4 h-4" />
-                    <span>
-                      {upcoming.date} • {upcoming.time}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{upcoming.location}</span>
-                  </div>
+            <div
+              className="rounded-2xl p-6 transition-all duration-300 hover:border-opacity-100"
+              style={{
+                backgroundColor: 'rgba(215, 187, 117, 0.08)',
+                border: '1px solid var(--color-border-light)',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.backgroundColor =
+                  'rgba(215, 187, 117, 0.12)';
+                e.currentTarget.style.borderColor = 'var(--color-gold)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.backgroundColor =
+                  'rgba(215, 187, 117, 0.08)';
+                e.currentTarget.style.borderColor = 'var(--color-border-light)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <CalendarClock
+                  className="h-5 w-5"
+                  style={{ color: 'var(--color-gold)' }}
+                />
+                <div>
+                  <p
+                    className="text-xs font-semibold uppercase tracking-wide"
+                    style={{ color: 'var(--color-text-secondary)' }}
+                  >
+                    Midweek Service
+                  </p>
+                  <p
+                    className="text-sm font-semibold mt-1"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    Thursday, 6:00 PM
+                  </p>
                 </div>
+              </div>
+              <p
+                className="mt-3 text-sm leading-relaxed"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Refreshing word, worship, and focused prayer.
+              </p>
+            </div>
 
-                <CustomButton
-                  size="sm"
-                  curvature="full"
-                  elevated
-                  onClick={handleUpcomingCta}
-                  className="px-5 py-2.5 text-[0.72rem] sm:text-[11px] font-medium border border-white/20"
-                  style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                    color: '#FFFFFF',
-                  }}
+            <div
+              className="rounded-2xl p-6 transition-all duration-300 hover:border-opacity-100 sm:col-span-2"
+              style={{
+                backgroundColor: 'rgba(215, 187, 117, 0.08)',
+                border: '1px solid var(--color-border-light)',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.backgroundColor =
+                  'rgba(215, 187, 117, 0.12)';
+                e.currentTarget.style.borderColor = 'var(--color-gold)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.backgroundColor =
+                  'rgba(215, 187, 117, 0.08)';
+                e.currentTarget.style.borderColor = 'var(--color-border-light)';
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <MapPin
+                  className="h-5 w-5"
+                  style={{ color: 'var(--color-gold)', flexShrink: 0 }}
+                />
+                <p
+                  className="text-xs font-semibold uppercase tracking-wide"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
-                  {upcoming.ctaLabel ?? 'Reserve a seat'}
-                </CustomButton>
+                  Find us in Lagos
+                </p>
               </div>
-
-              <div className="rounded-2xl border border-white/12 bg-black/55 backdrop-blur-xl p-6 sm:p-7 space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="h-10 w-10 rounded-xl border border-white/25 flex items-center justify-center shrink-0">
-                    <PlayCircle className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm sm:text-base text-white font-semibold">
-                      Watch the latest message
-                    </p>
-                    <p className="text-[0.7rem] sm:text-[11px] text-white/60">
-                      YouTube & on-demand
-                    </p>
-                  </div>
-                </div>
-
-                {latestVideo ? (
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <div className="relative h-36 sm:h-16 w-full sm:w-24 rounded-xl overflow-hidden border border-white/15">
-                      <img
-                        src={
-                          latestVideo.thumbnail ||
-                          (latestVideo as any)?.thumbnails?.medium?.url ||
-                          (latestVideo as any)?.thumbnails?.default?.url ||
-                          '/images/placeholder.jpg'
-                        }
-                        alt={latestVideo.title}
-                        className="absolute inset-0 h-full w-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      <div className="absolute inset-0 bg-black/30" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white text-[0.9rem] sm:text-[12px] font-medium leading-snug line-clamp-2">
-                        {latestVideo.title}
-                      </p>
-                    </div>
-                    <a
-                      href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-[0.75rem] sm:text-[11px] font-medium shadow-lg w-full sm:w-auto"
-                      style={{
-                        background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      <PlayCircle className="w-4 h-4" /> Play
-                    </a>
-                  </div>
-                ) : (
-                  <CustomButton
-                    variant="outline"
-                    size="sm"
-                    curvature="full"
-                    onClick={handleSecondaryClick}
-                    className="px-4 py-2 text-[0.7rem] sm:text-[11px] text-white border border-white/40"
-                  >
-                    {videoLoading ? 'Loading…' : 'Watch'}
-                  </CustomButton>
-                )}
-              </div>
+              <p
+                className="mt-3 font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe
+                Expressway
+              </p>
+              <p
+                className="mt-2 text-sm leading-relaxed"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Easy access from the Lekki-Epe corridor with dedicated parking
+                and welcome teams on-site.
+              </p>
             </div>
           </div>
         </div>
       </Container>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20">
-        <div
-          className="mx-auto h-px w-[min(94%,1200px)] rounded-full opacity-90"
-          style={{
-            backgroundImage: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary} 50%, transparent 100%)`,
-            boxShadow: `0 0 10px ${colorScheme.opacity.primary30}`,
-          }}
-        />
-      </div>
-
-      {/* Scroll Indicators */}
-      <ScrollIndicators
-        scrollToNextSection={scrollToNextSection}
-        colorScheme={colorScheme}
-      />
     </Section>
   );
-};
-
-interface ScrollIndicatorsProps {
-  scrollToNextSection: () => void;
-  colorScheme: ColorScheme;
 }
-
-const ScrollIndicators = ({
-  scrollToNextSection,
-  colorScheme,
-}: ScrollIndicatorsProps) => (
-  <>
-    <div
-      className="absolute bottom-0 sm:bottom-1.5 md:bottom-2 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
-      onClick={scrollToNextSection}
-      aria-label="Scroll to next section"
-    >
-      <div className="flex flex-col items-center">
-        <ChevronDown
-          className="w-5 h-5 md:w-6 md:h-6 animate-bounce"
-          style={{
-            color: colorScheme.primary,
-            filter: `drop-shadow(0 1px 3px rgba(0,0,0,0.5))`,
-          }}
-        />
-        <span className="text-xs sm:text-sm mt-1 text-white/60 font-medium tracking-wider">
-          SCROLL
-        </span>
-      </div>
-    </div>
-
-    <div
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 z-30 sm:hidden cursor-pointer pb-1"
-      onClick={scrollToNextSection}
-      aria-label="Scroll to next section"
-    >
-      <div className="flex flex-col items-center">
-        <ChevronDown
-          className="w-3.5 h-3.5 animate-bounce"
-          style={{
-            color: colorScheme.primary,
-            filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.5))`,
-          }}
-        />
-      </div>
-    </div>
-  </>
-);
-
-export default HeroSection;

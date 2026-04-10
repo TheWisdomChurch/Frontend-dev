@@ -15,8 +15,8 @@ interface ContainerProps {
 
 const Container: React.FC<ContainerProps> = ({
   children,
-  size = 'lg',
-  padding = 'md',
+  size = 'xl',
+  padding = 'lg',
   background = 'none',
   customBackground,
   className = '',
@@ -35,12 +35,12 @@ const Container: React.FC<ContainerProps> = ({
   // REMOVED all vertical padding - only horizontal padding
   const paddingClasses = {
     none: 'px-0',
-    xs: 'px-4', // Mobile first
-    sm: 'px-4 sm:px-6 md:px-8',
-    md: 'px-4 sm:px-6 md:px-8',
-    lg: 'px-4 sm:px-8 md:px-10',
-    xl: 'px-4 sm:px-10 md:px-12',
-    '2xl': 'px-4 sm:px-12 md:px-16',
+    xs: 'px-5',
+    sm: 'px-5 sm:px-7 md:px-9',
+    md: 'px-5 sm:px-8 md:px-10',
+    lg: 'px-5 sm:px-10 md:px-12 lg:px-14',
+    xl: 'px-5 sm:px-12 md:px-14 lg:px-16',
+    '2xl': 'px-5 sm:px-14 md:px-16 lg:px-20',
   };
 
   // Background colors

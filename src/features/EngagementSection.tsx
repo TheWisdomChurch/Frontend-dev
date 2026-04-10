@@ -8,171 +8,179 @@ import {
   Zap,
   MessageSquare,
   Volume2,
+  ArrowRight,
 } from 'lucide-react';
 import { Container, Section } from '@/shared/layout';
-import { H2, H3, BodyMD, BodySM, Caption } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 
 /**
- * IMPROVED ENGAGEMENT SECTION
- * Highlights key features and CTAs for user engagement
- * Uses design system colors, spacing, and typography
+ * ENGAGEMENT SECTION - Call to Action
+ * Highlights key features and benefits with engaging design
+ * Uses CSS variables from design system
  */
 export default function EngagementSection() {
-  const { colorScheme } = useTheme();
-
-  const primary = colorScheme?.primary ?? '#f7de12';
   const features = [
     {
       icon: Volume2,
       title: 'Inspiring Messages',
       description:
         'Powerful teachings that transform lives and strengthen faith',
-      color: primary,
       cta: 'Listen Now',
-      action: () => (window.location.href = '/resources/sermons'),
+      action: '/resources/sermons',
     },
     {
       icon: Users2,
-      title: 'Community',
+      title: 'Vibrant Community',
       description:
-        'Join our vibrant family of believers across online and in-person',
-      color: primary,
+        'Join a family of believers across online and in-person gatherings',
       cta: 'Join Us',
-      action: () => (window.location.href = '#join'),
+      action: '/contact',
     },
     {
       icon: Heart,
       title: 'Service Opportunities',
       description: 'Discover ways to use your gifts and make a real impact',
-      color: primary,
-      cta: 'Serve with Us',
-      action: () =>
-        document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' }),
+      cta: 'Get Involved',
+      action: '/ministries',
     },
     {
       icon: Zap,
       title: 'Spiritual Growth',
       description:
         'Resources, events, and mentorship to deepen your faith journey',
-      color: primary,
-      cta: 'Explore Resources',
-      action: () => (window.location.href = '/resources'),
+      cta: 'Explore',
+      action: '/resources',
     },
   ];
 
   return (
     <Section
       padding="lg"
-      className="py-12 sm:py-16 md:py-20"
-      style={{ background: '#0a0a0a' }}
+      className="py-16 sm:py-20 lg:py-24"
+      style={{ backgroundColor: 'var(--color-bg-dark)' }}
     >
-      <Container size="xl" className="space-y-12">
+      <Container size="xl" className="space-y-12 sm:space-y-16">
         {/* Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-4">
-          <Caption
-            className="uppercase tracking-[0.2em] text-xs font-semibold"
-            style={{ color: primary }}
+        <div className="max-w-3xl mx-auto text-center space-y-5">
+          <p
+            className="text-sm uppercase tracking-widest font-semibold"
+            style={{ color: 'var(--color-gold)' }}
           >
-            Why Choose Us
-          </Caption>
-          <H2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-            Experience the Power of Faith
-          </H2>
-          <BodyMD className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto">
-            Whether you're seeking spiritual growth, community connection, or
-            ways to serve others, we've got something meaningful for you.
-          </BodyMD>
+            Why Join Us
+          </p>
+          <h2
+            className="font-serif"
+            style={{
+              fontSize: 'clamp(2rem, 6vw, 3.5rem)',
+              color: 'var(--color-text-primary)',
+            }}
+          >
+            Experience the Power of Faith & Community
+          </h2>
+          <p
+            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            Whether you're seeking spiritual growth, meaningful connections, or
+            ways to serve, we have something special for you here.
+          </p>
         </div>
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-7">
           {features.map((feature, idx) => {
             const IconComponent = feature.icon;
             return (
-              <div
+              <a
                 key={idx}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:from-white/8 hover:to-white/[0.05]"
+                href={feature.action}
+                className="group relative overflow-hidden rounded-2xl p-8 sm:p-10 transition-all duration-300 hover:border-opacity-100 hover:shadow-lg cursor-pointer"
+                style={{
+                  backgroundColor: 'rgba(215, 187, 117, 0.08)',
+                  border: '1px solid var(--color-border-light)',
+                }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget;
+                  el.style.backgroundColor = 'rgba(215, 187, 117, 0.12)';
+                  el.style.borderColor = 'var(--color-gold)';
+                  el.style.transform = 'translateY(-4px)';
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget;
+                  el.style.backgroundColor = 'rgba(215, 187, 117, 0.08)';
+                  el.style.borderColor = 'var(--color-border-light)';
+                  el.style.transform = 'translateY(0)';
+                }}
               >
-                {/* Accent border on hover */}
-                <div
-                  className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                  style={{
-                    background: `linear-gradient(135deg, ${primary}20 0%, transparent 100%)`,
-                  }}
-                />
-
-                <div className="relative space-y-4">
-                  {/* Icon */}
+                {/* Icon */}
+                <div className="mb-5">
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
                     style={{
-                      background: `${primary}15`,
-                      borderColor: `${primary}30`,
-                      borderWidth: '1px',
+                      backgroundColor: 'rgba(215, 187, 117, 0.15)',
                     }}
                   >
                     <IconComponent
-                      className="w-6 h-6"
-                      style={{ color: primary }}
+                      className="h-6 w-6"
+                      style={{ color: 'var(--color-gold)' }}
                     />
                   </div>
-
-                  {/* Title and Description */}
-                  <div className="space-y-2">
-                    <H3 className="text-xl font-bold text-white">
-                      {feature.title}
-                    </H3>
-                    <BodySM className="text-white/60 leading-relaxed">
-                      {feature.description}
-                    </BodySM>
-                  </div>
-
-                  {/* CTA Button */}
-                  <button
-                    onClick={feature.action}
-                    className="inline-flex items-center gap-2 font-semibold text-sm py-2 px-0 transition-all duration-300 group/cta"
-                    style={{ color: primary }}
-                  >
-                    {feature.cta}
-                    <svg
-                      className="w-4 h-4 transition-transform duration-300 group-hover/cta:translate-x-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
                 </div>
-              </div>
+
+                {/* Content */}
+                <h3
+                  className="text-xl sm:text-2xl font-semibold mb-3 leading-tight"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {feature.title}
+                </h3>
+                <p
+                  className="text-sm sm:text-base leading-relaxed mb-6"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  {feature.description}
+                </p>
+
+                {/* CTA */}
+                <div
+                  className="inline-flex items-center gap-2 font-semibold text-sm sm:text-base transition-all group-hover:gap-3"
+                  style={{ color: 'var(--color-gold)' }}
+                >
+                  {feature.cta}
+                  <ArrowRight className="h-4 w-4" />
+                </div>
+              </a>
             );
           })}
         </div>
 
         {/* Bottom CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-          <button
-            onClick={() => (window.location.href = '/about')}
-            className="px-8 py-4 rounded-xl font-semibold text-black transition-all duration-300 hover:scale-105 shadow-lg"
-            style={{
-              background: primary,
-            }}
+        <div
+          className="rounded-2xl p-10 sm:p-12 lg:p-14 text-center"
+          style={{
+            backgroundColor: 'rgba(215, 187, 117, 0.1)',
+            border: '1px solid var(--color-border-default)',
+          }}
+        >
+          <h3
+            className="text-2xl sm:text-3xl font-serif mb-4"
+            style={{ color: 'var(--color-text-primary)' }}
           >
-            Learn More About Us
-          </button>
-          <button
-            onClick={() => (window.location.href = '#join')}
-            className="px-8 py-4 rounded-xl font-semibold border-2 text-white transition-all duration-300 hover:bg-white/10"
-            style={{ borderColor: primary }}
+            Ready to Find Your Place?
+          </h3>
+          <p
+            className="max-w-2xl mx-auto text-base sm:text-lg mb-6"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
-            Get Involved
-          </button>
+            Connect with us today and become part of a vibrant community
+            committed to spiritual growth and transformation.
+          </p>
+          <a
+            href="/contact"
+            className="btn-primary inline-flex items-center justify-center gap-2"
+          >
+            Plan Your Visit
+            <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
       </Container>
     </Section>
