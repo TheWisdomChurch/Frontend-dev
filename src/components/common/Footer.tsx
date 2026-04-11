@@ -7,12 +7,19 @@ import {
   Phone,
   MapPin,
   Mail,
-  Facebook,
-  Youtube,
-  Instagram,
-  Twitter,
+  Share2,
+  Video,
+  Camera,
+  Share,
   ArrowRight,
 } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faFacebook,
+  faYoutube,
+  faInstagram,
+  faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { useDormantAction } from '@/components/utils/hooks/useDormantAction';
 import { BodySM, BodyMD, Caption, BodyLG } from '@/components/text';
@@ -22,17 +29,19 @@ import { WisdomeHouseLogo } from '../assets';
 const currentYear = new Date().getFullYear();
 const socialLinks = [
   {
-    Icon: Facebook,
+    icon: faFacebook,
     href: 'https://www.facebook.com/wisdomhousehq',
     label: 'Facebook',
+    isFontAwesome: true,
   },
   {
-    Icon: Youtube,
+    icon: faYoutube,
     href: 'https://www.youtube.com/@wisdomhousehq',
     label: 'YouTube',
+    isFontAwesome: true,
   },
-  { Icon: Instagram, href: '#', label: 'Instagram' },
-  { Icon: Twitter, href: '#', label: 'Twitter' },
+  { icon: faInstagram, href: '#', label: 'Instagram', isFontAwesome: true },
+  { icon: faTwitter, href: '#', label: 'Twitter', isFontAwesome: true },
 ];
 const contactInfo = [
   {
@@ -253,10 +262,18 @@ function Footer() {
                       className="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all"
                       aria-label={social.label}
                     >
-                      <social.Icon
-                        className="w-4 h-4"
-                        style={{ color: colorScheme.primary }}
-                      />
+                      {social.isFontAwesome ? (
+                        <FontAwesomeIcon
+                          icon={social.icon}
+                          className="w-4 h-4"
+                          style={{ color: colorScheme.primary }}
+                        />
+                      ) : (
+                        <social.Icon
+                          className="w-4 h-4"
+                          style={{ color: colorScheme.primary }}
+                        />
+                      )}
                     </a>
                   );
                 })}

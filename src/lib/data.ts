@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   BookOpen,
   Heart,
+  MessageCircle,
 } from 'lucide-react';
 import {
   NavLink,
@@ -51,7 +52,11 @@ import {
   Deacon_2,
   Bishop,
 } from '@/components/assets';
-import { Instagram, MessageCircle, Youtube } from 'lucide-react';
+import {
+  faWhatsapp as faInstagramAlt,
+  faInstagram,
+  faYoutube,
+} from '@fortawesome/free-brands-svg-icons';
 
 export const defaultSlides: Slide[] = [
   {
@@ -513,7 +518,8 @@ export const confessionContent = `
 // JoinCommunity
 export const communityLinks = [
   {
-    icon: MessageCircle,
+    icon: 'whatsapp',
+    iconFA: true,
     title: 'Join Our WhatsApp Community',
     description: 'Connect with fellow believers in our active WhatsApp group',
     url: 'https://wa.me/2347069995333',
@@ -521,7 +527,8 @@ export const communityLinks = [
     hoverColor: 'hover:from-green-600 hover:to-green-700',
   },
   {
-    icon: Instagram,
+    icon: 'instagram',
+    iconFA: true,
     title: 'Follow Us on Instagram',
     description: 'Stay updated with our latest posts and stories',
     url: 'https://www.instagram.com/wisdomchurchhq',
@@ -529,7 +536,8 @@ export const communityLinks = [
     hoverColor: 'hover:from-pink-600 hover:to-pink-700',
   },
   {
-    icon: Youtube,
+    icon: 'youtube',
+    iconFA: true,
     title: 'Subscribe to Our YouTube',
     description: 'Watch our sermons and inspirational content',
     url: 'https://www.youtube.com/channel/UCJuXOj075x81CYK-cCuXwdg',
