@@ -3,7 +3,13 @@
 import { useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Instagram, Facebook, Twitter, ArrowRight } from 'lucide-react';
+import { ArrowRight, Share2 } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faInstagram,
+  faFacebook,
+  faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
 import { Bishop } from '@/components/assets';
 import { H1, P } from '@/components/text';
 import Button from '@/components/utils/buttons/CustomButton';
@@ -144,7 +150,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     variant="primary"
                     size="xs"
                     curvature="full"
-                    leftIcon={<Instagram className="w-4 h-4" />}
+                    leftIcon={
+                      <FontAwesomeIcon icon={faInstagram} className="w-4 h-4" />
+                    }
                     className="px-5 py-2 text-[13px] font-semibold shadow-lg"
                     style={{
                       background: 'linear-gradient(135deg, #E4405F, #C13584)',
@@ -165,7 +173,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     variant="outline"
                     size="xs"
                     curvature="full"
-                    leftIcon={<Facebook className="w-4 h-4" />}
+                    leftIcon={
+                      <FontAwesomeIcon icon={faFacebook} className="w-4 h-4" />
+                    }
                     className="px-4 py-2 text-[13px] font-semibold"
                     style={{
                       backgroundColor: 'rgba(255,255,255,0.08)',
@@ -187,7 +197,9 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     variant="outline"
                     size="xs"
                     curvature="full"
-                    leftIcon={<Twitter className="w-4 h-4" />}
+                    leftIcon={
+                      <FontAwesomeIcon icon={faTwitter} className="w-4 h-4" />
+                    }
                     className="px-4 py-2 text-[13px] font-semibold"
                     style={{
                       backgroundColor: 'rgba(255,255,255,0.08)',

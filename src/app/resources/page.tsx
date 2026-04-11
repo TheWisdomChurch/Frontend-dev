@@ -13,7 +13,7 @@ import {
 } from '@/components/layout';
 import PageHero from '@/components/features/hero/PageHero';
 import { resourceLinks } from '@/lib/data';
-import { Radio, Sparkles, X, Youtube, Bell, Search } from 'lucide-react';
+import { Radio, Sparkles, X, Video, Bell, Search } from 'lucide-react';
 
 type Category =
   | 'all'
@@ -45,7 +45,7 @@ const quickActions = [
     title: 'Latest sermon',
     desc: 'Catch last gathering',
     href: '/resources/sermons',
-    icon: Youtube,
+    icon: Video,
   },
   {
     title: 'Events',
@@ -395,7 +395,7 @@ export default function ResourcesPage() {
                 className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition hover:scale-[1.01] flex items-center justify-center gap-2"
                 style={{ backgroundColor: '#FF0000', color: 'white' }}
               >
-                <Youtube className="w-4 h-4" />
+                <Video className="w-4 h-4" />
                 Subscribe on YouTube
               </button>
 
