@@ -3,5 +3,5 @@
  * Analytics-related UI components
  */
 
-export { default as CookieConsentBanner } from './ui/analytics/CookieConsentBanner';
-export { default as AnalyticsDashboard } from './ui/analytics/AnalyticsDashboard';
+export { default as MetaPixel } from './MetaPixel';
+export { default as CookieConsentBanner } from '../ui/CookieConsentBanner';
