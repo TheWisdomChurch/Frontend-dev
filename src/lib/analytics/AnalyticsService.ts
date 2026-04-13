@@ -9,7 +9,6 @@ import {
   UserProfile,
   AnalyticsConfig,
   TrackingContext,
-  PageViewData,
   EngagementMetrics,
 } from './types';
 import { ConsentManager } from './ConsentManager';
