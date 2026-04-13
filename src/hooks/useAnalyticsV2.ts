@@ -146,7 +146,6 @@ export const useScrollTracking = (elementId?: string) => {
       );
 
       // Track at intervals (25%, 50%, 75%, 100%)
-      const milestones = [25, 50, 75, 100];
       const currentMilestone = Math.floor(scrollPercentage / 25) * 25;
 
       if (currentMilestone > lastDepthRef.current && currentMilestone <= 100) {
