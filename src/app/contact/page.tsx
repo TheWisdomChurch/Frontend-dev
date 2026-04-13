@@ -1,366 +1,437 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Clock3, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
-
+import React, { useState } from 'react';
 import PageHero from '@/features/hero/PageHero';
-import { useNotification } from '@/shared/contexts/NotificationContext';
-import { useAnalyticsTracking } from '@/shared/analytics/useTracking';
-import { Container, Section } from '@/shared/layout';
+import { H2, H3, BodyMD, SmallText, Caption } from '@/shared/text';
+import { useTheme } from '@/shared/contexts/ThemeContext';
 import {
-  ActionBanner,
-  StatStrip,
-} from '@/shared/components/site/PublicPageBlocks';
+  Container,
+  Section,
+  PageSection,
+  FlexboxLayout,
+  Gridbox,
+} from '@/shared/layout';
+import Button from '@/shared/utils/buttons/CustomButton';
+import {
+  MapPin,
+  Phone,
+  Mail,
+  LucideIcon,
+  ArrowUpRight,
+  Video,
+  MailOpen,
+} from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faInstagram,
+  faFacebook,
+  faYoutube,
+} from '@fortawesome/free-brands-svg-icons';
 
-const stats = [
-  {
-    label: 'Location',
-    value: 'Honor Gardens, Lagos',
-    detail: 'Opposite Dominion City, Alasia, Lekki-Epe Expressway.',
-    icon: MapPin,
-  },
-  {
-    label: 'Phone',
-    value: '0706 999 5333',
-    detail: 'Reach the church team directly for guidance or scheduling help.',
-    icon: Phone,
-  },
-  {
-    label: 'Email',
-    value: 'Wisdomhousehq@gmail.com',
-    detail: 'Use email for enquiries, follow-up, or pastoral requests.',
-    icon: Mail,
-  },
-  {
-    label: 'Office rhythm',
-    value: 'Weekday follow-up',
-    detail: 'We aim to respond promptly and route requests to the right team.',
-    icon: Clock3,
-  },
-];
+interface ContactMethod {
+  title: string;
+  description: string;
+  details: string[];
+  icon: LucideIcon;
+  link?: string;
+}
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    'idle' | 'success' | 'error'
-  >('idle');
+interface SocialMedia {
+  platform: string;
+  handle: string;
+  url: string;
+  icon?: LucideIcon;
+  faIcon?: typeof faInstagram;
+}
 
-  const { notify } = useNotification();
-  const { trackFormStart, trackFormComplete, trackFormError } =
-    useAnalyticsTracking();
+const ContactPage = () => {
+  const { colorScheme } = useTheme();
+  const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    trackFormStart('contact_form');
-  }, [trackFormStart]);
+  const contactMethods: ContactMethod[] = [
+    {
+      title: 'Visit Us',
+      description: 'Come worship with us in person',
+      details: [
+        'Honors gardens, opposite Dominion Church Headquarters',
+        'Alasia bus stop, Lekki Epe expressway',
+        'Lagos, Nigeria',
+        'Sunday Services: 9:00 AM',
+      ],
+      icon: MapPin,
+    },
+    {
+      title: 'Call Us',
+      description: 'Speak with our church office',
+      details: ['Phone: +234 706 999 5333'],
+      icon: Phone,
+      link: 'https://wa.me/2347069995333',
+    },
+    {
+      title: 'Email Us',
+      description: 'Send us a message anytime',
+      details: ['wisdomhousehq@gmail.com'],
+      icon: Mail,
+      link: 'mailto:wisdomhousehq@gmail.com',
+    },
+  ];
 
-  const handleChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = event.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const socialMedia: SocialMedia[] = [
+    {
+      platform: 'Instagram',
+      handle: '@wisdomhousehq',
+      url: 'https://instagram.com/wisdomhousehq',
+      faIcon: faInstagram,
+    },
+    {
+      platform: 'Facebook',
+      handle: '@wisdomhousehq',
+      url: 'https://facebook.com/wisdomhousehq',
+      faIcon: faFacebook,
+    },
+    {
+      platform: 'YouTube',
+      handle: 'Wisdom House',
+      url: 'https://youtube.com/@wisdomhousehq',
+      faIcon: faYoutube,
+    },
+  ];
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
+  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = colorScheme.primary;
+  };
 
-    try {
-      trackFormComplete('contact_form', {
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        messageLength: formData.message.length,
-      });
-
-      setSubmitStatus('success');
-      notify(
-        "Message sent successfully. We'll get back to you soon.",
-        'success',
-        6000
-      );
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      setTimeout(() => setSubmitStatus('idle'), 5000);
-    } catch (error) {
-      trackFormError(
-        'contact_form',
-        (error as Error)?.message || 'Unknown error'
-      );
-      setSubmitStatus('error');
-      notify('Failed to send message. Please try again.', 'error', 6000);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
   };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       <PageHero
-        title="Need directions, prayer, or a clear next step? Reach the church team here."
-        subtitle="Use this page to plan a visit, ask a question, request support, or start a conversation with Wisdom Church."
-        note="We want contact to feel simple. The goal is to help you reach the right person without confusion or delay."
-        chips={[
-          'Visit info',
-          'Prayer requests',
-          'General enquiries',
-          'Pastoral care',
-        ]}
+        title="Contact Us"
+        subtitle="We'd love to hear from you"
+        note="Whether you’re new or part of the family, reach out and we’ll get back quickly."
+        chips={['Visit', 'Call', 'Email', 'Connect']}
+        compact
       />
 
-      <StatStrip items={stats} />
+      <Section padding="xl" className="relative overflow-hidden bg-[#050505]">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)',
+            backgroundSize: '34px 34px',
+            maskImage:
+              'radial-gradient(circle at 50% 40%, black 40%, transparent 92%)',
+            WebkitMaskImage:
+              'radial-gradient(circle at 50% 40%, black 40%, transparent 92%)',
+          }}
+        />
+        <div
+          className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"
+          style={{ background: `${colorScheme.primary}1a` }}
+        />
 
-      <Section padding="lg" className="bg-[#050505]">
-        <Container
-          size="xl"
-          className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]"
-        >
-          <div className="space-y-5 rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
-            <div className="space-y-3">
-              <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
-                Contact form
-              </p>
-              <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
-                Send a message and we will route it properly.
-              </h2>
-              <p className="text-base leading-relaxed text-white/68">
-                Use the form for visit planning, ministry questions, pastoral
-                support, or general enquiries.
-              </p>
-            </div>
+        <Container size="xl" className="relative z-10">
+          <div className="grid grid-cols-1 xl:grid-cols-[0.94fr_1.06fr] gap-5 sm:gap-6 lg:gap-8">
+            <aside className="space-y-4 sm:space-y-5 xl:sticky xl:top-24 h-fit">
+              <div
+                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 lg:p-6"
+                style={{
+                  background:
+                    'linear-gradient(150deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.015) 42%, rgba(0,0,0,0.2) 100%)',
+                  boxShadow: '0 16px 42px rgba(0,0,0,0.34)',
+                }}
+              >
+                <H2 className="text-lg sm:text-xl font-semibold mb-1.5 leading-tight">
+                  Visit & Reach Us
+                </H2>
+                <BodyMD className="text-white/70 text-xs sm:text-sm leading-relaxed">
+                  Multiple ways to connect with leadership and teams.
+                </BodyMD>
 
-            <form onSubmit={handleSubmit} className="grid gap-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field
-                  label="Full name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Your name"
-                  required
-                />
-                <Field
-                  label="Email address"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="you@example.com"
-                  type="email"
-                  required
-                />
-              </div>
+                <div className="mt-4 space-y-3">
+                  {contactMethods.map((method, index) => {
+                    const Icon = method.icon;
+                    return (
+                      <div
+                        key={method.title}
+                        className="relative rounded-xl sm:rounded-2xl border border-white/10 bg-black/30 p-3.5 sm:p-4"
+                      >
+                        <div
+                          className="absolute inset-x-0 top-0 h-px opacity-70"
+                          style={{
+                            background: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary}55 50%, transparent 100%)`,
+                          }}
+                        />
+                        <div className="flex items-start gap-3">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div
+                              className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl flex items-center justify-center border border-white/10"
+                              style={{
+                                backgroundColor: colorScheme.opacity.primary10,
+                              }}
+                            >
+                              <Icon
+                                className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
+                                style={{ color: colorScheme.primary }}
+                              />
+                            </div>
+                            <div className="hidden sm:block">
+                              <Caption className="text-[10px] tracking-[0.18em] text-white/50">
+                                {String(index + 1).padStart(2, '0')}
+                              </Caption>
+                            </div>
+                          </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field
-                  label="Phone number"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Optional"
-                />
-                <div className="grid gap-2">
-                  <label
-                    htmlFor="subject"
-                    className="text-sm font-medium text-white/78"
-                  >
-                    Subject
-                  </label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-[#d7bb75]"
-                    required
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="First visit">First visit</option>
-                    <option value="Prayer request">Prayer request</option>
-                    <option value="Pastoral care">Pastoral care</option>
-                    <option value="Ministry enquiry">Ministry enquiry</option>
-                    <option value="General enquiry">General enquiry</option>
-                  </select>
+                          <div className="min-w-0 flex-1">
+                            <H3 className="text-sm sm:text-[15px] font-semibold leading-tight">
+                              {method.title}
+                            </H3>
+                            <SmallText className="mt-1 text-white/65 text-[11px] sm:text-xs leading-relaxed">
+                              {method.description}
+                            </SmallText>
+
+                            <div className="mt-2 space-y-1">
+                              {method.details.map(detail => (
+                                <SmallText
+                                  key={detail}
+                                  className="block text-white/70 text-[11px] sm:text-xs leading-relaxed"
+                                >
+                                  {detail}
+                                </SmallText>
+                              ))}
+                            </div>
+
+                            {method.link ? (
+                              <a
+                                href={method.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold"
+                                style={{ color: colorScheme.primary }}
+                              >
+                                Reach out
+                                <ArrowUpRight className="w-3.5 h-3.5" />
+                              </a>
+                            ) : null}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="grid gap-2">
-                <label
-                  htmlFor="message"
-                  className="text-sm font-medium text-white/78"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us how we can help"
-                  rows={6}
-                  required
-                  className="rounded-[1.5rem] border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-[#d7bb75]"
-                />
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-white/58">
-                  We treat enquiries with care and route support requests
-                  responsibly.
-                </p>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex items-center justify-center rounded-full bg-[#d7bb75] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {isSubmitting ? 'Sending...' : 'Send message'}
-                </button>
-              </div>
-
-              {submitStatus !== 'idle' ? (
-                <div
-                  className="rounded-2xl border px-4 py-3 text-sm"
-                  style={{
-                    borderColor:
-                      submitStatus === 'success'
-                        ? 'rgba(34,197,94,0.35)'
-                        : 'rgba(239,68,68,0.35)',
-                    backgroundColor:
-                      submitStatus === 'success'
-                        ? 'rgba(34,197,94,0.08)'
-                        : 'rgba(239,68,68,0.08)',
-                    color: submitStatus === 'success' ? '#86efac' : '#fca5a5',
-                  }}
-                >
-                  {submitStatus === 'success'
-                    ? 'Your message has been received. The team will follow up shortly.'
-                    : 'There was a problem submitting the form. Please try again.'}
+              <div
+                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5"
+                style={{
+                  background:
+                    'linear-gradient(150deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.015) 45%, rgba(0,0,0,0.16) 100%)',
+                }}
+              >
+                <H3 className="text-sm sm:text-base font-semibold mb-3">
+                  Follow us
+                </H3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {socialMedia.map(social => {
+                    return (
+                      <a
+                        key={social.platform}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2.5 transition-colors hover:border-white/20"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div
+                            className="h-8 w-8 rounded-lg flex items-center justify-center border border-white/10"
+                            style={{
+                              backgroundColor: colorScheme.opacity.primary10,
+                            }}
+                          >
+                            {social.faIcon ? (
+                              <FontAwesomeIcon
+                                icon={social.faIcon}
+                                className="w-4 h-4"
+                                style={{ color: colorScheme.primary }}
+                              />
+                            ) : social.icon ? (
+                              React.createElement(social.icon, {
+                                className: 'w-4 h-4',
+                                style: { color: colorScheme.primary },
+                              })
+                            ) : null}
+                          </div>
+                          <div className="min-w-0">
+                            <SmallText className="block text-white/85 text-[11px] sm:text-xs font-medium truncate">
+                              {social.platform}
+                            </SmallText>
+                            <SmallText className="block text-white/55 text-[10px] sm:text-[11px] truncate">
+                              {social.handle}
+                            </SmallText>
+                          </div>
+                        </div>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-white/50 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </a>
+                    );
+                  })}
                 </div>
-              ) : null}
-            </form>
-          </div>
+              </div>
+            </aside>
 
-          <div className="space-y-4">
-            {[
-              {
-                title: 'Visit information',
-                description:
-                  'Need directions, service times, or help planning your first Sunday? We can help you arrive prepared.',
-                icon: MapPin,
-              },
-              {
-                title: 'Prayer and pastoral care',
-                description:
-                  'If your request is spiritual, personal, or time-sensitive, our pastoral team can respond with care and discretion.',
-                icon: ShieldCheck,
-              },
-              {
-                title: 'Ministry and volunteering',
-                description:
-                  'If you want to join a ministry team or learn where you fit, this is the right starting point.',
-                icon: Phone,
-              },
-            ].map(item => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.title}
-                  className="rounded-[1.6rem] border border-white/10 bg-white/[0.03] p-5"
-                >
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
-                    <Icon className="h-5 w-5 text-[#d7bb75]" />
+            <div
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 lg:p-6"
+              style={{
+                background:
+                  'linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.02) 42%, rgba(0,0,0,0.22) 100%)',
+                boxShadow: '0 18px 48px rgba(0,0,0,0.36)',
+              }}
+            >
+              <div
+                className="absolute inset-0 opacity-80"
+                style={{
+                  background: `radial-gradient(circle at 92% 10%, ${colorScheme.primary}22 0%, transparent 44%)`,
+                }}
+              />
+
+              <div className="relative">
+                <div className="mb-5 sm:mb-6 space-y-1">
+                  <H3 className="text-base sm:text-lg font-semibold leading-tight">
+                    Send us a message
+                  </H3>
+                  <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
+                    We respond within 24 hours on weekdays.
+                  </SmallText>
+                </div>
+
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <SmallText className="text-white/70 text-[11px]">
+                        First name
+                      </SmallText>
+                      <input
+                        type="text"
+                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
+                        placeholder="John"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <SmallText className="text-white/70 text-[11px]">
+                        Last name
+                      </SmallText>
+                      <input
+                        type="text"
+                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
+                        placeholder="Doe"
+                      />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-white">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/66">
-                    {item.description}
-                  </p>
-                </div>
-              );
-            })}
 
-            <div className="rounded-[1.8rem] border border-white/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25))] p-6">
-              <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
-                Direct contact
-              </p>
-              <div className="mt-5 grid gap-3 text-sm text-white/70">
-                <a
-                  href="tel:07069995333"
-                  className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 transition hover:text-white"
-                >
-                  Phone: 0706 999 5333
-                </a>
-                <a
-                  href="mailto:Wisdomhousehq@gmail.com"
-                  className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 transition hover:text-white"
-                >
-                  Email: Wisdomhousehq@gmail.com
-                </a>
-                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
-                  Address: Honor Gardens, opposite Dominion City, Alasia,
-                  Lekki-Epe Expressway, Lagos
-                </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <SmallText className="text-white/70 text-[11px]">
+                        Email
+                      </SmallText>
+                      <input
+                        type="email"
+                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
+                        placeholder="you@example.com"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <SmallText className="text-white/70 text-[11px]">
+                        Phone
+                      </SmallText>
+                      <input
+                        type="tel"
+                        className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
+                        placeholder="+234 706 999 5333"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <SmallText className="text-white/70 text-[11px]">
+                      Topic
+                    </SmallText>
+                    <select className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10">
+                      <option value="">Select a topic</option>
+                      <option value="visit">Plan a visit</option>
+                      <option value="pastoral">Pastoral care</option>
+                      <option value="prayer">Prayer request</option>
+                      <option value="serve">Serving / volunteering</option>
+                      <option value="events">Events / bookings</option>
+                      <option value="media">Media / resources</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <SmallText className="text-white/70 text-[11px]">
+                      Message
+                    </SmallText>
+                    <textarea
+                      rows={5}
+                      className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10 resize-y min-h-[120px]"
+                      placeholder="Tell us how we can help..."
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2 text-white/70">
+                    <div
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: colorScheme.primary }}
+                    />
+                    <SmallText className="text-[11px] sm:text-xs">
+                      We’ll respond by email and phone if provided.
+                    </SmallText>
+                  </div>
+
+                  <div className="flex flex-col items-start gap-2">
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="md"
+                      curvature="xl"
+                      className="w-full sm:w-auto px-6 py-2.5 text-sm font-semibold text-black"
+                      style={{
+                        backgroundColor: colorScheme.primary,
+                        color: colorScheme.black,
+                      }}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      Send Message
+                    </Button>
+
+                    {submitted ? (
+                      <SmallText
+                        className="text-emerald-300 text-[11px] sm:text-xs"
+                        aria-live="polite"
+                      >
+                        Message queued successfully. Our team will respond
+                        within 24 hours.
+                      </SmallText>
+                    ) : null}
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </Container>
       </Section>
-
-      <ActionBanner
-        eyebrow="Need a first next step?"
-        title="If you are trying to plan a visit, ask for prayer, or connect to a ministry, this page is the right entry point."
-        description="The church team will help route you to the right person and make the process clear."
-        primaryHref="/events"
-        primaryLabel="See church rhythm"
-        secondaryHref="/pastoral"
-        secondaryLabel="View pastoral care"
-      />
     </div>
   );
-}
-
-type FieldProps = {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  type?: string;
-  required?: boolean;
 };
 
-function Field({
-  label,
-  name,
-  value,
-  onChange,
-  placeholder,
-  type = 'text',
-  required = false,
-}: FieldProps) {
-  return (
-    <div className="grid gap-2">
-      <label htmlFor={name} className="text-sm font-medium text-white/78">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-        className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-[#d7bb75]"
-      />
-    </div>
-  );
-}
+export default ContactPage;

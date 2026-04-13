@@ -1,22 +1,35 @@
-// components/text/index.ts
+/**
+ * Text Components Index
+ * Typography and text-related components
+ */
+
 export { BaseText } from './baseText';
+export type { BaseTextProps } from './baseText';
+
+export { BricolageText, WorkSansText, PlayfairText } from './FontText';
+
 export {
   H1,
   H2,
   H3,
   H4,
-  P,
-  BodyXL,
+  H5,
+  H6,
   BodyLG,
-  BodyMD, // ← ADD THIS
-  BodySM, // ← ADD THIS
+  BodyMD,
+  BodySM,
+  P,
   SmallText,
   Caption,
-  // Span,
-  // Strong,
-  // Em,
 } from './Semantictext';
-export { LightText, RegularText, MediumText, SemiBoldText } from './weightText';
-export { BricolageText } from './FontText';
 
-export type { BaseTextProps } from './baseText';
+export {
+  LightText,
+  RegularText,
+  MediumText,
+  SemiBoldText,
+  PlayfairRegular,
+  PlayfairBold,
+  PlayfairExtraBold,
+  PlayfairItalic,
+} from './weightText';

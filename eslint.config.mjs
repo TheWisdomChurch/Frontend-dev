@@ -16,6 +16,8 @@ export default [
       'next-env.d.ts',
       '*.config.js',
       '*.config.ts',
+      '**/*.css',
+      '**/*.scss',
     ],
   },
   js.configs.recommended,
@@ -43,6 +45,12 @@ export default [
       '@next/next/no-img-element': 'off',
       'prefer-const': 'off',
       'no-console': 'off',
+    },
+  },
+  {
+    files: ['**/*.scss'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
   {

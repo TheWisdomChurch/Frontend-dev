@@ -1,316 +1,282 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import React, { useEffect, useState, useMemo } from 'react';
+import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
-import {
-  ArrowRight,
-  BookOpenCheck,
-  CalendarDays,
-  HeartHandshake,
-  MapPin,
-  Radio,
-  Sparkles,
-  Users,
-} from 'lucide-react';
-
-import HeroMain from '@/features/hero/HeroMain';
-import { missionStatement } from '@/lib/data';
-import { Container, Section } from '@/shared/layout';
-import { BodyMD, Caption, H3 } from '@/shared/text';
 import { useTheme } from '@/shared/contexts/ThemeContext';
+import ResourceSection from '@/features/resources/Resource';
 
-const WhatWeDo = dynamic(() => import('@/features/WhatWeDo'), {
-  ssr: true,
-  loading: () => null,
+// Optimize: Allow caching where possible, only force dynamic for truly dynamic sections
+// Note: Since this component uses useState and useEffect, we can't use revalidate here
+// Use force-dynamic: false to allow ISR where possible with dynamic segments
+
+// ============================================================================
+// DYNAMIC IMPORTS - Using reorganized feature components
+// Optimize: Enable SSR where possible for better initial load performance
+// ============================================================================
+
+// Fast-loading components - SSR enabled with proper fallbacks
+const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
+  ssr: true, // Enable SSR for above-fold content
+  loading: () => <div className="h-[500px] bg-slate-900 animate-pulse" />,
 });
 
-const EventsShowcase = dynamic(
+const HeroHighlights = nextDynamic(
+  () => import('@/features/hero/HeroHighlights'),
+  {
+    ssr: false,
+    loading: () => <div className="h-[300px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+// Mid-load components - SSR enabled
+const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
+  ssr: true,
+  loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
+});
+
+const SeniorPastor = nextDynamic(
+  () => import('@/features/leadership/SeniorPastor'),
+  {
+    ssr: true,
+    loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+const Testimonials = nextDynamic(
+  () => import('@/features/testimonials/Testimonials'),
+  {
+    ssr: true,
+    loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+const OnlineGiving = nextDynamic(
+  () => import('@/features/events/OnlineGiving'),
+  {
+    ssr: true,
+    loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+// Below-fold components - Can be lazy loaded (ssr: false)
+const EventsShowcase = nextDynamic(
   () => import('@/features/events/EventsShowcase'),
+  {
+    ssr: false,
+    loading: () => <div className="h-[300px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
+  ssr: false,
+  loading: () => <div className="h-[250px] bg-slate-900 animate-pulse" />,
+});
+
+// Modal components - Client-side only
+const EventAdModal = nextDynamic(
+  () => import('@/shared/ui/modals/EventAdModal'),
   {
     ssr: false,
     loading: () => null,
   }
 );
 
-const SeniorPastor = dynamic(
-  () => import('@/features/leadership/SeniorPastor'),
+const ConfessionPopup = nextDynamic(
+  () => import('@/shared/ui/modals/ConfessionPopup'),
   {
-    ssr: true,
+    ssr: false,
     loading: () => null,
   }
 );
 
-const EngagementSection = dynamic(
-  () => import('@/features/EngagementSection'),
-  {
-    ssr: true,
-    loading: () => null,
-  }
-);
-
-const Testimonials = dynamic(
-  () => import('@/features/testimonials/Testimonials'),
-  {
-    ssr: true,
-    loading: () => null,
-  }
-);
-
-const ResourceSection = dynamic(() => import('@/features/resources/Resource'), {
-  ssr: true,
-  loading: () => null,
-});
-
-const JoinWisdomHouse = dynamic(() => import('@/features/events/JoinUs'), {
-  ssr: true,
-  loading: () => null,
-});
-
-const quickGuides = [
-  {
-    label: 'Sunday Worship',
-    value: '9:00 AM',
-    detail: 'Spirit-filled worship, prayer, and biblical teaching.',
-    icon: Radio,
-  },
-  {
-    label: 'Midweek Service',
-    value: 'Thursday · 6:00 PM',
-    detail:
-      'A focused church rhythm for Word, prayer, and spiritual refreshing.',
-    icon: CalendarDays,
-  },
-  {
-    label: 'Location',
-    value: 'Honor Gardens, Lekki-Epe',
-    detail: 'Opposite Dominion City, Alasia Bus Stop, Lagos.',
-    icon: MapPin,
-  },
-];
-
-const promisePillars = [
-  {
-    title: 'Presence-driven worship',
-    description:
-      'We make space for worship, prayer, and reverence without losing clarity or direction.',
-    icon: Sparkles,
-  },
-  {
-    title: 'Practical biblical teaching',
-    description:
-      'Messages are designed to strengthen conviction, character, and everyday obedience.',
-    icon: BookOpenCheck,
-  },
-  {
-    title: 'Authentic community',
-    description:
-      'Church life is structured to help families, students, and professionals truly belong.',
-    icon: Users,
-  },
-];
-
-const firstVisitSteps = [
-  'Know where we meet and what time to arrive.',
-  'Understand the feel of the service before you come.',
-  'See how ministries, care, and community life are structured.',
-  'Take one clear next step after your first visit.',
-];
-
-const nextPaths = [
-  {
-    title: 'Plan your first visit',
-    description:
-      'Get directions, contact details, and help with what to expect on your first Sunday.',
-    href: '/contact',
-    icon: MapPin,
-  },
-  {
-    title: 'Explore ministries',
-    description:
-      'Find a clear place for growth, discipleship, and service across every generation.',
-    href: '/ministries',
-    icon: Users,
-  },
-  {
-    title: 'Catch up on sermons',
-    description:
-      'Watch recent messages and follow the current teaching emphasis of the house.',
-    href: '/resources/sermons',
-    icon: BookOpenCheck,
-  },
-  {
-    title: 'Share life with us',
-    description:
-      'Reach out for prayer, pastoral care, or a conversation about getting connected.',
-    href: '/pastoral',
-    icon: HeartHandshake,
-  },
-];
+// ============================================================================
+// HOMEPAGE COMPONENT
+// ============================================================================
 
 export default function Home() {
   const { colorScheme } = useTheme();
-  const primary = colorScheme.primary || '#d9b35f';
-  const primaryGlow = colorScheme.opacity.primary10 || 'rgba(217,179,95,0.1)';
+
+  const [showModal, setShowModal] = useState(false);
+  const [nextAdAt, setNextAdAt] = useState<number | null>(null);
+  const [showConfessionPopup, setShowConfessionPopup] = useState(true);
+
+  const eventStorageKey = 'wc_event_ad_next_show_session_v2';
+  const autoOpenDelayMs = 1200;
+  const closeCooldownMs = 1000 * 60 * 20;
+  const remindCooldownMs = 1000 * 60 * 45;
+
+  // Event advertising modal data
+  const eventAd = useMemo(
+    () => ({
+      id: 'wpc-2026',
+      title: 'Wisdom Power Conference 2026',
+      headline: 'Have you registered for WPC 2026?',
+      description:
+        'Join three days of worship, impartation, and encounters designed to refresh your spirit and strengthen your walk.',
+      startAt: '2026-03-20T18:00:00Z',
+      endAt: '2026-03-22T20:00:00Z',
+      time: 'Morning Session • Evening Session',
+      location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
+      image: '/HEADER.png',
+      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
+      ctaLabel: 'Register now',
+      note: 'You will be returned to the main website after you finish.',
+    }),
+    []
+  );
+
+  // Initialize modal timing on mount
+  useEffect(() => {
+    document.body.classList.add('home-page');
+    return () => {
+      document.body.classList.remove('home-page');
+    };
+  }, []);
+
+  // Initialize modal timing on mount
+  useEffect(() => {
+    const now = Date.now();
+    const nextAllowedRaw =
+      typeof window !== 'undefined'
+        ? window.sessionStorage.getItem(eventStorageKey)
+        : null;
+    const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
+
+    if (Number.isFinite(nextAllowed) && now < nextAllowed) {
+      setNextAdAt(nextAllowed);
+      return;
+    }
+
+    setNextAdAt(now + autoOpenDelayMs);
+  }, [autoOpenDelayMs, eventStorageKey]);
+
+  // Setup modal auto-open timer
+  useEffect(() => {
+    if (nextAdAt === null) return;
+
+    const timeLeft = nextAdAt - Date.now();
+    if (timeLeft <= 0) {
+      setShowModal(true);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setShowModal(true);
+    }, timeLeft);
+
+    return () => window.clearTimeout(timer);
+  }, [nextAdAt]);
+
+  // Cooldown persistence for modal
+  const persistAdCooldown = (cooldownMs: number) => {
+    const nextAllowedAt = Date.now() + cooldownMs;
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem(eventStorageKey, String(nextAllowedAt));
+    }
+    setNextAdAt(nextAllowedAt);
+  };
+
+  const handleCloseModal = () => {
+    persistAdCooldown(closeCooldownMs);
+    setShowModal(false);
+  };
+
+  const handleRemindLater = () => {
+    persistAdCooldown(remindCooldownMs);
+    setShowModal(false);
+  };
 
   return (
-    <div className="bg-[#050505] text-white">
-      <HeroMain
-        primaryButtonText="Plan Your Visit"
-        secondaryButtonText="Watch a Message"
-        onPrimaryButtonClick={() => {
-          window.location.href = '/contact';
+    <div className="relative min-h-screen overflow-x-hidden bg-[#050505]">
+      {/* Animated background gradient */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 opacity-80"
+        style={{
+          background: `radial-gradient(circle at 20% 20%, ${colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.2)'} 0%, transparent 45%), radial-gradient(circle at 80% 10%, ${colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'} 0%, transparent 40%), radial-gradient(circle at 50% 90%, ${colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'} 0%, transparent 40%)`,
+          filter: 'blur(60px)',
         }}
-        onSecondaryButtonClick={() => {
-          window.location.href = '/resources/sermons';
-        }}
+        data-parallax-global="0.2"
       />
 
-      <Section
-        padding="md"
-        className="relative overflow-hidden border-y border-white/10 bg-[#070707]"
-      >
-        <Container size="xl" className="grid gap-3 sm:grid-cols-3">
-          {quickGuides.map(item => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-white/12 bg-black/30 p-4 backdrop-blur-md"
-              >
-                <div className="mb-3 flex items-center gap-2">
-                  <div
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10"
-                    style={{ backgroundColor: primaryGlow }}
-                  >
-                    <Icon className="h-4 w-4" style={{ color: primary }} />
-                  </div>
-                  <Caption className="text-[0.62rem] uppercase tracking-[0.18em] text-white/60">
-                    {item.label}
-                  </Caption>
-                </div>
-                <p className="text-sm font-semibold text-white sm:text-base">
-                  {item.value}
-                </p>
-                <p className="mt-1 text-sm leading-relaxed text-white/65">
-                  {item.detail}
-                </p>
-              </div>
-            );
-          })}
-        </Container>
-      </Section>
+      <main className="flex-1 w-full">
+        <div className="flex flex-col">
+          {/* Hero Section with video background */}
+          <HeroMain />
 
-      <Section
-        padding="lg"
-        className="relative overflow-hidden border-b border-white/10 bg-[#080808]"
-      >
-        <Container size="xl" className="space-y-10">
-          <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-            <div className="space-y-4">
-              <Caption
-                className="uppercase tracking-[0.2em] text-[0.62rem]"
-                style={{ color: primary }}
-              >
-                Who we are
-              </Caption>
-              <H3 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
-                A house of wisdom, power, excellence, and care.
-              </H3>
-              <BodyMD className="max-w-2xl text-base leading-relaxed text-white/70">
-                {missionStatement}
-              </BodyMD>
-            </div>
+          {/* Hero Highlights Section */}
+          <div data-gsap="reveal">
+            <HeroHighlights />
+          </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              {promisePillars.map(item => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={item.title}
-                    className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5"
-                  >
-                    <div
-                      className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10"
-                      style={{ backgroundColor: primaryGlow }}
-                    >
-                      <Icon className="h-5 w-5" style={{ color: primary }} />
-                    </div>
-                    <p className="text-base font-semibold text-white">
-                      {item.title}
-                    </p>
-                    <p className="mt-2 text-sm leading-relaxed text-white/66">
-                      {item.description}
-                    </p>
-                  </div>
-                );
-              })}
+          {/* What We Do Section */}
+          <div data-gsap="reveal">
+            <WhatWeDo />
+          </div>
+
+          {/* Events Showcase - Fetches from API */}
+          <div data-gsap="reveal">
+            <EventsShowcase />
+          </div>
+
+          {/* Senior Pastor Message Section */}
+          <div data-gsap="reveal">
+            <SeniorPastor />
+          </div>
+
+          {/* Call to Action - Join Us */}
+          <div id="join">
+            <div data-gsap="reveal">
+              <JoinUs />
             </div>
           </div>
 
-          <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.05),rgba(0,0,0,0.22))] p-5 sm:grid-cols-[1.1fr_0.9fr] sm:p-7">
-            <div className="space-y-3">
-              <Caption className="text-[0.62rem] uppercase tracking-[0.18em] text-white/55">
-                First-time guests
-              </Caption>
-              <p className="max-w-2xl text-lg font-semibold leading-snug text-white sm:text-xl">
-                A church website should remove uncertainty. It should help you
-                know what the house is like before you ever arrive.
-              </p>
-            </div>
-            <div className="grid gap-2">
-              {firstVisitSteps.map(step => (
-                <div
-                  key={step}
-                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white/72"
-                >
-                  {step}
-                </div>
-              ))}
-            </div>
+          {/* Testimonials Section - Fetches from API */}
+          <div data-gsap="reveal">
+            <Testimonials />
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-4">
-            {nextPaths.map(item => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="group rounded-[1.6rem] border border-white/10 bg-white/[0.03] p-5 transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.06]"
-                >
-                  <div
-                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10"
-                    style={{ backgroundColor: primaryGlow }}
-                  >
-                    <Icon className="h-5 w-5" style={{ color: primary }} />
-                  </div>
-                  <p className="text-lg font-semibold text-white">
-                    {item.title}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/66">
-                    {item.description}
-                  </p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[#d7bb75]">
-                    Open page
-                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </span>
-                </Link>
-              );
-            })}
+          {/* Online Giving Section */}
+          <div data-gsap="reveal">
+            <OnlineGiving />
           </div>
-        </Container>
-      </Section>
 
-      <WhatWeDo />
-      <EventsShowcase />
-      <SeniorPastor />
-      <EngagementSection />
-      <Testimonials />
-      <ResourceSection />
+          {/* Resources Section */}
+          <div data-gsap="reveal">
+            <ResourceSection />
+          </div>
+        </div>
 
-      <div id="join">
-        <JoinWisdomHouse />
-      </div>
+        {/* Event Advertisement Modal */}
+        <EventAdModal
+          open={showModal}
+          event={eventAd}
+          onClose={handleCloseModal}
+          onRemindLater={handleRemindLater}
+        />
+
+        {/* WPC 2026 Float Button */}
+        {!showModal && (
+          <button
+            type="button"
+            aria-label="Open conference registration ad"
+            onClick={() => setShowModal(true)}
+            className="fixed bottom-4 right-4 sm:bottom-5 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 sm:px-4 py-2.5 text-[11px] sm:text-sm font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+            style={{ animation: 'fade-up-keyframe 0.5s ease-out' }}
+          >
+            <span className="text-lg">📢</span>
+            <span>WPC 2026</span>
+          </button>
+        )}
+
+        {/* Confession Popup */}
+        {!showModal && showConfessionPopup && (
+          <ConfessionPopup
+            onClose={() => setShowConfessionPopup(false)}
+            delay={1800}
+          />
+        )}
+      </main>
     </div>
   );
 }

@@ -25,6 +25,8 @@
   "include": [
     "next-env.d.ts",
     "next.config.ts",
+    "ANALYTICS_CONFIGURATION.ts",
+    "ANALYTICS_EXAMPLES.tsx",
     "src/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
