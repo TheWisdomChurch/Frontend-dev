@@ -50,15 +50,6 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000; // Start with 1s, exponential backoff
 
-function clearExpiredCache() {
-  const now = Date.now();
-  for (const [key, value] of REQUEST_CACHE.entries()) {
-    if (now - value.timestamp > CACHE_TTL_MS) {
-      REQUEST_CACHE.delete(key);
-    }
-  }
-}
-
 /* ============================================================================
    Error Utilities
 ============================================================================ */
