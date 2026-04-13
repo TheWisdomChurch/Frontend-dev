@@ -362,7 +362,9 @@ export class AnalyticsService {
         }),
       });
     } catch (error) {
-      console.error('[Analytics] Error sending events:', error);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('[Analytics] Error sending events:', error);
+      }
     }
   }
 

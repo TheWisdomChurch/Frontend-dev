@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -48,8 +48,19 @@ export default function OnlineGiving() {
     nextCard,
   } = useOnlineGiving();
   useIntersectionObserver(setIsVisible, sectionRef);
-  const particles = useMemo(
-    () =>
+  const [particles, setParticles] = useState<
+    Array<{
+      id: number;
+      size: number;
+      left: number;
+      top: number;
+      delay: number;
+      duration: number;
+    }>
+  >([]);
+
+  useEffect(() => {
+    setParticles(
       [...Array(15)].map((_, i) => ({
         id: i,
         size: Math.random() * 100 + 50,
@@ -57,9 +68,9 @@ export default function OnlineGiving() {
         top: Math.random() * 100,
         delay: i * 0.5,
         duration: Math.random() * 10 + 15,
-      })),
-    []
-  );
+      }))
+    );
+  }, []);
   // Add ref to card
   const addCardRef = (el: HTMLDivElement | null, index: number) => {
     cardsRef.current[index] = el;
