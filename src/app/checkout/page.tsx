@@ -15,6 +15,7 @@ import {
 import { H2, LightText } from '@/components/text';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import { ShoppingBag } from 'lucide-react';
+import PageHero from '@/components/features/hero/PageHero';
 
 const CheckoutPage = () => {
   const router = useRouter();
@@ -46,6 +47,12 @@ const CheckoutPage = () => {
         className="min-h-screen py-8"
         style={{ backgroundColor: sectionBackground }}
       >
+        <PageHero
+          title="Checkout"
+          subtitle="Complete your order securely."
+          description="Review your items and finalize your purchase."
+          compact
+        />
         <Section
           padding="xl"
           fullHeight={false}
@@ -97,6 +104,12 @@ const CheckoutPage = () => {
       className="min-h-screen py-8"
       style={{ backgroundColor: sectionBackground }}
     >
+      <PageHero
+        title="Checkout"
+        subtitle="Complete your order securely."
+        description="Review your items and finalize your purchase."
+        compact
+      />
       <Section
         padding="xl"
         fullHeight={false}

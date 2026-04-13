@@ -1,5 +1,6 @@
 // app/cookies/page.tsx
 import { BodyMD, BodySM, H2, H3 } from '@/components/text';
+import PageHero from '@/components/features/hero/PageHero';
 import {
   Container,
   Section,
@@ -11,6 +12,12 @@ import {
 export default function CookiesPage() {
   return (
     <PageSection tone="surface" padding="xl">
+      <PageHero
+        title="Cookies & Privacy"
+        subtitle="How we use essential data to keep the site secure."
+        description="We only store what is needed to run the site and respect your privacy."
+        compact
+      />
       <div className="max-w-4xl mx-auto space-y-6">
         <H2>Cookies & Privacy</H2>
         <BodyMD className="text-muted">

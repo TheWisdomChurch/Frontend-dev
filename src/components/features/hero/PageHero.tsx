@@ -30,7 +30,7 @@ export default function PageHero({
   title,
   subtitle,
   description,
-  eyebrow = 'The Wisdom House Church',
+  eyebrow = '',
   note,
   chips,
   compact = false,
@@ -62,8 +62,8 @@ export default function PageHero({
       padding="none"
       className={`relative overflow-hidden bg-[#050505] flex items-center ${
         isAboutVariant
-          ? 'min-h-[68vh] sm:min-h-[72vh] lg:min-h-[76vh]'
-          : 'min-h-[58vh] sm:min-h-[62vh] lg:min-h-[68vh]'
+          ? 'min-h-[44vh] sm:min-h-[48vh] lg:min-h-[52vh]'
+          : 'min-h-[36vh] sm:min-h-[40vh] lg:min-h-[44vh]'
       }`}
     >
       {/* Optional background image */}
@@ -122,7 +122,7 @@ export default function PageHero({
 
       <Container
         size="xl"
-        className={`relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 pt-14 sm:pt-16 lg:pt-20 pb-12 sm:pb-16 lg:pb-20 ${
+        className={`relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 pt-12 sm:pt-14 lg:pt-16 pb-10 sm:pb-12 lg:pb-14 ${
           isAboutVariant
             ? 'grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-6 sm:gap-8 lg:gap-10'
             : 'flex flex-col gap-4 sm:gap-5 lg:gap-6'
@@ -131,19 +131,21 @@ export default function PageHero({
         <div
           className={`space-y-4 sm:space-y-5 ${isAboutVariant ? 'max-w-3xl' : ''}`}
         >
-          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 w-fit backdrop-blur fade-up">
-            <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg overflow-hidden border border-white/15 bg-black/60">
-              <Image
-                src={WisdomeHouseLogo}
-                alt="The Wisdom House"
-                fill
-                className="object-contain p-1.5"
-              />
+          {eyebrow ? (
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 w-fit backdrop-blur fade-up">
+              <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-white/15 bg-black/60">
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt="The Wisdom House"
+                  fill
+                  className="object-contain p-1.5"
+                />
+              </div>
+              <Caption className="text-white/80 uppercase tracking-[0.22em] text-[9px] sm:text-[10px]">
+                {eyebrow}
+              </Caption>
             </div>
-            <Caption className="text-white/80 uppercase tracking-[0.2em] text-[10px] sm:text-[11px]">
-              {eyebrow}
-            </Caption>
-          </div>
+          ) : null}
 
           <div
             className={`space-y-2 max-w-3xl fade-up ${
@@ -156,8 +158,8 @@ export default function PageHero({
                 compact
                   ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-medium text-white leading-tight text-balance'
                   : isAboutVariant
-                    ? 'text-[1.95rem] sm:text-3xl md:text-[2.55rem] lg:text-[2.8rem] font-medium text-white leading-[1.08] text-balance'
-                    : 'text-2xl sm:text-3xl md:text-[2.4rem] font-medium text-white leading-tight text-balance'
+                    ? 'text-[1.85rem] sm:text-3xl md:text-[2.35rem] lg:text-[2.5rem] font-medium text-white leading-[1.1] text-balance'
+                    : 'text-2xl sm:text-3xl md:text-[2.2rem] font-medium text-white leading-tight text-balance'
               }
             >
               {title}
@@ -190,8 +192,8 @@ export default function PageHero({
                   key={chip}
                   className={`rounded-full font-medium border border-white/15 bg-white/5 text-white ${
                     isAboutVariant
-                      ? 'px-3 py-2 text-[11px] sm:px-2.5 sm:py-1 sm:text-[11px] text-center'
-                      : 'px-2.5 py-1 text-[10px] sm:text-[11px]'
+                      ? 'px-3 py-2 text-[10px] sm:px-2.5 sm:py-1 sm:text-[10px] text-center'
+                      : 'px-2.5 py-1 text-[9.5px] sm:text-[10px]'
                   }`}
                   style={{
                     boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}`,

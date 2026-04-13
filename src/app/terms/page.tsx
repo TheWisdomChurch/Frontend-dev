@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { JSX } from 'react';
 import { BodyMD, BodySM, Caption, H2, H3 } from '@/components/text';
+import PageHero from '@/components/features/hero/PageHero';
 import {
   Container,
   Section,
@@ -109,12 +110,17 @@ const sections: Section[] = [
 export default function TermsPage(): JSX.Element {
   return (
     <PageSection tone="surface" padding="xl">
+      <PageHero
+        title="Terms of Use"
+        subtitle="Clear guidelines for using our digital services."
+        description="These terms govern your access to our website, livestreams, and events."
+        compact
+      />
       <div className="max-w-5xl mx-auto space-y-8">
         <header className="space-y-3">
           <Caption className="uppercase tracking-[0.32em] text-subtle">
             Legal
           </Caption>
-          <H2>Terms of Use</H2>
           <BodyMD className="text-muted max-w-3xl">
             Welcome to The Wisdom Church online experience. These Terms govern
             your access to and use of our website, livestreams, event
