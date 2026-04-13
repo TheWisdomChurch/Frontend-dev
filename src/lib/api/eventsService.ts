@@ -3,7 +3,7 @@
  * Handles all event-related API calls
  */
 
-import { apiClient, ApiResponse, PaginatedResponse } from './apiClient';
+import { apiClient, PaginatedResponse } from './apiClient';
 
 export interface Event {
   id: string;
