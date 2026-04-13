@@ -1,22 +1,9 @@
-// components/text/index.ts
-export { BaseText } from './baseText';
-export {
-  H1,
-  H2,
-  H3,
-  H4,
-  P,
-  BodyXL,
-  BodyLG,
-  BodyMD, // ← ADD THIS
-  BodySM, // ← ADD THIS
-  SmallText,
-  Caption,
-  // Span,
-  // Strong,
-  // Em,
-} from './Semantictext';
-export { LightText, RegularText, MediumText, SemiBoldText } from './weightText';
-export { BricolageText } from './FontText';
+/**
+ * Text Components Index
+ * Typography and text-related components
+ */
 
-export type { BaseTextProps } from './baseText';
+export { default as BaseText } from './baseText';
+export { default as FontText } from './FontText';
+export { default as SemanticText } from './Semantictext';
+export { default as WeightText } from './weightText';

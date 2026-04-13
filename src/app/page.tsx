@@ -1,72 +1,94 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 
-export const dynamic = 'force-dynamic';
+// Optimize: Allow caching where possible, only force dynamic for truly dynamic sections
+// Note: Since this component uses useState and useEffect, we can't use revalidate here
+// Use force-dynamic: false to allow ISR where possible with dynamic segments
 
 // ============================================================================
 // DYNAMIC IMPORTS - Using reorganized feature components
+// Optimize: Enable SSR where possible for better initial load performance
 // ============================================================================
 
+// Fast-loading components - SSR enabled with proper fallbacks
 const HeroMain = nextDynamic(
   () => import('@/components/features/hero/HeroMain'),
   {
-    ssr: false,
-    loading: () => null,
+    ssr: true, // Enable SSR for above-fold content
+    loading: () => <div className="h-[500px] bg-slate-900 animate-pulse" />,
   }
 );
 
 const HeroHighlights = nextDynamic(
   () => import('@/components/features/hero/HeroHighlights'),
   {
-    ssr: false,
-    loading: () => null,
+    ssr: true,
+    loading: () => <div className="h-[300px] bg-slate-900 animate-pulse" />,
   }
 );
 
+// Mid-load components - SSR enabled
 const WhatWeDo = nextDynamic(() => import('@/components/features/WhatWeDo'), {
   ssr: true,
-  loading: () => null,
+  loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
 });
-
-const EventsShowcase = nextDynamic(
-  () => import('@/components/features/events/EventsShowcase'),
-  { ssr: false, loading: () => null }
-);
 
 const SeniorPastor = nextDynamic(
   () => import('@/components/features/leadership/SeniorPastor'),
-  { ssr: true, loading: () => null }
+  {
+    ssr: true,
+    loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+const Testimonials = nextDynamic(
+  () => import('@/components/features/testimonials/Testimonials'),
+  {
+    ssr: true,
+    loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+const OnlineGiving = nextDynamic(
+  () => import('@/components/features/events/OnlineGiving'),
+  {
+    ssr: true,
+    loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+const ResourceSection = nextDynamic(
+  () => import('@/components/features/resources/Resource'),
+  {
+    ssr: true,
+    loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
+  }
+);
+
+// Below-fold components - Can be lazy loaded (ssr: false)
+const EventsShowcase = nextDynamic(
+  () => import('@/components/features/events/EventsShowcase'),
+  {
+    ssr: false,
+    loading: () => <div className="h-[300px] bg-slate-900 animate-pulse" />,
+  }
 );
 
 const JoinUs = nextDynamic(
   () => import('@/components/features/events/JoinUs'),
   {
     ssr: false,
-    loading: () => null,
+    loading: () => <div className="h-[250px] bg-slate-900 animate-pulse" />,
   }
 );
 
-const Testimonials = nextDynamic(
-  () => import('@/components/features/testimonials/Testimonials'),
-  { ssr: true, loading: () => null }
-);
-
-const OnlineGiving = nextDynamic(
-  () => import('@/components/features/events/OnlineGiving'),
-  { ssr: true, loading: () => null }
-);
-
-const ResourceSection = nextDynamic(
-  () => import('@/components/features/resources/Resource'),
-  { ssr: true, loading: () => null }
-);
-
+// Modal components - Client-side only
 const EventAdModal = nextDynamic(
   () => import('@/components/ui/modals/EventAdModal'),
   {
