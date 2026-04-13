@@ -15,6 +15,8 @@ export default [
       'next-env.d.ts',
       '*.config.js',
       '*.config.ts',
+      '**/*.css',
+      '**/*.scss',
     ],
   },
   js.configs.recommended,
