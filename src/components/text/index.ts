@@ -3,7 +3,33 @@
  * Typography and text-related components
  */
 
-export { default as BaseText } from './baseText';
-export { default as FontText } from './FontText';
-export { default as SemanticText } from './Semantictext';
-export { default as WeightText } from './weightText';
+export { BaseText } from './baseText';
+export type { BaseTextProps } from './baseText';
+
+export { BricolageText, WorkSansText, PlayfairText } from './FontText';
+
+export {
+  H1,
+  H2,
+  H3,
+  H4,
+  H5,
+  H6,
+  BodyLG,
+  BodyMD,
+  BodySM,
+  P,
+  SmallText,
+  Caption,
+} from './Semantictext';
+
+export {
+  LightText,
+  RegularText,
+  MediumText,
+  SemiBoldText,
+  PlayfairRegular,
+  PlayfairBold,
+  PlayfairExtraBold,
+  PlayfairItalic,
+} from './weightText';

@@ -14,10 +14,6 @@ export { cn } from './cn';
 export * from './theme';
 
 // ============================================
-// Validation
-// ============================================
-export * from './validation';
-
 // ============================================
 // API & Data
 // ============================================
@@ -28,12 +24,14 @@ export * from './data';
 // ============================================
 // Hooks & Motion
 // ============================================
-export * from './safe-motion';
+export { motion, AnimatePresence } from './safe-motion';
+export * from './responsive';
+export * from './modal-responsive';
 
 // ============================================
 // Media & Content
 // ============================================
-export { getYoutubeVideoData } from './youtube';
+export * from './youtube';
 
 // ============================================
 // Analytics
@@ -44,4 +42,3 @@ export * from './analytics';
 // Types
 // ============================================
 export type * from './types';
-export type * from './apiTypes';

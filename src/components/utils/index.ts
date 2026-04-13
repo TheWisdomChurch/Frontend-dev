@@ -12,7 +12,7 @@ export { default as TabsToggle } from './TabsToggle';
 export { default as MobileDebug } from './mobileDebug';
 
 // Hero utilities
-export { default as HeroTextUtil } from './heroTextUtil';
+export { renderTitle, renderSubtitle } from './heroTextUtil';
 
 // Button utilities
 export * from './buttons';

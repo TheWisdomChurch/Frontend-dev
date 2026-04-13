@@ -12,14 +12,4 @@ export { default as Flexbox } from './Flexbox';
 export { default as GridboxLayout } from './Gridbox';
 export { default as Gridbox } from './Gridbox';
 
-// Page Header & Footer
-export { default as Header } from '../common/Header';
-export { default as Footer } from '../common/Footer';
-export { default as ClientHeader } from '../common/ClientHeader';
-export { default as ClientFooter } from '../common/ClientFooter';
-
-// Layout Features
-export { default as ErrorBoundary } from '../common/ErrorBoundary';
-export { default as ThemeToggle } from '../common/ThemeToggle';
-export { default as ClientScrollHandler } from '../common/ClientScrollHandler';
-export { default as ClientScrollTop } from '../common/ClientscrollTop';
+// Shared components live outside this folder; import them directly when needed.

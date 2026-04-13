@@ -6,9 +6,6 @@
 // Styling utilities
 export { cn } from './cn';
 
-// Validation
-export { validateEmail, validatePhone, validateUrl } from './validation';
-
 // API utilities
 export { apiClient } from './api';
 export type { EventPublic, ReelPublic } from './apiTypes';
@@ -17,13 +14,14 @@ export type { EventPublic, ReelPublic } from './apiTypes';
 export * from './data';
 
 // YouTube utilities
-export { getYoutubeVideoData } from './youtube';
+export * from './youtube';
 
 // Responsive utilities
-export { useResponsive } from './responsivee';
+export * from './responsive';
+export * from './modal-responsive';
 
 // Safe motion utilities
-export { SafeMotionDiv, SafeMotionSection } from './safe-motion';
+export { motion, AnimatePresence } from './safe-motion';
 
 // Analytics
 export * from './analytics';

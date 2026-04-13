@@ -1,19 +1,12 @@
 /**
  * UI Components Index
- * Reusable UI components (buttons, cards, modals, etc.)
+ * Re-export UI components from actual locations.
  */
 
-// Text Components
-export * from './text';
+// Text & icons live in ../text and ../icons
+export * from '../text';
+export * from '../icons';
+export type { BaseTextProps as TextComponentProps } from '../text';
 
-// Icon Components
-export * from './icons';
-
-// Form Components
-export type { default as TextComponentProps } from './text/baseText';
-
-// Analytics UI
-export * from './analytics';
-
-// Core UI
-export * from './index';
+// Analytics
+export * from '../analytics';
