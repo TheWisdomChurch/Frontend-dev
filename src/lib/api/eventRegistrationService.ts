@@ -3,7 +3,7 @@
  * Handles all event registration related API calls
  */
 
-import { apiClient, ApiResponse, PaginatedResponse } from './apiClient';
+import { apiClient, PaginatedResponse } from './apiClient';
 import type { EventRegistrationData } from '@/lib/types';
 import type { EventRegistrationFormSchema } from '@/lib/validation';
 
