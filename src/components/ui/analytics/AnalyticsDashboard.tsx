@@ -5,7 +5,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   useEngagementMetrics,
   useUserProfile,
@@ -15,14 +15,23 @@ import {
 export const AnalyticsDashboard: React.FC<{ adminOnly?: boolean }> = ({
   adminOnly = true,
 }) => {
+  return null;
+
   const metrics = useEngagementMetrics();
   const userProfile = useUserProfile();
   const analytics = useAnalytics();
+  const [viewport, setViewport] = useState({ width: 0, height: 0 });
+  const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
+  const platform = typeof navigator !== 'undefined' ? navigator.platform : '';
+  const language = typeof navigator !== 'undefined' ? navigator.language : '';
 
-  // Only show in development or for authorized users
-  if (adminOnly && process.env.NODE_ENV === 'production') {
-    return null;
-  }
+  const shouldShow = useMemo(() => {
+    if (!adminOnly) return true;
+    if (process.env.NODE_ENV !== 'production') return true;
+    return process.env.NEXT_PUBLIC_ANALYTICS_DASHBOARD === '1';
+  }, [adminOnly]);
+
+  if (!shouldShow) return null;
 
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
@@ -30,6 +39,20 @@ export const AnalyticsDashboard: React.FC<{ adminOnly?: boolean }> = ({
     if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
     return `${seconds}s`;
   };
+
+  useEffect(() => {
+    const update = () => {
+      if (typeof window === 'undefined') return;
+      setViewport({ width: window.innerWidth, height: window.innerHeight });
+      setScreenSize({
+        width: window.screen?.width || 0,
+        height: window.screen?.height || 0,
+      });
+    };
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   return (
     <div className="fixed bottom-4 right-4 z-40 max-w-sm">
@@ -84,12 +107,10 @@ export const AnalyticsDashboard: React.FC<{ adminOnly?: boolean }> = ({
               </div>
               <div>🆔 Visit #{userProfile.visitCount}</div>
               <div>
-                📱 Platform:{' '}
-                <span className="text-green-400">{navigator.platform}</span>
+                📱 Platform: <span className="text-green-400">{platform}</span>
               </div>
               <div>
-                🌐 Language:{' '}
-                <span className="text-green-400">{navigator.language}</span>
+                🌐 Language: <span className="text-green-400">{language}</span>
               </div>
             </div>
           </div>
@@ -102,13 +123,13 @@ export const AnalyticsDashboard: React.FC<{ adminOnly?: boolean }> = ({
             <div>
               📐 Viewport:{' '}
               <span className="text-green-400">
-                {window.innerWidth}×{window.innerHeight}px
+                {viewport.width}×{viewport.height}px
               </span>
             </div>
             <div>
               🖥️ Screen:{' '}
               <span className="text-green-400">
-                {window.screen.width}×{window.screen.height}px
+                {screenSize.width}×{screenSize.height}px
               </span>
             </div>
           </div>
