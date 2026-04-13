@@ -2,12 +2,23 @@
 @use '../styles/index';
 
 .site-header {
+  position: sticky;
+  top: 0;
   background: transparent;
   border-bottom: 1px solid transparent;
   transition:
     background-color 0.35s ease,
     border-color 0.35s ease,
     box-shadow 0.35s ease;
+}
+
+body.home-page .site-header {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
 }
 
 body[data-scrolled='true'] .site-header {

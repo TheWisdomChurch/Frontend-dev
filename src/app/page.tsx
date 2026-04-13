@@ -141,6 +141,14 @@ export default function Home() {
 
   // Initialize modal timing on mount
   useEffect(() => {
+    document.body.classList.add('home-page');
+    return () => {
+      document.body.classList.remove('home-page');
+    };
+  }, []);
+
+  // Initialize modal timing on mount
+  useEffect(() => {
     const now = Date.now();
     const nextAllowedRaw =
       typeof window !== 'undefined'
