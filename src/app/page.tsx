@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, Suspense } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTheme } from '@/components/contexts/ThemeContext';
