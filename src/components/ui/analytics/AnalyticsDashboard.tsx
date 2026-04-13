@@ -12,11 +12,9 @@ import {
   useAnalytics,
 } from '@/hooks/useAnalytics';
 
-export const AnalyticsDashboard: React.FC<{ adminOnly?: boolean }> = ({
-  adminOnly = true,
-}) => {
+export const AnalyticsDashboard: React.FC<{ adminOnly?: boolean }> = () => {
   return null;
-
+  // Keeping previous implementation below for reference.
   const metrics = useEngagementMetrics();
   const userProfile = useUserProfile();
   const analytics = useAnalytics();
