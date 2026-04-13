@@ -16,12 +16,17 @@ import {
   MapPin,
   Phone,
   Mail,
-  Instagram,
-  Facebook,
-  Youtube,
   LucideIcon,
   ArrowUpRight,
+  Video,
+  MailOpen,
 } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faInstagram,
+  faFacebook,
+  faYoutube,
+} from '@fortawesome/free-brands-svg-icons';
 
 interface ContactMethod {
   title: string;
@@ -35,7 +40,8 @@ interface SocialMedia {
   platform: string;
   handle: string;
   url: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  faIcon?: typeof faInstagram;
 }
 
 const ContactPage = () => {
@@ -75,19 +81,19 @@ const ContactPage = () => {
       platform: 'Instagram',
       handle: '@wisdomhousehq',
       url: 'https://instagram.com/wisdomhousehq',
-      icon: Instagram,
+      faIcon: faInstagram,
     },
     {
       platform: 'Facebook',
       handle: '@wisdomhousehq',
       url: 'https://facebook.com/wisdomhousehq',
-      icon: Facebook,
+      faIcon: faFacebook,
     },
     {
       platform: 'YouTube',
       handle: 'Wisdom House',
       url: 'https://youtube.com/@wisdomhousehq',
-      icon: Youtube,
+      faIcon: faYoutube,
     },
   ];
 
@@ -235,7 +241,6 @@ const ContactPage = () => {
                 </H3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {socialMedia.map(social => {
-                    const Icon = social.icon;
                     return (
                       <a
                         key={social.platform}
@@ -251,10 +256,18 @@ const ContactPage = () => {
                               backgroundColor: colorScheme.opacity.primary10,
                             }}
                           >
-                            <Icon
-                              className="w-4 h-4"
-                              style={{ color: colorScheme.primary }}
-                            />
+                            {social.faIcon ? (
+                              <FontAwesomeIcon
+                                icon={social.faIcon}
+                                className="w-4 h-4"
+                                style={{ color: colorScheme.primary }}
+                              />
+                            ) : social.icon ? (
+                              React.createElement(social.icon, {
+                                className: 'w-4 h-4',
+                                style: { color: colorScheme.primary },
+                              })
+                            ) : null}
                           </div>
                           <div className="min-w-0">
                             <SmallText className="block text-white/85 text-[11px] sm:text-xs font-medium truncate">

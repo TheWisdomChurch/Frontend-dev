@@ -44,6 +44,12 @@ export default [
     },
   },
   {
+    files: ['**/*.scss'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
+  {
     linterOptions: {
       reportUnusedDisableDirectives: false,
     },

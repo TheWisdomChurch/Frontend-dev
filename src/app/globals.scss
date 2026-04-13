@@ -1,15 +1,2 @@
-@use '../styles/tokens';
-@use '../styles/base';
-@use '../styles/theme';
-@use '../styles/motion';
-@use '../styles/utilities';
-@use '../styles/colors';
-@use '../styles/typography';
-@use '../styles/spacing';
-@use '../styles/buttons';
-@use '../styles/variables';
-@use '../styles/animations';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+// Import consolidated styles system
+@use '../styles/index';

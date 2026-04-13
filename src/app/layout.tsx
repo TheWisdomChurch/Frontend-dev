@@ -17,7 +17,9 @@ import { ServiceUnavailableProvider } from '@/components/contexts/ServiceUnavail
 import { HeaderProvider } from '@/components/providers/NavProviders';
 import ReduxProvider from '@/components/providers/ReduxProvider';
 import AppStartupLoader from '@/components/providers/AppStartupLoader';
-import CookieConsentBanner from '@/components/ui/CookieConsentBanner';
+import AnalyticsProvider from '@/components/providers/AnalyticsProvider';
+import CookieConsentBanner from '@/components/ui/analytics/CookieConsentBanner';
+import AnalyticsDashboard from '@/components/ui/analytics/AnalyticsDashboard';
 import { cn } from '@/lib/cn';
 import './globals.scss';
 
@@ -149,25 +151,34 @@ export const viewport: Viewport = {
 // Client wrapper component — UNCHANGED
 function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ReduxProvider>
-      <ThemeProvider>
-        <ServiceUnavailableProvider>
-          <HeaderProvider>
-            <ErrorBoundary>
-              <AppStartupLoader />
-              <ScrollHandler />
-              <ClientHeader />
-              <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
-                {children}
-              </main>
-              <ClientFooter />
-              <ClientScrollToTop />
-              <CookieConsentBanner />
-            </ErrorBoundary>
-          </HeaderProvider>
-        </ServiceUnavailableProvider>
-      </ThemeProvider>
-    </ReduxProvider>
+    <AnalyticsProvider>
+      <ReduxProvider>
+        <ThemeProvider>
+          <ServiceUnavailableProvider>
+            <HeaderProvider>
+              <ErrorBoundary>
+                <AppStartupLoader />
+                <ScrollHandler />
+                <ClientHeader />
+                <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
+                  {children}
+                </main>
+                <ClientFooter />
+                <ClientScrollToTop />
+                <CookieConsentBanner
+                  position="bottom"
+                  theme="dark"
+                  showDetails={true}
+                  privacyPolicyUrl="/privacy"
+                  cookiePolicyUrl="/cookies"
+                />
+                <AnalyticsDashboard adminOnly={true} />
+              </ErrorBoundary>
+            </HeaderProvider>
+          </ServiceUnavailableProvider>
+        </ThemeProvider>
+      </ReduxProvider>
+    </AnalyticsProvider>
   );
 }
 

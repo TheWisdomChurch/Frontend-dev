@@ -42,6 +42,24 @@ const API_ORIGIN = normalizeOrigin(
 const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
 
 /* ============================================================================
+   CACHE & RETRY CONFIG
+============================================================================ */
+
+const REQUEST_CACHE = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1000; // Start with 1s, exponential backoff
+
+function clearExpiredCache() {
+  const now = Date.now();
+  for (const [key, value] of REQUEST_CACHE.entries()) {
+    if (now - value.timestamp > CACHE_TTL_MS) {
+      REQUEST_CACHE.delete(key);
+    }
+  }
+}
+
+/* ============================================================================
    Error Utilities
 ============================================================================ */
 
@@ -216,6 +234,20 @@ function extractArrayData<T>(res: any): T[] {
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_V1_BASE_URL}${path}`;
+  const cacheKey = `${options.method || 'GET'}:${path}`;
+
+  // Check cache for GET requests
+  if (
+    options.method !== 'POST' &&
+    options.method !== 'PUT' &&
+    options.method !== 'PATCH' &&
+    options.method !== 'DELETE'
+  ) {
+    const cached = REQUEST_CACHE.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data as T;
+    }
+  }
 
   const isFormData =
     typeof FormData !== 'undefined' && options.body instanceof FormData;
@@ -225,37 +257,95 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     ...(options.headers || {}),
   };
 
-  trackApiRequestStart();
-  try {
-    const res = await fetch(url, {
-      ...options,
-      headers,
-      credentials: 'include',
-      cache: 'no-store',
-    });
+  let lastError: any = null;
 
-    const json = await safeParseJson(res);
-    const payload =
-      json ??
-      ({ message: await res.text().catch(() => '') } as Record<string, any>);
-
-    if (!res.ok) {
-      const validationErrors = extractValidationErrors(payload);
-      throw createApiError(
-        getMessageFromPayload(payload) || 'Request failed',
-        res.status,
-        payload,
-        validationErrors
-      );
+  // Retry logic with exponential backoff
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      const delay = RETRY_DELAY_MS * Math.pow(2, attempt - 1);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
 
-    return payload as T;
-  } catch (err: any) {
-    if (isApiError(err)) throw err;
-    throw createApiError(getErrorMessage(err), 0, err);
-  } finally {
-    trackApiRequestEnd();
+    trackApiRequestStart();
+    try {
+      const res = await fetch(url, {
+        ...options,
+        headers,
+        credentials: 'include',
+        cache: 'no-store',
+        signal: AbortSignal.timeout(30000), // 30 second timeout
+      });
+
+      const json = await safeParseJson(res);
+      const payload =
+        json ??
+        ({ message: await res.text().catch(() => '') } as Record<string, any>);
+
+      if (!res.ok) {
+        // Don't retry on client errors (4xx)
+        if (res.status >= 400 && res.status < 500) {
+          const validationErrors = extractValidationErrors(payload);
+          throw createApiError(
+            getMessageFromPayload(payload) || 'Request failed',
+            res.status,
+            payload,
+            validationErrors
+          );
+        }
+
+        // Retry on server errors (5xx)
+        if (res.status >= 500 && attempt < MAX_RETRIES - 1) {
+          lastError = createApiError(
+            getMessageFromPayload(payload) || 'Server error',
+            res.status,
+            payload
+          );
+          continue;
+        }
+
+        throw createApiError(
+          getMessageFromPayload(payload) || 'Request failed',
+          res.status,
+          payload
+        );
+      }
+
+      // Cache successful GET requests
+      if (
+        options.method !== 'POST' &&
+        options.method !== 'PUT' &&
+        options.method !== 'PATCH' &&
+        options.method !== 'DELETE'
+      ) {
+        REQUEST_CACHE.set(cacheKey, { data: payload, timestamp: Date.now() });
+      }
+
+      return payload as T;
+    } catch (err: any) {
+      lastError = err;
+
+      // Don't retry on API errors (already processed)
+      if (isApiError(err) && err.statusCode && err.statusCode < 500) {
+        throw err;
+      }
+
+      // Retry on network errors or timeouts
+      if (attempt === MAX_RETRIES - 1) {
+        if (isApiError(err)) throw err;
+        throw createApiError(getErrorMessage(err), 0, err);
+      }
+    } finally {
+      trackApiRequestEnd();
+    }
   }
+
+  // If all retries failed, throw the last error
+  if (lastError) {
+    if (isApiError(lastError)) throw lastError;
+    throw createApiError(getErrorMessage(lastError), 0, lastError);
+  }
+
+  throw createApiError('Request failed after retries', 0, null);
 }
 
 /* ============================================================================
