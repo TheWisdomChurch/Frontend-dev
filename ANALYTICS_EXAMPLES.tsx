@@ -119,7 +119,7 @@ function AboutSectionExample() {
  * EXAMPLE 5: External Link with Link Click Tracking
  */
 function LearnMoreLinkExample() {
-  const linkRef = useClickTracking('Learn More About');
+  const linkRef = useClickTracking<HTMLAnchorElement>('Learn More About');
 
   return (
     <a
@@ -163,7 +163,9 @@ function EventsSectionExample() {
  * EXAMPLE 7: Event Card with Click Tracking
  */
 function EventCardExample({ event }: { event: any }) {
-  const clickRef = useClickTracking(`Event Card: ${event.title}`);
+  const clickRef = useClickTracking<HTMLDivElement>(
+    `Event Card: ${event.title}`
+  );
 
   return (
     <div
