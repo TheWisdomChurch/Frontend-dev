@@ -75,7 +75,7 @@ export const useHeroContent = () => {
             reject(
               new Error('Request timeout: Hero content fetch took too long')
             ),
-          10000 // 10 second timeout
+          20000 // 20 second timeout
         )
       );
 
@@ -191,9 +191,15 @@ export const useHeroContent = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to load hero content';
-      console.error('Error fetching hero content:', errorMessage, err);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Error fetching hero content:', errorMessage, err);
+      }
 
-      setError(errorMessage);
+      if (/timeout/i.test(errorMessage)) {
+        setError(null);
+      } else {
+        setError(errorMessage);
+      }
       setSlides(DEFAULT_FALLBACK_SLIDES);
 
       // Auto-retry once on network/timeout errors

@@ -19,7 +19,6 @@ import ReduxProvider from '@/components/providers/ReduxProvider';
 import AppStartupLoader from '@/components/providers/AppStartupLoader';
 import AnalyticsProvider from '@/components/providers/AnalyticsProvider';
 import CookieConsentBanner from '@/components/ui/analytics/CookieConsentBanner';
-import AnalyticsDashboard from '@/components/ui/analytics/AnalyticsDashboard';
 import { cn } from '@/lib/cn';
 import './globals.scss';
 
@@ -168,11 +167,10 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
                 <CookieConsentBanner
                   position="bottom"
                   theme="dark"
-                  showDetails={true}
+                  showDetails={false}
                   privacyPolicyUrl="/privacy"
                   cookiePolicyUrl="/cookies"
                 />
-                <AnalyticsDashboard adminOnly={true} />
               </ErrorBoundary>
             </HeaderProvider>
           </ServiceUnavailableProvider>

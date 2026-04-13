@@ -80,21 +80,19 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
       style={{
         backdropFilter: 'blur(4px)',
         background:
-          theme === 'dark'
-            ? 'rgba(0, 0, 0, 0.95)'
-            : 'rgba(255, 255, 255, 0.95)',
+          theme === 'dark' ? 'rgba(0, 0, 0, 0.88)' : 'rgba(255, 255, 255, 0.9)',
       }}
     >
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8`}>
+      <div className="mx-auto w-full max-w-5xl px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div
-          className={`${bgColor} ${textColor} rounded-lg border ${borderColor} p-6 sm:p-8`}
+          className={`${bgColor} ${textColor} rounded-xl border ${borderColor} p-4 sm:p-6 shadow-lg`}
         >
           {/* Header */}
-          <div className="mb-6">
-            <h3 className="text-lg sm:text-xl font-bold mb-2">
+          <div className="mb-4">
+            <h3 className="text-base sm:text-lg font-semibold mb-2">
               🍪 Cookie & Privacy Settings
             </h3>
-            <p className="text-sm text-gray-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
               {companyName} uses cookies and similar technologies to enhance
               your browsing experience, personalize content, analyze traffic,
               and for marketing purposes. We respect your privacy and only use
@@ -106,7 +104,7 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
           {showDetails && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className={`text-sm font-medium text-blue-400 hover:text-blue-300 mb-4 transition`}
+              className="text-xs sm:text-sm font-medium text-blue-400 hover:text-blue-300 mb-3 transition"
             >
               {expanded ? '▼' : '▶'} Learn More
             </button>
@@ -114,14 +112,14 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
 
           {/* Preferences Section */}
           {(expanded || showDetails) && (
-            <div className="mb-6 space-y-4 p-4 bg-gray-900/30 rounded-lg">
+            <div className="mb-4 max-h-[40vh] overflow-y-auto space-y-4 p-4 bg-gray-900/30 rounded-lg">
               {/* Necessary Cookies */}
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <label className="font-medium text-sm">
+                  <label className="font-medium text-xs sm:text-sm">
                     Essential Cookies
                   </label>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-[11px] sm:text-xs text-gray-400 mt-1">
                     Required for website functionality, security, and fraud
                     prevention. Always enabled.
                   </p>
@@ -137,10 +135,10 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
               {/* Analytics Cookies */}
               <div className="flex items-start justify-between border-t border-gray-800 pt-4">
                 <div className="flex-1">
-                  <label className="font-medium text-sm">
+                  <label className="font-medium text-xs sm:text-sm">
                     Analytics Cookies
                   </label>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-[11px] sm:text-xs text-gray-400 mt-1">
                     Help us understand how you interact with our content, so we
                     can improve the experience.
                   </p>
@@ -158,10 +156,10 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
               {/* Marketing Cookies */}
               <div className="flex items-start justify-between border-t border-gray-800 pt-4">
                 <div className="flex-1">
-                  <label className="font-medium text-sm">
+                  <label className="font-medium text-xs sm:text-sm">
                     Marketing Cookies
                   </label>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-[11px] sm:text-xs text-gray-400 mt-1">
                     Allow us to show personalized advertisements and measure
                     campaign effectiveness.
                   </p>
@@ -179,10 +177,10 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
               {/* Personalization Cookies */}
               <div className="flex items-start justify-between border-t border-gray-800 pt-4">
                 <div className="flex-1">
-                  <label className="font-medium text-sm">
+                  <label className="font-medium text-xs sm:text-sm">
                     Personalization Cookies
                   </label>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-[11px] sm:text-xs text-gray-400 mt-1">
                     Remember your preferences and provide personalized content
                     recommendations.
                   </p>
@@ -200,10 +198,10 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <button
               onClick={handleRejectAll}
-              className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg border ${borderColor} ${hoverBg} transition`}
+              className={`flex-1 px-4 py-2 text-xs sm:text-sm font-medium rounded-lg border ${borderColor} ${hoverBg} transition`}
             >
               Reject All
             </button>
@@ -211,14 +209,14 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
             {expanded || showDetails ? (
               <button
                 onClick={handleSavePreferences}
-                className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition"
+                className="flex-1 px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition"
               >
                 Save Preferences
               </button>
             ) : (
               <button
                 onClick={handleAcceptAll}
-                className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-green-600 hover:bg-green-700 text-white transition"
+                className="flex-1 px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-green-600 hover:bg-green-700 text-white transition"
               >
                 Accept All
               </button>
@@ -226,7 +224,7 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({
           </div>
 
           {/* Footer Links */}
-          <div className="mt-4 flex flex-wrap gap-2 justify-center text-xs text-gray-500">
+          <div className="mt-3 flex flex-wrap gap-2 justify-center text-[11px] text-gray-500">
             <a
               href={privacyPolicyUrl}
               className="hover:text-gray-300 transition"
