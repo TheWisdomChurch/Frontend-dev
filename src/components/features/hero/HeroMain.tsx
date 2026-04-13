@@ -328,7 +328,7 @@ const HeroSection = ({
       {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16"
+        className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-12 sm:pt-16 lg:pt-20 pb-12 sm:pb-16"
       >
         <div className="w-full flex flex-col gap-6 sm:gap-8 lg:gap-10 items-center sm:items-start max-w-6xl">
           {/* Wave label */}

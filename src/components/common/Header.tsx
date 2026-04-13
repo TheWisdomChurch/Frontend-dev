@@ -29,14 +29,14 @@ export default function Header() {
               priority
             />
           </span>
-          <span className="flex flex-col leading-none text-white">
-            <span className="text-[9px] uppercase tracking-[0.28em] text-white/70">
+          <span className="flex flex-col leading-none text-white font-sans">
+            <span className="text-[8.5px] uppercase tracking-[0.3em] text-white/70 font-medium">
               The
             </span>
-            <span className="text-[12px] font-semibold uppercase tracking-[0.24em]">
+            <span className="text-[11px] font-medium uppercase tracking-[0.24em]">
               Wisdom
             </span>
-            <span className="text-[11px] uppercase tracking-[0.22em] text-white/80">
+            <span className="text-[10.5px] uppercase tracking-[0.22em] text-white/80 font-medium">
               Church
             </span>
           </span>
@@ -46,7 +46,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-white"
+              className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-white"
             >
               {link.label}
             </Link>
@@ -55,7 +55,7 @@ export default function Header() {
         <div className="hidden items-center gap-2 md:flex">
           <Link
             href="/events"
-            className="rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary transition-colors hover:bg-primary/20"
+            className="rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.22em] text-primary transition-colors hover:bg-primary/20"
           >
             Plan a Visit
           </Link>
@@ -102,7 +102,7 @@ export default function Header() {
           type="button"
           aria-label="Close menu"
           onClick={() => setMenuOpen(false)}
-          className="absolute top-5 right-5 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white"
+          className="absolute top-5 right-5 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white"
         >
           <span className="absolute h-[2px] w-5 rotate-45 bg-white" />
           <span className="absolute h-[2px] w-5 -rotate-45 bg-white" />
