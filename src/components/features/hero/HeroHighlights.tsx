@@ -237,7 +237,7 @@ export default function HeroHighlights() {
   );
 
   return (
-    <section className="relative z-30" style={{ background: '#0b0b0b' }}>
+    <section className="relative z-30 bg-[#0b0b0b]" suppressHydrationWarning>
       <Container size="xl" className="relative py-4 sm:py-5 md:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
           {highlights.map((item, index) => {
