@@ -3,7 +3,7 @@
  * Handles all giving and donation-related API calls
  */
 
-import { apiClient, ApiResponse } from './apiClient';
+import { apiClient } from './apiClient';
 
 export interface DonationData {
   amount: number;
