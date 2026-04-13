@@ -12,13 +12,14 @@
     box-shadow 0.35s ease;
 }
 
-body.home-page .site-header {
+body.home-page:not([data-scrolled='true']) .site-header {
   position: fixed;
   left: 0;
   right: 0;
-  background-color: transparent;
-  border-bottom-color: transparent;
-  box-shadow: none;
+  background-color: rgba(2, 6, 23, 0.88);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px);
 }
 
 body[data-scrolled='true'] .site-header {

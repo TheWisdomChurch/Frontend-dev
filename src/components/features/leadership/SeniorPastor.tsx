@@ -138,7 +138,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                 </P>
 
                 {/* Social buttons (Senior Pastor only) */}
-                <div className="flex flex-wrap gap-2.5 pt-1">
+                <div className="flex flex-nowrap gap-2.5 pt-1 overflow-x-auto sm:flex-wrap sm:overflow-visible">
                   <Button
                     onClick={() =>
                       window.open(
@@ -153,7 +153,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     leftIcon={
                       <FontAwesomeIcon icon={faInstagram} className="w-4 h-4" />
                     }
-                    className="px-5 py-2 text-[13px] font-semibold shadow-lg"
+                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold shadow-lg min-w-max"
                     style={{
                       background: 'linear-gradient(135deg, #E4405F, #C13584)',
                       color: '#fff',
@@ -176,7 +176,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     leftIcon={
                       <FontAwesomeIcon icon={faFacebook} className="w-4 h-4" />
                     }
-                    className="px-4 py-2 text-[13px] font-semibold"
+                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold min-w-max"
                     style={{
                       backgroundColor: 'rgba(255,255,255,0.08)',
                       color: '#fff',
@@ -200,7 +200,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     leftIcon={
                       <FontAwesomeIcon icon={faTwitter} className="w-4 h-4" />
                     }
-                    className="px-4 py-2 text-[13px] font-semibold"
+                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold min-w-max"
                     style={{
                       backgroundColor: 'rgba(255,255,255,0.08)',
                       color: '#fff',
