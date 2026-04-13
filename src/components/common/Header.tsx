@@ -19,18 +19,26 @@ export default function Header() {
     <header className="site-header z-50 w-full">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-3">
-          <span className="relative h-9 w-9 overflow-hidden rounded-full border border-white/20 bg-white/5">
+          <span className="relative h-10 w-10 overflow-hidden rounded-full border border-white/20 bg-white/5">
             <Image
               src={WisdomeHouseLogo}
               alt="Wisdom House Church"
               fill
-              sizes="36px"
+              sizes="40px"
               className="object-cover"
               priority
             />
           </span>
-          <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-white">
-            Wisdom House
+          <span className="flex flex-col leading-none text-white">
+            <span className="text-[9px] uppercase tracking-[0.28em] text-white/70">
+              The
+            </span>
+            <span className="text-[12px] font-semibold uppercase tracking-[0.24em]">
+              Wisdom
+            </span>
+            <span className="text-[11px] uppercase tracking-[0.22em] text-white/80">
+              Church
+            </span>
           </span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
@@ -56,7 +64,7 @@ export default function Header() {
           type="button"
           aria-label="Toggle menu"
           onClick={() => setMenuOpen(prev => !prev)}
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white transition md:hidden"
+          className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition md:hidden"
         >
           <span
             className={`absolute h-[2px] w-5 bg-white transition-all ${
@@ -90,6 +98,15 @@ export default function Header() {
             menuOpen ? 'scale-y-100' : 'scale-y-0'
           } origin-top`}
         />
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setMenuOpen(false)}
+          className="absolute top-5 right-5 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white"
+        >
+          <span className="absolute h-[2px] w-5 rotate-45 bg-white" />
+          <span className="absolute h-[2px] w-5 -rotate-45 bg-white" />
+        </button>
         <div
           className={`relative z-10 flex h-full flex-col items-center justify-center gap-6 text-center transition-all duration-300 ${
             menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
