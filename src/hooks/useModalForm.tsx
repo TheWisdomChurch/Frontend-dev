@@ -9,7 +9,6 @@
 import { useCallback, useState, useRef } from 'react';
 import {
   FieldValues,
-  SubmitHandler,
   UseFormHandleSubmit,
 } from 'react-hook-form';
 
