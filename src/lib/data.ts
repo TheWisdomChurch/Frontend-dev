@@ -52,11 +52,7 @@ import {
   Deacon_2,
   Bishop,
 } from '@/components/assets';
-import {
-  faWhatsapp as faInstagramAlt,
-  faInstagram,
-  faYoutube,
-} from '@fortawesome/free-brands-svg-icons';
+
 
 export const defaultSlides: Slide[] = [
   {
