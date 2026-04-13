@@ -1,7 +1,7 @@
 // Hook to fetch hero and featured content from backend
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 
@@ -28,21 +28,71 @@ export interface HeroSlide {
   type: 'event' | 'reel' | 'highlight';
 }
 
+const DEFAULT_FALLBACK_SLIDES: HeroSlide[] = [
+  {
+    id: 'welcome',
+    title: 'Welcome to The Wisdom Church',
+    subtitle: 'Equipping and Empowering for greatness',
+    image: {
+      src: '/HEADER.png',
+      alt: "Experience God's Transforming Power",
+    },
+    upcoming: {
+      label: 'Welcome',
+      title: 'Join Our Community',
+      date: 'Year-round',
+      ctaLabel: 'Get Started',
+      ctaTarget: '#join',
+    },
+    type: 'highlight' as const,
+  },
+];
+
 export const useHeroContent = () => {
-  const [slides, setSlides] = useState<HeroSlide[]>([]);
+  const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_FALLBACK_SLIDES);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const retryCountRef = useRef(0);
+  const MAX_RETRIES = 2;
 
   const fetchHeroData = useCallback(async () => {
+    // Cancel previous request if still pending
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    abortControllerRef.current = new AbortController();
+
     try {
       setLoading(true);
       setError(null);
 
-      // Fetch events and reels in parallel
-      const [events, reels] = await Promise.all([
-        apiClient.listEvents(),
-        apiClient.listReels?.() || Promise.resolve([]),
-      ]);
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(
+          () =>
+            reject(
+              new Error('Request timeout: Hero content fetch took too long')
+            ),
+          20000 // 20 second timeout
+        )
+      );
+
+      // Fetch events and reels in parallel with timeout
+      const [events, reels] = (await Promise.race([
+        Promise.all([
+          apiClient.listEvents().catch(err => {
+            console.warn('Failed to fetch events:', err);
+            return [];
+          }),
+          apiClient
+            .listReels?.()
+            .catch(() => [])
+            .then(data => data || []) || Promise.resolve([]),
+        ]),
+        timeoutPromise,
+      ])) as [EventPublic[], ReelPublic[]];
 
       const heroSlides: HeroSlide[] = [];
 
@@ -130,54 +180,38 @@ export const useHeroContent = () => {
         heroSlides.push(...reelSlides);
       }
 
-      // Fallback to default slides if no backend data
+      // Use fallback if no backend data
       if (heroSlides.length === 0) {
-        heroSlides.push({
-          id: 'welcome',
-          title: 'Welcome to The Wisdom Church',
-          subtitle: 'Equipping and Empowering for greatness',
-          image: {
-            src: '/HEADER.png',
-            alt: "Experience God's Transforming Power",
-          },
-          upcoming: {
-            label: 'Welcome',
-            title: 'Join Our Community',
-            date: 'Year-round',
-            ctaLabel: 'Get Started',
-            ctaTarget: '#join',
-          },
-          type: 'highlight' as const,
-        });
+        setSlides(DEFAULT_FALLBACK_SLIDES);
+      } else {
+        setSlides(heroSlides);
       }
 
-      setSlides(heroSlides);
+      retryCountRef.current = 0;
     } catch (err) {
-      console.error('Error fetching hero content:', err);
-      setError(
-        err instanceof Error ? err.message : 'Failed to load hero content'
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to load hero content';
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Error fetching hero content:', errorMessage, err);
+      }
 
-      // Set minimal fallback
-      setSlides([
-        {
-          id: 'fallback',
-          title: 'Welcome to The Wisdom Church',
-          subtitle: 'Equipping and Empowering for greatness',
-          image: {
-            src: '/HEADER.png',
-            alt: 'Welcome',
-          },
-          upcoming: {
-            label: 'Welcome',
-            title: 'Join Our Community',
-            date: 'Today',
-            ctaLabel: 'Get Started',
-            ctaTarget: '#join',
-          },
-          type: 'highlight' as const,
-        },
-      ]);
+      if (/timeout/i.test(errorMessage)) {
+        setError(null);
+      } else {
+        setError(errorMessage);
+      }
+      setSlides(DEFAULT_FALLBACK_SLIDES);
+
+      // Auto-retry once on network/timeout errors
+      if (
+        retryCountRef.current < MAX_RETRIES &&
+        /timeout|network|fetch/.test(errorMessage)
+      ) {
+        retryCountRef.current++;
+        setTimeout(() => {
+          fetchHeroData();
+        }, 2000);
+      }
     } finally {
       setLoading(false);
     }
@@ -185,6 +219,13 @@ export const useHeroContent = () => {
 
   useEffect(() => {
     fetchHeroData();
+
+    // Cleanup on unmount
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [fetchHeroData]);
 
   return { slides, loading, error, refetch: fetchHeroData };

@@ -1,0 +1,24 @@
+// Core Styling System
+// This is the main entry point that imports all styles in the correct order
+
+// 1. Design Tokens & Variables
+@use 'tokens';
+@use 'variables';
+@use 'colors';
+@use 'theme';
+
+// 2. Base Styles
+@use 'base';
+@use 'typography';
+@use 'spacing';
+
+// 3. Components & Utilities
+@use 'buttons';
+@use 'animations';
+@use 'motion';
+@use 'utilities';
+
+// Tailwind Integration
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

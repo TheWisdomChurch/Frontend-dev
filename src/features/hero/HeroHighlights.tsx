@@ -231,87 +231,132 @@ export default function HeroHighlights() {
   );
 
   return (
-    <section className="relative z-30 bg-[#0b0b0b]">
-      <Container size="xl" className="relative py-6 sm:py-10">
-        <div className="flex flex-col gap-5">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span
-                className="h-2 w-2 rounded-full"
-                style={{ backgroundColor: colorScheme.primary }}
-              />
-              <p className="text-[0.7rem] sm:text-xs uppercase tracking-[0.2em] text-white/60">
-                Get connected
-              </p>
-            </div>
-            <div className="hidden sm:flex items-center gap-2 text-[0.7rem] text-white/50">
-              <CalendarClock className="h-4 w-4" />
-              <span>Sunday 9:00 AM (WAT)</span>
-            </div>
-          </div>
-
-          <div className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory pb-2">
-            {highlights.map((item, index) => (
+    <section className="relative z-30 bg-[#0b0b0b]" suppressHydrationWarning>
+      <Container size="xl" className="relative py-4 sm:py-5 md:py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
+          {highlights.map((item, index) => {
+            return (
               <motion.article
                 key={item.key}
-                className={cx(
-                  cardBase,
-                  'min-w-[250px] sm:min-w-[280px] md:min-w-[320px] snap-start'
-                )}
-                initial={{ y: 16, opacity: 0 }}
+                className={cardBase}
+                initial={{ y: 18, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.05 * index, duration: 0.4 }}
-                whileHover={{ translateY: -4 }}
+                transition={{
+                  delay: 0.06 * index,
+                  duration: 0.45,
+                  ease: 'easeOut',
+                }}
+                whileHover={{ translateY: -4, transition: { duration: 0.2 } }}
               >
-                <div className="relative h-36 sm:h-40 overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={`${item.title} preview`}
-                    fill
-                    sizes="(max-width: 640px) 80vw, 320px"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                  <div className="absolute left-4 bottom-3">
-                    <p className="text-[0.62rem] uppercase tracking-[0.18em] text-white/70">
-                      {item.meta}
-                    </p>
-                  </div>
-                </div>
+                <div
+                  className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: `radial-gradient(900px circle at 20% 20%, ${colorScheme.opacity?.primary20 ?? 'rgba(251,191,36,0.20)'}, transparent 55%)`,
+                  }}
+                />
 
-                <div className="p-4 sm:p-5 space-y-2.5">
-                  <h3 className="text-[0.95rem] sm:text-lg font-semibold text-white">
-                    {item.title}
-                  </h3>
-                  <p className="text-[0.72rem] sm:text-sm text-white/70">
+                <div className="relative p-4 sm:p-5 lg:p-6 space-y-2.5 sm:space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 space-y-1">
+                      <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-white/70 font-medium">
+                        {item.meta}
+                      </p>
+                      <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight">
+                        {item.title}
+                      </h3>
+                    </div>
+
+                    <motion.div
+                      className="relative h-11 w-16 sm:h-12 sm:w-20 rounded-xl overflow-hidden border border-white/20 shadow-inner shrink-0"
+                      style={{
+                        transform: 'rotate(-10deg)',
+                        boxShadow: `0 14px 26px ${colorScheme.opacity?.primary20 ?? 'rgba(251,191,36,0.20)'}`,
+                      }}
+                      animate={{ y: [0, -3, 0], rotate: [-10, -7, -10] }}
+                      transition={{
+                        duration: 4.2,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                        delay: index * 0.35,
+                      }}
+                      aria-hidden="true"
+                    >
+                      <Image
+                        src={item.image}
+                        alt={`${item.title} preview`}
+                        fill
+                        sizes="(max-width: 640px) 64px, 80px"
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/35" />
+                    </motion.div>
+                  </div>
+
+                  <p className="text-[11px] sm:text-sm font-medium text-white">
                     {item.detail}
                   </p>
-                  <p className="text-[0.75rem] sm:text-sm text-white/60 leading-relaxed">
+                  <p className="text-[12px] sm:text-sm leading-relaxed text-white/70">
                     {item.description}
                   </p>
 
-                  <div className="pt-2">
+                  <div className="flex items-center justify-between gap-3 pt-1">
                     <CustomButton
                       variant="outline"
                       size="sm"
                       curvature="full"
-                      className="border border-white/30 text-[0.7rem] sm:text-xs text-white"
+                      className="border border-white/30 text-[11px] sm:text-xs text-white"
                       rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
                       style={{
-                        backgroundColor: 'rgba(255,255,255,0.08)',
+                        backgroundColor: 'rgba(255,255,255,0.10)',
                         color: '#fff',
-                        borderColor: 'rgba(255,255,255,0.3)',
+                        borderColor: 'rgba(255,255,255,0.30)',
                       }}
                       onClick={() => openModal(item.key)}
                       type="button"
                     >
                       {item.actionLabel}
                     </CustomButton>
+
+                    <motion.div
+                      className="relative h-8 w-20 sm:h-10 sm:w-28 shrink-0"
+                      animate={{ y: [0, -1.5, 0] }}
+                      transition={{
+                        duration: 3.8,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                        delay: index * 0.2,
+                      }}
+                      aria-hidden="true"
+                    >
+                      <div
+                        className="absolute inset-0 overflow-hidden border border-white/20 bg-white/5"
+                        style={{
+                          clipPath: 'polygon(0 0, 100% 0, 82% 100%, 0 100%)',
+                          boxShadow: `0 10px 20px ${colorScheme.opacity?.black50 ?? 'rgba(0,0,0,0.35)'}`,
+                        }}
+                      >
+                        <Image
+                          src={item.image}
+                          alt=""
+                          fill
+                          sizes="(max-width: 640px) 56px, 80px"
+                          className="object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-white/15" />
+                        <div className="absolute inset-y-0 right-0 w-[18%] bg-gradient-to-l from-black/35 to-transparent" />
+                      </div>
+                      <div
+                        className="absolute -bottom-0.5 right-0 h-[2px] w-10 sm:w-14 rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg, transparent, ${colorScheme.primary})`,
+                        }}
+                      />
+                    </motion.div>
                   </div>
                 </div>
               </motion.article>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </Container>
 

@@ -2,9 +2,21 @@
 
 import { communityLinks } from '@/lib/data';
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faWhatsapp,
+  faInstagram,
+  faYoutube,
+} from '@fortawesome/free-brands-svg-icons';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { BaseModal } from './Base';
 import type { JoinCommunityModalProps } from '@/lib/types';
+
+const faIconMap = {
+  whatsapp: faWhatsapp,
+  instagram: faInstagram,
+  youtube: faYoutube,
+};
 
 export default function JoinCommunityModal({
   isOpen,
@@ -38,7 +50,9 @@ export default function JoinCommunityModal({
 
         <div className="space-y-3 sm:space-y-4">
           {communityLinks.map((link, index) => {
-            const Icon = link.icon;
+            const faIcon = link.iconFA
+              ? faIconMap[link.icon as keyof typeof faIconMap]
+              : null;
             return (
               <a
                 key={index}
@@ -56,7 +70,12 @@ export default function JoinCommunityModal({
                   <div className="flex items-center gap-3 sm:gap-4">
                     <div className="flex-shrink-0">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                        {faIcon ? (
+                          <FontAwesomeIcon
+                            icon={faIcon}
+                            className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                          />
+                        ) : null}
                       </div>
                     </div>
 

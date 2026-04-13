@@ -22,28 +22,26 @@ import {
   FlexboxLayout,
 } from '@/shared/layout';
 import { useTheme } from '@/shared/contexts/ThemeContext';
-import { MonitorPlay } from 'lucide-react';
+import { Video } from 'lucide-react';
 import PageHero from '@/features/hero/PageHero';
 
 const SermonPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { colorScheme, isDark } = useTheme();
+  const { colorScheme } = useTheme();
 
-  // Use resolved theme flag instead of hard-coded color checks
-  const isDarkMode = isDark;
+  // Determine if we're in dark mode based on background color
+  const isDarkMode = colorScheme.background === '#000000';
 
   // Memoize theme-based styles to prevent recalculation on each render
   const themeStyles = {
-    sectionBackground: isDarkMode
-      ? colorScheme.backgroundSecondary
-      : colorScheme.backgroundSecondary,
-    textColor: colorScheme.text,
-    secondaryTextColor: colorScheme.textSecondary,
-    cardBackground: isDarkMode ? 'rgba(255,255,255,0.04)' : colorScheme.white,
-    cardTextColor: colorScheme.text,
-    borderColor: isDarkMode
-      ? 'rgba(255,255,255,0.12)'
-      : `${colorScheme.primary}40`,
+    sectionBackground: isDarkMode ? colorScheme.white : colorScheme.black,
+    textColor: isDarkMode ? colorScheme.black : colorScheme.white,
+    secondaryTextColor: isDarkMode
+      ? colorScheme.textSecondary
+      : colorScheme.textTertiary,
+    cardBackground: isDarkMode ? colorScheme.black : colorScheme.white,
+    cardTextColor: isDarkMode ? colorScheme.white : colorScheme.black,
+    borderColor: isDarkMode ? colorScheme.border : `${colorScheme.primary}40`,
   };
 
   // Single useEffect for data fetching
@@ -64,12 +62,12 @@ const SermonPage = () => {
       platform: 'YouTube' as const,
       description: 'Full video messages with interactive features',
       action: 'Subscribe to Channel',
-      icon: <MonitorPlay className="w-12 h-12" style={{ color: '#FF0000' }} />,
+      icon: <Video className="w-12 h-12" style={{ color: '#FF0000' }} />,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen">
       <PageHero
         title="Sermons & Teachings"
         subtitle="Catch up on every message"
@@ -154,10 +152,7 @@ const SermonPage = () => {
                       curvature="full"
                       elevated={true}
                       leftIcon={
-                        <MonitorPlay
-                          className="w-5 h-5"
-                          style={{ color: 'white' }}
-                        />
+                        <Video className="w-5 h-5" style={{ color: 'white' }} />
                       }
                       className="w-full transition-all duration-300 transform hover:scale-105"
                       style={{

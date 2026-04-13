@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
 
   // ✅ Allow external images
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',

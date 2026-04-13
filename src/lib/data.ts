@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   BookOpen,
   Heart,
+  MessageCircle,
 } from 'lucide-react';
 import {
   NavLink,
@@ -51,12 +52,11 @@ import {
   Deacon_2,
   Bishop,
 } from '@/shared/assets';
-import { Camera, MessageCircle, MonitorPlay } from 'lucide-react';
 
 export const defaultSlides: Slide[] = [
   {
     title: 'Welcome to The Wisdom Church',
-    subtitle: 'Equipping and empowering for greatness.',
+    subtitle: 'Equiping and Empowering for greatness',
     // description:
     //   'Where lives are transformed through faith.',
     image: {
@@ -68,7 +68,7 @@ export const defaultSlides: Slide[] = [
       title: 'Wisdom Power Conference',
       date: 'Mar 20 - 22',
       time: 'Morning Session • Evening Session',
-      location: 'Honor Gardens, Alasia opposite Dominion City Headquarters',
+      location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
       ctaLabel: 'Reserve a seat',
       ctaTarget: '#programs',
     },
@@ -86,7 +86,7 @@ export const defaultSlides: Slide[] = [
       title: '7 Nights of Lifting',
       date: 'Nov 20 - 27',
       time: '6 PM',
-      location: 'Honor Gardens Event Center',
+      location: 'Honors Garden Event Center',
       ctaLabel: 'Plan a visit',
       ctaTarget: '#programs',
     },
@@ -513,7 +513,8 @@ export const confessionContent = `
 // JoinCommunity
 export const communityLinks = [
   {
-    icon: MessageCircle,
+    icon: 'whatsapp',
+    iconFA: true,
     title: 'Join Our WhatsApp Community',
     description: 'Connect with fellow believers in our active WhatsApp group',
     url: 'https://wa.me/2347069995333',
@@ -521,7 +522,8 @@ export const communityLinks = [
     hoverColor: 'hover:from-green-600 hover:to-green-700',
   },
   {
-    icon: Camera,
+    icon: 'instagram',
+    iconFA: true,
     title: 'Follow Us on Instagram',
     description: 'Stay updated with our latest posts and stories',
     url: 'https://www.instagram.com/wisdomchurchhq',
@@ -529,7 +531,8 @@ export const communityLinks = [
     hoverColor: 'hover:from-pink-600 hover:to-pink-700',
   },
   {
-    icon: MonitorPlay,
+    icon: 'youtube',
+    iconFA: true,
     title: 'Subscribe to Our YouTube',
     description: 'Watch our sermons and inspirational content',
     url: 'https://www.youtube.com/channel/UCJuXOj075x81CYK-cCuXwdg',

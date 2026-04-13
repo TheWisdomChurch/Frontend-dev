@@ -1,31 +1,94 @@
-// Type declarations for lucide-react
 declare module 'lucide-react' {
-  import type React from 'react';
+  import * as React from 'react';
 
-  interface LucideProps extends React.SVGAttributes<SVGSVGElement> {
-    size?: number | string;
-    strokeWidth?: number;
-    className?: string;
-  }
+  export type LucideIcon = React.FC<
+    React.SVGProps<SVGSVGElement> & {
+      size?: number | string;
+      color?: string;
+      strokeWidth?: number | string;
+    }
+  >;
 
-  // Export all icon components
-  export const Home: React.FC<LucideProps>;
-  export const Menu: React.FC<LucideProps>;
-  export const X: React.FC<LucideProps>;
-  export const ArrowRight: React.FC<LucideProps>;
-  export const Calendar: React.FC<LucideProps>;
-  export const MapPin: React.FC<LucideProps>;
-  export const Play: React.FC<LucideProps>;
-  export const BookOpenCheck: React.FC<LucideProps>;
-  export const CalendarDays: React.FC<LucideProps>;
-  export const HeartHandshake: React.FC<LucideProps>;
-  export const Radio: React.FC<LucideProps>;
-  export const Sparkles: React.FC<LucideProps>;
-  export const Users: React.FC<LucideProps>;
-  export const Laptop2: React.FC<LucideProps>;
-  export const Moon: React.FC<LucideProps>;
-  export const Sun: React.FC<LucideProps>;
-
-  // Generic icon component
-  export const createIcon: (name: string) => React.FC<LucideProps>;
+  export const Activity: LucideIcon;
+  export const AlertCircle: LucideIcon;
+  export const ArrowRight: LucideIcon;
+  export const ArrowLeft: LucideIcon;
+  export const ArrowUp: LucideIcon;
+  export const ArrowDown: LucideIcon;
+  export const ArrowUpRight: LucideIcon;
+  export const Award: LucideIcon;
+  export const Bell: LucideIcon;
+  export const BookOpen: LucideIcon;
+  export const Briefcase: LucideIcon;
+  export const Calendar: LucideIcon;
+  export const CalendarClock: LucideIcon;
+  export const CalendarPlus: LucideIcon;
+  export const Building: LucideIcon;
+  export const Banknote: LucideIcon;
+  export const Baby: LucideIcon;
+  export const Check: LucideIcon;
+  export const CheckCircle: LucideIcon;
+  export const CheckCircle2: LucideIcon;
+  export const ChevronDown: LucideIcon;
+  export const ChevronLeft: LucideIcon;
+  export const ChevronRight: LucideIcon;
+  export const ChevronUp: LucideIcon;
+  export const Church: LucideIcon;
+  export const Clock: LucideIcon;
+  export const Copy: LucideIcon;
+  export const Cpu: LucideIcon;
+  export const CreditCard: LucideIcon;
+  export const Download: LucideIcon;
+  export const DoorOpen: LucideIcon;
+  export const Eye: LucideIcon;
+  export const Filter: LucideIcon;
+  export const Gift: LucideIcon;
+  export const Globe: LucideIcon;
+  export const Heart: LucideIcon;
+  export const HeartHandshake: LucideIcon;
+  export const Home: LucideIcon;
+  export const Info: LucideIcon;
+  export const Loader2: LucideIcon;
+  export const MapPin: LucideIcon;
+  export const Mail: LucideIcon;
+  export const MailOpen: LucideIcon;
+  export const MessageCircle: LucideIcon;
+  export const MessageSquare: LucideIcon;
+  export const Menu: LucideIcon;
+  export const Mic: LucideIcon;
+  export const Minus: LucideIcon;
+  export const Music: LucideIcon;
+  export const Package: LucideIcon;
+  export const Palette: LucideIcon;
+  export const Pause: LucideIcon;
+  export const Phone: LucideIcon;
+  export const PictureInPicture: LucideIcon;
+  export const Play: LucideIcon;
+  export const PlayCircle: LucideIcon;
+  export const Plus: LucideIcon;
+  export const Printer: LucideIcon;
+  export const Quote: LucideIcon;
+  export const Radio: LucideIcon;
+  export const School: LucideIcon;
+  export const Search: LucideIcon;
+  export const Share2: LucideIcon;
+  export const Shield: LucideIcon;
+  export const ShieldCheck: LucideIcon;
+  export const Star: LucideIcon;
+  export const Tag: LucideIcon;
+  export const Target: LucideIcon;
+  export const ShoppingBag: LucideIcon;
+  export const SlidersHorizontal: LucideIcon;
+  export const Sparkles: LucideIcon;
+  export const Trash2: LucideIcon;
+  export const Truck: LucideIcon;
+  export const Upload: LucideIcon;
+  export const User: LucideIcon;
+  export const UserCheck: LucideIcon;
+  export const Users: LucideIcon;
+  export const Users2: LucideIcon;
+  export const Volume2: LucideIcon;
+  export const Zap: LucideIcon;
+  export const Video: LucideIcon;
+  export const X: LucideIcon;
 }

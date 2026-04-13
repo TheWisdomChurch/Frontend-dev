@@ -1,16 +1,18 @@
-// components/utils/ClientScrollHandler.tsx
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
 
-export default function ScrollHandler() {
-  const pathname = usePathname();
-
+export default function ClientScrollHandler() {
   useEffect(() => {
-    // Scroll to top on route change
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 8;
+      document.body.dataset.scrolled = scrolled ? 'true' : 'false';
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return null;
 }
