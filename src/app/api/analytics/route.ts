@@ -210,6 +210,7 @@ export async function POST(request: NextRequest) {
         eventCount: payload.events.length,
         sessionId,
         userId: userId || 'anonymous',
+        userAgent,
         receivedAt: new Date(receivedAt).toISOString(),
         categories: payload.events.map((e: any) => e.category),
       });
