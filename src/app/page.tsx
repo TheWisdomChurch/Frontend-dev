@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTheme } from '@/components/contexts/ThemeContext';
+import ResourceSection from '@/components/features/resources/Resource';
 
 // Optimize: Allow caching where possible, only force dynamic for truly dynamic sections
 // Note: Since this component uses useState and useEffect, we can't use revalidate here
@@ -26,7 +27,7 @@ const HeroMain = nextDynamic(
 const HeroHighlights = nextDynamic(
   () => import('@/components/features/hero/HeroHighlights'),
   {
-    ssr: true,
+    ssr: false,
     loading: () => <div className="h-[300px] bg-slate-900 animate-pulse" />,
   }
 );
@@ -58,14 +59,6 @@ const OnlineGiving = nextDynamic(
   {
     ssr: true,
     loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
-  }
-);
-
-const ResourceSection = nextDynamic(
-  () => import('@/components/features/resources/Resource'),
-  {
-    ssr: true,
-    loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
   }
 );
 
