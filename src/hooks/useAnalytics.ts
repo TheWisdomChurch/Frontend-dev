@@ -68,23 +68,24 @@ export function useComponentView(componentName: string, path?: string) {
 /**
  * Track clicks on element
  */
-export function useClickTracking(
+export function useClickTracking<T extends HTMLElement = HTMLElement>(
   label?: string,
   callback?: (e: React.MouseEvent) => void
 ) {
   const analytics = useAnalytics();
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<T | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const element = ref.current;
+    if (!element) return;
 
     const handleClick = (e: MouseEvent) => {
-      analytics.trackClick(ref.current, label);
+      analytics.trackClick(element, label);
       callback?.(e as any);
     };
 
-    ref.current.addEventListener('click', handleClick);
-    return () => ref.current?.removeEventListener('click', handleClick);
+    element.addEventListener('click', handleClick);
+    return () => element.removeEventListener('click', handleClick);
   }, [analytics, label, callback]);
 
   return ref;

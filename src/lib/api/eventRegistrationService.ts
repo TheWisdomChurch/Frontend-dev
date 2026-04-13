@@ -4,10 +4,8 @@
  */
 
 import { apiClient, ApiResponse, PaginatedResponse } from './apiClient';
-import type {
-  EventRegistrationData,
-  EventRegistrationFormSchema,
-} from '@/lib/types';
+import type { EventRegistrationData } from '@/lib/types';
+import type { EventRegistrationFormSchema } from '@/lib/validation';
 
 export interface EventRegistrationResponse {
   id: string;
