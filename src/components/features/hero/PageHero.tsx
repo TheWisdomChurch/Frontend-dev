@@ -122,7 +122,7 @@ export default function PageHero({
 
       <Container
         size="xl"
-        className={`relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20 ${
+        className={`relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 pt-14 sm:pt-16 lg:pt-20 pb-12 sm:pb-16 lg:pb-20 ${
           isAboutVariant
             ? 'grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-6 sm:gap-8 lg:gap-10'
             : 'flex flex-col gap-4 sm:gap-5 lg:gap-6'
@@ -154,10 +154,10 @@ export default function PageHero({
             <H2
               className={
                 compact
-                  ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-semibold text-white leading-tight text-balance'
+                  ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-medium text-white leading-tight text-balance'
                   : isAboutVariant
-                    ? 'text-[1.95rem] sm:text-3xl md:text-[2.55rem] lg:text-[2.8rem] font-semibold text-white leading-[1.08] text-balance'
-                    : 'text-2xl sm:text-3xl md:text-[2.4rem] font-semibold text-white leading-tight text-balance'
+                    ? 'text-[1.95rem] sm:text-3xl md:text-[2.55rem] lg:text-[2.8rem] font-medium text-white leading-[1.08] text-balance'
+                    : 'text-2xl sm:text-3xl md:text-[2.4rem] font-medium text-white leading-tight text-balance'
               }
             >
               {title}

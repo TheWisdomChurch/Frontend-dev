@@ -1,41 +1,106 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
+import { WisdomeHouseLogo } from '@/components/assets';
 
-const footerLinks = [
+const quickLinks = [
   { href: '/about', label: 'About' },
   { href: '/events', label: 'Events' },
-  { href: '/resources', label: 'Resources' },
+  { href: '/resources/sermons', label: 'Sermons' },
   { href: '/contact', label: 'Contact' },
+];
+
+const ministries = [
+  { href: '/ministries/men', label: "Men's Ministry" },
+  { href: '/ministries/women', label: "Women's Ministry" },
+  { href: '/ministries/youth', label: 'Youth Ministry' },
+  { href: '/ministries/children', label: "Children's Ministry" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-slate-950 py-10 text-slate-300">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-white">
-            The Wisdom Church
+    <footer className="border-t border-white/10 bg-black text-white">
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
+        <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="relative h-11 w-11 overflow-hidden rounded-full border border-white/20 bg-white/5">
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt="Wisdom House Church"
+                  fill
+                  sizes="44px"
+                  className="object-cover"
+                />
+              </span>
+              <div className="flex flex-col leading-none">
+                <span className="text-[10px] uppercase tracking-[0.28em] text-white/60">
+                  The
+                </span>
+                <span className="text-[13px] font-semibold uppercase tracking-[0.22em]">
+                  Wisdom
+                </span>
+                <span className="text-[12px] uppercase tracking-[0.22em] text-white/80">
+                  Church
+                </span>
+              </div>
+            </div>
+            <p className="text-sm text-white/65 leading-relaxed max-w-md">
+              Equipping and empowering believers with the Word and Spirit. Join
+              us every Sunday and Thursday for worship, teaching, and community.
+            </p>
           </div>
-          <p className="mt-2 max-w-md text-sm text-slate-400">
-            Equipping and empowering believers with the Word and Spirit.
-          </p>
+
+          <div className="space-y-3">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-primary">
+              Quick Links
+            </p>
+            <ul className="space-y-2 text-sm text-white/70">
+              {quickLinks.map(link => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-primary">
+              Ministries
+            </p>
+            <ul className="space-y-2 text-sm text-white/70">
+              {ministries.map(link => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-3 text-sm text-white/70">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-primary">
+              Visit Us
+            </p>
+            <p>Honor Gardens, Lekki-Epe Expressway, Lagos</p>
+            <p>Sunday Worship: 9:00 AM (WAT)</p>
+            <p>Midweek Service: Thursday 6:00 PM</p>
+            <p>Phone: 0706 999 5333</p>
+          </div>
         </div>
-        <nav className="flex flex-wrap gap-4 text-xs font-medium uppercase tracking-[0.16em]">
-          {footerLinks.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-slate-400 transition-colors hover:text-white"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
       </div>
-      <div className="mx-auto mt-8 flex w-full max-w-6xl flex-col gap-2 px-4 text-xs text-slate-500 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <span>© {new Date().getFullYear()} The Wisdom Church</span>
-        <span>Honor Gardens, Lekki-Epe Expressway, Lagos</span>
+      <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
+        © {new Date().getFullYear()} The Wisdom Church. All rights reserved.
       </div>
     </footer>
   );

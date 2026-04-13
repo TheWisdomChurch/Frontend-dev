@@ -19,9 +19,7 @@ export default function ClientRoot({
       <ThemeProvider>
         <HeaderProvider>
           <ScrollHandler />
-          <ClientHeader />
           <main className="flex-1">{children}</main>
-          <ClientFooter />
           <ClientScrollToTop />
         </HeaderProvider>
       </ThemeProvider>
