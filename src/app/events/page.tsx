@@ -4,13 +4,18 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 import { EventBannerDesktop } from '@/components/assets';
+import PageHero from '@/components/features/hero/PageHero';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 
 function sortEvents(items: EventPublic[]): EventPublic[] {
   return [...items].sort((a, b) => {
-    const aDate = a.startAt ? new Date(a.startAt).getTime() : Number.MAX_SAFE_INTEGER;
-    const bDate = b.startAt ? new Date(b.startAt).getTime() : Number.MAX_SAFE_INTEGER;
+    const aDate = a.startAt
+      ? new Date(a.startAt).getTime()
+      : Number.MAX_SAFE_INTEGER;
+    const bDate = b.startAt
+      ? new Date(b.startAt).getTime()
+      : Number.MAX_SAFE_INTEGER;
     return aDate - bDate;
   });
 }
@@ -65,7 +70,7 @@ export default function EventsPage() {
 
   const upcomingCount = useMemo(() => {
     const now = Date.now();
-    return events.filter((event) => {
+    return events.filter(event => {
       if (!event.startAt) return true;
       const ts = new Date(event.startAt).getTime();
       return Number.isNaN(ts) || ts >= now;
@@ -74,15 +79,24 @@ export default function EventsPage() {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
+      <PageHero
+        title="Events & Programs"
+        subtitle="Live updates from the church calendar."
+        description="New events posted in the admin portal appear here automatically."
+        compact
+      />
       <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4 fade-up">
-            <div>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 fade-up">
+          <div>
             <p className="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-amber-300">
               Wisdom House
             </p>
-            <h1 className="mt-2 text-3xl font-black sm:text-4xl">Events & Programs</h1>
+            <h1 className="mt-2 text-3xl font-black sm:text-4xl">
+              Events & Programs
+            </h1>
             <p className="mt-3 max-w-2xl text-sm text-neutral-300 sm:text-base">
-              Live data from your backend. Publish in admin, and it appears here automatically.
+              Live data from your backend. Publish in admin, and it appears here
+              automatically.
             </p>
           </div>
 
@@ -112,14 +126,18 @@ export default function EventsPage() {
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
+            {events.map(event => (
               <article
                 key={event.id}
                 className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900/70 fade-up"
               >
                 <div className="relative h-44 w-full bg-neutral-900">
                   <img
-                    src={event.bannerUrl || event.imageUrl || EventBannerDesktop.src}
+                    src={
+                      event.bannerUrl ||
+                      event.imageUrl ||
+                      EventBannerDesktop.src
+                    }
                     alt={event.title}
                     className="h-full w-full object-cover"
                     loading="lazy"
@@ -127,7 +145,9 @@ export default function EventsPage() {
                 </div>
 
                 <div className="space-y-3 p-5">
-                  <h2 className="line-clamp-2 text-lg font-bold">{event.title}</h2>
+                  <h2 className="line-clamp-2 text-lg font-bold">
+                    {event.title}
+                  </h2>
                   <p className="line-clamp-3 text-sm text-neutral-300">
                     {event.description || 'Join us for this gathering.'}
                   </p>

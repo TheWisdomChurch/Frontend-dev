@@ -15,28 +15,32 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+  }
   return (
     <header className="site-header z-50 w-full">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="relative h-10 w-10 overflow-hidden rounded-full border border-white/20 bg-white/5">
+        <Link href="/" className="flex items-center gap-2.5">
+          <span className="relative h-9 w-9 overflow-hidden rounded-full border border-white/20 bg-white/5">
             <Image
               src={WisdomeHouseLogo}
               alt="Wisdom House Church"
               fill
-              sizes="40px"
+              sizes="36px"
               className="object-cover"
               priority
             />
           </span>
+          <span className="h-8 w-px bg-white/35" />
           <span className="flex flex-col leading-none text-white font-sans">
-            <span className="text-[8.5px] uppercase tracking-[0.3em] text-white/70 font-medium">
+            <span className="text-[8px] uppercase tracking-[0.32em] text-white/70 font-medium">
               The
             </span>
-            <span className="text-[11px] font-medium uppercase tracking-[0.24em]">
+            <span className="text-[10.5px] font-medium uppercase tracking-[0.24em]">
               Wisdom
             </span>
-            <span className="text-[10.5px] uppercase tracking-[0.22em] text-white/80 font-medium">
+            <span className="text-[10px] uppercase tracking-[0.22em] text-white/80 font-medium">
               Church
             </span>
           </span>
@@ -64,7 +68,9 @@ export default function Header() {
           type="button"
           aria-label="Toggle menu"
           onClick={() => setMenuOpen(prev => !prev)}
-          className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition md:hidden"
+          className={`relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition md:hidden ${
+            menuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
         >
           <span
             className={`absolute h-[2px] w-5 bg-white transition-all ${

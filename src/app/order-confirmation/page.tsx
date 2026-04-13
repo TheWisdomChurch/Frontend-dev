@@ -17,6 +17,7 @@ import { H2, BaseText, LightText } from '@/components/text';
 import { Button } from '@/components/utils/buttons';
 import { useTheme } from '@/components/contexts/ThemeContext';
 import OrderConfirmation from '@/components/ui/Store/orderDetails';
+import PageHero from '@/components/features/hero/PageHero';
 
 // Simple confirmation page component
 const SimpleConfirmation = () => {
@@ -42,6 +43,12 @@ const SimpleConfirmation = () => {
       className="min-h-screen"
       style={{ backgroundColor: sectionBackground }}
     >
+      <PageHero
+        title="Order Confirmation"
+        subtitle="Thank you for supporting the ministry."
+        description="Your order is confirmed and a receipt has been sent to your email."
+        compact
+      />
       <Section
         padding="xl"
         fullHeight={false}

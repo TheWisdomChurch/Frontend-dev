@@ -4,8 +4,8 @@
 .site-header {
   position: sticky;
   top: 0;
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  background-color: #050505;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition:
     background-color 0.35s ease,
     border-color 0.35s ease,
@@ -16,7 +16,7 @@ body.home-page .site-header {
   position: fixed;
   left: 0;
   right: 0;
-  background: transparent;
+  background-color: transparent;
   border-bottom-color: transparent;
   box-shadow: none;
 }

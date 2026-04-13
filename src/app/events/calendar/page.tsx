@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
+import PageHero from '@/components/features/hero/PageHero';
 
 function toDateKey(event: EventPublic): string | null {
   if (event.startAt) {
@@ -81,7 +82,11 @@ export default function EventsCalendarPage() {
   const firstWeekday = monthStart.getDay();
 
   const calendarSlots = useMemo(() => {
-    const slots: Array<{ dateKey: string | null; day: number | null; count: number }> = [];
+    const slots: Array<{
+      dateKey: string | null;
+      day: number | null;
+      count: number;
+    }> = [];
 
     for (let i = 0; i < firstWeekday; i += 1) {
       slots.push({ dateKey: null, day: null, count: 0 });
@@ -106,12 +111,23 @@ export default function EventsCalendarPage() {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
+      <PageHero
+        title="Events Calendar"
+        subtitle="All upcoming services and programs in one view."
+        description="Plan ahead and reserve your spot."
+        compact
+      />
       <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8 space-y-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-amber-300">Events calendar</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-amber-300">
+              Events calendar
+            </p>
             <h1 className="mt-2 text-3xl font-black sm:text-4xl">
-              {monthStart.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+              {monthStart.toLocaleDateString(undefined, {
+                month: 'long',
+                year: 'numeric',
+              })}
             </h1>
           </div>
 
@@ -130,7 +146,7 @@ export default function EventsCalendarPage() {
         ) : (
           <>
             <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-wider text-neutral-400">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                 <div key={day}>{day}</div>
               ))}
             </div>
@@ -149,7 +165,9 @@ export default function EventsCalendarPage() {
                           {slot.count} event{slot.count > 1 ? 's' : ''}
                         </p>
                       ) : (
-                        <p className="mt-2 text-[11px] text-neutral-500">No event</p>
+                        <p className="mt-2 text-[11px] text-neutral-500">
+                          No event
+                        </p>
                       )}
                     </>
                   ) : null}
@@ -160,17 +178,30 @@ export default function EventsCalendarPage() {
             <div className="rounded-3xl border border-neutral-800 bg-neutral-900/60 p-5">
               <h2 className="text-lg font-bold">Upcoming timeline</h2>
               {grouped.length === 0 ? (
-                <p className="mt-3 text-sm text-neutral-400">No published events available.</p>
+                <p className="mt-3 text-sm text-neutral-400">
+                  No published events available.
+                </p>
               ) : (
                 <div className="mt-4 space-y-4">
                   {grouped.map(([dateKey, list]) => (
-                    <div key={dateKey} className="rounded-2xl border border-neutral-800 p-4">
-                      <p className="text-sm font-semibold text-amber-300">{formatDateKeyLabel(dateKey)}</p>
+                    <div
+                      key={dateKey}
+                      className="rounded-2xl border border-neutral-800 p-4"
+                    >
+                      <p className="text-sm font-semibold text-amber-300">
+                        {formatDateKeyLabel(dateKey)}
+                      </p>
                       <ul className="mt-2 space-y-2">
-                        {list.map((event) => (
-                          <li key={event.id} className="text-sm text-neutral-200">
+                        {list.map(event => (
+                          <li
+                            key={event.id}
+                            className="text-sm text-neutral-200"
+                          >
                             <span className="font-semibold">{event.title}</span>
-                            <span className="text-neutral-400"> • {event.location || 'Venue TBA'}</span>
+                            <span className="text-neutral-400">
+                              {' '}
+                              • {event.location || 'Venue TBA'}
+                            </span>
                           </li>
                         ))}
                       </ul>

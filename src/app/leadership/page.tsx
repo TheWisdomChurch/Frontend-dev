@@ -9,6 +9,7 @@ import {
   FlexboxLayout,
   Gridbox,
 } from '@/components/layout';
+import PageHero from '@/components/features/hero/PageHero';
 import { H2, H3, BodyLG, BodySM, Caption, SmallText } from '@/components/text';
 import CustomButton from '@/components/utils/buttons/CustomButton';
 import { useTheme } from '@/components/contexts/ThemeContext';
@@ -179,25 +180,12 @@ export default function LeadershipPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <Section
-        padding="lg"
-        className="relative overflow-hidden"
-        style={{ background: '#070707' }}
-      >
-        <Container size="xl" className="relative z-10 space-y-6 fade-up">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em]">
-            Leadership
-          </div>
-          <H2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
-            Leadership at Wisdom Church
-          </H2>
-          <BodyLG className="text-white/75 max-w-3xl">
-            Our leaders steward the vision, care for the people, and build
-            healthy ministries. Meet the team and apply if you have been called
-            into leadership.
-          </BodyLG>
-        </Container>
-      </Section>
+      <PageHero
+        title="Leadership at Wisdom Church"
+        subtitle="Guided by vision, grounded in service."
+        description="Meet the leaders stewarding our house and submit your leadership application."
+        compact
+      />
 
       <Section padding="lg" className="relative overflow-hidden bg-[#0b0b0b]">
         <Container size="xl" className="space-y-8">
