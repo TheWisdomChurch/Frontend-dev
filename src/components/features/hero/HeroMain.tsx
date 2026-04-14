@@ -267,6 +267,62 @@ const HeroSection = ({
     return () => ctx.revert();
   }, []);
 
+  // Cinematic text reveal
+  useEffect(() => {
+    if (!heroRef.current) return;
+    const prefersReduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    if (prefersReduced) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.fromTo(
+        waveTextRef.current,
+        { y: 12, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6 }
+      )
+        .fromTo(
+          titleRef.current,
+          { y: 24, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7 },
+          '-=0.25'
+        )
+        .fromTo(
+          subtitleRef.current,
+          { y: 18, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6 },
+          '-=0.35'
+        )
+        .fromTo(
+          descriptionRef.current,
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5 },
+          '-=0.35'
+        )
+        .fromTo(
+          buttonsRef.current,
+          { y: 12, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5 },
+          '-=0.3'
+        )
+        .fromTo(
+          cardsRef.current,
+          { y: 16, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6 },
+          '-=0.2'
+        )
+        .fromTo(
+          scrollIndicatorRef.current,
+          { y: 10, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.45 },
+          '-=0.25'
+        );
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, [currentSlide]);
+
   return (
     <Section
       ref={heroRef}
@@ -414,6 +470,14 @@ const HeroSection = ({
                 </span>
               </H2>
             ) : null}
+
+            <p
+              ref={descriptionRef}
+              className="text-[12px] sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl"
+            >
+              {(currentSlideData as any)?.description ||
+                'A Spirit-filled family helping believers grow in faith, purpose, and community — equipped and empowered for greatness.'}
+            </p>
 
             <div
               ref={buttonsRef}
