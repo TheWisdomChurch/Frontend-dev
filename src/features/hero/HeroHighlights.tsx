@@ -221,16 +221,21 @@ export default function HeroHighlights() {
     window.addEventListener('resize', resize);
 
     let frame = 0;
+    let rafId = 0;
+    let active = true;
     const tick = () => {
+      if (!active) return;
       frame += 0.0025;
       plane.rotation.z = frame * 0.4;
       plane.position.y = Math.sin(frame) * 0.08;
       renderer.render(scene, camera);
-      requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(tick);
     };
     tick();
 
     return () => {
+      active = false;
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
       geometry.dispose();
       material.dispose();
