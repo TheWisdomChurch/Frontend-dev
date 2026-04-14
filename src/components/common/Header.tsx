@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { Phone, Mail } from 'lucide-react';
 import { WisdomeHouseLogo } from '@/components/assets';
 
 const navLinks = [
@@ -86,6 +87,30 @@ export default function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
+          <div className="relative group">
+            <a
+              href="tel:07069995333"
+              aria-label="Call us"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80 transition hover:text-white"
+            >
+              <Phone className="h-4 w-4" />
+            </a>
+            <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/90 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] text-white/80 opacity-0 transition group-hover:opacity-100">
+              24/7 Support
+            </span>
+          </div>
+          <div className="relative group">
+            <a
+              href="mailto:wisdomhousehq@gmail.com"
+              aria-label="Email us"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80 transition hover:text-white"
+            >
+              <Mail className="h-4 w-4" />
+            </a>
+            <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/90 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] text-white/80 opacity-0 transition group-hover:opacity-100">
+              Email Us
+            </span>
+          </div>
           <Link
             href="/events"
             className="rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.22em] text-primary transition-colors hover:bg-primary/20"
