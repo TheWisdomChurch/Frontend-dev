@@ -5,6 +5,7 @@ import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import EventsShowcase from '@/features/events/EventsShowcase';
+import JoinUs from '@/features/events/JoinUs';
 import ResourceSection from '@/features/resources/Resource';
 
 // Optimize: Allow caching where possible, only force dynamic for truly dynamic sections
@@ -59,11 +60,6 @@ const OnlineGiving = nextDynamic(
     loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
   }
 );
-
-const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
-  ssr: false,
-  loading: () => <div className="h-[250px] bg-slate-900 animate-pulse" />,
-});
 
 // Modal components - Client-side only
 const EventAdModal = nextDynamic(
