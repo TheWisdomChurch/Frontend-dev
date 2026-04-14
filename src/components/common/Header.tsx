@@ -32,17 +32,38 @@ export default function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    if (!menuOpen) return;
+
+    const scrollY = window.scrollY || 0;
+    document.body.dataset.scrollLockY = String(scrollY);
+    document.body.classList.add('menu-open');
+    document.documentElement.classList.add('menu-open');
+
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    document.body.style.overflow = 'hidden';
+
     return () => {
+      const restoreY = Number(document.body.dataset.scrollLockY || scrollY);
+      document.body.classList.remove('menu-open');
+      document.documentElement.classList.remove('menu-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      document.body.dataset.scrollLockY = '';
+      window.scrollTo(0, restoreY);
     };
   }, [menuOpen]);
   return (
     <header
-      className={`site-header z-50 w-full ${
-        scrolled
-          ? 'bg-black/95 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]'
-          : 'bg-black/85 backdrop-blur-lg'
+      className={`site-header z-50 w-full bg-black/95 backdrop-blur-xl transition-shadow duration-300 ${
+        scrolled ? 'shadow-[0_12px_40px_rgba(0,0,0,0.45)]' : 'shadow-none'
       }`}
     >
       <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-4 sm:px-6">
@@ -121,10 +142,9 @@ export default function Header() {
         <button
           type="button"
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
           onClick={() => setMenuOpen(prev => !prev)}
-          className={`relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition md:hidden ${
-            menuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
+          className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition md:hidden"
         >
           <span
             className={`absolute h-[2px] w-5 bg-white transition-all ${
@@ -144,7 +164,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Door Menu */}
+      {/* Mobile Menu */}
       <div
         className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${
           menuOpen
@@ -201,7 +221,7 @@ export default function Header() {
               <span className="absolute h-[2px] w-5 -rotate-45 bg-white" />
             </button>
           </div>
-          <div className="mt-8 flex flex-1 flex-col items-center justify-center gap-6 text-center">
+          <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-5 text-center">
             <div className="grid w-full max-w-[320px] grid-cols-2 gap-3">
               {navLinks.map(link => (
                 <Link
@@ -218,6 +238,22 @@ export default function Header() {
                   <span className="absolute -bottom-1 left-1/2 h-px w-0 -translate-x-1/2 bg-primary transition-all duration-300 group-hover:w-8" />
                 </Link>
               ))}
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href="tel:07069995333"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80"
+                aria-label="Call us"
+              >
+                <Phone className="h-4 w-4" />
+              </a>
+              <a
+                href="mailto:wisdomhousehq@gmail.com"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80"
+                aria-label="Email us"
+              >
+                <Mail className="h-4 w-4" />
+              </a>
             </div>
             <Link
               href="/events"
