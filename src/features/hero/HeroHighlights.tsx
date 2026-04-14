@@ -2,27 +2,13 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CalendarClock, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, CalendarClock, Clock, MapPin } from 'lucide-react';
 import * as THREE from 'three';
 
-import { BaseModal } from '@/components/ui/modals/Base';
-import { Container } from '@/components/layout';
-import CustomButton from '@/components/utils/buttons/CustomButton';
-import { useServiceUnavailable } from '@/components/contexts/ServiceUnavailableContext';
-import { ArrowRight } from 'lucide-react';
-import React, { useCallback, useMemo, useState } from 'react';
-import Image from 'next/image';
-import { CalendarClock, ArrowRight, Clock, MapPin } from 'lucide-react';
-
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { lightShades } from '@/shared/colors/colorScheme';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Container } from '@/shared/layout';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
-import { Dept_1, Dept_2, Dept_3 } from '@/shared/assets';
-
-import { motion } from '@/lib/safe-motion';
 
 /* =============================================================================
    Data
