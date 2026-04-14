@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTheme } from '@/shared/contexts/ThemeContext';
+import EventsShowcase from '@/features/events/EventsShowcase';
 import ResourceSection from '@/features/resources/Resource';
 
 // Optimize: Allow caching where possible, only force dynamic for truly dynamic sections
@@ -56,15 +57,6 @@ const OnlineGiving = nextDynamic(
   {
     ssr: true,
     loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
-  }
-);
-
-// Below-fold components - Can be lazy loaded (ssr: false)
-const EventsShowcase = nextDynamic(
-  () => import('@/features/events/EventsShowcase'),
-  {
-    ssr: false,
-    loading: () => <div className="h-[300px] bg-slate-900 animate-pulse" />,
   }
 );
 
