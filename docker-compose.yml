@@ -1,46 +1,49 @@
-version: '3.8'
-
+name: wisdom-frontend-dev
 services:
-  app-dev:
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
       args:
-        - NPM_REGISTRY=https://registry.npmmirror.com
-    container_name: wisdomChurch-Frontend
+        NPM_REGISTRY: https://registry.npmjs.org
+    container_name: wisdom_frontend_dev
+    restart: unless-stopped
     ports:
       - '2000:2000'
     environment:
-      - NODE_ENV=development
-      - DOCKER_ENV=true
-      - WATCHPACK_POLLING=true
-      - CHOKIDAR_USEPOLLING=true
-      - NEXT_WEBPACK_USEPOLLING=1
-      - CHOKIDAR_INTERVAL=1000
-      - WATCHPACK_POLLING_INTERVAL=1000
-      - HOST=0.0.0.0
-      - PORT=2000
+      NODE_ENV: development
+      DOCKER_ENV: 'true'
+      HOSTNAME: 0.0.0.0
+      PORT: '2000'
+      WATCHPACK_POLLING: 'true'
+      CHOKIDAR_USEPOLLING: 'true'
+      NEXT_WEBPACK_USEPOLLING: '1'
+      CHOKIDAR_INTERVAL: '1000'
+      WATCHPACK_POLLING_INTERVAL: '1000'
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_API_BASE_URL: 'http://localhost:8080'
     volumes:
-      - .:/app:delegated,cached
-      - node_modules:/app/node_modules
-      - next_cache:/app/.next/cache
+      - .:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_next:/app/.next
+    working_dir: /app
+    command: npm run dev
+    stdin_open: true
+    tty: true
     healthcheck:
       test:
         [
           'CMD',
           'node',
           '-e',
-          "require('http').get('http://localhost:2000', (r) => process.exit(r.statusCode === 200 ? 0 : 1))",
+          "require('http').get('http://127.0.0.1:2000', (r) => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))",
         ]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
       start_period: 60s
-    command: npm run dev
-    stdin_open: true
-    tty: true
-    restart: unless-stopped
 
 volumes:
-  next_cache:
-  node_modules:
+  frontend_node_modules:
+  frontend_next:
