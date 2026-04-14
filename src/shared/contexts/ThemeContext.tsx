@@ -86,6 +86,90 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         root.style.setProperty(`--color-${key}`, value);
       }
     });
+
+    const hexToHsl = (hex: string): string | null => {
+      if (typeof hex !== 'string') return null;
+      let raw = hex.trim().replace(/^#/, '');
+      if (raw.length === 3) {
+        raw = raw
+          .split('')
+          .map(ch => ch + ch)
+          .join('');
+      }
+      if (raw.length !== 6) return null;
+
+      const r = parseInt(raw.slice(0, 2), 16) / 255;
+      const g = parseInt(raw.slice(2, 4), 16) / 255;
+      const b = parseInt(raw.slice(4, 6), 16) / 255;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let h = 0;
+      let s = 0;
+      const l = (max + min) / 2;
+
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+          case g:
+            h = (b - r) / d + 2;
+            break;
+          default:
+            h = (r - g) / d + 4;
+        }
+        h /= 6;
+      }
+
+      const hDeg = Math.round(h * 360);
+      const sPct = Math.round(s * 100);
+      const lPct = Math.round(l * 100);
+      return `${hDeg} ${sPct}% ${lPct}%`;
+    };
+
+    const setHslVar = (name: string, value?: string) => {
+      if (!value) return;
+      const hsl = hexToHsl(value);
+      if (hsl) root.style.setProperty(`--${name}`, hsl);
+    };
+
+    setHslVar('background', scheme.background);
+    setHslVar('foreground', scheme.text);
+    setHslVar('card', scheme.card ?? scheme.surface);
+    setHslVar('card-foreground', scheme.text);
+    setHslVar('popover', scheme.surface);
+    setHslVar('popover-foreground', scheme.text);
+    setHslVar('primary', scheme.primary);
+    setHslVar('primary-foreground', scheme.textInverted);
+    setHslVar('secondary', scheme.secondary);
+    setHslVar('secondary-foreground', scheme.text);
+    setHslVar('muted', scheme.surfaceVariant ?? scheme.backgroundSecondary);
+    setHslVar('muted-foreground', scheme.textTertiary);
+    setHslVar('accent', scheme.accent);
+    setHslVar('accent-foreground', scheme.textInverted);
+    setHslVar('destructive', scheme.error);
+    setHslVar('destructive-foreground', scheme.textInverted);
+    setHslVar('border', scheme.border);
+    setHslVar('input', scheme.border);
+    setHslVar('ring', scheme.primary);
+
+    setHslVar('sidebar-background', scheme.background);
+    setHslVar('sidebar-foreground', scheme.text);
+    setHslVar('sidebar-primary', scheme.primary);
+    setHslVar('sidebar-primary-foreground', scheme.textInverted);
+    setHslVar('sidebar-accent', scheme.accent);
+    setHslVar('sidebar-accent-foreground', scheme.textInverted);
+    setHslVar('sidebar-border', scheme.border);
+    setHslVar('sidebar-ring', scheme.primary);
+
+    setHslVar('chart-1', scheme.primary);
+    setHslVar('chart-2', scheme.info);
+    setHslVar('chart-3', scheme.success);
+    setHslVar('chart-4', scheme.warning);
+    setHslVar('chart-5', scheme.error);
   };
 
   // Ease the transition between modes
