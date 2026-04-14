@@ -261,7 +261,7 @@ export const youtubeLivestreams = {
 export const whatWeDoData: ServiceBox[] = [
   {
     id: 1,
-    title: ' Expect the word to work  ',
+    title: 'Expect the Word to Work',
     description:
       "We actively apply God's Word in our daily lives, transforming biblical teachings into practical actions that impact our community and deepen our faith journey.",
     image: WhatWedo_1,
@@ -269,7 +269,7 @@ export const whatWeDoData: ServiceBox[] = [
   },
   {
     id: 2,
-    title: 'Expect the power of prayer',
+    title: 'Expect the Power of Prayer',
     description:
       "Through fervent prayer, we connect with God's divine power, witnessing miraculous transformations and spiritual breakthroughs in our lives and community.",
     image: WhatWedo_4,

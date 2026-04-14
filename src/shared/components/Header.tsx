@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Phone, Mail } from 'lucide-react';
 import { WisdomeHouseLogo } from '@/shared/assets';
+import { Container } from '@/shared/layout';
 
 const navLinks = [
   { href: '/about', label: 'About' },
@@ -60,15 +61,19 @@ export default function Header() {
       window.scrollTo(0, restoreY);
     };
   }, [menuOpen]);
+
   return (
     <header
       className={`site-header z-50 w-full bg-black/95 backdrop-blur-xl transition-shadow duration-300 ${
         scrolled ? 'shadow-[0_12px_40px_rgba(0,0,0,0.45)]' : 'shadow-none'
       }`}
     >
-      <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-4 sm:px-6">
+      <Container
+        size="xl"
+        className="flex h-[72px] items-center justify-between"
+      >
         <Link href="/" className="flex items-center gap-3">
-          <span className="relative h-10 w-10 overflow-hidden rounded-full border border-white/20 bg-white/5">
+          <span className="relative h-10 w-10 overflow-hidden rounded-full border border-white/20 bg-white/5 shadow-[0_0_16px_rgba(255,255,255,0.06)]">
             <Image
               src={WisdomeHouseLogo}
               alt="Wisdom House Church"
@@ -78,25 +83,26 @@ export default function Header() {
               priority
             />
           </span>
-          <span className="h-9 w-px bg-white/35" />
+          <span className="h-9 w-px bg-white/25" />
           <span className="flex flex-col leading-none text-white font-sans">
-            <span className="text-[8px] uppercase tracking-[0.32em] text-white/70 font-medium">
+            <span className="text-[8px] uppercase tracking-[0.3em] text-white/70 font-light">
               The
             </span>
-            <span className="text-[11px] font-medium uppercase tracking-[0.24em]">
+            <span className="text-[11px] font-light uppercase tracking-[0.22em]">
               Wisdom
             </span>
-            <span className="text-[10.5px] uppercase tracking-[0.22em] text-white/80 font-medium">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-white/80 font-light">
               Church
             </span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-7 md:flex">
+
+        <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map(link => (
             <Link
               key={link.href}
               href={link.href}
-              className={`group relative text-[11px] font-medium uppercase tracking-[0.2em] transition-colors ${
+              className={`group relative text-[11px] font-light uppercase tracking-[0.18em] transition-colors ${
                 pathname === link.href
                   ? 'text-white'
                   : 'text-white/70 hover:text-white'
@@ -107,44 +113,32 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-2 md:flex">
-          <div className="relative group">
-            <a
-              href="tel:07069995333"
-              aria-label="Call us"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80 transition hover:text-white"
-            >
-              <Phone className="h-4 w-4" />
-            </a>
-            <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/90 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] text-white/80 opacity-0 transition group-hover:opacity-100">
-              24/7 Support
-            </span>
-          </div>
-          <div className="relative group">
-            <a
-              href="mailto:wisdomhousehq@gmail.com"
-              aria-label="Email us"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80 transition hover:text-white"
-            >
-              <Mail className="h-4 w-4" />
-            </a>
-            <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/90 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] text-white/80 opacity-0 transition group-hover:opacity-100">
-              Email Us
-            </span>
-          </div>
-          <Link
-            href="/events"
-            className="rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.22em] text-primary transition-colors hover:bg-primary/20"
+
+        <div className="hidden items-center gap-2.5 lg:flex">
+          <a
+            href="tel:07069995333"
+            aria-label="Call Wisdom Church"
+            title="Call Wisdom Church"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:text-white"
           >
-            Plan a Visit
-          </Link>
+            <Phone className="h-4 w-4 text-primary" />
+          </a>
+          <a
+            href="mailto:wisdomhousehq@gmail.com"
+            aria-label="Email Wisdom Church"
+            title="Email Wisdom Church"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:text-white"
+          >
+            <Mail className="h-4 w-4 text-primary" />
+          </a>
         </div>
+
         <button
           type="button"
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(prev => !prev)}
-          className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition md:hidden"
+          className="relative z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/40 text-white transition lg:hidden"
         >
           <span
             className={`absolute h-[2px] w-5 bg-white transition-all ${
@@ -162,28 +156,28 @@ export default function Header() {
             }`}
           />
         </button>
-      </div>
+      </Container>
 
-      {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${
+        className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${
           menuOpen
             ? 'opacity-100 pointer-events-auto'
             : 'opacity-0 pointer-events-none'
         }`}
         aria-hidden={!menuOpen}
       >
-        <div
-          className={`absolute inset-0 bg-gradient-to-b from-black/95 via-[#0b0b0b] to-black/90 backdrop-blur-xl transition-transform duration-300 ${
-            menuOpen ? 'scale-y-100' : 'scale-y-0'
-          } origin-top`}
+        <button
+          type="button"
+          aria-label="Close menu"
+          className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+          onClick={() => setMenuOpen(false)}
         />
         <div
-          className={`relative z-10 flex h-full flex-col transition-all duration-300 ${
-            menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+          className={`absolute right-0 top-0 h-full w-[86%] max-w-[360px] bg-[#0b0b0b] border-l border-white/10 transition-transform duration-300 ${
+            menuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
-          <div className="flex items-center justify-between border-b border-white/10 px-6 pb-5 pt-6">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
             <Link
               href="/"
               onClick={() => setMenuOpen(false)}
@@ -198,16 +192,12 @@ export default function Header() {
                   className="object-cover"
                 />
               </span>
-              <span className="h-7 w-px bg-white/35" />
               <span className="flex flex-col leading-none text-white font-sans">
-                <span className="text-[7px] uppercase tracking-[0.32em] text-white/70 font-medium">
+                <span className="text-[8px] uppercase tracking-[0.3em] text-white/70 font-light">
                   The
                 </span>
-                <span className="text-[9.5px] font-medium uppercase tracking-[0.24em]">
-                  Wisdom
-                </span>
-                <span className="text-[9px] uppercase tracking-[0.22em] text-white/80 font-medium">
-                  Church
+                <span className="text-[10px] font-light uppercase tracking-[0.22em]">
+                  Wisdom Church
                 </span>
               </span>
             </Link>
@@ -215,53 +205,47 @@ export default function Header() {
               type="button"
               aria-label="Close menu"
               onClick={() => setMenuOpen(false)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white"
             >
               <span className="absolute h-[2px] w-5 rotate-45 bg-white" />
               <span className="absolute h-[2px] w-5 -rotate-45 bg-white" />
             </button>
           </div>
-          <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-5 text-center">
-            <div className="grid w-full max-w-[320px] grid-cols-2 gap-3">
+
+          <div className="flex h-full flex-col gap-6 px-5 py-6 overflow-y-auto">
+            <nav className="flex flex-col gap-3">
               {navLinks.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`group relative rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] ${
+                  className={`rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-light uppercase tracking-[0.16em] ${
                     pathname === link.href
                       ? 'text-white'
                       : 'text-white/80 hover:text-white'
                   }`}
                 >
                   {link.label}
-                  <span className="absolute -bottom-1 left-1/2 h-px w-0 -translate-x-1/2 bg-primary transition-all duration-300 group-hover:w-8" />
                 </Link>
               ))}
-            </div>
-            <div className="flex items-center gap-3">
+            </nav>
+
+            <div className="space-y-3 text-sm text-white/70">
               <a
                 href="tel:07069995333"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80"
-                aria-label="Call us"
+                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3"
               >
-                <Phone className="h-4 w-4" />
+                <Phone className="h-4 w-4 text-primary" />
+                0706 999 5333
               </a>
               <a
                 href="mailto:wisdomhousehq@gmail.com"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80"
-                aria-label="Email us"
+                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3"
               >
-                <Mail className="h-4 w-4" />
+                <Mail className="h-4 w-4 text-primary" />
+                wisdomhousehq@gmail.com
               </a>
             </div>
-            <Link
-              href="/events"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-full border border-primary/50 bg-primary/15 px-6 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary"
-            >
-              Plan a Visit
-            </Link>
           </div>
         </div>
       </div>
