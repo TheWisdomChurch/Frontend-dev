@@ -2,7 +2,15 @@ name: Build & Push (Frontend)
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
+    paths:
+      - 'Dockerfile'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'next.config.*'
+      - 'src/**'
+      - 'public/**'
+      - '.github/workflows/frontend-build.yml'
   workflow_dispatch:
 
 concurrency:
@@ -40,7 +48,7 @@ jobs:
             type=raw,value=main
             type=sha,format=short
 
-      - name: Build & Push (amd64)
+      - name: Build and push image
         uses: docker/build-push-action@v6
         env:
           BUILDKIT_PROGRESS: plain
@@ -52,7 +60,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            NPM_REGISTRY=https://registry.npmmirror.com
+            NPM_REGISTRY=https://registry.npmjs.org
             NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
           cache-from: type=gha

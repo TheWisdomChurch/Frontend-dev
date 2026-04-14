@@ -1,4 +1,5 @@
 name: wisdom-frontend-dev
+
 services:
   frontend:
     build:
