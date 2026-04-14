@@ -261,8 +261,11 @@ export default function HeroHighlights() {
                   Next Steps
                 </p>
                 <h3 className="text-base sm:text-lg font-semibold text-white">
-                  Choose your path
+                  Take your next step
                 </h3>
+                <p className="text-[11px] text-white/60">
+                  Plan a visit, watch live, or join a serve team.
+                </p>
               </div>
 
               <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
