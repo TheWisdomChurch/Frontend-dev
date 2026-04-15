@@ -16,7 +16,7 @@ import {
 } from '@/shared/layout'; // Legacy: from '@/shared/layout/index';
 import { BodySM, Caption, H3, SmallText } from '@/shared/text';
 import { apiClient } from '@/lib/api';
-import type { EventPublic } from '@/lib/apiTypes';
+import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 
@@ -40,22 +40,6 @@ type Slide = {
 };
 
 const STATIC_SLIDES: Slide[] = [
-  {
-    id: 'wpc-2026',
-    title: 'Wisdom Power Conference 2026',
-    subtitle: 'Upcoming',
-    description:
-      'City-wide gathering with worship, word, and miracles. Come expectant.',
-    date: 'March 20, 2026 • 6:00 PM',
-    location: 'Honor Gardens Event Center',
-    imageUrl: EventBannerDesktop.src,
-    cta: 'Save a seat',
-    href: '/events',
-    badge: 'Upcoming',
-    category: 'program',
-    start: '2026-03-20T18:00:00.000Z',
-    end: '2026-03-22T20:00:00.000Z',
-  },
   {
     id: 'media-stories',
     title: 'Media Stories',
@@ -130,7 +114,9 @@ export default function EventsShowcase() {
   const [category, setCategory] = useState<ShowcaseCategory>('program');
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadingReels, setLoadingReels] = useState(true);
   const [events, setEvents] = useState<EventPublic[]>([]);
+  const [reels, setReels] = useState<ReelPublic[]>([]);
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   useEffect(() => {
@@ -160,11 +146,25 @@ export default function EventsShowcase() {
     };
   }, []);
 
-  const programSlides = useMemo<Slide[]>(() => {
-    if (!events.length) {
-      return STATIC_SLIDES.filter(slide => slide.category === 'program');
-    }
+  useEffect(() => {
+    let mounted = true;
+    const loadReels = async () => {
+      try {
+        const data = await apiClient.listReels();
+        if (mounted) setReels(Array.isArray(data) ? data : []);
+      } catch {
+        if (mounted) setReels([]);
+      } finally {
+        if (mounted) setLoadingReels(false);
+      }
+    };
+    loadReels();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
+  const programSlides = useMemo<Slide[]>(() => {
     return events.map(event => ({
       id: event.id,
       title: event.title,
@@ -182,10 +182,32 @@ export default function EventsShowcase() {
     }));
   }, [events]);
 
+  const reelSlides = useMemo<Slide[]>(
+    () =>
+      reels.map(reel => ({
+        id: reel.id,
+        title: reel.title,
+        subtitle: 'Reel',
+        description: reel.caption || 'Recent church highlight.',
+        date: reel.createdAt
+          ? new Date(reel.createdAt).toLocaleDateString()
+          : 'Recently added',
+        location: 'Wisdom House Media',
+        imageUrl: reel.thumbnailUrl || EventBannerDesktop.src,
+        cta: 'Watch reel',
+        href: reel.videoUrl || undefined,
+        badge: 'Reel',
+        category: 'reel',
+        videoUrl: reel.videoUrl || undefined,
+      })),
+    [reels]
+  );
+
   const activeSlides = useMemo<Slide[]>(() => {
     if (category === 'program') return programSlides;
+    if (category === 'reel') return reelSlides;
     return STATIC_SLIDES.filter(slide => slide.category === category);
-  }, [category, programSlides]);
+  }, [category, programSlides, reelSlides]);
 
   useEffect(() => {
     if (activeSlides.length === 0) {
@@ -268,7 +290,8 @@ export default function EventsShowcase() {
               lg:aspect-[16/9] lg:min-h-[320px]
             "
           >
-            {loading && category === 'program' ? (
+            {(loading && category === 'program') ||
+            (loadingReels && category === 'reel') ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-10 w-10 rounded-full border-2 border-white/40 border-t-white animate-spin" />
               </div>

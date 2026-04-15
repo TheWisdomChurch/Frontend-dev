@@ -36,13 +36,14 @@ import {
 import CartSidebar from '@/shared/ui/Store/CartSidebar';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import Image from 'next/image';
-import { merchandise } from '@/lib/data';
 import { Product } from '@/lib/types';
 import { storeClient } from '@/lib/api/storeClient';
 
 const StorePage = () => {
   const dispatch = useAppDispatch();
-  const { filteredProducts, filters } = useAppSelector(state => state.products);
+  const { products, filteredProducts, filters } = useAppSelector(
+    state => state.products
+  );
   const { itemCount } = useAppSelector(state => state.cart);
   const { colorScheme, isDark } = useTheme();
 
@@ -74,20 +75,20 @@ const StorePage = () => {
   const promotionsRef = useRef<HTMLDivElement>(null);
 
   const categories = [
-    { name: 'All Products', count: merchandise.length, value: 'all' },
+    { name: 'All Products', count: products.length, value: 'all' },
     {
       name: 'Clothing',
-      count: merchandise.filter(item => item.category === 'clothing').length,
+      count: products.filter(item => item.category === 'clothing').length,
       value: 'clothing',
     },
     {
       name: 'Accessories',
-      count: merchandise.filter(item => item.category === 'accessories').length,
+      count: products.filter(item => item.category === 'accessories').length,
       value: 'accessories',
     },
     {
       name: 'Utilities',
-      count: merchandise.filter(item => item.category === 'utilities').length,
+      count: products.filter(item => item.category === 'utilities').length,
       value: 'utilities',
     },
   ];
@@ -102,9 +103,7 @@ const StorePage = () => {
           dispatch(setProducts(data));
         }
       } catch {
-        if (isMounted) {
-          dispatch(setProducts(merchandise));
-        }
+        if (isMounted) dispatch(setProducts([]));
       }
     };
     loadProducts();
@@ -123,7 +122,7 @@ const StorePage = () => {
     dispatch(setSearchTerm(term));
 
     if (term.length > 2) {
-      const matchingProducts = merchandise.filter(
+      const matchingProducts = products.filter(
         product =>
           product.name.toLowerCase().includes(term.toLowerCase()) ||
           product.description.toLowerCase().includes(term.toLowerCase()) ||
@@ -133,7 +132,7 @@ const StorePage = () => {
       );
 
       if (matchingProducts.length === 0) {
-        const suggestions = merchandise.flatMap(product => product.tags);
+        const suggestions = products.flatMap(product => product.tags);
         const uniqueSuggestions = [...new Set(suggestions)];
         setAlertMessage(
           `No products found for "${term}". Try: ${uniqueSuggestions.slice(0, 5).join(', ')}`
@@ -369,7 +368,7 @@ const StorePage = () => {
                              transition-all duration-300"
                       >
                         <option value="all">
-                          All Products ({merchandise.length})
+                          All Products ({products.length})
                         </option>
                         {categories
                           .filter(cat => cat.value !== 'all')
@@ -616,6 +615,7 @@ const StorePage = () => {
                           curvature="full"
                           className="w-full transition-all duration-300 transform hover:scale-105"
                           onClick={() => handleQuickView(product)}
+                          disabled={product.stock <= 0}
                           style={{
                             backgroundColor: colorScheme.primary,
                             color: colorScheme.black,
@@ -629,7 +629,7 @@ const StorePage = () => {
                               colorScheme.primary;
                           }}
                         >
-                          Quick View
+                          {product.stock <= 0 ? 'Out of Stock' : 'Quick View'}
                         </Button>
                       </div>
 
@@ -716,7 +716,9 @@ const StorePage = () => {
                             color: secondaryTextColor,
                           }}
                         >
-                          {product.stock} in stock
+                          {product.stock > 0
+                            ? `${product.stock} in stock`
+                            : 'Out of stock'}
                         </span>
                       </FlexboxLayout>
 
@@ -729,6 +731,7 @@ const StorePage = () => {
                           elevated={true}
                           leftIcon={<ShoppingBag className="w-4 h-4" />}
                           onClick={() => handleQuickView(product)}
+                          disabled={product.stock <= 0}
                           className="flex-1 transition-all duration-300 transform hover:scale-105"
                           style={{
                             backgroundColor: colorScheme.primary,
@@ -743,7 +746,7 @@ const StorePage = () => {
                               colorScheme.primary;
                           }}
                         >
-                          Add to Cart
+                          {product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
                         </Button>
                         <Button
                           variant="outline"

@@ -23,9 +23,17 @@ export const AnalyticsProviderV2: React.FC<AnalyticsProviderProps> = ({
   config,
 }) => {
   useEffect(() => {
+    const apiBase =
+      process.env.NEXT_PUBLIC_API_URL ||
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      '';
+    const defaultEndpoint = apiBase
+      ? `${apiBase.replace(/\/+$/, '')}/api/v1/analytics/events`
+      : '/api/v1/analytics/events';
+
     // Initialize analytics service with configuration
     const analyticsConfig: Partial<AnalyticsConfig> = {
-      apiEndpoint: process.env.NEXT_PUBLIC_ANALYTICS_API || '/api/analytics',
+      apiEndpoint: process.env.NEXT_PUBLIC_ANALYTICS_API || defaultEndpoint,
       batchSize: 20,
       batchTimeout: 30000,
       enableAutoTracking: true,

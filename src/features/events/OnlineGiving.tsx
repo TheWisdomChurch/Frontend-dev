@@ -2,7 +2,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { OnlinegivingOptions } from '@/lib/data';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import GivingModal from '@/shared/ui/modals/GivingModal';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
@@ -12,6 +11,8 @@ import {
   handleContactCall,
   useIntersectionObserver,
 } from '@/shared/utils/functionUtils/contactUtils';
+import apiClient from '@/lib/api';
+import type { GivingOption } from '@/lib/types';
 import { H2, BaseText, BodySM, Caption, H3 } from '@/shared/text';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { Section, Container } from '@/shared/layout';
@@ -19,6 +20,7 @@ import { WisdomeHouseLogo } from '@/shared/assets';
 export default function OnlineGiving() {
   const { colorScheme } = useTheme();
   const { open } = useServiceUnavailable();
+  const [givingOptions, setGivingOptions] = useState<GivingOption[]>([]);
   const {
     isVisible,
     setIsVisible,
@@ -41,7 +43,7 @@ export default function OnlineGiving() {
     currentIndex,
     previousCard,
     nextCard,
-  } = useOnlineGiving();
+  } = useOnlineGiving(givingOptions.length);
   useIntersectionObserver(setIsVisible, sectionRef);
   const [particles, setParticles] = useState<
     Array<{
@@ -65,6 +67,22 @@ export default function OnlineGiving() {
         duration: Math.random() * 10 + 15,
       }))
     );
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadOptions = async () => {
+      try {
+        const options = await apiClient.listGivingOptions();
+        if (mounted) setGivingOptions(Array.isArray(options) ? options : []);
+      } catch {
+        if (mounted) setGivingOptions([]);
+      }
+    };
+    loadOptions();
+    return () => {
+      mounted = false;
+    };
   }, []);
   // Add ref to card
   const addCardRef = (el: HTMLDivElement | null, index: number) => {
@@ -312,7 +330,7 @@ export default function OnlineGiving() {
             </div>
             <div className="relative h-[400px] w-full overflow-hidden perspective-1000">
               <div className="w-full h-full flex items-center justify-center preserve-3d relative">
-                {OnlinegivingOptions.map((option, index) => {
+                {givingOptions.map((option, index) => {
                   const offset = index - currentIndex;
                   const absOffset = Math.abs(offset);
                   const translateX = offset * 240;
@@ -410,7 +428,7 @@ export default function OnlineGiving() {
           {/* Tablet (768px - 1023px) - Modified Grid Layout */}
           <div className="hidden md:block lg:hidden">
             <div className="grid grid-cols-2 gap-6 w-full mb-12">
-              {OnlinegivingOptions.map((option, index) => (
+              {givingOptions.map((option, index) => (
                 <div
                   key={option.title}
                   ref={el => addCardRef(el, index)}
@@ -489,7 +507,7 @@ export default function OnlineGiving() {
                 ref={scrollContainerRef}
                 className="flex gap-5 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
               >
-                {OnlinegivingOptions.map(option => (
+                {givingOptions.map(option => (
                   <div
                     key={option.title}
                     className="flex-shrink-0 w-72 snap-center"

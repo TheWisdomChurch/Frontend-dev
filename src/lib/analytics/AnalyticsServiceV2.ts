@@ -37,8 +37,14 @@ export interface AnalyticsConfig {
   debug: boolean;
 }
 
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
+const ANALYTICS_ENDPOINT = API_BASE
+  ? `${API_BASE.replace(/\/+$/, '')}/api/v1/analytics/events`
+  : '/api/v1/analytics/events';
+
 const DEFAULT_CONFIG: AnalyticsConfig = {
-  apiEndpoint: '/api/analytics',
+  apiEndpoint: ANALYTICS_ENDPOINT,
   batchSize: 20,
   batchTimeout: 30000, // 30 seconds
   enableAutoTracking: true,

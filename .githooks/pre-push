@@ -32,7 +32,7 @@ fi
 echo "[pre-push] Production build..."
 # This machine's native SWC path is crashing with a low-level bus error.
 # Force the wasm fallback so pre-push still validates the real production build.
-NEXT_TEST_WASM=1 node ./node_modules/next/dist/bin/next build --no-lint
+NEXT_DIST_DIR=.next-prepush NEXT_TEST_WASM=1 node ./node_modules/next/dist/bin/next build --no-lint
 echo "[pre-push] Build passed."
 
 echo "[pre-push] All checks passed."

@@ -48,6 +48,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
   if (!product) return null;
 
   const handleAddToCart = () => {
+    if (product.stock <= 0) return;
     dispatch(
       addToCart({
         productId: product.id,
@@ -157,8 +158,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
               </span>
               <button
                 type="button"
-                onClick={() => setQuantity(q => q + 1)}
+                onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
                 className="h-9 w-9 rounded-full border border-white/20 flex items-center justify-center text-white/80 hover:border-white/40"
+                disabled={quantity >= product.stock}
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -170,9 +172,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
             size="md"
             className="w-full"
             onClick={handleAddToCart}
+            disabled={product.stock <= 0}
           >
             <ShoppingBag className="w-4 h-4 mr-2" />
-            Add to Cart
+            {product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
           </Button>
         </div>
       </div>

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import apiClient from '@/lib/api';
 import type { LeadershipMember as ApiLeadershipMember } from '@/lib/types';
-import { pastorsData, deaconsData } from '@/lib/data'; // Fallback only
 
 type LeadershipMember = ApiLeadershipMember | any;
 
@@ -35,26 +34,16 @@ export function useLeadership() {
             error: null,
           });
         } else {
-          // Fallback to mock data only if backend returns empty
-          const fallbackLeaders = [
-            ...(pastorsData || []),
-            ...(deaconsData || []),
-          ];
           setState({
-            leaders: fallbackLeaders,
+            leaders: [],
             isLoading: false,
             error: null,
           });
         }
       } catch (error) {
         console.error('Failed to fetch leadership:', error);
-        // Use mock data as fallback on error
-        const fallbackLeaders = [
-          ...(pastorsData || []),
-          ...(deaconsData || []),
-        ];
         setState({
-          leaders: fallbackLeaders,
+          leaders: [],
           isLoading: false,
           error:
             error instanceof Error

@@ -38,9 +38,17 @@ const initialState: SermonsState = {
 export const fetchSermons = createAsyncThunk(
   'sermons/fetchSermons',
   async () => {
-    const response = await fetch('/api/sermons');
+    const base =
+      process.env.NEXT_PUBLIC_API_URL ||
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      '';
+    const endpoint = base
+      ? `${base.replace(/\/+$/, '')}/api/v1/sermons`
+      : '/api/v1/sermons';
+    const response = await fetch(endpoint, { credentials: 'include' });
     if (!response.ok) throw new Error('Failed to fetch sermons');
-    return await response.json();
+    const payload = await response.json();
+    return payload?.data ?? payload;
   }
 );
 
@@ -84,7 +92,9 @@ const applyFilters = (
       }
     } else {
       filtered = filtered.filter(video =>
-        video.series.toLowerCase().includes(filters.selectedSeries.toLowerCase())
+        video.series
+          .toLowerCase()
+          .includes(filters.selectedSeries.toLowerCase())
       );
     }
   }

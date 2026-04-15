@@ -38,6 +38,7 @@ class APIClient {
     this.instance = axios.create({
       baseURL: this.baseURL,
       timeout: 30000,
+      withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -53,12 +54,6 @@ class APIClient {
     // Request interceptor
     this.instance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        // Add auth token if available
-        const token = this.getAuthToken();
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-
         // Add request ID for debugging
         config.headers['X-Request-ID'] = this.generateRequestId();
 
@@ -93,20 +88,10 @@ class APIClient {
   }
 
   /**
-   * Get authentication token from storage
-   */
-  private getAuthToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    const match = document.cookie.match(/(?:^|;\s*)auth_token=([^;]+)/);
-    return match ? decodeURIComponent(match[1]) : null;
-  }
-
-  /**
    * Handle unauthorized response
    */
   private handleUnauthorized(): void {
     if (typeof window !== 'undefined') {
-      document.cookie = 'auth_token=; Max-Age=0; Path=/; SameSite=Lax';
       window.dispatchEvent(new CustomEvent('auth:unauthorized'));
     }
   }
@@ -186,19 +171,6 @@ class APIClient {
     this.instance.defaults.baseURL = url;
   }
 
-  /**
-   * Set authorization header
-   */
-  setAuthToken(token: string): void {
-    this.instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  }
-
-  /**
-   * Clear authorization header
-   */
-  clearAuthToken(): void {
-    delete this.instance.defaults.headers.common['Authorization'];
-  }
 }
 
 // Export singleton instance
