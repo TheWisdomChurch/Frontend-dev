@@ -7,10 +7,10 @@ import {
   Mail,
   Phone,
   ArrowUpRight,
-  Instagram,
-  Youtube,
-  Facebook,
-  Twitter,
+  Camera,
+  Play,
+  Users,
+  MessageCircle,
 } from 'lucide-react';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/layout';
@@ -34,22 +34,22 @@ const socials = [
   {
     href: 'https://www.instagram.com/wisdomhousehq',
     label: 'Instagram',
-    Icon: Instagram,
+    Icon: Camera,
   },
   {
     href: 'https://www.youtube.com/@wisdomhousehq',
     label: 'YouTube',
-    Icon: Youtube,
+    Icon: Play,
   },
   {
     href: 'https://www.facebook.com/wisdomhousehq',
     label: 'Facebook',
-    Icon: Facebook,
+    Icon: Users,
   },
   {
     href: 'https://x.com/wisdomhousehq',
     label: 'Twitter',
-    Icon: Twitter,
+    Icon: MessageCircle,
   },
 ];
 

@@ -11,6 +11,17 @@ if [[ ! -d node_modules ]]; then
   exit 1
 fi
 
+if [[ "${KEEP_PREPUSH_ARTIFACTS:-0}" != "1" ]]; then
+  rm -rf .next-prepush
+fi
+
+cleanup() {
+  if [[ "${KEEP_PREPUSH_ARTIFACTS:-0}" != "1" ]]; then
+    rm -rf .next-prepush
+  fi
+}
+trap cleanup EXIT
+
 echo ""
 echo "[pre-push] Running repository validation checks..."
 
