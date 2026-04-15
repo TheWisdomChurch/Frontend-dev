@@ -38,6 +38,24 @@ if [[ "${FOUND_CONFLICT_MARKER}" == "1" ]]; then
 fi
 echo "[pre-commit] Conflict marker check passed."
 
+echo "[pre-commit] Checking for generated/build artifacts in staged files..."
+FOUND_GENERATED_ARTIFACTS=0
+while IFS= read -r -d '' file; do
+  case "$file" in
+    .next/*|.next-prepush/*|node_modules/*)
+      echo "[pre-commit] Generated artifact staged: $file"
+      FOUND_GENERATED_ARTIFACTS=1
+      ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if [[ "${FOUND_GENERATED_ARTIFACTS}" == "1" ]]; then
+  echo "[pre-commit] Unstage generated files before committing:"
+  echo "  git reset HEAD -- .next .next-prepush node_modules"
+  exit 1
+fi
+echo "[pre-commit] Generated artifact check passed."
+
 echo "[pre-commit] Running lint-staged (Prettier + ESLint on staged files)..."
 node ./node_modules/lint-staged/bin/lint-staged.js
 echo "[pre-commit] lint-staged passed."
