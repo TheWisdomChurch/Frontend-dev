@@ -17,6 +17,7 @@ husky/
 
 # next.js
 /.next/
+/.next-prepush/
 /out/
 lintstagedrc.json
 eslintrc.json
