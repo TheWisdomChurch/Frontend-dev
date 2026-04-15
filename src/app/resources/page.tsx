@@ -13,6 +13,7 @@ import {
 } from '@/shared/layout';
 import PageHero from '@/features/hero/PageHero';
 import { resourceLinks } from '@/lib/data';
+import { ScrollFadeIn } from '@/shared/ui/motion';
 import { Radio, Sparkles, X, Video, Bell, Search } from 'lucide-react';
 
 type Category =
@@ -131,6 +132,7 @@ export default function ResourcesPage() {
       <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
         <div
           className="pointer-events-none absolute inset-0 opacity-50"
+          data-parallax-global="0.12"
           style={{
             backgroundImage:
               'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
@@ -143,6 +145,7 @@ export default function ResourcesPage() {
         />
         <div
           className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"
+          data-parallax-global="0.18"
           style={{ background: `${colorScheme.primary}14` }}
         />
 
@@ -151,41 +154,45 @@ export default function ResourcesPage() {
             {quickActions.map((item, index) => {
               const Icon = item.icon;
               return (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
-                  style={{ boxShadow: '0 12px 28px rgba(0,0,0,0.22)' }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{
-                      background: `radial-gradient(circle at 85% 15%, ${colorScheme.primary}18 0%, transparent 52%)`,
-                    }}
-                  />
-                  <div className="relative flex items-start gap-3">
+                <ScrollFadeIn key={item.title} delay={index * 0.05}>
+                  <Link
+                    href={item.href}
+                    className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
+                    style={{ boxShadow: '0 12px 28px rgba(0,0,0,0.22)' }}
+                    data-parallax-global={index % 2 === 0 ? '0.08' : '0.12'}
+                  >
                     <div
-                      className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
-                      style={{ backgroundColor: colorScheme.opacity.primary10 }}
-                    >
-                      <Icon
-                        className="w-4 h-4"
-                        style={{ color: colorScheme.primary }}
-                      />
+                      className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                      style={{
+                        background: `radial-gradient(circle at 85% 15%, ${colorScheme.primary}18 0%, transparent 52%)`,
+                      }}
+                    />
+                    <div className="relative flex items-start gap-3">
+                      <div
+                        className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
+                        style={{
+                          backgroundColor: colorScheme.opacity.primary10,
+                        }}
+                      >
+                        <Icon
+                          className="w-4 h-4"
+                          style={{ color: colorScheme.primary }}
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <Caption className="text-[10px] tracking-[0.18em] text-white/45 mb-1 block">
+                          {String(index + 1).padStart(2, '0')}
+                        </Caption>
+                        <H3 className="text-sm sm:text-[15px] font-semibold leading-tight mb-1">
+                          {item.title}
+                        </H3>
+                        <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
+                          {item.desc}
+                        </SmallText>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <Caption className="text-[10px] tracking-[0.18em] text-white/45 mb-1 block">
-                        {String(index + 1).padStart(2, '0')}
-                      </Caption>
-                      <H3 className="text-sm sm:text-[15px] font-semibold leading-tight mb-1">
-                        {item.title}
-                      </H3>
-                      <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
-                        {item.desc}
-                      </SmallText>
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
+                </ScrollFadeIn>
               );
             })}
           </div>
@@ -263,71 +270,73 @@ export default function ResourcesPage() {
             </aside>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-              {filteredResources.map(resource => {
+              {filteredResources.map((resource, index) => {
                 const Icon = resource.icon || Sparkles;
                 return (
-                  <Link
-                    key={resource.title}
-                    href={resource.path}
-                    onClick={e =>
-                      handleLiveServiceClick(e, resource.isLiveService)
-                    }
-                    className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
-                    style={{
-                      background:
-                        'linear-gradient(150deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.2) 100%)',
-                      boxShadow: '0 16px 36px rgba(0,0,0,0.25)',
-                    }}
-                  >
-                    <div
-                      className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  <ScrollFadeIn key={resource.title} delay={index * 0.04}>
+                    <Link
+                      href={resource.path}
+                      onClick={e =>
+                        handleLiveServiceClick(e, resource.isLiveService)
+                      }
+                      className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
                       style={{
-                        background: `radial-gradient(circle at 86% 12%, ${colorScheme.primary}16 0%, transparent 48%)`,
+                        background:
+                          'linear-gradient(150deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.2) 100%)',
+                        boxShadow: '0 16px 36px rgba(0,0,0,0.25)',
                       }}
-                    />
+                      data-parallax-global={index % 3 === 0 ? '0.08' : '0.12'}
+                    >
+                      <div
+                        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                        style={{
+                          background: `radial-gradient(circle at 86% 12%, ${colorScheme.primary}16 0%, transparent 48%)`,
+                        }}
+                      />
 
-                    <div className="relative flex h-full flex-col gap-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-start gap-3 min-w-0">
-                          <div
-                            className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
-                            style={{
-                              backgroundColor: colorScheme.opacity.primary10,
-                            }}
-                          >
-                            <Icon
-                              className="w-4 h-4"
-                              style={{ color: colorScheme.primary }}
-                            />
+                      <div className="relative flex h-full flex-col gap-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start gap-3 min-w-0">
+                            <div
+                              className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
+                              style={{
+                                backgroundColor: colorScheme.opacity.primary10,
+                              }}
+                            >
+                              <Icon
+                                className="w-4 h-4"
+                                style={{ color: colorScheme.primary }}
+                              />
+                            </div>
+                            <div className="min-w-0">
+                              <Caption className="text-white/55 text-[10px] sm:text-[11px] block mb-1 leading-tight">
+                                {resource.subtitle}
+                              </Caption>
+                              <H3 className="text-sm sm:text-base font-semibold leading-tight text-white">
+                                {resource.title}
+                              </H3>
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <Caption className="text-white/55 text-[10px] sm:text-[11px] block mb-1 leading-tight">
-                              {resource.subtitle}
-                            </Caption>
-                            <H3 className="text-sm sm:text-base font-semibold leading-tight text-white">
-                              {resource.title}
-                            </H3>
-                          </div>
+                          <span className="text-white/45 text-sm transition-transform duration-300 group-hover:translate-x-0.5">
+                            →
+                          </span>
                         </div>
-                        <span className="text-white/45 text-sm transition-transform duration-300 group-hover:translate-x-0.5">
-                          →
-                        </span>
-                      </div>
 
-                      <BodyMD className="text-white/70 text-xs sm:text-sm leading-relaxed">
-                        {resource.description}
-                      </BodyMD>
+                        <BodyMD className="text-white/70 text-xs sm:text-sm leading-relaxed">
+                          {resource.description}
+                        </BodyMD>
 
-                      <div className="mt-auto pt-1">
-                        <Caption
-                          className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.14em]"
-                          style={{ color: colorScheme.primary }}
-                        >
-                          {resource.actionText || 'Read More →'}
-                        </Caption>
+                        <div className="mt-auto pt-1">
+                          <Caption
+                            className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.14em]"
+                            style={{ color: colorScheme.primary }}
+                          >
+                            {resource.actionText || 'Read More →'}
+                          </Caption>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </ScrollFadeIn>
                 );
               })}
             </div>

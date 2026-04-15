@@ -79,6 +79,18 @@ h6 {
   text-wrap: balance;
 }
 
+h1 {
+  font-size: clamp(1.85rem, 2.5vw + 1rem, 3.35rem);
+}
+
+h2 {
+  font-size: clamp(1.45rem, 1.8vw + 0.95rem, 2.6rem);
+}
+
+h3 {
+  font-size: clamp(1.1rem, 0.95vw + 0.88rem, 1.65rem);
+}
+
 p,
 li {
   text-wrap: pretty;
@@ -118,4 +130,19 @@ textarea:focus-visible {
     fill 0.35s ease,
     stroke 0.35s ease,
     box-shadow 0.35s ease;
+}
+
+main.page-shell {
+  width: 100%;
+  overflow-x: clip;
+}
+
+@media (max-width: 767px) {
+  html {
+    font-size: 15px;
+  }
+
+  body {
+    background-attachment: scroll;
+  }
 }

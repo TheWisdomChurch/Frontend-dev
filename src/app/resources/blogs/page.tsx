@@ -8,6 +8,7 @@ import {
   FlexboxLayout,
   Gridbox,
 } from '@/shared/layout';
+import { ScrollFadeIn } from '@/shared/ui/motion';
 
 const BlogPage = () => {
   const blogPosts = [
@@ -82,42 +83,47 @@ const BlogPage = () => {
 
       {/* Blog Posts Grid */}
       <PageSection tone="surface" padding="xl">
-        <div className="text-center mb-8 fade-up">
+        <ScrollFadeIn className="text-center mb-8 fade-up">
           <H2>Recent Articles</H2>
           <BodyMD className="text-muted mt-3">
             Fresh content to encourage and equip you
           </BodyMD>
-        </div>
+        </ScrollFadeIn>
 
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogPosts.map((post, index) => (
-              <article key={index} className="page-card overflow-hidden">
-                <div className="h-40 bg-gradient-to-br from-yellow-400/70 to-yellow-600/70 flex items-end p-4">
-                  <span className="px-3 py-1 rounded-full text-[11px] font-medium border border-muted text-muted bg-white/70">
-                    {post.category}
-                  </span>
-                </div>
-
-                <div className="p-5">
-                  <div className="flex items-center text-[11px] text-subtle mb-3">
-                    <span>{post.date}</span>
-                    <span className="mx-2">•</span>
-                    <span>{post.readTime}</span>
+              <ScrollFadeIn key={index} delay={index * 0.04}>
+                <article
+                  className="page-card overflow-hidden"
+                  data-parallax-global={index % 2 === 0 ? '0.08' : '0.12'}
+                >
+                  <div className="h-40 bg-gradient-to-br from-yellow-400/70 to-yellow-600/70 flex items-end p-4">
+                    <span className="px-3 py-1 rounded-full text-[11px] font-medium border border-muted text-muted bg-white/70">
+                      {post.category}
+                    </span>
                   </div>
 
-                  <H3 className="mb-2">{post.title}</H3>
+                  <div className="p-5">
+                    <div className="flex items-center text-[11px] text-subtle mb-3">
+                      <span>{post.date}</span>
+                      <span className="mx-2">•</span>
+                      <span>{post.readTime}</span>
+                    </div>
 
-                  <BodySM className="text-muted mb-4">{post.excerpt}</BodySM>
+                    <H3 className="mb-2">{post.title}</H3>
 
-                  <div className="flex items-center justify-between">
-                    <BodySM className="text-subtle">By {post.author}</BodySM>
-                    <button className="text-accent font-medium">
-                      Read More →
-                    </button>
+                    <BodySM className="text-muted mb-4">{post.excerpt}</BodySM>
+
+                    <div className="flex items-center justify-between">
+                      <BodySM className="text-subtle">By {post.author}</BodySM>
+                      <button className="text-accent font-medium">
+                        Read More →
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </ScrollFadeIn>
             ))}
           </div>
         </div>
@@ -126,7 +132,9 @@ const BlogPage = () => {
       {/* Categories Section */}
       <PageSection tone="muted" padding="xl">
         <div className="max-w-4xl mx-auto text-center">
-          <H2 className="mb-6">Browse by Category</H2>
+          <ScrollFadeIn>
+            <H2 className="mb-6">Browse by Category</H2>
+          </ScrollFadeIn>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -139,9 +147,11 @@ const BlogPage = () => {
               'Faith',
               'Bible Study',
             ].map((category, index) => (
-              <button key={index} className="page-card p-4">
-                <BodySM className="font-medium text-muted">{category}</BodySM>
-              </button>
+              <ScrollFadeIn key={index} delay={index * 0.03}>
+                <button className="page-card p-4 w-full">
+                  <BodySM className="font-medium text-muted">{category}</BodySM>
+                </button>
+              </ScrollFadeIn>
             ))}
           </div>
         </div>

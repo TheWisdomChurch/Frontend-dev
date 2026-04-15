@@ -14,6 +14,7 @@ import ClientFooter from '@/shared/components/ClientFooter';
 import ClientScrollToTop from '@/shared/components/ClientscrollTop';
 import ScrollHandler from '@/shared/components/ClientScrollHandler';
 import CookieConsentBanner from '@/shared/ui/CookieConsentBanner';
+import GlobalScrollEffects from '@/shared/components/GlobalScrollEffects';
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -30,6 +31,7 @@ export function Providers({ children }: { children: ReactNode }) {
                 <ErrorBoundary>
                   <AppStartupLoader />
                   <ScrollHandler />
+                  <GlobalScrollEffects />
                   <ClientHeader />
                   <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
                     {children}
