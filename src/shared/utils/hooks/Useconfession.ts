@@ -7,16 +7,12 @@ interface UseWelcomeModalProps {
   onClose?: () => void;
 }
 
-const CONFESSION_SESSION_KEY = 'wc_confession_modal_seen_session_v3';
+let hasSeenModalInRuntime = false;
 
-const hasSeenThisSession = () => {
-  if (typeof window === 'undefined') return false;
-  return window.sessionStorage.getItem(CONFESSION_SESSION_KEY) === '1';
-};
+const hasSeenThisSession = () => hasSeenModalInRuntime;
 
 const markSeenThisSession = () => {
-  if (typeof window === 'undefined') return;
-  window.sessionStorage.setItem(CONFESSION_SESSION_KEY, '1');
+  hasSeenModalInRuntime = true;
 };
 
 export function useWelcomeModal({

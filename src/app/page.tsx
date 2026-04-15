@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTheme } from '@/shared/contexts/ThemeContext';
+import HeroHighlights from '@/features/hero/HeroHighlights';
 import EventsShowcase from '@/features/events/EventsShowcase';
 import JoinUs from '@/features/events/JoinUs';
 import ResourceSection from '@/features/resources/Resource';
@@ -22,14 +23,6 @@ const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
   ssr: true, // Enable SSR for above-fold content
   loading: () => <div className="h-[500px] bg-slate-900 animate-pulse" />,
 });
-
-const HeroHighlights = nextDynamic(
-  () => import('@/features/hero/HeroHighlights'),
-  {
-    ssr: false,
-    loading: () => <div className="h-[300px] bg-slate-900 animate-pulse" />,
-  }
-);
 
 // Mid-load components - SSR enabled
 const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
@@ -82,37 +75,76 @@ const ConfessionPopup = nextDynamic(
 // HOMEPAGE COMPONENT
 // ============================================================================
 
+type HomeEventAd = {
+  id: string;
+  title: string;
+  headline: string;
+  description: string;
+  startAt: string;
+  endAt: string;
+  time: string;
+  location: string;
+  image: string;
+  registerUrl: string;
+  ctaLabel: string;
+  note: string;
+};
+
+const fallbackEventAd: HomeEventAd = {
+  id: 'wpc-2026',
+  title: 'Wisdom Power Conference 2026',
+  headline: 'Have you registered for WPC 2026?',
+  description:
+    'Join three days of worship, impartation, and encounters designed to refresh your spirit and strengthen your walk.',
+  startAt: '2026-03-20T18:00:00Z',
+  endAt: '2026-03-22T20:00:00Z',
+  time: 'Morning Session • Evening Session',
+  location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
+  image: '/HEADER.png',
+  registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
+  ctaLabel: 'Register now',
+  note: 'You will be returned to the main website after you finish.',
+};
+
 export default function Home() {
   const { colorScheme } = useTheme();
 
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
   const [showConfessionPopup, setShowConfessionPopup] = useState(true);
+  const [eventAd, setEventAd] = useState<HomeEventAd>(fallbackEventAd);
 
-  const eventStorageKey = 'wc_event_ad_next_show_session_v2';
   const autoOpenDelayMs = 1200;
   const closeCooldownMs = 1000 * 60 * 20;
   const remindCooldownMs = 1000 * 60 * 45;
 
-  // Event advertising modal data
-  const eventAd = useMemo(
-    () => ({
-      id: 'wpc-2026',
-      title: 'Wisdom Power Conference 2026',
-      headline: 'Have you registered for WPC 2026?',
-      description:
-        'Join three days of worship, impartation, and encounters designed to refresh your spirit and strengthen your walk.',
-      startAt: '2026-03-20T18:00:00Z',
-      endAt: '2026-03-22T20:00:00Z',
-      time: 'Morning Session • Evening Session',
-      location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
-      image: '/HEADER.png',
-      registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
-      ctaLabel: 'Register now',
-      note: 'You will be returned to the main website after you finish.',
-    }),
-    []
-  );
+  // Event advertising data (backend-first, fallback-safe)
+  useEffect(() => {
+    let mounted = true;
+
+    const loadHomepageAd = async () => {
+      try {
+        const res = await fetch('/api/content/homepage-ad', {
+          method: 'GET',
+          cache: 'no-store',
+        });
+        if (!res.ok) return;
+        const payload = (await res.json()) as Partial<HomeEventAd>;
+        if (!mounted) return;
+        setEventAd(prev => ({
+          ...prev,
+          ...payload,
+        }));
+      } catch {
+        // Keep fallback in place when endpoint is not yet wired.
+      }
+    };
+
+    loadHomepageAd();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Initialize modal timing on mount
   useEffect(() => {
@@ -124,20 +156,8 @@ export default function Home() {
 
   // Initialize modal timing on mount
   useEffect(() => {
-    const now = Date.now();
-    const nextAllowedRaw =
-      typeof window !== 'undefined'
-        ? window.sessionStorage.getItem(eventStorageKey)
-        : null;
-    const nextAllowed = nextAllowedRaw ? Number(nextAllowedRaw) : 0;
-
-    if (Number.isFinite(nextAllowed) && now < nextAllowed) {
-      setNextAdAt(nextAllowed);
-      return;
-    }
-
-    setNextAdAt(now + autoOpenDelayMs);
-  }, [autoOpenDelayMs, eventStorageKey]);
+    setNextAdAt(Date.now() + autoOpenDelayMs);
+  }, [autoOpenDelayMs]);
 
   // Setup modal auto-open timer
   useEffect(() => {
@@ -159,9 +179,6 @@ export default function Home() {
   // Cooldown persistence for modal
   const persistAdCooldown = (cooldownMs: number) => {
     const nextAllowedAt = Date.now() + cooldownMs;
-    if (typeof window !== 'undefined') {
-      window.sessionStorage.setItem(eventStorageKey, String(nextAllowedAt));
-    }
     setNextAdAt(nextAllowedAt);
   };
 

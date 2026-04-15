@@ -97,7 +97,8 @@ class APIClient {
    */
   private getAuthToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('auth_token');
+    const match = document.cookie.match(/(?:^|;\s*)auth_token=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
   }
 
   /**
@@ -105,7 +106,7 @@ class APIClient {
    */
   private handleUnauthorized(): void {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('auth_token');
+      document.cookie = 'auth_token=; Max-Age=0; Path=/; SameSite=Lax';
       window.dispatchEvent(new CustomEvent('auth:unauthorized'));
     }
   }
