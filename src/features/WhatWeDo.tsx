@@ -9,15 +9,25 @@ import { Section, Container } from '@/shared/layout';
 
 export default function WhatWeDo() {
   const { sectionRef, headingRef, textRef, addToBoxesRef } = useWhatWeDo();
+  const firstBox = whatWeDoData[0];
+  const secondBox = whatWeDoData[1];
+  const thirdBox = whatWeDoData[2];
+  const fourthBox = whatWeDoData[3];
 
-  const renderBox = (box: ServiceBox, index: number) => {
+  const renderBox = (box: ServiceBox, index: number, tall = false) => {
     return (
       <div
         key={box.id}
         ref={el => addToBoxesRef(el, index)}
-        className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f0f] shadow-[0_18px_50px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.45)]"
+        className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f0f] shadow-[0_18px_50px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.45)] ${
+          tall ? 'min-h-[420px] sm:min-h-[460px] lg:min-h-[500px]' : ''
+        }`}
       >
-        <div className="relative h-48 sm:h-52 lg:h-56 overflow-hidden">
+        <div
+          className={`relative overflow-hidden ${
+            tall ? 'h-56 sm:h-60 lg:h-64' : 'h-48 sm:h-52 lg:h-56'
+          }`}
+        >
           <Image
             src={box.image}
             alt={box.imageAlt}
@@ -54,11 +64,11 @@ export default function WhatWeDo() {
       padding="lg"
       fullHeight={false}
       style={{ background: '#080808' }}
-      className="relative overflow-hidden"
+      className="relative overflow-hidden pt-24 sm:pt-28 lg:pt-32"
     >
       <div className="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_12%_20%,rgba(255,255,255,0.07),transparent_45%),radial-gradient(circle_at_88%_10%,rgba(255,255,255,0.05),transparent_40%)]" />
       <Container size="xl" className="relative z-10">
-        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end pb-4">
+        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end pb-6">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-white/70">
               What to expect
@@ -79,8 +89,18 @@ export default function WhatWeDo() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 lg:gap-6 pb-2">
-          {whatWeDoData.map((box, index) => renderBox(box, index))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 pb-2">
+          {firstBox && (
+            <div className="md:col-span-2">{renderBox(firstBox, 0, true)}</div>
+          )}
+
+          {secondBox && renderBox(secondBox, 1)}
+
+          {thirdBox && renderBox(thirdBox, 2)}
+
+          {fourthBox && (
+            <div className="md:col-span-2">{renderBox(fourthBox, 3, true)}</div>
+          )}
         </div>
       </Container>
     </Section>

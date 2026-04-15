@@ -8,17 +8,24 @@ export function ConsentBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem('analytics_consent');
+    const consent =
+      typeof document !== 'undefined'
+        ? document.cookie.includes('analytics_consent=1')
+        : false;
     if (!consent) setVisible(true);
   }, []);
 
   const acceptAll = () => {
     setConsent({ functional: true, analytics: true, marketing: true });
+    document.cookie =
+      'analytics_consent=1; Max-Age=31536000; Path=/; SameSite=Lax';
     setVisible(false);
   };
 
   const acceptEssential = () => {
     setConsent({ functional: true, analytics: false, marketing: false });
+    document.cookie =
+      'analytics_consent=1; Max-Age=31536000; Path=/; SameSite=Lax';
     setVisible(false);
   };
 

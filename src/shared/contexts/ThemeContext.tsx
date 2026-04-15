@@ -46,16 +46,24 @@ const resolveTheme = (
   return mode;
 };
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const getInitialTheme = (): ThemeMode => {
-    if (typeof window === 'undefined') return 'system';
-    const saved = window.localStorage.getItem('theme');
-    return saved === 'light' || saved === 'dark' || saved === 'system'
-      ? saved
-      : 'system';
-  };
+const readCookie = (name: string): string | null => {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(
+    new RegExp(
+      `(?:^|; )${name.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
+    )
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+};
 
-  const [theme, setThemeMode] = useState<ThemeMode>(getInitialTheme);
+const writeCookie = (name: string, value: string, days = 365): void => {
+  if (typeof document === 'undefined') return;
+  const maxAge = days * 24 * 60 * 60;
+  document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
+};
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeMode] = useState<ThemeMode>('system');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const [isDark, setIsDark] = useState(false);
   const [systemPrefersDark, setSystemPrefersDark] = useState(false);
@@ -184,6 +192,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    const saved = readCookie('wc_theme');
+    if (saved === 'light' || saved === 'dark' || saved === 'system') {
+      setThemeMode(saved);
+    }
+
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemChange = (event: MediaQueryListEvent) => {
       setSystemPrefersDark(event.matches);
@@ -221,7 +234,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     applyCSSVariables(scheme);
 
     try {
-      window.localStorage.setItem('theme', theme);
+      writeCookie('wc_theme', theme, 365);
     } catch (error) {
       console.warn('Failed to save theme preference:', error);
     }

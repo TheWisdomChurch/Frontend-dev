@@ -52,81 +52,104 @@ export default function GlobalScrollEffects() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const root = document.querySelector(
-      'main.page-shell'
-    ) as HTMLElement | null;
-    if (!root) return;
+    let ctx: gsap.Context | null = null;
+    let refreshId = 0;
+    let runTimer = 0;
+    let cancelled = false;
 
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-    const isMobile = window.matchMedia('(max-width: 767px)').matches;
-    const isTablet = window.matchMedia(
-      '(min-width: 768px) and (max-width: 1024px)'
-    ).matches;
-    const revealDistance = isMobile ? 16 : isTablet ? 22 : 28;
-    const revealDuration = isMobile ? 0.58 : 0.85;
-    const revealStagger = isMobile ? 0.045 : 0.08;
-    const parallaxScale = isMobile ? 0.35 : isTablet ? 0.62 : 1;
+    const runEffects = () => {
+      if (cancelled) return;
 
-    const ctx = gsap.context(() => {
-      const revealTargets = collectRevealTargets(root);
-      const parallaxTargets = Array.from(
-        root.querySelectorAll<HTMLElement>('[data-parallax-global]')
-      ).filter(isEligibleTarget);
+      const root = document.querySelector(
+        'main.page-shell'
+      ) as HTMLElement | null;
+      if (!root) return;
 
-      if (!reduceMotion && revealTargets.length > 0) {
-        gsap.set(revealTargets, {
-          autoAlpha: 0,
-          y: revealDistance,
-          willChange: 'transform, opacity',
-        });
+      const reduceMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      const isTablet = window.matchMedia(
+        '(min-width: 768px) and (max-width: 1024px)'
+      ).matches;
+      const revealDistance = isMobile ? 16 : isTablet ? 22 : 28;
+      const revealDuration = isMobile ? 0.58 : 0.85;
+      const revealStagger = isMobile ? 0.045 : 0.08;
+      const parallaxScale = isMobile ? 0.35 : isTablet ? 0.62 : 1;
 
-        ScrollTrigger.batch(revealTargets, {
-          start: 'top 88%',
-          once: true,
-          onEnter: batch => {
-            gsap.to(batch, {
-              autoAlpha: 1,
-              y: 0,
-              duration: revealDuration,
-              ease: 'power3.out',
-              stagger: revealStagger,
-              overwrite: 'auto',
-              clearProps: 'transform,opacity,visibility,will-change',
-            });
-          },
-        });
-      } else {
-        gsap.set(revealTargets, { clearProps: 'all' });
-      }
+      ctx = gsap.context(() => {
+        const revealTargets = collectRevealTargets(root);
+        const parallaxTargets = Array.from(
+          root.querySelectorAll<HTMLElement>('[data-parallax-global]')
+        ).filter(isEligibleTarget);
 
-      if (!reduceMotion && parallaxTargets.length > 0) {
-        parallaxTargets.forEach(node => {
-          const rawDepth = Number(node.dataset.parallaxGlobal ?? 0.14);
-          const depth = MathUtils.clamp(rawDepth * parallaxScale, 0.02, 0.32);
+        if (!reduceMotion && revealTargets.length > 0) {
+          gsap.set(revealTargets, {
+            autoAlpha: 0,
+            y: revealDistance,
+            willChange: 'transform, opacity',
+          });
 
-          gsap.to(node, {
-            yPercent: depth * 30,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: node,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.1,
+          ScrollTrigger.batch(revealTargets, {
+            start: 'top 88%',
+            once: true,
+            onEnter: batch => {
+              gsap.to(batch, {
+                autoAlpha: 1,
+                y: 0,
+                duration: revealDuration,
+                ease: 'power3.out',
+                stagger: revealStagger,
+                overwrite: 'auto',
+                clearProps: 'transform,opacity,visibility,will-change',
+              });
             },
           });
-        });
-      }
-    }, root);
+        } else {
+          gsap.set(revealTargets, { clearProps: 'all' });
+        }
 
-    const refreshId = requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-    });
+        if (!reduceMotion && parallaxTargets.length > 0) {
+          parallaxTargets.forEach(node => {
+            const rawDepth = Number(node.dataset.parallaxGlobal ?? 0.14);
+            const depth = MathUtils.clamp(rawDepth * parallaxScale, 0.02, 0.32);
+
+            gsap.to(node, {
+              yPercent: depth * 30,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: node,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.1,
+              },
+            });
+          });
+        }
+      }, root);
+
+      refreshId = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    };
+
+    const scheduleRun = () => {
+      // Defer until after load to avoid mutating DOM while lazy chunks hydrate.
+      runTimer = window.setTimeout(runEffects, 80);
+    };
+
+    if (document.readyState === 'complete') {
+      scheduleRun();
+    } else {
+      window.addEventListener('load', scheduleRun, { once: true });
+    }
 
     return () => {
-      cancelAnimationFrame(refreshId);
-      ctx.revert();
+      cancelled = true;
+      window.removeEventListener('load', scheduleRun);
+      if (runTimer) window.clearTimeout(runTimer);
+      if (refreshId) cancelAnimationFrame(refreshId);
+      ctx?.revert();
     };
   }, [pathname]);
 

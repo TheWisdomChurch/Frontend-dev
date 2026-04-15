@@ -2,7 +2,12 @@
 import { merchandise } from '@/lib/data';
 import type { Product } from '@/lib/types';
 
-type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+type OrderStatus =
+  | 'pending'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled';
 type PaymentMethod = 'transfer' | 'online' | 'delivery';
 
 export interface StoreOrderItem {
@@ -42,22 +47,15 @@ export interface StoreOrder extends StoreOrderPayload {
   orderDate: string;
 }
 
-const ORDERS_KEY = 'storeOrders';
-const LAST_ORDER_KEY = 'lastOrderData';
+const inMemoryOrders: StoreOrder[] = [];
+let inMemoryLastOrder: StoreOrder | null = null;
 
 const readOrders = (): StoreOrder[] => {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = window.localStorage.getItem(ORDERS_KEY);
-    return raw ? (JSON.parse(raw) as StoreOrder[]) : [];
-  } catch {
-    return [];
-  }
+  return inMemoryOrders;
 };
 
 const writeOrders = (orders: StoreOrder[]) => {
-  if (typeof window === 'undefined') return;
-  window.localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  inMemoryOrders.splice(0, inMemoryOrders.length, ...orders);
 };
 
 export const storeClient = {
@@ -76,12 +74,10 @@ export const storeClient = {
       orderDate: new Date().toISOString(),
     };
 
-    if (typeof window !== 'undefined') {
-      const orders = readOrders();
-      orders.unshift(order);
-      writeOrders(orders);
-      window.localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(order));
-    }
+    const orders = readOrders();
+    orders.unshift(order);
+    writeOrders(orders);
+    inMemoryLastOrder = order;
 
     return new Promise(resolve => {
       setTimeout(() => resolve(order), 400);
@@ -89,20 +85,12 @@ export const storeClient = {
   },
 
   async getOrder(orderId: string): Promise<StoreOrder | null> {
-    if (typeof window === 'undefined') return null;
     const orders = readOrders();
     const found = orders.find(order => order.orderId === orderId);
     return found || null;
   },
 
   async getLastOrder(): Promise<StoreOrder | null> {
-    if (typeof window === 'undefined') return null;
-    const raw = window.localStorage.getItem(LAST_ORDER_KEY);
-    if (!raw) return null;
-    try {
-      return JSON.parse(raw) as StoreOrder;
-    } catch {
-      return null;
-    }
+    return inMemoryLastOrder;
   },
 };

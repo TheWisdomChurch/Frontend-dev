@@ -17,6 +17,7 @@ type CookiePreferences = {
 };
 
 const COOKIE_PREFS_KEY = 'wc_cookie_preferences_v1';
+const COOKIE_PREFS_VALUE_KEY = 'wc_cookie_preferences_data';
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 180;
 
 const basePreferences: CookiePreferences = {
@@ -29,7 +30,12 @@ const basePreferences: CookiePreferences = {
 
 const readSavedPreferences = (): CookiePreferences | null => {
   if (typeof window === 'undefined') return null;
-  const raw = window.localStorage.getItem(COOKIE_PREFS_KEY);
+  const match = document.cookie.match(
+    new RegExp(
+      `(?:^|; )${COOKIE_PREFS_VALUE_KEY.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
+    )
+  );
+  const raw = match ? decodeURIComponent(match[1]) : null;
   if (!raw) return null;
 
   try {
@@ -51,6 +57,8 @@ const writeCookies = (prefs: CookiePreferences) => {
   document.cookie = `wc_cookie_consent=1; ${cookieOptions}`;
   document.cookie = `wc_cookie_analytics=${prefs.analytics ? '1' : '0'}; ${cookieOptions}`;
   document.cookie = `wc_cookie_marketing=${prefs.marketing ? '1' : '0'}; ${cookieOptions}`;
+  document.cookie = `${COOKIE_PREFS_VALUE_KEY}=${encodeURIComponent(JSON.stringify(prefs))}; ${cookieOptions}`;
+  document.cookie = `${COOKIE_PREFS_KEY}=1; ${cookieOptions}`;
 };
 
 export default function CookieConsentBanner() {
@@ -74,7 +82,6 @@ export default function CookieConsentBanner() {
 
   const persistPreferences = (next: CookiePreferences) => {
     if (typeof window === 'undefined') return;
-    window.localStorage.setItem(COOKIE_PREFS_KEY, JSON.stringify(next));
     writeCookies(next);
     window.dispatchEvent(
       new CustomEvent('wc:cookie-consent-updated', { detail: next })

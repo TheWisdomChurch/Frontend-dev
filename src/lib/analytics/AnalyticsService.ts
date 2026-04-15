@@ -55,6 +55,22 @@ export class AnalyticsService {
     this.initializeSession();
   }
 
+  private readCookie(name: string): string | null {
+    if (typeof document === 'undefined') return null;
+    const match = document.cookie.match(
+      new RegExp(
+        `(?:^|; )${name.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
+      )
+    );
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  private writeCookie(name: string, value: string, days = 365): void {
+    if (typeof document === 'undefined') return;
+    const maxAge = days * 24 * 60 * 60;
+    document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
+  }
+
   /**
    * Get singleton instance
    */
@@ -428,17 +444,17 @@ export class AnalyticsService {
     if (typeof window === 'undefined') return;
 
     // Generate or retrieve session ID
-    let sessionId = sessionStorage.getItem('wcm-session-id');
+    let sessionId = this.readCookie('wcm-session-id');
     if (!sessionId) {
       sessionId = this.generateId();
-      sessionStorage.setItem('wcm-session-id', sessionId);
+      this.writeCookie('wcm-session-id', sessionId, 1);
     }
 
     // Generate or retrieve user ID
-    let userId = localStorage.getItem('wcm-user-id');
+    let userId = this.readCookie('wcm-user-id');
     if (!userId) {
       userId = this.generateId();
-      localStorage.setItem('wcm-user-id', userId);
+      this.writeCookie('wcm-user-id', userId, 365);
     }
 
     const consent = ConsentManager.getConsent();
@@ -456,20 +472,22 @@ export class AnalyticsService {
       userId,
       sessionId,
       firstVisit:
-        parseInt(localStorage.getItem('wcm-first-visit') || '') || Date.now(),
+        parseInt(this.readCookie('wcm-first-visit') || '') || Date.now(),
       lastVisit: Date.now(),
-      visitCount: parseInt(localStorage.getItem('wcm-visit-count') || '0') + 1,
+      visitCount: parseInt(this.readCookie('wcm-visit-count') || '0') + 1,
       totalEngagementTime: 0,
       preferences: consent,
     };
 
-    localStorage.setItem(
+    this.writeCookie(
       'wcm-first-visit',
-      this.userProfile.firstVisit.toString()
+      this.userProfile.firstVisit.toString(),
+      365
     );
-    localStorage.setItem(
+    this.writeCookie(
       'wcm-visit-count',
-      this.userProfile.visitCount.toString()
+      this.userProfile.visitCount.toString(),
+      365
     );
   }
 

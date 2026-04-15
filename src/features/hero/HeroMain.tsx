@@ -316,6 +316,15 @@ const HeroSection = ({
           { y: 0, opacity: 1, duration: 0.45 },
           '-=0.25'
         );
+
+      // Keep the wave badge subtly alive after entrance.
+      gsap.to(waveTextRef.current, {
+        y: 5,
+        duration: 1.8,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+      });
     }, heroRef);
 
     return () => ctx.revert();
@@ -387,7 +396,7 @@ const HeroSection = ({
         <div className="w-full flex flex-col gap-6 sm:gap-8 lg:gap-10 items-center sm:items-start max-w-6xl">
           {/* Wave label */}
           {showWaveText && (
-            <div className="w-full flex justify-start mt-1 sm:mt-3 lg:mt-4 mb-4 sm:mb-6 md:mb-7 lg:mb-8">
+            <div className="w-full flex justify-start mt-8 sm:mt-10 lg:mt-12 mb-5 sm:mb-7 md:mb-8 lg:mb-9">
               <div
                 ref={waveTextRef}
                 className="relative inline-flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-full border border-white/15 bg-white/8 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
