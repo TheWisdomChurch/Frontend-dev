@@ -22,6 +22,7 @@ export default function Header() {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const isTransparent = isHomePage && !scrolled && !menuOpen;
+  const smoothEase = { transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' } as const;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -90,11 +91,12 @@ export default function Header() {
 
   return (
     <header
-      className={`site-header z-50 w-full font-[family-name:var(--font-worksans)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`site-header z-50 w-full font-[family-name:var(--font-worksans)] transition-all duration-500 ${
         isTransparent
           ? 'bg-transparent border-transparent backdrop-blur-0 shadow-none'
           : 'bg-[#06080f]/92 border-white/10 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.45)]'
       }`}
+      style={smoothEase}
     >
       <Container
         size="xl"
@@ -166,16 +168,18 @@ export default function Header() {
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(prev => !prev)}
-          className={`relative z-[70] inline-flex h-11 w-11 items-center justify-center rounded-full border text-white transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
+          className={`relative z-[70] inline-flex h-11 w-11 items-center justify-center rounded-full border text-white transition-all duration-400 lg:hidden ${
             menuOpen
               ? 'border-white/35 bg-black/70 shadow-[0_8px_24px_rgba(0,0,0,0.35)]'
               : 'border-white/25 bg-black/40'
           }`}
+          style={smoothEase}
         >
           <span
-            className={`absolute h-[2px] w-5 origin-center rounded-full bg-white transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`absolute h-[2px] w-5 origin-center rounded-full bg-white transition-all duration-400 ${
               menuOpen ? 'translate-y-0 rotate-45' : '-translate-y-1.5 rotate-0'
             }`}
+            style={smoothEase}
           />
           <span
             className={`absolute h-[2px] w-4 rounded-full bg-white transition-all duration-300 ${
@@ -183,19 +187,21 @@ export default function Header() {
             }`}
           />
           <span
-            className={`absolute h-[2px] w-5 origin-center rounded-full bg-white transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`absolute h-[2px] w-5 origin-center rounded-full bg-white transition-all duration-400 ${
               menuOpen ? 'translate-y-0 -rotate-45' : 'translate-y-1.5 rotate-0'
             }`}
+            style={smoothEase}
           />
         </button>
       </Container>
 
       <div
-        className={`lg:hidden fixed inset-0 z-[60] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`lg:hidden fixed inset-0 z-[60] transition-all duration-500 ${
           menuOpen
             ? 'opacity-100 pointer-events-auto'
             : 'opacity-0 pointer-events-none'
         }`}
+        style={smoothEase}
         aria-hidden={!menuOpen}
       >
         <button
@@ -205,9 +211,10 @@ export default function Header() {
           onClick={() => setMenuOpen(false)}
         />
         <div
-          className={`absolute right-0 top-[72px] h-[calc(100%-72px)] w-[90%] max-w-[420px] border-l border-white/10 bg-[linear-gradient(180deg,#0a0e18_0%,#080c14_52%,#070a12_100%)] shadow-[-26px_0_64px_rgba(0,0,0,0.55)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`absolute right-0 top-[72px] h-[calc(100%-72px)] w-[90%] max-w-[420px] border-l border-white/10 bg-[linear-gradient(180deg,#0a0e18_0%,#080c14_52%,#070a12_100%)] shadow-[-26px_0_64px_rgba(0,0,0,0.55)] transition-transform duration-500 ${
             menuOpen ? 'translate-x-0' : 'translate-x-[104%]'
           }`}
+          style={smoothEase}
         >
           <div className="border-b border-white/10 px-5 py-5">
             <Link
@@ -242,7 +249,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`block w-full rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-4 text-sm font-light uppercase tracking-[0.2em] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`block w-full rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-4 text-sm font-light uppercase tracking-[0.2em] transition-all duration-500 ${
                     menuOpen
                       ? 'translate-y-0 opacity-100'
                       : 'translate-y-2 opacity-0'
@@ -251,7 +258,10 @@ export default function Header() {
                       ? 'text-white'
                       : 'text-white/80 hover:text-white'
                   }`}
-                  style={{ transitionDelay: `${80 + index * 45}ms` }}
+                  style={{
+                    ...smoothEase,
+                    transitionDelay: `${80 + index * 45}ms`,
+                  }}
                 >
                   {link.label}
                 </Link>

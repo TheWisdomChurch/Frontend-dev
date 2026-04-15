@@ -11,6 +11,7 @@ import type {
 
 import type {
   LeadershipApplicationRequest,
+  GivingOption,
   LeadershipMember,
   LeadershipRole,
   WorkforceRegistrationData,
@@ -597,6 +598,12 @@ export const apiClient = {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+  },
+
+  async listGivingOptions(): Promise<GivingOption[]> {
+    const res = await request<any>('/giving/options', { method: 'GET' });
+    const data = unwrapData<any>(res);
+    return Array.isArray(data) ? (data as GivingOption[]) : [];
   },
 
   async applyWorkforce(payload: WorkforceRegistrationData): Promise<any> {

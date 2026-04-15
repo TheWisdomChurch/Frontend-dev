@@ -2,50 +2,46 @@ import type { NextConfig } from 'next';
 import withPWA from 'next-pwa';
 
 const nextConfig: NextConfig = {
-  // ✅ CRITICAL: Add this for Docker production build
+  // Use an isolated build directory for CI/hooks when NEXT_DIST_DIR is set.
+  // This avoids conflicts with a running `next dev` process writing to `.next`.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
+
   output: 'standalone',
 
-  // ✅ Keep typescript and eslint config
   typescript: {
     ignoreBuildErrors: true,
   },
+
   eslint: {
     ignoreDuringBuilds: true,
   },
 
-  // ✅ Allow external images
   images: {
     unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'placehold.co',
-        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'picsum.photos',
-        port: '',
         pathname: '/**',
       },
-      // Add your own domain for logos/OG images if needed
       {
         protocol: 'https',
         hostname: 'wisdomchurchhq.org',
-        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'www.thewisdomhousechurch.org',
-        port: '',
         pathname: '/**',
       },
     ],
@@ -55,7 +51,6 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // ✅ Webpack configuration - OPTIMIZED FOR DOCKER
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
       config.watchOptions = {
@@ -64,7 +59,6 @@ const nextConfig: NextConfig = {
         ignored: /node_modules/,
       };
 
-      // Disable SWC in Docker for better performance
       if (process.env.DOCKER_ENV === 'true') {
         config.experiments = {
           ...config.experiments,
@@ -72,23 +66,20 @@ const nextConfig: NextConfig = {
         };
       }
     }
+
     return config;
   },
 
-  // ✅ Comprehensive CSS handling
   experimental: {
     optimizeCss: false,
   },
 
-  // ✅ Production optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // ✅ Reduce preloading for development
   poweredByHeader: false,
 
-  // ✅ Add headers to handle CORS if needed
   async headers() {
     return [
       {
@@ -104,15 +95,13 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Wrap with PWA config (disable in dev to avoid issues)
 const enablePwa = false;
-const withPwa = withPWA({
+
+const withPwaConfig = withPWA({
   dest: 'public',
   register: false,
   skipWaiting: false,
   disable: !enablePwa,
 });
 
-export default (withPwa as unknown as (config: NextConfig) => NextConfig)(
-  nextConfig
-);
+export default withPwaConfig(nextConfig);

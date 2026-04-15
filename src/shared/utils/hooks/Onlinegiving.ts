@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect } from 'react';
-import { OnlinegivingOptions } from '@/lib/data';
 import { createScrollFunctions } from '../functionUtils/contactUtils';
-export const useOnlineGiving = () => {
-  const total = OnlinegivingOptions.length;
+export const useOnlineGiving = (total: number) => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedGivingOption, setSelectedGivingOption] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

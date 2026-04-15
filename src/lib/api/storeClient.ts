@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { merchandise } from '@/lib/data';
 import type { Product } from '@/lib/types';
 
 type OrderStatus =
@@ -12,6 +11,7 @@ type PaymentMethod = 'transfer' | 'online' | 'delivery';
 
 export interface StoreOrderItem {
   id: string;
+  productId?: number;
   name: string;
   price: string;
   quantity: number;
@@ -47,50 +47,95 @@ export interface StoreOrder extends StoreOrderPayload {
   orderDate: string;
 }
 
-const inMemoryOrders: StoreOrder[] = [];
-let inMemoryLastOrder: StoreOrder | null = null;
+const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
+const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
 
-const readOrders = (): StoreOrder[] => {
-  return inMemoryOrders;
+function normalizeOrigin(raw?: string | null): string {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  if (!raw || !raw.trim()) {
+    return isProd ? DEFAULT_PROD_API_ORIGIN : DEFAULT_LOCAL_API_ORIGIN;
+  }
+
+  let base = raw.trim().replace(/\/+$/, '');
+  if (base.endsWith('/api/v1')) base = base.slice(0, -'/api/v1'.length);
+  return base;
+}
+
+const API_ORIGIN = normalizeOrigin(
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+);
+const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
+
+const inMemoryFallback: { lastOrder: StoreOrder | null } = {
+  lastOrder: null,
 };
 
-const writeOrders = (orders: StoreOrder[]) => {
-  inMemoryOrders.splice(0, inMemoryOrders.length, ...orders);
-};
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const res = await fetch(`${API_V1_BASE_URL}${path}`, {
+    ...options,
+    credentials: 'include',
+    cache: 'no-store',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
+  });
+
+  const json = (await res.json().catch(() => null)) as any;
+  if (!res.ok) {
+    const message = json?.message || json?.error || 'Request failed';
+    throw new Error(message);
+  }
+
+  const payload = json?.data ?? json;
+  return payload as T;
+}
 
 export const storeClient = {
   async listProducts(): Promise<Product[]> {
-    // TODO: Replace with real API call when endpoints are ready.
-    return new Promise(resolve => {
-      setTimeout(() => resolve(merchandise), 250);
-    });
+    const data = await request<any[]>('/store/products', { method: 'GET' });
+
+    return (Array.isArray(data) ? data : []).map(item => ({
+      id: Number(item.id),
+      name: String(item.name || ''),
+      category: String(item.category || 'general'),
+      price: String(item.price || 'N0'),
+      originalPrice:
+        typeof item.originalPrice === 'string' ? item.originalPrice : undefined,
+      image: String(item.image || '/images/placeholder.jpg'),
+      description: String(item.description || ''),
+      sizes: Array.isArray(item.sizes) ? item.sizes.map(String) : [],
+      colors: Array.isArray(item.colors) ? item.colors.map(String) : [],
+      tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+      stock: Number(item.stock || 0),
+    }));
   },
 
   async createOrder(payload: StoreOrderPayload): Promise<StoreOrder> {
-    // TODO: Replace with POST /orders when backend is available.
-    const order: StoreOrder = {
-      ...payload,
-      status: 'pending',
-      orderDate: new Date().toISOString(),
-    };
-
-    const orders = readOrders();
-    orders.unshift(order);
-    writeOrders(orders);
-    inMemoryLastOrder = order;
-
-    return new Promise(resolve => {
-      setTimeout(() => resolve(order), 400);
+    const order = await request<StoreOrder>('/store/orders', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
+    inMemoryFallback.lastOrder = order;
+    return order;
   },
 
   async getOrder(orderId: string): Promise<StoreOrder | null> {
-    const orders = readOrders();
-    const found = orders.find(order => order.orderId === orderId);
-    return found || null;
+    if (!orderId) return null;
+    try {
+      const order = await request<StoreOrder>(
+        `/store/orders/${encodeURIComponent(orderId)}`,
+        { method: 'GET' }
+      );
+      inMemoryFallback.lastOrder = order;
+      return order;
+    } catch {
+      return null;
+    }
   },
 
   async getLastOrder(): Promise<StoreOrder | null> {
-    return inMemoryLastOrder;
+    return inMemoryFallback.lastOrder;
   },
 };

@@ -215,8 +215,9 @@ const HeroSection = ({
     const fetchLatest = async () => {
       setVideoLoading(true);
       try {
-        const res = await fetch('/api/sermons?sort=newest', {
+        const res = await fetch(SERMONS_ENDPOINT, {
           cache: 'force-cache',
+          credentials: 'include',
         });
         if (!res.ok) return;
         const data: YouTubeVideo[] = await res.json();
@@ -760,3 +761,8 @@ const ScrollIndicators = ({
 );
 
 export default HeroSection;
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
+const SERMONS_ENDPOINT = API_BASE
+  ? `${API_BASE.replace(/\/+$/, '')}/api/v1/sermons?sort=newest`
+  : '/api/v1/sermons?sort=newest';

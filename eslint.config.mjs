@@ -11,6 +11,7 @@ export default [
     ignores: [
       'node_modules/**',
       '.next/**',
+      '.next-prepush/**',
       'dist/**',
       'src/archive/**',
       'next-env.d.ts',

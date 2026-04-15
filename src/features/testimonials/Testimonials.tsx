@@ -14,7 +14,6 @@ import { Caption, H3, BodySM, SmallText } from '@/shared/text';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import apiClient from '@/lib/api';
-import { testimonialsData } from '@/lib/data';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 import { avatar } from '@/shared/assets'; // ✅ FIX: import avatar
 
@@ -103,25 +102,13 @@ const normalizeTestimonial = (item: ApiTestimonial): UiTestimonial => {
   };
 };
 
-const fallbackTestimonials: UiTestimonial[] = testimonialsData.map(item => ({
-  id: item.id,
-  fullName:
-    item.fullName ||
-    [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
-    'Anonymous',
-  testimony: item.testimony,
-  imageUrl: (item as any).image ?? null, // matches your local data shape
-  createdAt: (item as any).date,
-  role: (item as any).anonymous ? 'Anonymous' : (item as any).role || 'Member',
-}));
-
 export default function Testimonials() {
   const { colorScheme } = useTheme();
   const primary = colorScheme?.primary ?? '#fbbf24';
   const primary10 = colorScheme?.opacity?.primary10 ?? 'rgba(251,191,36,0.10)';
 
   const [active, setActive] = useState(0);
-  const [items, setItems] = useState<UiTestimonial[]>(fallbackTestimonials);
+  const [items, setItems] = useState<UiTestimonial[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -135,12 +122,9 @@ export default function Testimonials() {
           normalizeTestimonial
         );
 
-        if (normalized.length > 0) setItems(normalized.slice(0, 6));
-        else setItems(fallbackTestimonials);
+        setItems(normalized.slice(0, 6));
       } catch (error) {
-        // keep fallback silently (avoid crashing SSR build)
-        if (mounted)
-          setItems(prev => (prev.length ? prev : fallbackTestimonials));
+        if (mounted) setItems([]);
       }
     };
 

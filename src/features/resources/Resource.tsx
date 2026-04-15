@@ -12,6 +12,11 @@ import type { YouTubeVideo } from '@/lib/types';
 import apiClient from '@/lib/api';
 
 type Subscriber = { name: string; email: string };
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
+const SERMONS_ENDPOINT = API_BASE
+  ? `${API_BASE.replace(/\/+$/, '')}/api/v1/sermons?sort=newest`
+  : '/api/v1/sermons?sort=newest';
 
 export default function ResourceSection() {
   const { colorScheme } = useTheme();
@@ -66,8 +71,9 @@ export default function ResourceSection() {
       setLoadingRecent(true);
       try {
         // Your internal route that proxies / fetches YouTube
-        const res = await fetch('/api/sermons?sort=newest', {
+        const res = await fetch(SERMONS_ENDPOINT, {
           cache: 'force-cache',
+          credentials: 'include',
         });
         if (!res.ok) return;
 
