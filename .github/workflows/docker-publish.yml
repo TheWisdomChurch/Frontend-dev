@@ -10,7 +10,7 @@ on:
       - 'next.config.*'
       - 'src/**'
       - 'public/**'
-      - '.github/workflows/frontend-build.yml'
+      - '.github/workflows/docker-publish.yml'
   workflow_dispatch:
 
 concurrency:
