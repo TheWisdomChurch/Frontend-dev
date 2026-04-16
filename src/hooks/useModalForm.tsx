@@ -6,8 +6,8 @@
 
 'use client';
 
-import { useCallback, useState, useRef } from 'react';
-import { FieldValues, UseFormHandleSubmit } from 'react-hook-form';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
+import type { FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 
 export interface ModalFormConfig {
   onSuccess?: () => void;
@@ -31,44 +31,41 @@ export function useModalForm<T extends FieldValues>(
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const submitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const submitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSubmitTimeRef = useRef<number>(0);
 
-  /**
-   * Create a safe submit handler that prevents page refresh
-   */
   const createSubmitHandler = useCallback(
     (handler: (data: T) => Promise<void> | void) => {
       return async (data: T) => {
-        // Prevent double submissions
         const now = Date.now();
+
         if (now - lastSubmitTimeRef.current < debounceMs) {
           return;
         }
-        lastSubmitTimeRef.current = now;
 
+        lastSubmitTimeRef.current = now;
         setIsSubmitting(true);
         setError(null);
 
         try {
-          // Call the actual handler
           await handler(data);
 
-          // Don't navigate or refresh
-          if (preventPageRefresh) {
-            // Clear any pending navigation
-            window.history.pushState(
-              {},
+          if (preventPageRefresh && typeof window !== 'undefined') {
+            window.history.replaceState(
+              window.history.state,
               document.title,
-              window.location.pathname
+              window.location.pathname +
+                window.location.search +
+                window.location.hash
             );
           }
 
           onSuccess?.();
         } catch (err) {
-          const error = err instanceof Error ? err : new Error('Unknown error');
-          setError(error);
-          onError?.(error);
+          const nextError =
+            err instanceof Error ? err : new Error('Unknown error');
+          setError(nextError);
+          onError?.(nextError);
         } finally {
           setIsSubmitting(false);
         }
@@ -77,50 +74,42 @@ export function useModalForm<T extends FieldValues>(
     [preventPageRefresh, debounceMs, onSuccess, onError]
   );
 
-  /**
-   * Handle form submission with prevent default
-   */
   const handleSubmit = useCallback(
-    (
+    async (
       e: React.FormEvent<HTMLFormElement>,
       handler: (data: T) => Promise<void> | void
     ) => {
       e.preventDefault();
       e.stopPropagation();
 
-      // Don't propagate to parent forms
       if (isSubmitting) {
         return;
       }
 
-      // Get form data
       const formData = new FormData(e.currentTarget);
-      const data = Object.fromEntries(formData) as T;
+      const data = Object.fromEntries(formData.entries()) as T;
 
       const submitHandler = createSubmitHandler(handler);
-      submitHandler(data);
+      await submitHandler(data);
     },
     [createSubmitHandler, isSubmitting]
   );
 
-  /**
-   * Wrap react-hook-form's handleSubmit
-   */
   const wrapHandleSubmit = useCallback(
     (
-      handleSubmitFromHookForm: UseFormHandleSubmit<T, undefined>,
+      handleSubmitFromHookForm: UseFormHandleSubmit<T>,
       handler: (data: T) => Promise<void> | void
     ) => {
-      return (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
+      return (e?: React.BaseSyntheticEvent) => {
+        e?.preventDefault?.();
+        e?.stopPropagation?.();
 
         if (isSubmitting) {
           return;
         }
 
         const wrappedHandler = createSubmitHandler(handler);
-        handleSubmitFromHookForm(wrappedHandler)(e);
+        return handleSubmitFromHookForm(wrappedHandler)(e);
       };
     },
     [createSubmitHandler, isSubmitting]
@@ -133,9 +122,19 @@ export function useModalForm<T extends FieldValues>(
   const reset = useCallback(() => {
     setIsSubmitting(false);
     setError(null);
+
     if (submitTimeoutRef.current) {
       clearTimeout(submitTimeoutRef.current);
+      submitTimeoutRef.current = null;
     }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (submitTimeoutRef.current) {
+        clearTimeout(submitTimeoutRef.current);
+      }
+    };
   }, []);
 
   return {
@@ -153,14 +152,14 @@ export function useModalForm<T extends FieldValues>(
  * HOC to wrap form elements with modal form safety
  */
 export function withModalFormSafety<
-  P extends { onSubmit?: (data: any) => Promise<void> | void },
+  P extends { onSubmit?: (data: unknown) => Promise<void> | void },
 >(Component: React.ComponentType<P>) {
   return function ModalSafeForm(props: P) {
     return (
       <Component
         {...props}
-        onSubmit={data => {
-          props.onSubmit?.(data);
+        onSubmit={async (data: unknown) => {
+          await props.onSubmit?.(data);
         }}
       />
     );

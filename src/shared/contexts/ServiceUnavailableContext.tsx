@@ -60,10 +60,12 @@ export function ServiceUnavailableProvider({
 
 export function useServiceUnavailable() {
   const ctx = useContext(ServiceUnavailableContext);
+
   if (!ctx) {
     throw new Error(
       'useServiceUnavailable must be used within ServiceUnavailableProvider'
     );
   }
+
   return ctx;
 }

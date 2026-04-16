@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useState,
   useRef,
+  useEffect,
 } from 'react';
 import gsap from 'gsap';
 
@@ -36,10 +37,11 @@ export function NotificationProvider({
   children: React.ReactNode;
 }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const timeoutsRef = useRef<{ [key: string]: NodeJS.Timeout }>({});
+  const timeoutsRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   const removeNotification = useCallback((id: string) => {
     const element = document.getElementById(`notification-${id}`);
+
     if (element) {
       gsap.to(element, {
         opacity: 0,
@@ -50,6 +52,8 @@ export function NotificationProvider({
           setNotifications(prev => prev.filter(n => n.id !== id));
         },
       });
+    } else {
+      setNotifications(prev => prev.filter(n => n.id !== id));
     }
 
     if (timeoutsRef.current[id]) {
@@ -60,12 +64,11 @@ export function NotificationProvider({
 
   const notify = useCallback(
     (message: string, type: Notification['type'] = 'info', duration = 4000) => {
-      const id = `${Date.now()}-${Math.random()}`;
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
       const notification: Notification = { id, message, type, duration };
 
       setNotifications(prev => [...prev, notification]);
 
-      // Auto-remove after duration
       if (duration > 0) {
         const timeout = setTimeout(() => removeNotification(id), duration);
         timeoutsRef.current[id] = timeout;
@@ -73,6 +76,15 @@ export function NotificationProvider({
     },
     [removeNotification]
   );
+
+  useEffect(() => {
+    return () => {
+      Object.values(timeoutsRef.current).forEach(timeout => {
+        clearTimeout(timeout);
+      });
+      timeoutsRef.current = {};
+    };
+  }, []);
 
   return (
     <NotificationContext.Provider
@@ -89,9 +101,11 @@ export function NotificationProvider({
 
 export function useNotification() {
   const context = useContext(NotificationContext);
+
   if (!context) {
     throw new Error('useNotification must be used within NotificationProvider');
   }
+
   return context;
 }
 
@@ -136,51 +150,54 @@ function NotificationItem({
 }) {
   const itemRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    if (itemRef.current) {
-      gsap.fromTo(
-        itemRef.current,
-        {
-          opacity: 0,
-          y: -30,
-          x: 50,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          x: 0,
-          duration: 0.5,
-          ease: 'back.out',
-        }
-      );
-    }
+  useEffect(() => {
+    if (!itemRef.current) return;
+
+    gsap.fromTo(
+      itemRef.current,
+      {
+        opacity: 0,
+        y: -30,
+        x: 50,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        x: 0,
+        duration: 0.5,
+        ease: 'back.out',
+      }
+    );
   }, []);
 
   const getColors = () => {
-    const colors: Record<string, { bg: string; border: string; icon: string }> =
-      {
-        success: {
-          bg: 'rgba(76, 175, 80, 0.1)',
-          border: '#4CAF50',
-          icon: '✓',
-        },
-        error: {
-          bg: 'rgba(244, 67, 54, 0.1)',
-          border: '#F44336',
-          icon: '✗',
-        },
-        info: {
-          bg: 'rgba(33, 150, 243, 0.1)',
-          border: '#2196F3',
-          icon: 'ℹ',
-        },
-        warning: {
-          bg: 'rgba(255, 152, 0, 0.1)',
-          border: '#FF9800',
-          icon: '!',
-        },
-      };
-    return colors[notification.type] || colors.info;
+    const colors: Record<
+      Notification['type'],
+      { bg: string; border: string; icon: string }
+    > = {
+      success: {
+        bg: 'rgba(76, 175, 80, 0.1)',
+        border: '#4CAF50',
+        icon: '✓',
+      },
+      error: {
+        bg: 'rgba(244, 67, 54, 0.1)',
+        border: '#F44336',
+        icon: '✗',
+      },
+      info: {
+        bg: 'rgba(33, 150, 243, 0.1)',
+        border: '#2196F3',
+        icon: 'ℹ',
+      },
+      warning: {
+        bg: 'rgba(255, 152, 0, 0.1)',
+        border: '#FF9800',
+        icon: '!',
+      },
+    };
+
+    return colors[notification.type];
   };
 
   const colors = getColors();
@@ -200,7 +217,6 @@ function NotificationItem({
         backdropFilter: 'blur(10px)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
         pointerEvents: 'auto',
-        animation: 'slideIn 0.5s ease-out',
       }}
       onMouseEnter={e => {
         gsap.to(e.currentTarget, {
@@ -215,7 +231,6 @@ function NotificationItem({
         });
       }}
     >
-      {/* Icon */}
       <div
         style={{
           minWidth: '24px',
@@ -233,7 +248,6 @@ function NotificationItem({
         {colors.icon}
       </div>
 
-      {/* Message */}
       <div
         style={{
           flex: 1,
@@ -245,7 +259,6 @@ function NotificationItem({
         {notification.message}
       </div>
 
-      {/* Close Button */}
       <button
         onClick={() => onRemove(notification.id)}
         style={{
@@ -259,27 +272,14 @@ function NotificationItem({
           transition: 'color 0.2s',
         }}
         onMouseEnter={e => {
-          (e.currentTarget as HTMLButtonElement).style.color = '#C9A84C';
+          e.currentTarget.style.color = '#C9A84C';
         }}
         onMouseLeave={e => {
-          (e.currentTarget as HTMLButtonElement).style.color = '#999';
+          e.currentTarget.style.color = '#999';
         }}
       >
         ✕
       </button>
-
-      <style jsx>{`
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(100px) translateY(-50px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0) translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }
