@@ -34,22 +34,72 @@ const initialState: SermonsState = {
   currentPage: 'all',
 };
 
+/* ============================================================================
+   API CONFIG
+============================================================================ */
+
+const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
+const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
+
+function normalizeOrigin(raw?: string | null): string {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  if (!raw || !raw.trim()) {
+    return isProd ? DEFAULT_PROD_API_ORIGIN : DEFAULT_LOCAL_API_ORIGIN;
+  }
+
+  let base = raw.trim().replace(/\/+$/, '');
+  if (base.endsWith('/api/v1')) {
+    base = base.slice(0, -'/api/v1'.length);
+  }
+
+  return base;
+}
+
+function getApiOrigin(): string {
+  return normalizeOrigin(
+    process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+  );
+}
+
+function isYouTubeVideoArray(value: unknown): value is YouTubeVideo[] {
+  return Array.isArray(value);
+}
+
 // Async thunk for fetching sermons
-export const fetchSermons = createAsyncThunk(
+export const fetchSermons = createAsyncThunk<YouTubeVideo[]>(
   'sermons/fetchSermons',
-  async () => {
-    const rawBase =
-      process.env.NEXT_PUBLIC_API_URL ||
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      '';
-    const base = rawBase
-      ? rawBase.replace(/\/+$/, '').replace(/\/api\/v1$/, '')
-      : '';
-    const endpoint = base ? `${base}/api/v1/sermons` : '/api/v1/sermons';
-    const response = await fetch(endpoint, { credentials: 'omit' });
-    if (!response.ok) throw new Error('Failed to fetch sermons');
-    const payload = await response.json();
-    return payload?.data ?? payload;
+  async (_, { rejectWithValue }) => {
+    try {
+      const apiOrigin = getApiOrigin();
+      const endpoint = `${apiOrigin}/api/v1/sermons?sort=newest`;
+
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        credentials: 'omit',
+        cache: 'no-store',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch sermons (${response.status})`);
+      }
+
+      const payload = await response.json();
+      const data = payload?.data ?? payload;
+
+      if (!isYouTubeVideoArray(data)) {
+        throw new Error('Invalid sermons response format');
+      }
+
+      return data;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to fetch sermons';
+      return rejectWithValue(message);
+    }
   }
 );
 
@@ -69,13 +119,19 @@ const applyFilters = (
   // Apply search filter
   if (filters.searchTerm) {
     const searchLower = filters.searchTerm.toLowerCase();
-    filtered = filtered.filter(
-      video =>
-        video.title.toLowerCase().includes(searchLower) ||
-        video.description.toLowerCase().includes(searchLower) ||
-        video.series.toLowerCase().includes(searchLower) ||
-        video.preacher.toLowerCase().includes(searchLower)
-    );
+    filtered = filtered.filter(video => {
+      const title = video.title?.toLowerCase?.() ?? '';
+      const description = video.description?.toLowerCase?.() ?? '';
+      const series = video.series?.toLowerCase?.() ?? '';
+      const preacher = video.preacher?.toLowerCase?.() ?? '';
+
+      return (
+        title.includes(searchLower) ||
+        description.includes(searchLower) ||
+        series.includes(searchLower) ||
+        preacher.includes(searchLower)
+      );
+    });
   }
 
   // Apply series filter
@@ -85,17 +141,19 @@ const applyFilters = (
       const group = seriesGroups.find(
         item => item.name.toLowerCase() === groupName.toLowerCase()
       );
+
       if (group) {
         const terms = group.searchTerms.map(term => term.toLowerCase());
-        filtered = filtered.filter(video =>
-          terms.some(term => video.series.toLowerCase().includes(term))
-        );
+        filtered = filtered.filter(video => {
+          const series = video.series?.toLowerCase?.() ?? '';
+          return terms.some(term => series.includes(term));
+        });
       }
     } else {
       filtered = filtered.filter(video =>
-        video.series
-          .toLowerCase()
-          .includes(filters.selectedSeries.toLowerCase())
+        (video.series?.toLowerCase?.() ?? '').includes(
+          filters.selectedSeries.toLowerCase()
+        )
       );
     }
   }
@@ -103,19 +161,21 @@ const applyFilters = (
   // Apply preacher filter
   if (filters.selectedPreacher !== 'all') {
     filtered = filtered.filter(video =>
-      video.preacher
-        .toLowerCase()
-        .includes(filters.selectedPreacher.toLowerCase())
+      (video.preacher?.toLowerCase?.() ?? '').includes(
+        filters.selectedPreacher.toLowerCase()
+      )
     );
   }
 
   // Apply year filter
   if (filters.selectedYear !== 'all') {
-    filtered = filtered.filter(
-      video =>
-        new Date(video.publishedAt).getFullYear().toString() ===
-        filters.selectedYear
-    );
+    filtered = filtered.filter(video => {
+      const publishedAt = video.publishedAt;
+      if (!publishedAt) return false;
+      return (
+        new Date(publishedAt).getFullYear().toString() === filters.selectedYear
+      );
+    });
   }
 
   // Apply sorting
@@ -126,9 +186,15 @@ const applyFilters = (
           new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
       );
       break;
+
     case 'popular':
-      filtered.sort((a, b) => parseInt(b.viewCount) - parseInt(a.viewCount));
+      filtered.sort(
+        (a, b) =>
+          (parseInt(b.viewCount || '0', 10) || 0) -
+          (parseInt(a.viewCount || '0', 10) || 0)
+      );
       break;
+
     case 'newest':
     default:
       filtered.sort(
@@ -156,6 +222,7 @@ const sermonsSlice = createSlice({
       });
       state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     setSelectedSeries: (state, action: PayloadAction<string>) => {
       state.selectedSeries = action.payload;
       state.filteredVideos = applyFilters(state.videos, {
@@ -167,6 +234,7 @@ const sermonsSlice = createSlice({
       });
       state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     setSelectedPreacher: (state, action: PayloadAction<string>) => {
       state.selectedPreacher = action.payload;
       state.filteredVideos = applyFilters(state.videos, {
@@ -178,6 +246,7 @@ const sermonsSlice = createSlice({
       });
       state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     setSelectedYear: (state, action: PayloadAction<string>) => {
       state.selectedYear = action.payload;
       state.filteredVideos = applyFilters(state.videos, {
@@ -189,6 +258,7 @@ const sermonsSlice = createSlice({
       });
       state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     setSortBy: (
       state,
       action: PayloadAction<'newest' | 'oldest' | 'popular'>
@@ -203,10 +273,12 @@ const sermonsSlice = createSlice({
       });
       state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     loadMoreVideos: state => {
       state.visibleCount += 12;
       state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     resetFilters: state => {
       state.searchTerm = '';
       state.selectedSeries = 'all';
@@ -214,11 +286,21 @@ const sermonsSlice = createSlice({
       state.selectedYear = 'all';
       state.sortBy = 'newest';
       state.visibleCount = 12;
-      state.filteredVideos = state.videos;
-      state.displayedVideos = state.videos.slice(0, state.visibleCount);
+
+      state.filteredVideos = applyFilters(state.videos, {
+        searchTerm: '',
+        selectedSeries: 'all',
+        selectedPreacher: 'all',
+        selectedYear: 'all',
+        sortBy: 'newest',
+      });
+
+      state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     setCurrentPage: (state, action: PayloadAction<string>) => {
       state.currentPage = action.payload;
+
       if (action.payload === 'all') {
         state.filteredVideos = applyFilters(state.videos, {
           searchTerm: state.searchTerm,
@@ -228,7 +310,6 @@ const sermonsSlice = createSlice({
           sortBy: state.sortBy,
         });
       } else {
-        // When a specific series page is selected
         state.filteredVideos = applyFilters(state.videos, {
           searchTerm: '',
           selectedSeries: action.payload,
@@ -236,50 +317,79 @@ const sermonsSlice = createSlice({
           selectedYear: 'all',
           sortBy: 'newest',
         });
-        // Update featured series to show videos from this series
+
         const seriesVideos = state.videos
           .filter(video =>
-            video.series.toLowerCase().includes(action.payload.toLowerCase())
+            (video.series?.toLowerCase?.() ?? '').includes(
+              action.payload.toLowerCase()
+            )
           )
           .slice(0, 4);
+
         state.featuredSeries = seriesVideos;
       }
+
       state.visibleCount = 12;
       state.displayedVideos = state.filteredVideos.slice(0, state.visibleCount);
     },
+
     setFeaturedSeries: (state, action: PayloadAction<string>) => {
       const seriesVideos = state.videos
         .filter(video =>
-          video.series.toLowerCase().includes(action.payload.toLowerCase())
+          (video.series?.toLowerCase?.() ?? '').includes(
+            action.payload.toLowerCase()
+          )
         )
         .slice(0, 4);
+
       state.featuredSeries = seriesVideos;
     },
   },
+
   extraReducers: builder => {
     builder
       .addCase(fetchSermons.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchSermons.fulfilled, (state, action) => {
-        state.loading = false;
-        state.videos = action.payload;
-        state.filteredVideos = action.payload;
-        state.displayedVideos = action.payload.slice(0, state.visibleCount);
+      .addCase(
+        fetchSermons.fulfilled,
+        (state, action: PayloadAction<YouTubeVideo[]>) => {
+          state.loading = false;
+          state.error = null;
+          state.videos = action.payload;
 
-        // Set initial featured series (most recent series)
-        const mostRecentSeries = action.payload[0]?.series || 'Sunday Teaching';
-        const seriesVideos = action.payload
-          .filter((video: { series: string }) =>
-            video.series.toLowerCase().includes(mostRecentSeries.toLowerCase())
-          )
-          .slice(0, 4);
-        state.featuredSeries = seriesVideos;
-      })
+          state.filteredVideos = applyFilters(action.payload, {
+            searchTerm: state.searchTerm,
+            selectedSeries: state.selectedSeries,
+            selectedPreacher: state.selectedPreacher,
+            selectedYear: state.selectedYear,
+            sortBy: state.sortBy,
+          });
+
+          state.displayedVideos = state.filteredVideos.slice(
+            0,
+            state.visibleCount
+          );
+
+          const mostRecentSeries =
+            action.payload[0]?.series?.trim() || 'Sunday Teaching';
+
+          state.featuredSeries = action.payload
+            .filter(video =>
+              (video.series?.toLowerCase?.() ?? '').includes(
+                mostRecentSeries.toLowerCase()
+              )
+            )
+            .slice(0, 4);
+        }
+      )
       .addCase(fetchSermons.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch sermons';
+        state.error =
+          (action.payload as string) ||
+          action.error.message ||
+          'Failed to fetch sermons';
       });
   },
 });
