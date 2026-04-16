@@ -12,7 +12,9 @@ import type {
 import type {
   LeadershipApplicationRequest,
   GivingOption,
+  GivingIntentData,
   LeadershipMember,
+  PastoralCareRequestData,
   LeadershipRole,
   WorkforceRegistrationData,
 } from './types';
@@ -352,12 +354,14 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     phone,
     title,
     department,
+    departmentSection,
     leadershipCategory,
     birthMonth,
     anniversaryMonth,
     isExistingMember,
     currentAssignment,
     birthday,
+    sourceChannel,
     notes,
   } = payload;
 
@@ -368,12 +372,14 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     phone,
     title,
     department,
+    departmentSection,
     leadershipCategory,
     birthMonth,
     anniversaryMonth,
     isExistingMember,
     currentAssignment,
     birthday,
+    sourceChannel,
     notes,
   };
 }
@@ -601,9 +607,29 @@ export const apiClient = {
   },
 
   async listGivingOptions(): Promise<GivingOption[]> {
-    const res = await request<any>('/giving/options', { method: 'GET' });
+    const res = await request<any>('/giving/options', {
+      method: 'GET',
+    });
     const data = unwrapData<any>(res);
     return Array.isArray(data) ? (data as GivingOption[]) : [];
+  },
+
+  async getHomepageAd(): Promise<Record<string, unknown> | null> {
+    const res = await request<any>('/content/homepage-ad', { method: 'GET' });
+    const data = unwrapData<any>(res);
+    return data && typeof data === 'object'
+      ? (data as Record<string, unknown>)
+      : null;
+  },
+
+  async getConfessionContent(): Promise<Record<string, unknown> | null> {
+    const res = await request<any>('/content/confession-popup', {
+      method: 'GET',
+    });
+    const data = unwrapData<any>(res);
+    return data && typeof data === 'object'
+      ? (data as Record<string, unknown>)
+      : null;
   },
 
   async applyWorkforce(payload: WorkforceRegistrationData): Promise<any> {
@@ -623,6 +649,46 @@ export const apiClient = {
     };
 
     const res = await request<any>('/workforce/serving/register', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return unwrapData<any>(res);
+  },
+
+  async submitPastoralCareRequest(
+    payload: PastoralCareRequestData
+  ): Promise<any> {
+    const body = {
+      title: payload.title,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      phone: payload.contactNumber,
+      email: payload.email,
+      address: payload.contactAddress,
+      eventDate: payload.eventDate,
+      eventType: payload.eventType,
+      churchRole: payload.churchRole,
+      customRole: payload.customRole,
+      comments: payload.comments,
+      sourceChannel: payload.sourceChannel ?? 'frontend:web:pastoral',
+    };
+
+    const res = await request<any>('/pastoral-care/requests', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return unwrapData<any>(res);
+  },
+
+  async submitGivingIntent(payload: GivingIntentData): Promise<any> {
+    const body = {
+      title: payload.title,
+      description: payload.description,
+      sourceChannel: payload.sourceChannel ?? 'frontend:web:online-giving',
+      metadata: payload.metadata ?? {},
+    };
+
+    const res = await request<any>('/giving/intents', {
       method: 'POST',
       body: JSON.stringify(body),
     });

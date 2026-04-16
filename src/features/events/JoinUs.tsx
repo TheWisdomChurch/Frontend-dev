@@ -30,6 +30,8 @@ const { zodResolver } = ZodResolvers;
 const departments = [
   {
     title: 'Ushers & Protocol',
+    section: 'Protocol',
+    apiDepartment: 'Protocol',
     from: '#f59e0b',
     to: '#f97316',
     icon: Users,
@@ -37,6 +39,8 @@ const departments = [
   },
   {
     title: 'Media & Broadcast',
+    section: 'Media',
+    apiDepartment: 'Media',
     from: '#3b82f6',
     to: '#06b6d4',
     icon: Video,
@@ -44,6 +48,8 @@ const departments = [
   },
   {
     title: 'Wave City Music',
+    section: 'Music',
+    apiDepartment: 'Music',
     from: '#f43f5e',
     to: '#ec4899',
     icon: Music,
@@ -51,6 +57,8 @@ const departments = [
   },
   {
     title: 'Children Ministry',
+    section: 'Children',
+    apiDepartment: 'Children',
     from: '#10b981',
     to: '#14b8a6',
     icon: Baby,
@@ -58,6 +66,8 @@ const departments = [
   },
   {
     title: 'Youth & Campus',
+    section: 'Youth',
+    apiDepartment: 'Youth',
     from: '#6366f1',
     to: '#a855f7',
     icon: Users2,
@@ -65,6 +75,8 @@ const departments = [
   },
   {
     title: 'Technical Team',
+    section: 'Technical',
+    apiDepartment: 'Technical',
     from: '#475569',
     to: '#0f172a',
     icon: Cpu,
@@ -115,18 +127,32 @@ export default function JoinWisdomHouse() {
     return { firstName, lastName };
   };
 
+  const getDepartmentMeta = (rawDepartment: string) => {
+    const matched = departments.find(
+      d => d.title.toLowerCase() === rawDepartment.trim().toLowerCase()
+    );
+    return {
+      department: matched?.apiDepartment || rawDepartment.trim(),
+      departmentSection: matched?.section || 'General',
+      originalLabel: rawDepartment.trim(),
+    };
+  };
+
   const onQuickSubmit = handleQuickSubmit(
     async (values: z.infer<typeof quickSchema>) => {
       try {
         setQuickSubmitting(true);
         const { firstName, lastName } = splitName(values.name);
+        const dept = getDepartmentMeta(values.team);
         await apiClient.applyWorkforceNew({
           firstName,
           lastName,
           email: values.email,
-          department: values.team,
+          department: dept.department,
+          departmentSection: dept.departmentSection,
           registrationType: 'new',
-          notes: 'Quick signup',
+          sourceChannel: 'frontend:web:join-us:quick',
+          notes: `Quick signup\nOriginal team label: ${dept.originalLabel}`,
         });
         setSubmitted(true);
         resetQuick();
@@ -245,6 +271,10 @@ export default function JoinWisdomHouse() {
           notesParts.push(`Anniversary: ${values.anniversary}`);
       }
       if (values.about) notesParts.push(`About: ${values.about}`);
+      const dept = getDepartmentMeta(values.department);
+      if (dept.originalLabel && dept.originalLabel !== dept.department) {
+        notesParts.push(`Original team label: ${dept.originalLabel}`);
+      }
 
       const birthday = values.birthday.trim();
       const phone = `${values.phoneCode} ${values.phone}`.trim();
@@ -258,10 +288,14 @@ export default function JoinWisdomHouse() {
         lastName,
         email: values.email,
         phone,
-        department: values.department,
+        department: dept.department,
+        departmentSection: dept.departmentSection,
         birthday: birthday || undefined,
         registrationType: existing ? 'serving' : 'new',
         isExistingMember: existing,
+        sourceChannel: existing
+          ? 'frontend:web:join-us:serving'
+          : 'frontend:web:join-us:new',
         notes: notesParts.length > 0 ? notesParts.join('\n') : undefined,
       });
 

@@ -20,11 +20,18 @@ import { useWelcomeModal } from '@/shared/utils/hooks/Useconfession';
 interface WelcomeModalProps {
   onClose: () => void;
   delay?: number;
+  content?: {
+    welcomeTitle?: string;
+    welcomeMessage?: string;
+    confessionText?: string;
+    motto?: string;
+  };
 }
 
 export default function ConfessionPopup({
   onClose,
   delay = 2400,
+  content,
 }: WelcomeModalProps) {
   const { colorScheme } = useTheme();
   const {
@@ -38,11 +45,20 @@ export default function ConfessionPopup({
 
   if (!mounted || !isVisible) return null;
 
+  const welcomeTitle = content?.welcomeTitle || 'Welcome Home';
+  const welcomeMessage =
+    content?.welcomeMessage ||
+    'You are in a place of worship, truth, and transformation. Before you continue, take a moment with our confession and align your words with faith.';
+  const motto =
+    content?.motto ||
+    'We begin to prosper, we continue to prosper, until we become very prosperous.';
+  const confessionText = content?.confessionText || confessionContent;
+
   return (
     <BaseModal
       isOpen={isVisible}
       onClose={handleClose}
-      title={currentStep === 'welcome' ? 'Welcome Home' : 'Our Confession'}
+      title={currentStep === 'welcome' ? welcomeTitle : 'Our Confession'}
       subtitle={
         currentStep === 'welcome'
           ? 'A short stop before you continue exploring.'
@@ -71,9 +87,7 @@ export default function ConfessionPopup({
               </div>
             </div>
             <BodyMD className="leading-relaxed text-white/90">
-              You are in a place of worship, truth, and transformation. Before
-              you continue, take a moment with our confession and align your
-              words with faith.
+              {welcomeMessage}
             </BodyMD>
           </div>
 
@@ -141,13 +155,12 @@ export default function ConfessionPopup({
               style={{ color: '#ffffff' }}
               weight="regular"
             >
-              We begin to prosper, we continue to prosper, until we become very
-              prosperous.
+              {motto}
             </PlayfairText>
           </div>
 
           <div className="max-h-[44vh] space-y-3 overflow-y-auto rounded-2xl border border-white/15 bg-white/[0.06] p-4">
-            {confessionContent
+            {confessionText
               .split('\n\n')
               .map(paragraph => paragraph.trim())
               .filter(Boolean)

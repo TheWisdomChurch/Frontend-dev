@@ -212,6 +212,7 @@ export interface WorkforceRegistrationData {
   phone?: string;
   title?: string;
   department: string;
+  departmentSection?: string;
   leadershipCategory?: string;
   birthMonth?: string;
   anniversaryMonth?: string;
@@ -219,7 +220,30 @@ export interface WorkforceRegistrationData {
   currentAssignment?: string;
   birthday?: string; // DD/MM
   registrationType?: 'new' | 'serving';
+  sourceChannel?: string;
   notes?: string;
+}
+
+export interface PastoralCareRequestData {
+  title: string;
+  firstName: string;
+  lastName: string;
+  contactNumber: string;
+  email: string;
+  contactAddress: string;
+  eventDate: string;
+  eventType: string;
+  churchRole: string;
+  customRole?: string;
+  comments?: string;
+  sourceChannel?: string;
+}
+
+export interface GivingIntentData {
+  title: string;
+  description?: string;
+  sourceChannel?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface WorkforceRegistrationModalProps {

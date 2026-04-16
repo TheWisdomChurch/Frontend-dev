@@ -19,9 +19,11 @@ const navLinks = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
-  const isTransparent = isHomePage && !scrolled && !menuOpen;
+  const isTransparent =
+    isHomePage && !scrolled && !menuOpen && !isMobileViewport;
   const smoothEase = {
     transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
   } as const;
@@ -31,6 +33,14 @@ export default function Header() {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const updateViewportMode = () =>
+      setIsMobileViewport(window.innerWidth < 1024);
+    updateViewportMode();
+    window.addEventListener('resize', updateViewportMode, { passive: true });
+    return () => window.removeEventListener('resize', updateViewportMode);
   }, []);
 
   useEffect(() => {
@@ -70,6 +80,22 @@ export default function Header() {
     html.style.touchAction = 'none';
     html.style.overscrollBehavior = 'none';
 
+    const canScrollInsideMenu = (target: EventTarget | null) =>
+      target instanceof Element &&
+      Boolean(target.closest('[data-menu-scroll="true"]'));
+
+    const preventBackgroundScroll = (event: TouchEvent | WheelEvent) => {
+      if (canScrollInsideMenu(event.target)) return;
+      event.preventDefault();
+    };
+
+    window.addEventListener('touchmove', preventBackgroundScroll, {
+      passive: false,
+    });
+    window.addEventListener('wheel', preventBackgroundScroll, {
+      passive: false,
+    });
+
     return () => {
       const restoreY = Number(body.dataset.scrollLockY || scrollY);
       body.classList.remove('menu-open');
@@ -86,6 +112,8 @@ export default function Header() {
       html.style.overflow = previousHtmlOverflow;
       html.style.touchAction = previousHtmlTouchAction;
       html.style.overscrollBehavior = previousHtmlOverscroll;
+      window.removeEventListener('touchmove', preventBackgroundScroll);
+      window.removeEventListener('wheel', preventBackgroundScroll);
       body.dataset.scrollLockY = '';
       window.scrollTo(0, restoreY);
     };
@@ -244,7 +272,10 @@ export default function Header() {
             </Link>
           </div>
 
-          <div className="flex h-[calc(100%-79px)] flex-col gap-6 overflow-y-auto px-5 py-6 overscroll-contain">
+          <div
+            className="flex h-[calc(100%-79px)] flex-col gap-6 overflow-y-auto px-5 py-6 overscroll-contain"
+            data-menu-scroll="true"
+          >
             <nav className="space-y-2.5">
               {navLinks.map((link, index) => (
                 <Link

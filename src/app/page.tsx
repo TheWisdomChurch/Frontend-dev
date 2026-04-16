@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
-import Link from 'next/link';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import HeroHighlights from '@/features/hero/HeroHighlights';
 import EventsShowcase from '@/features/events/EventsShowcase';
 import JoinUs from '@/features/events/JoinUs';
 import ResourceSection from '@/features/resources/Resource';
+import { apiClient } from '@/lib/api';
 
 // Optimize: Allow caching where possible, only force dynamic for truly dynamic sections
 // Note: Since this component uses useState and useEffect, we can't use revalidate here
@@ -90,6 +90,13 @@ type HomeEventAd = {
   note: string;
 };
 
+type HomeConfessionContent = {
+  welcomeTitle: string;
+  welcomeMessage: string;
+  confessionText: string;
+  motto: string;
+};
+
 const fallbackEventAd: HomeEventAd = {
   id: 'wpc-2026',
   title: 'Wisdom Power Conference 2026',
@@ -106,18 +113,6 @@ const fallbackEventAd: HomeEventAd = {
   note: 'You will be returned to the main website after you finish.',
 };
 
-const RAW_API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
-const API_ORIGIN = RAW_API_BASE
-  ? RAW_API_BASE.replace(/\/+$/, '').replace(/\/api\/v1$/, '')
-  : '';
-const HOMEPAGE_AD_ENDPOINT = API_ORIGIN
-  ? `${API_ORIGIN}/api/content/homepage-ad`
-  : null;
-const HOMEPAGE_AD_CACHE_KEY = 'homepage-ad-cache-v1';
-const HOMEPAGE_AD_CACHE_TTL_MS = 1000 * 60 * 30;
-const NEXT_AD_AT_STORAGE_KEY = 'homepage-next-ad-at-v1';
-
 export default function Home() {
   const { colorScheme } = useTheme();
 
@@ -125,68 +120,54 @@ export default function Home() {
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
   const [showConfessionPopup, setShowConfessionPopup] = useState(true);
   const [eventAd, setEventAd] = useState<HomeEventAd>(fallbackEventAd);
+  const [confessionContent, setConfessionContent] =
+    useState<HomeConfessionContent | null>(null);
 
   const autoOpenDelayMs = 1200;
   const closeCooldownMs = 1000 * 60 * 20;
   const remindCooldownMs = 1000 * 60 * 45;
 
-  // Event advertising data (backend-first, fallback-safe)
+  // Backend-driven homepage content (ad + confession copy)
   useEffect(() => {
     let mounted = true;
 
-    const loadHomepageAd = async () => {
-      if (typeof window !== 'undefined') {
-        try {
-          const raw = window.localStorage.getItem(HOMEPAGE_AD_CACHE_KEY);
-          if (raw) {
-            const parsed = JSON.parse(raw) as {
-              timestamp: number;
-              data: Partial<HomeEventAd>;
-            };
-            if (
-              parsed?.timestamp &&
-              Date.now() - parsed.timestamp < HOMEPAGE_AD_CACHE_TTL_MS &&
-              parsed?.data &&
-              mounted
-            ) {
-              setEventAd(prev => ({
-                ...prev,
-                ...parsed.data,
-              }));
-            }
-          }
-        } catch {
-          // Ignore malformed cache.
-        }
-      }
-
-      if (!HOMEPAGE_AD_ENDPOINT) return;
-
+    const loadHomepageContent = async () => {
       try {
-        const res = await fetch(HOMEPAGE_AD_ENDPOINT, {
-          method: 'GET',
-          cache: 'force-cache',
-          credentials: 'omit',
-        });
-        if (!res.ok) return;
-        const payload = (await res.json()) as Partial<HomeEventAd>;
+        const [adPayload, confessionPayload] = await Promise.all([
+          apiClient.getHomepageAd(),
+          apiClient.getConfessionContent(),
+        ]);
+
         if (!mounted) return;
-        setEventAd(prev => ({
-          ...prev,
-          ...payload,
-        }));
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(
-            HOMEPAGE_AD_CACHE_KEY,
-            JSON.stringify({ timestamp: Date.now(), data: payload })
-          );
+
+        if (adPayload) {
+          setEventAd(prev => ({
+            ...prev,
+            ...(adPayload as Partial<HomeEventAd>),
+          }));
+        }
+
+        if (confessionPayload) {
+          setConfessionContent({
+            welcomeTitle:
+              String(confessionPayload.welcomeTitle || '').trim() ||
+              'Welcome Home',
+            welcomeMessage:
+              String(confessionPayload.welcomeMessage || '').trim() ||
+              'You are in a place of worship, truth, and transformation.',
+            confessionText:
+              String(confessionPayload.confessionText || '').trim() || '',
+            motto:
+              String(confessionPayload.motto || '').trim() ||
+              'We begin to prosper, we continue to prosper, until we become very prosperous.',
+          });
         }
       } catch {
-        // Keep fallback in place when endpoint is not yet wired.
+        // Keep fallback content when backend payload is unavailable.
       }
     };
 
-    loadHomepageAd();
+    loadHomepageContent();
     return () => {
       mounted = false;
     };
@@ -200,21 +181,8 @@ export default function Home() {
     };
   }, []);
 
-  // Initialize modal timing on mount
+  // Initialize modal timing on mount (runtime only; no local storage)
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    try {
-      const raw = window.localStorage.getItem(NEXT_AD_AT_STORAGE_KEY);
-      const stored = raw ? Number(raw) : NaN;
-      if (Number.isFinite(stored) && stored > Date.now()) {
-        setNextAdAt(stored);
-        return;
-      }
-    } catch {
-      // No-op.
-    }
-
     setNextAdAt(Date.now() + autoOpenDelayMs);
   }, [autoOpenDelayMs]);
 
@@ -239,12 +207,6 @@ export default function Home() {
   const persistAdCooldown = (cooldownMs: number) => {
     const nextAllowedAt = Date.now() + cooldownMs;
     setNextAdAt(nextAllowedAt);
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(
-        NEXT_AD_AT_STORAGE_KEY,
-        String(nextAllowedAt)
-      );
-    }
   };
 
   const handleCloseModal = () => {
@@ -344,6 +306,7 @@ export default function Home() {
           <ConfessionPopup
             onClose={() => setShowConfessionPopup(false)}
             delay={1800}
+            content={confessionContent ?? undefined}
           />
         )}
       </main>

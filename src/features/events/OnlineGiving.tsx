@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import GivingModal from '@/shared/ui/modals/GivingModal';
@@ -88,6 +88,27 @@ export default function OnlineGiving() {
   const addCardRef = (el: HTMLDivElement | null, index: number) => {
     cardsRef.current[index] = el;
   };
+
+  const handleGiveNowWithTracking = useCallback(
+    async (option: GivingOption) => {
+      handleGiveNow(option);
+
+      try {
+        await apiClient.submitGivingIntent({
+          title: option.title,
+          description: option.description,
+          sourceChannel: 'frontend:web:online-giving',
+          metadata: {
+            page: 'home',
+            component: 'OnlineGiving',
+          },
+        });
+      } catch {
+        // Non-blocking tracking call.
+      }
+    },
+    [handleGiveNow]
+  );
 
   const cardShell =
     'giving-card rounded-2xl border border-white/12 bg-white/5 backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 ease-out';
@@ -354,7 +375,7 @@ export default function OnlineGiving() {
                       }}
                       onMouseEnter={() => handleCardHover(index)}
                       onMouseLeave={() => handleCardLeave(index)}
-                      onClick={() => handleGiveNow(option)}
+                      onClick={() => handleGiveNowWithTracking(option)}
                     >
                       {/* 3D Card */}
                       <div className="w-full h-80 relative preserve-3d cursor-pointer group">
@@ -465,7 +486,7 @@ export default function OnlineGiving() {
                     {/* Button */}
                     <div className={cardCtaWrap}>
                       <Button
-                        onClick={() => handleGiveNow(option)}
+                        onClick={() => handleGiveNowWithTracking(option)}
                         variant="ghost"
                         size="sm"
                         curvature="lg"
@@ -538,7 +559,7 @@ export default function OnlineGiving() {
                       {/* Button */}
                       <div className={cardCtaWrap}>
                         <Button
-                          onClick={() => handleGiveNow(option)}
+                          onClick={() => handleGiveNowWithTracking(option)}
                           variant="ghost"
                           size="sm"
                           curvature="lg"
