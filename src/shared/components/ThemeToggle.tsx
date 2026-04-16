@@ -1,12 +1,9 @@
-// components/layout/ThemeToggle.tsx
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Laptop2, Moon, Sun } from 'lucide-react';
-import { useMemo } from 'react';
 import { useTheme, ThemeMode } from '@/shared/contexts/ThemeContext';
 import { cn } from '@/lib/cn';
-
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 
 type ThemeToggleProps = {
@@ -26,20 +23,20 @@ export default function ThemeToggle({
 }: ThemeToggleProps) {
   const { theme, resolvedTheme, setTheme, colorScheme, mounted } = useTheme();
 
-  // Avoid hydration mismatch before theme mounts
-  if (!mounted) return null;
-
-  const activeIndex = options.findIndex(opt => opt.id === theme);
-  const pillWidth = 100 / options.length;
   const compact = size === 'sm';
+  const activeIndex = Math.max(
+    0,
+    options.findIndex(opt => opt.id === theme)
+  );
+  const pillWidth = 100 / options.length;
 
   const textTone = resolvedTheme === 'dark' ? 'text-white/80' : 'text-gray-900';
 
   const baseClasses = cn(
-    'relative overflow-hidden rounded-full border backdrop-blur-md isolate',
+    'relative isolate overflow-hidden rounded-full border backdrop-blur-md',
     compact
-      ? 'px-1.5 py-1 min-w-[150px]'
-      : 'px-2 py-1.5 min-w-[210px] shadow-lg',
+      ? 'min-w-[150px] px-1.5 py-1'
+      : 'min-w-[210px] px-2 py-1.5 shadow-lg',
     className
   );
 
@@ -53,6 +50,31 @@ export default function ThemeToggle({
     }),
     [resolvedTheme]
   );
+
+  if (!mounted) {
+    return (
+      <div className={baseClasses} style={containerTone} aria-hidden="true">
+        <div className="grid grid-cols-3 items-center text-[11px] sm:text-xs font-semibold opacity-0">
+          {options.map(opt => {
+            const Icon = opt.icon;
+            return (
+              <div
+                key={opt.id}
+                className={cn(
+                  'relative z-10 flex items-center justify-center gap-1.5 px-2 py-1',
+                  compact ? 'h-8' : 'h-9'
+                )}
+              >
+                <Icon
+                  className={cn('w-3.5 h-3.5', compact ? '' : 'sm:w-4 sm:h-4')}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={baseClasses} style={containerTone}>
@@ -83,6 +105,7 @@ export default function ThemeToggle({
         {options.map(opt => {
           const Icon = opt.icon;
           const isActive = opt.id === theme;
+
           return (
             <button
               key={opt.id}
@@ -92,7 +115,11 @@ export default function ThemeToggle({
               className={cn(
                 'relative z-10 flex items-center justify-center gap-1.5 px-2 py-1 transition-all duration-200',
                 compact ? 'h-8' : 'h-9',
-                isActive ? 'text-black' : 'text-white/70 hover:text-white'
+                isActive
+                  ? 'text-black'
+                  : resolvedTheme === 'dark'
+                    ? 'text-white/70 hover:text-white'
+                    : 'text-gray-700 hover:text-black'
               )}
             >
               <Icon

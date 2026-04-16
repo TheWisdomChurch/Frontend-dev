@@ -32,9 +32,12 @@ const DEFAULT_FALLBACK_SLIDES: HeroSlide[] = [
     id: 'welcome',
     title: 'Welcome to The Wisdom Church',
     subtitle: 'Equipping and Empowering for greatness',
+    description:
+      'A Spirit-filled family helping believers grow in faith, purpose, and community.',
     image: {
       src: '/HEADER.png',
       alt: "Experience God's Transforming Power",
+      objectPosition: 'center',
     },
     upcoming: {
       label: 'Welcome',
@@ -47,165 +50,219 @@ const DEFAULT_FALLBACK_SLIDES: HeroSlide[] = [
   },
 ];
 
+const FETCH_TIMEOUT_MS = 12000;
+const RETRY_DELAY_MS = 2500;
+const MAX_RETRIES = 1;
+
+function formatEventDate(startAt?: string, endAt?: string): string {
+  if (!startAt) return 'Upcoming';
+
+  const startDate = new Date(startAt);
+  if (Number.isNaN(startDate.getTime())) return 'Upcoming';
+
+  const endDate = endAt ? new Date(endAt) : startDate;
+  const validEndDate = Number.isNaN(endDate.getTime()) ? startDate : endDate;
+
+  const startLabel = startDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
+
+  const endLabel = validEndDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
+
+  return startDate.toDateString() !== validEndDate.toDateString()
+    ? `${startLabel} - ${endLabel}`
+    : startLabel;
+}
+
+function formatEventTime(startAt?: string): string | undefined {
+  if (!startAt) return undefined;
+
+  const startDate = new Date(startAt);
+  if (Number.isNaN(startDate.getTime())) return undefined;
+
+  return startDate.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function mapEventToHeroSlide(event: EventPublic): HeroSlide {
+  const dateLabel = formatEventDate(event.startAt, event.endAt);
+
+  return {
+    id: String(event.id),
+    title: dateLabel,
+    subtitle: event.title || 'Upcoming Event',
+    description: event.description || undefined,
+    image: {
+      src: event.imageUrl || event.bannerUrl || '/images/event-placeholder.jpg',
+      alt: event.title || 'Church event',
+      objectPosition: 'center',
+    },
+    upcoming: {
+      label: 'Upcoming',
+      title: event.title || 'Upcoming Event',
+      date: dateLabel,
+      time: formatEventTime(event.startAt),
+      location: event.location || undefined,
+      ctaLabel: 'Register Now',
+      ctaUrl: event.registerLink || `/events/${event.id}`,
+    },
+    type: 'event',
+  };
+}
+
+function mapReelToHeroSlide(reel: ReelPublic): HeroSlide {
+  return {
+    id: String(reel.id),
+    title: reel.title || 'Latest Media',
+    subtitle: 'Latest Media',
+    description: reel.description || undefined,
+    image: {
+      src: reel.thumbnailUrl || '/images/reel-placeholder.jpg',
+      alt: reel.title || 'Media reel',
+      objectPosition: 'center',
+    },
+    upcoming: {
+      label: 'Watch',
+      title: reel.title || 'Latest Media',
+      date: reel.publishedAt
+        ? new Date(reel.publishedAt).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+          })
+        : 'Recently',
+      ctaLabel: 'Watch Now',
+      ctaUrl: `/resources/reels/${reel.id}`,
+    },
+    type: 'reel',
+  };
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = window.setTimeout(() => {
+      reject(new Error('Hero content request timed out'));
+    }, timeoutMs);
+
+    promise
+      .then(value => {
+        window.clearTimeout(timer);
+        resolve(value);
+      })
+      .catch(error => {
+        window.clearTimeout(timer);
+        reject(error);
+      });
+  });
+}
+
 export const useHeroContent = () => {
   const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_FALLBACK_SLIDES);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const retryCountRef = useRef(0);
-  const timeoutRef = useRef<number | null>(null);
-  const mountedRef = useRef(true);
 
-  const MAX_RETRIES = 2;
+  const mountedRef = useRef(false);
+  const retryCountRef = useRef(0);
+  const retryTimerRef = useRef<number | null>(null);
+
+  const clearRetryTimer = () => {
+    if (retryTimerRef.current) {
+      window.clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
+  };
 
   const fetchHeroData = useCallback(async () => {
+    clearRetryTimer();
+
+    if (!mountedRef.current) return;
+
+    setLoading(true);
+    setError(null);
+
     try {
-      setLoading(true);
-      setError(null);
-
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        timeoutRef.current = window.setTimeout(() => {
-          reject(
-            new Error('Request timeout: Hero content fetch took too long')
-          );
-        }, 20000);
-      });
-
-      const [events, reels] = await Promise.race([
-        Promise.all([
-          apiClient.listEvents().catch(err => {
-            console.warn('Failed to fetch events:', err);
-            return [] as EventPublic[];
-          }),
-          apiClient.listReels?.().catch(() => [] as ReelPublic[]) ??
-            Promise.resolve([] as ReelPublic[]),
-        ]),
-        timeoutPromise,
+      const heroDataPromise = Promise.all([
+        apiClient.listEvents().catch(err => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('Hero events fetch failed, using empty list:', err);
+          }
+          return [] as EventPublic[];
+        }),
+        apiClient.listReels?.().catch(err => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('Hero reels fetch failed, using empty list:', err);
+          }
+          return [] as ReelPublic[];
+        }) ?? Promise.resolve([] as ReelPublic[]),
       ]);
+
+      const [events, reels] = await withTimeout(
+        heroDataPromise,
+        FETCH_TIMEOUT_MS
+      );
 
       if (!mountedRef.current) return;
 
-      const heroSlides: HeroSlide[] = [];
+      const upcomingEvents = Array.isArray(events)
+        ? events
+            .filter(event => {
+              if (!event?.startAt) return false;
+              const date = new Date(event.startAt);
+              return !Number.isNaN(date.getTime()) && date > new Date();
+            })
+            .slice(0, 3)
+            .map(mapEventToHeroSlide)
+        : [];
 
-      if (events && events.length > 0) {
-        const upcomingEvents = events
-          .filter(
-            (e: EventPublic) => e.startAt && new Date(e.startAt) > new Date()
-          )
-          .slice(0, 3)
-          .map((event: EventPublic) => {
-            const startDate = new Date(event.startAt || new Date());
-            const endDate = event.endAt ? new Date(event.endAt) : startDate;
-            const isMultiDay =
-              startDate.toDateString() !== endDate.toDateString();
+      const reelSlides = Array.isArray(reels)
+        ? reels.slice(0, 2).map(mapReelToHeroSlide)
+        : [];
 
-            return {
-              id: event.id,
-              title: isMultiDay
-                ? `${startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-                : startDate.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                  }),
-              subtitle: event.title,
-              description: event.description,
-              image: {
-                src:
-                  event.imageUrl ||
-                  event.bannerUrl ||
-                  '/images/event-placeholder.jpg',
-                alt: event.title,
-                objectPosition: 'center',
-              },
-              upcoming: {
-                label: 'Upcoming',
-                title: event.title,
-                date: isMultiDay
-                  ? `${startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-                  : startDate.toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    }),
-                time: startDate.toLocaleTimeString('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }),
-                location: event.location,
-                ctaLabel: 'Register Now',
-                ctaUrl: event.registerLink || `/events/${event.id}`,
-              },
-              type: 'event' as const,
-            };
-          });
+      const nextSlides = [...upcomingEvents, ...reelSlides];
 
-        heroSlides.push(...upcomingEvents);
-      }
-
-      if (reels && reels.length > 0) {
-        const reelSlides = reels.slice(0, 2).map((reel: ReelPublic) => ({
-          id: reel.id,
-          title: reel.title,
-          subtitle: 'Latest Media',
-          description: reel.description,
-          image: {
-            src: reel.thumbnailUrl || '/images/reel-placeholder.jpg',
-            alt: reel.title,
-          },
-          upcoming: {
-            label: 'Watch',
-            title: reel.title,
-            date: reel.publishedAt
-              ? new Date(reel.publishedAt).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })
-              : 'Recently',
-            ctaLabel: 'Watch Now',
-            ctaUrl: `/resources/reels/${reel.id}`,
-          },
-          type: 'reel' as const,
-        }));
-
-        heroSlides.push(...reelSlides);
-      }
-
-      setSlides(heroSlides.length > 0 ? heroSlides : DEFAULT_FALLBACK_SLIDES);
+      setSlides(nextSlides.length > 0 ? nextSlides : DEFAULT_FALLBACK_SLIDES);
+      setError(null);
       retryCountRef.current = 0;
     } catch (err) {
+      if (!mountedRef.current) return;
+
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to load hero content';
 
-      if (process.env.NODE_ENV !== 'production') {
+      const isSoftTimeout = /timed out|timeout/i.test(errorMessage);
+      const isRetriable = /timed out|timeout|network|fetch/i.test(errorMessage);
+
+      if (process.env.NODE_ENV !== 'production' && !isSoftTimeout) {
         console.error('Error fetching hero content:', errorMessage, err);
+      } else if (process.env.NODE_ENV !== 'production' && isSoftTimeout) {
+        console.warn(
+          'Hero content fetch timed out. Falling back to default slides.'
+        );
       }
 
-      if (!mountedRef.current) return;
+      setSlides(DEFAULT_FALLBACK_SLIDES);
 
-      if (/timeout/i.test(errorMessage)) {
+      if (isSoftTimeout) {
         setError(null);
       } else {
         setError(errorMessage);
       }
 
-      setSlides(DEFAULT_FALLBACK_SLIDES);
-
-      if (
-        retryCountRef.current < MAX_RETRIES &&
-        /timeout|network|fetch/i.test(errorMessage)
-      ) {
+      if (isRetriable && retryCountRef.current < MAX_RETRIES) {
         retryCountRef.current += 1;
 
-        window.setTimeout(() => {
+        retryTimerRef.current = window.setTimeout(() => {
           if (mountedRef.current) {
             void fetchHeroData();
           }
-        }, 2000);
+        }, RETRY_DELAY_MS);
       }
     } finally {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-
       if (mountedRef.current) {
         setLoading(false);
       }
@@ -218,13 +275,14 @@ export const useHeroContent = () => {
 
     return () => {
       mountedRef.current = false;
-
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
+      clearRetryTimer();
     };
   }, [fetchHeroData]);
 
-  return { slides, loading, error, refetch: fetchHeroData };
+  return {
+    slides,
+    loading,
+    error,
+    refetch: fetchHeroData,
+  };
 };

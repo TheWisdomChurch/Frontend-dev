@@ -10,7 +10,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
-import type { ScrollTrigger as ScrollTriggerType } from 'gsap/ScrollTrigger';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import apiClient from '@/lib/api';
 import { useChurchAnalytics } from '@/shared/analytics/churchAnalytics';
@@ -32,44 +31,36 @@ export default function SmartEventRecommendation({
   limit = 3,
   title = 'Events You Might Love',
 }: SmartEventRecommendationProps) {
-  const [events, setEvents] = useState<EventPublic[]>([]);
   const [recommendations, setRecommendations] = useState<EventPublic[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const { trackEventEngagement } = useChurchAnalytics();
 
-  // ========================================
-  // FETCH EVENTS
-  // ========================================
-
   useEffect(() => {
+    let active = true;
+
     const loadEvents = async () => {
       try {
         const data = await apiClient.listEvents();
-        setEvents(data);
 
-        // ✅ Smart recommendation logic
         const recommended = data
-          .sort((a: EventPublic, b: EventPublic) => {
-            // Prioritize upcoming events
-            const now = new Date();
+          .sort((a, b) => {
+            const now = Date.now();
             const aTime = a.startAt ? new Date(a.startAt).getTime() : 0;
             const bTime = b.startAt ? new Date(b.startAt).getTime() : 0;
 
-            // Scoring: closer upcoming > random variety
-            const aScore =
-              (aTime > now.getTime() ? 1000 : 0) + Math.random() * 100; // Add randomness for variety
-            const bScore =
-              (bTime > now.getTime() ? 1000 : 0) + Math.random() * 100;
+            const aScore = (aTime > now ? 1000 : 0) + Math.random() * 100;
+            const bScore = (bTime > now ? 1000 : 0) + Math.random() * 100;
 
             return bScore - aScore;
           })
           .slice(0, limit);
 
+        if (!active) return;
+
         setRecommendations(recommended);
 
-        // Track recommendation view
-        recommended.forEach((event: EventPublic) => {
+        recommended.forEach(event => {
           trackEventEngagement({
             eventId: event.id,
             eventName: event.title,
@@ -79,22 +70,25 @@ export default function SmartEventRecommendation({
       } catch (error) {
         console.error('Failed to load events:', error);
       } finally {
-        setIsLoading(false);
+        if (active) {
+          setIsLoading(false);
+        }
       }
     };
 
     loadEvents();
+
+    return () => {
+      active = false;
+    };
   }, [limit, trackEventEngagement]);
 
-  // ========================================
-  // ANIMATIONS
-  // ========================================
-
   useEffect(() => {
-    if (!containerRef.current || recommendations.length === 0) return;
+    const root = containerRef.current;
+    if (!root || recommendations.length === 0) return;
 
-    // Stagger animation for cards
-    const cards = containerRef.current.querySelectorAll('.event-card-item');
+    const cards = root.querySelectorAll('.event-card-item');
+
     gsap.from(cards, {
       opacity: 0,
       y: 40,
@@ -102,13 +96,12 @@ export default function SmartEventRecommendation({
       stagger: 0.1,
       ease: 'power2.out',
       scrollTrigger: {
-        trigger: containerRef.current,
+        trigger: root,
         start: 'top 80%',
         once: true,
       },
     });
 
-    // Floating animation
     cards.forEach((card, index) => {
       gsap.to(card, {
         y: -8,
@@ -120,18 +113,11 @@ export default function SmartEventRecommendation({
     });
 
     return () => {
-      (ScrollTrigger.getAll() as unknown as { kill: () => void }[]).forEach(
-        st => st.kill()
-      );
+      ScrollTrigger.getAll().forEach((st: { kill: () => any }) => st.kill());
     };
   }, [recommendations]);
 
-  // ========================================
-  // EVENT CLICK HANDLER
-  // ========================================
-
   const handleEventClick = (event: EventPublic) => {
-    // Track engagement
     trackEventEngagement({
       eventId: event.id,
       eventName: event.title,
@@ -139,15 +125,10 @@ export default function SmartEventRecommendation({
       registrationSource: 'website',
     });
 
-    // Redirect to registration
     if (event.registerLink) {
-      window.open(event.registerLink, '_blank');
+      window.open(event.registerLink, '_blank', 'noopener,noreferrer');
     }
   };
-
-  // ========================================
-  // RENDER
-  // ========================================
 
   if (isLoading) {
     return (
@@ -171,7 +152,6 @@ export default function SmartEventRecommendation({
 
   return (
     <div ref={containerRef} style={{ marginTop: '40px' }}>
-      {/* Title */}
       <h2
         style={{
           fontSize: '28px',
@@ -184,7 +164,6 @@ export default function SmartEventRecommendation({
         {title}
       </h2>
 
-      {/* Event Cards Grid */}
       <div
         style={{
           display: 'grid',
@@ -208,23 +187,20 @@ export default function SmartEventRecommendation({
               backdropFilter: 'blur(10px)',
             }}
             onMouseEnter={e => {
-              const el = e.currentTarget as HTMLDivElement;
-              gsap.to(el, {
+              gsap.to(e.currentTarget, {
                 boxShadow: '0 12px 32px rgba(201,168,76,0.2)',
                 borderColor: 'rgba(201,168,76,0.4)',
                 duration: 0.3,
               });
             }}
             onMouseLeave={e => {
-              const el = e.currentTarget as HTMLDivElement;
-              gsap.to(el, {
+              gsap.to(e.currentTarget, {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                 borderColor: 'rgba(201,168,76,0.2)',
                 duration: 0.3,
               });
             }}
           >
-            {/* Image */}
             {event.imageUrl && (
               <img
                 src={event.imageUrl}
@@ -237,9 +213,7 @@ export default function SmartEventRecommendation({
               />
             )}
 
-            {/* Content */}
             <div style={{ padding: '20px' }}>
-              {/* Date */}
               {event.startAt && (
                 <div
                   style={{
@@ -268,7 +242,6 @@ export default function SmartEventRecommendation({
                 </div>
               )}
 
-              {/* Title */}
               <h3
                 style={{
                   fontSize: '18px',
@@ -280,7 +253,6 @@ export default function SmartEventRecommendation({
                 {event.title}
               </h3>
 
-              {/* Description */}
               <p
                 style={{
                   fontSize: '13px',
@@ -295,7 +267,6 @@ export default function SmartEventRecommendation({
                   : ''}
               </p>
 
-              {/* Location */}
               {event.location && (
                 <div
                   style={{
@@ -314,9 +285,12 @@ export default function SmartEventRecommendation({
                 </div>
               )}
 
-              {/* CTA Button */}
               <button
-                onClick={() => handleEventClick(event)}
+                type="button"
+                onClick={e => {
+                  e.stopPropagation();
+                  handleEventClick(event);
+                }}
                 style={{
                   width: '100%',
                   padding: '12px 16px',

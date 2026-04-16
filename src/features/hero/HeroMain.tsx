@@ -26,7 +26,6 @@ import { renderTitle, renderSubtitle } from '@/shared/utils/heroTextUtil';
 import { useWaveTextAnimation } from '@/shared/utils/hooks/mainHeroHooks/useWaveText';
 import type { YouTubeVideo } from '@/lib/types';
 
-// Register GSAP plugins once on client
 if (
   typeof window !== 'undefined' &&
   typeof gsap.registerPlugin === 'function'
@@ -34,10 +33,41 @@ if (
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
 
-/* API CONFIG
------------------------------------------------------------------------------ */
 const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
 const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
+
+const FALLBACK_COLOR_SCHEME: ColorScheme = {
+  primary: '#F7DE12',
+  primaryLight: '#FFF3A3',
+  primaryDark: '#C7A600',
+  secondary: '#FFFFFF',
+  background: '#050505',
+  surface: '#111111',
+  text: '#FFFFFF',
+  textSecondary: '#B3B3B3',
+  border: '#2A2A2A',
+  success: '#22C55E',
+  warning: '#F59E0B',
+  error: '#EF4444',
+  opacity: {
+    primary05: 'rgba(247,222,18,0.05)',
+    primary10: 'rgba(247,222,18,0.10)',
+    primary15: 'rgba(247,222,18,0.15)',
+    primary20: 'rgba(247,222,18,0.20)',
+    primary25: 'rgba(247,222,18,0.25)',
+    primary30: 'rgba(247,222,18,0.30)',
+    primary40: 'rgba(247,222,18,0.40)',
+    primary50: 'rgba(247,222,18,0.50)',
+    black10: 'rgba(0,0,0,0.10)',
+    black20: 'rgba(0,0,0,0.20)',
+    black30: 'rgba(0,0,0,0.30)',
+    black40: 'rgba(0,0,0,0.40)',
+    black50: 'rgba(0,0,0,0.50)',
+    white10: 'rgba(255,255,255,0.10)',
+    white20: 'rgba(255,255,255,0.20)',
+    white30: 'rgba(255,255,255,0.30)',
+  },
+};
 
 function normalizeOrigin(raw?: string | null): string {
   const isProd = process.env.NODE_ENV === 'production';
@@ -60,8 +90,6 @@ const API_ORIGIN = normalizeOrigin(
 
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
 
-/* Types (simplified for backend structure)
------------------------------------------------------------------------------ */
 function isStaticImageData(x: any): x is StaticImageData {
   return (
     !!x &&
@@ -76,9 +104,6 @@ function isSimpleImage(image: any): boolean {
   return typeof image === 'string' || isStaticImageData(image);
 }
 
-/**
- * Normalize slide.image for Next/Image
- */
 function normalizeImage(
   image: any,
   fallbackAlt = 'Slide image'
@@ -87,7 +112,7 @@ function normalizeImage(
   alt: string;
   objectPosition?: string;
 } {
-  if (typeof image === 'string') {
+  if (typeof image === 'string' && image.trim()) {
     return { src: image, alt: fallbackAlt };
   }
 
@@ -109,8 +134,6 @@ function normalizeImage(
   return { src: '/images/placeholder.jpg', alt: fallbackAlt };
 }
 
-/* Props
------------------------------------------------------------------------------ */
 interface HeroSectionProps {
   primaryButtonText?: string;
   secondaryButtonText?: string;
@@ -121,9 +144,6 @@ interface HeroSectionProps {
   slides?: HeroSlide[];
 }
 
-/* ----------------------------------------------------------------------------
-   Component
------------------------------------------------------------------------------ */
 const HeroSection = ({
   primaryButtonText = 'Join Our Community',
   secondaryButtonText = 'Watch Live Stream',
@@ -133,26 +153,26 @@ const HeroSection = ({
   colorScheme: externalColorScheme,
   slides: externalSlides,
 }: HeroSectionProps) => {
-  const { colorScheme: themeColors } = useTheme();
-  const colorScheme = externalColorScheme || themeColors;
+  const theme = useTheme();
+  const themeColors = theme?.colorScheme;
+  const colorScheme =
+    externalColorScheme || themeColors || FALLBACK_COLOR_SCHEME;
+
   const { open } = useServiceUnavailable();
-
   const { slides: backendSlides } = useHeroContent();
-  const slidesToUse = externalSlides || backendSlides;
 
-  const heroRef = useRef<HTMLDivElement>(null!);
-  const titleRef = useRef<HTMLHeadingElement>(null!);
-  const subtitleRef = useRef<HTMLHeadingElement>(null!);
-  const descriptionRef = useRef<HTMLParagraphElement>(null!);
-  const buttonsRef = useRef<HTMLDivElement>(null!);
-  const scrollIndicatorRef = useRef<HTMLDivElement>(null!);
-  const waveTextRef = useRef<HTMLDivElement>(null!);
-  const cardsRef = useRef<HTMLDivElement>(null!);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const waveTextRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
 
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
   const [videoLoading, setVideoLoading] = useState(false);
   const [isCompactMobile, setIsCompactMobile] = useState(false);
-
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -167,10 +187,25 @@ const HeroSection = ({
   }, []);
 
   const slideList: HeroSlide[] = useMemo(() => {
-    return slidesToUse && slidesToUse.length > 0 ? slidesToUse : [];
-  }, [slidesToUse]);
+    const source = externalSlides || backendSlides;
+    return Array.isArray(source) ? source.filter(Boolean) : [];
+  }, [externalSlides, backendSlides]);
 
-  const currentSlideData = slideList[currentSlide] ?? slideList[0];
+  const safeSlides: HeroSlide[] = useMemo(() => {
+    if (slideList.length > 0) return slideList;
+
+    return [
+      {
+        title: 'Welcome to The Wisdom Church',
+        subtitle: 'Equipped and empowered for greatness',
+        description:
+          'A Spirit-filled family helping believers grow in faith, purpose, and community.',
+        image: '/images/placeholder.jpg',
+      } as HeroSlide,
+    ];
+  }, [slideList]);
+
+  const currentSlideData = safeSlides[currentSlide] ?? safeSlides[0];
 
   const fallbackUpcoming = {
     label: 'Upcoming',
@@ -187,18 +222,18 @@ const HeroSection = ({
   useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
 
   useEffect(() => {
-    if (slideList.length <= 1) return;
+    if (safeSlides.length <= 1) return;
 
     const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % slideList.length);
+      setCurrentSlide(prev => (prev + 1) % safeSlides.length);
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [slideList.length]);
+  }, [safeSlides.length]);
 
   const scrollToNextSection = useCallback(() => {
     const nextSection = heroRef.current?.nextElementSibling;
-    if (nextSection) {
+    if (nextSection instanceof HTMLElement) {
       nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, []);
@@ -235,20 +270,30 @@ const HeroSection = ({
       return;
     }
 
-    window.location.href = upcoming.ctaTarget;
+    if (typeof upcoming.ctaTarget === 'string') {
+      window.location.href = upcoming.ctaTarget;
+      return;
+    }
+
+    handleUnavailable('Reservations opening soon');
   }, [upcoming, handleUnavailable]);
 
   const handlePrimaryClick = useCallback(() => {
-    if (onPrimaryButtonClick) return onPrimaryButtonClick();
+    if (onPrimaryButtonClick) {
+      onPrimaryButtonClick();
+      return;
+    }
     handleUnavailable('Join our community');
   }, [onPrimaryButtonClick, handleUnavailable]);
 
   const handleSecondaryClick = useCallback(() => {
-    if (onSecondaryButtonClick) return onSecondaryButtonClick();
+    if (onSecondaryButtonClick) {
+      onSecondaryButtonClick();
+      return;
+    }
     handleUnavailable('Live stream coming soon');
   }, [onSecondaryButtonClick, handleUnavailable]);
 
-  // Pull newest YouTube video
   useEffect(() => {
     if (isCompactMobile) return;
 
@@ -289,7 +334,6 @@ const HeroSection = ({
     };
   }, [isCompactMobile]);
 
-  // Parallax layers inside hero
   useEffect(() => {
     if (!heroRef.current) return;
 
@@ -322,7 +366,6 @@ const HeroSection = ({
     return () => ctx.revert();
   }, []);
 
-  // Cinematic text reveal
   useEffect(() => {
     if (!heroRef.current) return;
 
@@ -396,7 +439,7 @@ const HeroSection = ({
       perf="none"
       className="relative w-full min-h-[90vh] overflow-hidden bg-black md:min-h-[95vh] lg:min-h-[100vh]"
     >
-      {slideList.map((slide, index) => {
+      {safeSlides.map((slide, index) => {
         const img = normalizeImage(
           slide.image,
           (slide as any)?.title || `Slide ${index + 1}`
@@ -746,11 +789,12 @@ const HeroSection = ({
         </div>
       </Container>
 
-      {slideList.length > 1 && (
+      {safeSlides.length > 1 && (
         <div className="absolute bottom-11 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-2.5 py-1.5 backdrop-blur-md sm:bottom-14">
-          {slideList.map((_, index) => (
+          {safeSlides.map((_, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => setCurrentSlide(index)}
               className="rounded-full border border-white/25 transition-all duration-300 ease-out"
               style={{
@@ -808,6 +852,14 @@ const ScrollIndicators = ({
       className="absolute bottom-0 left-1/2 z-30 hidden -translate-x-1/2 cursor-pointer sm:bottom-1.5 sm:block md:bottom-2"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          scrollToNextSection();
+        }
+      }}
     >
       <div className="flex flex-col items-center">
         <ChevronDown
@@ -827,6 +879,14 @@ const ScrollIndicators = ({
       className="absolute bottom-0 left-1/2 z-30 -translate-x-1/2 cursor-pointer pb-1 sm:hidden"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          scrollToNextSection();
+        }
+      }}
     >
       <div className="flex flex-col items-center">
         <ChevronDown
