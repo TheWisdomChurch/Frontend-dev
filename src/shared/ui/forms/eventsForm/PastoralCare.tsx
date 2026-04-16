@@ -21,6 +21,7 @@ import {
 } from '@/shared/layout';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { useTheme } from '@/shared/contexts/ThemeContext';
+import { apiClient } from '@/lib/api';
 
 interface PastoralCareFormData {
   title: string;
@@ -57,6 +58,7 @@ const PastoralCareUnit = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string>('');
   const errors: Partial<PastoralCareFormData> = {};
 
   const eventTypes = [
@@ -105,12 +107,50 @@ const PastoralCareUnit = () => {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      setSubmitError('');
+
+      const requiredFields: Array<keyof PastoralCareFormData> = [
+        'title',
+        'firstName',
+        'lastName',
+        'contactNumber',
+        'email',
+        'contactAddress',
+        'eventDate',
+        'eventType',
+        'churchRole',
+      ];
+      const missing = requiredFields.some(
+        field => !String(formData[field] || '').trim()
+      );
+      if (missing) {
+        setSubmitError(
+          'Please complete all required fields before submitting.'
+        );
+        return;
+      }
+      if (showCustomRole && !formData.customRole.trim()) {
+        setSubmitError('Please provide your custom role.');
+        return;
+      }
 
       setIsSubmitting(true);
 
       try {
-        // TODO: replace with real API call; backend should validate and send confirmation email
-        await new Promise(resolve => setTimeout(resolve, 1200));
+        await apiClient.submitPastoralCareRequest({
+          title: formData.title,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          contactNumber: formData.contactNumber,
+          email: formData.email,
+          contactAddress: formData.contactAddress,
+          eventDate: formData.eventDate,
+          eventType: formData.eventType,
+          churchRole: formData.churchRole,
+          customRole: showCustomRole ? formData.customRole : undefined,
+          comments: formData.comments,
+          sourceChannel: 'frontend:web:pastoral-care',
+        });
 
         // Reset form
         setFormData({
@@ -129,13 +169,16 @@ const PastoralCareUnit = () => {
         setShowCustomRole(false);
 
         setShowSuccess(true);
-      } catch (error) {
-        console.error('Error submitting form:', error);
+      } catch (error: any) {
+        setSubmitError(
+          error?.message ||
+            'We could not submit your request right now. Please try again.'
+        );
       } finally {
         setIsSubmitting(false);
       }
     },
-    [formData]
+    [formData, showCustomRole]
   );
 
   const getMinDate = useCallback(() => {
@@ -644,6 +687,12 @@ const PastoralCareUnit = () => {
 
                 {/* Submit Button */}
                 <div className="pt-6">
+                  {submitError ? (
+                    <div className="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                      {submitError}
+                    </div>
+                  ) : null}
+
                   <button
                     type="submit"
                     disabled={isSubmitting}

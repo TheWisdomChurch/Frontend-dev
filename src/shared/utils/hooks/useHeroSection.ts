@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { defaultSlides as slides } from '@/lib/data';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 
 // Register ScrollTrigger plugin
-if (typeof window !== 'undefined') {
+if (
+  typeof window !== 'undefined' &&
+  typeof gsap.registerPlugin === 'function'
+) {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
 

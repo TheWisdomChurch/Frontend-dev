@@ -2,11 +2,16 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MathUtils } from 'three';
 
-gsap.registerPlugin(ScrollTrigger);
+if (
+  typeof window !== 'undefined' &&
+  typeof gsap.registerPlugin === 'function'
+) {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const EXPLICIT_REVEAL_SELECTOR =
   '[data-gsap="reveal"], [data-scroll-fade], [data-reveal]';

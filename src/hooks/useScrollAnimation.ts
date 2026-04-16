@@ -1,9 +1,14 @@
 import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import type { ScrollTrigger as ScrollTriggerType } from 'gsap/ScrollTrigger';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+if (
+  typeof window !== 'undefined' &&
+  typeof gsap.registerPlugin === 'function'
+) {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface ScrollAnimationConfig {
   trigger?: string | HTMLElement;

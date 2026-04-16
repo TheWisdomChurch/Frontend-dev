@@ -1,10 +1,15 @@
 // hooks/useSpecialEvents.ts
 import { useState, useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { NL } from '@/shared/assets';
 
-gsap.registerPlugin(ScrollTrigger);
+if (
+  typeof window !== 'undefined' &&
+  typeof gsap.registerPlugin === 'function'
+) {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export interface SpecialEvent {
   id: string;

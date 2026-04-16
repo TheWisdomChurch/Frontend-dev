@@ -1,7 +1,12 @@
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+if (
+  typeof window !== 'undefined' &&
+  typeof gsap.registerPlugin === 'function'
+) {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export const animatePosterCard = (element: HTMLElement, index: number) => {
   const ctx = gsap.context(() => {

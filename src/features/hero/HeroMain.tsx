@@ -8,7 +8,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';
@@ -27,7 +27,10 @@ import { useWaveTextAnimation } from '@/shared/utils/hooks/mainHeroHooks/useWave
 import type { YouTubeVideo } from '@/lib/types';
 
 // Register GSAP plugins once on client
-if (typeof window !== 'undefined') {
+if (
+  typeof window !== 'undefined' &&
+  typeof gsap.registerPlugin === 'function'
+) {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
 
@@ -126,9 +129,19 @@ const HeroSection = ({
 
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
   const [videoLoading, setVideoLoading] = useState(false);
+  const [isCompactMobile, setIsCompactMobile] = useState(false);
 
   // Slider state
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsCompactMobile(window.innerWidth < 768);
+    };
+    onResize();
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const slideList: HeroSlide[] = useMemo(() => {
     return slidesToUse && slidesToUse.length > 0 ? slidesToUse : [];
@@ -210,6 +223,7 @@ const HeroSection = ({
 
   // Pull newest YouTube video
   useEffect(() => {
+    if (isCompactMobile) return;
     let mounted = true;
 
     const fetchLatest = async () => {
@@ -233,7 +247,7 @@ const HeroSection = ({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [isCompactMobile]);
 
   // Parallax layers inside hero
   useEffect(() => {
@@ -394,9 +408,9 @@ const HeroSection = ({
         size="xl"
         className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-12 sm:pt-16 lg:pt-20 pb-12 sm:pb-16"
       >
-        <div className="w-full flex flex-col gap-6 sm:gap-8 lg:gap-10 items-center sm:items-start max-w-6xl">
+        <div className="w-full flex flex-col gap-5 sm:gap-8 lg:gap-10 items-center sm:items-start max-w-6xl">
           {/* Wave label */}
-          {showWaveText && (
+          {showWaveText && !isCompactMobile && (
             <div className="w-full flex justify-start mt-8 sm:mt-10 lg:mt-12 mb-5 sm:mb-7 md:mb-8 lg:mb-9">
               <div
                 ref={waveTextRef}
@@ -463,7 +477,7 @@ const HeroSection = ({
             {(currentSlideData as any)?.subtitle ? (
               <H2
                 ref={subtitleRef}
-                className="text-center sm:text-left"
+                className="hidden sm:block text-center sm:text-left"
                 style={{
                   color: colorScheme.primary,
                   textShadow:
@@ -481,11 +495,17 @@ const HeroSection = ({
 
             <p
               ref={descriptionRef}
-              className="text-[12px] sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl"
+              className="hidden sm:block text-[12px] sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl"
             >
               {(currentSlideData as any)?.description ||
                 'A Spirit-filled family helping believers grow in faith, purpose, and community — equipped and empowered for greatness.'}
             </p>
+            {isCompactMobile ? (
+              <p className="text-[12px] text-white/85 leading-relaxed max-w-sm mx-auto sm:mx-0">
+                A Spirit-filled family helping believers grow in faith and
+                purpose.
+              </p>
+            ) : null}
 
             <div
               ref={buttonsRef}
@@ -520,19 +540,28 @@ const HeroSection = ({
                   color: '#FFFFFF',
                   backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 }}
-                className="hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
+                className={`hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 ${isCompactMobile ? 'hidden' : ''}`}
               >
                 <span className="text-xs sm:text-sm font-medium tracking-wide">
                   {secondaryButtonText}
                 </span>
               </CustomButton>
+              {isCompactMobile ? (
+                <button
+                  type="button"
+                  onClick={handleSecondaryClick}
+                  className="text-[12px] text-white/85 underline underline-offset-4"
+                >
+                  {secondaryButtonText}
+                </button>
+              ) : null}
             </div>
           </div>
 
           {/* Cards */}
           <div
             ref={cardsRef}
-            className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-5"
+            className="hidden md:grid w-full grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-5"
           >
             <div
               className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-4 sm:p-5 flex flex-col gap-3"
@@ -660,6 +689,16 @@ const HeroSection = ({
               )}
             </div>
           </div>
+          {isCompactMobile ? (
+            <div className="w-full rounded-2xl border border-white/15 bg-black/45 backdrop-blur-xl px-4 py-3 text-center">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-white/65">
+                {upcoming.label}
+              </p>
+              <p className="mt-1 text-sm text-white font-medium">
+                {upcoming.title}
+              </p>
+            </div>
+          ) : null}
         </div>
       </Container>
 

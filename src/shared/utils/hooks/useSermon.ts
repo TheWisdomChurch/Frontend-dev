@@ -12,7 +12,7 @@ import {
   loadMoreVideos,
   resetFilters,
 } from '@/lib/store/slices/sermonsSlice';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { seriesGroups } from '@/lib/data';
 import {
@@ -23,7 +23,12 @@ import {
 } from '@/lib/types';
 
 // Register GSAP plugins
-gsap.registerPlugin(ScrollToPlugin);
+if (
+  typeof window !== 'undefined' &&
+  typeof gsap.registerPlugin === 'function'
+) {
+  gsap.registerPlugin(ScrollToPlugin);
+}
 
 // Suppress GSAP warnings in development
 if (process.env.NODE_ENV === 'development') {
