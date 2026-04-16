@@ -9,32 +9,21 @@ import JoinUs from '@/features/events/JoinUs';
 import ResourceSection from '@/features/resources/Resource';
 import { apiClient } from '@/lib/api';
 
-// Optimize: Allow caching where possible, only force dynamic for truly dynamic sections
-// Note: Since this component uses useState and useEffect, we can't use revalidate here
-// Use force-dynamic: false to allow ISR where possible with dynamic segments
-
-// ============================================================================
-// DYNAMIC IMPORTS - Using reorganized feature components
-// Optimize: Enable SSR where possible for better initial load performance
-// ============================================================================
-
-// Fast-loading components - SSR enabled with proper fallbacks
 const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
-  ssr: true, // Enable SSR for above-fold content
-  loading: () => <div className="h-[500px] bg-slate-900 animate-pulse" />,
+  ssr: true,
+  loading: () => <div className="h-[500px] animate-pulse bg-slate-900" />,
 });
 
-// Mid-load components - SSR enabled
 const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
   ssr: true,
-  loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
+  loading: () => <div className="h-[400px] animate-pulse bg-slate-900" />,
 });
 
 const SeniorPastor = nextDynamic(
   () => import('@/features/leadership/SeniorPastor'),
   {
     ssr: true,
-    loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
+    loading: () => <div className="h-[350px] animate-pulse bg-slate-900" />,
   }
 );
 
@@ -42,7 +31,7 @@ const Testimonials = nextDynamic(
   () => import('@/features/testimonials/Testimonials'),
   {
     ssr: true,
-    loading: () => <div className="h-[400px] bg-slate-900 animate-pulse" />,
+    loading: () => <div className="h-[400px] animate-pulse bg-slate-900" />,
   }
 );
 
@@ -50,11 +39,10 @@ const OnlineGiving = nextDynamic(
   () => import('@/features/events/OnlineGiving'),
   {
     ssr: true,
-    loading: () => <div className="h-[350px] bg-slate-900 animate-pulse" />,
+    loading: () => <div className="h-[350px] animate-pulse bg-slate-900" />,
   }
 );
 
-// Modal components - Client-side only
 const EventAdModal = nextDynamic(
   () => import('@/shared/ui/modals/EventAdModal'),
   {
@@ -70,10 +58,6 @@ const ConfessionPopup = nextDynamic(
     loading: () => null,
   }
 );
-
-// ============================================================================
-// HOMEPAGE COMPONENT
-// ============================================================================
 
 type HomeEventAd = {
   id: string;
@@ -127,7 +111,6 @@ export default function Home() {
   const closeCooldownMs = 1000 * 60 * 20;
   const remindCooldownMs = 1000 * 60 * 45;
 
-  // Backend-driven homepage content (ad + confession copy)
   useEffect(() => {
     let mounted = true;
 
@@ -163,34 +146,34 @@ export default function Home() {
           });
         }
       } catch {
-        // Keep fallback content when backend payload is unavailable.
+        // keep fallback content
       }
     };
 
     loadHomepageContent();
+
     return () => {
       mounted = false;
     };
   }, []);
 
-  // Initialize modal timing on mount
   useEffect(() => {
     document.body.classList.add('home-page');
+
     return () => {
       document.body.classList.remove('home-page');
     };
   }, []);
 
-  // Initialize modal timing on mount (runtime only; no local storage)
   useEffect(() => {
     setNextAdAt(Date.now() + autoOpenDelayMs);
   }, [autoOpenDelayMs]);
 
-  // Setup modal auto-open timer
   useEffect(() => {
     if (nextAdAt === null) return;
 
     const timeLeft = nextAdAt - Date.now();
+
     if (timeLeft <= 0) {
       setShowModal(true);
       return;
@@ -203,10 +186,8 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [nextAdAt]);
 
-  // Cooldown persistence for modal
   const persistAdCooldown = (cooldownMs: number) => {
-    const nextAllowedAt = Date.now() + cooldownMs;
-    setNextAdAt(nextAllowedAt);
+    setNextAdAt(Date.now() + cooldownMs);
   };
 
   const handleCloseModal = () => {
@@ -221,7 +202,6 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505]">
-      {/* Animated background gradient */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-80"
         style={{
@@ -231,55 +211,45 @@ export default function Home() {
         data-parallax-global="0.2"
       />
 
-      <main className="flex-1 w-full">
+      <main className="w-full flex-1">
         <div className="flex flex-col">
-          {/* Hero Section with video background */}
           <HeroMain />
 
-          {/* Hero Highlights Section */}
           <div data-gsap="reveal">
             <HeroHighlights />
           </div>
 
-          {/* What We Do Section */}
           <div data-gsap="reveal">
             <WhatWeDo />
           </div>
 
-          {/* Events Showcase - Fetches from API */}
           <div data-gsap="reveal">
             <EventsShowcase />
           </div>
 
-          {/* Senior Pastor Message Section */}
           <div data-gsap="reveal">
             <SeniorPastor />
           </div>
 
-          {/* Call to Action - Join Us */}
           <div id="join">
             <div data-gsap="reveal">
               <JoinUs />
             </div>
           </div>
 
-          {/* Testimonials Section - Fetches from API */}
           <div data-gsap="reveal">
             <Testimonials />
           </div>
 
-          {/* Online Giving Section */}
           <div id="give" data-gsap="reveal">
             <OnlineGiving />
           </div>
 
-          {/* Resources Section */}
           <div data-gsap="reveal">
             <ResourceSection />
           </div>
         </div>
 
-        {/* Event Advertisement Modal */}
         <EventAdModal
           open={showModal}
           event={eventAd}
@@ -287,13 +257,12 @@ export default function Home() {
           onRemindLater={handleRemindLater}
         />
 
-        {/* WPC 2026 Float Button */}
         {!showModal && (
           <button
             type="button"
             aria-label="Open conference registration ad"
             onClick={() => setShowModal(true)}
-            className="fixed bottom-4 right-4 sm:bottom-5 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 sm:px-4 py-2.5 text-[11px] sm:text-sm font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+            className="fixed bottom-4 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 py-2.5 text-[11px] font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 sm:bottom-5 sm:px-4 sm:text-sm"
             style={{ animation: 'fade-up-keyframe 0.5s ease-out' }}
           >
             <span className="text-lg">📢</span>
@@ -301,7 +270,6 @@ export default function Home() {
           </button>
         )}
 
-        {/* Confession Popup */}
         {!showModal && showConfessionPopup && (
           <ConfessionPopup
             onClose={() => setShowConfessionPopup(false)}

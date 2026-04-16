@@ -1,8 +1,3 @@
-/**
- * Enhanced Responsive Hook
- * Provides screen size detection and responsive utilities
- */
-
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
@@ -31,9 +26,6 @@ export interface UseResponsiveReturn {
   getValue: (config: Record<ScreenSize, string>) => string;
 }
 
-/**
- * Enhanced responsive hook with screen detection
- */
 export function useResponsive(): UseResponsiveReturn {
   const [mounted, setMounted] = useState(false);
   const [dimensions, setDimensions] = useState({
@@ -48,19 +40,15 @@ export function useResponsive(): UseResponsiveReturn {
     setMounted(true);
 
     const handleResize = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-      setOrientation(
-        window.innerHeight > window.innerWidth ? 'portrait' : 'landscape'
-      );
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      setDimensions({ width, height });
+      setOrientation(height > width ? 'portrait' : 'landscape');
     };
 
-    // Initial call
     handleResize();
 
-    // Add listeners
     window.addEventListener('resize', handleResize);
     window.addEventListener('orientationchange', handleResize);
 
@@ -70,7 +58,7 @@ export function useResponsive(): UseResponsiveReturn {
     };
   }, []);
 
-  const screenSize = useMemo(() => {
+  const screenSize = useMemo<ScreenSize>(() => {
     if (!mounted) return 'mobile';
     return getScreenSize(dimensions.width);
   }, [mounted, dimensions.width]);
@@ -88,12 +76,13 @@ export function useResponsive(): UseResponsiveReturn {
 
   const deviceChecks = useMemo(() => {
     if (!mounted) return { isTouchDevice: false };
+
     return {
       isTouchDevice:
         typeof window !== 'undefined' &&
         ('ontouchstart' in window ||
           navigator.maxTouchPoints > 0 ||
-          (navigator as any).msMaxTouchPoints > 0),
+          'msMaxTouchPoints' in navigator),
     };
   }, [mounted]);
 
@@ -125,9 +114,6 @@ export function useResponsive(): UseResponsiveReturn {
   };
 }
 
-/**
- * Hook to check if screen size is at least a certain size
- */
 export function useIsAtLeast(size: ScreenSize): boolean {
   const { screenSize } = useResponsive();
   const sizes: ScreenSize[] = ['mobile', 'tablet', 'desktop', 'large', 'tv'];
@@ -136,9 +122,6 @@ export function useIsAtLeast(size: ScreenSize): boolean {
   return currentIndex >= sizeIndex;
 }
 
-/**
- * Hook to check if screen size is at most a certain size
- */
 export function useIsAtMost(size: ScreenSize): boolean {
   const { screenSize } = useResponsive();
   const sizes: ScreenSize[] = ['mobile', 'tablet', 'desktop', 'large', 'tv'];
@@ -147,9 +130,6 @@ export function useIsAtMost(size: ScreenSize): boolean {
   return currentIndex <= sizeIndex;
 }
 
-/**
- * Hook to conditionally render based on screen size
- */
 export function useHideOnScreenSize(
   hideOn: ScreenSize | ScreenSize[]
 ): boolean {
@@ -158,9 +138,6 @@ export function useHideOnScreenSize(
   return hideOnArray.includes(screenSize);
 }
 
-/**
- * Hook to show only on specific screen sizes
- */
 export function useShowOnScreenSize(
   showOn: ScreenSize | ScreenSize[]
 ): boolean {
@@ -169,13 +146,12 @@ export function useShowOnScreenSize(
   return showOnArray.includes(screenSize);
 }
 
-/**
- * Hook for media query matching
- */
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const mediaQuery = window.matchMedia(query);
     setMatches(mediaQuery.matches);
 
@@ -183,16 +159,18 @@ export function useMediaQuery(query: string): boolean {
       setMatches(e.matches);
     };
 
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handler);
+      return () => mediaQuery.removeEventListener('change', handler);
+    }
+
+    mediaQuery.addListener(handler);
+    return () => mediaQuery.removeListener(handler);
   }, [query]);
 
   return matches;
 }
 
-/**
- * Hook for touch device detection
- */
 export function useTouchDevice(): boolean {
   const { isTouchDevice } = useResponsive();
   return isTouchDevice;
