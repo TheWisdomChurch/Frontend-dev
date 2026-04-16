@@ -1,4 +1,3 @@
-// src/components/ui/Homepage/Resource.tsx
 'use client';
 
 import React, { type ElementType, useEffect, useRef, useState } from 'react';
@@ -12,19 +11,34 @@ import type { YouTubeVideo } from '@/lib/types';
 import apiClient from '@/lib/api';
 
 type Subscriber = { name: string; email: string };
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
-const API_ORIGIN = API_BASE
-  ? API_BASE.replace(/\/+$/, '').replace(/\/api\/v1$/, '')
-  : '';
-const SERMONS_ENDPOINT = API_ORIGIN
-  ? `${API_ORIGIN}/api/v1/sermons?sort=newest`
-  : '/api/v1/sermons?sort=newest';
+
+const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
+const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
+
+function normalizeOrigin(raw?: string | null): string {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  if (!raw || !raw.trim()) {
+    return isProd ? DEFAULT_PROD_API_ORIGIN : DEFAULT_LOCAL_API_ORIGIN;
+  }
+
+  let base = raw.trim().replace(/\/+$/, '');
+  if (base.endsWith('/api/v1')) {
+    base = base.slice(0, -'/api/v1'.length);
+  }
+
+  return base;
+}
+
+const API_ORIGIN = normalizeOrigin(
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+);
+
+const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
 
 export default function ResourceSection() {
   const { colorScheme } = useTheme();
 
-  // ✅ avoid re-slicing on every render
   const highlight = resourceLinks.slice(0, 4);
 
   const [recentVideo, setRecentVideo] = useState<YouTubeVideo | null>(null);
@@ -40,7 +54,6 @@ export default function ResourceSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [shouldFetch, setShouldFetch] = useState(false);
 
-  // Fetch once when section enters viewport
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -58,13 +71,11 @@ export default function ResourceSection() {
     return () => observer.disconnect();
   }, []);
 
-  // Fallback: fetch after 1.5s even if observer doesn't fire
   useEffect(() => {
     const timer = setTimeout(() => setShouldFetch(true), 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  // Actual fetch
   useEffect(() => {
     if (!shouldFetch || fetchedOnce.current) return;
 
@@ -73,21 +84,26 @@ export default function ResourceSection() {
     const fetchRecent = async () => {
       setLoadingRecent(true);
       try {
-        // Your internal route that proxies / fetches YouTube
         const res = await fetch(SERMONS_ENDPOINT, {
-          cache: 'force-cache',
-          credentials: 'include',
+          method: 'GET',
+          cache: 'no-store',
+          credentials: 'omit',
+          headers: {
+            Accept: 'application/json',
+          },
         });
+
         if (!res.ok) return;
 
-        const data: YouTubeVideo[] = await res.json();
+        const payload = await res.json();
+        const data: YouTubeVideo[] = payload?.data ?? payload;
 
         if (mounted) {
           setRecentVideo(data?.[0] ?? null);
           fetchedOnce.current = true;
         }
       } catch {
-        // no-op (avoid console spam in prod)
+        // no-op
       } finally {
         if (mounted) setLoadingRecent(false);
       }
@@ -113,7 +129,7 @@ export default function ResourceSection() {
       await apiClient.subscribe({ name: name || undefined, email });
       setSubscriber({ name: '', email: '' });
     } catch {
-      // optional: show toast/modal
+      // optional toast
     } finally {
       setSubmitting(false);
     }
@@ -138,19 +154,18 @@ export default function ResourceSection() {
       style={{ background: '#070707' }}
     >
       <Container size="xl" className="relative z-10 space-y-12">
-        {/* HEADER */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-4">
             <Caption
-              className="uppercase tracking-[0.22em] text-[0.62rem]"
+              className="text-[0.62rem] uppercase tracking-[0.22em]"
               style={{ color: colorScheme.primary }}
             >
               Resources & Media
             </Caption>
-            <H3 className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
+            <H3 className="text-2xl font-semibold leading-tight text-white sm:text-3xl">
               Streams, sermons, events, and pastoral care
             </H3>
-            <BodySM className="text-white/70 max-w-3xl text-sm sm:text-base">
+            <BodySM className="max-w-3xl text-sm text-white/70 sm:text-base">
               Catch up on sermons, join a live service, register for events, or
               request pastoral moments.
             </BodySM>
@@ -158,17 +173,16 @@ export default function ResourceSection() {
 
           <Link
             href="/resources"
-            className="inline-flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-full border border-white/20 hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10"
           >
-            View all resources <ArrowRight className="w-4 h-4" />
+            View all resources <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8">
-          {/* LEFT: Latest video */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#111] p-6 sm:p-7 shadow-2xl space-y-5">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="relative space-y-5 overflow-hidden rounded-2xl border border-white/12 bg-[#111] p-6 shadow-2xl sm:p-7">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/0 to-white/10" />
-            <div className="relative flex items-center gap-3 text-white/80 text-sm">
+            <div className="relative flex items-center gap-3 text-sm text-white/80">
               <span
                 className="h-2 w-2 rounded-full"
                 style={{ background: colorScheme.primary }}
@@ -179,20 +193,19 @@ export default function ResourceSection() {
             <div className="relative flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <SmallText className="text-white/70">This week</SmallText>
-                <H3 className="text-lg sm:text-xl font-semibold text-white">
+                <H3 className="text-lg font-semibold text-white sm:text-xl">
                   Latest from YouTube
                 </H3>
-                <BodySM className="text-white/70 text-sm sm:text-base">
+                <BodySM className="text-sm text-white/70 sm:text-base">
                   Stream Sundays & Thursdays. Turn on reminders so you never
                   miss a moment.
                 </BodySM>
               </div>
 
-              {/* ✅ FIXED: only ONE ternary (no extra ":(") */}
               {!loadingRecent && recentVideo ? (
                 <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-3 sm:p-4">
-                  <div className="flex items-center gap-3 min-h-[88px] sm:min-h-[96px]">
-                    <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-white/10 shrink-0">
+                  <div className="flex min-h-[88px] items-center gap-3 sm:min-h-[96px]">
+                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10">
                       <img
                         src={recentVideoThumb}
                         alt={recentVideo.title}
@@ -200,13 +213,13 @@ export default function ResourceSection() {
                         loading="lazy"
                         decoding="async"
                       />
-                      <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
-                        <PlayCircle className="w-4 h-4 text-white" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/35">
+                        <PlayCircle className="h-4 w-4 text-white" />
                       </div>
                     </div>
 
-                    <div className="flex-1 min-w-0">
-                      <SmallText className="text-white line-clamp-2 text-[0.8rem] sm:text-sm">
+                    <div className="min-w-0 flex-1">
+                      <SmallText className="line-clamp-2 text-[0.8rem] text-white sm:text-sm">
                         {recentVideo.title}
                       </SmallText>
                       <Caption className="text-white/60">
@@ -221,9 +234,9 @@ export default function ResourceSection() {
                         href={recentVideoUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white text-black text-[0.7rem] sm:text-xs font-semibold hover:scale-[1.04] transition shadow-lg shrink-0"
+                        className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-3 py-2 text-[0.7rem] font-semibold text-black shadow-lg transition hover:scale-[1.04] sm:text-xs"
                       >
-                        <PlayCircle className="w-4 h-4" /> Play
+                        <PlayCircle className="h-4 w-4" /> Play
                       </Link>
                     ) : null}
                   </div>
@@ -235,7 +248,7 @@ export default function ResourceSection() {
                   </BodySM>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-white/10 bg-black/40 p-4 text-white/70 text-sm min-h-[88px] sm:min-h-[96px] flex items-center">
+                <div className="flex min-h-[88px] items-center rounded-2xl border border-white/10 bg-black/40 p-4 text-sm text-white/70 sm:min-h-[96px]">
                   Latest message coming soon.
                 </div>
               )}
@@ -243,33 +256,32 @@ export default function ResourceSection() {
               <div className="flex flex-wrap gap-2">
                 <Link
                   href="/resources/sermons"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 text-white text-[0.78rem] sm:text-sm hover:bg-white/10"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-[0.78rem] text-white hover:bg-white/10 sm:text-sm"
                 >
-                  <PlayCircle className="w-4 h-4" /> Watch now
+                  <PlayCircle className="h-4 w-4" /> Watch now
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-white/70 text-sm">
-                <div className="rounded-2xl bg-black/40 border border-white/10 p-3">
-                  <div className="text-white font-semibold">Sundays</div>
+              <div className="grid grid-cols-1 gap-3 text-sm text-white/70 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+                  <div className="font-semibold text-white">Sundays</div>
                   <div>9:00 AM (WAT)</div>
                 </div>
-                <div className="rounded-2xl bg-black/40 border border-white/10 p-3">
-                  <div className="text-white font-semibold">Midweek</div>
+                <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+                  <div className="font-semibold text-white">Midweek</div>
                   <div>Thu • 6:00 PM</div>
                 </div>
-                <div className="rounded-2xl bg-black/40 border border-white/10 p-3">
-                  <div className="text-white font-semibold">Replays</div>
+                <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+                  <div className="font-semibold text-white">Replays</div>
                   <div>YouTube + Mixlr archive</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* RIGHT: Subscribe */}
-          <div className="rounded-3xl border border-white/12 bg-[#111] p-5 shadow-2xl space-y-4">
-            <div className="flex items-center gap-2 text-white/70 text-sm mb-3">
-              <Radio className="w-4 h-4" />
+          <div className="space-y-4 rounded-3xl border border-white/12 bg-[#111] p-5 shadow-2xl">
+            <div className="mb-3 flex items-center gap-2 text-sm text-white/70">
+              <Radio className="h-4 w-4" />
               Live notification
             </div>
 
@@ -281,7 +293,7 @@ export default function ResourceSection() {
                 onChange={e =>
                   setSubscriber(prev => ({ ...prev, name: e.target.value }))
                 }
-                className="w-full rounded-xl bg-black/60 border border-white/15 text-white px-3 py-2 text-[0.8rem] outline-none focus:border-primary"
+                className="w-full rounded-xl border border-white/15 bg-black/60 px-3 py-2 text-[0.8rem] text-white outline-none focus:border-primary"
               />
               <input
                 type="email"
@@ -291,15 +303,15 @@ export default function ResourceSection() {
                 onChange={e =>
                   setSubscriber(prev => ({ ...prev, email: e.target.value }))
                 }
-                className="w-full rounded-xl bg-black/40 border border-white/15 text-white px-3 py-2 text-[0.8rem] outline-none focus:border-primary"
+                className="w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-[0.8rem] text-white outline-none focus:border-primary"
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-black font-semibold text-[0.8rem] hover:scale-[1.02] transition disabled:opacity-60"
+                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-[0.8rem] font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
               >
-                {submitting ? 'Sending...' : 'Notify me when live'}{' '}
-                <ArrowRight className="w-4 h-4" />
+                {submitting ? 'Sending...' : 'Notify me when live'}
+                <ArrowRight className="h-4 w-4" />
               </button>
               <Caption className="text-white/60">
                 We only send service reminders and key events.
@@ -308,8 +320,7 @@ export default function ResourceSection() {
           </div>
         </div>
 
-        {/* CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {highlight.map(card => {
             const Icon = (card.icon as ElementType) || ArrowRight;
 
@@ -317,14 +328,14 @@ export default function ResourceSection() {
               <Link
                 key={card.title}
                 href={card.path}
-                className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 shadow-xl group"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-5 shadow-xl backdrop-blur-xl"
               >
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   style={{ background: card.gradient || 'transparent' }}
                 />
                 <div className="relative z-10 space-y-2">
-                  <div className="flex items-center gap-2 text-white/70 text-xs uppercase tracking-[0.12em]">
+                  <div className="flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-white/70">
                     <span
                       className="h-2 w-2 rounded-full"
                       style={{ background: card.glow || colorScheme.primary }}
@@ -333,24 +344,24 @@ export default function ResourceSection() {
                   </div>
 
                   <div className="flex items-center gap-2 text-white">
-                    <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/15">
-                      <Icon className="w-5 h-5" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10">
+                      <Icon className="h-5 w-5" />
                     </div>
                     <SmallText
                       weight="bold"
-                      className="text-white text-[0.95rem] sm:text-lg"
+                      className="text-[0.95rem] text-white sm:text-lg"
                     >
                       {card.title}
                     </SmallText>
                   </div>
 
-                  <BodySM className="text-white/70 leading-relaxed text-[0.82rem] sm:text-sm">
+                  <BodySM className="text-[0.82rem] leading-relaxed text-white/70 sm:text-sm">
                     {card.description}
                   </BodySM>
 
-                  <div className="inline-flex items-center gap-2 text-[0.78rem] sm:text-sm font-semibold text-white">
-                    {card.actionText || 'Open'}{' '}
-                    <ArrowRight className="w-4 h-4" />
+                  <div className="inline-flex items-center gap-2 text-[0.78rem] font-semibold text-white sm:text-sm">
+                    {card.actionText || 'Open'}
+                    <ArrowRight className="h-4 w-4" />
                   </div>
                 </div>
               </Link>
