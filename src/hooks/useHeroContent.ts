@@ -1,4 +1,3 @@
-// Hook to fetch hero and featured content from backend
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
@@ -44,7 +43,7 @@ const DEFAULT_FALLBACK_SLIDES: HeroSlide[] = [
       ctaLabel: 'Get Started',
       ctaTarget: '#join',
     },
-    type: 'highlight' as const,
+    type: 'highlight',
   },
 ];
 
@@ -52,51 +51,41 @@ export const useHeroContent = () => {
   const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_FALLBACK_SLIDES);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
   const retryCountRef = useRef(0);
+  const timeoutRef = useRef<number | null>(null);
+  const mountedRef = useRef(true);
+
   const MAX_RETRIES = 2;
 
   const fetchHeroData = useCallback(async () => {
-    // Cancel previous request if still pending
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    abortControllerRef.current = new AbortController();
-
     try {
       setLoading(true);
       setError(null);
 
-      // Create a timeout promise
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(
-          () =>
-            reject(
-              new Error('Request timeout: Hero content fetch took too long')
-            ),
-          20000 // 20 second timeout
-        )
-      );
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutRef.current = window.setTimeout(() => {
+          reject(
+            new Error('Request timeout: Hero content fetch took too long')
+          );
+        }, 20000);
+      });
 
-      // Fetch events and reels in parallel with timeout
-      const [events, reels] = (await Promise.race([
+      const [events, reels] = await Promise.race([
         Promise.all([
           apiClient.listEvents().catch(err => {
             console.warn('Failed to fetch events:', err);
-            return [];
+            return [] as EventPublic[];
           }),
-          apiClient
-            .listReels?.()
-            .catch(() => [])
-            .then(data => data || []) || Promise.resolve([]),
+          apiClient.listReels?.().catch(() => [] as ReelPublic[]) ??
+            Promise.resolve([] as ReelPublic[]),
         ]),
         timeoutPromise,
-      ])) as [EventPublic[], ReelPublic[]];
+      ]);
+
+      if (!mountedRef.current) return;
 
       const heroSlides: HeroSlide[] = [];
 
-      // Add upcoming events as slides
       if (events && events.length > 0) {
         const upcomingEvents = events
           .filter(
@@ -151,7 +140,6 @@ export const useHeroContent = () => {
         heroSlides.push(...upcomingEvents);
       }
 
-      // Add recent reels
       if (reels && reels.length > 0) {
         const reelSlides = reels.slice(0, 2).map((reel: ReelPublic) => ({
           id: reel.id,
@@ -180,50 +168,60 @@ export const useHeroContent = () => {
         heroSlides.push(...reelSlides);
       }
 
-      // Use fallback if no backend data
-      if (heroSlides.length === 0) {
-        setSlides(DEFAULT_FALLBACK_SLIDES);
-      } else {
-        setSlides(heroSlides);
-      }
-
+      setSlides(heroSlides.length > 0 ? heroSlides : DEFAULT_FALLBACK_SLIDES);
       retryCountRef.current = 0;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to load hero content';
+
       if (process.env.NODE_ENV !== 'production') {
         console.error('Error fetching hero content:', errorMessage, err);
       }
+
+      if (!mountedRef.current) return;
 
       if (/timeout/i.test(errorMessage)) {
         setError(null);
       } else {
         setError(errorMessage);
       }
+
       setSlides(DEFAULT_FALLBACK_SLIDES);
 
-      // Auto-retry once on network/timeout errors
       if (
         retryCountRef.current < MAX_RETRIES &&
-        /timeout|network|fetch/.test(errorMessage)
+        /timeout|network|fetch/i.test(errorMessage)
       ) {
-        retryCountRef.current++;
-        setTimeout(() => {
-          fetchHeroData();
+        retryCountRef.current += 1;
+
+        window.setTimeout(() => {
+          if (mountedRef.current) {
+            void fetchHeroData();
+          }
         }, 2000);
       }
     } finally {
-      setLoading(false);
+      if (timeoutRef.current) {
+        window.clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+
+      if (mountedRef.current) {
+        setLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    fetchHeroData();
+    mountedRef.current = true;
+    void fetchHeroData();
 
-    // Cleanup on unmount
     return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+      mountedRef.current = false;
+
+      if (timeoutRef.current) {
+        window.clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
     };
   }, [fetchHeroData]);
