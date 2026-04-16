@@ -8,7 +8,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';
@@ -763,6 +763,9 @@ const ScrollIndicators = ({
 export default HeroSection;
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
-const SERMONS_ENDPOINT = API_BASE
-  ? `${API_BASE.replace(/\/+$/, '')}/api/v1/sermons?sort=newest`
+const API_ORIGIN = API_BASE
+  ? API_BASE.replace(/\/+$/, '').replace(/\/api\/v1$/, '')
+  : '';
+const SERMONS_ENDPOINT = API_ORIGIN
+  ? `${API_ORIGIN}/api/v1/sermons?sort=newest`
   : '/api/v1/sermons?sort=newest';

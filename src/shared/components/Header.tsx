@@ -12,7 +12,7 @@ const navLinks = [
   { href: '/about', label: 'About' },
   { href: '/events', label: 'Events' },
   { href: '/resources/sermons', label: 'Sermons' },
-  { href: '/give', label: 'Give' },
+  { href: '/#give', label: 'Give' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -22,7 +22,9 @@ export default function Header() {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const isTransparent = isHomePage && !scrolled && !menuOpen;
-  const smoothEase = { transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' } as const;
+  const smoothEase = {
+    transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
+  } as const;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
