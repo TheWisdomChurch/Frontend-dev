@@ -28,12 +28,19 @@ interface WelcomeModalProps {
   };
 }
 
+const FALLBACK_PRIMARY = '#F7DE12';
+const FALLBACK_PRIMARY_DARK = '#C7A600';
+
 export default function ConfessionPopup({
   onClose,
   delay = 2400,
   content,
 }: WelcomeModalProps) {
-  const { colorScheme } = useTheme();
+  const theme = useTheme();
+  const colorScheme = theme?.colorScheme;
+  const primary = colorScheme?.primary || FALLBACK_PRIMARY;
+  const primaryDark = colorScheme?.primaryDark || FALLBACK_PRIMARY_DARK;
+
   const {
     isVisible,
     currentStep,
@@ -52,7 +59,7 @@ export default function ConfessionPopup({
   const motto =
     content?.motto ||
     'We begin to prosper, we continue to prosper, until we become very prosperous.';
-  const confessionText = content?.confessionText || confessionContent;
+  const fullConfessionText = content?.confessionText || confessionContent;
 
   return (
     <BaseModal
@@ -103,12 +110,9 @@ export default function ConfessionPopup({
               >
                 <div
                   className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full"
-                  style={{ background: `${colorScheme.primary}24` }}
+                  style={{ background: `${primary}24` }}
                 >
-                  <item.icon
-                    className="h-4 w-4"
-                    style={{ color: colorScheme.primary }}
-                  />
+                  <item.icon className="h-4 w-4" style={{ color: primary }} />
                 </div>
                 <Caption className="text-white/80">{item.label}</Caption>
               </div>
@@ -124,13 +128,14 @@ export default function ConfessionPopup({
               leftIcon={<BookOpen className="h-4 w-4" />}
               className="h-11 w-full text-sm font-medium"
               style={{
-                borderColor: `${colorScheme.primary}66`,
+                borderColor: `${primary}66`,
                 color: '#FFFFFF',
-                backgroundColor: `${colorScheme.primary}08`,
+                backgroundColor: `${primary}08`,
               }}
             >
               Read Confession
             </CustomButton>
+
             <CustomButton
               variant="primary"
               size="sm"
@@ -138,7 +143,7 @@ export default function ConfessionPopup({
               onClick={handleClose}
               className="h-11 w-full text-sm font-medium"
               style={{
-                background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                background: `linear-gradient(135deg, ${primary}, ${primaryDark})`,
                 color: '#FFFFFF',
               }}
             >
@@ -160,7 +165,7 @@ export default function ConfessionPopup({
           </div>
 
           <div className="max-h-[44vh] space-y-3 overflow-y-auto rounded-2xl border border-white/15 bg-white/[0.06] p-4">
-            {confessionText
+            {fullConfessionText
               .split('\n\n')
               .map(paragraph => paragraph.trim())
               .filter(Boolean)
@@ -183,13 +188,14 @@ export default function ConfessionPopup({
               leftIcon={<ArrowLeft className="h-4 w-4" />}
               className="h-11 w-full text-sm font-medium"
               style={{
-                borderColor: `${colorScheme.primary}66`,
+                borderColor: `${primary}66`,
                 color: '#FFFFFF',
-                backgroundColor: `${colorScheme.primary}08`,
+                backgroundColor: `${primary}08`,
               }}
             >
               Back
             </CustomButton>
+
             <CustomButton
               variant="primary"
               size="sm"
@@ -197,7 +203,7 @@ export default function ConfessionPopup({
               onClick={handleClose}
               className="h-11 w-full text-sm font-medium"
               style={{
-                background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                background: `linear-gradient(135deg, ${primary}, ${primaryDark})`,
                 color: '#FFFFFF',
               }}
             >

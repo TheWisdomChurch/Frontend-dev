@@ -98,7 +98,8 @@ const fallbackEventAd: HomeEventAd = {
 };
 
 export default function Home() {
-  const { colorScheme } = useTheme();
+  const theme = useTheme();
+  const colorScheme = theme?.colorScheme;
 
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
@@ -106,10 +107,6 @@ export default function Home() {
   const [eventAd, setEventAd] = useState<HomeEventAd>(fallbackEventAd);
   const [confessionContent, setConfessionContent] =
     useState<HomeConfessionContent | null>(null);
-
-  const autoOpenDelayMs = 1200;
-  const closeCooldownMs = 1000 * 60 * 20;
-  const remindCooldownMs = 1000 * 60 * 45;
 
   useEffect(() => {
     let mounted = true;
@@ -123,14 +120,14 @@ export default function Home() {
 
         if (!mounted) return;
 
-        if (adPayload) {
+        if (adPayload && typeof adPayload === 'object') {
           setEventAd(prev => ({
             ...prev,
             ...(adPayload as Partial<HomeEventAd>),
           }));
         }
 
-        if (confessionPayload) {
+        if (confessionPayload && typeof confessionPayload === 'object') {
           setConfessionContent({
             welcomeTitle:
               String(confessionPayload.welcomeTitle || '').trim() ||
@@ -145,8 +142,8 @@ export default function Home() {
               'We begin to prosper, we continue to prosper, until we become very prosperous.',
           });
         }
-      } catch {
-        // keep fallback content
+      } catch (error) {
+        console.warn('Failed to load homepage content:', error);
       }
     };
 
@@ -166,8 +163,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const autoOpenDelayMs = 1200;
     setNextAdAt(Date.now() + autoOpenDelayMs);
-  }, [autoOpenDelayMs]);
+  }, []);
 
   useEffect(() => {
     if (nextAdAt === null) return;
@@ -191,11 +189,13 @@ export default function Home() {
   };
 
   const handleCloseModal = () => {
+    const closeCooldownMs = 1000 * 60 * 20;
     persistAdCooldown(closeCooldownMs);
     setShowModal(false);
   };
 
   const handleRemindLater = () => {
+    const remindCooldownMs = 1000 * 60 * 45;
     persistAdCooldown(remindCooldownMs);
     setShowModal(false);
   };
@@ -205,7 +205,13 @@ export default function Home() {
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-80"
         style={{
-          background: `radial-gradient(circle at 20% 20%, ${colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.2)'} 0%, transparent 45%), radial-gradient(circle at 80% 10%, ${colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'} 0%, transparent 40%), radial-gradient(circle at 50% 90%, ${colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'} 0%, transparent 40%)`,
+          background: `radial-gradient(circle at 20% 20%, ${
+            colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.2)'
+          } 0%, transparent 45%), radial-gradient(circle at 80% 10%, ${
+            colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'
+          } 0%, transparent 40%), radial-gradient(circle at 50% 90%, ${
+            colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'
+          } 0%, transparent 40%)`,
           filter: 'blur(60px)',
         }}
         data-parallax-global="0.2"

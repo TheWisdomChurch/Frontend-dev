@@ -5,10 +5,11 @@ import {
   useEffect,
   createContext,
   useContext,
-  ReactNode,
+  type ReactNode,
   useCallback,
   useRef,
   useState,
+  useMemo,
 } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
@@ -23,9 +24,6 @@ import {
 } from '../analytics/providers/Meta';
 import { getGA4Provider, type GA4Config } from '../analytics/providers/ga';
 
-// ----------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------
 export interface AnalyticsProviderProps {
   children: ReactNode;
   metaPixelId?: string;
@@ -38,16 +36,13 @@ export interface AnalyticsProviderProps {
 }
 
 export interface AnalyticsContextValue {
-  trackEvent: (name: string, params?: Record<string, any>) => void;
+  trackEvent: (name: string, params?: Record<string, unknown>) => void;
   identify: (user: UserIdentity) => void;
   setConsent: (consent: Partial<ConsentSettings>) => void;
   getConsent: () => ConsentSettings;
   isReady: boolean;
 }
 
-// ----------------------------------------------------------------------
-// Context
-// ----------------------------------------------------------------------
 const AnalyticsContext = createContext<AnalyticsContextValue | null>(null);
 
 function AnalyticsPageTracker({
@@ -64,32 +59,34 @@ function AnalyticsPageTracker({
 
   useEffect(() => {
     if (!isReady) return;
+    if (typeof window === 'undefined' || typeof document === 'undefined')
+      return;
 
     const currentPath =
       pathname +
       (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-    if (previousPageRef.current === currentPath) return;
 
+    if (previousPageRef.current === currentPath) return;
     previousPageRef.current = currentPath;
 
-    const timeout = setTimeout(() => {
+    const timeout = window.setTimeout(() => {
       analyticsCore.trackPageView({
         page_title: document.title,
         page_location: window.location.href,
         page_referrer: document.referrer,
       });
-      if (debug) console.log('[AnalyticsProvider] Page view:', currentPath);
+
+      if (debug) {
+        console.log('[AnalyticsProvider] Page view:', currentPath);
+      }
     }, 100);
 
-    return () => clearTimeout(timeout);
+    return () => window.clearTimeout(timeout);
   }, [pathname, searchParams, isReady, debug, previousPageRef]);
 
   return null;
 }
 
-// ----------------------------------------------------------------------
-// Provider Component
-// ----------------------------------------------------------------------
 export function AnalyticsProvider({
   children,
   metaPixelId,
@@ -104,28 +101,29 @@ export function AnalyticsProvider({
   const [isReady, setIsReady] = useState(false);
   const previousPageRef = useRef<string>('');
 
-  // --------------------------------------------------------------------
-  // 1. Initialize providers and consent
-  // --------------------------------------------------------------------
   useEffect(() => {
     let mounted = true;
 
     const initialize = async () => {
       if (debug) console.log('[AnalyticsProvider] Initializing...');
 
-      if (coreConfig) {
-        if (debug) console.log('[AnalyticsProvider] Core config:', coreConfig);
+      if (coreConfig && debug) {
+        console.log('[AnalyticsProvider] Core config:', coreConfig);
       }
 
       const currentConsent = analyticsCore.getConsent();
-      const hasConsentCookie = document.cookie.includes('_ana_consent');
+      const hasConsentCookie =
+        typeof document !== 'undefined' &&
+        document.cookie.includes('_ana_consent');
+
       if (!hasConsentCookie && defaultConsent) {
         analyticsCore.setConsent(defaultConsent);
-        if (debug)
+        if (debug) {
           console.log(
             '[AnalyticsProvider] Applied default consent:',
             defaultConsent
           );
+        }
       } else if (debug) {
         console.log(
           '[AnalyticsProvider] Loaded existing consent:',
@@ -133,51 +131,60 @@ export function AnalyticsProvider({
         );
       }
 
-      // Register Meta Pixel provider
       if (metaPixelId) {
         const metaProvider = getMetaPixelProvider(metaPixelId, {
           debug,
           ...metaConfig,
         });
+
         analyticsCore.registerProvider('meta', {
           pageView: metaProvider.pageView,
           trackEvent: metaProvider.trackEvent,
           identify: metaProvider.identify,
           updateConsent: metaProvider.updateConsent,
         });
+
         metaProvider.updateConsent({ marketing: currentConsent.marketing });
+
         if (debug) console.log('[AnalyticsProvider] Meta Pixel registered');
       }
 
-      // Register GA4 provider
       if (gaMeasurementId) {
         const gaProvider = getGA4Provider(gaMeasurementId, {
           debugMode: debug,
           ...gaConfig,
         });
+
         analyticsCore.registerProvider('ga', {
           pageView: gaProvider.pageView,
           trackEvent: gaProvider.trackEvent,
           identify: gaProvider.identify,
           updateConsent: gaProvider.updateConsent,
         });
+
         gaProvider.updateConsent({
           analytics: currentConsent.analytics,
           marketing: currentConsent.marketing,
         });
+
         if (debug) console.log('[AnalyticsProvider] GA4 registered');
       }
 
       if (mounted) {
         isReadyRef.current = true;
         setIsReady(true);
+
         if (debug) console.log('[AnalyticsProvider] Ready');
       }
     };
 
     initialize().catch(err => {
       console.error('[AnalyticsProvider] Initialization error:', err);
-      if (mounted) setIsReady(true);
+
+      if (mounted) {
+        isReadyRef.current = true;
+        setIsReady(true);
+      }
     });
 
     return () => {
@@ -193,16 +200,15 @@ export function AnalyticsProvider({
     defaultConsent,
   ]);
 
-  // --------------------------------------------------------------------
-  // 2. Public API methods
-  // --------------------------------------------------------------------
   const trackEvent = useCallback(
-    (name: string, params?: Record<string, any>) => {
+    (name: string, params?: Record<string, unknown>) => {
       if (!isReadyRef.current) {
-        if (debug)
+        if (debug) {
           console.warn('[AnalyticsProvider] Not ready, event dropped:', name);
+        }
         return;
       }
+
       analyticsCore.trackEvent({ name, params });
     },
     [debug]
@@ -211,10 +217,12 @@ export function AnalyticsProvider({
   const identify = useCallback(
     (user: UserIdentity) => {
       if (!isReadyRef.current) {
-        if (debug)
+        if (debug) {
           console.warn('[AnalyticsProvider] Not ready, identify dropped');
+        }
         return;
       }
+
       analyticsCore.identify(user);
     },
     [debug]
@@ -223,23 +231,25 @@ export function AnalyticsProvider({
   const setConsent = useCallback(
     (consent: Partial<ConsentSettings>) => {
       analyticsCore.setConsent(consent);
-      if (debug) console.log('[AnalyticsProvider] Consent updated:', consent);
+      if (debug) {
+        console.log('[AnalyticsProvider] Consent updated:', consent);
+      }
     },
     [debug]
   );
 
   const getConsent = useCallback(() => analyticsCore.getConsent(), []);
 
-  // --------------------------------------------------------------------
-  // 3. Context value
-  // --------------------------------------------------------------------
-  const contextValue: AnalyticsContextValue = {
-    trackEvent,
-    identify,
-    setConsent,
-    getConsent,
-    isReady,
-  };
+  const contextValue = useMemo<AnalyticsContextValue>(
+    () => ({
+      trackEvent,
+      identify,
+      setConsent,
+      getConsent,
+      isReady,
+    }),
+    [trackEvent, identify, setConsent, getConsent, isReady]
+  );
 
   return (
     <AnalyticsContext.Provider value={contextValue}>
@@ -255,13 +265,12 @@ export function AnalyticsProvider({
   );
 }
 
-// ----------------------------------------------------------------------
-// Hook with safety check
-// ----------------------------------------------------------------------
 export function useAnalytics(): AnalyticsContextValue {
   const ctx = useContext(AnalyticsContext);
+
   if (!ctx) {
     throw new Error('useAnalytics must be used within an AnalyticsProvider');
   }
+
   return ctx;
 }

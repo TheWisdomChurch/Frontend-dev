@@ -21,9 +21,11 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const pathname = usePathname();
+
   const isHomePage = pathname === '/';
   const isTransparent =
     isHomePage && !scrolled && !menuOpen && !isMobileViewport;
+
   const smoothEase = {
     transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
   } as const;
@@ -31,15 +33,19 @@ export default function Header() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
+
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    const updateViewportMode = () =>
+    const updateViewportMode = () => {
       setIsMobileViewport(window.innerWidth < 1024);
+    };
+
     updateViewportMode();
     window.addEventListener('resize', updateViewportMode, { passive: true });
+
     return () => window.removeEventListener('resize', updateViewportMode);
   }, []);
 
@@ -57,12 +63,15 @@ export default function Header() {
     const scrollY = window.scrollY || 0;
     const html = document.documentElement;
     const body = document.body;
+
     const previousHtmlOverflow = html.style.overflow;
     const previousHtmlTouchAction = html.style.touchAction;
     const previousHtmlOverscroll = html.style.overscrollBehavior;
     const previousBodyOverscroll = body.style.overscrollBehavior;
     const previousBodyPaddingRight = body.style.paddingRight;
+
     const scrollbarWidth = window.innerWidth - html.clientWidth;
+
     body.dataset.scrollLockY = String(scrollY);
     body.dataset.menuOpen = 'true';
     body.classList.add('menu-open');
@@ -76,6 +85,7 @@ export default function Header() {
     body.style.overflow = 'hidden';
     body.style.overscrollBehavior = 'none';
     body.style.paddingRight = scrollbarWidth > 0 ? `${scrollbarWidth}px` : '';
+
     html.style.overflow = 'hidden';
     html.style.touchAction = 'none';
     html.style.overscrollBehavior = 'none';
@@ -98,9 +108,11 @@ export default function Header() {
 
     return () => {
       const restoreY = Number(body.dataset.scrollLockY || scrollY);
+
       body.classList.remove('menu-open');
       body.dataset.menuOpen = 'false';
       html.classList.remove('menu-open');
+
       body.style.position = '';
       body.style.top = '';
       body.style.left = '';
@@ -109,11 +121,14 @@ export default function Header() {
       body.style.overflow = '';
       body.style.overscrollBehavior = previousBodyOverscroll;
       body.style.paddingRight = previousBodyPaddingRight;
+
       html.style.overflow = previousHtmlOverflow;
       html.style.touchAction = previousHtmlTouchAction;
       html.style.overscrollBehavior = previousHtmlOverscroll;
+
       window.removeEventListener('touchmove', preventBackgroundScroll);
       window.removeEventListener('wheel', preventBackgroundScroll);
+
       body.dataset.scrollLockY = '';
       window.scrollTo(0, restoreY);
     };

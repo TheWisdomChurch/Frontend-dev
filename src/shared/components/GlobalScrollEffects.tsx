@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MathUtils } from 'three';
 
 if (
   typeof window !== 'undefined' &&
@@ -16,6 +15,9 @@ if (
 const EXPLICIT_REVEAL_SELECTOR =
   '[data-gsap="reveal"], [data-scroll-fade], [data-reveal]';
 
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
 const isEligibleTarget = (node: Element): node is HTMLElement => {
   if (!(node instanceof HTMLElement)) return false;
   if (node.dataset.scrollIgnore === 'true') return false;
@@ -24,6 +26,7 @@ const isEligibleTarget = (node: Element): node is HTMLElement => {
   const style = window.getComputedStyle(node);
   if (style.display === 'none' || style.visibility === 'hidden') return false;
   if (node.offsetHeight < 24) return false;
+
   return true;
 };
 
@@ -42,6 +45,7 @@ const collectRevealTargets = (root: HTMLElement): HTMLElement[] => {
     const directChildren = Array.from(section.children).filter(
       isEligibleTarget
     );
+
     if (directChildren.length > 0) {
       directChildren.forEach(child => unique.add(child));
       return;
@@ -57,9 +61,11 @@ export default function GlobalScrollEffects() {
   const pathname = usePathname();
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     let ctx: gsap.Context | null = null;
-    let refreshId = 0;
-    let runTimer = 0;
+    let refreshId: number | null = null;
+    let runTimer: ReturnType<typeof setTimeout> | null = null;
     let cancelled = false;
 
     const runEffects = () => {
@@ -77,6 +83,7 @@ export default function GlobalScrollEffects() {
       const isTablet = window.matchMedia(
         '(min-width: 768px) and (max-width: 1024px)'
       ).matches;
+
       const revealDistance = isMobile ? 16 : isTablet ? 22 : 28;
       const revealDuration = isMobile ? 0.58 : 0.85;
       const revealStagger = isMobile ? 0.045 : 0.08;
@@ -98,7 +105,7 @@ export default function GlobalScrollEffects() {
           ScrollTrigger.batch(revealTargets, {
             start: 'top 88%',
             once: true,
-            onEnter: (batch: any) => {
+            onEnter: (batch: Element[]) => {
               gsap.to(batch, {
                 autoAlpha: 1,
                 y: 0,
@@ -117,7 +124,7 @@ export default function GlobalScrollEffects() {
         if (!reduceMotion && parallaxTargets.length > 0) {
           parallaxTargets.forEach(node => {
             const rawDepth = Number(node.dataset.parallaxGlobal ?? 0.14);
-            const depth = MathUtils.clamp(rawDepth * parallaxScale, 0.02, 0.32);
+            const depth = clamp(rawDepth * parallaxScale, 0.02, 0.32);
 
             gsap.to(node, {
               yPercent: depth * 30,
@@ -139,8 +146,7 @@ export default function GlobalScrollEffects() {
     };
 
     const scheduleRun = () => {
-      // Defer until after load to avoid mutating DOM while lazy chunks hydrate.
-      runTimer = window.setTimeout(runEffects, 80);
+      runTimer = setTimeout(runEffects, 80);
     };
 
     if (document.readyState === 'complete') {
@@ -152,9 +158,14 @@ export default function GlobalScrollEffects() {
     return () => {
       cancelled = true;
       window.removeEventListener('load', scheduleRun);
-      if (runTimer) window.clearTimeout(runTimer);
+
+      if (runTimer) clearTimeout(runTimer);
       if (refreshId) cancelAnimationFrame(refreshId);
+
       ctx?.revert();
+      ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) =>
+        trigger.kill()
+      );
     };
   }, [pathname]);
 

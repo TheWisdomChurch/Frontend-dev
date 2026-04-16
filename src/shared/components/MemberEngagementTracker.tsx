@@ -8,7 +8,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import {
   useChurchAnalytics,
@@ -40,9 +40,9 @@ export default function MemberEngagementTracker({
   const { calculateEngagementScore } = useChurchAnalytics();
 
   useEffect(() => {
-    // Simulate loading member data
+    let active = true;
+
     const loadMember = async () => {
-      // In production, fetch from API
       const mockMember: MemberProfile = {
         id: memberId || 'member_001',
         name: 'John Doe',
@@ -64,7 +64,6 @@ export default function MemberEngagementTracker({
 
       mockMember.engagementScore = calculateEngagementScore(mockMember.metrics);
 
-      // Determine engagement level
       if (mockMember.engagementScore >= 100) {
         mockMember.engagementLevel = 'very_high';
       } else if (mockMember.engagementScore >= 50) {
@@ -75,17 +74,19 @@ export default function MemberEngagementTracker({
         mockMember.engagementLevel = 'low';
       }
 
+      if (!active) return;
+
       setMember(mockMember);
       onMemberUpdate?.(mockMember);
       setIsLoading(false);
     };
 
     loadMember();
-  }, [memberId, calculateEngagementScore, onMemberUpdate]);
 
-  // ====================================================================
-  // COMPONENT
-  // ====================================================================
+    return () => {
+      active = false;
+    };
+  }, [memberId, calculateEngagementScore, onMemberUpdate]);
 
   if (isLoading) {
     return (
@@ -103,7 +104,7 @@ export default function MemberEngagementTracker({
     );
   }
 
-  const engagementColors: Record<string, string> = {
+  const engagementColors: Record<MemberProfile['engagementLevel'], string> = {
     low: '#FF6B6B',
     medium: '#FFA500',
     high: '#4CAF50',
@@ -112,7 +113,6 @@ export default function MemberEngagementTracker({
 
   return (
     <div style={{ padding: '24px', maxWidth: '600px' }}>
-      {/* Header */}
       <div style={{ marginBottom: '32px' }}>
         <div
           style={{
@@ -150,6 +150,7 @@ export default function MemberEngagementTracker({
               {member.name.charAt(0)}
             </div>
           )}
+
           <div>
             <h2 style={{ margin: 0, color: 'var(--text)', fontSize: '20px' }}>
               {member.name}
@@ -166,7 +167,6 @@ export default function MemberEngagementTracker({
           </div>
         </div>
 
-        {/* Engagement Score */}
         <div
           style={{
             background: 'rgba(201,168,76,0.1)',
@@ -205,6 +205,7 @@ export default function MemberEngagementTracker({
                 {member.engagementScore}
               </p>
             </div>
+
             <div style={{ textAlign: 'right' }}>
               <p
                 style={{
@@ -233,7 +234,6 @@ export default function MemberEngagementTracker({
         </div>
       </div>
 
-      {/* Engagement Metrics */}
       <div>
         <h3
           style={{
@@ -266,7 +266,6 @@ export default function MemberEngagementTracker({
         </div>
       </div>
 
-      {/* Member Since */}
       <div
         style={{
           marginTop: '24px',
@@ -288,10 +287,6 @@ export default function MemberEngagementTracker({
   );
 }
 
-// ====================================================================
-// METRIC CARD COMPONENT
-// ====================================================================
-
 interface MetricCardProps {
   label: string;
   value: number;
@@ -299,9 +294,9 @@ interface MetricCardProps {
 }
 
 function MetricCard({ label, value, icon }: MetricCardProps) {
-  const cardRef = React.useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!cardRef.current) return;
 
     gsap.from(cardRef.current, {
@@ -364,10 +359,6 @@ function MetricCard({ label, value, icon }: MetricCardProps) {
   );
 }
 
-// ====================================================================
-// HELPER FUNCTIONS
-// ====================================================================
-
 function getMetricIcon(key: string): string {
   const icons: Record<string, string> = {
     pageViews: '👁️',
@@ -379,5 +370,6 @@ function getMetricIcon(key: string): string {
     testimoniesShared: '💬',
     memberInteractions: '👤',
   };
+
   return icons[key] || '📊';
 }
