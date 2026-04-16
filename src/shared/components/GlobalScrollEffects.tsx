@@ -98,7 +98,7 @@ export default function GlobalScrollEffects() {
           ScrollTrigger.batch(revealTargets, {
             start: 'top 88%',
             once: true,
-            onEnter: batch => {
+            onEnter: (batch: any) => {
               gsap.to(batch, {
                 autoAlpha: 1,
                 y: 0,

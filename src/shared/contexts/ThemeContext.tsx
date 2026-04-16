@@ -1,5 +1,4 @@
-﻿// contexts/ThemeContext.tsx
-'use client';
+﻿'use client';
 
 import React, {
   createContext,
@@ -8,6 +7,7 @@ import React, {
   useEffect,
   useRef,
   useMemo,
+  useCallback,
 } from 'react';
 import { ColorScheme, darkShades, lightShades } from '../colors/colorScheme';
 
@@ -25,7 +25,6 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Safe default values for build time
 const defaultTheme: ThemeContextType = {
   theme: 'system',
   resolvedTheme: 'light',
@@ -48,16 +47,19 @@ const resolveTheme = (
 
 const readCookie = (name: string): string | null => {
   if (typeof document === 'undefined') return null;
+
   const match = document.cookie.match(
     new RegExp(
       `(?:^|; )${name.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
     )
   );
+
   return match ? decodeURIComponent(match[1]) : null;
 };
 
 const writeCookie = (name: string, value: string, days = 365): void => {
   if (typeof document === 'undefined') return;
+
   const maxAge = days * 24 * 60 * 60;
   document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
 };
@@ -70,8 +72,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const hasAnimated = useRef(false);
 
-  // Apply theme to DOM immediately (synchronous)
-  const applyThemeToDOM = (dark: boolean): void => {
+  const applyThemeToDOM = useCallback((dark: boolean): void => {
     if (typeof document === 'undefined') return;
 
     if (dark) {
@@ -81,10 +82,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.classList.remove('dark');
       document.documentElement.style.colorScheme = 'light';
     }
-  };
+  }, []);
 
-  // Apply CSS variables immediately
-  const applyCSSVariables = (scheme: ColorScheme): void => {
+  const applyCSSVariables = useCallback((scheme: ColorScheme): void => {
     if (typeof document === 'undefined') return;
 
     const root = document.documentElement;
@@ -96,14 +96,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     });
 
     const hexToHsl = (hex: string): string | null => {
-      if (typeof hex !== 'string') return null;
       let raw = hex.trim().replace(/^#/, '');
+
       if (raw.length === 3) {
         raw = raw
           .split('')
           .map(ch => ch + ch)
           .join('');
       }
+
       if (raw.length !== 6) return null;
 
       const r = parseInt(raw.slice(0, 2), 16) / 255;
@@ -119,6 +120,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (max !== min) {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
         switch (max) {
           case r:
             h = (g - b) / d + (g < b ? 6 : 0);
@@ -129,6 +131,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           default:
             h = (r - g) / d + 4;
         }
+
         h /= 6;
       }
 
@@ -141,7 +144,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const setHslVar = (name: string, value?: string) => {
       if (!value) return;
       const hsl = hexToHsl(value);
-      if (hsl) root.style.setProperty(`--${name}`, hsl);
+      if (hsl) {
+        root.style.setProperty(`--${name}`, hsl);
+      }
     };
 
     setHslVar('background', scheme.background);
@@ -178,17 +183,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setHslVar('chart-3', scheme.success);
     setHslVar('chart-4', scheme.warning);
     setHslVar('chart-5', scheme.error);
-  };
+  }, []);
 
-  // Ease the transition between modes
-  const animateThemeChange = () => {
+  const animateThemeChange = useCallback(() => {
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
     root.classList.add('theme-transition');
     window.setTimeout(() => root.classList.remove('theme-transition'), 450);
-  };
+  }, []);
 
-  // Listen to system preference
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -198,38 +201,41 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
 
     const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemChange = (event: MediaQueryListEvent) => {
-      setSystemPrefersDark(event.matches);
+
+    const syncSystemPreference = (matches: boolean) => {
+      setSystemPrefersDark(matches);
     };
 
-    const resolved = resolveTheme(theme, media.matches);
-    const scheme = resolved === 'dark' ? darkShades : lightShades;
+    syncSystemPreference(media.matches);
 
-    setResolvedTheme(resolved);
-    setIsDark(resolved === 'dark');
-    setSystemPrefersDark(media.matches);
-    applyThemeToDOM(resolved === 'dark');
-    applyCSSVariables(scheme);
-    setMounted(true);
-    media.addEventListener('change', handleSystemChange);
+    const handleSystemChange = (event: MediaQueryListEvent) => {
+      syncSystemPreference(event.matches);
+    };
 
-    return () => media.removeEventListener('change', handleSystemChange);
-  }, [theme]);
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', handleSystemChange);
+      return () => media.removeEventListener('change', handleSystemChange);
+    }
 
-  // Re-apply theme when user switches or system preference changes
+    media.addListener(handleSystemChange);
+    return () => media.removeListener(handleSystemChange);
+  }, []);
+
   useEffect(() => {
-    if (!mounted) return;
-
     const resolved = resolveTheme(theme, systemPrefersDark);
     const scheme = resolved === 'dark' ? darkShades : lightShades;
 
     setResolvedTheme(resolved);
     setIsDark(resolved === 'dark');
-    if (hasAnimated.current) {
-      animateThemeChange();
-    } else {
-      hasAnimated.current = true;
+
+    if (mounted) {
+      if (hasAnimated.current) {
+        animateThemeChange();
+      } else {
+        hasAnimated.current = true;
+      }
     }
+
     applyThemeToDOM(resolved === 'dark');
     applyCSSVariables(scheme);
 
@@ -238,17 +244,28 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.warn('Failed to save theme preference:', error);
     }
-  }, [theme, systemPrefersDark, mounted]);
 
-  const toggleTheme = (): void => {
+    if (!mounted) {
+      setMounted(true);
+    }
+  }, [
+    theme,
+    systemPrefersDark,
+    mounted,
+    animateThemeChange,
+    applyThemeToDOM,
+    applyCSSVariables,
+  ]);
+
+  const toggleTheme = useCallback((): void => {
     setThemeMode(prev =>
       prev === 'light' ? 'dark' : prev === 'dark' ? 'system' : 'light'
     );
-  };
+  }, []);
 
-  const setTheme = (mode: ThemeMode) => {
+  const setTheme = useCallback((mode: ThemeMode) => {
     setThemeMode(mode);
-  };
+  }, []);
 
   const colorScheme = useMemo(
     () => (resolvedTheme === 'dark' ? darkShades : lightShades),
@@ -258,7 +275,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
     <ThemeContext.Provider
       value={{
-        theme: resolvedTheme,
+        theme,
         resolvedTheme,
         colorScheme,
         isDark,
@@ -279,6 +296,7 @@ export function useTheme() {
     if (typeof window === 'undefined') {
       return defaultTheme;
     }
+
     throw new Error('useTheme must be used within a ThemeProvider');
   }
 

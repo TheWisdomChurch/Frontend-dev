@@ -11,9 +11,8 @@ import { AnalyticsServiceV2 } from '../lib/analytics/AnalyticsServiceV2';
 import { UserIdentificationService } from '../lib/analytics/UserIdentificationService';
 import { EngagementMetricsTracker } from '../lib/analytics/EngagementMetricsTracker';
 import { SessionManager } from '../lib/analytics/SessionManager';
-import { EventProperties } from '../lib/analytics/EventFactory';
+import type { EventProperties } from '../lib/analytics/EventFactory';
 
-// Get singleton analytics instance
 export const useAnalytics = () => {
   return AnalyticsServiceV2.getInstance({
     debug: process.env.NODE_ENV === 'development',
@@ -27,6 +26,10 @@ export const usePageView = (pageTitle?: string, pageUrl?: string) => {
   const analytics = useAnalytics();
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+
     analytics.trackPageView(
       pageTitle || document.title,
       pageUrl || window.location.href
@@ -63,13 +66,13 @@ export const useClickTracking = (
   properties?: EventProperties
 ) => {
   const analytics = useAnalytics();
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
-    const handleClick = (event: MouseEvent) => {
+    const handleClick = () => {
       analytics.trackClick(label, element, properties);
     };
 
@@ -87,14 +90,14 @@ export const useFormTracking = (formName: string) => {
   const analytics = useAnalytics();
 
   const trackSubmit = useCallback(
-    (fields?: Record<string, any>) => {
+    (fields?: Record<string, unknown>) => {
       analytics.trackFormSubmission(formName, fields);
     },
     [analytics, formName]
   );
 
   const trackFieldInteraction = useCallback(
-    (fieldName: string, value?: any) => {
+    (fieldName: string, value?: unknown) => {
       analytics.trackCustomEvent(`${formName}-${fieldName}-filled`, {
         form_name: formName,
         field_name: fieldName,
@@ -118,7 +121,6 @@ export const useTimeTracking = (eventName: string, threshold?: number) => {
     return () => {
       const timeSpent = Date.now() - startTimeRef.current;
 
-      // Only track if threshold is met (default 1 second)
       if (timeSpent >= (threshold || 1000)) {
         analytics.trackCustomEvent(`${eventName}-time-tracked`, {
           event_name: eventName,
@@ -139,13 +141,14 @@ export const useScrollTracking = (elementId?: string) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPercentage = Math.round(
-        (window.scrollY /
-          (document.documentElement.scrollHeight - window.innerHeight)) *
-          100
-      );
+      const denominator =
+        document.documentElement.scrollHeight - window.innerHeight;
 
-      // Track at intervals (25%, 50%, 75%, 100%)
+      if (denominator <= 0) {
+        return;
+      }
+
+      const scrollPercentage = Math.round((window.scrollY / denominator) * 100);
       const currentMilestone = Math.floor(scrollPercentage / 25) * 25;
 
       if (currentMilestone > lastDepthRef.current && currentMilestone <= 100) {
@@ -165,7 +168,7 @@ export const useScrollTracking = (elementId?: string) => {
 };
 
 /**
- * Track user engagement (interaction count, time, etc.)
+ * Track user engagement
  */
 export const useEngagementTracking = () => {
   const analytics = useAnalytics();
@@ -200,7 +203,7 @@ export const useUserIdentification = () => {
         email?: string;
         name?: string;
         segment?: string;
-        customAttributes?: Record<string, any>;
+        customAttributes?: Record<string, unknown>;
       }
     ) => {
       const analytics = AnalyticsServiceV2.getInstance();
@@ -222,7 +225,7 @@ export const useUserIdentification = () => {
 };
 
 /**
- * Track media playback (video, audio)
+ * Track media playback
  */
 export const useMediaTracking = (mediaTitle: string, duration?: number) => {
   const analytics = useAnalytics();
@@ -322,9 +325,6 @@ export const useSessionInfo = () => {
   };
 };
 
-/**
- * Export all hooks
- */
 export default {
   useAnalytics,
   usePageView,
