@@ -42,28 +42,30 @@ const SeriesCard = ({
       secondaryTextColor: isDarkMode
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
-      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      borderColor: colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );
 
   return (
     <div
-      className="series-card group hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border rounded-2xl p-4 sm:p-6 flex-shrink-0 w-[280px] sm:w-auto"
+      className="series-card group w-[280px] flex-shrink-0 cursor-pointer rounded-2xl border p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:w-auto sm:p-6"
       onClick={onClick}
       style={{
         backgroundColor: themeStyles.cardBackground,
         borderColor: themeStyles.borderColor,
       }}
     >
-      <div className="flex items-start justify-between mb-3 sm:mb-4">
+      <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div
-          className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${'color' in group ? group.color : 'from-gray-400 to-gray-600'} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md border-2`}
+          className={`flex h-12 w-12 items-center justify-center rounded-xl border-2 bg-gradient-to-br shadow-md transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 ${
+            'color' in group ? group.color : 'from-gray-400 to-gray-600'
+          }`}
           style={{ borderColor: colorScheme.primary }}
         >
           <div
-            className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2"
-            style={{ borderColor: colorScheme.primary + '30' }}
+            className="relative h-8 w-8 overflow-hidden rounded-full border-2 sm:h-10 sm:w-10"
+            style={{ borderColor: `${colorScheme.primary}30` }}
           >
             <Image
               src={WisdomeHouseLogo}
@@ -74,11 +76,12 @@ const SeriesCard = ({
             />
           </div>
         </div>
+
         {group.latestThumbnail && (
           <img
             src={group.latestThumbnail}
             alt={group.name}
-            className="w-12 h-10 sm:w-16 sm:h-12 rounded-lg object-cover shadow-sm group-hover:shadow-md transition-shadow"
+            className="h-10 w-12 rounded-lg object-cover shadow-sm transition-shadow group-hover:shadow-md sm:h-12 sm:w-16"
             loading="lazy"
             decoding="async"
           />
@@ -86,14 +89,14 @@ const SeriesCard = ({
       </div>
 
       <BaseText
-        className="text-base md:text-lg lg:text-xl font-semibold md:font-bold mb-2 group-hover:text-primary transition-colors leading-tight line-clamp-2"
+        className="mb-2 line-clamp-2 text-base font-semibold leading-tight transition-colors group-hover:text-primary md:text-lg lg:text-xl md:font-bold"
         style={{ color: themeStyles.textColor }}
       >
         {group.name}
       </BaseText>
 
       <LightText
-        className="text-xs md:text-sm mb-2 sm:mb-3 leading-relaxed line-clamp-2"
+        className="mb-2 line-clamp-2 text-xs leading-relaxed md:text-sm sm:mb-3"
         style={{ color: themeStyles.secondaryTextColor }}
       >
         {'description' in group
@@ -104,7 +107,7 @@ const SeriesCard = ({
       {!isUngrouped && 'uniqueSeries' in group && (
         <div className="mb-2">
           <span
-            className="px-2 py-1 rounded-full text-xs md:text-sm font-medium"
+            className="rounded-full px-2 py-1 text-xs font-medium md:text-sm"
             style={{
               backgroundColor: isDarkMode
                 ? colorScheme.opacity.primary10
@@ -118,7 +121,7 @@ const SeriesCard = ({
       )}
 
       <LightText
-        className="text-sm md:text-base mb-3 sm:mb-4"
+        className="mb-3 text-sm md:text-base sm:mb-4"
         style={{ color: themeStyles.secondaryTextColor }}
       >
         {group.count} {group.count === 1 ? 'message' : 'messages'}
@@ -129,7 +132,7 @@ const SeriesCard = ({
         group.uniqueSeries.length > 0 && (
           <div className="mt-2">
             <LightText
-              className="text-xs md:text-sm font-medium mb-1"
+              className="mb-1 text-xs font-medium md:text-sm"
               style={{ color: themeStyles.secondaryTextColor }}
             >
               Includes:
@@ -143,21 +146,22 @@ const SeriesCard = ({
                     className="flex items-center"
                   >
                     <div
-                      className="w-1 h-1 rounded-full mr-2"
+                      className="mr-2 h-1 w-1 rounded-full"
                       style={{ backgroundColor: colorScheme.primary }}
                     />
                     <LightText
-                      className="text-xs md:text-sm truncate"
+                      className="truncate text-xs md:text-sm"
                       style={{ color: themeStyles.secondaryTextColor }}
                     >
                       {seriesName}
                     </LightText>
                   </div>
                 ))}
+
               {group.uniqueSeries.length > 2 && (
                 <div className="flex items-center">
                   <div
-                    className="w-1 h-1 rounded-full mr-2"
+                    className="mr-2 h-1 w-1 rounded-full"
                     style={{ backgroundColor: colorScheme.primary }}
                   />
                   <LightText
@@ -173,17 +177,17 @@ const SeriesCard = ({
         )}
 
       <div
-        className="flex items-center justify-between pt-3 border-t mt-2"
+        className="mt-2 flex items-center justify-between border-t pt-3"
         style={{ borderColor: themeStyles.borderColor }}
       >
         <BaseText
-          className="font-semibold md:font-bold text-sm md:text-base group-hover:text-primaryDark transition-colors"
+          className="text-sm font-semibold transition-colors group-hover:text-primaryDark md:text-base md:font-bold"
           style={{ color: colorScheme.primary }}
         >
           {isUngrouped ? 'View Series' : 'View Category'}
         </BaseText>
         <span
-          className="transform group-hover:translate-x-1 transition-transform"
+          className="transform transition-transform group-hover:translate-x-1"
           style={{ color: colorScheme.primary }}
         >
           →
@@ -210,7 +214,7 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
       secondaryTextColor: isDarkMode
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
-      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      borderColor: colorScheme.border,
       modalBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
       modalTextColor: isDarkMode ? colorScheme.text : colorScheme.heading,
     }),
@@ -226,7 +230,7 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
   }, []);
 
   const formatViewCount = useCallback((count: string): string => {
-    return parseInt(count).toLocaleString();
+    return parseInt(count || '0', 10).toLocaleString();
   }, []);
 
   const handleMouseEnter = useCallback(
@@ -245,30 +249,30 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
 
   return (
     <div
-      className="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border overflow-hidden"
+      className="overflow-hidden rounded-xl border shadow-sm transition-all duration-200 hover:shadow-md"
       style={{
         backgroundColor: themeStyles.cardBackground,
         borderColor: themeStyles.borderColor,
       }}
     >
       <div
-        className="h-40 sm:h-44 relative overflow-hidden cursor-pointer"
+        className="relative h-40 cursor-pointer overflow-hidden sm:h-44"
         onClick={() => setShowPlayer(true)}
       >
         <img
           src={video.thumbnail}
           alt={video.title}
-          className="w-full h-full object-cover transition-transform hover:scale-105"
+          className="h-full w-full object-cover transition-transform hover:scale-105"
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
+        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 to-transparent p-4">
           <FlexboxLayout gap="sm">
             <Button
               variant="primary"
               size="sm"
               curvature="full"
-              className="px-4 py-2 font-semibold transition-colors text-sm shadow-md"
+              className="px-4 py-2 text-sm font-semibold shadow-md transition-colors"
               style={{
                 backgroundColor: colorScheme.primary,
                 color: colorScheme.black,
@@ -280,19 +284,20 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             </Button>
           </FlexboxLayout>
         </div>
-        <div className="absolute top-3 right-3 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium">
+        <div className="absolute right-3 top-3 rounded bg-black/80 px-2 py-1 text-xs font-medium text-white">
           {formatViewCount(video.viewCount)} views
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30">
-            <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-sm transition-colors hover:bg-white/30">
+            <div className="ml-1 h-0 w-0 border-b-[8px] border-l-[12px] border-t-[8px] border-b-transparent border-l-white border-t-transparent" />
           </div>
         </div>
       </div>
+
       <div className="p-6">
         <FlexboxLayout gap="sm" className="mb-3">
           <span
-            className="text-xs px-2 py-1 rounded font-medium"
+            className="rounded px-2 py-1 text-xs font-medium"
             style={{
               backgroundColor: isDarkMode
                 ? colorScheme.opacity.primary10
@@ -303,7 +308,7 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             {video.series}
           </span>
           <span
-            className="text-xs px-2 py-1 rounded font-medium"
+            className="rounded px-2 py-1 text-xs font-medium"
             style={{
               backgroundColor: isDarkMode
                 ? colorScheme.surfaceVariant
@@ -316,14 +321,14 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
         </FlexboxLayout>
 
         <H1
-          className="text-lg md:text-xl lg:text-2xl font-bold mb-3 line-clamp-2 leading-tight"
+          className="mb-3 line-clamp-2 text-lg font-bold leading-tight md:text-xl lg:text-2xl"
           style={{ color: themeStyles.textColor }}
         >
           {video.title}
         </H1>
 
         <LightText
-          className="text-sm md:text-base mb-4 line-clamp-2 leading-relaxed"
+          className="mb-4 line-clamp-2 text-sm leading-relaxed md:text-base"
           style={{ color: themeStyles.secondaryTextColor }}
         >
           {video.description}
@@ -341,9 +346,9 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
       </div>
 
       {showPlayer && (
-        <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4">
           <div
-            className="rounded-2xl max-w-6xl w-full h-[90vh] overflow-hidden shadow-2xl border flex flex-col"
+            className="flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border shadow-2xl"
             style={{
               backgroundColor: themeStyles.modalBackground,
               borderColor: themeStyles.borderColor,
@@ -352,21 +357,22 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             <FlexboxLayout
               justify="between"
               align="center"
-              className="p-4 border-b flex-shrink-0"
+              className="flex-shrink-0 border-b p-4"
               style={{
                 borderColor: themeStyles.borderColor,
                 backgroundColor: themeStyles.modalBackground,
               }}
             >
               <BaseText
-                className="text-lg md:text-xl font-semibold pr-4 line-clamp-1"
+                className="line-clamp-1 pr-4 text-lg font-semibold md:text-xl"
                 style={{ color: themeStyles.modalTextColor }}
               >
                 {video.title}
               </BaseText>
+
               <button
                 onClick={() => setShowPlayer(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
+                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
                 style={{
                   color: themeStyles.modalTextColor,
                   backgroundColor: isDarkMode
@@ -388,17 +394,17 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
               </button>
             </FlexboxLayout>
 
-            <div className="flex-1 p-0 overflow-hidden">
+            <div className="flex-1 overflow-hidden p-0">
               <YouTubePlayer
                 videoId={video.id}
                 title={video.title}
-                className="w-full h-full"
-                iframeClassName="w-full h-full"
+                className="h-full w-full"
+                iframeClassName="h-full w-full"
               />
             </div>
 
             <div
-              className="p-4 border-t flex-shrink-0"
+              className="flex-shrink-0 border-t p-4"
               style={{ borderColor: themeStyles.borderColor }}
             >
               <FlexboxLayout direction="column" gap="sm">
@@ -452,7 +458,6 @@ const SearchFiltersComponent = ({
   handleSeriesFilterChange,
   handlePreacherChange,
   handleYearChange,
-  handleResetFilters,
   filteredVideos,
 }: SearchFiltersProps) => {
   const { colorScheme, isDark } = useTheme();
@@ -462,26 +467,26 @@ const SearchFiltersComponent = ({
     () => ({
       cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
       textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
-      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      borderColor: colorScheme.border,
       inputBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
-      inputBorderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      inputBorderColor: colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );
 
   return (
-    <div className="max-w-6xl mx-auto mb-10 sm:mb-12">
+    <div className="mx-auto mb-10 max-w-6xl sm:mb-12">
       <div
-        className="rounded-2xl p-5 sm:p-6 border"
+        className="rounded-2xl border p-5 sm:p-6"
         style={{
           backgroundColor: themeStyles.cardBackground,
           borderColor: themeStyles.borderColor,
         }}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 items-end">
+        <div className="grid grid-cols-1 items-end gap-4 lg:grid-cols-6">
           <div className="lg:col-span-2">
             <label
-              className="block text-sm font-medium mb-2"
+              className="mb-2 block text-sm font-medium"
               style={{ color: themeStyles.textColor }}
             >
               Search
@@ -491,7 +496,7 @@ const SearchFiltersComponent = ({
               value={searchTerm}
               onChange={e => handleSearchChange(e.target.value)}
               placeholder="Title, series, preacher, or keywords..."
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-gray-400 text-sm"
+              className="w-full rounded-lg border px-4 py-2 text-sm placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-primary"
               style={{
                 backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
@@ -499,9 +504,10 @@ const SearchFiltersComponent = ({
               }}
             />
           </div>
+
           <div>
             <label
-              className="block text-sm font-medium mb-2"
+              className="mb-2 block text-sm font-medium"
               style={{ color: themeStyles.textColor }}
             >
               Series
@@ -509,7 +515,7 @@ const SearchFiltersComponent = ({
             <select
               value={selectedSeries}
               onChange={e => handleSeriesFilterChange(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              className="w-full rounded-lg border px-4 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary"
               style={{
                 backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
@@ -527,9 +533,10 @@ const SearchFiltersComponent = ({
               ))}
             </select>
           </div>
+
           <div>
             <label
-              className="block text-sm font-medium mb-2"
+              className="mb-2 block text-sm font-medium"
               style={{ color: themeStyles.textColor }}
             >
               Preacher
@@ -537,7 +544,7 @@ const SearchFiltersComponent = ({
             <select
               value={selectedPreacher}
               onChange={e => handlePreacherChange(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              className="w-full rounded-lg border px-4 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary"
               style={{
                 backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
@@ -551,9 +558,10 @@ const SearchFiltersComponent = ({
               ))}
             </select>
           </div>
+
           <div>
             <label
-              className="block text-sm font-medium mb-2"
+              className="mb-2 block text-sm font-medium"
               style={{ color: themeStyles.textColor }}
             >
               Year
@@ -561,7 +569,7 @@ const SearchFiltersComponent = ({
             <select
               value={selectedYear}
               onChange={e => handleYearChange(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              className="w-full rounded-lg border px-4 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary"
               style={{
                 backgroundColor: themeStyles.inputBackground,
                 borderColor: themeStyles.inputBorderColor,
@@ -575,6 +583,7 @@ const SearchFiltersComponent = ({
               ))}
             </select>
           </div>
+
           <div className="text-left lg:text-right">
             <LightText
               className="text-sm"
@@ -582,7 +591,7 @@ const SearchFiltersComponent = ({
             >
               Showing{' '}
               <BaseText
-                className="font-semibold inline"
+                className="inline font-semibold"
                 style={{ color: colorScheme.primary }}
               >
                 {filteredVideos.length}
@@ -595,10 +604,6 @@ const SearchFiltersComponent = ({
     </div>
   );
 };
-
-// ============================================
-// QUICK FILTER CHIPS + TOOLBAR
-// ============================================
 
 interface QuickFiltersProps {
   selectedSeries: string;
@@ -613,6 +618,7 @@ const QuickFilters = ({
 }: QuickFiltersProps) => {
   const { colorScheme, isDark } = useTheme();
   const isDarkMode = isDark;
+
   const chips = useMemo(
     () => [
       'Monday Morning Prayers',
@@ -632,11 +638,12 @@ const QuickFilters = ({
       {chipGroups.map(group => {
         const value = `group:${group.name}`;
         const isActive = selectedSeries === value;
+
         return (
           <button
             key={group.name}
             onClick={() => onSelectGroup(group.searchTerms, group.name)}
-            className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition"
+            className="rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm"
             style={{
               backgroundColor: isActive
                 ? colorScheme.primary
@@ -653,9 +660,10 @@ const QuickFilters = ({
           </button>
         );
       })}
+
       <button
         onClick={onReset}
-        className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition"
+        className="rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm"
         style={{
           backgroundColor: 'transparent',
           color: colorScheme.primary,
@@ -693,6 +701,7 @@ const ResultsToolbar = ({
 }: ResultsToolbarProps) => {
   const { colorScheme, isDark } = useTheme();
   const isDarkMode = isDark;
+
   const activeFilters = [
     searchTerm ? `Search: "${searchTerm}"` : null,
     selectedSeries !== 'all'
@@ -706,10 +715,10 @@ const ResultsToolbar = ({
 
   return (
     <div
-      className="rounded-2xl border p-4 sm:p-5 mb-6 sm:mb-8"
+      className="mb-6 rounded-2xl border p-4 sm:mb-8 sm:p-5"
       style={{ borderColor: `${colorScheme.primary}40` }}
     >
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <BaseText
             className="text-sm font-semibold"
@@ -719,9 +728,10 @@ const ResultsToolbar = ({
           >
             Results: {filteredCount} of {totalCount}
           </BaseText>
+
           {activeFilters.length > 0 && (
             <LightText
-              className="text-xs sm:text-sm mt-1"
+              className="mt-1 text-xs sm:text-sm"
               style={{
                 color: isDarkMode
                   ? colorScheme.textSecondary
@@ -732,10 +742,11 @@ const ResultsToolbar = ({
             </LightText>
           )}
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
             <label
-              className="text-xs sm:text-sm font-semibold"
+              className="text-xs font-semibold sm:text-sm"
               style={{
                 color: isDarkMode ? colorScheme.text : colorScheme.heading,
               }}
@@ -747,7 +758,7 @@ const ResultsToolbar = ({
               onChange={e =>
                 onSortChange(e.target.value as 'newest' | 'oldest' | 'popular')
               }
-              className="px-3 py-2 border rounded-lg text-xs sm:text-sm"
+              className="rounded-lg border px-3 py-2 text-xs sm:text-sm"
               style={{
                 backgroundColor: isDarkMode
                   ? colorScheme.surface
@@ -761,10 +772,11 @@ const ResultsToolbar = ({
               <option value="popular">Most Popular</option>
             </select>
           </div>
+
           {activeFilters.length > 0 && (
             <button
               onClick={onClear}
-              className="text-xs sm:text-sm font-semibold"
+              className="text-xs font-semibold sm:text-sm"
               style={{ color: colorScheme.primary }}
             >
               Clear all
@@ -776,10 +788,6 @@ const ResultsToolbar = ({
   );
 };
 
-// ============================================
-// SUB-COMPONENTS FOR HORIZONTAL SCROLLING
-// ============================================
-
 interface MobileHorizontalScrollProps {
   groupedSeries: GroupedSeriesData[];
   handleGroupClick: (searchTerms: string[], groupName?: string) => void;
@@ -790,13 +798,13 @@ const MobileHorizontalScroll = ({
   handleGroupClick,
 }: MobileHorizontalScrollProps) => {
   const { colorScheme, isDark } = useTheme();
-  const _horizontalScrollRef = useRef<HTMLDivElement>(null);
+  const horizontalScrollRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="block lg:hidden">
       <div
-        ref={_horizontalScrollRef}
-        className="flex space-x-4 pb-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pl-4"
+        ref={horizontalScrollRef}
+        className="scrollbar-hide flex snap-x snap-mandatory space-x-4 overflow-x-auto pb-4 pl-4"
       >
         {groupedSeries.map((group: GroupedSeriesData) => (
           <div key={group.name} className="snap-start">
@@ -807,7 +815,8 @@ const MobileHorizontalScroll = ({
           </div>
         ))}
       </div>
-      <div className="text-center mt-2">
+
+      <div className="mt-2 text-center">
         <LightText
           className="text-sm md:text-base"
           style={{
@@ -836,7 +845,7 @@ const DesktopGridSeries = ({
 }: DesktopGridSeriesProps) => (
   <div
     ref={cardsRef}
-    className="hidden lg:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 max-w-7xl mx-auto"
+    className="hidden max-w-7xl grid-cols-1 gap-6 md:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
   >
     {groupedSeries.map((group: GroupedSeriesData) => (
       <SeriesCard
@@ -863,19 +872,20 @@ const MobileHorizontalGrid = ({
     <div className="block lg:hidden">
       <div
         ref={horizontalGridRef}
-        className="flex space-x-4 pb-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pl-4"
+        className="scrollbar-hide flex snap-x snap-mandatory space-x-4 overflow-x-auto pb-4 pl-4"
       >
         {displayedVideos.map((video: YouTubeVideo) => (
           <div
             key={video.id}
-            className="sermon-card flex-shrink-0 w-[280px] snap-start"
+            className="sermon-card w-[280px] flex-shrink-0 snap-start"
           >
             <SermonCardComponent video={video} />
           </div>
         ))}
       </div>
+
       {displayedVideos.length > 1 && (
-        <div className="text-center mt-2">
+        <div className="mt-2 text-center">
           <LightText
             className="text-sm md:text-base"
             style={{
@@ -903,7 +913,7 @@ const DesktopSermonsGrid = ({
 }: DesktopSermonsGridProps) => (
   <div
     ref={gridRef}
-    className="hidden lg:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12"
+    className="mb-8 hidden grid-cols-1 gap-4 sm:mb-12 sm:gap-6 lg:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
   >
     {displayedVideos.map((video: YouTubeVideo) => (
       <div key={video.id} className="sermon-card">
@@ -912,10 +922,6 @@ const DesktopSermonsGrid = ({
     ))}
   </div>
 );
-
-// ============================================
-// CURATED SECTIONS
-// ============================================
 
 interface CuratedSectionsProps {
   videos: YouTubeVideo[];
@@ -955,29 +961,37 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
     return terms.some(term => series.includes(term.toUpperCase()));
   }, []);
 
-  const sections = curatedGroups.map(group => {
-    const groupVideos = videos.filter(video =>
-      matchesGroup(video, group.searchTerms)
-    );
-    return {
-      ...group,
-      videos: groupVideos,
-    };
-  });
+  const sections = useMemo(
+    () =>
+      curatedGroups.map(group => ({
+        ...group,
+        videos: videos.filter(video => matchesGroup(video, group.searchTerms)),
+      })),
+    [curatedGroups, videos, matchesGroup]
+  );
 
-  if (!sections.some(section => section.videos.length > 0)) return null;
+  const hasAnySectionVideos = useMemo(
+    () => sections.some(section => section.videos.length > 0),
+    [sections]
+  );
+
+  if (!hasAnySectionVideos) {
+    return null;
+  }
 
   return (
     <div className="mb-8 sm:mb-10">
       {sections.map(section => {
         if (!section.videos.length) return null;
+
         const preview = section.videos.slice(0, 4);
+
         return (
           <div key={section.title} className="mb-8 sm:mb-10">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <BaseText
-                  className="text-lg sm:text-xl font-semibold"
+                  className="text-lg font-semibold sm:text-xl"
                   style={{
                     color: isDarkMode ? colorScheme.text : colorScheme.heading,
                   }}
@@ -995,6 +1009,7 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                   {section.description}
                 </LightText>
               </div>
+
               <button
                 onClick={() =>
                   onSelectGroup(section.searchTerms, section.groupName)
@@ -1005,7 +1020,8 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                 View all
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {preview.map(video => (
                 <div key={video.id} className="sermon-card">
                   <SermonCardComponent video={video} />
@@ -1018,10 +1034,6 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
     </div>
   );
 };
-
-// ============================================
-// FEATURED SECTION COMPONENT
-// ============================================
 
 interface FeaturedSectionProps {
   videos: YouTubeVideo[];
@@ -1055,7 +1067,7 @@ const FeaturedSection = ({
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
       cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
-      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      borderColor: colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );
@@ -1073,29 +1085,27 @@ const FeaturedSection = ({
           justify="center"
           align="center"
           gap="lg"
-          className="text-center w-full"
+          className="w-full text-center"
         >
           <H2
-            className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold md:font-extrabold mb-8 md:mb-12"
+            className="mb-8 text-2xl font-bold md:mb-12 md:text-3xl lg:text-4xl xl:text-5xl md:font-extrabold"
             style={{ color: themeStyles.textColor }}
           >
             Latest from WisdomHouse
           </H2>
 
           <div
-            className="rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg border w-full max-w-7xl mx-auto"
+            className="mx-auto w-full max-w-7xl rounded-2xl border p-4 shadow-lg sm:p-6 lg:p-8"
             style={{
               backgroundColor: themeStyles.cardBackground,
               borderColor: themeStyles.borderColor,
             }}
           >
-            {/* Main Content Layout */}
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start w-full">
-              {/* Video Player Section */}
+            <div className="flex w-full flex-col items-start gap-8 lg:flex-row lg:gap-12">
               <div className="w-full lg:w-8/12 xl:w-7/12">
                 <div
-                  className="rounded-2xl overflow-hidden shadow-xl bg-black border-2"
-                  style={{ borderColor: colorScheme.primary + '20' }}
+                  className="overflow-hidden rounded-2xl border-2 bg-black shadow-xl"
+                  style={{ borderColor: `${colorScheme.primary}20` }}
                 >
                   {currentVideo ? (
                     <div className="relative aspect-video w-full">
@@ -1103,12 +1113,12 @@ const FeaturedSection = ({
                         key={playerKey}
                         videoId={currentVideo.id}
                         title={currentVideo.title}
-                        className="absolute inset-0 w-full h-full"
+                        className="absolute inset-0 h-full w-full"
                       />
                     </div>
                   ) : (
                     <div
-                      className="w-full aspect-video rounded-2xl flex items-center justify-center"
+                      className="flex aspect-video w-full items-center justify-center rounded-2xl"
                       style={{ backgroundColor: colorScheme.black }}
                     >
                       <LightText
@@ -1121,11 +1131,10 @@ const FeaturedSection = ({
                   )}
                 </div>
 
-                {/* Video Info below player on desktop */}
-                <div className="hidden lg:block mt-6 text-left">
+                <div className="mt-6 hidden text-left lg:block">
                   <div className="mb-3">
                     <BaseText
-                      className="font-semibold md:font-bold text-sm md:text-base uppercase tracking-wide"
+                      className="text-sm font-semibold uppercase tracking-wide md:text-base md:font-bold"
                       style={{ color: themeStyles.textColor }}
                     >
                       {currentVideo === videos[0]
@@ -1135,7 +1144,7 @@ const FeaturedSection = ({
                   </div>
 
                   <BaseText
-                    className="text-xl md:text-2xl lg:text-3xl font-bold md:font-extrabold mb-4 leading-tight"
+                    className="mb-4 text-xl font-bold leading-tight md:text-2xl lg:text-3xl md:font-extrabold"
                     style={{ color: themeStyles.textColor }}
                   >
                     {currentVideo?.title || 'New Content Coming Soon'}
@@ -1150,7 +1159,7 @@ const FeaturedSection = ({
                         className="mb-4 flex-wrap"
                       >
                         <span
-                          className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
+                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
                               ? colorScheme.opacity.primary10
@@ -1161,7 +1170,7 @@ const FeaturedSection = ({
                           {currentVideo.series}
                         </span>
                         <span
-                          className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
+                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
                               ? colorScheme.surfaceVariant
@@ -1172,7 +1181,7 @@ const FeaturedSection = ({
                           {currentVideo.preacher}
                         </span>
                         <span
-                          className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
+                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
                               ? colorScheme.opacity.primary10
@@ -1188,7 +1197,7 @@ const FeaturedSection = ({
 
                       <div className="mb-6">
                         <LightText
-                          className="text-sm md:text-base leading-relaxed"
+                          className="text-sm leading-relaxed md:text-base"
                           style={{ color: themeStyles.secondaryTextColor }}
                         >
                           {currentVideo.description ||
@@ -1216,13 +1225,11 @@ const FeaturedSection = ({
                 </div>
               </div>
 
-              {/* Sidebar Content - Recent Uploads */}
               <div className="w-full lg:w-4/12 xl:w-5/12">
-                {/* Mobile-only video info */}
-                <div className="lg:hidden mb-6">
+                <div className="mb-6 lg:hidden">
                   <div className="mb-3">
                     <BaseText
-                      className="font-semibold md:font-bold text-sm md:text-base uppercase tracking-wide"
+                      className="text-sm font-semibold uppercase tracking-wide md:text-base md:font-bold"
                       style={{ color: themeStyles.textColor }}
                     >
                       {currentVideo === videos[0]
@@ -1232,7 +1239,7 @@ const FeaturedSection = ({
                   </div>
 
                   <BaseText
-                    className="text-xl md:text-2xl font-bold md:font-extrabold mb-4 leading-tight line-clamp-3"
+                    className="mb-4 line-clamp-3 text-xl font-bold leading-tight md:text-2xl md:font-extrabold"
                     style={{ color: themeStyles.textColor }}
                   >
                     {currentVideo?.title || 'New Content Coming Soon'}
@@ -1247,7 +1254,7 @@ const FeaturedSection = ({
                         className="mb-4 flex-wrap"
                       >
                         <span
-                          className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
+                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
                               ? colorScheme.opacity.primary10
@@ -1258,7 +1265,7 @@ const FeaturedSection = ({
                           {currentVideo.series}
                         </span>
                         <span
-                          className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
+                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
                               ? colorScheme.surfaceVariant
@@ -1269,7 +1276,7 @@ const FeaturedSection = ({
                           {currentVideo.preacher}
                         </span>
                         <span
-                          className="px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
+                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
                               ? colorScheme.opacity.primary10
@@ -1285,7 +1292,7 @@ const FeaturedSection = ({
 
                       <div className="mb-4">
                         <LightText
-                          className="text-sm md:text-base leading-relaxed max-h-24 overflow-y-auto pr-2"
+                          className="max-h-24 overflow-y-auto pr-2 text-sm leading-relaxed md:text-base"
                           style={{ color: themeStyles.secondaryTextColor }}
                         >
                           {currentVideo.description ||
@@ -1297,7 +1304,7 @@ const FeaturedSection = ({
                         variant="primary"
                         size="md"
                         curvature="full"
-                        className="w-full py-3 font-semibold transition-colors mb-6"
+                        className="mb-6 w-full py-3 font-semibold transition-colors"
                         style={{
                           backgroundColor: colorScheme.primary,
                           color: colorScheme.black,
@@ -1310,7 +1317,6 @@ const FeaturedSection = ({
                   )}
                 </div>
 
-                {/* Recent Uploads Section */}
                 {recentVideos.length > 0 && (
                   <div className="lg:mt-0">
                     <FlexboxLayout
@@ -1319,13 +1325,13 @@ const FeaturedSection = ({
                       className="mb-4"
                     >
                       <BaseText
-                        className="text-lg md:text-xl font-semibold md:font-bold"
+                        className="text-lg font-semibold md:text-xl md:font-bold"
                         style={{ color: themeStyles.textColor }}
                       >
                         Recent Uploads
                       </BaseText>
                       <span
-                        className="text-xs md:text-sm px-3 py-1 rounded font-medium"
+                        className="rounded px-3 py-1 text-xs font-medium md:text-sm"
                         style={{
                           backgroundColor: isDarkMode
                             ? colorScheme.surfaceVariant
@@ -1337,11 +1343,11 @@ const FeaturedSection = ({
                       </span>
                     </FlexboxLayout>
 
-                    <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                    <div className="max-h-96 space-y-3 overflow-y-auto pr-2">
                       {recentVideos.map((video: YouTubeVideo) => (
                         <div
                           key={video.id}
-                          className={`flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer group border ${
+                          className={`group flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-all ${
                             currentVideo?.id === video.id
                               ? 'border-primary/30 shadow-sm'
                               : isDarkMode
@@ -1357,7 +1363,7 @@ const FeaturedSection = ({
                                 : themeStyles.cardBackground,
                             borderColor:
                               currentVideo?.id === video.id
-                                ? colorScheme.primary + '30'
+                                ? `${colorScheme.primary}30`
                                 : themeStyles.borderColor,
                           }}
                           onClick={() => handleVideoSelect(video)}
@@ -1366,20 +1372,20 @@ const FeaturedSection = ({
                             <img
                               src={video.thumbnail}
                               alt={video.title}
-                              className="w-16 h-12 rounded object-cover border"
+                              className="h-12 w-16 rounded border object-cover"
                               style={{ borderColor: themeStyles.borderColor }}
                               loading="lazy"
                               decoding="async"
                             />
                             <div
-                              className={`absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center transition-opacity ${
+                              className={`absolute inset-0 flex items-center justify-center rounded bg-black bg-opacity-50 transition-opacity ${
                                 currentVideo?.id === video.id
                                   ? 'opacity-100'
                                   : 'opacity-0 group-hover:opacity-100'
                               }`}
                             >
                               <svg
-                                className="w-4 h-4 text-white"
+                                className="h-4 w-4 text-white"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
@@ -1388,21 +1394,22 @@ const FeaturedSection = ({
                             </div>
                             {currentVideo?.id === video.id && (
                               <div
-                                className="absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white"
+                                className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white"
                                 style={{ backgroundColor: colorScheme.primary }}
                               />
                             )}
                           </div>
-                          <div className="flex-1 min-w-0">
+
+                          <div className="min-w-0 flex-1">
                             <BaseText
-                              className="text-sm font-medium md:font-semibold truncate leading-tight"
+                              className="truncate text-sm font-medium leading-tight md:font-semibold"
                               style={{ color: themeStyles.textColor }}
                             >
                               {video.title}
                             </BaseText>
-                            <div className="flex items-center gap-2 mt-1">
+                            <div className="mt-1 flex items-center gap-2">
                               <LightText
-                                className="text-xs truncate"
+                                className="truncate text-xs"
                                 style={{
                                   color: themeStyles.secondaryTextColor,
                                 }}
@@ -1427,9 +1434,10 @@ const FeaturedSection = ({
                               </LightText>
                             </div>
                           </div>
+
                           {video === videos[0] && (
                             <span
-                              className="px-2 py-1 rounded text-xs font-medium flex-shrink-0"
+                              className="flex-shrink-0 rounded px-2 py-1 text-xs font-medium"
                               style={{
                                 backgroundColor: isDarkMode
                                   ? colorScheme.opacity.error10
@@ -1448,12 +1456,12 @@ const FeaturedSection = ({
                       <div className="mt-4 text-center">
                         <button
                           onClick={handleViewMore}
-                          className="font-semibold md:font-bold text-sm md:text-base transition-colors flex items-center justify-center gap-1 mx-auto"
+                          className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold transition-colors md:text-base md:font-bold"
                           style={{ color: colorScheme.primary }}
                         >
                           View More Series
                           <svg
-                            className="w-4 h-4"
+                            className="h-4 w-4"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -1479,10 +1487,6 @@ const FeaturedSection = ({
   );
 };
 
-// ============================================
-// MAIN SERMON UTIL COMPONENT
-// ============================================
-
 const SermonUtil = () => {
   const { colorScheme, isDark } = useTheme();
   const isDarkMode = isDark;
@@ -1496,7 +1500,6 @@ const SermonUtil = () => {
     return () => cancelAnimationFrame(timer);
   }, []);
 
-  // Add these hooks unconditionally at the top
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
@@ -1510,6 +1513,8 @@ const SermonUtil = () => {
     },
     [colorScheme.primary]
   );
+
+  const sermonState = useSermonUtil();
 
   const {
     videos,
@@ -1530,11 +1535,9 @@ const SermonUtil = () => {
     recentVideos,
     currentVideo,
     playerKey,
-
     cardsRef,
     gridRef,
     horizontalGridRef,
-
     handleSeriesClick,
     handleGroupClick,
     handleLoadMore,
@@ -1547,7 +1550,7 @@ const SermonUtil = () => {
     handleVideoSelect,
     handleWatchSeries,
     handleViewMore,
-  } = useSermonUtil();
+  } = sermonState;
 
   const themeStyles = useMemo(
     () => ({
@@ -1559,35 +1562,35 @@ const SermonUtil = () => {
         ? colorScheme.textSecondary
         : colorScheme.textTertiary,
       cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
-      borderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      borderColor: colorScheme.border,
       inputBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
-      inputBorderColor: isDarkMode ? colorScheme.border : colorScheme.border,
+      inputBorderColor: colorScheme.border,
     }),
     [isDarkMode, colorScheme]
   );
 
-  if (!isClient) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Loading sermons...</div>
-      </div>
-    );
-  }
+  const clientReady = isClient;
+
+  const featuredSection = clientReady ? (
+    <FeaturedSection
+      videos={videos}
+      recentVideos={recentVideos}
+      currentVideo={currentVideo || null}
+      playerKey={String(playerKey)}
+      handleVideoSelect={handleVideoSelect}
+      handleWatchSeries={handleWatchSeries}
+      handleViewMore={handleViewMore}
+    />
+  ) : (
+    <div className="flex min-h-screen items-center justify-center">
+      <div>Loading sermons...</div>
+    </div>
+  );
 
   return (
     <div className="sermon-util">
-      {/* Featured Section */}
-      <FeaturedSection
-        videos={videos}
-        recentVideos={recentVideos}
-        currentVideo={currentVideo || null}
-        playerKey={playerKey.toString()}
-        handleVideoSelect={handleVideoSelect}
-        handleWatchSeries={handleWatchSeries}
-        handleViewMore={handleViewMore}
-      />
+      {featuredSection}
 
-      {/* Series Cards Section */}
       <Section
         padding="lg"
         fullHeight={false}
@@ -1604,24 +1607,25 @@ const SermonUtil = () => {
             >
               <div className="animate-pulse">
                 <div
-                  className="h-8 rounded w-1/4 mx-auto mb-4"
+                  className="mx-auto mb-4 h-8 w-1/4 rounded"
                   style={{ backgroundColor: themeStyles.sectionBackground }}
                 />
                 <div
-                  className="h-4 rounded w-1/2 mx-auto mb-12"
+                  className="mx-auto mb-12 h-4 w-1/2 rounded"
                   style={{ backgroundColor: themeStyles.cardBackground }}
                 />
               </div>
+
               <GridboxLayout
                 columns={1}
                 responsive={{ sm: 1, md: 2, lg: 3 }}
                 gap="lg"
-                className="max-w-6xl mx-auto"
+                className="mx-auto max-w-6xl"
               >
                 {[1, 2, 3, 4, 5, 6].map(i => (
                   <div
                     key={i}
-                    className="rounded-2xl h-64 animate-pulse"
+                    className="h-64 rounded-2xl animate-pulse"
                     style={{ backgroundColor: themeStyles.cardBackground }}
                   />
                 ))}
@@ -1635,7 +1639,7 @@ const SermonUtil = () => {
                 className="mb-10 sm:mb-12"
               >
                 <BaseText
-                  className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold md:font-extrabold text-center"
+                  className="text-center text-xl font-bold md:text-2xl lg:text-3xl xl:text-4xl md:font-extrabold"
                   style={{ color: themeStyles.textColor }}
                 >
                   Featured Categories
@@ -1645,12 +1649,14 @@ const SermonUtil = () => {
                   groupedSeries={groupedSeries}
                   handleGroupClick={handleGroupClick}
                 />
+
                 <DesktopGridSeries
                   groupedSeries={groupedSeries}
                   handleGroupClick={handleGroupClick}
                   cardsRef={cardsRef}
                 />
               </FlexboxLayout>
+
               {ungroupedSeries.length > 0 && (
                 <FlexboxLayout
                   direction="column"
@@ -1658,25 +1664,26 @@ const SermonUtil = () => {
                   className="mb-10 sm:mb-12"
                 >
                   <BaseText
-                    className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold md:font-extrabold text-center"
+                    className="text-center text-xl font-bold md:text-2xl lg:text-3xl xl:text-4xl md:font-extrabold"
                     style={{ color: themeStyles.textColor }}
                   >
                     More Sermons
                   </BaseText>
 
                   <div className="block lg:hidden">
-                    <div className="flex space-x-4 pb-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pl-4">
+                    <div className="scrollbar-hide flex snap-x snap-mandatory space-x-4 overflow-x-auto pb-4 pl-4">
                       {ungroupedSeries.map((series: UngroupedSeriesData) => (
                         <div key={series.name} className="snap-start">
                           <SeriesCard
                             group={series}
-                            isUngrouped={true}
+                            isUngrouped
                             onClick={() => handleSeriesClick(series.name)}
                           />
                         </div>
                       ))}
                     </div>
-                    <div className="text-center mt-2">
+
+                    <div className="mt-2 text-center">
                       <LightText
                         className="text-sm md:text-base"
                         style={{ color: themeStyles.secondaryTextColor }}
@@ -1685,24 +1692,26 @@ const SermonUtil = () => {
                       </LightText>
                     </div>
                   </div>
-                  <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+
+                  <div className="hidden max-w-7xl grid-cols-1 gap-6 lg:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                     {ungroupedSeries.map((series: UngroupedSeriesData) => (
                       <SeriesCard
                         key={series.name}
                         group={series}
-                        isUngrouped={true}
+                        isUngrouped
                         onClick={() => handleSeriesClick(series.name)}
                       />
                     ))}
                   </div>
                 </FlexboxLayout>
               )}
+
               <FlexboxLayout justify="center" className="mt-8 sm:mt-12">
                 <Button
                   variant="primary"
                   size="lg"
                   curvature="full"
-                  className="px-6 sm:px-8 py-3 sm:py-4 font-semibold transition-colors transform hover:scale-105 duration-200 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-lg"
+                  className="px-6 py-3 text-sm font-semibold shadow-lg transition-colors duration-200 hover:scale-105 hover:shadow-xl sm:px-8 sm:py-4 md:text-base lg:text-lg"
                   style={{
                     backgroundColor: colorScheme.primary,
                     color: colorScheme.black,
@@ -1719,11 +1728,10 @@ const SermonUtil = () => {
         </Container>
       </Section>
 
-      {/* Sermons Grid Section */}
       <Section
         background="image"
         backgroundImage={Banner_2.src}
-        overlay={true}
+        overlay
         overlayOpacity={50}
         padding="lg"
         fullHeight={false}
@@ -1746,15 +1754,17 @@ const SermonUtil = () => {
               filteredVideos={filteredVideos}
             />
           </div>
+
           <div className="mb-4 sm:mb-6">
             <QuickFilters
               selectedSeries={selectedSeries}
-              onSelectGroup={(terms, name) =>
+              onSelectGroup={(_, name) =>
                 handleSeriesFilterChange(`group:${name}`)
               }
               onReset={handleResetFilters}
             />
           </div>
+
           <ResultsToolbar
             totalCount={videos.length}
             filteredCount={filteredVideos.length}
@@ -1766,37 +1776,42 @@ const SermonUtil = () => {
             onSortChange={handleSortChange}
             onClear={handleResetFilters}
           />
+
           <CuratedSections
             videos={filteredVideos.length ? filteredVideos : videos}
             onSelectGroup={handleGroupClick}
           />
+
           <MobileHorizontalGrid
             displayedVideos={displayedVideos}
             horizontalGridRef={horizontalGridRef}
           />
+
           <DesktopSermonsGrid
             displayedVideos={displayedVideos}
             gridRef={gridRef}
           />
+
           {filteredVideos.length === 0 && !loading && (
             <FlexboxLayout
               direction="column"
               justify="center"
               align="center"
               gap="md"
-              className="text-center py-8 sm:py-12"
+              className="py-8 text-center sm:py-12"
             >
               <LightText
-                className="text-base md:text-lg lg:text-xl mb-3 sm:mb-4"
+                className="mb-3 text-base md:text-lg lg:text-xl sm:mb-4"
                 style={{ color: themeStyles.secondaryTextColor }}
               >
                 No sermons found matching your criteria.
               </LightText>
+
               <Button
                 variant="primary"
                 size="md"
                 curvature="full"
-                className="px-4 sm:px-6 py-2 sm:py-3 font-semibold transition-colors text-sm md:text-base lg:text-lg shadow-md"
+                className="px-4 py-2 text-sm font-semibold shadow-md transition-colors sm:px-6 sm:py-3 md:text-base lg:text-lg"
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: colorScheme.black,
@@ -1809,13 +1824,14 @@ const SermonUtil = () => {
               </Button>
             </FlexboxLayout>
           )}
+
           {hasMoreVideos && filteredVideos.length > 0 && (
             <FlexboxLayout justify="center" className="mt-6 sm:mt-8">
               <Button
                 variant="primary"
                 size="lg"
                 curvature="full"
-                className="px-6 sm:px-8 py-2 sm:py-3 font-semibold transition-colors transform hover:scale-105 duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm md:text-base lg:text-lg shadow-md"
+                className="px-6 py-2 text-sm font-semibold shadow-md transition-colors duration-200 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none sm:px-8 sm:py-3 md:text-base lg:text-lg"
                 style={{
                   backgroundColor: colorScheme.primary,
                   color: colorScheme.black,
@@ -1825,14 +1841,15 @@ const SermonUtil = () => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
-                {loading ? 'Loading...' : `Load More Videos`}
+                {loading ? 'Loading...' : 'Load More Videos'}
               </Button>
             </FlexboxLayout>
           )}
+
           {loading && (
             <FlexboxLayout justify="center" className="py-6 sm:py-8">
               <div
-                className="animate-spin rounded-full border-b-2 mx-auto"
+                className="mx-auto animate-spin rounded-full border-b-2"
                 style={{
                   width: '2rem',
                   height: '2rem',
