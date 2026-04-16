@@ -34,9 +34,34 @@ if (
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
 
+/* API CONFIG
+----------------------------------------------------------------------------- */
+const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
+const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
+
+function normalizeOrigin(raw?: string | null): string {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  if (!raw || !raw.trim()) {
+    return isProd ? DEFAULT_PROD_API_ORIGIN : DEFAULT_LOCAL_API_ORIGIN;
+  }
+
+  let base = raw.trim().replace(/\/+$/, '');
+  if (base.endsWith('/api/v1')) {
+    base = base.slice(0, -'/api/v1'.length);
+  }
+
+  return base;
+}
+
+const API_ORIGIN = normalizeOrigin(
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+);
+
+const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
+
 /* Types (simplified for backend structure)
 ----------------------------------------------------------------------------- */
-
 function isStaticImageData(x: any): x is StaticImageData {
   return (
     !!x &&
@@ -70,9 +95,10 @@ function normalizeImage(
     return { src: image.src, alt: fallbackAlt };
   }
 
-  if (typeof image === 'object' && 'src' in image) {
+  if (typeof image === 'object' && image !== null && 'src' in image) {
     const src =
       typeof image.src === 'string' ? image.src : image.src?.src || '';
+
     return {
       src: src || '/images/placeholder.jpg',
       alt: image.alt || fallbackAlt,
@@ -92,7 +118,7 @@ interface HeroSectionProps {
   onSecondaryButtonClick?: () => void;
   showWaveText?: boolean;
   colorScheme?: ColorScheme;
-  slides?: HeroSlide[]; // Backend-driven slides
+  slides?: HeroSlide[];
 }
 
 /* ----------------------------------------------------------------------------
@@ -111,13 +137,9 @@ const HeroSection = ({
   const colorScheme = externalColorScheme || themeColors;
   const { open } = useServiceUnavailable();
 
-  // Fetch backend hero content
   const { slides: backendSlides } = useHeroContent();
-
-  // Use external slides if provided, otherwise use backend slides
   const slidesToUse = externalSlides || backendSlides;
 
-  // Refs
   const heroRef = useRef<HTMLDivElement>(null!);
   const titleRef = useRef<HTMLHeadingElement>(null!);
   const subtitleRef = useRef<HTMLHeadingElement>(null!);
@@ -131,15 +153,16 @@ const HeroSection = ({
   const [videoLoading, setVideoLoading] = useState(false);
   const [isCompactMobile, setIsCompactMobile] = useState(false);
 
-  // Slider state
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const onResize = () => {
       setIsCompactMobile(window.innerWidth < 768);
     };
+
     onResize();
     window.addEventListener('resize', onResize, { passive: true });
+
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
@@ -161,22 +184,23 @@ const HeroSection = ({
 
   const upcoming = (currentSlideData as any)?.upcoming ?? fallbackUpcoming;
 
-  // wave text
   useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
 
-  // Auto-rotate slides
   useEffect(() => {
     if (slideList.length <= 1) return;
+
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % slideList.length);
     }, 7000);
+
     return () => clearInterval(interval);
   }, [slideList.length]);
 
   const scrollToNextSection = useCallback(() => {
     const nextSection = heroRef.current?.nextElementSibling;
-    if (nextSection)
+    if (nextSection) {
       nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, []);
 
   const handleUnavailable = useCallback(
@@ -203,8 +227,11 @@ const HeroSection = ({
       upcoming.ctaTarget.startsWith('#')
     ) {
       const target = document.getElementById(upcoming.ctaTarget.slice(1));
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
-      else handleUnavailable('Reservations opening soon');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        handleUnavailable('Reservations opening soon');
+      }
       return;
     }
 
@@ -224,18 +251,30 @@ const HeroSection = ({
   // Pull newest YouTube video
   useEffect(() => {
     if (isCompactMobile) return;
+
     let mounted = true;
 
     const fetchLatest = async () => {
       setVideoLoading(true);
+
       try {
         const res = await fetch(SERMONS_ENDPOINT, {
-          cache: 'force-cache',
-          credentials: 'include',
+          method: 'GET',
+          cache: 'no-store',
+          credentials: 'omit',
+          headers: {
+            Accept: 'application/json',
+          },
         });
+
         if (!res.ok) return;
-        const data: YouTubeVideo[] = await res.json();
-        if (mounted && data.length) setLatestVideo(data[0]);
+
+        const payload = await res.json();
+        const data: YouTubeVideo[] = payload?.data ?? payload;
+
+        if (mounted && Array.isArray(data) && data.length > 0) {
+          setLatestVideo(data[0]);
+        }
       } catch (err) {
         console.warn('Hero latest video fetch failed', err);
       } finally {
@@ -244,6 +283,7 @@ const HeroSection = ({
     };
 
     fetchLatest();
+
     return () => {
       mounted = false;
     };
@@ -262,8 +302,10 @@ const HeroSection = ({
       const parallaxEls = gsap.utils.toArray(
         '[data-parallax]'
       ) as HTMLElement[];
+
       parallaxEls.forEach((el: HTMLElement) => {
         const speed = Number(el.dataset.parallax ?? 0.2);
+
         gsap.to(el, {
           yPercent: speed * 20,
           ease: 'none',
@@ -283,6 +325,7 @@ const HeroSection = ({
   // Cinematic text reveal
   useEffect(() => {
     if (!heroRef.current) return;
+
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
@@ -290,6 +333,7 @@ const HeroSection = ({
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
       tl.fromTo(
         waveTextRef.current,
         { y: 12, opacity: 0 },
@@ -332,7 +376,6 @@ const HeroSection = ({
           '-=0.25'
         );
 
-      // Keep the wave badge subtly alive after entrance.
       gsap.to(waveTextRef.current, {
         y: 5,
         duration: 1.8,
@@ -351,9 +394,8 @@ const HeroSection = ({
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative w-full min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] overflow-hidden bg-black"
+      className="relative w-full min-h-[90vh] overflow-hidden bg-black md:min-h-[95vh] lg:min-h-[100vh]"
     >
-      {/* Background Slides (✅ fixed alt typing + src normalization) */}
       {slideList.map((slide, index) => {
         const img = normalizeImage(
           slide.image,
@@ -364,10 +406,10 @@ const HeroSection = ({
           <div
             key={index}
             className={`absolute inset-0 transition-all duration-800 ease-in-out ${
-              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              index === currentSlide ? 'z-10 opacity-100' : 'z-0 opacity-0'
             }`}
           >
-            <div className="relative w-full h-full" data-parallax="0.25">
+            <div className="relative h-full w-full" data-parallax="0.25">
               <Image
                 src={img.src}
                 alt={img.alt}
@@ -377,14 +419,12 @@ const HeroSection = ({
                 quality={80}
                 className="object-cover"
                 style={{
-                  // if your custom object provides objectPosition use it; else default
                   objectPosition:
                     img.objectPosition ||
                     (isSimpleImage(slide.image) ? 'center' : 'center 28%'),
                 }}
               />
 
-              {/* overlays */}
               <div
                 className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/70 sm:from-black/60 sm:via-black/35 sm:to-black/60"
                 data-parallax="0.15"
@@ -403,18 +443,16 @@ const HeroSection = ({
         );
       })}
 
-      {/* Hero Content */}
       <Container
         size="xl"
-        className="relative z-20 min-h-[90vh] md:min-h-[95vh] lg:min-h-[100vh] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 pt-12 sm:pt-16 lg:pt-20 pb-12 sm:pb-16"
+        className="relative z-20 flex min-h-[90vh] items-center px-4 pb-12 pt-12 sm:min-h-[95vh] sm:px-6 sm:pt-16 sm:pb-16 md:min-h-[95vh] md:px-8 lg:min-h-[100vh] lg:px-12 lg:pt-20"
       >
-        <div className="w-full flex flex-col gap-5 sm:gap-8 lg:gap-10 items-center sm:items-start max-w-6xl">
-          {/* Wave label */}
+        <div className="flex w-full max-w-6xl flex-col items-center gap-5 sm:items-start sm:gap-8 lg:gap-10">
           {showWaveText && !isCompactMobile && (
-            <div className="w-full flex justify-start mt-8 sm:mt-10 lg:mt-12 mb-5 sm:mb-7 md:mb-8 lg:mb-9">
+            <div className="mb-5 mt-8 flex w-full justify-start sm:mt-10 sm:mb-7 md:mb-8 lg:mt-12 lg:mb-9">
               <div
                 ref={waveTextRef}
-                className="relative inline-flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-full border border-white/15 bg-white/8 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+                className="relative inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/8 px-3 py-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:px-4 sm:py-3"
                 style={{ opacity: 0.97 }}
               >
                 <span
@@ -422,14 +460,14 @@ const HeroSection = ({
                   style={{ backgroundColor: colorScheme.primary }}
                 />
                 <span
-                  className="flex items-center gap-2 uppercase tracking-[0.16em] font-medium text-[0.62rem] sm:text-[0.7rem] md:text-[0.78rem] leading-tight"
+                  className="flex items-center gap-2 text-[0.62rem] font-medium uppercase leading-tight tracking-[0.16em] sm:text-[0.7rem] md:text-[0.78rem]"
                   style={{
                     color: '#fff',
-                    textShadow: `0 2px 10px rgba(0,0,0,0.45)`,
+                    textShadow: '0 2px 10px rgba(0,0,0,0.45)',
                   }}
                 >
                   <span
-                    className="inline-block text-transparent bg-clip-text"
+                    className="inline-block bg-clip-text text-transparent"
                     style={{
                       backgroundImage: `linear-gradient(120deg, ${colorScheme.primaryLight} 0%, #ffffff 35%, ${colorScheme.primary} 70%, ${colorScheme.primaryDark} 100%)`,
                       WebkitBackgroundClip: 'text',
@@ -439,20 +477,20 @@ const HeroSection = ({
                   </span>
                 </span>
                 <div
-                  className="absolute inset-0 rounded-full pointer-events-none"
+                  className="pointer-events-none absolute inset-0 rounded-full"
                   style={{
-                    boxShadow: `0 0 0 1px rgba(255,255,255,0.06), 0 18px 40px rgba(0,0,0,0.35)`,
+                    boxShadow:
+                      '0 0 0 1px rgba(255,255,255,0.06), 0 18px 40px rgba(0,0,0,0.35)',
                   }}
                 />
               </div>
             </div>
           )}
 
-          {/* Title block */}
-          <div className="relative flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-7 w-full max-w-5xl text-center sm:text-left">
+          <div className="relative flex w-full max-w-5xl flex-col gap-4 text-center sm:text-left sm:gap-5 md:gap-6 lg:gap-7">
             <H1
               ref={titleRef}
-              className="leading-tight tracking-tight font-medium text-center sm:text-left"
+              className="text-center font-medium leading-tight tracking-tight sm:text-left"
               style={{
                 color: '#FFFFFF',
                 textShadow:
@@ -460,13 +498,13 @@ const HeroSection = ({
               }}
               useThemeColor={false}
             >
-              <span className="text-xl xs:text-[1.9rem] sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl block leading-[1.15]">
+              <span className="block text-xl leading-[1.15] xs:text-[1.9rem] sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl">
                 {renderTitle((currentSlideData as any)?.title, colorScheme)}
               </span>
             </H1>
 
             <div
-              className="h-px w-16 sm:w-20 md:w-24 lg:w-28 rounded-full"
+              className="h-px w-16 rounded-full sm:w-20 md:w-24 lg:w-28"
               style={{
                 backgroundColor: colorScheme.primary,
                 backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
@@ -477,7 +515,7 @@ const HeroSection = ({
             {(currentSlideData as any)?.subtitle ? (
               <H2
                 ref={subtitleRef}
-                className="hidden sm:block text-center sm:text-left"
+                className="hidden text-center sm:block sm:text-left"
                 style={{
                   color: colorScheme.primary,
                   textShadow:
@@ -487,7 +525,7 @@ const HeroSection = ({
                 weight="medium"
                 smWeight="semibold"
               >
-                <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem] block leading-[1.3]">
+                <span className="block text-sm leading-[1.3] sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem]">
                   {renderSubtitle((currentSlideData as any)?.subtitle)}
                 </span>
               </H2>
@@ -495,13 +533,14 @@ const HeroSection = ({
 
             <p
               ref={descriptionRef}
-              className="hidden sm:block text-[12px] sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl"
+              className="hidden max-w-2xl text-[12px] leading-relaxed text-white/80 sm:block sm:text-sm md:text-base"
             >
               {(currentSlideData as any)?.description ||
                 'A Spirit-filled family helping believers grow in faith, purpose, and community — equipped and empowered for greatness.'}
             </p>
+
             {isCompactMobile ? (
-              <p className="text-[12px] text-white/85 leading-relaxed max-w-sm mx-auto sm:mx-0">
+              <p className="mx-auto max-w-sm text-[12px] leading-relaxed text-white/85 sm:mx-0">
                 A Spirit-filled family helping believers grow in faith and
                 purpose.
               </p>
@@ -509,7 +548,7 @@ const HeroSection = ({
 
             <div
               ref={buttonsRef}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 justify-center sm:justify-start items-center pt-1"
+              className="flex flex-col items-center justify-center gap-3 pt-1 sm:flex-row sm:justify-start sm:gap-4 md:gap-5"
             >
               <CustomButton
                 variant="primary"
@@ -517,14 +556,14 @@ const HeroSection = ({
                 curvature="xl"
                 elevated
                 onClick={handlePrimaryClick}
-                className="group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3"
+                className="group relative w-full overflow-hidden px-4 py-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] sm:w-auto sm:px-6 sm:py-3"
                 style={{
                   background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                   color: '#FFFFFF',
                   boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
                 }}
               >
-                <span className="text-xs sm:text-sm font-medium tracking-wide">
+                <span className="text-xs font-medium tracking-wide sm:text-sm">
                   {primaryButtonText}
                 </span>
               </CustomButton>
@@ -540,12 +579,15 @@ const HeroSection = ({
                   color: '#FFFFFF',
                   backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 }}
-                className={`hover:border-primary/80 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 ${isCompactMobile ? 'hidden' : ''}`}
+                className={`w-full px-4 py-2 transition-all duration-200 hover:border-primary/80 hover:bg-white/10 sm:w-auto sm:px-6 sm:py-3 ${
+                  isCompactMobile ? 'hidden' : ''
+                }`}
               >
-                <span className="text-xs sm:text-sm font-medium tracking-wide">
+                <span className="text-xs font-medium tracking-wide sm:text-sm">
                   {secondaryButtonText}
                 </span>
               </CustomButton>
+
               {isCompactMobile ? (
                 <button
                   type="button"
@@ -558,28 +600,27 @@ const HeroSection = ({
             </div>
           </div>
 
-          {/* Cards */}
           <div
             ref={cardsRef}
-            className="hidden md:grid w-full grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-5"
+            className="hidden w-full grid-cols-1 gap-3 md:grid md:grid-cols-2 md:gap-4 lg:gap-5"
           >
             <div
-              className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-4 sm:p-5 flex flex-col gap-3"
+              className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-xl sm:p-5"
               data-parallax="0.12"
               data-gsap="reveal"
             >
               <div className="flex items-center gap-3">
                 <div
-                  className="h-10 w-10 rounded-2xl flex items-center justify-center border border-white/30"
+                  className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/30"
                   style={{ background: colorScheme.primary }}
                 >
-                  <CalendarClock className="w-5 h-5 text-black" />
+                  <CalendarClock className="h-5 w-5 text-black" />
                 </div>
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.16em] text-white/70 font-medium">
+                  <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-white/70">
                     {upcoming.label}
                   </p>
-                  <p className="text-sm text-white font-medium">
+                  <p className="text-sm font-medium text-white">
                     {upcoming.title}
                   </p>
                 </div>
@@ -587,13 +628,13 @@ const HeroSection = ({
 
               <div className="space-y-2 text-[12px] text-white/85">
                 <div className="flex items-center gap-2">
-                  <CalendarClock className="w-4 h-4" />
+                  <CalendarClock className="h-4 w-4" />
                   <span>
                     {upcoming.date} • {upcoming.time}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
+                  <MapPin className="h-4 w-4" />
                   <span>{upcoming.location}</span>
                 </div>
               </div>
@@ -604,7 +645,7 @@ const HeroSection = ({
                   curvature="full"
                   elevated
                   onClick={handleUpcomingCta}
-                  className="px-4 py-2 text-[11px] font-medium border border-white/20 hover:scale-[1.02]"
+                  className="border border-white/20 px-4 py-2 text-[11px] font-medium hover:scale-[1.02]"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                     color: '#FFFFFF',
@@ -616,16 +657,16 @@ const HeroSection = ({
             </div>
 
             <div
-              className="rounded-2xl border border-white/10 bg-black/50 backdrop-blur-xl p-4 sm:p-5 flex flex-col gap-4"
+              className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/50 p-4 backdrop-blur-xl sm:p-5"
               data-parallax="0.18"
               data-gsap="reveal"
             >
               <div className="flex items-start gap-3">
-                <div className="h-10 w-10 rounded-2xl border border-white/20 flex items-center justify-center shrink-0">
-                  <PlayCircle className="w-5 h-5 text-white" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/20">
+                  <PlayCircle className="h-5 w-5 text-white" />
                 </div>
                 <div className="leading-tight">
-                  <p className="text-[13px] text-white font-medium">
+                  <p className="text-[13px] font-medium text-white">
                     Watch live stream
                   </p>
                   <p className="text-[10px] text-white/60">
@@ -635,8 +676,8 @@ const HeroSection = ({
               </div>
 
               {latestVideo ? (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2">
-                  <div className="relative h-20 w-full sm:w-32 rounded-xl overflow-hidden border border-white/15 bg-black/60">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <div className="relative h-20 w-full overflow-hidden rounded-xl border border-white/15 bg-black/60 sm:w-32">
                     <img
                       src={
                         latestVideo.thumbnail ||
@@ -649,16 +690,16 @@ const HeroSection = ({
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
-                      <PlayCircle className="w-5 h-5 text-white" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/35">
+                      <PlayCircle className="h-5 w-5 text-white" />
                     </div>
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white text-[13px] font-medium line-clamp-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="line-clamp-2 text-[13px] font-medium text-white">
                       {latestVideo.title}
                     </p>
-                    <p className="text-white/60 text-[11px]">
+                    <p className="text-[11px] text-white/60">
                       Tap to watch now
                     </p>
                   </div>
@@ -667,13 +708,15 @@ const HeroSection = ({
                     href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium hover:scale-[1.04] transition shadow-lg self-start sm:self-auto"
+                    className="inline-flex self-start rounded-full px-4 py-2 text-[11px] font-medium shadow-lg transition hover:scale-[1.04] sm:self-auto"
                     style={{
                       background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                       color: '#FFFFFF',
                     }}
                   >
-                    <PlayCircle className="w-4 h-4" /> Play
+                    <span className="inline-flex items-center gap-2">
+                      <PlayCircle className="h-4 w-4" /> Play
+                    </span>
                   </a>
                 </div>
               ) : (
@@ -682,19 +725,20 @@ const HeroSection = ({
                   size="sm"
                   curvature="full"
                   onClick={handleSecondaryClick}
-                  className="px-4 py-2 text-[11px] text-white border border-white/40 hover:border-primary/80 hover:bg-white/10 self-start"
+                  className="self-start border border-white/40 px-4 py-2 text-[11px] text-white hover:border-primary/80 hover:bg-white/10"
                 >
                   {videoLoading ? 'Loading…' : 'Watch'}
                 </CustomButton>
               )}
             </div>
           </div>
+
           {isCompactMobile ? (
-            <div className="w-full rounded-2xl border border-white/15 bg-black/45 backdrop-blur-xl px-4 py-3 text-center">
+            <div className="w-full rounded-2xl border border-white/15 bg-black/45 px-4 py-3 text-center backdrop-blur-xl">
               <p className="text-[10px] uppercase tracking-[0.16em] text-white/65">
                 {upcoming.label}
               </p>
-              <p className="mt-1 text-sm text-white font-medium">
+              <p className="mt-1 text-sm font-medium text-white">
                 {upcoming.title}
               </p>
             </div>
@@ -702,9 +746,8 @@ const HeroSection = ({
         </div>
       </Container>
 
-      {/* Slide Indicators */}
       {slideList.length > 1 && (
-        <div className="absolute bottom-11 sm:bottom-14 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-2.5 py-1.5 backdrop-blur-md">
+        <div className="absolute bottom-11 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-2.5 py-1.5 backdrop-blur-md sm:bottom-14">
           {slideList.map((_, index) => (
             <button
               key={index}
@@ -739,7 +782,6 @@ const HeroSection = ({
         />
       </div>
 
-      {/* Scroll Indicators */}
       <ScrollIndicators
         scrollIndicatorRef={scrollIndicatorRef}
         scrollToNextSection={scrollToNextSection}
@@ -763,35 +805,35 @@ const ScrollIndicators = ({
   <>
     <div
       ref={scrollIndicatorRef}
-      className="absolute bottom-0 sm:bottom-1.5 md:bottom-2 left-1/2 -translate-x-1/2 z-30 hidden sm:block cursor-pointer"
+      className="absolute bottom-0 left-1/2 z-30 hidden -translate-x-1/2 cursor-pointer sm:bottom-1.5 sm:block md:bottom-2"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
     >
       <div className="flex flex-col items-center">
         <ChevronDown
-          className="w-5 h-5 md:w-6 md:h-6 animate-bounce"
+          className="h-5 w-5 animate-bounce md:h-6 md:w-6"
           style={{
             color: colorScheme.primary,
-            filter: `drop-shadow(0 1px 3px rgba(0,0,0,0.5))`,
+            filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))',
           }}
         />
-        <span className="text-xs sm:text-sm mt-1 text-white/60 font-medium tracking-wider">
+        <span className="mt-1 text-xs font-medium tracking-wider text-white/60 sm:text-sm">
           SCROLL
         </span>
       </div>
     </div>
 
     <div
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 z-30 sm:hidden cursor-pointer pb-1"
+      className="absolute bottom-0 left-1/2 z-30 -translate-x-1/2 cursor-pointer pb-1 sm:hidden"
       onClick={scrollToNextSection}
       aria-label="Scroll to next section"
     >
       <div className="flex flex-col items-center">
         <ChevronDown
-          className="w-3.5 h-3.5 animate-bounce"
+          className="h-3.5 w-3.5 animate-bounce"
           style={{
             color: colorScheme.primary,
-            filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.5))`,
+            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))',
           }}
         />
       </div>
@@ -800,11 +842,3 @@ const ScrollIndicators = ({
 );
 
 export default HeroSection;
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
-const API_ORIGIN = API_BASE
-  ? API_BASE.replace(/\/+$/, '').replace(/\/api\/v1$/, '')
-  : '';
-const SERMONS_ENDPOINT = API_ORIGIN
-  ? `${API_ORIGIN}/api/v1/sermons?sort=newest`
-  : '/api/v1/sermons?sort=newest';
