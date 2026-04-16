@@ -120,6 +120,11 @@ export const metadata: Metadata = {
   verification: {
     google: '06pkcDIlRljdgVWZrLV9a9tqH7FJ5xp9lMfhho7LaRU',
   },
+  icons: {
+    icon: '/logo.webp',
+    shortcut: '/logo.webp',
+    apple: '/logo.webp',
+  },
   other: {
     'msvalidate.01': 'CDC0BA45440A0A1BB38769D83C132EBB',
   },

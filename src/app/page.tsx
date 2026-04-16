@@ -106,6 +106,18 @@ const fallbackEventAd: HomeEventAd = {
   note: 'You will be returned to the main website after you finish.',
 };
 
+const RAW_API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
+const API_ORIGIN = RAW_API_BASE
+  ? RAW_API_BASE.replace(/\/+$/, '').replace(/\/api\/v1$/, '')
+  : '';
+const HOMEPAGE_AD_ENDPOINT = API_ORIGIN
+  ? `${API_ORIGIN}/api/content/homepage-ad`
+  : null;
+const HOMEPAGE_AD_CACHE_KEY = 'homepage-ad-cache-v1';
+const HOMEPAGE_AD_CACHE_TTL_MS = 1000 * 60 * 30;
+const NEXT_AD_AT_STORAGE_KEY = 'homepage-next-ad-at-v1';
+
 export default function Home() {
   const { colorScheme } = useTheme();
 
@@ -123,10 +135,38 @@ export default function Home() {
     let mounted = true;
 
     const loadHomepageAd = async () => {
+      if (typeof window !== 'undefined') {
+        try {
+          const raw = window.localStorage.getItem(HOMEPAGE_AD_CACHE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw) as {
+              timestamp: number;
+              data: Partial<HomeEventAd>;
+            };
+            if (
+              parsed?.timestamp &&
+              Date.now() - parsed.timestamp < HOMEPAGE_AD_CACHE_TTL_MS &&
+              parsed?.data &&
+              mounted
+            ) {
+              setEventAd(prev => ({
+                ...prev,
+                ...parsed.data,
+              }));
+            }
+          }
+        } catch {
+          // Ignore malformed cache.
+        }
+      }
+
+      if (!HOMEPAGE_AD_ENDPOINT) return;
+
       try {
-        const res = await fetch('/api/content/homepage-ad', {
+        const res = await fetch(HOMEPAGE_AD_ENDPOINT, {
           method: 'GET',
-          cache: 'no-store',
+          cache: 'force-cache',
+          credentials: 'omit',
         });
         if (!res.ok) return;
         const payload = (await res.json()) as Partial<HomeEventAd>;
@@ -135,6 +175,12 @@ export default function Home() {
           ...prev,
           ...payload,
         }));
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(
+            HOMEPAGE_AD_CACHE_KEY,
+            JSON.stringify({ timestamp: Date.now(), data: payload })
+          );
+        }
       } catch {
         // Keep fallback in place when endpoint is not yet wired.
       }
@@ -156,6 +202,19 @@ export default function Home() {
 
   // Initialize modal timing on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const raw = window.localStorage.getItem(NEXT_AD_AT_STORAGE_KEY);
+      const stored = raw ? Number(raw) : NaN;
+      if (Number.isFinite(stored) && stored > Date.now()) {
+        setNextAdAt(stored);
+        return;
+      }
+    } catch {
+      // No-op.
+    }
+
     setNextAdAt(Date.now() + autoOpenDelayMs);
   }, [autoOpenDelayMs]);
 
@@ -180,6 +239,12 @@ export default function Home() {
   const persistAdCooldown = (cooldownMs: number) => {
     const nextAllowedAt = Date.now() + cooldownMs;
     setNextAdAt(nextAllowedAt);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(
+        NEXT_AD_AT_STORAGE_KEY,
+        String(nextAllowedAt)
+      );
+    }
   };
 
   const handleCloseModal = () => {
@@ -242,7 +307,7 @@ export default function Home() {
           </div>
 
           {/* Online Giving Section */}
-          <div data-gsap="reveal">
+          <div id="give" data-gsap="reveal">
             <OnlineGiving />
           </div>
 

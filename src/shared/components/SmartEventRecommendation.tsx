@@ -9,7 +9,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import type { ScrollTrigger as ScrollTriggerType } from 'gsap/ScrollTrigger';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import apiClient from '@/lib/api';

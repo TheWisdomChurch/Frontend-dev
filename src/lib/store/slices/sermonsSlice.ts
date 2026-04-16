@@ -38,14 +38,15 @@ const initialState: SermonsState = {
 export const fetchSermons = createAsyncThunk(
   'sermons/fetchSermons',
   async () => {
-    const base =
+    const rawBase =
       process.env.NEXT_PUBLIC_API_URL ||
       process.env.NEXT_PUBLIC_BACKEND_URL ||
       '';
-    const endpoint = base
-      ? `${base.replace(/\/+$/, '')}/api/v1/sermons`
-      : '/api/v1/sermons';
-    const response = await fetch(endpoint, { credentials: 'include' });
+    const base = rawBase
+      ? rawBase.replace(/\/+$/, '').replace(/\/api\/v1$/, '')
+      : '';
+    const endpoint = base ? `${base}/api/v1/sermons` : '/api/v1/sermons';
+    const response = await fetch(endpoint, { credentials: 'omit' });
     if (!response.ok) throw new Error('Failed to fetch sermons');
     const payload = await response.json();
     return payload?.data ?? payload;
