@@ -515,7 +515,7 @@ const Upcoming = () => {
             poster="/conference-poster.jpg" // Add a poster image as fallback
           >
             {/* Correct video source - place your video in public/videos folder */}
-            <source src="/videos/videoBg.mp4" type="video/mp4" />
+            <source src="/videos/videoBg.mp4?v=20260417" type="video/mp4" />
             {/* Fallback image if video doesn't load */}
             <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900"></div>
           </video>

@@ -2,16 +2,14 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  MapPin,
-  Mail,
-  Phone,
-  ArrowUpRight,
-  Camera,
-  Play,
-  Users,
-  MessageCircle,
-} from 'lucide-react';
+  faInstagram,
+  faYoutube,
+  faFacebook,
+  faXTwitter,
+} from '@fortawesome/free-brands-svg-icons';
+import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/layout';
 
@@ -34,22 +32,22 @@ const socials = [
   {
     href: 'https://www.instagram.com/wisdomhousehq',
     label: 'Instagram',
-    Icon: Camera,
+    icon: faInstagram,
   },
   {
     href: 'https://www.youtube.com/@wisdomhousehq',
     label: 'YouTube',
-    Icon: Play,
+    icon: faYoutube,
   },
   {
     href: 'https://www.facebook.com/wisdomhousehq',
     label: 'Facebook',
-    Icon: Users,
+    icon: faFacebook,
   },
   {
     href: 'https://x.com/wisdomhousehq',
-    label: 'Twitter',
-    Icon: MessageCircle,
+    label: 'X',
+    icon: faXTwitter,
   },
 ];
 
@@ -192,7 +190,7 @@ export default function Footer() {
                     aria-label={item.label}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:text-white"
                   >
-                    <item.Icon className="h-4 w-4" />
+                    <FontAwesomeIcon icon={item.icon} className="h-4 w-4" />
                   </a>
                 ))}
               </div>

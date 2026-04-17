@@ -295,8 +295,6 @@ const HeroSection = ({
   }, [onSecondaryButtonClick, handleUnavailable]);
 
   useEffect(() => {
-    if (isCompactMobile) return;
-
     let mounted = true;
 
     const fetchLatest = async () => {
@@ -332,7 +330,7 @@ const HeroSection = ({
     return () => {
       mounted = false;
     };
-  }, [isCompactMobile]);
+  }, []);
 
   useEffect(() => {
     if (!heroRef.current) return;
@@ -437,7 +435,7 @@ const HeroSection = ({
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative w-full min-h-[90vh] overflow-hidden bg-black md:min-h-[95vh] lg:min-h-[100vh]"
+      className="relative w-full min-h-[82vh] overflow-hidden bg-black sm:min-h-[88vh] md:min-h-[95vh] lg:min-h-[100vh]"
     >
       {safeSlides.map((slide, index) => {
         const img = normalizeImage(
@@ -488,14 +486,14 @@ const HeroSection = ({
 
       <Container
         size="xl"
-        className="relative z-20 flex min-h-[90vh] items-center px-4 pb-12 pt-12 sm:min-h-[95vh] sm:px-6 sm:pt-16 sm:pb-16 md:min-h-[95vh] md:px-8 lg:min-h-[100vh] lg:px-12 lg:pt-20"
+        className="relative z-20 flex min-h-[82vh] items-center px-4 pb-10 pt-8 sm:min-h-[88vh] sm:px-6 sm:pt-12 sm:pb-14 md:min-h-[95vh] md:px-8 lg:min-h-[100vh] lg:px-12 lg:pt-20"
       >
         <div className="flex w-full max-w-6xl flex-col items-center gap-5 sm:items-start sm:gap-8 lg:gap-10">
-          {showWaveText && !isCompactMobile && (
-            <div className="mb-5 mt-8 flex w-full justify-start sm:mt-10 sm:mb-7 md:mb-8 lg:mt-12 lg:mb-9">
+          {showWaveText && (
+            <div className="mb-4 mt-2 flex w-full justify-center sm:mt-8 sm:mb-7 sm:justify-start md:mb-8 lg:mt-12 lg:mb-9">
               <div
                 ref={waveTextRef}
-                className="relative inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/8 px-3 py-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:px-4 sm:py-3"
+                className="relative inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-2.5 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-3"
                 style={{ opacity: 0.97 }}
               >
                 <span
@@ -503,7 +501,7 @@ const HeroSection = ({
                   style={{ backgroundColor: colorScheme.primary }}
                 />
                 <span
-                  className="flex items-center gap-2 text-[0.62rem] font-medium uppercase leading-tight tracking-[0.16em] sm:text-[0.7rem] md:text-[0.78rem]"
+                  className="flex items-center gap-2 text-[0.56rem] font-medium uppercase leading-tight tracking-[0.12em] sm:text-[0.7rem] md:text-[0.78rem]"
                   style={{
                     color: '#fff',
                     textShadow: '0 2px 10px rgba(0,0,0,0.45)',
@@ -558,7 +556,7 @@ const HeroSection = ({
             {(currentSlideData as any)?.subtitle ? (
               <H2
                 ref={subtitleRef}
-                className="hidden text-center sm:block sm:text-left"
+                className="text-center sm:text-left"
                 style={{
                   color: colorScheme.primary,
                   textShadow:
@@ -568,7 +566,7 @@ const HeroSection = ({
                 weight="medium"
                 smWeight="semibold"
               >
-                <span className="block text-sm leading-[1.3] sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem]">
+                <span className="block text-[0.82rem] leading-[1.35] sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem]">
                   {renderSubtitle((currentSlideData as any)?.subtitle)}
                 </span>
               </H2>
@@ -777,13 +775,67 @@ const HeroSection = ({
           </div>
 
           {isCompactMobile ? (
-            <div className="w-full rounded-2xl border border-white/15 bg-black/45 px-4 py-3 text-center backdrop-blur-xl">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-white/65">
-                {upcoming.label}
-              </p>
-              <p className="mt-1 text-sm font-medium text-white">
-                {upcoming.title}
-              </p>
+            <div className="w-full space-y-3">
+              <div className="w-full rounded-2xl border border-white/15 bg-black/45 px-4 py-3 text-center backdrop-blur-xl">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-white/65">
+                  {upcoming.label}
+                </p>
+                <p className="mt-1 text-sm font-medium text-white">
+                  {upcoming.title}
+                </p>
+              </div>
+
+              <div className="w-full rounded-2xl border border-white/10 bg-black/55 p-3 backdrop-blur-xl">
+                <div className="mb-2 flex items-start gap-2">
+                  <PlayCircle className="mt-0.5 h-4 w-4 text-white" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-white">
+                      Latest message from YouTube
+                    </p>
+                    <p className="text-[10px] text-white/65">
+                      Tap to watch now
+                    </p>
+                  </div>
+                </div>
+
+                {latestVideo ? (
+                  <a
+                    href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-3 rounded-xl border border-white/15 bg-black/45 p-2.5"
+                  >
+                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-white/15 bg-black/60">
+                      <img
+                        src={
+                          latestVideo.thumbnail ||
+                          (latestVideo as any)?.thumbnails?.medium?.url ||
+                          (latestVideo as any)?.thumbnails?.default?.url ||
+                          '/images/placeholder.jpg'
+                        }
+                        alt={latestVideo.title}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/35">
+                        <PlayCircle className="h-4 w-4 text-white" />
+                      </div>
+                    </div>
+                    <p className="line-clamp-2 text-xs text-white/90">
+                      {latestVideo.title}
+                    </p>
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSecondaryClick}
+                    className="w-full rounded-xl border border-white/25 px-3 py-2 text-xs text-white/90"
+                  >
+                    {videoLoading ? 'Loading latest message…' : 'Watch live'}
+                  </button>
+                )}
+              </div>
             </div>
           ) : null}
         </div>

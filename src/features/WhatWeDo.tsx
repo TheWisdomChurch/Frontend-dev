@@ -20,12 +20,12 @@ export default function WhatWeDo() {
         key={box.id}
         ref={el => addToBoxesRef(el, index)}
         className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f0f] shadow-[0_18px_50px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.45)] ${
-          tall ? 'min-h-[420px] sm:min-h-[460px] lg:min-h-[500px]' : ''
+          tall ? 'min-h-[450px] sm:min-h-[500px] lg:min-h-[540px]' : ''
         }`}
       >
         <div
           className={`relative overflow-hidden ${
-            tall ? 'h-56 sm:h-60 lg:h-64' : 'h-48 sm:h-52 lg:h-56'
+            tall ? 'h-64 sm:h-72 lg:h-80' : 'h-56 sm:h-64 lg:h-72'
           }`}
         >
           <Image
@@ -64,7 +64,7 @@ export default function WhatWeDo() {
       padding="lg"
       fullHeight={false}
       style={{ background: '#080808' }}
-      className="relative overflow-hidden pt-24 sm:pt-28 lg:pt-32"
+      className="relative overflow-hidden pt-28 sm:pt-32 lg:pt-36"
     >
       <div className="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_12%_20%,rgba(255,255,255,0.07),transparent_45%),radial-gradient(circle_at_88%_10%,rgba(255,255,255,0.05),transparent_40%)]" />
       <Container size="xl" className="relative z-10">
