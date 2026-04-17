@@ -12,9 +12,9 @@ import {
   EngagementMetrics,
 } from './types';
 import { ConsentManager } from './ConsentManager';
+import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
+const API_BASE = resolveConfiguredApiOrigin();
 const ANALYTICS_ENDPOINT = API_BASE
   ? `${API_BASE.replace(/\/+$/, '')}/api/v1/analytics/events`
   : '/api/v1/analytics/events';

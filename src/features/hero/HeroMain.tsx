@@ -25,6 +25,7 @@ import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { renderTitle, renderSubtitle } from '@/shared/utils/heroTextUtil';
 import { useWaveTextAnimation } from '@/shared/utils/hooks/mainHeroHooks/useWaveText';
 import type { YouTubeVideo } from '@/lib/types';
+import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 if (
   typeof window !== 'undefined' &&
@@ -32,9 +33,6 @@ if (
 ) {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 }
-
-const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
-const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
 
 const FALLBACK_COLOR_SCHEME: ColorScheme = {
   primary: '#F7DE12',
@@ -69,24 +67,7 @@ const FALLBACK_COLOR_SCHEME: ColorScheme = {
   },
 };
 
-function normalizeOrigin(raw?: string | null): string {
-  const isProd = process.env.NODE_ENV === 'production';
-
-  if (!raw || !raw.trim()) {
-    return isProd ? DEFAULT_PROD_API_ORIGIN : DEFAULT_LOCAL_API_ORIGIN;
-  }
-
-  let base = raw.trim().replace(/\/+$/, '');
-  if (base.endsWith('/api/v1')) {
-    base = base.slice(0, -'/api/v1'.length);
-  }
-
-  return base;
-}
-
-const API_ORIGIN = normalizeOrigin(
-  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
-);
+const API_ORIGIN = resolveConfiguredApiOrigin();
 
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
 
