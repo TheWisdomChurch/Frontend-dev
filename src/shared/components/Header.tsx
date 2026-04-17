@@ -22,7 +22,7 @@ export default function Header() {
   const pathname = usePathname();
 
   const headerClass =
-    'bg-[#000000]/95 backdrop-blur-md border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.55)]';
+    'bg-[#000000] border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.55)]';
 
   const smoothEase = {
     transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
@@ -224,7 +224,7 @@ export default function Header() {
       </Container>
 
       <div
-        className={`lg:hidden fixed inset-0 z-[60] transition-all duration-500 ${
+        className={`lg:hidden fixed inset-x-0 top-[72px] bottom-0 z-[60] transition-all duration-500 ${
           menuOpen
             ? 'opacity-100 pointer-events-auto'
             : 'opacity-0 pointer-events-none'
@@ -239,7 +239,7 @@ export default function Header() {
           onClick={() => setMenuOpen(false)}
         />
         <div
-          className={`absolute right-0 top-[72px] h-[calc(100%-72px)] w-[90%] max-w-[420px] border-l border-white/10 bg-[linear-gradient(180deg,#0a0e18_0%,#080c14_52%,#070a12_100%)] shadow-[-26px_0_64px_rgba(0,0,0,0.55)] transition-transform duration-500 ${
+          className={`absolute right-0 top-0 h-full w-[90%] max-w-[420px] border-l border-white/10 bg-[linear-gradient(180deg,#0a0e18_0%,#080c14_52%,#070a12_100%)] shadow-[-26px_0_64px_rgba(0,0,0,0.55)] transition-transform duration-500 ${
             menuOpen ? 'translate-x-0' : 'translate-x-[104%]'
           }`}
           style={smoothEase}

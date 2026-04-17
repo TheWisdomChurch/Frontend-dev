@@ -55,8 +55,10 @@ interface ActionBannerProps {
   description: string;
   primaryHref: string;
   primaryLabel: string;
+  primaryTargetBlank?: boolean;
   secondaryHref?: string;
   secondaryLabel?: string;
+  secondaryTargetBlank?: boolean;
 }
 
 export function SectionHeading({
@@ -293,8 +295,10 @@ export function ActionBanner({
   description,
   primaryHref,
   primaryLabel,
+  primaryTargetBlank = false,
   secondaryHref,
   secondaryLabel,
+  secondaryTargetBlank = false,
 }: ActionBannerProps) {
   return (
     <Section padding="lg" className="bg-[#080808]">
@@ -318,6 +322,8 @@ export function ActionBanner({
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 href={primaryHref}
+                target={primaryTargetBlank ? '_blank' : undefined}
+                rel={primaryTargetBlank ? 'noopener noreferrer' : undefined}
                 className="inline-flex items-center justify-center rounded-full bg-[#d7bb75] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-90"
               >
                 {primaryLabel}
@@ -325,6 +331,8 @@ export function ActionBanner({
               {secondaryHref && secondaryLabel ? (
                 <Link
                   href={secondaryHref}
+                  target={secondaryTargetBlank ? '_blank' : undefined}
+                  rel={secondaryTargetBlank ? 'noopener noreferrer' : undefined}
                   className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
                 >
                   {secondaryLabel}

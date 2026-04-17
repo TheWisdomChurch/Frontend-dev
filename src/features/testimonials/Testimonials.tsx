@@ -109,6 +109,24 @@ export default function Testimonials() {
 
   const [active, setActive] = useState(0);
   const [items, setItems] = useState<UiTestimonial[]>([]);
+  const [shareUrl, setShareUrl] = useState(
+    process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/testimonial'
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const base =
+      process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/testimonial';
+    try {
+      const returnTo = `${window.location.origin}/testimonies?testimonial_submitted=1`;
+      const resolved = new URL(base, window.location.origin);
+      resolved.searchParams.set('return_to', returnTo);
+      resolved.searchParams.set('return_delay_ms', '1800');
+      setShareUrl(resolved.toString());
+    } catch {
+      setShareUrl(base);
+    }
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -211,12 +229,14 @@ export default function Testimonials() {
               <ChevronRight className="w-4 h-4 text-white" />
             </button>
 
-            <Link
-              href="/testimonies"
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:scale-[1.02] transition"
             >
               Share your testimony <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
         </div>
 

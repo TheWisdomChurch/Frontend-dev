@@ -1,73 +1,41 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { HeartHandshake, Sparkles, Users, WandSparkles } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { HeartHandshake, Sparkles, Users } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
+import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import {
   ActionBanner,
   StatStrip,
 } from '@/shared/components/site/PublicPageBlocks';
+import apiClient from '@/lib/api';
+import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
-const testimonies = [
-  {
-    id: 1,
-    name: 'Chioma Okonkwo',
-    title: 'Marketing Manager',
-    category: 'faith',
-    quote:
-      'The Wisdom Church helped me grow from inspiration alone into real spiritual discipline. The teaching gave structure to my faith again.',
-  },
-  {
-    id: 2,
-    name: 'David Adeniran',
-    title: 'Software Engineer',
-    category: 'healing',
-    quote:
-      'I came during a difficult season and found both prayer support and a community that stayed present beyond one service.',
-  },
-  {
-    id: 3,
-    name: 'Grace Adeyemi',
-    title: 'Teacher',
-    category: 'family',
-    quote:
-      'Pastoral counsel and consistent fellowship helped my family recover stability and hope in a very practical way.',
-  },
-  {
-    id: 4,
-    name: 'Samuel Olaleye',
-    title: 'Business Owner',
-    category: 'breakthrough',
-    quote:
-      'What changed me most was not only the testimony moment but the steady discipleship that followed it.',
-  },
-  {
-    id: 5,
-    name: 'Ngozi Isubu',
-    title: 'Nurse',
-    category: 'faith',
-    quote:
-      'This church gave me a place to belong while I rebuilt my prayer life and confidence in God’s direction.',
-  },
-  {
-    id: 6,
-    name: 'Tunde Okafor',
-    title: 'Architect',
-    category: 'salvation',
-    quote:
-      'I came searching for answers and found a house where the gospel was clear, personal, and impossible to ignore.',
-  },
-] as const;
+type UiTestimony = {
+  id: number | string;
+  name: string;
+  title: string;
+  quote: string;
+};
 
-const categories = [
-  { id: 'all', label: 'All stories' },
-  { id: 'faith', label: 'Growing in faith' },
-  { id: 'healing', label: 'Healing and restoration' },
-  { id: 'family', label: 'Family stories' },
-  { id: 'breakthrough', label: 'Breakthroughs' },
-] as const;
+const mapTestimony = (item: ApiTestimonial): UiTestimony => {
+  const fullName =
+    item.fullName ||
+    [item.firstName, item.lastName].filter(Boolean).join(' ').trim() ||
+    'Anonymous';
+  return {
+    id: item.id,
+    name: fullName,
+    title: item.isAnonymous ? 'Anonymous member' : 'Church member',
+    quote: item.testimony,
+  };
+};
+
+const TESTIMONIAL_FORM_BASE_URL =
+  process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/testimonial';
 
 const stats = [
   {
@@ -96,20 +64,70 @@ const stats = [
     value: 'Strengthen others',
     detail:
       'Testimonies remind the church that God is still working in ordinary and difficult seasons.',
-    icon: WandSparkles,
+    icon: Sparkles,
   },
 ];
 
 export default function TestimoniesPage() {
-  const [activeCategory, setActiveCategory] =
-    useState<(typeof categories)[number]['id']>('all');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [testimonies, setTestimonies] = useState<UiTestimony[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [shareUrl, setShareUrl] = useState(TESTIMONIAL_FORM_BASE_URL);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const filtered = useMemo(() => {
-    if (activeCategory === 'all') return testimonies;
-    return testimonies.filter(
-      testimony => testimony.category === activeCategory
-    );
-  }, [activeCategory]);
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        setLoading(true);
+        const items = await apiClient.listApprovedTestimonials();
+        if (!mounted) return;
+        setTestimonies((Array.isArray(items) ? items : []).map(mapTestimony));
+      } catch {
+        if (!mounted) return;
+        setTestimonies([]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const returnTo = `${window.location.origin}/testimonies?testimonial_submitted=1`;
+      const resolved = new URL(
+        TESTIMONIAL_FORM_BASE_URL,
+        window.location.origin
+      );
+      resolved.searchParams.set('return_to', returnTo);
+      resolved.searchParams.set('return_delay_ms', '1800');
+      setShareUrl(resolved.toString());
+    } catch {
+      setShareUrl(TESTIMONIAL_FORM_BASE_URL);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (searchParams.get('testimonial_submitted') === '1') {
+      setShowSuccessModal(true);
+    }
+  }, [searchParams]);
+
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    router.replace('/testimonies');
+  };
+
+  const visibleTestimonies = useMemo(
+    () => testimonies.slice(0, 24),
+    [testimonies]
+  );
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
@@ -130,58 +148,50 @@ export default function TestimoniesPage() {
                 Testimony stories
               </p>
               <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
-                Filter by the kind of encouragement you need to read right now.
+                Approved testimonies from the community.
               </h2>
             </div>
-            <div className="flex flex-wrap gap-3">
-              {categories.map(category => (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setActiveCategory(category.id)}
-                  className="rounded-full border px-4 py-2 text-sm font-medium transition"
-                  style={
-                    activeCategory === category.id
-                      ? {
-                          borderColor: 'transparent',
-                          color: '#050505',
-                          background:
-                            'linear-gradient(135deg, #d7bb75, #f0deaa)',
-                        }
-                      : {
-                          borderColor: 'rgba(255,255,255,0.12)',
-                          color: 'rgba(255,255,255,0.72)',
-                          background: 'rgba(255,255,255,0.03)',
-                        }
-                  }
-                >
-                  {category.label}
-                </button>
-              ))}
-            </div>
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full bg-[#d7bb75] px-5 py-2.5 text-sm font-semibold text-black transition hover:opacity-90"
+            >
+              Share your testimony
+            </a>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-3">
-            {filtered.map(testimony => (
-              <article
-                key={testimony.id}
-                className="rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(0,0,0,0.22))] p-6"
-              >
-                <p className="text-4xl leading-none text-[#d7bb75]">“</p>
-                <p className="mt-4 text-base leading-relaxed text-white/72">
-                  {testimony.quote}
-                </p>
-                <div className="mt-6 border-t border-white/10 pt-4">
-                  <p className="text-base font-semibold text-white">
-                    {testimony.name}
+          {loading ? (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-white/70">
+              Loading approved testimonies...
+            </div>
+          ) : visibleTestimonies.length === 0 ? (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-white/70">
+              No approved testimonies yet.
+            </div>
+          ) : (
+            <div className="grid gap-4 lg:grid-cols-3">
+              {visibleTestimonies.map(testimony => (
+                <article
+                  key={testimony.id}
+                  className="rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(0,0,0,0.22))] p-6"
+                >
+                  <p className="text-4xl leading-none text-[#d7bb75]">“</p>
+                  <p className="mt-4 text-base leading-relaxed text-white/72">
+                    {testimony.quote}
                   </p>
-                  <p className="mt-1 text-sm text-white/58">
-                    {testimony.title}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="mt-6 border-t border-white/10 pt-4">
+                    <p className="text-base font-semibold text-white">
+                      {testimony.name}
+                    </p>
+                    <p className="mt-1 text-sm text-white/58">
+                      {testimony.title}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </Container>
       </Section>
 
@@ -189,10 +199,19 @@ export default function TestimoniesPage() {
         eyebrow="Share your story"
         title="If God has done something meaningful in your life through this church season, we would love to hear it."
         description="Testimonies encourage people who are still praying, still waiting, and still trying to trust God well."
-        primaryHref="/contact"
+        primaryHref={shareUrl}
         primaryLabel="Share a testimony"
+        primaryTargetBlank
         secondaryHref="/events"
         secondaryLabel="Join a service"
+      />
+
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={closeSuccessModal}
+        title="Testimony submitted"
+        message="Thank you. Your testimony has been received and is now in the admin approval queue."
+        actionLabel="Continue"
       />
     </div>
   );
