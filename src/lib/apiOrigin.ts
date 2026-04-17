@@ -11,11 +11,10 @@ export function normalizeApiOrigin(raw?: string | null): string {
 export function resolveApiOrigin(raw?: string | null): string {
   const normalized = normalizeApiOrigin(raw);
   const isProd = process.env.NODE_ENV === 'production';
-  const forceDirect = process.env.NEXT_PUBLIC_FORCE_DIRECT_API === 'true';
 
-  // In browser environments, prefer same-origin calls routed via /api/v1
-  // unless explicitly overridden.
-  if (typeof window !== 'undefined' && !forceDirect) {
+  // In browser environments, always prefer same-origin calls routed via /api/v1.
+  // This keeps API traffic behind Next.js rewrites and avoids public CORS issues.
+  if (typeof window !== 'undefined') {
     return '';
   }
 

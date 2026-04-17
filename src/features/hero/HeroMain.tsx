@@ -8,7 +8,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';

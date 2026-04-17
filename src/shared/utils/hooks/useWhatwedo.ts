@@ -2,7 +2,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Register ScrollTrigger plugin

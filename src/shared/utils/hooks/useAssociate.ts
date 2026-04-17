@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Register GSAP plugins

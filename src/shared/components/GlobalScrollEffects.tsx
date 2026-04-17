@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 if (
