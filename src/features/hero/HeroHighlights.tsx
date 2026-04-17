@@ -244,7 +244,7 @@ export default function HeroHighlights() {
   }, []);
 
   return (
-    <section className="relative z-30 -mt-6 sm:-mt-8">
+    <section className="relative z-30 -mt-2 sm:-mt-4">
       <Container size="xl" className="relative pb-4 sm:pb-6">
         <div className="mx-auto mb-2 w-full max-w-5xl px-2 sm:px-0">
           <div className="h-px w-full bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -256,7 +256,7 @@ export default function HeroHighlights() {
           />
           <div className="relative z-10 px-4 py-5 sm:px-6 sm:py-6">
             <div className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl p-4 sm:p-5">
-              <div className="flex flex-col gap-3 text-center sm:text-left">
+              <div className="flex flex-col gap-3 text-left">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-white/60">
                   Next Steps
                 </p>
