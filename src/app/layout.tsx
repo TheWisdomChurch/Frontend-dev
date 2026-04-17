@@ -14,7 +14,11 @@ const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: SITE_URL,
+    canonical: '/',
+    languages: {
+      'en-US': '/',
+      'en-NG': '/',
+    },
   },
 
   title: {
@@ -23,6 +27,7 @@ export const metadata: Metadata = {
   },
   description:
     'The Wisdom Church is a vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
+  applicationName: SITE_NAME,
 
   keywords: [
     'wisdomchurch',
@@ -92,6 +97,7 @@ export const metadata: Metadata = {
       },
     ],
     locale: 'en_US',
+    alternateLocale: ['en_NG'],
     type: 'website',
   },
 
@@ -115,6 +121,7 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  category: 'religion',
 
   // ✅ Verification: token ONLY (NOT .html filename)
   verification: {
@@ -127,6 +134,7 @@ export const metadata: Metadata = {
   },
   other: {
     'msvalidate.01': 'CDC0BA45440A0A1BB38769D83C132EBB',
+    'theme-color': '#050505',
   },
 };
 
@@ -157,7 +165,7 @@ export default function RootLayout({
       '@type': 'ContactPoint',
       contactType: 'customer service',
       telephone: '0706 999 5333',
-      email: 'Wisdomhousehq@gmail.com',
+      email: 'wisdomhousehq@gmail.com',
       availableLanguage: ['English'],
     },
     address: {
@@ -166,6 +174,18 @@ export default function RootLayout({
         'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway',
       addressLocality: 'Lagos',
       addressCountry: 'NG',
+    },
+  };
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_URL}/resources?search={search_term_string}`,
+      'query-input': 'required name=search_term_string',
     },
   };
 
@@ -185,6 +205,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         <MetaPixel />
         <Providers>{children}</Providers>

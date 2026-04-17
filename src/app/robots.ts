@@ -9,9 +9,16 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
+        disallow: [
+          '/api/',
+          '/checkout',
+          '/order-confirmation',
+          '/forms/',
+          '/_next/',
+        ],
       },
     ],
-    sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
+    sitemap: [`${SITE_URL}/sitemap.xml`],
+    host: 'wisdomchurchhq.org',
   };
 }
