@@ -142,10 +142,6 @@ export default function Testimonials() {
     return () => clearInterval(timer);
   }, [items.length]);
 
-  if (items.length === 0) return null;
-
-  const current = items[active] ?? items[0];
-
   const nextList = useMemo(
     () =>
       items
@@ -153,6 +149,9 @@ export default function Testimonials() {
         .filter(i => i.idx !== active),
     [items, active]
   );
+
+  const current = items[active] ?? items[0];
+  if (!current) return null;
 
   const chips = makeChipsFromText(current.testimony, 4);
 
