@@ -1,6 +1,13 @@
 import type { NextConfig } from 'next';
 import withPWA from 'next-pwa';
 
+function normalizeApiProxyTarget(raw?: string): string {
+  if (!raw || !raw.trim()) return '';
+  let base = raw.trim().replace(/\/+$/, '');
+  if (base.endsWith('/api/v1')) base = base.slice(0, -'/api/v1'.length);
+  return base;
+}
+
 const nextConfig: NextConfig = {
   // Use an isolated build directory for CI/hooks when NEXT_DIST_DIR is set.
   // This avoids conflicts with a running `next dev` process writing to `.next`.
@@ -90,6 +97,23 @@ const nextConfig: NextConfig = {
             value: 'public, max-age=31536000, immutable',
           },
         ],
+      },
+    ];
+  },
+
+  async rewrites() {
+    const target = normalizeApiProxyTarget(
+      process.env.API_PROXY_TARGET ||
+        process.env.NEXT_PUBLIC_API_URL ||
+        process.env.NEXT_PUBLIC_BACKEND_URL
+    );
+
+    if (!target) return [];
+
+    return [
+      {
+        source: '/api/v1/:path*',
+        destination: `${target}/api/v1/:path*`,
       },
     ];
   },

@@ -12,6 +12,7 @@ import {
   type AnalyticsConfig,
 } from '@/lib/analytics/AnalyticsServiceV2';
 import { EngagementMetricsTracker } from '@/lib/analytics/EngagementMetricsTracker';
+import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 interface AnalyticsProviderProps {
   children: React.ReactNode;
@@ -23,10 +24,7 @@ export const AnalyticsProviderV2: React.FC<AnalyticsProviderProps> = ({
   config,
 }) => {
   useEffect(() => {
-    const apiBase =
-      process.env.NEXT_PUBLIC_API_URL ||
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      '';
+    const apiBase = resolveConfiguredApiOrigin();
     const defaultEndpoint = apiBase
       ? `${apiBase.replace(/\/+$/, '')}/api/v1/analytics/events`
       : '/api/v1/analytics/events';

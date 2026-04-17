@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { YouTubeVideo } from '@/lib/types';
 import { seriesGroups } from '@/lib/data';
+import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 interface SermonsState {
   videos: YouTubeVideo[];
@@ -38,28 +39,8 @@ const initialState: SermonsState = {
    API CONFIG
 ============================================================================ */
 
-const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8080';
-const DEFAULT_PROD_API_ORIGIN = 'https://api.wisdomchurchhq.org';
-
-function normalizeOrigin(raw?: string | null): string {
-  const isProd = process.env.NODE_ENV === 'production';
-
-  if (!raw || !raw.trim()) {
-    return isProd ? DEFAULT_PROD_API_ORIGIN : DEFAULT_LOCAL_API_ORIGIN;
-  }
-
-  let base = raw.trim().replace(/\/+$/, '');
-  if (base.endsWith('/api/v1')) {
-    base = base.slice(0, -'/api/v1'.length);
-  }
-
-  return base;
-}
-
 function getApiOrigin(): string {
-  return normalizeOrigin(
-    process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
-  );
+  return resolveConfiguredApiOrigin();
 }
 
 function isYouTubeVideoArray(value: unknown): value is YouTubeVideo[] {

@@ -16,6 +16,7 @@ import {
 } from './EngagementMetricsTracker';
 import { EventFactory, AnalyticsEvent, EventProperties } from './EventFactory';
 import { ConsentManager } from './ConsentManager';
+import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 export interface BatchPayload {
   events: AnalyticsEvent[];
@@ -37,8 +38,7 @@ export interface AnalyticsConfig {
   debug: boolean;
 }
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '';
+const API_BASE = resolveConfiguredApiOrigin();
 const ANALYTICS_ENDPOINT = API_BASE
   ? `${API_BASE.replace(/\/+$/, '')}/api/v1/analytics/events`
   : '/api/v1/analytics/events';
