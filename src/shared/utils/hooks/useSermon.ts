@@ -12,7 +12,7 @@ import {
   loadMoreVideos,
   resetFilters,
 } from '@/lib/store/slices/sermonsSlice';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { seriesGroups } from '@/lib/data';
 import {

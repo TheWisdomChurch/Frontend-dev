@@ -1,6 +1,6 @@
 // hooks/useSpecialEvents.ts
 import { useState, useRef, useEffect } from 'react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { NL } from '@/shared/assets';
 

@@ -27,6 +27,7 @@ import {
   faFacebook,
   faYoutube,
 } from '@fortawesome/free-brands-svg-icons';
+import apiClient, { mapValidationErrors } from '@/lib/api';
 
 interface ContactMethod {
   title: string;
@@ -47,6 +48,16 @@ interface SocialMedia {
 const ContactPage = () => {
   const { colorScheme } = useTheme();
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    topic: '',
+    message: '',
+  });
 
   const contactMethods: ContactMethod[] = [
     {
@@ -105,9 +116,38 @@ const ContactPage = () => {
     e.currentTarget.style.backgroundColor = colorScheme.primary;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+
+    setSubmitting(true);
+    setError(null);
+    setSubmitted(false);
+
+    try {
+      await apiClient.submitContactMessage({
+        ...formData,
+        sourceChannel: 'frontend:web:contact-page',
+      });
+      setSubmitted(true);
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        topic: '',
+        message: '',
+      });
+    } catch (err) {
+      const fields = mapValidationErrors(err);
+      if (fields) {
+        const firstError = Object.values(fields)[0];
+        setError(firstError || 'Please check your details and try again.');
+      } else {
+        setError('Unable to send your message right now. Please try again.');
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -319,6 +359,15 @@ const ContactPage = () => {
                       </SmallText>
                       <input
                         type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            firstName: e.target.value,
+                          }))
+                        }
+                        required
                         className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
                         placeholder="John"
                       />
@@ -330,6 +379,15 @@ const ContactPage = () => {
                       </SmallText>
                       <input
                         type="text"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            lastName: e.target.value,
+                          }))
+                        }
+                        required
                         className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
                         placeholder="Doe"
                       />
@@ -343,6 +401,15 @@ const ContactPage = () => {
                       </SmallText>
                       <input
                         type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
+                        required
                         className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
                         placeholder="you@example.com"
                       />
@@ -354,6 +421,14 @@ const ContactPage = () => {
                       </SmallText>
                       <input
                         type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            phone: e.target.value,
+                          }))
+                        }
                         className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
                         placeholder="+234 706 999 5333"
                       />
@@ -364,7 +439,17 @@ const ContactPage = () => {
                     <SmallText className="text-white/70 text-[11px]">
                       Topic
                     </SmallText>
-                    <select className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10">
+                    <select
+                      name="topic"
+                      value={formData.topic}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          topic: e.target.value,
+                        }))
+                      }
+                      className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
+                    >
                       <option value="">Select a topic</option>
                       <option value="visit">Plan a visit</option>
                       <option value="pastoral">Pastoral care</option>
@@ -382,6 +467,15 @@ const ContactPage = () => {
                     </SmallText>
                     <textarea
                       rows={5}
+                      name="message"
+                      value={formData.message}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          message: e.target.value,
+                        }))
+                      }
+                      required
                       className="w-full rounded-xl border border-white/10 bg-[#0c0c0c] px-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10 resize-y min-h-[120px]"
                       placeholder="Tell us how we can help..."
                     />
@@ -410,8 +504,9 @@ const ContactPage = () => {
                       }}
                       onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}
+                      disabled={submitting}
                     >
-                      Send Message
+                      {submitting ? 'Sending...' : 'Send Message'}
                     </Button>
 
                     {submitted ? (
@@ -421,6 +516,14 @@ const ContactPage = () => {
                       >
                         Message queued successfully. Our team will respond
                         within 24 hours.
+                      </SmallText>
+                    ) : null}
+                    {error ? (
+                      <SmallText
+                        className="text-rose-300 text-[11px] sm:text-xs"
+                        aria-live="polite"
+                      >
+                        {error}
                       </SmallText>
                     ) : null}
                   </div>

@@ -148,6 +148,7 @@ export default function PageHero({
         style={{ background: overlay, filter: 'blur(60px)' }}
         ref={glowRef}
       />
+      <div className="absolute inset-x-0 top-0 -z-10 h-28 bg-gradient-to-b from-black via-black/85 to-transparent sm:h-32" />
 
       {isAboutVariant ? (
         <div

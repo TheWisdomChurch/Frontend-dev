@@ -246,6 +246,17 @@ export interface GivingIntentData {
   metadata?: Record<string, unknown>;
 }
 
+export interface ContactMessageData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  topic?: string;
+  message: string;
+  sourceChannel?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export interface WorkforceRegistrationModalProps {
   isOpen: boolean;
   onClose: () => void;

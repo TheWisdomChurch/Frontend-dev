@@ -17,6 +17,7 @@ import type {
   PastoralCareRequestData,
   LeadershipRole,
   WorkforceRegistrationData,
+  ContactMessageData,
 } from './types';
 import { trackApiRequestStart, trackApiRequestEnd } from './apiActivity';
 import { resolveConfiguredApiOrigin } from './apiOrigin';
@@ -213,13 +214,15 @@ function extractArrayData<T>(res: any): T[] {
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_V1_BASE_URL}${path}`;
   const cacheKey = `${options.method || 'GET'}:${path}`;
+  const method = (options.method || 'GET').toUpperCase();
+  const isIdempotent = method === 'GET' || method === 'HEAD';
 
   // Check cache for GET requests
   if (
-    options.method !== 'POST' &&
-    options.method !== 'PUT' &&
-    options.method !== 'PATCH' &&
-    options.method !== 'DELETE'
+    method !== 'POST' &&
+    method !== 'PUT' &&
+    method !== 'PATCH' &&
+    method !== 'DELETE'
   ) {
     const cached = REQUEST_CACHE.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
@@ -272,7 +275,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         }
 
         // Retry on server errors (5xx)
-        if (res.status >= 500 && attempt < MAX_RETRIES - 1) {
+        if (res.status >= 500 && isIdempotent && attempt < MAX_RETRIES - 1) {
           lastError = createApiError(
             getMessageFromPayload(payload) || 'Server error',
             res.status,
@@ -290,10 +293,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
       // Cache successful GET requests
       if (
-        options.method !== 'POST' &&
-        options.method !== 'PUT' &&
-        options.method !== 'PATCH' &&
-        options.method !== 'DELETE'
+        method !== 'POST' &&
+        method !== 'PUT' &&
+        method !== 'PATCH' &&
+        method !== 'DELETE'
       ) {
         REQUEST_CACHE.set(cacheKey, { data: payload, timestamp: Date.now() });
       }
@@ -307,8 +310,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         throw err;
       }
 
-      // Retry on network errors or timeouts
-      if (attempt === MAX_RETRIES - 1) {
+      // Retry on network errors or timeouts only for idempotent requests.
+      if (!isIdempotent || attempt === MAX_RETRIES - 1) {
         if (isApiError(err)) throw err;
         throw createApiError(getErrorMessage(err), 0, err);
       }
@@ -673,6 +676,25 @@ export const apiClient = {
     };
 
     const res = await request<any>('/giving/intents', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return unwrapData<any>(res);
+  },
+
+  async submitContactMessage(payload: ContactMessageData): Promise<any> {
+    const body = {
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      email: payload.email,
+      phone: payload.phone,
+      topic: payload.topic,
+      message: payload.message,
+      sourceChannel: payload.sourceChannel ?? 'frontend:web:contact',
+      metadata: payload.metadata ?? {},
+    };
+
+    const res = await request<any>('/contact/messages', {
       method: 'POST',
       body: JSON.stringify(body),
     });

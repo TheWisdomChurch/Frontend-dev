@@ -19,17 +19,10 @@ const navLinks = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isMobileViewport, setIsMobileViewport] = useState(true);
   const pathname = usePathname();
 
-  const isHomePage = pathname === '/';
-  const isTransparent =
-    isHomePage && !scrolled && !menuOpen && !isMobileViewport;
-  const mobileHeaderClass =
-    'bg-[#000000] border-white/15 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.55)]';
-  const desktopHeaderClass = isTransparent
-    ? 'bg-transparent border-transparent backdrop-blur-0 shadow-none'
-    : 'bg-[#06080f]/92 border-white/10 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.45)]';
+  const headerClass =
+    'bg-[#000000]/95 backdrop-blur-md border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.55)]';
 
   const smoothEase = {
     transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
@@ -41,17 +34,6 @@ export default function Header() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    const updateViewportMode = () => {
-      setIsMobileViewport(window.innerWidth < 1024);
-    };
-
-    updateViewportMode();
-    window.addEventListener('resize', updateViewportMode, { passive: true });
-
-    return () => window.removeEventListener('resize', updateViewportMode);
   }, []);
 
   useEffect(() => {
@@ -141,9 +123,7 @@ export default function Header() {
 
   return (
     <header
-      className={`site-header z-50 w-full font-[family-name:var(--font-worksans)] transition-all duration-500 ${
-        isMobileViewport ? mobileHeaderClass : desktopHeaderClass
-      }`}
+      className={`site-header z-50 w-full font-[family-name:var(--font-worksans)] transition-all duration-500 ${headerClass}`}
       style={smoothEase}
     >
       <Container
