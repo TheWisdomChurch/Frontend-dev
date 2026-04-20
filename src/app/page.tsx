@@ -91,7 +91,7 @@ const fallbackEventAd: HomeEventAd = {
   endAt: '2026-03-22T20:00:00Z',
   time: 'Morning Session • Evening Session',
   location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
-  image: '/HEADER.png',
+  image: '/HEADER.webp',
   registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
   ctaLabel: 'Register now',
   note: 'You will be returned to the main website after you finish.',

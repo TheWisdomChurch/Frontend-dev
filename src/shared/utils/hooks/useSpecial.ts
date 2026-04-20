@@ -67,7 +67,7 @@ export const useSpecialEvents = () => {
         'Experience three days of powerful teachings, anointed worship, and life-changing encounters with God. Join us for this transformative conference featuring renowned speakers and ministers.',
       location: 'Main Sanctuary & Overflow Areas',
       type: 'conference',
-      image: '/images/conference-2025.jpg',
+      image: '/images/conference-2025.webp',
       featured: true,
       registrationLink: '#register',
     },
@@ -92,7 +92,7 @@ export const useSpecialEvents = () => {
         'Join us for a powerful 7 Nights of Lifting service celebrating the resurrection of Jesus Christ. Special music, message of hope, and family activities.',
       location: 'Honor Gardens, opposite Dominion City, Alasia Bus Stop',
       type: 'celebration',
-      image: '/images/easter-service.jpg',
+      image: '/images/easter-service.webp',
     },
     {
       id: '4',
@@ -103,7 +103,7 @@ export const useSpecialEvents = () => {
         'A beautiful candlelight service with Christmas carols, communion, and the Christmas story. Perfect for the whole family.',
       location: 'Main Sanctuary',
       type: 'celebration',
-      image: '/images/christmas-eve.jpg',
+      image: '/images/christmas-eve.webp',
     },
 
     {
@@ -115,7 +115,7 @@ export const useSpecialEvents = () => {
         'Experience the supernatural power of God in our monthly miracle service. A time dedicated to healing, deliverance, and divine encounters.',
       location: 'Main Sanctuary',
       type: 'service',
-      image: '/images/supernatural-service.jpg',
+      image: '/images/supernatural-service.webp',
     },
   ];
 

@@ -9,7 +9,7 @@ import './globals.scss';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
 const SITE_NAME = 'The Wisdom Church';
-const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+const OG_IMAGE = `${SITE_URL}/og-image.webp`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

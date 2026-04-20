@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run media:optimize",
     "build": "next build",
     "start": "next start -p 2000",
+    "media:optimize": "node scripts/media-pipeline.mjs",
+    "media:optimize:dry": "node scripts/media-pipeline.mjs --dry-run",
     "lint": "eslint . --max-warnings 0 --no-warn-ignored",
     "lint:fix": "eslint . --fix --max-warnings 0 --no-warn-ignored",
     "type-check": "tsc --noEmit",

@@ -1,6 +1,6 @@
 export const SITE_URL = 'https://wisdomchurchhq.org';
 export const SITE_NAME = 'The Wisdom Church';
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.webp`;
 
 export function canonicalUrl(path: string): string {
   const normalized = path.startsWith('/') ? path : `/${path}`;

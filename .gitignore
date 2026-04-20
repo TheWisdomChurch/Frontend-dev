@@ -19,6 +19,7 @@ husky/
 /.next/
 /.next-prepush/
 /out/
+/public/_optimized/
 lintstagedrc.json
 eslintrc.json
 prettierignore
