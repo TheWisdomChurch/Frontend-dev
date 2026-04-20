@@ -123,7 +123,7 @@ export default function Header() {
 
   return (
     <header
-      className={`site-header z-50 w-full font-[family-name:var(--font-worksans)] transition-all duration-500 ${headerClass}`}
+      className={`site-header z-[100] w-full font-[family-name:var(--font-worksans)] transition-all duration-500 ${headerClass} ${menuOpen ? 'bg-black/95 backdrop-blur-md' : ''}`}
       style={smoothEase}
     >
       <Container
@@ -224,7 +224,7 @@ export default function Header() {
       </Container>
 
       <div
-        className={`lg:hidden fixed inset-x-0 top-[72px] bottom-0 z-[60] transition-all duration-500 ${
+        className={`lg:hidden fixed inset-x-0 top-[72px] bottom-0 z-[110] transition-all duration-500 ${
           menuOpen
             ? 'opacity-100 pointer-events-auto'
             : 'opacity-0 pointer-events-none'
@@ -235,11 +235,11 @@ export default function Header() {
         <button
           type="button"
           aria-label="Close menu"
-          className="absolute inset-0 bg-black/82 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/90 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
         />
         <div
-          className={`absolute right-0 top-0 h-full w-[90%] max-w-[420px] border-l border-white/10 bg-[linear-gradient(180deg,#0a0e18_0%,#080c14_52%,#070a12_100%)] shadow-[-26px_0_64px_rgba(0,0,0,0.55)] transition-transform duration-500 ${
+          className={`absolute right-0 top-0 h-full w-[90%] max-w-[420px] border-l border-white/20 bg-[#0b0f17] shadow-[-26px_0_64px_rgba(0,0,0,0.7)] transition-transform duration-500 ${
             menuOpen ? 'translate-x-0' : 'translate-x-[104%]'
           }`}
           style={smoothEase}
@@ -280,7 +280,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`block w-full rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-4 text-sm font-light uppercase tracking-[0.2em] transition-all duration-500 ${
+                  className={`block w-full rounded-2xl border border-white/20 bg-black/40 px-4 py-4 text-sm font-light uppercase tracking-[0.2em] transition-all duration-500 ${
                     menuOpen
                       ? 'translate-y-0 opacity-100'
                       : 'translate-y-2 opacity-0'
