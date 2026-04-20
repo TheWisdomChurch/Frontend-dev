@@ -4,25 +4,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Container, Section } from '@/shared/layout';
-import { H3, BodySM } from '@/shared/text';
+import { H2, H3, BodyMD, BodySM } from '@/shared/text';
 import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient from '@/lib/api';
 import { PublicFormPayload, EventPublic, PublicFormField } from '@/lib';
 
 const fieldBaseClass =
-  'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
+  'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
 
 const labelClass = 'text-sm font-semibold text-white/80';
-const DEFAULT_EYEBROW = 'Registration';
-
-function formatFormTypeLabel(formType?: string): string {
-  if (!formType) return DEFAULT_EYEBROW;
-  return formType
-    .replace(/[_-]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/\b\w/g, letter => letter.toUpperCase());
-}
 
 function applyTemplateVars(
   input: string | undefined,
@@ -45,6 +35,14 @@ export default function PublicFormPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const isTestimonialForm = useMemo(() => {
+    const slug = (formSlug || '').toLowerCase();
+    return (
+      slug.includes('testimony') ||
+      slug.includes('testimonial') ||
+      (form?.settings?.formType || '').toLowerCase() === 'testimonial'
+    );
+  }, [formSlug, form?.settings?.formType]);
 
   useEffect(() => {
     if (!formSlug) return;
@@ -107,14 +105,15 @@ export default function PublicFormPage() {
 
   const presentation = useMemo(() => {
     const settings = form?.settings;
-    const title =
-      settings?.introTitle || event?.title || form?.title || 'Registration';
-    const subtitle =
-      settings?.introSubtitle ||
-      event?.description ||
-      form?.description ||
-      'Complete the form below to continue.';
-    const eyebrow = formatFormTypeLabel(settings?.formType);
+    const title = isTestimonialForm
+      ? form?.title || 'Share Your Testimony'
+      : settings?.introTitle || event?.title || form?.title || 'Registration';
+    const subtitle = isTestimonialForm
+      ? form?.description || 'Tell us what God has done in your life.'
+      : settings?.introSubtitle ||
+        event?.description ||
+        form?.description ||
+        'Complete the form below to continue.';
     const detailItems = settings?.introBullets || [];
     const detailSubtexts = settings?.introBulletSubtexts || [];
     const headerNote = settings?.formHeaderNote || '';
@@ -134,7 +133,6 @@ export default function PublicFormPage() {
     return {
       title,
       subtitle,
-      eyebrow,
       detailItems,
       detailSubtexts,
       headerNote,
@@ -143,7 +141,9 @@ export default function PublicFormPage() {
       successSubtitle,
       successMessage,
     };
-  }, [event, form]);
+  }, [event, form, isTestimonialForm]);
+
+  const showHeroCopy = isTestimonialForm;
 
   const handleChange = (key: string, value: any) => {
     setAnswers(prev => ({ ...prev, [key]: value }));
@@ -185,7 +185,7 @@ export default function PublicFormPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <Section padding="sm" className="relative overflow-hidden">
+      <Section padding="none" className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src={EventBannerMobile}
@@ -207,21 +207,33 @@ export default function PublicFormPage() {
 
         <div className="absolute inset-0 bg-black/60" />
 
-        <Container size="xl" className="relative z-10 py-8 sm:py-12">
-          <div className="h-24 sm:h-28" aria-hidden />
+        <Container
+          size="xl"
+          className={`relative z-10 ${showHeroCopy ? 'py-8 sm:py-10' : 'py-2 sm:py-3'}`}
+        >
+          {showHeroCopy ? (
+            <div className="max-w-3xl space-y-3">
+              <H2 className="text-3xl sm:text-4xl font-black">
+                {presentation.title}
+              </H2>
+              <BodyMD className="text-white/80">{presentation.subtitle}</BodyMD>
+            </div>
+          ) : (
+            <div className="h-6 sm:h-8" aria-hidden />
+          )}
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[#0b0b0b]">
+      <Section padding="md" className="bg-[#0b0b0b]">
         <Container size="md">
           {loading && (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/70">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 text-white/70">
               Loading form...
             </div>
           )}
 
           {!loading && error && (
-            <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-6 text-red-200">
+            <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 sm:p-6 text-red-200">
               {error}
             </div>
           )}
@@ -316,24 +328,203 @@ export default function PublicFormPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 gap-5">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 {form.fields
                   .slice()
                   .sort((a, b) => a.order - b.order)
                   .map(field => {
                     const value = answers[field.key];
+                    const fullWidth =
+                      field.type === 'textarea' ||
+                      field.type === 'select' ||
+                      field.type === 'radio' ||
+                      field.type === 'checkbox';
 
                     if (field.type === 'textarea') {
                       return (
-                        <label key={field.key} className="space-y-2">
+                        <div
+                          key={field.key}
+                          className={fullWidth ? 'md:col-span-2' : undefined}
+                        >
+                          <label className="space-y-2">
+                            <span className={labelClass}>
+                              {field.label}
+                              {field.required && (
+                                <span className="text-yellow-300"> *</span>
+                              )}
+                            </span>
+                            <textarea
+                              className={`${fieldBaseClass} min-h-[120px]`}
+                              placeholder={field.placeholder}
+                              required={field.required}
+                              value={value || ''}
+                              onChange={e =>
+                                handleChange(field.key, e.target.value)
+                              }
+                            />
+                          </label>
+                        </div>
+                      );
+                    }
+
+                    if (field.type === 'select') {
+                      return (
+                        <div
+                          key={field.key}
+                          className={fullWidth ? 'md:col-span-2' : undefined}
+                        >
+                          <label className="space-y-2">
+                            <span className={labelClass}>
+                              {field.label}
+                              {field.required && (
+                                <span className="text-yellow-300"> *</span>
+                              )}
+                            </span>
+                            <select
+                              className={fieldBaseClass}
+                              required={field.required}
+                              value={value || ''}
+                              onChange={e =>
+                                handleChange(field.key, e.target.value)
+                              }
+                            >
+                              <option value="" disabled>
+                                {field.placeholder || 'Select an option'}
+                              </option>
+                              {field.options?.map(option => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        </div>
+                      );
+                    }
+
+                    if (field.type === 'radio') {
+                      return (
+                        <div
+                          key={field.key}
+                          className={fullWidth ? 'md:col-span-2' : undefined}
+                        >
+                          <fieldset className="space-y-2">
+                            <legend className={labelClass}>
+                              {field.label}
+                              {field.required && (
+                                <span className="text-yellow-300"> *</span>
+                              )}
+                            </legend>
+                            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+                              {field.options?.map(option => (
+                                <label
+                                  key={option.value}
+                                  className="flex items-center gap-2 text-sm text-white/80"
+                                >
+                                  <input
+                                    type="radio"
+                                    name={field.key}
+                                    value={option.value}
+                                    checked={value === option.value}
+                                    onChange={e =>
+                                      handleChange(field.key, e.target.value)
+                                    }
+                                    required={field.required}
+                                    className="accent-yellow-400"
+                                  />
+                                  {option.label}
+                                </label>
+                              ))}
+                            </div>
+                          </fieldset>
+                        </div>
+                      );
+                    }
+
+                    if (field.type === 'checkbox' && field.options?.length) {
+                      const currentValues = Array.isArray(value) ? value : [];
+                      return (
+                        <div
+                          key={field.key}
+                          className={fullWidth ? 'md:col-span-2' : undefined}
+                        >
+                          <fieldset className="space-y-2">
+                            <legend className={labelClass}>
+                              {field.label}
+                              {field.required && (
+                                <span className="text-yellow-300"> *</span>
+                              )}
+                            </legend>
+                            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+                              {field.options.map(option => (
+                                <label
+                                  key={option.value}
+                                  className="flex items-center gap-2 text-sm text-white/80"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={currentValues.includes(
+                                      option.value
+                                    )}
+                                    onChange={e =>
+                                      handleCheckboxOption(
+                                        field.key,
+                                        option.value,
+                                        e.target.checked
+                                      )
+                                    }
+                                    className="accent-yellow-400"
+                                  />
+                                  {option.label}
+                                </label>
+                              ))}
+                            </div>
+                          </fieldset>
+                        </div>
+                      );
+                    }
+
+                    if (field.type === 'checkbox') {
+                      return (
+                        <div
+                          key={field.key}
+                          className={fullWidth ? 'md:col-span-2' : undefined}
+                        >
+                          <label className="flex items-center gap-2 text-sm text-white/80">
+                            <input
+                              type="checkbox"
+                              checked={Boolean(value)}
+                              onChange={e =>
+                                handleChange(field.key, e.target.checked)
+                              }
+                              className="accent-yellow-400"
+                            />
+                            <span>
+                              {field.label}
+                              {field.required && (
+                                <span className="text-yellow-300"> *</span>
+                              )}
+                            </span>
+                          </label>
+                        </div>
+                      );
+                    }
+
+                    const inputType =
+                      field.type === 'number' ? 'number' : field.type;
+
+                    return (
+                      <div key={field.key}>
+                        <label className="space-y-2">
                           <span className={labelClass}>
                             {field.label}
                             {field.required && (
                               <span className="text-yellow-300"> *</span>
                             )}
                           </span>
-                          <textarea
-                            className={`${fieldBaseClass} min-h-[120px]`}
+                          <input
+                            type={inputType}
+                            className={fieldBaseClass}
                             placeholder={field.placeholder}
                             required={field.required}
                             value={value || ''}
@@ -342,164 +533,16 @@ export default function PublicFormPage() {
                             }
                           />
                         </label>
-                      );
-                    }
-
-                    if (field.type === 'select') {
-                      return (
-                        <label key={field.key} className="space-y-2">
-                          <span className={labelClass}>
-                            {field.label}
-                            {field.required && (
-                              <span className="text-yellow-300"> *</span>
-                            )}
-                          </span>
-                          <select
-                            className={fieldBaseClass}
-                            required={field.required}
-                            value={value || ''}
-                            onChange={e =>
-                              handleChange(field.key, e.target.value)
-                            }
-                          >
-                            <option value="" disabled>
-                              {field.placeholder || 'Select an option'}
-                            </option>
-                            {field.options?.map(option => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      );
-                    }
-
-                    if (field.type === 'radio') {
-                      return (
-                        <fieldset key={field.key} className="space-y-2">
-                          <legend className={labelClass}>
-                            {field.label}
-                            {field.required && (
-                              <span className="text-yellow-300"> *</span>
-                            )}
-                          </legend>
-                          <div className="flex flex-wrap gap-3">
-                            {field.options?.map(option => (
-                              <label
-                                key={option.value}
-                                className="flex items-center gap-2 text-sm text-white/80"
-                              >
-                                <input
-                                  type="radio"
-                                  name={field.key}
-                                  value={option.value}
-                                  checked={value === option.value}
-                                  onChange={e =>
-                                    handleChange(field.key, e.target.value)
-                                  }
-                                  required={field.required}
-                                  className="accent-yellow-400"
-                                />
-                                {option.label}
-                              </label>
-                            ))}
-                          </div>
-                        </fieldset>
-                      );
-                    }
-
-                    if (field.type === 'checkbox' && field.options?.length) {
-                      const currentValues = Array.isArray(value) ? value : [];
-                      return (
-                        <fieldset key={field.key} className="space-y-2">
-                          <legend className={labelClass}>
-                            {field.label}
-                            {field.required && (
-                              <span className="text-yellow-300"> *</span>
-                            )}
-                          </legend>
-                          <div className="flex flex-wrap gap-3">
-                            {field.options.map(option => (
-                              <label
-                                key={option.value}
-                                className="flex items-center gap-2 text-sm text-white/80"
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={currentValues.includes(option.value)}
-                                  onChange={e =>
-                                    handleCheckboxOption(
-                                      field.key,
-                                      option.value,
-                                      e.target.checked
-                                    )
-                                  }
-                                  className="accent-yellow-400"
-                                />
-                                {option.label}
-                              </label>
-                            ))}
-                          </div>
-                        </fieldset>
-                      );
-                    }
-
-                    if (field.type === 'checkbox') {
-                      return (
-                        <label
-                          key={field.key}
-                          className="flex items-center gap-2 text-sm text-white/80"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={Boolean(value)}
-                            onChange={e =>
-                              handleChange(field.key, e.target.checked)
-                            }
-                            className="accent-yellow-400"
-                          />
-                          <span>
-                            {field.label}
-                            {field.required && (
-                              <span className="text-yellow-300"> *</span>
-                            )}
-                          </span>
-                        </label>
-                      );
-                    }
-
-                    const inputType =
-                      field.type === 'number' ? 'number' : field.type;
-
-                    return (
-                      <label key={field.key} className="space-y-2">
-                        <span className={labelClass}>
-                          {field.label}
-                          {field.required && (
-                            <span className="text-yellow-300"> *</span>
-                          )}
-                        </span>
-                        <input
-                          type={inputType}
-                          className={fieldBaseClass}
-                          placeholder={field.placeholder}
-                          required={field.required}
-                          value={value || ''}
-                          onChange={e =>
-                            handleChange(field.key, e.target.value)
-                          }
-                        />
-                      </label>
+                      </div>
                     );
                   })}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
                 >
                   {submitting ? 'Submitting...' : 'Submit form'}
                 </button>
