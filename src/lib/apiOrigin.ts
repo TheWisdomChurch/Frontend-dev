@@ -12,10 +12,10 @@ export function resolveApiOrigin(raw?: string | null): string {
   const normalized = normalizeApiOrigin(raw);
   const isProd = process.env.NODE_ENV === 'production';
 
-  // In browser environments, always prefer same-origin calls routed via /api/v1.
-  // This keeps API traffic behind Next.js rewrites and avoids public CORS issues.
+  // In browser environments, prefer an explicitly configured origin when present.
+  // Otherwise fall back to same-origin calls routed via /api/v1 rewrites.
   if (typeof window !== 'undefined') {
-    return '';
+    return normalized || '';
   }
 
   if (normalized) return normalized;
