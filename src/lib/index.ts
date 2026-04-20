@@ -21,6 +21,9 @@ export { default, apiClient } from './api';
 export type {
   FormFieldType,
   PublicFormField,
+  PublicFormSettings,
+  PublicFormContentSection,
+  PublicFormContentSectionItem,
   PublicFormPayload,
   PublicFormSubmissionRequest,
   EventPublic,

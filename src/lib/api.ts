@@ -2,9 +2,12 @@
 
 import type {
   EventPublic,
+  PublicFormContentSection,
+  PublicFormContentSectionItem,
   PublicFormField,
   ReelPublic,
   PublicFormPayload,
+  PublicFormSettings,
   PublicFormSubmissionRequest,
   Testimonial,
   CreateTestimonialRequest,
@@ -212,14 +215,21 @@ function extractArrayData<T>(res: any): T[] {
   return [];
 }
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+async function request<T>(
+  path: string,
+  options: RequestInit = {},
+  config?: { skipCache?: boolean }
+): Promise<T> {
   const url = `${API_V1_BASE_URL}${path}`;
   const cacheKey = `${options.method || 'GET'}:${path}`;
   const method = (options.method || 'GET').toUpperCase();
   const isIdempotent = method === 'GET' || method === 'HEAD';
 
-  // Check cache for GET requests
+  const skipCache = Boolean(config?.skipCache);
+
+  // Check cache for cacheable GET requests
   if (
+    !skipCache &&
     method !== 'POST' &&
     method !== 'PUT' &&
     method !== 'PATCH' &&
@@ -292,8 +302,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         );
       }
 
-      // Cache successful GET requests
+      // Cache successful cacheable GET requests
       if (
+        !skipCache &&
         method !== 'POST' &&
         method !== 'PUT' &&
         method !== 'PATCH' &&
@@ -486,6 +497,100 @@ function parseJsonValue<T>(value: unknown, fallback: T): T {
   return value as T;
 }
 
+function parseStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map(item => (typeof item === 'string' ? item.trim() : ''))
+      .filter(Boolean);
+  }
+  if (typeof value === 'string') {
+    return value
+      .split('\n')
+      .map(item => item.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function normalizePublicFormSectionItem(
+  input: unknown
+): PublicFormContentSectionItem | null {
+  if (!isRecord(input)) return null;
+  const title = asNonEmptyString(input.title);
+  if (!title) return null;
+
+  return {
+    title,
+    body: asNonEmptyString(input.body),
+    eyebrow: asNonEmptyString(input.eyebrow),
+    icon: asNonEmptyString(input.icon),
+    linkText: asNonEmptyString(input.linkText),
+    linkUrl: asNonEmptyString(input.linkUrl),
+  };
+}
+
+function normalizePublicFormSection(
+  input: unknown
+): PublicFormContentSection | null {
+  if (!isRecord(input)) return null;
+  const title = asNonEmptyString(input.title);
+  if (!title) return null;
+
+  const itemsRaw = Array.isArray(input.items) ? input.items : [];
+  const items = itemsRaw
+    .map(normalizePublicFormSectionItem)
+    .filter((item): item is PublicFormContentSectionItem => item !== null);
+
+  return {
+    id: asNonEmptyString(input.id),
+    title,
+    subtitle: asNonEmptyString(input.subtitle),
+    layout: asNonEmptyString(input.layout),
+    items,
+  };
+}
+
+function normalizePublicFormSettings(
+  input: unknown
+): PublicFormSettings | null {
+  if (!isRecord(input)) return null;
+  const design = isRecord(input.design) ? input.design : null;
+  const pick = (key: string): unknown =>
+    input[key] !== undefined ? input[key] : design?.[key];
+
+  const introBullets = parseStringArray(pick('introBullets'));
+  const introBulletSubtexts = parseStringArray(pick('introBulletSubtexts'));
+  const rawSections = Array.isArray(pick('sections'))
+    ? (pick('sections') as unknown[])
+    : [];
+  const sections = rawSections
+    .map(normalizePublicFormSection)
+    .filter((section): section is PublicFormContentSection => section !== null);
+
+  const settings: PublicFormSettings = {
+    formType: asNonEmptyString(pick('formType')),
+    introTitle: asNonEmptyString(pick('introTitle')),
+    introSubtitle: asNonEmptyString(pick('introSubtitle')),
+    introBullets: introBullets.length ? introBullets : undefined,
+    introBulletSubtexts: introBulletSubtexts.length
+      ? introBulletSubtexts
+      : undefined,
+    formHeaderNote: asNonEmptyString(pick('formHeaderNote')),
+    successMessage: asNonEmptyString(pick('successMessage')),
+    successModalTitle: asNonEmptyString(pick('successModalTitle')),
+    successModalSubtitle: asNonEmptyString(pick('successModalSubtitle')),
+    successModalMessage: asNonEmptyString(pick('successModalMessage')),
+    layoutMode: asNonEmptyString(pick('layoutMode')),
+    dateFormat: asNonEmptyString(pick('dateFormat')),
+    sections: sections.length ? sections : undefined,
+  };
+
+  const hasAnyValue = Object.values(settings).some(value =>
+    Array.isArray(value) ? value.length > 0 : Boolean(value)
+  );
+  return hasAnyValue ? settings : null;
+}
+
 function normalizePublicFormField(
   input: unknown,
   index: number
@@ -553,18 +658,19 @@ function normalizePublicFormPayload(input: unknown): PublicFormPayload {
     throw createApiError('Invalid public form payload', 500, input);
   }
 
-  const settings = parseJsonValue<Record<string, unknown> | null>(
+  const rawSettings = parseJsonValue<Record<string, unknown> | null>(
     rawForm.settings,
     null
   );
+  const settings = normalizePublicFormSettings(rawSettings);
 
   const capacityFromSettings =
-    settings && typeof settings.capacity === 'number'
-      ? settings.capacity
+    rawSettings && typeof rawSettings.capacity === 'number'
+      ? rawSettings.capacity
       : null;
   const closesAtFromSettings =
-    settings && typeof settings.closesAt === 'string'
-      ? settings.closesAt
+    rawSettings && typeof rawSettings.closesAt === 'string'
+      ? rawSettings.closesAt
       : null;
 
   const rawFields = Array.isArray(rawForm.fields) ? rawForm.fields : [];
@@ -586,6 +692,7 @@ function normalizePublicFormPayload(input: unknown): PublicFormPayload {
       asNonEmptyString(rawForm.closesAt) ?? closesAtFromSettings ?? null,
     fields,
     event: mapBackendEvent(input.event),
+    settings,
   };
 
   return payload;
@@ -666,9 +773,13 @@ export const apiClient = {
   },
 
   async getPublicForm(slug: string): Promise<PublicFormPayload> {
-    const res = await request<any>(`/forms/${encodeURIComponent(slug)}`, {
-      method: 'GET',
-    });
+    const res = await request<any>(
+      `/forms/${encodeURIComponent(slug)}`,
+      {
+        method: 'GET',
+      },
+      { skipCache: true }
+    );
     return normalizePublicFormPayload(unwrapData<unknown>(res));
   },
 
@@ -694,9 +805,13 @@ export const apiClient = {
   },
 
   async listApprovedTestimonials(): Promise<Testimonial[]> {
-    const res = await request<any>(`/testimonials?approved=true`, {
-      method: 'GET',
-    });
+    const res = await request<any>(
+      `/testimonials?approved=true`,
+      {
+        method: 'GET',
+      },
+      { skipCache: true }
+    );
     const data = unwrapData<any>(res);
     return Array.isArray(data) ? data.map(normalizeTestimonial) : [];
   },
