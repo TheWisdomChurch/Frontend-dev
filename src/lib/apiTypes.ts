@@ -22,6 +22,39 @@ export type PublicFormField = {
   placeholder?: string;
 };
 
+export type PublicFormContentSectionItem = {
+  title: string;
+  body?: string;
+  eyebrow?: string;
+  icon?: string;
+  linkText?: string;
+  linkUrl?: string;
+};
+
+export type PublicFormContentSection = {
+  id?: string;
+  title: string;
+  subtitle?: string;
+  layout?: 'grid' | 'stack' | 'timeline' | 'split' | string;
+  items?: PublicFormContentSectionItem[];
+};
+
+export type PublicFormSettings = {
+  formType?: string;
+  introTitle?: string;
+  introSubtitle?: string;
+  introBullets?: string[];
+  introBulletSubtexts?: string[];
+  formHeaderNote?: string;
+  successMessage?: string;
+  successModalTitle?: string;
+  successModalSubtitle?: string;
+  successModalMessage?: string;
+  layoutMode?: string;
+  dateFormat?: string;
+  sections?: PublicFormContentSection[];
+};
+
 export type PublicFormPayload = {
   id: string;
   slug: string;
@@ -31,6 +64,7 @@ export type PublicFormPayload = {
   closesAt?: string | null;
   fields: PublicFormField[];
   event?: EventPublic | null;
+  settings?: PublicFormSettings | null;
 };
 
 export type PublicFormSubmissionRequest = {

@@ -110,13 +110,13 @@ export default function Testimonials() {
   const [active, setActive] = useState(0);
   const [items, setItems] = useState<UiTestimonial[]>([]);
   const [shareUrl, setShareUrl] = useState(
-    process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/testimonial'
+    process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/share-testimony'
   );
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const base =
-      process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/testimonial';
+      process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/share-testimony';
     try {
       const returnTo = `${window.location.origin}/testimonies?testimonial_submitted=1`;
       const resolved = new URL(base, window.location.origin);

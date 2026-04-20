@@ -35,7 +35,7 @@ const mapTestimony = (item: ApiTestimonial): UiTestimony => {
 };
 
 const TESTIMONIAL_FORM_BASE_URL =
-  process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/testimonial';
+  process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/share-testimony';
 
 const stats = [
   {
@@ -141,8 +141,8 @@ export default function TestimoniesPage() {
       <StatStrip items={stats} />
 
       <Section padding="lg" className="bg-[#050505]">
-        <Container size="xl" className="space-y-8">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <Container size="xl" className="space-y-6 sm:space-y-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-3">
               <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
                 Testimony stories
@@ -170,11 +170,11 @@ export default function TestimoniesPage() {
               No approved testimonies yet.
             </div>
           ) : (
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 lg:grid-cols-3">
               {visibleTestimonies.map(testimony => (
                 <article
                   key={testimony.id}
-                  className="rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(0,0,0,0.22))] p-6"
+                  className="rounded-[1.6rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(0,0,0,0.22))] p-5 sm:p-6"
                 >
                   <p className="text-4xl leading-none text-[#d7bb75]">“</p>
                   <p className="mt-4 text-base leading-relaxed text-white/72">

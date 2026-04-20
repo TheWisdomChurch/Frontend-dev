@@ -3,13 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+import { Container, Section } from '@/shared/layout';
 import { H2, H3, BodyMD, BodySM, SmallText } from '@/shared/text';
 import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient from '@/lib/api';
@@ -20,6 +14,24 @@ const fieldBaseClass =
   'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
 
 const labelClass = 'text-sm font-semibold text-white/80';
+const DEFAULT_EYEBROW = 'Registration';
+
+function formatFormTypeLabel(formType?: string): string {
+  if (!formType) return DEFAULT_EYEBROW;
+  return formType
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, letter => letter.toUpperCase());
+}
+
+function applyTemplateVars(
+  input: string | undefined,
+  formTitle: string
+): string {
+  if (!input) return '';
+  return input.replace(/\{\{\s*formTitle\s*\}\}/gi, formTitle);
+}
 
 export default function PublicFormPage() {
   const params = useParams();
@@ -100,6 +112,46 @@ export default function PublicFormPage() {
     return { date, location: event.location || '' };
   }, [event]);
 
+  const presentation = useMemo(() => {
+    const settings = form?.settings;
+    const title =
+      settings?.introTitle || event?.title || form?.title || 'Registration';
+    const subtitle =
+      settings?.introSubtitle ||
+      event?.description ||
+      form?.description ||
+      'Complete the form below to continue.';
+    const eyebrow = formatFormTypeLabel(settings?.formType);
+    const detailItems = settings?.introBullets || [];
+    const detailSubtexts = settings?.introBulletSubtexts || [];
+    const headerNote = settings?.formHeaderNote || '';
+    const sections = settings?.sections || [];
+    const successTitle =
+      applyTemplateVars(settings?.successModalTitle, form?.title || 'Form') ||
+      'Submission received';
+    const successSubtitle = applyTemplateVars(
+      settings?.successModalSubtitle,
+      form?.title || 'Form'
+    );
+    const successMessage =
+      applyTemplateVars(settings?.successModalMessage, form?.title || 'Form') ||
+      applyTemplateVars(settings?.successMessage, form?.title || 'Form') ||
+      'Your response has been received successfully.';
+
+    return {
+      title,
+      subtitle,
+      eyebrow,
+      detailItems,
+      detailSubtexts,
+      headerNote,
+      sections,
+      successTitle,
+      successSubtitle,
+      successMessage,
+    };
+  }, [event, form]);
+
   const handleChange = (key: string, value: any) => {
     setAnswers(prev => ({ ...prev, [key]: value }));
   };
@@ -165,18 +217,14 @@ export default function PublicFormPage() {
         <Container size="xl" className="relative z-10 py-8 sm:py-12">
           <div className="max-w-3xl space-y-3">
             <SmallText className="uppercase tracking-[0.22em] text-white/70">
-              Event Registration
+              {presentation.eyebrow}
             </SmallText>
 
             <H2 className="text-3xl sm:text-4xl font-black">
-              {event?.title || form?.title || 'Event Registration'}
+              {presentation.title}
             </H2>
 
-            <BodyMD className="text-white/80">
-              {event?.description ||
-                form?.description ||
-                'Complete the form below to reserve your spot.'}
-            </BodyMD>
+            <BodyMD className="text-white/80">{presentation.subtitle}</BodyMD>
 
             {eventMeta && (
               <div className="flex flex-wrap items-center gap-4 text-white/75 text-sm">
@@ -219,7 +267,88 @@ export default function PublicFormPage() {
                 {form.description && (
                   <BodySM className="text-white/70">{form.description}</BodySM>
                 )}
+                {presentation.headerNote && (
+                  <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs sm:text-sm text-white/75">
+                    {presentation.headerNote}
+                  </div>
+                )}
               </div>
+
+              {(presentation.detailItems.length > 0 ||
+                presentation.sections.length > 0) && (
+                <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                  {presentation.detailItems.length > 0 && (
+                    <div className="space-y-3">
+                      {presentation.detailItems.map((item, index) => (
+                        <div
+                          key={`${item}-${index}`}
+                          className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
+                        >
+                          <p className="text-sm font-semibold text-white">
+                            {item}
+                          </p>
+                          {presentation.detailSubtexts[index] && (
+                            <p className="mt-1 text-xs sm:text-sm text-white/70">
+                              {presentation.detailSubtexts[index]}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {presentation.sections.map(section => (
+                    <div
+                      key={section.id || section.title}
+                      className="space-y-2"
+                    >
+                      <h4 className="text-base font-semibold text-white">
+                        {section.title}
+                      </h4>
+                      {section.subtitle && (
+                        <p className="text-sm text-white/70">
+                          {section.subtitle}
+                        </p>
+                      )}
+                      {Array.isArray(section.items) &&
+                        section.items.length > 0 && (
+                          <div className="grid gap-2 sm:grid-cols-2">
+                            {section.items.map((item, index) => (
+                              <div
+                                key={`${section.title}-${item.title}-${index}`}
+                                className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
+                              >
+                                {item.eyebrow && (
+                                  <p className="text-[11px] uppercase tracking-[0.14em] text-yellow-300/90">
+                                    {item.eyebrow}
+                                  </p>
+                                )}
+                                <p className="mt-1 text-sm font-medium text-white">
+                                  {item.title}
+                                </p>
+                                {item.body && (
+                                  <p className="mt-1 text-xs sm:text-sm text-white/70">
+                                    {item.body}
+                                  </p>
+                                )}
+                                {item.linkText && item.linkUrl && (
+                                  <a
+                                    href={item.linkUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-2 inline-block text-xs sm:text-sm font-semibold text-yellow-300 hover:underline"
+                                  >
+                                    {item.linkText}
+                                  </a>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="grid grid-cols-1 gap-5">
                 {form.fields
@@ -417,7 +546,17 @@ export default function PublicFormPage() {
 
           {!loading && submitted && (
             <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-6 text-emerald-100">
-              Your response has been received. Thank you for registering!
+              <p className="text-lg font-semibold">
+                {presentation.successTitle}
+              </p>
+              {presentation.successSubtitle && (
+                <p className="mt-1 text-sm text-emerald-200/90">
+                  {presentation.successSubtitle}
+                </p>
+              )}
+              <p className="mt-2 text-sm text-emerald-100/90">
+                {presentation.successMessage}
+              </p>
             </div>
           )}
         </Container>
