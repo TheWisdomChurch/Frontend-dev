@@ -4,11 +4,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Container, Section } from '@/shared/layout';
-import { H2, H3, BodyMD, BodySM, SmallText } from '@/shared/text';
+import { H3, BodySM } from '@/shared/text';
 import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient from '@/lib/api';
 import { PublicFormPayload, EventPublic, PublicFormField } from '@/lib';
-import { Calendar, MapPin } from 'lucide-react';
 
 const fieldBaseClass =
   'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
@@ -105,12 +104,6 @@ export default function PublicFormPage() {
       mounted = false;
     };
   }, [formSlug]);
-
-  const eventMeta = useMemo(() => {
-    if (!event) return null;
-    const date = event.startAt ? new Date(event.startAt).toLocaleString() : '';
-    return { date, location: event.location || '' };
-  }, [event]);
 
   const presentation = useMemo(() => {
     const settings = form?.settings;
@@ -215,34 +208,7 @@ export default function PublicFormPage() {
         <div className="absolute inset-0 bg-black/60" />
 
         <Container size="xl" className="relative z-10 py-8 sm:py-12">
-          <div className="max-w-3xl space-y-3">
-            <SmallText className="uppercase tracking-[0.22em] text-white/70">
-              {presentation.eyebrow}
-            </SmallText>
-
-            <H2 className="text-3xl sm:text-4xl font-black">
-              {presentation.title}
-            </H2>
-
-            <BodyMD className="text-white/80">{presentation.subtitle}</BodyMD>
-
-            {eventMeta && (
-              <div className="flex flex-wrap items-center gap-4 text-white/75 text-sm">
-                {eventMeta.date && (
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-yellow-300" />
-                    <span>{eventMeta.date}</span>
-                  </div>
-                )}
-                {eventMeta.location && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-yellow-300" />
-                    <span>{eventMeta.location}</span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <div className="h-24 sm:h-28" aria-hidden />
         </Container>
       </Section>
 
