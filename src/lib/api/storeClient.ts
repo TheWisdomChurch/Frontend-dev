@@ -87,7 +87,7 @@ export const storeClient = {
       price: String(item.price || 'N0'),
       originalPrice:
         typeof item.originalPrice === 'string' ? item.originalPrice : undefined,
-      image: String(item.image || '/images/placeholder.jpg'),
+      image: String(item.image || '/images/placeholder.webp'),
       description: String(item.description || ''),
       sizes: Array.isArray(item.sizes) ? item.sizes.map(String) : [],
       colors: Array.isArray(item.colors) ? item.colors.map(String) : [],

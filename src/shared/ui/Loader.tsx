@@ -8,7 +8,8 @@ interface LoaderProps {
   label?: string;
 }
 
-const VIDEO_BG_SRC = '/videos/videoBg.mp4?v=20260417';
+const VIDEO_BG_WEBM_SRC = '/_optimized/videos/videoBg.webm';
+const VIDEO_BG_MP4_SRC = '/videos/videoBg.mp4';
 
 export default function Loader({
   label = 'Equipped Empowered for Greatness',
@@ -44,9 +45,10 @@ export default function Loader({
             onCanPlay={() => setVideoLoaded(true)}
             onError={() => setVideoError(true)}
             aria-hidden="true"
-            poster="/images/placeholder.jpg"
+            poster="/images/placeholder.webp"
           >
-            <source src={VIDEO_BG_SRC} type="video/mp4" />
+            <source src={VIDEO_BG_WEBM_SRC} type="video/webm" />
+            <source src={VIDEO_BG_MP4_SRC} type="video/mp4" />
           </video>
         )}
         {/* Fallback gradient */}

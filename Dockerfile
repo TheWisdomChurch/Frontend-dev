@@ -26,8 +26,8 @@ RUN npm ci --no-audit --no-fund
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Native deps often needed by Next 16 toolchain (sharp, etc.)
-RUN apk add --no-cache libc6-compat ca-certificates python3 make g++ vips-dev \
+# Native deps for Next toolchain + media pipeline (sharp + ffmpeg)
+RUN apk add --no-cache libc6-compat ca-certificates python3 make g++ vips-dev ffmpeg \
  && update-ca-certificates
 
 COPY --from=deps /app/node_modules ./node_modules

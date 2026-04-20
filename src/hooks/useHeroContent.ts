@@ -35,7 +35,7 @@ const DEFAULT_FALLBACK_SLIDES: HeroSlide[] = [
     description:
       'A Spirit-filled family helping believers grow in faith, purpose, and community.',
     image: {
-      src: '/HEADER.png',
+      src: '/HEADER.webp',
       alt: "Experience God's Transforming Power",
       objectPosition: 'center',
     },
@@ -99,7 +99,8 @@ function mapEventToHeroSlide(event: EventPublic): HeroSlide {
     subtitle: event.title || 'Upcoming Event',
     description: event.description || undefined,
     image: {
-      src: event.imageUrl || event.bannerUrl || '/images/event-placeholder.jpg',
+      src:
+        event.imageUrl || event.bannerUrl || '/images/event-placeholder.webp',
       alt: event.title || 'Church event',
       objectPosition: 'center',
     },
@@ -123,7 +124,7 @@ function mapReelToHeroSlide(reel: ReelPublic): HeroSlide {
     subtitle: 'Latest Media',
     description: reel.description || undefined,
     image: {
-      src: reel.thumbnailUrl || '/images/reel-placeholder.jpg',
+      src: reel.thumbnailUrl || '/images/reel-placeholder.webp',
       alt: reel.title || 'Media reel',
       objectPosition: 'center',
     },

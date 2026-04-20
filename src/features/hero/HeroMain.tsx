@@ -106,13 +106,13 @@ function normalizeImage(
       typeof image.src === 'string' ? image.src : image.src?.src || '';
 
     return {
-      src: src || '/images/placeholder.jpg',
+      src: src || '/images/placeholder.webp',
       alt: image.alt || fallbackAlt,
       objectPosition: image.objectPosition,
     };
   }
 
-  return { src: '/images/placeholder.jpg', alt: fallbackAlt };
+  return { src: '/images/placeholder.webp', alt: fallbackAlt };
 }
 
 interface HeroSectionProps {
@@ -181,7 +181,7 @@ const HeroSection = ({
         subtitle: 'Equipped and empowered for greatness',
         description:
           'A Spirit-filled family helping believers grow in faith, purpose, and community.',
-        image: '/images/placeholder.jpg',
+        image: '/images/placeholder.webp',
       } as HeroSlide,
     ];
   }, [slideList]);
@@ -705,7 +705,7 @@ const HeroSection = ({
                         latestVideo.thumbnail ||
                         (latestVideo as any)?.thumbnails?.medium?.url ||
                         (latestVideo as any)?.thumbnails?.default?.url ||
-                        '/images/placeholder.jpg'
+                        '/images/placeholder.webp'
                       }
                       alt={latestVideo.title}
                       className="absolute inset-0 h-full w-full object-cover"
@@ -792,7 +792,7 @@ const HeroSection = ({
                           latestVideo.thumbnail ||
                           (latestVideo as any)?.thumbnails?.medium?.url ||
                           (latestVideo as any)?.thumbnails?.default?.url ||
-                          '/images/placeholder.jpg'
+                          '/images/placeholder.webp'
                         }
                         alt={latestVideo.title}
                         className="absolute inset-0 h-full w-full object-cover"

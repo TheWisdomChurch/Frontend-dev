@@ -120,7 +120,7 @@ export default function ResourceSection() {
     recentVideo?.thumbnail ||
     (recentVideo as any)?.thumbnails?.medium?.url ||
     (recentVideo as any)?.thumbnails?.default?.url ||
-    '/images/placeholder.jpg';
+    '/images/placeholder.webp';
 
   const recentVideoUrl = recentVideo?.id
     ? `https://www.youtube.com/watch?v=${recentVideo.id}`
