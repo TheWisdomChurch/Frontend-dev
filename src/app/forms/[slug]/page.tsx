@@ -45,20 +45,22 @@ export default function PublicFormPage() {
       setError(null);
 
       try {
-        const [formData, eventsData] = await Promise.all([
-          apiClient.getPublicForm(formSlug),
-          apiClient.listEvents().catch(() => [] as EventPublic[]),
-        ]);
+        const formData = await apiClient.getPublicForm(formSlug);
 
         if (!mounted) return;
 
         setForm(formData);
 
-        setEvent(
-          Array.isArray(eventsData)
+        let resolvedEvent = formData.event ?? null;
+        if (!resolvedEvent) {
+          const eventsData = await apiClient
+            .listEvents()
+            .catch(() => [] as EventPublic[]);
+          resolvedEvent = Array.isArray(eventsData)
             ? eventsData.find(evt => evt.formSlug === formSlug) || null
-            : null
-        );
+            : null;
+        }
+        setEvent(resolvedEvent);
 
         const defaults: Record<string, any> = {};
         (formData?.fields || []).forEach((field: PublicFormField) => {
@@ -72,7 +74,15 @@ export default function PublicFormPage() {
         setAnswers(prev => ({ ...defaults, ...prev }));
       } catch (err: any) {
         if (!mounted) return;
-        setError(err?.message || 'Unable to load form. Please try again.');
+        if (err?.statusCode === 404) {
+          setError(
+            'This form link is invalid, unpublished, or no longer available. Please contact support for the active link.'
+          );
+        } else if (err?.statusCode === 410) {
+          setError('This form is closed and no longer accepting responses.');
+        } else {
+          setError(err?.message || 'Unable to load form. Please try again.');
+        }
       } finally {
         if (mounted) setLoading(false);
       }
@@ -119,7 +129,7 @@ export default function PublicFormPage() {
     setError(null);
 
     try {
-      await apiClient.submitPublicForm(formSlug, { answers });
+      await apiClient.submitPublicForm(formSlug, { values: answers });
       setSubmitted(true);
     } catch (err: any) {
       setError(err?.message || 'Submission failed. Please try again.');

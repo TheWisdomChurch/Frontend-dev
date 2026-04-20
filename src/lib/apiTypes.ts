@@ -30,10 +30,13 @@ export type PublicFormPayload = {
   capacity?: number | null;
   closesAt?: string | null;
   fields: PublicFormField[];
+  event?: EventPublic | null;
 };
 
 export type PublicFormSubmissionRequest = {
-  answers: Record<string, any>;
+  values?: Record<string, any>;
+  // Backward-compat payload accepted by older callers.
+  answers?: Record<string, any>;
 };
 
 export type EventPublic = {

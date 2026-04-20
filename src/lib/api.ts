@@ -2,6 +2,7 @@
 
 import type {
   EventPublic,
+  PublicFormField,
   ReelPublic,
   PublicFormPayload,
   PublicFormSubmissionRequest,
@@ -473,6 +474,123 @@ function mapBackendReel(input: unknown): ReelPublic | null {
   };
 }
 
+function parseJsonValue<T>(value: unknown, fallback: T): T {
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return fallback;
+    }
+  }
+  if (value === undefined || value === null) return fallback;
+  return value as T;
+}
+
+function normalizePublicFormField(
+  input: unknown,
+  index: number
+): PublicFormField | null {
+  if (!isRecord(input)) return null;
+
+  const key = asNonEmptyString(input.key) ?? `field_${index + 1}`;
+  const label = asNonEmptyString(input.label) ?? key;
+  const rawType = (asNonEmptyString(input.type) ?? 'text').toLowerCase();
+  const allowedTypes = new Set([
+    'text',
+    'email',
+    'tel',
+    'number',
+    'textarea',
+    'select',
+    'radio',
+    'checkbox',
+    'date',
+  ]);
+  const type = (
+    allowedTypes.has(rawType) ? rawType : 'text'
+  ) as PublicFormField['type'];
+  const required = Boolean(input.required);
+  const order = typeof input.order === 'number' ? input.order : index;
+  const placeholder = asNonEmptyString(input.placeholder);
+
+  const rawOptions = parseJsonValue<unknown>(input.options, []);
+  const options = Array.isArray(rawOptions)
+    ? rawOptions
+        .map(item => {
+          if (!isRecord(item)) return null;
+          const value = asNonEmptyString(item.value);
+          const optionLabel = asNonEmptyString(item.label);
+          if (!value || !optionLabel) return null;
+          return { label: optionLabel, value };
+        })
+        .filter(
+          (item): item is { label: string; value: string } => item !== null
+        )
+    : undefined;
+
+  return {
+    key,
+    label,
+    type,
+    required,
+    order,
+    placeholder,
+    options,
+  };
+}
+
+function normalizePublicFormPayload(input: unknown): PublicFormPayload {
+  if (!isRecord(input)) {
+    throw createApiError('Invalid public form payload', 500, input);
+  }
+
+  const rawForm = isRecord(input.form) ? input.form : input;
+  const id = asNonEmptyString(rawForm.id);
+  const slug = asNonEmptyString(rawForm.slug);
+  const title = asNonEmptyString(rawForm.title);
+
+  if (!id || !slug || !title) {
+    throw createApiError('Invalid public form payload', 500, input);
+  }
+
+  const settings = parseJsonValue<Record<string, unknown> | null>(
+    rawForm.settings,
+    null
+  );
+
+  const capacityFromSettings =
+    settings && typeof settings.capacity === 'number'
+      ? settings.capacity
+      : null;
+  const closesAtFromSettings =
+    settings && typeof settings.closesAt === 'string'
+      ? settings.closesAt
+      : null;
+
+  const rawFields = Array.isArray(rawForm.fields) ? rawForm.fields : [];
+  const fields = rawFields
+    .map((field, index) => normalizePublicFormField(field, index))
+    .filter((field): field is PublicFormField => field !== null)
+    .sort((a, b) => a.order - b.order);
+
+  const payload: PublicFormPayload = {
+    id,
+    slug,
+    title,
+    description: asNonEmptyString(rawForm.description),
+    capacity:
+      typeof rawForm.capacity === 'number'
+        ? rawForm.capacity
+        : capacityFromSettings,
+    closesAt:
+      asNonEmptyString(rawForm.closesAt) ?? closesAtFromSettings ?? null,
+    fields,
+    event: mapBackendEvent(input.event),
+  };
+
+  return payload;
+}
+
 function normalizeTestimonial(raw: any): Testimonial {
   const firstName = raw?.firstName ?? raw?.first_name;
   const lastName = raw?.lastName ?? raw?.last_name;
@@ -551,18 +669,25 @@ export const apiClient = {
     const res = await request<any>(`/forms/${encodeURIComponent(slug)}`, {
       method: 'GET',
     });
-    return unwrapData<PublicFormPayload>(res);
+    return normalizePublicFormPayload(unwrapData<unknown>(res));
   },
 
   async submitPublicForm(
     slug: string,
     body: PublicFormSubmissionRequest
   ): Promise<any> {
+    const values =
+      isRecord(body) && isRecord(body.values)
+        ? body.values
+        : isRecord(body) && isRecord(body.answers)
+          ? body.answers
+          : {};
+
     const res = await request<any>(
       `/forms/${encodeURIComponent(slug)}/submissions`,
       {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify({ values }),
       }
     );
     return unwrapData<any>(res);
