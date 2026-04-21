@@ -20,6 +20,14 @@ export type PublicFormField = {
   required: boolean;
   order: number;
   options?: { label: string; value: string }[];
+  validation?: {
+    minLength?: number;
+    maxLength?: number;
+    maxWords?: number;
+    pattern?: string;
+    min?: number;
+    max?: number;
+  };
   placeholder?: string;
 };
 
