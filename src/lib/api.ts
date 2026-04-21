@@ -610,6 +610,7 @@ function normalizePublicFormField(
     'radio',
     'checkbox',
     'date',
+    'image',
   ]);
   const type = (
     allowedTypes.has(rawType) ? rawType : 'text'
@@ -619,6 +620,31 @@ function normalizePublicFormField(
   const placeholder = asNonEmptyString(input.placeholder);
 
   const rawOptions = parseJsonValue<unknown>(input.options, []);
+  const rawValidation = parseJsonValue<Record<string, unknown> | null>(
+    input.validation,
+    null
+  );
+  const validation = rawValidation
+    ? {
+        minLength:
+          typeof rawValidation.minLength === 'number'
+            ? rawValidation.minLength
+            : undefined,
+        maxLength:
+          typeof rawValidation.maxLength === 'number'
+            ? rawValidation.maxLength
+            : undefined,
+        maxWords:
+          typeof rawValidation.maxWords === 'number'
+            ? rawValidation.maxWords
+            : undefined,
+        pattern: asNonEmptyString(rawValidation.pattern),
+        min:
+          typeof rawValidation.min === 'number' ? rawValidation.min : undefined,
+        max:
+          typeof rawValidation.max === 'number' ? rawValidation.max : undefined,
+      }
+    : undefined;
   const options = Array.isArray(rawOptions)
     ? rawOptions
         .map(item => {
@@ -639,6 +665,7 @@ function normalizePublicFormField(
     type,
     required,
     order,
+    validation,
     placeholder,
     options,
   };
