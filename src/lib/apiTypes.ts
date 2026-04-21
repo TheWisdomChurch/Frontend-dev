@@ -9,7 +9,8 @@ export type FormFieldType =
   | 'select'
   | 'radio'
   | 'checkbox'
-  | 'date';
+  | 'date'
+  | 'image';
 
 export type PublicFormField = {
   id?: string;

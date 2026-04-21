@@ -209,7 +209,7 @@ export default function PublicFormPage() {
 
         <Container
           size="xl"
-          className={`relative z-10 ${showHeroCopy ? 'py-8 sm:py-10' : 'py-2 sm:py-3'}`}
+          className={`relative z-10 ${showHeroCopy ? 'py-12 sm:py-16' : 'py-2 sm:py-3'}`}
         >
           {showHeroCopy ? (
             <div className="max-w-3xl space-y-3">
@@ -224,128 +224,311 @@ export default function PublicFormPage() {
         </Container>
       </Section>
 
-      <Section padding="md" className="bg-[#0b0b0b]">
+      <Section padding="none" className="bg-[#0b0b0b]">
         <Container size="md">
-          {loading && (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 text-white/70">
-              Loading form...
-            </div>
-          )}
-
-          {!loading && error && (
-            <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 sm:p-6 text-red-200">
-              {error}
-            </div>
-          )}
-
-          {!loading && form && !submitted && (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-1.5">
-                <H3 className="text-2xl font-semibold">{form.title}</H3>
-                {form.description && (
-                  <BodySM className="text-white/70">{form.description}</BodySM>
-                )}
-                {presentation.headerNote && (
-                  <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs sm:text-sm text-white/75">
-                    {presentation.headerNote}
-                  </div>
-                )}
+          <div className="py-6 sm:py-8">
+            {loading && (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 text-white/70">
+                Loading form...
               </div>
+            )}
 
-              {(presentation.detailItems.length > 0 ||
-                presentation.sections.length > 0) && (
-                <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-                  {presentation.detailItems.length > 0 && (
-                    <div className="space-y-3">
-                      {presentation.detailItems.map((item, index) => (
-                        <div
-                          key={`${item}-${index}`}
-                          className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
-                        >
-                          <p className="text-sm font-semibold text-white">
-                            {item}
-                          </p>
-                          {presentation.detailSubtexts[index] && (
-                            <p className="mt-1 text-xs sm:text-sm text-white/70">
-                              {presentation.detailSubtexts[index]}
-                            </p>
-                          )}
-                        </div>
-                      ))}
+            {!loading && error && (
+              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 sm:p-6 text-red-200">
+                {error}
+              </div>
+            )}
+
+            {!loading && form && !submitted && (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-1.5">
+                  {!showHeroCopy && (
+                    <>
+                      <H3 className="text-2xl font-semibold">{form.title}</H3>
+                      {form.description && (
+                        <BodySM className="text-white/70">
+                          {form.description}
+                        </BodySM>
+                      )}
+                    </>
+                  )}
+                  {presentation.headerNote && (
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs sm:text-sm text-white/75">
+                      {presentation.headerNote}
                     </div>
                   )}
-
-                  {presentation.sections.map(section => (
-                    <div
-                      key={section.id || section.title}
-                      className="space-y-2"
-                    >
-                      <h4 className="text-base font-semibold text-white">
-                        {section.title}
-                      </h4>
-                      {section.subtitle && (
-                        <p className="text-sm text-white/70">
-                          {section.subtitle}
-                        </p>
-                      )}
-                      {Array.isArray(section.items) &&
-                        section.items.length > 0 && (
-                          <div className="grid gap-2 sm:grid-cols-2">
-                            {section.items.map((item, index) => (
-                              <div
-                                key={`${section.title}-${item.title}-${index}`}
-                                className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
-                              >
-                                {item.eyebrow && (
-                                  <p className="text-[11px] uppercase tracking-[0.14em] text-yellow-300/90">
-                                    {item.eyebrow}
-                                  </p>
-                                )}
-                                <p className="mt-1 text-sm font-medium text-white">
-                                  {item.title}
-                                </p>
-                                {item.body && (
-                                  <p className="mt-1 text-xs sm:text-sm text-white/70">
-                                    {item.body}
-                                  </p>
-                                )}
-                                {item.linkText && item.linkUrl && (
-                                  <a
-                                    href={item.linkUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mt-2 inline-block text-xs sm:text-sm font-semibold text-yellow-300 hover:underline"
-                                  >
-                                    {item.linkText}
-                                  </a>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                    </div>
-                  ))}
                 </div>
-              )}
 
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                {form.fields
-                  .slice()
-                  .sort((a, b) => a.order - b.order)
-                  .map(field => {
-                    const value = answers[field.key];
-                    const fullWidth =
-                      field.type === 'textarea' ||
-                      field.type === 'select' ||
-                      field.type === 'radio' ||
-                      field.type === 'checkbox';
+                {(presentation.detailItems.length > 0 ||
+                  presentation.sections.length > 0) && (
+                  <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                    {presentation.detailItems.length > 0 && (
+                      <div className="space-y-3">
+                        {presentation.detailItems.map((item, index) => (
+                          <div
+                            key={`${item}-${index}`}
+                            className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
+                          >
+                            <p className="text-sm font-semibold text-white">
+                              {item}
+                            </p>
+                            {presentation.detailSubtexts[index] && (
+                              <p className="mt-1 text-xs sm:text-sm text-white/70">
+                                {presentation.detailSubtexts[index]}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-                    if (field.type === 'textarea') {
+                    {presentation.sections.map(section => (
+                      <div
+                        key={section.id || section.title}
+                        className="space-y-2"
+                      >
+                        <h4 className="text-base font-semibold text-white">
+                          {section.title}
+                        </h4>
+                        {section.subtitle && (
+                          <p className="text-sm text-white/70">
+                            {section.subtitle}
+                          </p>
+                        )}
+                        {Array.isArray(section.items) &&
+                          section.items.length > 0 && (
+                            <div className="grid gap-2 sm:grid-cols-2">
+                              {section.items.map((item, index) => (
+                                <div
+                                  key={`${section.title}-${item.title}-${index}`}
+                                  className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
+                                >
+                                  {item.eyebrow && (
+                                    <p className="text-[11px] uppercase tracking-[0.14em] text-yellow-300/90">
+                                      {item.eyebrow}
+                                    </p>
+                                  )}
+                                  <p className="mt-1 text-sm font-medium text-white">
+                                    {item.title}
+                                  </p>
+                                  {item.body && (
+                                    <p className="mt-1 text-xs sm:text-sm text-white/70">
+                                      {item.body}
+                                    </p>
+                                  )}
+                                  {item.linkText && item.linkUrl && (
+                                    <a
+                                      href={item.linkUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="mt-2 inline-block text-xs sm:text-sm font-semibold text-yellow-300 hover:underline"
+                                    >
+                                      {item.linkText}
+                                    </a>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  {form.fields
+                    .slice()
+                    .sort((a, b) => a.order - b.order)
+                    .map(field => {
+                      const value = answers[field.key];
+                      const fullWidth =
+                        field.type === 'textarea' ||
+                        field.type === 'select' ||
+                        field.type === 'radio' ||
+                        field.type === 'checkbox';
+
+                      if (field.type === 'textarea') {
+                        return (
+                          <div
+                            key={field.key}
+                            className={fullWidth ? 'md:col-span-2' : undefined}
+                          >
+                            <label className="space-y-2">
+                              <span className={labelClass}>
+                                {field.label}
+                                {field.required && (
+                                  <span className="text-yellow-300"> *</span>
+                                )}
+                              </span>
+                              <textarea
+                                className={`${fieldBaseClass} min-h-[120px]`}
+                                placeholder={field.placeholder}
+                                required={field.required}
+                                value={value || ''}
+                                onChange={e =>
+                                  handleChange(field.key, e.target.value)
+                                }
+                              />
+                            </label>
+                          </div>
+                        );
+                      }
+
+                      if (field.type === 'select') {
+                        return (
+                          <div
+                            key={field.key}
+                            className={fullWidth ? 'md:col-span-2' : undefined}
+                          >
+                            <label className="space-y-2">
+                              <span className={labelClass}>
+                                {field.label}
+                                {field.required && (
+                                  <span className="text-yellow-300"> *</span>
+                                )}
+                              </span>
+                              <select
+                                className={fieldBaseClass}
+                                required={field.required}
+                                value={value || ''}
+                                onChange={e =>
+                                  handleChange(field.key, e.target.value)
+                                }
+                              >
+                                <option value="" disabled>
+                                  {field.placeholder || 'Select an option'}
+                                </option>
+                                {field.options?.map(option => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                          </div>
+                        );
+                      }
+
+                      if (field.type === 'radio') {
+                        return (
+                          <div
+                            key={field.key}
+                            className={fullWidth ? 'md:col-span-2' : undefined}
+                          >
+                            <fieldset className="space-y-2">
+                              <legend className={labelClass}>
+                                {field.label}
+                                {field.required && (
+                                  <span className="text-yellow-300"> *</span>
+                                )}
+                              </legend>
+                              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+                                {field.options?.map(option => (
+                                  <label
+                                    key={option.value}
+                                    className="flex items-center gap-2 text-sm text-white/80"
+                                  >
+                                    <input
+                                      type="radio"
+                                      name={field.key}
+                                      value={option.value}
+                                      checked={value === option.value}
+                                      onChange={e =>
+                                        handleChange(field.key, e.target.value)
+                                      }
+                                      required={field.required}
+                                      className="accent-yellow-400"
+                                    />
+                                    {option.label}
+                                  </label>
+                                ))}
+                              </div>
+                            </fieldset>
+                          </div>
+                        );
+                      }
+
+                      if (field.type === 'checkbox' && field.options?.length) {
+                        const currentValues = Array.isArray(value) ? value : [];
+                        return (
+                          <div
+                            key={field.key}
+                            className={fullWidth ? 'md:col-span-2' : undefined}
+                          >
+                            <fieldset className="space-y-2">
+                              <legend className={labelClass}>
+                                {field.label}
+                                {field.required && (
+                                  <span className="text-yellow-300"> *</span>
+                                )}
+                              </legend>
+                              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+                                {field.options.map(option => (
+                                  <label
+                                    key={option.value}
+                                    className="flex items-center gap-2 text-sm text-white/80"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={currentValues.includes(
+                                        option.value
+                                      )}
+                                      onChange={e =>
+                                        handleCheckboxOption(
+                                          field.key,
+                                          option.value,
+                                          e.target.checked
+                                        )
+                                      }
+                                      className="accent-yellow-400"
+                                    />
+                                    {option.label}
+                                  </label>
+                                ))}
+                              </div>
+                            </fieldset>
+                          </div>
+                        );
+                      }
+
+                      if (field.type === 'checkbox') {
+                        return (
+                          <div
+                            key={field.key}
+                            className={fullWidth ? 'md:col-span-2' : undefined}
+                          >
+                            <label className="flex items-center gap-2 text-sm text-white/80">
+                              <input
+                                type="checkbox"
+                                checked={Boolean(value)}
+                                onChange={e =>
+                                  handleChange(field.key, e.target.checked)
+                                }
+                                className="accent-yellow-400"
+                              />
+                              <span>
+                                {field.label}
+                                {field.required && (
+                                  <span className="text-yellow-300"> *</span>
+                                )}
+                              </span>
+                            </label>
+                          </div>
+                        );
+                      }
+
+                      const inputType =
+                        field.type === 'number'
+                          ? 'number'
+                          : field.type === 'image'
+                            ? 'url'
+                            : field.type;
+
                       return (
-                        <div
-                          key={field.key}
-                          className={fullWidth ? 'md:col-span-2' : undefined}
-                        >
+                        <div key={field.key}>
                           <label className="space-y-2">
                             <span className={labelClass}>
                               {field.label}
@@ -353,8 +536,9 @@ export default function PublicFormPage() {
                                 <span className="text-yellow-300"> *</span>
                               )}
                             </span>
-                            <textarea
-                              className={`${fieldBaseClass} min-h-[120px]`}
+                            <input
+                              type={inputType}
+                              className={fieldBaseClass}
                               placeholder={field.placeholder}
                               required={field.required}
                               value={value || ''}
@@ -365,209 +549,40 @@ export default function PublicFormPage() {
                           </label>
                         </div>
                       );
-                    }
+                    })}
+                </div>
 
-                    if (field.type === 'select') {
-                      return (
-                        <div
-                          key={field.key}
-                          className={fullWidth ? 'md:col-span-2' : undefined}
-                        >
-                          <label className="space-y-2">
-                            <span className={labelClass}>
-                              {field.label}
-                              {field.required && (
-                                <span className="text-yellow-300"> *</span>
-                              )}
-                            </span>
-                            <select
-                              className={fieldBaseClass}
-                              required={field.required}
-                              value={value || ''}
-                              onChange={e =>
-                                handleChange(field.key, e.target.value)
-                              }
-                            >
-                              <option value="" disabled>
-                                {field.placeholder || 'Select an option'}
-                              </option>
-                              {field.options?.map(option => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-                        </div>
-                      );
-                    }
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
+                  >
+                    {submitting ? 'Submitting...' : 'Submit form'}
+                  </button>
+                  <p className="text-xs text-white/60 sm:text-sm">
+                    We will follow up using the details you provide.
+                  </p>
+                </div>
+              </form>
+            )}
 
-                    if (field.type === 'radio') {
-                      return (
-                        <div
-                          key={field.key}
-                          className={fullWidth ? 'md:col-span-2' : undefined}
-                        >
-                          <fieldset className="space-y-2">
-                            <legend className={labelClass}>
-                              {field.label}
-                              {field.required && (
-                                <span className="text-yellow-300"> *</span>
-                              )}
-                            </legend>
-                            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
-                              {field.options?.map(option => (
-                                <label
-                                  key={option.value}
-                                  className="flex items-center gap-2 text-sm text-white/80"
-                                >
-                                  <input
-                                    type="radio"
-                                    name={field.key}
-                                    value={option.value}
-                                    checked={value === option.value}
-                                    onChange={e =>
-                                      handleChange(field.key, e.target.value)
-                                    }
-                                    required={field.required}
-                                    className="accent-yellow-400"
-                                  />
-                                  {option.label}
-                                </label>
-                              ))}
-                            </div>
-                          </fieldset>
-                        </div>
-                      );
-                    }
-
-                    if (field.type === 'checkbox' && field.options?.length) {
-                      const currentValues = Array.isArray(value) ? value : [];
-                      return (
-                        <div
-                          key={field.key}
-                          className={fullWidth ? 'md:col-span-2' : undefined}
-                        >
-                          <fieldset className="space-y-2">
-                            <legend className={labelClass}>
-                              {field.label}
-                              {field.required && (
-                                <span className="text-yellow-300"> *</span>
-                              )}
-                            </legend>
-                            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
-                              {field.options.map(option => (
-                                <label
-                                  key={option.value}
-                                  className="flex items-center gap-2 text-sm text-white/80"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={currentValues.includes(
-                                      option.value
-                                    )}
-                                    onChange={e =>
-                                      handleCheckboxOption(
-                                        field.key,
-                                        option.value,
-                                        e.target.checked
-                                      )
-                                    }
-                                    className="accent-yellow-400"
-                                  />
-                                  {option.label}
-                                </label>
-                              ))}
-                            </div>
-                          </fieldset>
-                        </div>
-                      );
-                    }
-
-                    if (field.type === 'checkbox') {
-                      return (
-                        <div
-                          key={field.key}
-                          className={fullWidth ? 'md:col-span-2' : undefined}
-                        >
-                          <label className="flex items-center gap-2 text-sm text-white/80">
-                            <input
-                              type="checkbox"
-                              checked={Boolean(value)}
-                              onChange={e =>
-                                handleChange(field.key, e.target.checked)
-                              }
-                              className="accent-yellow-400"
-                            />
-                            <span>
-                              {field.label}
-                              {field.required && (
-                                <span className="text-yellow-300"> *</span>
-                              )}
-                            </span>
-                          </label>
-                        </div>
-                      );
-                    }
-
-                    const inputType =
-                      field.type === 'number' ? 'number' : field.type;
-
-                    return (
-                      <div key={field.key}>
-                        <label className="space-y-2">
-                          <span className={labelClass}>
-                            {field.label}
-                            {field.required && (
-                              <span className="text-yellow-300"> *</span>
-                            )}
-                          </span>
-                          <input
-                            type={inputType}
-                            className={fieldBaseClass}
-                            placeholder={field.placeholder}
-                            required={field.required}
-                            value={value || ''}
-                            onChange={e =>
-                              handleChange(field.key, e.target.value)
-                            }
-                          />
-                        </label>
-                      </div>
-                    );
-                  })}
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
-                >
-                  {submitting ? 'Submitting...' : 'Submit form'}
-                </button>
-                <p className="text-xs text-white/60 sm:text-sm">
-                  We will follow up using the details you provide.
+            {!loading && submitted && (
+              <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-6 text-emerald-100">
+                <p className="text-lg font-semibold">
+                  {presentation.successTitle}
+                </p>
+                {presentation.successSubtitle && (
+                  <p className="mt-1 text-sm text-emerald-200/90">
+                    {presentation.successSubtitle}
+                  </p>
+                )}
+                <p className="mt-2 text-sm text-emerald-100/90">
+                  {presentation.successMessage}
                 </p>
               </div>
-            </form>
-          )}
-
-          {!loading && submitted && (
-            <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-6 text-emerald-100">
-              <p className="text-lg font-semibold">
-                {presentation.successTitle}
-              </p>
-              {presentation.successSubtitle && (
-                <p className="mt-1 text-sm text-emerald-200/90">
-                  {presentation.successSubtitle}
-                </p>
-              )}
-              <p className="mt-2 text-sm text-emerald-100/90">
-                {presentation.successMessage}
-              </p>
-            </div>
-          )}
+            )}
+          </div>
         </Container>
       </Section>
     </div>
