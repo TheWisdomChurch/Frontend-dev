@@ -1217,8 +1217,8 @@ export default function PublicFormPage() {
             )}
 
             {!loading && submitted && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-                <div className="w-full max-w-lg rounded-2xl border border-emerald-400/40 bg-[#0f1e14] p-6 text-emerald-100 shadow-2xl">
+              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-6">
+                <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-emerald-400/40 bg-[#0f1e14] p-6 text-emerald-100 shadow-2xl">
                   <p className="text-lg font-semibold">
                     {presentation.successTitle}
                   </p>
@@ -1234,11 +1234,18 @@ export default function PublicFormPage() {
                     You can now return to the homepage.
                   </p>
                   <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                    <Link
-                      href={returnPath}
+                    <button
+                      type="button"
+                      onClick={() => router.push(returnPath)}
                       className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
                     >
                       {returnLabel}
+                    </button>
+                    <Link
+                      href={returnPath}
+                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-emerald-200/40 px-6 py-3 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-100/10"
+                    >
+                      {returnPath}
                     </Link>
                   </div>
                 </div>
