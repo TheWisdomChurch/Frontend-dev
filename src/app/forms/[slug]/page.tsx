@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Container, Section } from '@/shared/layout';
 import { H2, H3, BodyMD, BodySM } from '@/shared/text';
@@ -223,6 +224,8 @@ function isFieldVisible(
 
 export default function PublicFormPage() {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const formSlug = useMemo(() => {
     if (!pathname) return undefined;
     const segments = pathname.split('/').filter(Boolean);
@@ -261,6 +264,31 @@ export default function PublicFormPage() {
       (form?.settings?.formType || '').toLowerCase() === 'testimonial'
     );
   }, [formSlug, form?.settings?.formType]);
+  const returnPath = useMemo(() => {
+    const raw = (searchParams.get('return_to') || '/').trim();
+    if (!raw) return '/';
+    if (!raw.startsWith('/')) return '/';
+    return raw;
+  }, [searchParams]);
+  const returnDelayMs = useMemo(() => {
+    const raw = searchParams.get('return_delay_ms');
+    if (!raw) return 0;
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed) || parsed < 0) return 0;
+    return Math.min(parsed, 15000);
+  }, [searchParams]);
+  const returnLabel = useMemo(() => {
+    const raw = (searchParams.get('return_label') || '').trim();
+    return raw || 'Return to homepage';
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!submitted || returnDelayMs <= 0) return;
+    const timer = window.setTimeout(() => {
+      router.push(returnPath);
+    }, returnDelayMs);
+    return () => window.clearTimeout(timer);
+  }, [submitted, returnDelayMs, returnPath, router]);
 
   useEffect(() => {
     if (!formSlug) return;
@@ -1189,18 +1217,31 @@ export default function PublicFormPage() {
             )}
 
             {!loading && submitted && (
-              <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-6 text-emerald-100">
-                <p className="text-lg font-semibold">
-                  {presentation.successTitle}
-                </p>
-                {presentation.successSubtitle && (
-                  <p className="mt-1 text-sm text-emerald-200/90">
-                    {presentation.successSubtitle}
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+                <div className="w-full max-w-lg rounded-2xl border border-emerald-400/40 bg-[#0f1e14] p-6 text-emerald-100 shadow-2xl">
+                  <p className="text-lg font-semibold">
+                    {presentation.successTitle}
                   </p>
-                )}
-                <p className="mt-2 text-sm text-emerald-100/90">
-                  {presentation.successMessage}
-                </p>
+                  {presentation.successSubtitle && (
+                    <p className="mt-1 text-sm text-emerald-200/90">
+                      {presentation.successSubtitle}
+                    </p>
+                  )}
+                  <p className="mt-2 text-sm text-emerald-100/90">
+                    {presentation.successMessage}
+                  </p>
+                  <p className="mt-4 text-sm text-emerald-200/90">
+                    You can now return to the homepage.
+                  </p>
+                  <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                    <Link
+                      href={returnPath}
+                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
+                    >
+                      {returnLabel}
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
           </div>
