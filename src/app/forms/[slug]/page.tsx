@@ -11,6 +11,8 @@ import { PublicFormPayload, EventPublic, PublicFormField } from '@/lib';
 
 const fieldBaseClass =
   'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
+const fieldSelectClass =
+  'w-full rounded-xl border border-white/30 bg-white px-4 py-3 text-base sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
 
 const labelClass = 'text-sm font-semibold text-white/80';
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -126,6 +128,86 @@ function applyTemplateVars(
 ): string {
   if (!input) return '';
   return input.replace(/\{\{\s*formTitle\s*\}\}/gi, formTitle);
+}
+
+function normalizeValue(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  return String(value).trim().toLowerCase();
+}
+
+function evaluateFieldRule(
+  currentValue: unknown,
+  operator: string,
+  expectedValue?: unknown,
+  expectedValues?: unknown[]
+): boolean {
+  const left = normalizeValue(currentValue);
+  const right = normalizeValue(expectedValue);
+  const rightList = Array.isArray(expectedValues)
+    ? expectedValues.map(item => normalizeValue(item))
+    : [];
+  const op = operator.toLowerCase();
+
+  if (op === 'is_empty') return !left;
+  if (op === 'not_empty') return Boolean(left);
+  if (op === 'contains' || op === 'includes') {
+    if (Array.isArray(currentValue)) {
+      return currentValue.map(item => normalizeValue(item)).includes(right);
+    }
+    return left.includes(right);
+  }
+  if (op === 'not_contains' || op === 'not_includes') {
+    if (Array.isArray(currentValue)) {
+      return !currentValue.map(item => normalizeValue(item)).includes(right);
+    }
+    return !left.includes(right);
+  }
+  if (op === 'in') return rightList.includes(left);
+  if (op === 'not_in') return !rightList.includes(left);
+  if (op === 'greater_than') return Number(left) > Number(right);
+  if (op === 'less_than') return Number(left) < Number(right);
+  if (op === 'not_equals' || op === 'not_equal') return left !== right;
+  return left === right;
+}
+
+function isFieldVisible(
+  field: PublicFormField,
+  answers: Record<string, unknown>
+): boolean {
+  const conditional = field.conditional;
+  if (
+    !conditional ||
+    !Array.isArray(conditional.rules) ||
+    !conditional.rules.length
+  ) {
+    return true;
+  }
+
+  const matchMode =
+    (conditional.match || 'all').toLowerCase() === 'any' ? 'any' : 'all';
+  const mode =
+    (conditional.mode || 'show').toLowerCase() === 'hide' ? 'hide' : 'show';
+
+  const didMatch =
+    matchMode === 'any'
+      ? conditional.rules.some(rule =>
+          evaluateFieldRule(
+            answers[rule.fieldKey],
+            rule.operator || 'equals',
+            rule.value,
+            rule.values
+          )
+        )
+      : conditional.rules.every(rule =>
+          evaluateFieldRule(
+            answers[rule.fieldKey],
+            rule.operator || 'equals',
+            rule.value,
+            rule.values
+          )
+        );
+
+  return mode === 'hide' ? !didMatch : didMatch;
 }
 
 export default function PublicFormPage() {
@@ -270,6 +352,30 @@ export default function PublicFormPage() {
   }, [event, form, isTestimonialForm]);
 
   const showHeroCopy = isStructuredPublicForm;
+  const sortedFields = useMemo(
+    () => (form?.fields || []).slice().sort((a, b) => a.order - b.order),
+    [form?.fields]
+  );
+  const visibleFields = useMemo(
+    () => sortedFields.filter(field => isFieldVisible(field, answers)),
+    [answers, sortedFields]
+  );
+
+  useEffect(() => {
+    const visibleKeys = new Set(visibleFields.map(field => field.key));
+    setFieldErrors(prev => {
+      const next: Record<string, string> = {};
+      let changed = false;
+      Object.entries(prev).forEach(([key, message]) => {
+        if (visibleKeys.has(key)) {
+          next[key] = message;
+          return;
+        }
+        changed = true;
+      });
+      return changed ? next : prev;
+    });
+  }, [visibleFields]);
 
   const handleChange = (key: string, value: any) => {
     setAnswers(prev => ({ ...prev, [key]: value }));
@@ -308,11 +414,7 @@ export default function PublicFormPage() {
     try {
       const nextFieldErrors: Record<string, string> = {};
       const payloadValues: Record<string, any> = {};
-      const sortedFields = form.fields
-        .slice()
-        .sort((a, b) => a.order - b.order);
-
-      for (const field of sortedFields) {
+      for (const field of visibleFields) {
         const rawValue = answers[field.key];
         const validation = field.validation;
         const maxWords =
@@ -461,8 +563,8 @@ export default function PublicFormPage() {
       </Section>
 
       <Section padding="none" className="bg-[#0b0b0b]">
-        <Container size="md">
-          <div className="py-6 sm:py-8">
+        <Container size="xl">
+          <div className="py-6 sm:py-8 lg:py-12">
             {loading && (
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 text-white/70">
                 Loading form...
@@ -476,106 +578,118 @@ export default function PublicFormPage() {
             )}
 
             {!loading && form && !submitted && (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-1.5">
-                  {!showHeroCopy && (
-                    <>
-                      <H3 className="text-2xl font-semibold">{form.title}</H3>
-                      {form.description && (
-                        <BodySM className="text-white/70">
-                          {form.description}
-                        </BodySM>
-                      )}
-                    </>
-                  )}
-                  {presentation.headerNote && (
-                    <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs sm:text-sm text-white/75">
-                      {presentation.headerNote}
-                    </div>
-                  )}
-                </div>
-
-                {(presentation.detailItems.length > 0 ||
-                  presentation.sections.length > 0) && (
-                  <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-                    {presentation.detailItems.length > 0 && (
-                      <div className="space-y-3">
-                        {presentation.detailItems.map((item, index) => (
-                          <div
-                            key={`${item}-${index}`}
-                            className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
-                          >
-                            <p className="text-sm font-semibold text-white">
-                              {item}
-                            </p>
-                            {presentation.detailSubtexts[index] && (
-                              <p className="mt-1 text-xs sm:text-sm text-white/70">
-                                {presentation.detailSubtexts[index]}
-                              </p>
-                            )}
-                          </div>
-                        ))}
+              <div className="mx-auto grid max-w-6xl gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
+                <aside className="h-fit space-y-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5 xl:sticky xl:top-6">
+                  <div className="space-y-2">
+                    {!showHeroCopy && (
+                      <>
+                        <H3 className="text-2xl font-semibold">{form.title}</H3>
+                        {form.description && (
+                          <BodySM className="text-white/70">
+                            {form.description}
+                          </BodySM>
+                        )}
+                      </>
+                    )}
+                    {presentation.headerNote && (
+                      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-xs sm:text-sm text-white/75">
+                        {presentation.headerNote}
                       </div>
                     )}
-
-                    {presentation.sections.map(section => (
-                      <div
-                        key={section.id || section.title}
-                        className="space-y-2"
-                      >
-                        <h4 className="text-base font-semibold text-white">
-                          {section.title}
-                        </h4>
-                        {section.subtitle && (
-                          <p className="text-sm text-white/70">
-                            {section.subtitle}
-                          </p>
-                        )}
-                        {Array.isArray(section.items) &&
-                          section.items.length > 0 && (
-                            <div className="grid gap-2 sm:grid-cols-2">
-                              {section.items.map((item, index) => (
-                                <div
-                                  key={`${section.title}-${item.title}-${index}`}
-                                  className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
-                                >
-                                  {item.eyebrow && (
-                                    <p className="text-[11px] uppercase tracking-[0.14em] text-yellow-300/90">
-                                      {item.eyebrow}
-                                    </p>
-                                  )}
-                                  <p className="mt-1 text-sm font-medium text-white">
-                                    {item.title}
-                                  </p>
-                                  {item.body && (
-                                    <p className="mt-1 text-xs sm:text-sm text-white/70">
-                                      {item.body}
-                                    </p>
-                                  )}
-                                  {item.linkText && item.linkUrl && (
-                                    <a
-                                      href={item.linkUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="mt-2 inline-block text-xs sm:text-sm font-semibold text-yellow-300 hover:underline"
-                                    >
-                                      {item.linkText}
-                                    </a>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                      </div>
-                    ))}
                   </div>
-                )}
+                  <div className="rounded-xl border border-yellow-300/30 bg-yellow-300/10 px-4 py-3">
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-yellow-300/90">
+                      Form Overview
+                    </p>
+                    <p className="mt-2 text-sm text-white/85">
+                      {visibleFields.length} visible field
+                      {visibleFields.length === 1 ? '' : 's'} in this step.
+                    </p>
+                  </div>
+                </aside>
 
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                  {form.fields
-                    .slice()
-                    .sort((a, b) => a.order - b.order)
-                    .map(field => {
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-6 lg:p-8"
+                >
+                  {(presentation.detailItems.length > 0 ||
+                    presentation.sections.length > 0) && (
+                    <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                      {presentation.detailItems.length > 0 && (
+                        <div className="space-y-3">
+                          {presentation.detailItems.map((item, index) => (
+                            <div
+                              key={`${item}-${index}`}
+                              className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
+                            >
+                              <p className="text-sm font-semibold text-white">
+                                {item}
+                              </p>
+                              {presentation.detailSubtexts[index] && (
+                                <p className="mt-1 text-xs sm:text-sm text-white/70">
+                                  {presentation.detailSubtexts[index]}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {presentation.sections.map(section => (
+                        <div
+                          key={section.id || section.title}
+                          className="space-y-2"
+                        >
+                          <h4 className="text-base font-semibold text-white">
+                            {section.title}
+                          </h4>
+                          {section.subtitle && (
+                            <p className="text-sm text-white/70">
+                              {section.subtitle}
+                            </p>
+                          )}
+                          {Array.isArray(section.items) &&
+                            section.items.length > 0 && (
+                              <div className="grid gap-2 sm:grid-cols-2">
+                                {section.items.map((item, index) => (
+                                  <div
+                                    key={`${section.title}-${item.title}-${index}`}
+                                    className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
+                                  >
+                                    {item.eyebrow && (
+                                      <p className="text-[11px] uppercase tracking-[0.14em] text-yellow-300/90">
+                                        {item.eyebrow}
+                                      </p>
+                                    )}
+                                    <p className="mt-1 text-sm font-medium text-white">
+                                      {item.title}
+                                    </p>
+                                    {item.body && (
+                                      <p className="mt-1 text-xs sm:text-sm text-white/70">
+                                        {item.body}
+                                      </p>
+                                    )}
+                                    {item.linkText && item.linkUrl && (
+                                      <a
+                                        href={item.linkUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="mt-2 inline-block text-xs sm:text-sm font-semibold text-yellow-300 hover:underline"
+                                      >
+                                        {item.linkText}
+                                      </a>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    {visibleFields.map(field => {
                       const value = answers[field.key];
                       const fullWidth =
                         field.type === 'textarea' ||
@@ -643,7 +757,7 @@ export default function PublicFormPage() {
                                 )}
                               </span>
                               <select
-                                className={fieldBaseClass}
+                                className={fieldSelectClass}
                                 value={value || ''}
                                 onChange={e =>
                                   handleChange(field.key, e.target.value)
@@ -656,6 +770,7 @@ export default function PublicFormPage() {
                                   <option
                                     key={option.value}
                                     value={option.value}
+                                    className="bg-white text-slate-900"
                                   >
                                     {option.label}
                                   </option>
@@ -860,7 +975,7 @@ export default function PublicFormPage() {
                               </span>
                               <div className="grid grid-cols-1 gap-2 sm:grid-cols-[170px_1fr]">
                                 <select
-                                  className={fieldBaseClass}
+                                  className={fieldSelectClass}
                                   value={currentDial}
                                   onChange={e => {
                                     const nextDial = e.target.value;
@@ -938,7 +1053,7 @@ export default function PublicFormPage() {
                               </span>
                               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                                 <select
-                                  className={fieldBaseClass}
+                                  className={fieldSelectClass}
                                   value={selectedDay}
                                   disabled={!selectedMonth}
                                   onChange={e => {
@@ -959,7 +1074,7 @@ export default function PublicFormPage() {
                                   ))}
                                 </select>
                                 <select
-                                  className={fieldBaseClass}
+                                  className={fieldSelectClass}
                                   value={selectedMonth}
                                   onChange={e => {
                                     const nextMonth = e.target.value;
@@ -1035,21 +1150,22 @@ export default function PublicFormPage() {
                         </div>
                       );
                     })}
-                </div>
+                  </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
-                  >
-                    {submitting ? 'Submitting...' : 'Submit form'}
-                  </button>
-                  <p className="text-xs text-white/60 sm:text-sm">
-                    We will follow up using the details you provide.
-                  </p>
-                </div>
-              </form>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
+                    >
+                      {submitting ? 'Submitting...' : 'Submit form'}
+                    </button>
+                    <p className="text-xs text-white/60 sm:text-sm">
+                      We will follow up using the details you provide.
+                    </p>
+                  </div>
+                </form>
+              </div>
             )}
 
             {!loading && submitted && (

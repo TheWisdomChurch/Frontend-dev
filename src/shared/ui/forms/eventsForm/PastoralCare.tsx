@@ -310,7 +310,11 @@ const PastoralCareUnit = () => {
                         >
                           <option value="">Select Title</option>
                           {titles.map(title => (
-                            <option key={title} value={title}>
+                            <option
+                              key={title}
+                              value={title}
+                              className="bg-white text-gray-900"
+                            >
                               {title}
                             </option>
                           ))}
@@ -549,7 +553,11 @@ const PastoralCareUnit = () => {
                         >
                           <option value="">Select Event Type</option>
                           {eventTypes.map(type => (
-                            <option key={type} value={type}>
+                            <option
+                              key={type}
+                              value={type}
+                              className="bg-white text-gray-900"
+                            >
                               {type}
                             </option>
                           ))}
@@ -588,7 +596,11 @@ const PastoralCareUnit = () => {
                         >
                           <option value="">Select Preferred Role</option>
                           {churchRoles.map(role => (
-                            <option key={role} value={role}>
+                            <option
+                              key={role}
+                              value={role}
+                              className="bg-white text-gray-900"
+                            >
                               {role}
                             </option>
                           ))}

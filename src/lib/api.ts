@@ -4,6 +4,8 @@ import type {
   EventPublic,
   PublicFormContentSection,
   PublicFormContentSectionItem,
+  PublicFormFieldConditionRule,
+  PublicFormFieldConditional,
   PublicFormField,
   ReelPublic,
   PublicFormPayload,
@@ -624,6 +626,93 @@ function normalizePublicFormField(
     input.validation,
     null
   );
+  const rawConditional =
+    parseJsonValue<Record<string, unknown> | null>(input.conditional, null) ??
+    parseJsonValue<Record<string, unknown> | null>(input.conditions, null) ??
+    parseJsonValue<Record<string, unknown> | null>(input.visibility, null) ??
+    null;
+
+  const normalizeRule = (
+    rawRule: unknown
+  ): PublicFormFieldConditionRule | null => {
+    if (!isRecord(rawRule)) return null;
+
+    const fieldKey =
+      asNonEmptyString(rawRule.fieldKey) ??
+      asNonEmptyString(rawRule.field) ??
+      asNonEmptyString(rawRule.dependsOn) ??
+      asNonEmptyString(rawRule.sourceField);
+    if (!fieldKey) return null;
+
+    const operator =
+      asNonEmptyString(rawRule.operator) ??
+      asNonEmptyString(rawRule.comparison) ??
+      'equals';
+    const value =
+      typeof rawRule.value === 'string' ||
+      typeof rawRule.value === 'number' ||
+      typeof rawRule.value === 'boolean' ||
+      rawRule.value === null
+        ? rawRule.value
+        : undefined;
+    const values = Array.isArray(rawRule.values)
+      ? rawRule.values.filter(
+          item =>
+            typeof item === 'string' ||
+            typeof item === 'number' ||
+            typeof item === 'boolean'
+        )
+      : undefined;
+
+    return {
+      fieldKey,
+      operator,
+      value,
+      values: values?.length ? values : undefined,
+    };
+  };
+
+  const normalizeConditional = (): PublicFormFieldConditional | undefined => {
+    const rulesFromList = Array.isArray(input['conditionRules'])
+      ? input['conditionRules']
+      : [];
+    const rawRules = rawConditional
+      ? Array.isArray(rawConditional.rules)
+        ? rawConditional.rules
+        : []
+      : [];
+    const directRule =
+      rawConditional && !Array.isArray(rawConditional.rules)
+        ? normalizeRule(rawConditional)
+        : null;
+
+    const rules = [...rawRules, ...rulesFromList]
+      .map(normalizeRule)
+      .filter((rule): rule is PublicFormFieldConditionRule => rule !== null);
+
+    if (directRule) {
+      rules.unshift(directRule);
+    }
+
+    if (rules.length === 0) return undefined;
+
+    const rawMode =
+      asNonEmptyString(rawConditional?.mode) ??
+      asNonEmptyString(rawConditional?.action) ??
+      'show';
+    const rawMatch =
+      asNonEmptyString(rawConditional?.match) ??
+      asNonEmptyString(rawConditional?.logic) ??
+      'all';
+
+    return {
+      mode: rawMode === 'hide' ? 'hide' : 'show',
+      match: rawMatch === 'any' ? 'any' : 'all',
+      rules,
+    };
+  };
+
+  const conditional = normalizeConditional();
   const validation = rawValidation
     ? {
         minLength:
@@ -668,6 +757,7 @@ function normalizePublicFormField(
     validation,
     placeholder,
     options,
+    conditional,
   };
 }
 

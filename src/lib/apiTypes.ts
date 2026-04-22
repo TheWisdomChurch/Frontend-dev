@@ -12,6 +12,30 @@ export type FormFieldType =
   | 'date'
   | 'image';
 
+export type PublicFormFieldConditionRule = {
+  fieldKey: string;
+  operator?:
+    | 'equals'
+    | 'not_equals'
+    | 'contains'
+    | 'not_contains'
+    | 'in'
+    | 'not_in'
+    | 'is_empty'
+    | 'not_empty'
+    | 'greater_than'
+    | 'less_than'
+    | string;
+  value?: string | number | boolean | null;
+  values?: Array<string | number | boolean>;
+};
+
+export type PublicFormFieldConditional = {
+  mode?: 'show' | 'hide';
+  match?: 'all' | 'any';
+  rules: PublicFormFieldConditionRule[];
+};
+
 export type PublicFormField = {
   id?: string;
   key: string;
@@ -29,6 +53,7 @@ export type PublicFormField = {
     max?: number;
   };
   placeholder?: string;
+  conditional?: PublicFormFieldConditional;
 };
 
 export type PublicFormContentSectionItem = {
