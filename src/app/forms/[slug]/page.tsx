@@ -12,7 +12,7 @@ import { PublicFormPayload, EventPublic, PublicFormField } from '@/lib';
 const fieldBaseClass =
   'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
 const fieldSelectClass =
-  'w-full rounded-xl border border-white/30 bg-white px-4 py-3 text-base sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
+  'w-full rounded-xl border border-white/20 bg-slate-950/90 px-4 py-3 text-base sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
 
 const labelClass = 'text-sm font-semibold text-white/80';
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -131,8 +131,22 @@ function applyTemplateVars(
 }
 
 function normalizeValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    return value
+      .map(item => normalizeValue(item))
+      .filter(Boolean)
+      .join('|');
+  }
   if (value === null || value === undefined) return '';
   return String(value).trim().toLowerCase();
+}
+
+function asNormalizedList(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map(item => normalizeValue(item)).filter(Boolean);
+  }
+  const normalized = normalizeValue(value);
+  return normalized ? [normalized] : [];
 }
 
 function evaluateFieldRule(
@@ -142,31 +156,28 @@ function evaluateFieldRule(
   expectedValues?: unknown[]
 ): boolean {
   const left = normalizeValue(currentValue);
+  const leftList = asNormalizedList(currentValue);
   const right = normalizeValue(expectedValue);
-  const rightList = Array.isArray(expectedValues)
-    ? expectedValues.map(item => normalizeValue(item))
-    : [];
+  const rightList = asNormalizedList(expectedValues);
   const op = operator.toLowerCase();
 
   if (op === 'is_empty') return !left;
   if (op === 'not_empty') return Boolean(left);
   if (op === 'contains' || op === 'includes') {
-    if (Array.isArray(currentValue)) {
-      return currentValue.map(item => normalizeValue(item)).includes(right);
-    }
+    if (leftList.length > 1) return leftList.includes(right);
     return left.includes(right);
   }
   if (op === 'not_contains' || op === 'not_includes') {
-    if (Array.isArray(currentValue)) {
-      return !currentValue.map(item => normalizeValue(item)).includes(right);
-    }
+    if (leftList.length > 1) return !leftList.includes(right);
     return !left.includes(right);
   }
-  if (op === 'in') return rightList.includes(left);
-  if (op === 'not_in') return !rightList.includes(left);
+  if (op === 'in') return leftList.some(item => rightList.includes(item));
+  if (op === 'not_in') return leftList.every(item => !rightList.includes(item));
   if (op === 'greater_than') return Number(left) > Number(right);
   if (op === 'less_than') return Number(left) < Number(right);
-  if (op === 'not_equals' || op === 'not_equal') return left !== right;
+  if (op === 'not_equals' || op === 'not_equal')
+    return !leftList.includes(right);
+  if (op === 'equals' && leftList.length > 1) return leftList.includes(right);
   return left === right;
 }
 
@@ -578,7 +589,7 @@ export default function PublicFormPage() {
             )}
 
             {!loading && form && !submitted && (
-              <div className="mx-auto grid max-w-6xl gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
+              <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
                 <aside className="h-fit space-y-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5 xl:sticky xl:top-6">
                   <div className="space-y-2">
                     {!showHeroCopy && (
@@ -688,14 +699,14 @@ export default function PublicFormPage() {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:gap-5">
                     {visibleFields.map(field => {
                       const value = answers[field.key];
                       const fullWidth =
                         field.type === 'textarea' ||
-                        field.type === 'select' ||
                         field.type === 'radio' ||
-                        field.type === 'checkbox';
+                        field.type === 'checkbox' ||
+                        field.type === 'image';
 
                       if (field.type === 'textarea') {
                         const maxWords =
@@ -711,7 +722,7 @@ export default function PublicFormPage() {
                         return (
                           <div
                             key={field.key}
-                            className={fullWidth ? 'md:col-span-2' : undefined}
+                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
                           >
                             <label className="space-y-2">
                               <span className={labelClass}>
@@ -747,7 +758,7 @@ export default function PublicFormPage() {
                         return (
                           <div
                             key={field.key}
-                            className={fullWidth ? 'md:col-span-2' : undefined}
+                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
                           >
                             <label className="space-y-2">
                               <span className={labelClass}>
@@ -770,7 +781,7 @@ export default function PublicFormPage() {
                                   <option
                                     key={option.value}
                                     value={option.value}
-                                    className="bg-white text-slate-900"
+                                    className="bg-slate-900 text-white"
                                   >
                                     {option.label}
                                   </option>
@@ -790,7 +801,7 @@ export default function PublicFormPage() {
                         return (
                           <div
                             key={field.key}
-                            className={fullWidth ? 'md:col-span-2' : undefined}
+                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
                           >
                             <fieldset className="space-y-2">
                               <legend className={labelClass}>
@@ -835,7 +846,7 @@ export default function PublicFormPage() {
                         return (
                           <div
                             key={field.key}
-                            className={fullWidth ? 'md:col-span-2' : undefined}
+                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
                           >
                             <fieldset className="space-y-2">
                               <legend className={labelClass}>
@@ -882,7 +893,7 @@ export default function PublicFormPage() {
                         return (
                           <div
                             key={field.key}
-                            className={fullWidth ? 'md:col-span-2' : undefined}
+                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
                           >
                             <label className="flex items-center gap-2 text-sm text-white/80">
                               <input
@@ -918,7 +929,7 @@ export default function PublicFormPage() {
                         return (
                           <div
                             key={field.key}
-                            className={fullWidth ? 'md:col-span-2' : undefined}
+                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
                           >
                             <label className="space-y-2">
                               <span className={labelClass}>
@@ -965,7 +976,10 @@ export default function PublicFormPage() {
                           parsed?.dial ?? COUNTRY_PHONE_CODES[0].dial;
                         const currentNational = parsed?.national ?? '';
                         return (
-                          <div key={field.key}>
+                          <div
+                            key={field.key}
+                            className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                          >
                             <label className="space-y-2">
                               <span className={labelClass}>
                                 {field.label}
@@ -1043,7 +1057,10 @@ export default function PublicFormPage() {
                         );
 
                         return (
-                          <div key={field.key}>
+                          <div
+                            key={field.key}
+                            className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                          >
                             <label className="space-y-2">
                               <span className={labelClass}>
                                 {field.label}
@@ -1124,7 +1141,10 @@ export default function PublicFormPage() {
                         field.type === 'number' ? 'number' : field.type;
 
                       return (
-                        <div key={field.key}>
+                        <div
+                          key={field.key}
+                          className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                        >
                           <label className="space-y-2">
                             <span className={labelClass}>
                               {field.label}
