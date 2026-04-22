@@ -32,6 +32,9 @@ import { resolveConfiguredApiOrigin } from './apiOrigin';
    API CONFIG
 ============================================================================ */
 
+// const API_ORIGIN = resolveConfiguredApiOrigin();
+// const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
+
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
 
