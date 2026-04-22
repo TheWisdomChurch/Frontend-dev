@@ -125,7 +125,7 @@ export const metadata: Metadata = {
 
   // ✅ Verification: token ONLY (NOT .html filename)
   verification: {
-    google: '06pkcDIlRljdgVWZrLV9a9tqH7FJ5xp9lMfhho7LaRU',
+    google: 'uOPR3Lh4dhAVkY-jD_5e6cFGtrW2NTpy4TDCtU93-sY',
   },
   icons: {
     icon: '/logo.webp',
