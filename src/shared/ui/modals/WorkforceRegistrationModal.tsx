@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as ZodResolvers from '@hookform/resolvers/zod';
 import { Loader2, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
+
 import { BaseModal, modalStyles } from './Base';
 import { SuccessModal } from './SuccessModal';
 import apiClient, { mapValidationErrors } from '@/lib/api';
@@ -49,12 +50,12 @@ const MONTHS = [
   'December',
 ];
 
-export const WorkforceRegistrationModal = ({
+export function WorkforceRegistrationModal({
   isOpen,
   onClose,
   onSubmit,
   defaultValues = {},
-}: WorkforceRegistrationModalProps) => {
+}: WorkforceRegistrationModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -90,17 +91,20 @@ export const WorkforceRegistrationModal = ({
 
   const onSubmitForm = async (data: WorkforceRegistrationFormData) => {
     setIsSubmitting(true);
+
     try {
       await submitHandler({
         ...data,
         isExistingMember: true,
         registrationType: 'serving',
       });
+
       reset();
       onClose();
       setShowSuccess(true);
     } catch (error) {
       const fieldErrors = mapValidationErrors(error);
+
       if (fieldErrors) {
         const fieldMap: Record<string, keyof WorkforceRegistrationFormData> = {
           first_name: 'firstName',
@@ -111,9 +115,11 @@ export const WorkforceRegistrationModal = ({
           is_existing_member: 'isExistingMember',
           current_assignment: 'currentAssignment',
         };
+
         Object.entries(fieldErrors).forEach(([field, message]) => {
           const mappedField =
             fieldMap[field] ?? (field as keyof WorkforceRegistrationFormData);
+
           setError(mappedField, {
             type: 'server',
             message: String(message),
@@ -133,235 +139,284 @@ export const WorkforceRegistrationModal = ({
         isOpen={isOpen}
         onClose={onClose}
         title="Workforce Registration"
-        subtitle="Keep your leadership profile up to date"
-        maxWidth="max-w-2xl"
+        subtitle="Keep your leadership and service profile up to date."
+        maxWidth="max-w-3xl"
         preventClose={isSubmitting}
         isLoading={isSubmitting}
         loadingText="Submitting..."
+        forceBottomSheet
       >
-        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-5 pb-6">
-          <div className={modalStyles.sectionTitle}>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Personal Details
-            </div>
-          </div>
+        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
+          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#f7de12]/10 text-[#f7de12]">
+                <Users className="h-5 w-5" />
+              </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={modalStyles.label} htmlFor="firstName">
-                First Name *
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                autoComplete="given-name"
-                className={modalStyles.input}
-                placeholder="First name"
-                {...register('firstName')}
-              />
-              {errors.firstName && (
-                <p className={modalStyles.errorText}>
-                  {errors.firstName.message}
+              <div>
+                <p className={modalStyles.sectionTitle}>Personal details</p>
+                <p className="mt-1 text-sm text-white/55">
+                  Basic contact information for your profile.
                 </p>
-              )}
+              </div>
             </div>
-            <div>
-              <label className={modalStyles.label} htmlFor="lastName">
-                Last Name *
-              </label>
-              <input
-                id="lastName"
-                type="text"
-                autoComplete="family-name"
-                className={modalStyles.input}
-                placeholder="Last name"
-                {...register('lastName')}
-              />
-              {errors.lastName && (
-                <p className={modalStyles.errorText}>
-                  {errors.lastName.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className={modalStyles.label} htmlFor="email">
-                Email *
-              </label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="email"
-                className={modalStyles.input}
-                placeholder="you@example.com"
-                {...register('email')}
-              />
-              {errors.email && (
-                <p className={modalStyles.errorText}>{errors.email.message}</p>
-              )}
-            </div>
-            <div>
-              <label className={modalStyles.label} htmlFor="phone">
-                Phone *
-              </label>
-              <input
-                id="phone"
-                type="tel"
-                autoComplete="tel"
-                className={modalStyles.input}
-                placeholder="+1 555 123 4567"
-                {...register('phone')}
-              />
-              {errors.phone && (
-                <p className={modalStyles.errorText}>{errors.phone.message}</p>
-              )}
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={modalStyles.label} htmlFor="title">
-                Leadership Title *
-              </label>
-              <select
-                id="title"
-                className={modalStyles.select}
-                {...register('title')}
-              >
-                <option value="">Select a title</option>
-                {LEADERSHIP_TITLES.map(option => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {errors.title && (
-                <p className={modalStyles.errorText}>{errors.title.message}</p>
-              )}
-            </div>
-            <div>
-              <label className={modalStyles.label} htmlFor="department">
-                Department *
-              </label>
-              <input
-                id="department"
-                type="text"
-                className={modalStyles.input}
-                placeholder="E.g. Choir, Media, Ushering"
-                {...register('department')}
-              />
-              {errors.department && (
-                <p className={modalStyles.errorText}>
-                  {errors.department.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className={modalStyles.label} htmlFor="leadershipCategory">
-                Leadership Category *
-              </label>
-              <select
-                id="leadershipCategory"
-                className={modalStyles.select}
-                {...register('leadershipCategory')}
-              >
-                <option value="">Select a category</option>
-                {LEADERSHIP_CATEGORIES.map(option => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {errors.leadershipCategory && (
-                <p className={modalStyles.errorText}>
-                  {errors.leadershipCategory.message}
-                </p>
-              )}
-            </div>
-            <div className="flex items-center gap-2 pt-6">
-              <input
-                id="existingMember"
-                type="checkbox"
-                className="h-4 w-4 rounded border border-white/30"
-                {...register('isExistingMember')}
-              />
-              <label htmlFor="existingMember" className="text-sm text-white/80">
-                I am updating my existing workforce profile
-              </label>
-            </div>
-          </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className={modalStyles.label} htmlFor="firstName">
+                  First Name *
+                </label>
+                <input
+                  id="firstName"
+                  type="text"
+                  autoComplete="given-name"
+                  className={modalStyles.input}
+                  placeholder="First name"
+                  {...register('firstName')}
+                />
+                {errors.firstName ? (
+                  <p className={modalStyles.errorText}>
+                    {errors.firstName.message}
+                  </p>
+                ) : null}
+              </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={modalStyles.label} htmlFor="birthMonth">
-                Birth Month
-              </label>
-              <select
-                id="birthMonth"
-                className={modalStyles.select}
-                {...register('birthMonth')}
-              >
-                <option value="">Select month</option>
-                {MONTHS.map(month => (
-                  <option key={month} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <label className={modalStyles.label} htmlFor="lastName">
+                  Last Name *
+                </label>
+                <input
+                  id="lastName"
+                  type="text"
+                  autoComplete="family-name"
+                  className={modalStyles.input}
+                  placeholder="Last name"
+                  {...register('lastName')}
+                />
+                {errors.lastName ? (
+                  <p className={modalStyles.errorText}>
+                    {errors.lastName.message}
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <label className={modalStyles.label} htmlFor="email">
+                  Email *
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  className={modalStyles.input}
+                  placeholder="you@example.com"
+                  {...register('email')}
+                />
+                {errors.email ? (
+                  <p className={modalStyles.errorText}>
+                    {errors.email.message}
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <label className={modalStyles.label} htmlFor="phone">
+                  Phone *
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  className={modalStyles.input}
+                  placeholder="+234 801 234 5678"
+                  {...register('phone')}
+                />
+                {errors.phone ? (
+                  <p className={modalStyles.errorText}>
+                    {errors.phone.message}
+                  </p>
+                ) : null}
+              </div>
             </div>
-            <div>
-              <label className={modalStyles.label} htmlFor="anniversaryMonth">
-                Wedding Anniversary Month
-              </label>
-              <select
-                id="anniversaryMonth"
-                className={modalStyles.select}
-                {...register('anniversaryMonth')}
-              >
-                <option value="">Select month</option>
-                {MONTHS.map(month => (
-                  <option key={month} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
+          </section>
+
+          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <div className="mb-5">
+              <p className={modalStyles.sectionTitle}>Leadership information</p>
+              <p className="mt-1 text-sm text-white/55">
+                Help us keep your ministry assignment accurate.
+              </p>
             </div>
-          </div>
 
-          <div>
-            <label className={modalStyles.label} htmlFor="currentAssignment">
-              Current Assignment
-            </label>
-            <input
-              id="currentAssignment"
-              type="text"
-              className={modalStyles.input}
-              placeholder="E.g. Worship leader, Protocol team, Assistant pastor"
-              {...register('currentAssignment')}
-            />
-          </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className={modalStyles.label} htmlFor="title">
+                  Leadership Title *
+                </label>
+                <select
+                  id="title"
+                  className={modalStyles.select}
+                  {...register('title')}
+                >
+                  <option value="">Select a title</option>
+                  {LEADERSHIP_TITLES.map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                {errors.title ? (
+                  <p className={modalStyles.errorText}>
+                    {errors.title.message}
+                  </p>
+                ) : null}
+              </div>
 
-          <div>
-            <label className={modalStyles.label} htmlFor="notes">
-              Additional Notes
-            </label>
-            <textarea
-              id="notes"
-              className={`${modalStyles.textarea} min-h-[96px]`}
-              placeholder="Share any important updates or requests"
-              {...register('notes')}
-            />
-          </div>
+              <div>
+                <label className={modalStyles.label} htmlFor="department">
+                  Department *
+                </label>
+                <input
+                  id="department"
+                  type="text"
+                  className={modalStyles.input}
+                  placeholder="E.g. Choir, Media, Ushering"
+                  {...register('department')}
+                />
+                {errors.department ? (
+                  <p className={modalStyles.errorText}>
+                    {errors.department.message}
+                  </p>
+                ) : null}
+              </div>
 
-          <div className="sticky bottom-0 -mx-6 lg:-mx-8 px-6 lg:px-8 pt-4 pb-3 bg-black/95 backdrop-blur border-t border-white/10">
+              <div>
+                <label
+                  className={modalStyles.label}
+                  htmlFor="leadershipCategory"
+                >
+                  Leadership Category *
+                </label>
+                <select
+                  id="leadershipCategory"
+                  className={modalStyles.select}
+                  {...register('leadershipCategory')}
+                >
+                  <option value="">Select a category</option>
+                  {LEADERSHIP_CATEGORIES.map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                {errors.leadershipCategory ? (
+                  <p className={modalStyles.errorText}>
+                    {errors.leadershipCategory.message}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="flex items-center rounded-2xl border border-white/10 bg-black/25 px-4 py-3 sm:mt-6">
+                <input
+                  id="existingMember"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-white/30 accent-[#f7de12]"
+                  {...register('isExistingMember')}
+                />
+                <label
+                  htmlFor="existingMember"
+                  className="ml-3 text-sm leading-6 text-white/75"
+                >
+                  I am updating my existing workforce profile
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <div className="mb-5">
+              <p className={modalStyles.sectionTitle}>Additional details</p>
+              <p className="mt-1 text-sm text-white/55">
+                Optional details for better church administration.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className={modalStyles.label} htmlFor="birthMonth">
+                  Birth Month
+                </label>
+                <select
+                  id="birthMonth"
+                  className={modalStyles.select}
+                  {...register('birthMonth')}
+                >
+                  <option value="">Select month</option>
+                  {MONTHS.map(month => (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className={modalStyles.label} htmlFor="anniversaryMonth">
+                  Wedding Anniversary Month
+                </label>
+                <select
+                  id="anniversaryMonth"
+                  className={modalStyles.select}
+                  {...register('anniversaryMonth')}
+                >
+                  <option value="">Select month</option>
+                  {MONTHS.map(month => (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
+                  className={modalStyles.label}
+                  htmlFor="currentAssignment"
+                >
+                  Current Assignment
+                </label>
+                <input
+                  id="currentAssignment"
+                  type="text"
+                  className={modalStyles.input}
+                  placeholder="E.g. Worship leader, Protocol team, Assistant pastor"
+                  {...register('currentAssignment')}
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className={modalStyles.label} htmlFor="notes">
+                  Additional Notes
+                </label>
+                <textarea
+                  id="notes"
+                  className={modalStyles.textarea}
+                  placeholder="Share any important updates or requests"
+                  {...register('notes')}
+                />
+              </div>
+            </div>
+          </section>
+
+          <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[#070707]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
             <button
               type="submit"
               disabled={!isValid || isSubmitting}
               className={modalStyles.primaryButton}
             >
               {isSubmitting ? (
-                <span className="flex items-center justify-center">
-                  <Loader2 className="animate-spin mr-2" />
+                <span className="inline-flex items-center justify-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...
                 </span>
               ) : (
@@ -381,4 +436,4 @@ export const WorkforceRegistrationModal = ({
       />
     </>
   );
-};
+}

@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import Image from 'next/image';
 import {
-  BookOpenCheck,
+  BookOpen,
   HeartHandshake,
   Shield,
   Sparkles,
@@ -31,7 +31,7 @@ const culturePillars = [
     title: 'Word-shaped discipleship',
     description:
       'Teaching is practical, biblical, and aimed at forming complete believers for daily life.',
-    icon: BookOpenCheck,
+    icon: BookOpen,
   },
   {
     title: 'People-first community',
@@ -59,7 +59,7 @@ const stats = [
     label: 'Church culture',
     value: 'Word, power, excellence',
     detail: 'A house shaped by worship, truth, and practical obedience.',
-    icon: BookOpenCheck,
+    icon: BookOpen,
   },
   {
     label: 'Community posture',
@@ -79,8 +79,10 @@ const stats = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[#050505] text-white">
       <PageHero
+        variant="about"
+        eyebrow="About Wisdom Church"
         title="A church family committed to wisdom, power, and faithful formation."
         subtitle="The Wisdom Church exists to help people know Christ deeply, grow in truth, and live with conviction in every sphere of life."
         note="We are building a strong, Spirit-filled church where worship is sincere, teaching is clear, and community is intentional."
@@ -98,43 +100,42 @@ export default function AboutPage() {
 
       <Section padding="lg" className="bg-[#050505]">
         <Container size="xl">
-          <div data-parallax-global="0.08">
-            <ScrollFadeIn>
-              <SplitSection
-                eyebrow="Our identity"
-                title="We are building a house where people grow in Christ with clarity and consistency."
-                description="The Wisdom Church is a trans-generational church community committed to forming believers who can stand strong in truth, serve others with grace, and walk boldly in their calling."
-                points={[
-                  'Biblical teaching that connects doctrine to everyday living.',
-                  'Worship gatherings that make room for prayer, reverence, and joy.',
-                  'Pastoral care that stays close to people through real life situations.',
-                  'Ministries that help children, youth, families, and professionals find their place.',
-                ]}
-                panelTitle="How we define growth"
-                panelBody="Growth at Wisdom Church is not just attendance. It means being formed in character, conviction, spiritual maturity, and service."
-                panelItems={[
-                  'Grow in the Word and prayer life.',
-                  'Belong to a caring church family.',
-                  'Discover gifts and begin serving.',
-                  'Live with purpose in home, work, and city life.',
-                ]}
-              />
-            </ScrollFadeIn>
-          </div>
+          <ScrollFadeIn>
+            <SplitSection
+              eyebrow="Our identity"
+              title="We are building a house where people grow in Christ with clarity and consistency."
+              description="The Wisdom Church is a trans-generational church community committed to forming believers who can stand strong in truth, serve others with grace, and walk boldly in their calling."
+              points={[
+                'Biblical teaching that connects doctrine to everyday living.',
+                'Worship gatherings that make room for prayer, reverence, and joy.',
+                'Pastoral care that stays close to people through real life situations.',
+                'Ministries that help children, youth, families, and professionals find their place.',
+              ]}
+              panelTitle="How we define growth"
+              panelBody="Growth at Wisdom Church is not just attendance. It means being formed in character, conviction, spiritual maturity, and service."
+              panelItems={[
+                'Grow in the Word and prayer life.',
+                'Belong to a caring church family.',
+                'Discover gifts and begin serving.',
+                'Live with purpose in home, work, and city life.',
+              ]}
+            />
+          </ScrollFadeIn>
         </Container>
       </Section>
 
       <Section padding="lg" className="border-y border-white/10 bg-[#080808]">
         <Container size="xl" className="space-y-8">
-          <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+          <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f7de12]">
               House culture
             </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            <h2 className="text-balance text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
               Four commitments shape how we lead, gather, and serve.
             </h2>
           </ScrollFadeIn>
-          <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
+
+          <ScrollFadeIn delay={0.1}>
             <FeatureGrid items={culturePillars} columns={4} />
           </ScrollFadeIn>
         </Container>
@@ -142,16 +143,16 @@ export default function AboutPage() {
 
       <Section padding="lg" className="bg-[#050505]">
         <Container size="xl" className="space-y-8">
-          <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+          <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f7de12]">
               Leadership
             </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            <h2 className="text-balance text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
               Leadership that keeps doctrine, care, and service aligned.
             </h2>
           </ScrollFadeIn>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2">
             {[
               {
                 image: Bishop,
@@ -169,35 +170,39 @@ export default function AboutPage() {
               },
             ].map((person, index) => (
               <ScrollFadeIn key={person.name} delay={0.05 * index}>
-                <div
-                  className="grid gap-5 rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-5 sm:grid-cols-[220px_1fr] sm:p-6"
-                  data-parallax-global={index % 2 === 0 ? '0.1' : '0.14'}
-                >
-                  <div className="relative h-72 overflow-hidden rounded-[1.4rem] border border-white/10 bg-black/20 sm:h-full sm:min-h-[280px]">
-                    <Image
-                      src={person.image}
-                      alt={person.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, 220px"
-                    />
+                <article className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/30 transition duration-300 hover:border-[#f7de12]/35 sm:rounded-[2rem]">
+                  <div className="grid gap-0 sm:grid-cols-[220px_1fr]">
+                    <div className="relative h-72 bg-black sm:h-full sm:min-h-[300px]">
+                      <Image
+                        src={person.image}
+                        alt={person.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 220px"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent sm:hidden" />
+                    </div>
+
+                    <div className="flex flex-col justify-center space-y-4 p-5 sm:p-6 lg:p-7">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f7de12]">
+                        {person.role}
+                      </p>
+
+                      <h3 className="text-xl font-semibold text-white sm:text-2xl">
+                        {person.name}
+                      </h3>
+
+                      <p className="text-sm leading-7 text-white/70 sm:text-base">
+                        {person.description}
+                      </p>
+
+                      <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-white/65">
+                        Wisdom Church leadership is built around discipleship,
+                        doctrinal soundness, and practical care for people.
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-4">
-                    <p className="text-[0.66rem] uppercase tracking-[0.2em] text-[#d7bb75]">
-                      {person.role}
-                    </p>
-                    <h3 className="text-2xl font-semibold text-white">
-                      {person.name}
-                    </h3>
-                    <p className="text-base leading-relaxed text-white/68">
-                      {person.description}
-                    </p>
-                    <p className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/65">
-                      Wisdom Church leadership is built around discipleship,
-                      doctrinal soundness, and practical care for people.
-                    </p>
-                  </div>
-                </div>
+                </article>
               </ScrollFadeIn>
             ))}
           </div>
@@ -215,6 +220,6 @@ export default function AboutPage() {
           secondaryLabel="Meet the team"
         />
       </ScrollFadeIn>
-    </div>
+    </main>
   );
 }

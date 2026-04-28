@@ -1,22 +1,18 @@
 'use client';
 
 import {
+  memo,
+  ReactNode,
+  useCallback,
   useEffect,
+  useId,
+  useMemo,
   useRef,
   useState,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useId,
-  ReactNode,
-  memo,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { gsap } from 'gsap';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { X, Loader2 } from 'lucide-react';
-import { useWindowSize } from '@/shared/utils/hooks/useWindowSize';
-import { responsive } from '@/lib/responsivee';
+import { Loader2, X } from 'lucide-react';
+import { cn } from '@/lib/cn';
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -32,40 +28,33 @@ interface BaseModalProps {
   isLoading?: boolean;
   loadingText?: string;
   initialFocusRef?: React.RefObject<HTMLElement>;
-  onAnimationComplete?: () => void;
   forceBottomSheet?: boolean;
 }
 
 export const modalStyles = {
-  sectionTitle: 'text-sm font-semibold text-white/80',
+  sectionTitle: 'text-xs font-bold uppercase tracking-[0.18em] text-[#f7de12]',
   label:
-    'block text-xs font-semibold uppercase tracking-wide text-white/70 mb-1',
+    'mb-2 block text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/60',
   input:
-    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30',
+    'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10',
   select:
-    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/30',
+    'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-sm text-white outline-none transition focus:border-[#f7de12]/70 focus:ring-4 focus:ring-[#f7de12]/10',
   textarea:
-    'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30',
-  errorText: 'text-xs text-red-400 mt-1',
+    'min-h-[130px] w-full resize-y rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10',
+  errorText: 'mt-2 text-xs leading-5 text-rose-300',
   primaryButton:
-    'w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed',
+    'inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d] disabled:cursor-not-allowed disabled:opacity-60',
   ghostButton:
-    'w-full rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10 border border-white/20',
+    'inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/82 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-60',
 };
 
-type ViewportSize = 'mobile' | 'tablet' | 'desktop';
-
-// Focus trap helper function
-const getFocusableElements = (element: HTMLElement): HTMLElement[] => {
+function getFocusableElements(element: HTMLElement): HTMLElement[] {
   return Array.from(
-    element.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    element.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
     )
-  ).filter(
-    el =>
-      !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true'
-  ) as HTMLElement[];
-};
+  ).filter(node => node.offsetParent !== null);
+}
 
 export const BaseModal = memo(function BaseModal({
   isOpen,
@@ -81,571 +70,228 @@ export const BaseModal = memo(function BaseModal({
   isLoading = false,
   loadingText = 'Loading...',
   initialFocusRef,
-  onAnimationComplete,
   forceBottomSheet = false,
 }: BaseModalProps) {
-  const { colorScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const backdropRef = useRef<HTMLDivElement>(null);
-  const windowSize = useWindowSize();
-  const lastFocusedElement = useRef<HTMLElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
-  const descriptionId = useId();
+  const subtitleId = useId();
 
-  const viewport: ViewportSize = useMemo(() => {
-    if (!windowSize.width) return 'mobile';
-    if (windowSize.width < 640) return 'mobile';
-    if (windowSize.width < 1024) return 'tablet';
-    return 'desktop';
-  }, [windowSize.width]);
+  const isSheet = forceBottomSheet;
 
-  // Use bottom sheet on mobile for consistency; allow forced sheet on larger screens
-  const useBottomSheet = viewport === 'mobile' || forceBottomSheet;
+  const canClose = !preventClose && !isLoading;
 
-  const colors = useMemo(
-    () => ({
-      background: colorScheme.black,
-      text: {
-        primary: colorScheme.white,
-        secondary: colorScheme.white,
-        muted: 'rgba(255, 255, 255, 0.7)',
-        accent: colorScheme.primary,
-      },
-      button: {
-        background: colorScheme.primary,
-        text: colorScheme.black,
-        hover: colorScheme.opacity || colorScheme.primary,
-      },
-      border: {
-        default: colorScheme.border,
-        active: colorScheme.primary,
-        input: colorScheme.border,
-      },
-      backdrop: 'rgba(0, 0, 0, 0.7)',
-    }),
-    [colorScheme]
-  );
+  const close = useCallback(() => {
+    if (!canClose) return;
+    onClose();
+  }, [canClose, onClose]);
 
-  // Mount/Unmount logic
   useEffect(() => {
     setMounted(true);
-    return () => setMounted(false);
   }, []);
 
-  // Body scroll lock
-  useLayoutEffect(() => {
-    if (mounted && isOpen) {
-      const scrollY = window.scrollY;
-      const body = document.body;
-
-      const originalStyles = {
-        overflow: body.style.overflow,
-        position: body.style.position,
-        top: body.style.top,
-        width: body.style.width,
-        height: body.style.height,
-        touchAction: body.style.touchAction,
-      };
-
-      body.style.overflow = 'hidden';
-      body.style.position = 'fixed';
-      body.style.top = `-${scrollY}px`;
-      body.style.width = '100%';
-      body.style.height = '100%';
-      body.style.touchAction = 'none';
-
-      document.documentElement.dataset.scrollY = scrollY.toString();
-
-      return () => {
-        Object.entries(originalStyles).forEach(([key, value]) => {
-          (body.style as any)[key] = value;
-        });
-
-        const scrollYValue = parseInt(
-          document.documentElement.dataset.scrollY || '0'
-        );
-        window.scrollTo(0, scrollYValue);
-        delete document.documentElement.dataset.scrollY;
-      };
-    }
-  }, [mounted, isOpen]);
-
-  // Focus Management
   useEffect(() => {
-    if (!mounted || !isOpen || !modalRef.current) return;
+    if (!isOpen || !mounted) return;
 
-    // Store the currently focused element
-    lastFocusedElement.current = document.activeElement as HTMLElement;
+    const body = document.body;
+    const previousOverflow = body.style.overflow;
+    const previousPaddingRight = body.style.paddingRight;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
 
-    // Focus management
-    const handleFocusTrap = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || !modalRef.current) return;
+    body.style.overflow = 'hidden';
 
-      const focusableElements = getFocusableElements(modalRef.current);
-      if (focusableElements.length === 0) return;
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
 
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (e.shiftKey) {
-        // Shift + Tab
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        }
-      } else {
-        // Tab
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
-      }
+    return () => {
+      body.style.overflow = previousOverflow;
+      body.style.paddingRight = previousPaddingRight;
     };
+  }, [isOpen, mounted]);
 
-    // Add focus trap
-    document.addEventListener('keydown', handleFocusTrap);
+  useEffect(() => {
+    if (!isOpen || !mounted) return;
 
-    // Focus on modal or initial element
-    setTimeout(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+
+    const timer = window.setTimeout(() => {
       if (initialFocusRef?.current) {
         initialFocusRef.current.focus();
-      } else if (showCloseButton && modalRef.current) {
-        // Find close button
-        const closeButton = modalRef.current.querySelector(
-          '[aria-label="Close modal"]'
-        ) as HTMLElement;
-        if (closeButton) {
-          closeButton.focus();
-        } else {
-          // Focus first focusable element
-          const focusableElements = getFocusableElements(modalRef.current);
-          if (focusableElements.length > 0) {
-            focusableElements[0].focus();
-          } else {
-            modalRef.current.setAttribute('tabindex', '-1');
-            modalRef.current.focus();
-          }
-        }
-      }
-    }, 100);
-
-    return () => {
-      document.removeEventListener('keydown', handleFocusTrap);
-
-      // Restore focus to last focused element
-      if (lastFocusedElement.current) {
-        lastFocusedElement.current.focus();
-        lastFocusedElement.current = null;
-      }
-    };
-  }, [mounted, isOpen, showCloseButton, initialFocusRef]);
-
-  // Animation
-  useEffect(() => {
-    if (!mounted || !isOpen || !modalRef.current || !backdropRef.current)
-      return;
-
-    const modal = modalRef.current;
-    const backdrop = backdropRef.current;
-    const revealNodes = modal.querySelectorAll('[data-modal-stagger]');
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    if (prefersReducedMotion) {
-      gsap.set(backdrop, { opacity: 1 });
-      gsap.set(modal, { opacity: 1, y: 0, scale: 1 });
-      if (revealNodes.length > 0) {
-        gsap.set(revealNodes, { opacity: 1, y: 0 });
-      }
-      onAnimationComplete?.();
-      return;
-    }
-
-    const tl = gsap.timeline({
-      defaults: { ease: 'power3.out', duration: 0.45 },
-      onComplete: onAnimationComplete,
-    });
-
-    if (useBottomSheet) {
-      tl.fromTo(
-        backdrop,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.36, ease: 'power2.out' }
-      ).fromTo(
-        modal,
-        { y: '108%', opacity: 0, scale: 0.98 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.58, ease: 'expo.out' },
-        '<'
-      );
-    } else {
-      tl.fromTo(
-        backdrop,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.34, ease: 'power2.out' }
-      ).fromTo(
-        modal,
-        {
-          scale: 0.94,
-          opacity: 0,
-          y: 26,
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'back.out(1.2)',
-        },
-        '<'
-      );
-    }
-
-    if (revealNodes.length > 0) {
-      tl.fromTo(
-        revealNodes,
-        { opacity: 0, y: 10 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.3,
-          stagger: 0.05,
-          ease: 'power2.out',
-        },
-        '-=0.24'
-      );
-    }
-
-    return () => {
-      tl.kill();
-    };
-  }, [mounted, isOpen, useBottomSheet, onAnimationComplete]);
-
-  const handleClose = useCallback(() => {
-    if (
-      !modalRef.current ||
-      !backdropRef.current ||
-      isClosing ||
-      preventClose ||
-      isLoading
-    )
-      return;
-
-    setIsClosing(true);
-    const modal = modalRef.current;
-    const backdrop = backdropRef.current;
-    const revealNodes = modal.querySelectorAll('[data-modal-stagger]');
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    if (prefersReducedMotion) {
-      setIsClosing(false);
-      onClose();
-      return;
-    }
-
-    const tl = gsap.timeline({
-      defaults: { ease: 'power2.in', duration: 0.24 },
-      onComplete: () => {
-        setIsClosing(false);
-        onClose();
-      },
-    });
-
-    if (revealNodes.length > 0) {
-      tl.to(revealNodes, {
-        opacity: 0,
-        y: 8,
-        duration: 0.16,
-        stagger: -0.025,
-      });
-    }
-
-    if (useBottomSheet) {
-      tl.to(modal, {
-        y: '108%',
-        opacity: 0.2,
-        duration: 0.28,
-        ease: 'power3.in',
-      }).to(backdrop, { opacity: 0, duration: 0.22 }, '<');
-    } else {
-      tl.to(modal, {
-        scale: 0.96,
-        opacity: 0,
-        y: 24,
-        duration: 0.25,
-        ease: 'power2.in',
-      }).to(backdrop, { opacity: 0, duration: 0.2 }, '<');
-    }
-  }, [onClose, useBottomSheet, isClosing, preventClose, isLoading]);
-
-  // Escape key
-  useEffect(() => {
-    if (!isOpen || !onEscapeClose) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !isLoading) handleClose();
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen, handleClose, onEscapeClose, isLoading]);
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget && !preventClose && !isLoading) {
-        handleClose();
-      }
-    },
-    [handleClose, preventClose, isLoading]
-  );
-
-  // Handle drag for bottom sheet (mobile/tablet)
-  const [isDragging, setIsDragging] = useState(false);
-  const [startY, setStartY] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
-  const dragThreshold = 100;
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      if (!useBottomSheet || !showHandle) return;
-      setIsDragging(true);
-      setStartY(e.touches[0].clientY);
-      setCurrentY(e.touches[0].clientY);
-    },
-    [useBottomSheet, showHandle]
-  );
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (!isDragging || !modalRef.current) return;
-      const clientY = e.touches[0].clientY;
-      setCurrentY(clientY);
-
-      const delta = clientY - startY;
-      if (delta > 0) {
-        modalRef.current.style.transform = `translateY(${delta}px)`;
-      }
-    },
-    [isDragging, startY]
-  );
-
-  const handleTouchEnd = useCallback(() => {
-    if (!isDragging || !modalRef.current) return;
-    setIsDragging(false);
-
-    const delta = currentY - startY;
-    if (delta > dragThreshold && !preventClose && !isLoading) {
-      handleClose();
-    } else {
-      // Snap back
-      modalRef.current.style.transform = 'translateY(0)';
-    }
-  }, [isDragging, currentY, startY, preventClose, isLoading, handleClose]);
-
-  // Handle mouse drag for bottom sheet
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (
-        !useBottomSheet ||
-        !showHandle ||
-        preventClose ||
-        isLoading ||
-        !modalRef.current
-      )
         return;
-      setIsDragging(true);
-      setStartY(e.clientY);
-      setCurrentY(e.clientY);
-    },
-    [useBottomSheet, showHandle, preventClose, isLoading]
-  );
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isDragging || !modalRef.current) return;
-      const clientY = e.clientY;
-      setCurrentY(clientY);
-
-      const delta = clientY - startY;
-      if (delta > 0) {
-        modalRef.current.style.transform = `translateY(${delta}px)`;
       }
-    },
-    [isDragging, startY]
-  );
 
-  const handleMouseUp = useCallback(() => {
-    if (!isDragging || !modalRef.current) return;
-    setIsDragging(false);
+      const modal = modalRef.current;
+      if (!modal) return;
 
-    const delta = currentY - startY;
-    if (delta > dragThreshold && !preventClose && !isLoading) {
-      handleClose();
-    } else {
-      // Snap back
-      modalRef.current.style.transform = 'translateY(0)';
-    }
-  }, [isDragging, currentY, startY, preventClose, isLoading, handleClose]);
+      const focusables = getFocusableElements(modal);
+      focusables[0]?.focus();
+    }, 40);
 
-  const handleMouseLeave = useCallback(() => {
-    if (isDragging && modalRef.current) {
-      setIsDragging(false);
-      const delta = currentY - startY;
-      if (delta > dragThreshold && !preventClose && !isLoading) {
-        handleClose();
-      } else {
-        modalRef.current.style.transform = 'translateY(0)';
+    return () => {
+      window.clearTimeout(timer);
+      previousFocusRef.current?.focus?.();
+      previousFocusRef.current = null;
+    };
+  }, [isOpen, mounted, initialFocusRef]);
+
+  useEffect(() => {
+    if (!isOpen || !mounted) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && onEscapeClose && canClose) {
+        event.preventDefault();
+        close();
       }
-    }
-  }, [isDragging, currentY, startY, preventClose, isLoading, handleClose]);
+
+      if (event.key !== 'Tab') return;
+
+      const modal = modalRef.current;
+      if (!modal) return;
+
+      const focusables = getFocusableElements(modal);
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
+
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, mounted, onEscapeClose, canClose, close]);
+
+  const modalClassName = useMemo(
+    () =>
+      cn(
+        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/10 bg-[#070707]/95 text-white shadow-2xl shadow-black/55 backdrop-blur-xl',
+        'motion-safe:animate-[modal-enter_220ms_ease-out]',
+        isSheet
+          ? 'max-h-[90svh] rounded-t-[1.75rem] rounded-b-none'
+          : 'max-h-[88svh] rounded-[1.75rem] sm:max-h-[90vh]',
+        maxWidth
+      ),
+    [isSheet, maxWidth]
+  );
 
   if (!mounted || !isOpen) return null;
 
   return createPortal(
     <div
-      ref={backdropRef}
-      className={`fixed inset-0 z-[9999] ${useBottomSheet ? 'flex items-end justify-center p-4' : 'flex items-center justify-center p-4'}`}
-      onClick={handleBackdropClick}
+      className={cn(
+        'fixed inset-0 z-[9999] flex bg-black/72 px-3 py-4 backdrop-blur-md',
+        isSheet
+          ? 'items-end justify-center sm:items-center'
+          : 'items-center justify-center'
+      )}
       role="presentation"
-      style={{
-        backgroundColor: colors.backdrop,
-        backdropFilter: 'blur(8px)',
-        willChange: 'opacity',
+      onMouseDown={event => {
+        if (event.target === event.currentTarget) close();
       }}
     >
-      {/* Loading Overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
-          <div className="flex flex-col items-center gap-3">
-            <div className="relative">
-              <Loader2
-                className="w-8 h-8 animate-spin"
-                style={{ color: colors.text.primary }}
-              />
-            </div>
-            {loadingText && <p className="text-sm text-white">{loadingText}</p>}
-          </div>
-        </div>
-      )}
-
       <div
         ref={modalRef}
-        className={`
-          w-full overflow-hidden border shadow-2xl
-          ${responsive.modal[viewport]}
-          ${useBottomSheet ? 'rounded-t-3xl rounded-b-none pb-safe-bottom' : 'rounded-2xl'}
-          ${useBottomSheet ? 'h-[90svh] max-h-[90svh]' : 'max-h-[88vh] sm:max-h-[92vh]'}
-          ${maxWidth}
-          ${isLoading ? 'opacity-80' : ''}
-          transition-transform duration-300 ease-out
-        `}
-        style={{
-          backgroundColor: colors.background,
-          borderColor: colors.border.default,
-          willChange: 'transform, opacity',
-          touchAction: 'pan-y',
-        }}
+        className={modalClassName}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
-        aria-describedby={subtitle ? descriptionId : undefined}
+        aria-describedby={subtitle ? subtitleId : undefined}
         aria-busy={isLoading}
-        tabIndex={-1}
-        onClick={e => e.stopPropagation()}
-        onTouchStart={useBottomSheet ? handleTouchStart : undefined}
-        onTouchMove={useBottomSheet ? handleTouchMove : undefined}
-        onTouchEnd={useBottomSheet ? handleTouchEnd : undefined}
       >
-        {showHandle && useBottomSheet && (
-          <div
-            className="flex justify-center pt-4 pb-3 cursor-grab active:cursor-grabbing touch-none select-none"
-            aria-hidden="true"
-            onMouseDown={useBottomSheet ? handleMouseDown : undefined}
-            onMouseMove={useBottomSheet ? handleMouseMove : undefined}
-            onMouseUp={useBottomSheet ? handleMouseUp : undefined}
-            onMouseLeave={useBottomSheet ? handleMouseLeave : undefined}
-          >
-            <div
-              className="w-12 h-1.5 rounded-full"
-              style={{ backgroundColor: colors.text.accent }}
-            />
-          </div>
-        )}
-
-        <div className="flex flex-col h-full min-h-0">
-          <div
-            className={`
-              overflow-y-auto flex-1 min-h-0
-              ${useBottomSheet ? 'px-6' : responsive.padding[viewport]}
-              ${useBottomSheet ? 'pb-6' : ''}
-              ${responsive.gap[viewport]}
-              overscroll-contain
-            `}
-            style={{ WebkitOverflowScrolling: 'touch' }}
-          >
-            {/* Header */}
-            {(title || subtitle || showCloseButton) && (
-              <div
-                className={`flex justify-between items-start mb-6 ${useBottomSheet ? 'pt-2' : ''}`}
-                data-modal-stagger
-              >
-                <div className="flex-1">
-                  {title && (
-                    <h2
-                      id={titleId}
-                      className={`mb-2 ${useBottomSheet ? 'text-xl' : responsive.heading[viewport]} font-bold leading-tight`}
-                      style={{ color: colors.text.primary }}
-                    >
-                      {title}
-                    </h2>
-                  )}
-                  {subtitle && (
-                    <p
-                      id={descriptionId}
-                      className={`${useBottomSheet ? 'text-sm' : responsive.body[viewport]} leading-relaxed`}
-                      style={{ color: colors.text.muted }}
-                    >
-                      {subtitle}
-                    </p>
-                  )}
-                </div>
-
-                {showCloseButton && (
-                  <button
-                    onClick={handleClose}
-                    type="button"
-                    className="rounded-full p-1.5 transition-all duration-200 hover:scale-110 active:scale-95 ml-2 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{
-                      backgroundColor: colors.background,
-                      borderColor: colors.border.default,
-                      borderWidth: '1px',
-                    }}
-                    aria-label="Close modal"
-                    disabled={preventClose || isLoading}
-                  >
-                    <X
-                      className="w-4 h-4"
-                      style={{ color: colors.text.primary }}
-                    />
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Content */}
-            <div
-              className={isLoading ? 'opacity-60 pointer-events-none' : ''}
-              data-modal-stagger
-            >
-              {children}
+        {isLoading ? (
+          <div className="absolute inset-0 z-30 grid place-items-center bg-black/65 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/45 px-5 py-4">
+              <Loader2 className="h-6 w-6 animate-spin text-[#f7de12]" />
+              <p className="text-sm text-white/75">{loadingText}</p>
             </div>
           </div>
+        ) : null}
+
+        {showHandle ? (
+          <div className="flex justify-center px-4 pt-3 sm:hidden">
+            <div className="h-1.5 w-12 rounded-full bg-white/22" />
+          </div>
+        ) : null}
+
+        {title || subtitle || showCloseButton ? (
+          <header className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-6">
+            <div className="min-w-0">
+              {title ? (
+                <h2
+                  id={titleId}
+                  className="text-balance text-xl font-semibold leading-tight tracking-tight text-white sm:text-2xl"
+                >
+                  {title}
+                </h2>
+              ) : null}
+
+              {subtitle ? (
+                <p
+                  id={subtitleId}
+                  className="mt-2 text-sm leading-6 text-white/58"
+                >
+                  {subtitle}
+                </p>
+              ) : null}
+            </div>
+
+            {showCloseButton ? (
+              <button
+                type="button"
+                onClick={close}
+                disabled={!canClose}
+                aria-label="Close modal"
+                className="grid h-10 w-10 flex-none place-items-center rounded-full border border-white/10 bg-white/[0.05] text-white/70 transition hover:bg-white/[0.1] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            ) : null}
+          </header>
+        ) : null}
+
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6 sm:py-6">
+          {children}
         </div>
       </div>
+
+      <style jsx global>{`
+        @keyframes modal-enter {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(0.98);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @media (max-width: 640px) {
+          @keyframes modal-enter {
+            from {
+              opacity: 0;
+              transform: translateY(100%);
+            }
+
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        }
+      `}</style>
     </div>,
     document.body
   );

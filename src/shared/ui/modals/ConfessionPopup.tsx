@@ -8,11 +8,10 @@ import {
   HeartHandshake,
   Sparkles,
 } from 'lucide-react';
-import { BaseModal } from '@/shared/ui/modals/Base';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
-import { BaseText, BodyMD, Caption, H3 } from '@/shared/text';
+
+import { BaseModal, modalStyles } from '@/shared/ui/modals/Base';
 import { PlayfairText } from '@/shared/text/FontText';
-import { useTheme } from '@/shared/contexts/ThemeContext';
+import { BodyMD, Caption } from '@/shared/text';
 import { confessionContent } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { useWelcomeModal } from '@/shared/utils/hooks/Useconfession';
@@ -28,19 +27,11 @@ interface WelcomeModalProps {
   };
 }
 
-const FALLBACK_PRIMARY = '#F7DE12';
-const FALLBACK_PRIMARY_DARK = '#C7A600';
-
 export default function ConfessionPopup({
   onClose,
   delay = 2400,
   content,
 }: WelcomeModalProps) {
-  const theme = useTheme();
-  const colorScheme = theme?.colorScheme;
-  const primary = colorScheme?.primary || FALLBACK_PRIMARY;
-  const primaryDark = colorScheme?.primaryDark || FALLBACK_PRIMARY_DARK;
-
   const {
     isVisible,
     currentStep,
@@ -72,33 +63,36 @@ export default function ConfessionPopup({
           : 'Speak this over your week with bold faith.'
       }
       maxWidth="max-w-2xl"
+      forceBottomSheet
     >
       {currentStep === 'welcome' ? (
-        <div className="space-y-5 text-white">
-          <div className="rounded-2xl border border-white/20 bg-black/45 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.35)]">
+        <div className="space-y-5">
+          <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5">
             <div className="mb-4 flex items-center gap-3">
-              <div className="rounded-full border border-white/15 bg-black/40 p-3">
+              <div className="grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-black/35">
                 <Image
                   src={WisdomeHouseLogo}
                   alt="The Wisdom Church"
                   width={42}
                   height={42}
-                  className="h-10 w-10 object-contain"
+                  className="object-contain"
                 />
               </div>
-              <div>
-                <Caption className="uppercase tracking-[0.15em] text-white/60">
+
+              <div className="min-w-0">
+                <Caption className="uppercase tracking-[0.18em] text-[#f7de12]">
                   The Wisdom Church
                 </Caption>
-                <H3 className="text-white">We are Equipped and Empowered</H3>
+                <h3 className="mt-1 text-lg font-semibold text-white">
+                  We are Equipped and Empowered
+                </h3>
               </div>
             </div>
-            <BodyMD className="leading-relaxed text-white/90">
-              {welcomeMessage}
-            </BodyMD>
+
+            <BodyMD className="text-white/72">{welcomeMessage}</BodyMD>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-3">
             {[
               { icon: Church, label: 'Worship' },
               { icon: HeartHandshake, label: 'Community' },
@@ -106,114 +100,84 @@ export default function ConfessionPopup({
             ].map(item => (
               <div
                 key={item.label}
-                className="rounded-xl border border-white/15 bg-white/[0.06] px-3 py-4 text-center"
+                className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 text-center"
               >
-                <div
-                  className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full"
-                  style={{ background: `${primary}24` }}
-                >
-                  <item.icon className="h-4 w-4" style={{ color: primary }} />
+                <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-full bg-[#f7de12]/10">
+                  <item.icon className="h-4 w-4 text-[#f7de12]" />
                 </div>
-                <Caption className="text-white/80">{item.label}</Caption>
+                <Caption className="text-white/75">{item.label}</Caption>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <CustomButton
-              variant="outline"
-              size="sm"
-              curvature="full"
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
               onClick={showConfession}
-              leftIcon={<BookOpen className="h-4 w-4" />}
-              className="h-11 w-full text-sm font-medium"
-              style={{
-                borderColor: `${primary}66`,
-                color: '#FFFFFF',
-                backgroundColor: `${primary}08`,
-              }}
+              className={modalStyles.ghostButton}
             >
+              <BookOpen className="mr-2 h-4 w-4" />
               Read Confession
-            </CustomButton>
+            </button>
 
-            <CustomButton
-              variant="primary"
-              size="sm"
-              curvature="full"
+            <button
+              type="button"
               onClick={handleClose}
-              className="h-11 w-full text-sm font-medium"
-              style={{
-                background: `linear-gradient(135deg, ${primary}, ${primaryDark})`,
-                color: '#FFFFFF',
-              }}
+              className={modalStyles.primaryButton}
             >
               Continue
-            </CustomButton>
+            </button>
           </div>
         </div>
       ) : (
-        <div className="space-y-5 text-white">
-          <div className="rounded-2xl border border-white/20 bg-black/55 p-5">
+        <div className="space-y-5">
+          <div className="rounded-[1.35rem] border border-white/10 bg-[#f7de12]/10 p-5">
             <PlayfairText
               as="p"
-              className="text-center text-sm italic leading-relaxed sm:text-base"
-              style={{ color: '#ffffff' }}
+              className="text-center text-base italic leading-8 text-white"
               weight="regular"
             >
               {motto}
             </PlayfairText>
           </div>
 
-          <div className="max-h-[44vh] space-y-3 overflow-y-auto rounded-2xl border border-white/15 bg-white/[0.06] p-4">
+          <div className="max-h-[46svh] space-y-4 overflow-y-auto rounded-[1.35rem] border border-white/10 bg-black/25 p-5">
             {fullConfessionText
               .split('\n\n')
               .map(paragraph => paragraph.trim())
               .filter(Boolean)
               .map((paragraph, index) => (
                 <BodyMD
-                  key={`${paragraph.slice(0, 20)}-${index}`}
-                  className="leading-relaxed text-white/90"
+                  key={`${paragraph.slice(0, 24)}-${index}`}
+                  className="text-white/75"
                 >
                   {paragraph}
                 </BodyMD>
               ))}
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <CustomButton
-              variant="outline"
-              size="sm"
-              curvature="full"
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
               onClick={showWelcome}
-              leftIcon={<ArrowLeft className="h-4 w-4" />}
-              className="h-11 w-full text-sm font-medium"
-              style={{
-                borderColor: `${primary}66`,
-                color: '#FFFFFF',
-                backgroundColor: `${primary}08`,
-              }}
+              className={modalStyles.ghostButton}
             >
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back
-            </CustomButton>
+            </button>
 
-            <CustomButton
-              variant="primary"
-              size="sm"
-              curvature="full"
+            <button
+              type="button"
               onClick={handleClose}
-              className="h-11 w-full text-sm font-medium"
-              style={{
-                background: `linear-gradient(135deg, ${primary}, ${primaryDark})`,
-                color: '#FFFFFF',
-              }}
+              className={modalStyles.primaryButton}
             >
               I Believe It
-            </CustomButton>
+            </button>
           </div>
 
-          <BaseText className="text-center text-xs text-white/70">
+          <p className="text-center text-xs leading-5 text-white/45">
             This confession appears periodically and can always be revisited.
-          </BaseText>
+          </p>
         </div>
       )}
     </BaseModal>

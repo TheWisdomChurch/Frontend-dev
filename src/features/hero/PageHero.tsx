@@ -1,13 +1,11 @@
-// components/ui/PageHero.tsx
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useRef } from 'react';
-import gsap from 'gsap';
+import Link from 'next/link';
+import { ArrowDown, ArrowRight } from 'lucide-react';
+
 import { WisdomeHouseLogo } from '@/shared/assets';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { Caption, H2, BodySM } from '@/shared/text';
-import { Section, Container } from '@/shared/layout';
+import { Container, Section } from '@/shared/layout';
 
 export type PageHeroProps = {
   title: string;
@@ -18,9 +16,7 @@ export type PageHeroProps = {
   chips?: string[];
   compact?: boolean;
   variant?: 'default' | 'about';
-
   backgroundImage?: string;
-
   showButtons?: boolean;
   primaryButtonText?: string;
   secondaryButtonText?: string;
@@ -31,102 +27,24 @@ export default function PageHero({
   title,
   subtitle,
   description,
-  eyebrow = '',
+  eyebrow = 'The Wisdom Church',
   note,
   chips,
   compact = false,
   variant = 'default',
   backgroundImage,
-  showButtons,
-  primaryButtonText,
-  secondaryButtonText,
-  showScrollIndicator,
+  showButtons = false,
+  primaryButtonText = 'Plan your visit',
+  secondaryButtonText = 'Learn more',
+  showScrollIndicator = false,
 }: PageHeroProps) {
-  const { colorScheme } = useTheme();
-  const isAboutVariant = variant === 'about';
   const supportingCopy = note ?? description;
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const eyebrowRef = useRef<HTMLDivElement | null>(null);
-  const titleBlockRef = useRef<HTMLDivElement | null>(null);
-  const chipsRef = useRef<HTMLDivElement | null>(null);
-  const panelRef = useRef<HTMLDivElement | null>(null);
-  const glowRef = useRef<HTMLDivElement | null>(null);
-  const visualChips =
-    chips && chips.length
-      ? chips.slice(0, 4)
-      : ['Word & Power', 'Excellence', 'Generations', 'Nations'];
-
-  const overlay = useMemo(
-    () =>
-      `radial-gradient(circle at 20% 20%, ${colorScheme.opacity.primary20} 0%, transparent 32%),
-       radial-gradient(circle at 80% 10%, ${colorScheme.opacity.primary10} 0%, transparent 36%),
-       radial-gradient(circle at 55% 90%, ${colorScheme.opacity.primary10} 0%, transparent 42%)`,
-    [colorScheme.opacity.primary10, colorScheme.opacity.primary20]
-  );
-
-  useEffect(() => {
-    if (!rootRef.current) return;
-    const prefersReduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-    if (prefersReduced) return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      if (eyebrowRef.current) {
-        tl.fromTo(
-          eyebrowRef.current,
-          { y: 10, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.45 }
-        );
-      }
-      if (titleBlockRef.current) {
-        tl.fromTo(
-          titleBlockRef.current,
-          { y: 18, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6 },
-          '-=0.2'
-        );
-      }
-      if (chipsRef.current) {
-        tl.fromTo(
-          chipsRef.current,
-          { y: 14, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5 },
-          '-=0.25'
-        );
-      }
-      if (panelRef.current) {
-        tl.fromTo(
-          panelRef.current,
-          { y: 16, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.55 },
-          '-=0.3'
-        );
-      }
-
-      if (glowRef.current) {
-        gsap.to(glowRef.current, {
-          opacity: 0.85,
-          duration: 4,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
-      }
-    }, rootRef);
-
-    return () => ctx.revert();
-  }, []);
+  const isAboutVariant = variant === 'about';
 
   return (
     <Section
       padding="none"
-      className={`relative overflow-hidden bg-[#050505] flex items-center ${
-        isAboutVariant
-          ? 'min-h-[44vh] sm:min-h-[48vh] lg:min-h-[52vh]'
-          : 'min-h-[36vh] sm:min-h-[40vh] lg:min-h-[44vh]'
-      }`}
+      className="relative isolate overflow-hidden bg-[#050505] text-white"
     >
       {backgroundImage ? (
         <div className="absolute inset-0 -z-30">
@@ -135,145 +53,89 @@ export default function PageHero({
             alt=""
             fill
             priority
-            className="object-cover object-center sm:object-[center_20%]"
+            className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-black/65 sm:bg-black/55" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/70 sm:from-black/55 sm:via-black/35 sm:to-black/55" />
+          <div className="absolute inset-0 bg-black/70" />
         </div>
       ) : null}
 
-      <div
-        className="absolute inset-0 -z-10 opacity-50 sm:opacity-70"
-        style={{ background: overlay, filter: 'blur(60px)' }}
-        ref={glowRef}
-      />
-      <div className="absolute inset-x-0 top-0 -z-10 h-28 bg-gradient-to-b from-black via-black/85 to-transparent sm:h-32" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_15%,rgba(247,222,18,0.16),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_48%,#050505_100%)]" />
 
-      {isAboutVariant ? (
-        <div
-          className="absolute inset-0 z-[-15] opacity-40"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
-            backgroundSize: '30px 30px',
-            maskImage:
-              'radial-gradient(circle at 50% 40%, black 35%, transparent 85%)',
-            WebkitMaskImage:
-              'radial-gradient(circle at 50% 40%, black 35%, transparent 85%)',
-          }}
-        />
-      ) : null}
+      <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-[#f7de12]/50 to-transparent" />
 
-      <div
-        className={`absolute inset-0 -z-20 hidden sm:flex items-center justify-center ${
-          isAboutVariant ? 'opacity-[0.06]' : 'opacity-10'
-        }`}
-      >
-        <Image
-          src={WisdomeHouseLogo}
-          alt="Wisdom House watermark"
-          width={520}
-          height={520}
-          className="object-contain grayscale"
-          priority
-        />
-      </div>
+      <div className="absolute left-1/2 top-8 -z-10 hidden h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[#f7de12]/[0.04] blur-3xl sm:block" />
 
       <Container size="xl">
         <div
-          ref={rootRef}
-          className={`relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 pt-12 sm:pt-14 lg:pt-16 pb-10 sm:pb-12 lg:pb-14 ${
-            isAboutVariant
-              ? 'grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-6 sm:gap-8 lg:gap-10'
-              : 'flex flex-col gap-4 sm:gap-5 lg:gap-6'
-          }`}
+          className={[
+            'grid min-h-[420px] items-center gap-8 py-16 sm:min-h-[460px] sm:py-20 lg:py-24',
+            isAboutVariant ? 'lg:grid-cols-[1.05fr_0.75fr]' : '',
+          ].join(' ')}
         >
           <div
-            className={`space-y-4 sm:space-y-5 ${
-              isAboutVariant ? 'max-w-3xl' : ''
-            }`}
+            className={[
+              'mx-auto max-w-4xl space-y-6',
+              isAboutVariant ? 'text-left lg:mx-0' : 'text-center',
+            ].join(' ')}
           >
             {eyebrow ? (
               <div
-                ref={eyebrowRef}
-                className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 w-fit backdrop-blur"
+                className={[
+                  'inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-3 py-2 shadow-xl shadow-black/20 backdrop-blur-md',
+                  isAboutVariant ? '' : 'mx-auto',
+                ].join(' ')}
               >
-                <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-white/15 bg-black/60">
+                <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[#f7de12]">
                   <Image
                     src={WisdomeHouseLogo}
-                    alt="The Wisdom House"
+                    alt=""
                     fill
                     className="object-contain p-1.5"
                   />
-                </div>
-                <Caption className="text-white/80 uppercase tracking-[0.22em] text-[9px] sm:text-[10px]">
+                </span>
+                <span className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-white/75">
                   {eyebrow}
-                </Caption>
+                </span>
               </div>
             ) : null}
 
-            <div
-              ref={titleBlockRef}
-              className={`space-y-2 max-w-3xl ${
-                isAboutVariant ? 'text-left' : 'text-center sm:text-left'
-              }`}
-            >
-              <H2
-                className={
+            <div className="space-y-4">
+              <h1
+                className={[
+                  'text-balance font-semibold tracking-[-0.045em] text-white',
                   compact
-                    ? 'text-2xl sm:text-3xl md:text-[2.1rem] font-medium text-white leading-tight text-balance'
-                    : isAboutVariant
-                      ? 'text-[1.85rem] sm:text-3xl md:text-[2.35rem] lg:text-[2.5rem] font-medium text-white leading-[1.1] text-balance'
-                      : 'text-2xl sm:text-3xl md:text-[2.2rem] font-medium text-white leading-tight text-balance'
-                }
+                    ? 'text-3xl leading-[1.08] sm:text-4xl lg:text-5xl'
+                    : 'text-[2.15rem] leading-[1.04] sm:text-5xl lg:text-6xl',
+                ].join(' ')}
               >
                 {title}
-              </H2>
-
-              <div
-                className={`h-px w-12 sm:w-16 ${
-                  isAboutVariant ? '' : 'mx-auto sm:mx-0'
-                }`}
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
-                  boxShadow: `0 0 12px ${colorScheme.opacity.primary30}`,
-                }}
-              />
+              </h1>
 
               {subtitle ? (
-                <BodySM className="text-white/80 text-sm sm:text-base leading-relaxed text-balance">
+                <p className="max-w-3xl text-pretty text-base leading-8 text-white/76 sm:text-lg">
                   {subtitle}
-                </BodySM>
+                </p>
               ) : null}
 
               {supportingCopy ? (
-                <BodySM className="text-white/65 text-xs sm:text-sm leading-relaxed text-balance max-w-2xl">
+                <p className="max-w-2xl text-pretty text-sm leading-7 text-white/58 sm:text-base">
                   {supportingCopy}
-                </BodySM>
+                </p>
               ) : null}
             </div>
 
             {chips?.length ? (
               <div
-                ref={chipsRef}
-                className={`${
-                  isAboutVariant
-                    ? 'grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-2.5'
-                    : 'flex flex-wrap gap-2 justify-center sm:justify-start'
-                }`}
+                className={[
+                  'flex flex-wrap gap-2.5',
+                  isAboutVariant ? 'justify-start' : 'justify-center',
+                ].join(' ')}
               >
                 {chips.map(chip => (
                   <span
                     key={chip}
-                    className={`rounded-full font-medium border border-white/15 bg-white/5 text-white ${
-                      isAboutVariant
-                        ? 'px-3 py-2 text-[10px] sm:px-2.5 sm:py-1 sm:text-[10px] text-center'
-                        : 'px-2.5 py-1 text-[9.5px] sm:text-[10px]'
-                    }`}
-                    style={{
-                      boxShadow: `0 8px 20px ${colorScheme.opacity.primary10}`,
-                    }}
+                    className="rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-2 text-xs font-semibold text-white/80 shadow-lg shadow-black/20"
                   >
                     {chip}
                   </span>
@@ -281,104 +143,80 @@ export default function PageHero({
               </div>
             ) : null}
 
-            {showButtons ||
-            primaryButtonText ||
-            secondaryButtonText ||
-            showScrollIndicator
-              ? null
-              : null}
+            {showButtons ? (
+              <div
+                className={[
+                  'flex flex-col gap-3 pt-2 sm:flex-row',
+                  isAboutVariant ? 'sm:justify-start' : 'sm:justify-center',
+                ].join(' ')}
+              >
+                <Link
+                  href="/contact"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                >
+                  {primaryButtonText}
+                  <ArrowRight size={16} />
+                </Link>
+
+                <Link
+                  href="/about"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/85 transition hover:bg-white/[0.08]"
+                >
+                  {secondaryButtonText}
+                </Link>
+              </div>
+            ) : null}
           </div>
 
           {isAboutVariant ? (
-            <div ref={panelRef} className="relative">
-              <div
-                className="relative rounded-3xl border border-white/10 p-3 sm:p-4 overflow-hidden"
-                style={{
-                  background:
-                    'linear-gradient(155deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, rgba(0,0,0,0.16) 100%)',
-                  boxShadow: `0 24px 60px ${colorScheme.opacity.black50}`,
-                }}
-              >
-                <div
-                  className="absolute inset-0 opacity-80"
-                  style={{
-                    background: `radial-gradient(circle at 88% 18%, ${colorScheme.opacity.primary20} 0%, transparent 42%)`,
-                  }}
-                />
+            <aside className="hidden lg:block">
+              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40">
+                <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[#f7de12]/10 blur-3xl" />
 
-                <div className="relative rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl p-4 sm:p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <Caption
-                      className="uppercase tracking-[0.18em] text-[10px] sm:text-[11px]"
-                      style={{ color: colorScheme.primary }}
-                    >
-                      {eyebrow}
-                    </Caption>
+                <div className="relative space-y-5">
+                  <div className="relative mx-auto h-28 w-28 overflow-hidden rounded-3xl border border-white/10 bg-black/40 p-4">
+                    <Image
+                      src={WisdomeHouseLogo}
+                      alt="The Wisdom Church"
+                      fill
+                      className="object-contain p-4"
+                    />
                   </div>
 
-                  <div className="mt-4 grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4">
-                    <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl overflow-hidden border border-white/15 bg-black/70">
-                      <Image
-                        src={WisdomeHouseLogo}
-                        alt="The Wisdom House logo"
-                        fill
-                        className="object-contain p-2 sm:p-2.5"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-white font-semibold text-sm sm:text-base leading-tight">
-                        {subtitle || title}
-                      </p>
-                      {note ? (
-                        <p className="text-white/65 text-xs sm:text-sm leading-relaxed line-clamp-3">
-                          {note}
-                        </p>
-                      ) : null}
-                    </div>
+                  <div className="text-center">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                      Our foundation
+                    </p>
+                    <p className="mt-3 text-lg font-semibold leading-7 text-white">
+                      Word, worship, discipleship, and intentional community.
+                    </p>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-                    {visualChips.map(chip => (
-                      <div
-                        key={chip}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2"
-                      >
-                        <p className="text-white text-xs sm:text-sm font-medium leading-tight">
-                          {chip}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 relative h-14 sm:h-16 rounded-xl overflow-hidden border border-white/10 bg-black/35">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background: `linear-gradient(120deg, transparent 0%, ${colorScheme.opacity.primary20} 35%, transparent 70%)`,
-                      }}
-                    />
-                    <div
-                      className="absolute -left-6 top-1/2 h-[2px] w-24 sm:w-28 -translate-y-1/2 rotate-[22deg]"
-                      style={{ backgroundColor: colorScheme.primary }}
-                    />
-                    <div
-                      className="absolute -right-5 top-1/2 h-[2px] w-20 sm:w-24 -translate-y-1/2 -rotate-[18deg]"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.55)' }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-between px-3 sm:px-4">
-                      <span className="text-[10px] sm:text-xs uppercase tracking-[0.16em] text-white/70">
-                        {visualChips[0] || 'Wisdom'}
-                      </span>
-                      <span className="text-[10px] sm:text-xs uppercase tracking-[0.16em] text-white/70">
-                        {visualChips[1] || 'Power'}
-                      </span>
-                    </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {(chips ?? ['Wisdom', 'Power', 'Growth', 'Care']).map(
+                      item => (
+                        <div
+                          key={item}
+                          className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-center text-sm font-semibold text-white/75"
+                        >
+                          {item}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
+            </aside>
           ) : null}
         </div>
+
+        {showScrollIndicator ? (
+          <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 sm:block">
+            <div className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/70">
+              <ArrowDown size={16} />
+            </div>
+          </div>
+        ) : null}
       </Container>
     </Section>
   );

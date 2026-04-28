@@ -1,27 +1,70 @@
 'use client';
 
-import { BaseModal } from './Base';
+import { useMemo, useRef, useState } from 'react';
 import {
   Calendar,
-  Clock,
-  MapPin,
-  Share2,
   CalendarPlus,
   Check,
+  Clock,
   Loader2,
+  MapPin,
+  Share2,
 } from 'lucide-react';
-import { format, addHours } from 'date-fns';
-import { useState, useRef } from 'react';
+import { addHours, format } from 'date-fns';
 import toast from 'react-hot-toast';
+
+import { BaseModal, modalStyles } from './Base';
 import type { EventDetailsModalProps } from '@/lib/types';
 
-export const EventDetailsModal = ({
+function parseEventTime(timeString?: string): {
+  hours: number;
+  minutes: number;
+} {
+  if (!timeString) return { hours: 9, minutes: 0 };
+
+  const match = timeString.match(/(\d{1,2})(?::(\d{2}))?\s?(am|pm)?/i);
+  if (!match) return { hours: 9, minutes: 0 };
+
+  let hour = Number(match[1]);
+  const minute = Number(match[2] || 0);
+  const period = match[3]?.toLowerCase();
+
+  if (period === 'pm' && hour < 12) hour += 12;
+  if (period === 'am' && hour === 12) hour = 0;
+
+  return { hours: hour, minutes: minute };
+}
+
+function sanitizeCalendarText(value?: string): string {
+  return String(value || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\n/g, '\\n')
+    .replace(/,/g, '\\,')
+    .replace(/;/g, '\\;');
+}
+
+function formatIcsDate(date: Date): string {
+  return date
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '');
+}
+
+function safeFileName(value: string): string {
+  return value
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .toLowerCase();
+}
+
+export function EventDetailsModal({
   event,
   isOpen,
   onClose,
   onRegister,
   isLoading = false,
-}: EventDetailsModalProps) => {
+}: EventDetailsModalProps) {
   const [addedToCalendar, setAddedToCalendar] = useState(false);
   const [isAddingToCalendar, setIsAddingToCalendar] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
@@ -29,69 +72,93 @@ export const EventDetailsModal = ({
 
   const registerButtonRef = useRef<HTMLButtonElement>(null);
 
-  const formattedDate = format(
-    new Date(event.start_date),
-    'EEEE, MMMM dd, yyyy'
+  const startDate = useMemo(
+    () => new Date(event.start_date),
+    [event.start_date]
   );
 
-  const parseTime = (
-    timeString: string
-  ): { hours: number; minutes: number } => {
-    const match = timeString.match(/(\d{1,2}):(\d{2})\s?(am|pm)?/i);
-    if (!match) return { hours: 9, minutes: 0 };
+  const formattedDate = useMemo(() => {
+    if (Number.isNaN(startDate.getTime())) return 'Date to be announced';
 
-    let [_, hourStr, minuteStr, period] = match;
-    let hour = parseInt(hourStr);
-    const minute = parseInt(minuteStr);
+    return format(startDate, 'EEEE, MMMM dd, yyyy');
+  }, [startDate]);
 
-    if (period?.toLowerCase() === 'pm' && hour < 12) hour += 12;
-    if (period?.toLowerCase() === 'am' && hour === 12) hour = 0;
+  const eventDateRange = useMemo(() => {
+    const start = new Date(event.start_date);
+    const end = event.end_date ? new Date(event.end_date) : null;
 
-    return { hours: hour, minutes: minute };
-  };
+    if (Number.isNaN(start.getTime())) return 'Date to be announced';
+
+    if (end && !Number.isNaN(end.getTime())) {
+      return `${format(start, 'MMM dd')} - ${format(end, 'MMM dd, yyyy')}`;
+    }
+
+    return format(start, 'MMMM dd, yyyy');
+  }, [event.end_date, event.start_date]);
 
   const createEventDates = () => {
-    const startDate = new Date(event.start_date);
-    const { hours, minutes } = parseTime(event.time);
+    const eventStart = new Date(event.start_date);
+    const { hours, minutes } = parseEventTime(event.time);
 
-    startDate.setHours(hours, minutes, 0, 0);
+    if (Number.isNaN(eventStart.getTime())) {
+      const fallback = new Date();
+      fallback.setHours(hours, minutes, 0, 0);
 
-    const endDate = event.end_date
+      return {
+        startDate: fallback,
+        endDate: addHours(fallback, 2),
+      };
+    }
+
+    eventStart.setHours(hours, minutes, 0, 0);
+
+    const eventEnd = event.end_date
       ? new Date(event.end_date)
-      : addHours(startDate, 2);
+      : addHours(eventStart, 2);
 
-    return { startDate, endDate };
+    if (event.end_date && !Number.isNaN(eventEnd.getTime())) {
+      eventEnd.setHours(hours + 2, minutes, 0, 0);
+      return { startDate: eventStart, endDate: eventEnd };
+    }
+
+    return {
+      startDate: eventStart,
+      endDate: addHours(eventStart, 2),
+    };
   };
 
   const handleAddToCalendar = async () => {
     try {
       setIsAddingToCalendar(true);
-      const { startDate, endDate } = createEventDates();
 
-      const formatDate = (date: Date) => {
-        return date.toISOString().replace(/-|:|\.\d+/g, '');
-      };
+      const { startDate: calendarStart, endDate: calendarEnd } =
+        createEventDates();
+
+      const host =
+        typeof window !== 'undefined'
+          ? window.location.hostname
+          : 'wisdomchurch';
 
       const icalContent = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
-        'PRODID:-//Church Events//EN',
+        'PRODID:-//The Wisdom Church//Events//EN',
         'BEGIN:VEVENT',
-        `UID:${event.id}@${window.location.hostname}`,
-        `DTSTAMP:${formatDate(new Date())}`,
-        `DTSTART:${formatDate(startDate)}`,
-        `DTEND:${formatDate(endDate)}`,
-        `SUMMARY:${event.title}`,
-        `DESCRIPTION:${event.description || 'Church Event'}`,
-        `LOCATION:${event.location}`,
+        `UID:${sanitizeCalendarText(event.id)}@${host}`,
+        `DTSTAMP:${formatIcsDate(new Date())}`,
+        `DTSTART:${formatIcsDate(calendarStart)}`,
+        `DTEND:${formatIcsDate(calendarEnd)}`,
+        `SUMMARY:${sanitizeCalendarText(event.title)}`,
+        `DESCRIPTION:${sanitizeCalendarText(event.description || 'Church Event')}`,
+        `LOCATION:${sanitizeCalendarText(event.location || 'Venue to be announced')}`,
         'STATUS:CONFIRMED',
         'SEQUENCE:0',
         'BEGIN:VALARM',
         'TRIGGER:-PT15M',
         'ACTION:DISPLAY',
-        `DESCRIPTION:Reminder: ${event.title}`,
+        `DESCRIPTION:${sanitizeCalendarText(`Reminder: ${event.title}`)}`,
         'END:VALARM',
         'END:VEVENT',
         'END:VCALENDAR',
@@ -100,54 +167,62 @@ export const EventDetailsModal = ({
       const blob = new Blob([icalContent], {
         type: 'text/calendar;charset=utf-8',
       });
-      const url = URL.createObjectURL(blob);
 
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
+
       link.href = url;
-      link.download = `${event.title.replace(/\s+/g, '-')}.ics`;
+      link.download = `${safeFileName(event.title || 'wisdom-event')}.ics`;
       link.style.display = 'none';
 
       document.body.appendChild(link);
       link.click();
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-      }, 100);
+      }, 150);
 
       setAddedToCalendar(true);
-      toast.success(
-        'Calendar event downloaded! Open the .ics file to add to your calendar.'
-      );
+      toast.success('Calendar event downloaded.');
     } catch (error) {
       console.error('Failed to create calendar event:', error);
-      toast.error('Failed to create calendar event');
+      toast.error('Failed to create calendar event.');
     } finally {
       setIsAddingToCalendar(false);
     }
   };
 
   const handleShare = async () => {
+    const shareText =
+      `${event.title}\n📅 ${formattedDate} at ${event.time || 'Time TBA'}\n📍 ${
+        event.location || 'Venue TBA'
+      }\n\n${event.description || ''}`.trim();
+
     try {
       setIsSharing(true);
+
       const shareData = {
         title: event.title,
-        text: `${event.title}\n📅 ${formattedDate} at ${event.time}\n📍 ${event.location}\n\n${event.description || ''}`,
-        url: window.location.href,
+        text: shareText,
+        url: typeof window !== 'undefined' ? window.location.href : undefined,
       };
 
-      if (navigator.share && navigator.canShare(shareData)) {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.share &&
+        navigator.canShare?.(shareData)
+      ) {
         await navigator.share(shareData);
-        toast.success('Event shared!');
-      } else {
-        const text = `${event.title}\n📅 ${formattedDate} at ${event.time}\n📍 ${event.location}`;
-        await navigator.clipboard.writeText(text);
-        toast.success('Event details copied to clipboard!');
+        toast.success('Event shared.');
+        return;
       }
+
+      await navigator.clipboard.writeText(shareText);
+      toast.success('Event details copied.');
     } catch (error: any) {
-      if (error.name !== 'AbortError') {
-        const text = `${event.title}\n📅 ${formattedDate} at ${event.time}\n📍 ${event.location}`;
-        alert(`Share this event:\n\n${text}`);
+      if (error?.name !== 'AbortError') {
+        toast.error('Unable to share event.');
       }
     } finally {
       setIsSharing(false);
@@ -160,12 +235,15 @@ export const EventDetailsModal = ({
     try {
       setIsRegistering(true);
       await onRegister();
-    } catch (error) {
-      toast.error('Registration failed');
+    } catch {
+      toast.error('Registration failed.');
     } finally {
       setIsRegistering(false);
     }
   };
+
+  const disabled =
+    isLoading || isAddingToCalendar || isSharing || isRegistering;
 
   return (
     <BaseModal
@@ -173,117 +251,149 @@ export const EventDetailsModal = ({
       onClose={onClose}
       title={event.title}
       subtitle={event.type}
-      maxWidth="max-w-md"
+      maxWidth="max-w-2xl"
       isLoading={isLoading}
+      loadingText="Loading event..."
+      preventClose={isLoading}
+      forceBottomSheet
       initialFocusRef={
         onRegister
           ? (registerButtonRef as React.RefObject<HTMLElement>)
           : undefined
       }
     >
-      {/* Event Image */}
-      {event.image_url && (
-        <div className="mb-4 rounded-lg overflow-hidden">
-          <img
-            src={event.image_url}
-            alt={event.title}
-            className="w-full h-40 sm:h-44 md:h-48 object-cover"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      )}
+      <div className="space-y-5">
+        {event.image_url ? (
+          <div className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/35">
+            <img
+              src={event.image_url}
+              alt={event.title}
+              className="h-44 w-full object-cover sm:h-56"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ) : null}
 
-      {/* Event Details */}
-      <div className="space-y-3 mb-6">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4" />
-          <span className="font-medium">{formattedDate}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4" />
-          <span className="font-medium">{event.time}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4" />
-          <span className="font-medium">{event.location}</span>
-        </div>
-      </div>
+        <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+          <p className={modalStyles.sectionTitle}>Event details</p>
 
-      {/* Description */}
-      {event.description && (
-        <div className="mb-6">
-          <h4 className="font-semibold mb-2">About This Event</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {event.description}
+          <div className="mt-4 grid gap-3 text-sm leading-6 text-white/72">
+            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
+              <Calendar className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <div className="min-w-0">
+                <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
+                  Date
+                </p>
+                <p className="mt-1 font-semibold text-white">
+                  {eventDateRange}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
+              <Clock className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <div className="min-w-0">
+                <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
+                  Time
+                </p>
+                <p className="mt-1 font-semibold text-white">
+                  {event.time || 'Time to be announced'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
+              <MapPin className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <div className="min-w-0">
+                <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
+                  Location
+                </p>
+                <p className="mt-1 break-words font-semibold text-white">
+                  {event.location || 'Venue to be announced'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {event.description ? (
+          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <p className={modalStyles.sectionTitle}>About this event</p>
+            <p className="mt-3 text-sm leading-7 text-white/65">
+              {event.description}
+            </p>
+          </section>
+        ) : null}
+
+        <section className="space-y-3">
+          {onRegister ? (
+            <button
+              ref={registerButtonRef}
+              type="button"
+              onClick={handleRegister}
+              disabled={disabled}
+              className={modalStyles.primaryButton}
+            >
+              {isRegistering ? (
+                <span className="inline-flex items-center justify-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Registering...
+                </span>
+              ) : (
+                'Register Now'
+              )}
+            </button>
+          ) : null}
+
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+            <button
+              type="button"
+              onClick={handleAddToCalendar}
+              disabled={disabled}
+              className={modalStyles.ghostButton}
+              title="Add to calendar"
+            >
+              {isAddingToCalendar ? (
+                <span className="inline-flex items-center justify-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating...
+                </span>
+              ) : addedToCalendar ? (
+                <span className="inline-flex items-center justify-center">
+                  <Check className="mr-2 h-4 w-4" />
+                  Calendar Downloaded
+                </span>
+              ) : (
+                <span className="inline-flex items-center justify-center">
+                  <CalendarPlus className="mr-2 h-4 w-4" />
+                  Add to Calendar
+                </span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleShare}
+              disabled={disabled}
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 text-sm font-bold text-white/82 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-60"
+              title="Share event"
+              aria-label="Share event"
+            >
+              {isSharing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Share2 className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+
+          <p className="text-center text-xs leading-5 text-white/45">
+            The .ics file works with Apple Calendar, Google Calendar, Outlook,
+            and most calendar apps.
           </p>
-        </div>
-      )}
-
-      {/* Action Buttons */}
-      <div className="space-y-3">
-        {/* Register Button (if provided) */}
-        {onRegister && (
-          <button
-            ref={registerButtonRef}
-            onClick={handleRegister}
-            disabled={isRegistering || isLoading}
-            className="w-full py-3 rounded-lg font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-          >
-            {isRegistering ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                Registering...
-              </>
-            ) : (
-              'Register Now'
-            )}
-          </button>
-        )}
-
-        {/* Calendar & Share Buttons */}
-        <div className="flex gap-3">
-          <button
-            onClick={handleAddToCalendar}
-            disabled={isAddingToCalendar || isLoading}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Add to Calendar"
-          >
-            {isAddingToCalendar ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : addedToCalendar ? (
-              <>
-                <Check className="w-5 h-5" />
-                <span className="font-medium">Added!</span>
-              </>
-            ) : (
-              <>
-                <CalendarPlus className="w-5 h-5" />
-                <span className="font-medium">Add to Calendar</span>
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={handleShare}
-            disabled={isSharing || isLoading}
-            className="flex items-center justify-center gap-2 p-3 rounded-lg border border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Share Event"
-          >
-            {isSharing ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Share2 className="w-5 h-5" />
-            )}
-          </button>
-        </div>
-
-        {/* Help Text */}
-        <p className="text-xs text-gray-500 text-center mt-2">
-          The .ics file works with Apple Calendar, Google Calendar, Outlook, and
-          most calendar apps
-        </p>
+        </section>
       </div>
     </BaseModal>
   );
-};
+}

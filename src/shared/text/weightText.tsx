@@ -1,10 +1,8 @@
-// components/text/WeightText.tsx
 'use client';
 
 import React from 'react';
-import { BaseText, BaseTextProps } from './baseText';
+import { BaseText, type BaseTextProps } from './baseText';
 
-// Work Sans Weight Variants
 export const LightText = React.forwardRef<HTMLElement, BaseTextProps>(
   (props, ref) => (
     <BaseText ref={ref} {...props} weight="light" fontFamily="worksans" />
@@ -33,7 +31,13 @@ export const SemiBoldText = React.forwardRef<HTMLElement, BaseTextProps>(
 );
 SemiBoldText.displayName = 'SemiBoldText';
 
-// Bricolage Weight Variants
+export const BoldText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="bold" fontFamily="worksans" />
+  )
+);
+BoldText.displayName = 'BoldText';
+
 export const BricolageMedium = React.forwardRef<HTMLElement, BaseTextProps>(
   (props, ref) => (
     <BaseText ref={ref} {...props} weight="medium" fontFamily="bricolage" />
@@ -62,7 +66,13 @@ export const BricolageExtraBold = React.forwardRef<HTMLElement, BaseTextProps>(
 );
 BricolageExtraBold.displayName = 'BricolageExtraBold';
 
-// Playfair Weight Variants
+export const BricolageBlack = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => (
+    <BaseText ref={ref} {...props} weight="black" fontFamily="bricolage" />
+  )
+);
+BricolageBlack.displayName = 'BricolageBlack';
+
 export const PlayfairRegular = React.forwardRef<HTMLElement, BaseTextProps>(
   (props, ref) => (
     <BaseText ref={ref} {...props} weight="regular" fontFamily="playfair" />
@@ -85,13 +95,13 @@ export const PlayfairExtraBold = React.forwardRef<HTMLElement, BaseTextProps>(
 PlayfairExtraBold.displayName = 'PlayfairExtraBold';
 
 export const PlayfairItalic = React.forwardRef<HTMLElement, BaseTextProps>(
-  (props, ref) => (
+  ({ style, ...props }, ref) => (
     <BaseText
       ref={ref}
       {...props}
       weight="regular"
       fontFamily="playfair"
-      style={{ fontStyle: 'italic' }}
+      style={{ fontStyle: 'italic', ...style }}
     />
   )
 );

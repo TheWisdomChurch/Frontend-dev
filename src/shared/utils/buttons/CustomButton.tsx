@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// components/ui/Button.tsx
 'use client';
 
-import React from 'react';
-import { useTheme } from '@/shared/contexts/ThemeContext';
+import React, { forwardRef } from 'react';
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/cn';
 
 export type ButtonVariant =
   | 'primary'
@@ -13,287 +12,157 @@ export type ButtonVariant =
   | 'outline'
   | 'ghost'
   | 'danger'
-  | 'success';
+  | 'success'
+  | 'dark';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
-export interface ButtonProps {
-  children: React.ReactNode;
+export interface ButtonProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'disabled'
+> {
+  children?: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // Fixed: Added event parameter
-  type?: 'button' | 'submit' | 'reset';
-  className?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  style?: React.CSSProperties;
   elevated?: boolean;
   curvature?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onMouseDown?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onMouseUp?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
 }
 
-const Button: React.FC<ButtonProps> = ({
-  children,
-  variant = 'primary',
-  size = 'md',
-  disabled = false,
-  loading = false,
-  fullWidth = false,
-  onClick,
-  type = 'button',
-  className = '',
-  leftIcon,
-  rightIcon,
-  style,
-  elevated = false,
-  curvature = 'lg',
-  onMouseEnter,
-  onMouseLeave,
-  onMouseDown,
-  onMouseUp,
-  onFocus,
-  onBlur,
-}) => {
-  const { colorScheme } = useTheme();
+const baseClasses =
+  'group relative inline-flex min-w-0 shrink-0 items-center justify-center overflow-hidden border font-bold outline-none transition-all duration-300 ease-out focus-visible:ring-4 focus-visible:ring-[#f7de12]/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:transform-none';
 
-  // Size styles
-  const sizeStyles = {
-    xs: 'px-2.5 py-1.5 text-[11px] sm:text-xs min-h-[28px] sm:min-h-[30px]',
-    sm: 'px-3 py-[7px] text-[11px] sm:text-xs min-h-[32px]',
-    md: 'px-3.5 py-2 text-xs sm:text-sm min-h-[36px] sm:min-h-[38px]',
-    lg: 'px-4 py-2.5 text-sm sm:text-[15px] min-h-[42px]',
-    xl: 'px-5 py-3 text-sm sm:text-base min-h-[46px] sm:min-h-[48px]',
-    icon: 'p-2 min-h-[auto]',
-  };
-
-  // Curvature styles
-  const curvatureStyles = {
-    sm: 'rounded-md',
-    md: 'rounded-lg',
-    lg: 'rounded-2xl',
-    xl: 'rounded-3xl',
-    full: 'rounded-full',
-  };
-
-  // Enhanced variant styles - SIMPLIFIED
-  const getVariantStyles = () => {
-    const baseStyles = `inline-flex items-center justify-center font-medium transition-all duration-300 ease-out focus:outline-none focus:ring-3 focus:ring-offset-2 ${curvatureStyles[curvature]}`;
-
-    const variants = {
-      primary: {
-        backgroundColor: colorScheme.primary,
-        color: colorScheme.textInverted,
-        hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-primary/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-      secondary: {
-        backgroundColor: colorScheme.surface,
-        color: colorScheme.text,
-        hover: 'hover:bg-surfaceVariant hover:shadow-md hover:scale-[1.02]',
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-gray-300/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-      'accent-yellow': {
-        backgroundColor: colorScheme.primary,
-        color: colorScheme.textInverted,
-        hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-yellow-500/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-      'accent-orange': {
-        backgroundColor: colorScheme.secondary,
-        color: colorScheme.white,
-        hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-orange-500/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-      outline: {
-        backgroundColor: 'transparent',
-        color: colorScheme.text,
-        border: `2px solid ${colorScheme.border}`,
-        hover: `hover:bg-surfaceVariant hover:border-primary hover:shadow-md hover:scale-[1.02]`,
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-primary/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-      ghost: {
-        backgroundColor: 'transparent',
-        color: colorScheme.text,
-        hover: `hover:bg-surfaceVariant hover:shadow-sm hover:scale-[1.02]`,
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-primary/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-      danger: {
-        backgroundColor: colorScheme.error,
-        color: colorScheme.white,
-        hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-error/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-      success: {
-        backgroundColor: colorScheme.success,
-        color: colorScheme.white,
-        hover: 'hover:shadow-lg hover:scale-[1.02] hover:brightness-110',
-        active: 'active:scale-[0.98]',
-        focus: 'focus:ring-success/50',
-        disabled: 'opacity-60 cursor-not-allowed',
-      },
-    };
-
-    const variantConfig = variants[variant];
-
-    return {
-      backgroundColor: variantConfig.backgroundColor,
-      color: variantConfig.color,
-      border: (variantConfig as any).border || 'none',
-      hover: variantConfig.hover,
-      active: variantConfig.active,
-      focus: variantConfig.focus,
-      disabled: variantConfig.disabled,
-      base: baseStyles,
-    };
-  };
-
-  const variantStyles = getVariantStyles();
-  const sizeStyle = sizeStyles[size];
-  const widthStyle = fullWidth ? 'w-full' : '';
-  const elevationStyle = elevated ? 'shadow-md hover:shadow-lg' : '';
-
-  const colorUtilityPattern =
-    /\b(?:[a-z-]+:)*text-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-[0-9]{2,3})?(?:\/[0-9]{1,3})?\b/;
-  const bgUtilityPattern =
-    /\b(?:[a-z-]+:)*bg-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-[0-9]{2,3})?(?:\/[0-9]{1,3})?\b/;
-  const borderUtilityPattern =
-    /\b(?:[a-z-]+:)*border-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-[0-9]{2,3})?(?:\/[0-9]{1,3})?\b/;
-
-  const hasTextColorOverride = colorUtilityPattern.test(className);
-  const hasBackgroundOverride = bgUtilityPattern.test(className);
-  const hasBorderOverride = borderUtilityPattern.test(className);
-
-  const buttonStyles: React.CSSProperties = {
-    ...(!hasBackgroundOverride || style?.backgroundColor
-      ? { backgroundColor: variantStyles.backgroundColor }
-      : {}),
-    ...(!hasTextColorOverride || style?.color
-      ? { color: variantStyles.color }
-      : {}),
-    ...(!hasBorderOverride || style?.border
-      ? { border: variantStyles.border }
-      : {}),
-    ...style,
-  };
-
-  // Handle click with proper event propagation
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (disabled || loading) return;
-
-    // Add a small delay to ensure state updates properly
-    setTimeout(() => {
-      onClick?.(e);
-    }, 10);
-  };
-
-  return (
-    <button
-      type={type}
-      disabled={disabled || loading}
-      onClick={handleClick} // Use the fixed handler
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      className={`
-        ${variantStyles.base}
-        ${sizeStyle}
-        ${widthStyle}
-        ${elevationStyle}
-        ${!(disabled || loading) ? variantStyles.hover : ''}
-        ${!(disabled || loading) ? variantStyles.active : ''}
-        ${variantStyles.focus}
-        ${disabled || loading ? variantStyles.disabled : ''}
-        ${className}
-        transform transition-all duration-300 ease-out
-        font-medium tracking-[0.02em] sm:tracking-[0.04em]
-        overflow-hidden relative
-        disabled:cursor-not-allowed
-        disabled:transform-none
-        disabled:shadow-none
-        cursor-pointer // Ensure cursor shows it's clickable
-        select-none // Prevent text selection
-        z-10 // Ensure proper z-index
-      `}
-      style={buttonStyles}
-    >
-      {/* Loading overlay - FIXED: Removed absolute positioning that might block clicks */}
-      {loading && (
-        <div className="absolute inset-0 rounded-inherit bg-current opacity-20" />
-      )}
-
-      {/* Content container - FIXED: Simplified structure */}
-      <div
-        className={`flex items-center justify-center gap-2 text-center leading-tight ${loading ? 'opacity-70' : ''}`}
-      >
-        {/* Loading spinner */}
-        {loading && (
-          <svg
-            className="animate-spin h-4 w-4 flex-shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
-          </svg>
-        )}
-
-        {/* Left Icon */}
-        {!loading && leftIcon && (
-          <span className="flex-shrink-0" style={{ fontSize: '0.9em' }}>
-            {leftIcon}
-          </span>
-        )}
-
-        {/* Children */}
-        <span className="whitespace-normal sm:whitespace-nowrap">
-          {children}
-        </span>
-
-        {/* Right Icon */}
-        {!loading && rightIcon && (
-          <span className="flex-shrink-0" style={{ fontSize: '0.9em' }}>
-            {rightIcon}
-          </span>
-        )}
-      </div>
-    </button>
-  );
+const sizeClasses: Record<ButtonSize, string> = {
+  xs: 'min-h-8 px-3 text-xs gap-1.5',
+  sm: 'min-h-9 px-3.5 text-xs sm:text-sm gap-2',
+  md: 'min-h-11 px-5 text-sm gap-2',
+  lg: 'min-h-12 px-6 text-sm sm:text-[0.95rem] gap-2.5',
+  xl: 'min-h-14 px-7 text-base gap-3',
+  icon: 'h-11 w-11 p-0',
 };
+
+const radiusClasses = {
+  sm: 'rounded-lg',
+  md: 'rounded-xl',
+  lg: 'rounded-2xl',
+  xl: 'rounded-[1.25rem]',
+  full: 'rounded-full',
+};
+
+const variantClasses: Record<ButtonVariant, string> = {
+  primary:
+    'border-[#f7de12] bg-[#f7de12] text-black shadow-[#f7de12]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
+  'accent-yellow':
+    'border-[#f7de12] bg-[#f7de12] text-black shadow-[#f7de12]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
+  'accent-orange':
+    'border-orange-500 bg-orange-500 text-white shadow-orange-500/20 hover:border-orange-400 hover:bg-orange-400',
+  secondary:
+    'border-white/10 bg-white/[0.07] text-white hover:border-white/20 hover:bg-white/[0.11]',
+  outline:
+    'border-white/15 bg-transparent text-white hover:border-[#f7de12]/50 hover:bg-[#f7de12]/10 hover:text-[#f7de12]',
+  ghost:
+    'border-transparent bg-transparent text-white/78 hover:bg-white/[0.08] hover:text-white',
+  dark: 'border-white/10 bg-black/55 text-white hover:border-white/20 hover:bg-black/75',
+  danger:
+    'border-rose-500 bg-rose-500 text-white shadow-rose-500/20 hover:border-rose-400 hover:bg-rose-400',
+  success:
+    'border-emerald-500 bg-emerald-500 text-white shadow-emerald-500/20 hover:border-emerald-400 hover:bg-emerald-400',
+};
+
+const interactiveClasses =
+  'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.985]';
+
+const iconSizeClasses: Record<ButtonSize, string> = {
+  xs: '[&_svg]:h-3.5 [&_svg]:w-3.5',
+  sm: '[&_svg]:h-4 [&_svg]:w-4',
+  md: '[&_svg]:h-4 [&_svg]:w-4',
+  lg: '[&_svg]:h-5 [&_svg]:w-5',
+  xl: '[&_svg]:h-5 [&_svg]:w-5',
+  icon: '[&_svg]:h-5 [&_svg]:w-5',
+};
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      children,
+      variant = 'primary',
+      size = 'md',
+      disabled = false,
+      loading = false,
+      fullWidth = false,
+      leftIcon,
+      rightIcon,
+      elevated = false,
+      curvature = 'full',
+      className,
+      type = 'button',
+      onClick,
+      ...props
+    },
+    ref
+  ) => {
+    const isDisabled = disabled || loading;
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (isDisabled) return;
+      onClick?.(event);
+    };
+
+    return (
+      <button
+        ref={ref}
+        type={type}
+        disabled={isDisabled}
+        aria-busy={loading || undefined}
+        onClick={handleClick}
+        className={cn(
+          baseClasses,
+          sizeClasses[size],
+          radiusClasses[curvature],
+          variantClasses[variant],
+          iconSizeClasses[size],
+          !isDisabled && interactiveClasses,
+          elevated && 'shadow-lg hover:shadow-xl',
+          fullWidth && 'w-full',
+          className
+        )}
+        {...props}
+      >
+        <span className="pointer-events-none absolute inset-0 translate-x-[-120%] bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[120%]" />
+
+        <span className="relative z-10 flex min-w-0 items-center justify-center gap-inherit">
+          {loading ? (
+            <Loader2 className="shrink-0 animate-spin" aria-hidden="true" />
+          ) : leftIcon ? (
+            <span className="shrink-0" aria-hidden="true">
+              {leftIcon}
+            </span>
+          ) : null}
+
+          {children ? (
+            <span className="min-w-0 truncate whitespace-nowrap">
+              {children}
+            </span>
+          ) : null}
+
+          {!loading && rightIcon ? (
+            <span
+              className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            >
+              {rightIcon}
+            </span>
+          ) : null}
+        </span>
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';
 
 export default Button;

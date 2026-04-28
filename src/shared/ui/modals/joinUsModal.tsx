@@ -1,13 +1,15 @@
 'use client';
 
-import { communityLinks } from '@/lib/data';
 import Image from 'next/image';
+import { ArrowUpRight, CheckCircle2, ShieldCheck, Users2 } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faWhatsapp,
   faInstagram,
+  faWhatsapp,
   faYoutube,
 } from '@fortawesome/free-brands-svg-icons';
+
+import { communityLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { BaseModal } from './Base';
 import type { JoinCommunityModalProps } from '@/lib/types';
@@ -18,6 +20,27 @@ const faIconMap = {
   youtube: faYoutube,
 };
 
+const communityStats = [
+  {
+    title: 'Always Active',
+    detail: 'Round-the-clock fellowship',
+    icon: CheckCircle2,
+    value: '24/7',
+  },
+  {
+    title: 'Live Community',
+    detail: 'Real-time interactions',
+    icon: Users2,
+    value: 'Live',
+  },
+  {
+    title: 'Safe Space',
+    detail: 'Secure and welcoming',
+    icon: ShieldCheck,
+    value: 'Safe',
+  },
+];
+
 export default function JoinCommunityModal({
   isOpen,
   onClose,
@@ -27,84 +50,66 @@ export default function JoinCommunityModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Join Our Community"
+      subtitle="Connect with us across different platforms and grow together in faith."
       maxWidth="max-w-2xl"
+      forceBottomSheet
     >
-      <div className="space-y-6 sm:space-y-8">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center p-3 rounded-full border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 mb-4">
-            <div className="relative w-12 h-12 sm:w-16 sm:h-16">
+      <div className="space-y-6">
+        <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-5 text-center">
+          <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl border border-[#f7de12]/20 bg-[#f7de12]/10">
+            <div className="relative h-14 w-14">
               <Image
                 src={WisdomeHouseLogo}
                 alt="The Wisdom House Church Logo"
                 fill
-                className="object-contain p-1"
+                className="object-contain"
               />
             </div>
           </div>
 
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-md mx-auto">
-            Connect with us across different platforms and grow together in
-            faith
+          <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-white/65">
+            Choose your preferred platform and stay connected to updates,
+            fellowship, prayers, and ministry moments.
           </p>
         </div>
 
-        <div className="space-y-3 sm:space-y-4">
-          {communityLinks.map((link, index) => {
+        <div className="grid gap-3">
+          {communityLinks.map(link => {
             const faIcon = link.iconFA
               ? faIconMap[link.icon as keyof typeof faIconMap]
               : null;
+
             return (
               <a
-                key={index}
+                key={link.title}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block group relative overflow-hidden rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
-                style={{
-                  background: `linear-gradient(135deg, ${link.bgColor}, ${link.hoverColor})`,
-                }}
+                className="group rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-[#f7de12]/35 hover:bg-white/[0.06]"
               >
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                <div className="flex items-center gap-4">
+                  <div
+                    className="grid h-12 w-12 flex-none place-items-center rounded-2xl text-white shadow-lg"
+                    style={{
+                      background: `linear-gradient(135deg, ${link.bgColor}, ${link.hoverColor})`,
+                    }}
+                  >
+                    {faIcon ? (
+                      <FontAwesomeIcon icon={faIcon} className="h-5 w-5" />
+                    ) : null}
+                  </div>
 
-                <div className="relative p-4 sm:p-6">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                        {faIcon ? (
-                          <FontAwesomeIcon
-                            icon={faIcon}
-                            className="w-5 h-5 sm:w-6 sm:h-6 text-white"
-                          />
-                        ) : null}
-                      </div>
-                    </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-base font-semibold text-white">
+                      {link.title}
+                    </h3>
+                    <p className="mt-1 line-clamp-2 text-sm leading-6 text-white/58">
+                      {link.description}
+                    </p>
+                  </div>
 
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-white font-bold text-sm sm:text-lg truncate">
-                        {link.title}
-                      </h3>
-                      <p className="text-white/90 text-xs sm:text-sm mt-1 leading-relaxed line-clamp-2">
-                        {link.description}
-                      </p>
-                    </div>
-
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                        <svg
-                          className="w-4 h-4 text-white transform -rotate-45"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"
-                          />
-                        </svg>
-                      </div>
-                    </div>
+                  <div className="grid h-10 w-10 flex-none place-items-center rounded-full border border-white/10 bg-black/25 text-white/55 transition group-hover:border-[#f7de12]/40 group-hover:text-[#f7de12]">
+                    <ArrowUpRight className="h-4 w-4" />
                   </div>
                 </div>
               </a>
@@ -112,88 +117,39 @@ export default function JoinCommunityModal({
           })}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-          <div className="rounded-lg sm:rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-4 text-center">
-            <div className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10 mb-2 sm:mb-3">
-              <span className="text-amber-400 text-sm font-bold">24/7</span>
-            </div>
-            <h4 className="text-white font-medium text-xs sm:text-sm mb-1">
-              Always Active
-            </h4>
-            <p className="text-slate-400 text-xs">Round-the-clock fellowship</p>
-          </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {communityStats.map(item => {
+            const Icon = item.icon;
 
-          <div className="rounded-lg sm:rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-4 text-center">
-            <div className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10 mb-2 sm:mb-3">
-              <svg
-                className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            return (
+              <div
+                key={item.title}
+                className="rounded-[1.15rem] border border-white/10 bg-black/25 p-4 text-center"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-            <h4 className="text-white font-medium text-xs sm:text-sm mb-1">
-              Live Community
-            </h4>
-            <p className="text-slate-400 text-xs">Real-time interactions</p>
-          </div>
+                <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-[#f7de12]/10 text-[#f7de12]">
+                  <Icon className="h-4 w-4" />
+                </div>
 
-          <div className="rounded-lg sm:rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-4 text-center">
-            <div className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10 mb-2 sm:mb-3">
-              <svg
-                className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h4 className="text-white font-medium text-xs sm:text-sm mb-1">
-              Safe Space
-            </h4>
-            <p className="text-slate-400 text-xs">
-              Secure & welcoming environment
-            </p>
-          </div>
+                <p className="mt-3 text-sm font-semibold text-white">
+                  {item.title}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-white/48">
+                  {item.detail}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="rounded-lg sm:rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-4 sm:p-6">
-          <div className="flex items-start gap-3 sm:gap-4">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10 flex items-center justify-center">
-                <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
+        <div className="rounded-[1.25rem] border border-[#f7de12]/20 bg-[#f7de12]/10 p-4">
+          <div className="flex items-start gap-3">
+            <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-[#f7de12]/10 text-[#f7de12]">
+              <CheckCircle2 className="h-5 w-5" />
             </div>
+
             <div>
-              <h4 className="text-white font-semibold text-sm sm:text-base mb-1">
-                Quick tip
-              </h4>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              <h4 className="text-sm font-semibold text-white">Quick tip</h4>
+              <p className="mt-1 text-sm leading-6 text-white/62">
                 Turn on notifications so you never miss updates from the
                 ministry.
               </p>

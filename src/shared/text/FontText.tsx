@@ -1,17 +1,22 @@
-// components/text/FontText.tsx
 'use client';
 
 import React from 'react';
-import { BaseText, BaseTextProps } from './baseText';
+import { BaseText, type BaseTextProps } from './baseText';
 
-export const BricolageText: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} fontFamily="bricolage" />
+export const BricolageText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => <BaseText ref={ref} {...props} fontFamily="bricolage" />
 );
 
-export const WorkSansText: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} fontFamily="worksans" />
+BricolageText.displayName = 'BricolageText';
+
+export const WorkSansText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => <BaseText ref={ref} {...props} fontFamily="worksans" />
 );
 
-export const PlayfairText: React.FC<BaseTextProps> = props => (
-  <BaseText {...props} fontFamily="playfair" />
+WorkSansText.displayName = 'WorkSansText';
+
+export const PlayfairText = React.forwardRef<HTMLElement, BaseTextProps>(
+  (props, ref) => <BaseText ref={ref} {...props} fontFamily="playfair" />
 );
+
+PlayfairText.displayName = 'PlayfairText';

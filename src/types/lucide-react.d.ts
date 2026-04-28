@@ -94,4 +94,7 @@ declare module 'lucide-react' {
   export const Laptop2: LucideIcon;
   export const Moon: LucideIcon;
   export const Sun: LucideIcon;
+  export const Lock: LucideIcon;
+  export const Cookie: LucideIcon;
+  export const Settings: LucideIcon;
 }

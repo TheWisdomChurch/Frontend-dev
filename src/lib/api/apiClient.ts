@@ -69,16 +69,20 @@ class APIClient {
       (response: AxiosResponse) => response,
       (error: AxiosError) => {
         // Handle common error scenarios
-        if (error.response?.status === 401) {
+        const status = error.response?.status;
+        const requestUrl = String(error.config?.url || '');
+        const isAuthProbe = requestUrl.includes('/auth/me');
+
+        if (status === 401 && !isAuthProbe) {
           this.handleUnauthorized();
         }
-        if (error.response?.status === 403) {
+        if (status === 403 && !isAuthProbe) {
           console.error('Forbidden: Access denied');
         }
-        if (error.response?.status === 404) {
+        if (status === 404 && !isAuthProbe) {
           console.error('Not found: Resource does not exist');
         }
-        if (error.response?.status === 500) {
+        if (status === 500) {
           console.error('Server error: Internal server error');
         }
 
@@ -170,7 +174,6 @@ class APIClient {
     this.baseURL = url;
     this.instance.defaults.baseURL = url;
   }
-
 }
 
 // Export singleton instance

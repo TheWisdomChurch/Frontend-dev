@@ -1,11 +1,13 @@
 // app/layout.tsx
 import type { Metadata, Viewport } from 'next';
-import { bricolageGrotesque, worksans, playfair } from '@/shared/fonts/fonts';
+import type { ReactNode } from 'react';
+
+import '@/app/globals.scss';
 
 import MetaPixel from '@/shared/analytics/MetaPixel';
-import { Providers } from './providers';
+import { bricolageGrotesque, playfair, worksans } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
-import './globals.scss';
+import { Providers } from './providers';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
 const SITE_NAME = 'The Wisdom Church';
@@ -20,67 +22,16 @@ export const metadata: Metadata = {
       'en-NG': '/',
     },
   },
-
   title: {
     default: 'The Wisdom Church | Experience God’s Transforming Power',
-    template: '%s | The Wisdom Church',
+    template: `%s | ${SITE_NAME}`,
   },
   description:
     'The Wisdom Church is a vibrant Spirit-filled church where lives are transformed through powerful worship, biblical teaching, and authentic community. Join us this Sunday!',
   applicationName: SITE_NAME,
-
-  keywords: [
-    'wisdomchurch',
-    'wisdom house church',
-    'the wisdom house church',
-    'wisdom church',
-    'wisdom house',
-    'pentecostal church',
-    'spirit filled church',
-    'church near me',
-    'sunday service',
-    'bible teaching church',
-    'holy spirit church',
-    'christian church',
-    'place of worship',
-    'faith community',
-    'churches near me',
-    'church services near me',
-    'non denominational church near me',
-    'contemporary church near me',
-    'worship services near me',
-    'sunday morning church service',
-    'online church services',
-    'live church service',
-    'pentecostal churches near me',
-    'charismatic church',
-    'full gospel church',
-    'spirit filled churches',
-    'holy ghost church',
-    'bible study',
-    'youth ministry',
-    'church events',
-    'christian community',
-    'worship music',
-    'church choir',
-    'childrens ministry',
-    "women's ministry",
-    "men's ministry",
-    'church small groups',
-    'volunteer at church',
-    'church volunteer opportunities',
-    'church live stream',
-  ],
-
-  authors: [
-    {
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
-  ],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
-
   openGraph: {
     title: SITE_NAME,
     description:
@@ -93,23 +44,21 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: `${SITE_NAME} - Welcome Home`,
-        type: 'image/jpeg',
+        type: 'image/webp',
       },
     ],
     locale: 'en_US',
     alternateLocale: ['en_NG'],
     type: 'website',
   },
-
   twitter: {
     card: 'summary_large_image',
     title: SITE_NAME,
     description: 'Join us for powerful worship and life-changing messages.',
-    images: [OG_IMAGE], // use same OG image
+    images: [OG_IMAGE],
     creator: '@wisdomhousehq',
     site: '@wisdomhousehq',
   },
-
   robots: {
     index: true,
     follow: true,
@@ -122,8 +71,6 @@ export const metadata: Metadata = {
     },
   },
   category: 'religion',
-
-  // ✅ Verification: token ONLY (NOT .html filename)
   verification: {
     google: 'uOPR3Lh4dhAVkY-jD_5e6cFGtrW2NTpy4TDCtU93-sY',
   },
@@ -134,21 +81,21 @@ export const metadata: Metadata = {
   },
   other: {
     'msvalidate.01': 'CDC0BA45440A0A1BB38769D83C132EBB',
-    'theme-color': '#050505',
   },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#050505',
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const orgSchema = {
     '@context': 'https://schema.org',
@@ -201,7 +148,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={cn(worksans.className, 'font-sans')}>
-        {/* ✅ Valid JSON-LD only (no <meta> inside JSON.stringify) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

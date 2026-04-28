@@ -5,6 +5,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const DEFAULT_API_UPSTREAM = 'https://api.wisdomchurchhq.org';
+const API_BASE_PATH = '/api/v1';
 const SIGNING_HEADER_PREFIX = 'x-wc-proxy';
 
 type ProxySigning = {
@@ -12,35 +13,13 @@ type ProxySigning = {
   secret: string;
 };
 
-function normalizeUpstream(raw: string): string {
-  let value = raw.trim();
-  if (!value) return '';
-  value = value.replace(/\/+$/, '');
-  if (value.endsWith('/api/v1')) value = value.slice(0, -'/api/v1'.length);
-  return value;
-}
+type RouteParams = {
+  path?: string[];
+};
 
-function resolveUpstreamOrigin(): string {
-  const envValue =
-    process.env.API_PROXY_TARGET ||
-    process.env.NEXT_PUBLIC_API_URL ||
-    process.env.NEXT_PUBLIC_BACKEND_URL ||
-    process.env.BACKEND_URL ||
-    DEFAULT_API_UPSTREAM;
-
-  return normalizeUpstream(envValue);
-}
-
-function resolveProxySigning(): ProxySigning | null {
-  const secret = (process.env.API_PROXY_SIGNING_SECRET || '').trim();
-  if (!secret) return null;
-
-  const keyId = (process.env.API_PROXY_SIGNING_KEY_ID || 'frontend-proxy-v1')
-    .trim()
-    .toLowerCase();
-
-  return { keyId, secret };
-}
+type RouteContext = {
+  params: RouteParams | Promise<RouteParams>;
+};
 
 const HOP_BY_HOP_HEADERS = new Set([
   'connection',
@@ -55,45 +34,110 @@ const HOP_BY_HOP_HEADERS = new Set([
   'content-length',
 ]);
 
-function buildForwardHeaders(req: NextRequest): Headers {
-  const headers = new Headers();
-  req.headers.forEach((value, key) => {
-    if (HOP_BY_HOP_HEADERS.has(key.toLowerCase())) return;
-    headers.set(key, value);
-  });
-  const host = req.headers.get('host') || '';
-  const proto = req.nextUrl.protocol.replace(':', '');
-  const forwardedFor = req.headers.get('x-forwarded-for');
-  const remoteAddr =
-    req.headers.get('x-real-ip') || req.headers.get('cf-connecting-ip');
+const REQUEST_HEADERS_TO_DROP = new Set([
+  ...HOP_BY_HOP_HEADERS,
+  'accept-encoding',
+]);
 
-  headers.set('x-forwarded-host', host);
-  headers.set('x-forwarded-proto', proto);
-  if (remoteAddr) {
-    headers.set(
-      'x-forwarded-for',
-      forwardedFor ? `${forwardedFor}, ${remoteAddr}` : remoteAddr
-    );
-  }
-  return headers;
+const RESPONSE_HEADERS_TO_DROP = new Set([
+  ...HOP_BY_HOP_HEADERS,
+  'content-encoding',
+  'content-length',
+]);
+
+function jsonResponse(payload: unknown, status = 500): Response {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store',
+    },
+  });
+}
+
+function normalizeUpstream(raw?: string): string {
+  const value = (raw || '').trim().replace(/\/+$/, '');
+
+  if (!value) return '';
+
+  return value.endsWith(API_BASE_PATH)
+    ? value.slice(0, -API_BASE_PATH.length)
+    : value;
+}
+
+function resolveUpstreamOrigin(): string {
+  return normalizeUpstream(
+    process.env.API_PROXY_TARGET ||
+      process.env.API_PROXY_ORIGIN ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      process.env.BACKEND_URL ||
+      DEFAULT_API_UPSTREAM
+  );
+}
+
+function resolveProxySigning(): ProxySigning | null {
+  const secret = process.env.API_PROXY_SIGNING_SECRET?.trim();
+
+  if (!secret) return null;
+
+  return {
+    keyId: (process.env.API_PROXY_SIGNING_KEY_ID || 'frontend-proxy-v1')
+      .trim()
+      .toLowerCase(),
+    secret,
+  };
+}
+
+function toBuffer(input: ArrayBuffer | Uint8Array | string): Buffer {
+  if (typeof input === 'string') return Buffer.from(input, 'utf8');
+  if (input instanceof ArrayBuffer) return Buffer.from(new Uint8Array(input));
+
+  return Buffer.from(input.buffer, input.byteOffset, input.byteLength);
 }
 
 function sha256Hex(input: ArrayBuffer | Uint8Array | string): string {
-  const hash = createHash('sha256');
-  hash.update(
-    typeof input === 'string' ? Buffer.from(input, 'utf8') : Buffer.from(input)
-  );
-  return hash.digest('hex');
+  return createHash('sha256').update(toBuffer(input)).digest('hex');
 }
 
-function buildSigningPayload(
-  method: string,
-  pathWithQuery: string,
-  timestamp: string,
-  nonce: string,
-  bodyHash: string
-): string {
-  return [method, pathWithQuery, timestamp, nonce, bodyHash].join('\n');
+function getClientIp(req: NextRequest): string {
+  return (
+    req.headers.get('cf-connecting-ip') ||
+    req.headers.get('x-real-ip') ||
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    ''
+  );
+}
+
+function buildForwardHeaders(req: NextRequest): Headers {
+  const headers = new Headers();
+
+  req.headers.forEach((value, key) => {
+    const lower = key.toLowerCase();
+
+    if (REQUEST_HEADERS_TO_DROP.has(lower)) return;
+    if (lower.startsWith(`${SIGNING_HEADER_PREFIX}-`)) return;
+
+    headers.set(key, value);
+  });
+
+  const host = req.headers.get('host') || '';
+  const proto = req.nextUrl.protocol.replace(':', '') || 'https';
+  const clientIp = getClientIp(req);
+  const forwardedFor = req.headers.get('x-forwarded-for');
+
+  headers.set('x-forwarded-host', host);
+  headers.set('x-forwarded-proto', proto);
+  headers.set('x-proxy-source', 'wisdom-frontend');
+
+  if (clientIp) {
+    headers.set(
+      'x-forwarded-for',
+      forwardedFor ? `${forwardedFor}, ${clientIp}` : clientIp
+    );
+  }
+
+  return headers;
 }
 
 function attachSignatureHeaders(params: {
@@ -101,21 +145,24 @@ function attachSignatureHeaders(params: {
   signing: ProxySigning | null;
   method: string;
   pathWithQuery: string;
-  body: ArrayBuffer | undefined;
-}) {
+  body?: ArrayBuffer;
+}): void {
   const { headers, signing, method, pathWithQuery, body } = params;
+
   if (!signing) return;
 
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const nonce = randomUUID();
   const bodyHash = sha256Hex(body ?? '');
-  const payload = buildSigningPayload(
+
+  const payload = [
     method.toUpperCase(),
     pathWithQuery,
     timestamp,
     nonce,
-    bodyHash
-  );
+    bodyHash,
+  ].join('\n');
+
   const signature = createHmac('sha256', signing.secret)
     .update(payload, 'utf8')
     .digest('hex');
@@ -127,113 +174,140 @@ function attachSignatureHeaders(params: {
   headers.set(`${SIGNING_HEADER_PREFIX}-signature`, signature);
 }
 
-function sanitizeRequestHeaders(headers: Headers): Headers {
-  const sanitized = new Headers();
-  headers.forEach((value, key) => {
-    const lower = key.toLowerCase();
-    if (lower.startsWith(`${SIGNING_HEADER_PREFIX}-`)) return;
-    sanitized.set(key, value);
-  });
-  return sanitized;
-}
-
 function filterResponseHeaders(source: Headers): Headers {
   const headers = new Headers();
+
   source.forEach((value, key) => {
-    if (HOP_BY_HOP_HEADERS.has(key.toLowerCase())) return;
-    headers.set(key, value);
+    if (!RESPONSE_HEADERS_TO_DROP.has(key.toLowerCase())) {
+      headers.set(key, value);
+    }
   });
+
+  headers.set('cache-control', 'no-store');
+
   return headers;
 }
 
-async function proxyRequest(req: NextRequest, path: string[]) {
+function buildTargetUrl(req: NextRequest, path: string[]) {
   const upstream = resolveUpstreamOrigin();
+
   if (!upstream) {
-    return new Response(
-      JSON.stringify({
-        error:
-          'API upstream is not configured. Set API_PROXY_TARGET or NEXT_PUBLIC_BACKEND_URL.',
-      }),
-      {
-        status: 500,
-        headers: { 'content-type': 'application/json' },
-      }
+    throw new Error(
+      'API upstream is not configured. Set API_PROXY_ORIGIN or API_PROXY_TARGET.'
     );
   }
 
-  const joinedPath = path.join('/');
-  const query = req.nextUrl.search || '';
-  const targetUrl = `${upstream}/api/v1/${joinedPath}${query}`;
-  const pathWithQuery = `/api/v1/${joinedPath}${query}`;
+  const safePath = path
+    .filter(Boolean)
+    .map(segment => encodeURIComponent(decodeURIComponent(segment)))
+    .join('/');
 
+  const pathWithQuery = `${API_BASE_PATH}/${safePath}${req.nextUrl.search || ''}`;
+
+  return {
+    targetUrl: `${upstream}${pathWithQuery}`,
+    pathWithQuery,
+  };
+}
+
+async function readBody(req: NextRequest): Promise<ArrayBuffer | undefined> {
   const method = req.method.toUpperCase();
-  const body =
-    method === 'GET' || method === 'HEAD' ? undefined : await req.arrayBuffer();
-  const signing = resolveProxySigning();
-  const headers = sanitizeRequestHeaders(buildForwardHeaders(req));
+
+  if (method === 'GET' || method === 'HEAD') return undefined;
+
+  return req.arrayBuffer();
+}
+
+async function proxyRequest(
+  req: NextRequest,
+  ctx: RouteContext
+): Promise<Response> {
+  const params = await ctx.params;
+  const path = params.path ?? [];
+  const method = req.method.toUpperCase();
+
+  let targetUrl = '';
+  let pathWithQuery = '';
+
+  try {
+    const built = buildTargetUrl(req, path);
+    targetUrl = built.targetUrl;
+    pathWithQuery = built.pathWithQuery;
+  } catch (error) {
+    return jsonResponse(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Invalid API proxy configuration.',
+      },
+      500
+    );
+  }
+
+  let body: ArrayBuffer | undefined;
+
+  try {
+    body = await readBody(req);
+  } catch {
+    return jsonResponse({ error: 'Unable to read request body.' }, 400);
+  }
+
+  const headers = buildForwardHeaders(req);
+
   attachSignatureHeaders({
     headers,
-    signing,
+    signing: resolveProxySigning(),
     method,
     pathWithQuery,
     body,
   });
 
-  let upstreamRes: Response;
   try {
-    upstreamRes = await fetch(targetUrl, {
+    const upstreamResponse = await fetch(targetUrl, {
       method,
       headers,
       body,
-      redirect: 'follow',
+      redirect: 'manual',
       cache: 'no-store',
     });
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : 'Failed to reach API upstream service';
-    return new Response(JSON.stringify({ error: message }), {
-      status: 502,
-      headers: { 'content-type': 'application/json' },
+
+    return new Response(upstreamResponse.body, {
+      status: upstreamResponse.status,
+      statusText: upstreamResponse.statusText,
+      headers: filterResponseHeaders(upstreamResponse.headers),
     });
+  } catch (error) {
+    return jsonResponse(
+      {
+        error: 'Failed to reach API upstream service.',
+        detail: error instanceof Error ? error.message : undefined,
+      },
+      502
+    );
   }
-
-  return new Response(upstreamRes.body, {
-    status: upstreamRes.status,
-    statusText: upstreamRes.statusText,
-    headers: filterResponseHeaders(upstreamRes.headers),
-  });
 }
 
-type RouteContext = { params: Promise<{ path: string[] }> };
-
-export async function GET(req: NextRequest, ctx: RouteContext) {
-  const { path } = await ctx.params;
-  return proxyRequest(req, path);
+export function GET(req: NextRequest, ctx: RouteContext) {
+  return proxyRequest(req, ctx);
 }
 
-export async function POST(req: NextRequest, ctx: RouteContext) {
-  const { path } = await ctx.params;
-  return proxyRequest(req, path);
+export function POST(req: NextRequest, ctx: RouteContext) {
+  return proxyRequest(req, ctx);
 }
 
-export async function PUT(req: NextRequest, ctx: RouteContext) {
-  const { path } = await ctx.params;
-  return proxyRequest(req, path);
+export function PUT(req: NextRequest, ctx: RouteContext) {
+  return proxyRequest(req, ctx);
 }
 
-export async function PATCH(req: NextRequest, ctx: RouteContext) {
-  const { path } = await ctx.params;
-  return proxyRequest(req, path);
+export function PATCH(req: NextRequest, ctx: RouteContext) {
+  return proxyRequest(req, ctx);
 }
 
-export async function DELETE(req: NextRequest, ctx: RouteContext) {
-  const { path } = await ctx.params;
-  return proxyRequest(req, path);
+export function DELETE(req: NextRequest, ctx: RouteContext) {
+  return proxyRequest(req, ctx);
 }
 
-export async function OPTIONS(req: NextRequest, ctx: RouteContext) {
-  const { path } = await ctx.params;
-  return proxyRequest(req, path);
+export function OPTIONS(req: NextRequest, ctx: RouteContext) {
+  return proxyRequest(req, ctx);
 }

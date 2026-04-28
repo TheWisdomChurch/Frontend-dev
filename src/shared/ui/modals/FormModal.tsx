@@ -1,32 +1,33 @@
 'use client';
 
-import { BaseModal, modalStyles } from './Base';
-import { useForm } from 'react-hook-form';
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
+import { useForm } from 'react-hook-form';
 import * as ZodResolvers from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
-import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import {
+  AlertCircle,
+  Bell,
+  Building,
+  DoorOpen,
+  Heart,
   Loader2,
-  Users,
   Music,
   Shield,
   UserCheck,
-  Heart,
-  Building,
-  DoorOpen,
-  Bell,
-  AlertCircle,
+  Users,
 } from 'lucide-react';
+
+import { BaseModal, modalStyles } from './Base';
+import { SuccessModal } from './SuccessModal';
+import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { eventRegistrationSchema } from '@/lib/validation';
+import type { EventRegistrationFormSchema } from '@/lib/validation';
 import type {
   EventRegistrationData,
   EventRegistrationModalProps,
 } from '@/lib/types';
-import type { EventRegistrationFormSchema } from '@/lib/validation';
-import { SuccessModal } from './SuccessModal';
 
 const { zodResolver } = ZodResolvers;
 
@@ -34,67 +35,83 @@ const VOLUNTEER_ROLES = [
   {
     id: 'service_prep',
     label: 'Service Preparatory Unit',
-    icon: <Bell className="w-4 h-4" />,
+    icon: Bell,
   },
   {
     id: 'music',
     label: 'Music Department',
-    icon: <Music className="w-4 h-4" />,
+    icon: Music,
   },
   {
     id: 'sanctuary',
     label: 'Sanctuary Management',
-    icon: <Building className="w-4 h-4" />,
+    icon: Building,
   },
   {
     id: 'ushers',
     label: 'Ushers & Greeters',
-    icon: <DoorOpen className="w-4 h-4" />,
+    icon: DoorOpen,
   },
   {
     id: 'security',
     label: 'Security Team',
-    icon: <Shield className="w-4 h-4" />,
+    icon: Shield,
   },
   {
     id: 'protocol',
     label: 'Protocol & Logistics',
-    icon: <UserCheck className="w-4 h-4" />,
+    icon: UserCheck,
   },
-  { id: 'media', label: 'Media & Tech', icon: <Users className="w-4 h-4" /> },
-  { id: 'prayer', label: 'Prayer Team', icon: <Heart className="w-4 h-4" /> },
+  {
+    id: 'media',
+    label: 'Media & Tech',
+    icon: Users,
+  },
+  {
+    id: 'prayer',
+    label: 'Prayer Team',
+    icon: Heart,
+  },
   {
     id: 'children',
     label: 'Children Ministry',
-    icon: <Users className="w-4 h-4" />,
+    icon: Users,
   },
   {
     id: 'hospitality',
     label: 'Hospitality',
-    icon: <Users className="w-4 h-4" />,
+    icon: Users,
   },
   {
     id: 'other',
-    label: 'Other (Please specify)',
-    icon: <Users className="w-4 h-4" />,
+    label: 'Other',
+    icon: Users,
   },
-];
+] as const;
 
 const COUNTRIES = [
-  'United States',
-  'United Kingdom',
-  'Canada',
   'Nigeria',
   'Ghana',
   'South Africa',
   'Kenya',
+  'United Kingdom',
+  'United States',
+  'Canada',
   'Australia',
   'Germany',
   'France',
   'Other',
 ];
 
-export const EventRegistrationModal = ({
+type Step = 'personal' | 'volunteer' | 'additional';
+
+const stepOrder: Step[] = ['personal', 'volunteer', 'additional'];
+
+function getStepNumber(step: Step) {
+  return stepOrder.indexOf(step) + 1;
+}
+
+export function EventRegistrationModal({
   event,
   isOpen,
   onClose,
@@ -105,13 +122,11 @@ export const EventRegistrationModal = ({
   eyebrow,
   highlight,
   ctaNote,
-}: EventRegistrationModalProps) => {
+}: EventRegistrationModalProps) {
   const { open } = useServiceUnavailable();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [step, setStep] = useState<'personal' | 'volunteer' | 'additional'>(
-    'personal'
-  );
+  const [step, setStep] = useState<Step>('personal');
 
   const resolver = useMemo(() => zodResolver(eventRegistrationSchema), []);
 
@@ -122,6 +137,7 @@ export const EventRegistrationModal = ({
     watch,
     setValue,
     trigger,
+    reset,
   } = useForm<EventRegistrationFormSchema>({
     resolver,
     mode: 'onChange',
@@ -136,18 +152,22 @@ export const EventRegistrationModal = ({
   const attendanceType = watch('attendance_type');
   const volunteerRole = watch('volunteer_role');
 
-  const formatEventDate = () => {
+  const eventDate = useMemo(() => {
     const start = new Date(event.start_date);
     const end = event.end_date ? new Date(event.end_date) : null;
 
-    if (end) {
+    if (Number.isNaN(start.getTime())) return 'Date to be announced';
+
+    if (end && !Number.isNaN(end.getTime())) {
       return `${format(start, 'MMM dd')} - ${format(end, 'MMM dd, yyyy')}`;
     }
-    return format(start, 'MMMM dd, yyyy');
-  };
 
-  const handleFormSubmit = async (data: EventRegistrationFormSchema) => {
+    return format(start, 'MMMM dd, yyyy');
+  }, [event.end_date, event.start_date]);
+
+  const submitRegistration = async (data: EventRegistrationFormSchema) => {
     setIsSubmitting(true);
+
     try {
       if (!onSubmit) {
         onClose();
@@ -159,18 +179,22 @@ export const EventRegistrationModal = ({
         });
         return;
       }
+
       const submissionData = {
         ...(data as EventRegistrationData),
         event_title: event.title,
         event_date: event.start_date,
         event_time: event.time,
         event_location: event.location,
-      } as EventRegistrationData & Record<string, any>;
+      } as EventRegistrationData & Record<string, unknown>;
 
       await onSubmit(submissionData);
+
+      reset();
+      setStep('personal');
       onClose();
       setShowSuccess(true);
-    } catch (error) {
+    } catch {
       toast.error('Registration failed. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -178,55 +202,57 @@ export const EventRegistrationModal = ({
   };
 
   const handleNextStep = async () => {
-    let isStepValid = false;
-
-    switch (step) {
-      case 'personal':
-        isStepValid = await trigger([
-          'firstName',
-          'lastName',
-          'email',
-          'phone',
-          'country',
-          'city',
-        ]);
-        break;
-      case 'volunteer':
-        if (attendanceType !== 'attendee') {
-          isStepValid = await trigger(['volunteer_role', 'custom_role']);
-        } else {
-          isStepValid = true;
-        }
-        break;
-      case 'additional':
-        isStepValid = await trigger(['occupation']);
-        break;
-    }
-
-    if (!isStepValid) return;
+    let isValid = false;
 
     if (step === 'personal') {
-      if (attendanceType === 'attendee') {
-        setStep('additional');
-      } else {
-        setStep('volunteer');
-      }
+      isValid = await trigger([
+        'firstName',
+        'lastName',
+        'email',
+        'phone',
+        'country',
+        'city',
+        'attendance_type',
+      ]);
+
+      if (!isValid) return;
+
+      setStep(attendanceType === 'attendee' ? 'additional' : 'volunteer');
       return;
     }
 
     if (step === 'volunteer') {
+      isValid = await trigger(
+        volunteerRole === 'other'
+          ? ['volunteer_role', 'custom_role']
+          : ['volunteer_role']
+      );
+
+      if (!isValid) return;
+
       setStep('additional');
       return;
     }
 
-    handleSubmit(handleFormSubmit)();
+    isValid = await trigger(['occupation']);
+
+    if (!isValid) return;
+
+    await handleSubmit(submitRegistration)();
   };
 
   const handlePrevStep = () => {
-    if (step === 'volunteer') setStep('personal');
-    if (step === 'additional')
+    if (step === 'volunteer') {
+      setStep('personal');
+      return;
+    }
+
+    if (step === 'additional') {
       setStep(attendanceType === 'attendee' ? 'personal' : 'volunteer');
+    }
   };
+
+  const canGoBack = step !== 'personal';
 
   return (
     <>
@@ -234,105 +260,181 @@ export const EventRegistrationModal = ({
         isOpen={isOpen}
         onClose={onClose}
         title={headline || `Register for ${event.title}`}
-        subtitle={`${formatEventDate()} • ${event.location || 'Location TBD'}`}
+        subtitle={`${eventDate} • ${event.location || 'Location TBD'}`}
         maxWidth="max-w-3xl"
         isLoading={isSubmitting}
         loadingText="Submitting..."
         preventClose={isSubmitting}
+        forceBottomSheet
       >
-        <div className="space-y-4">
-          {event.image_url && (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-              <div className="relative h-36 sm:h-44 md:h-52 w-full">
+        <div className="space-y-5">
+          {event.image_url ? (
+            <div className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/35">
+              <div className="relative h-40 w-full sm:h-48 md:h-56">
                 <Image
                   src={event.image_url}
                   alt={`${event.title} program`}
                   fill
-                  sizes="(max-width: 768px) 90vw, 640px"
+                  sizes="(max-width: 768px) 92vw, 720px"
                   className="object-cover"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               </div>
             </div>
-          )}
-          {(eyebrow || lead) && (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              {eyebrow && (
-                <p className="text-xs uppercase tracking-widest text-white/60 mb-2">
-                  {eyebrow}
-                </p>
-              )}
-              {lead && (
-                <p className="text-sm text-white/80 leading-relaxed">{lead}</p>
-              )}
-              {highlight && (
-                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-yellow-400/20 px-3 py-1 text-xs text-yellow-200">
+          ) : null}
+
+          {eyebrow || lead || highlight ? (
+            <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+              {eyebrow ? (
+                <p className={modalStyles.sectionTitle}>{eyebrow}</p>
+              ) : null}
+
+              {lead ? (
+                <p className="mt-2 text-sm leading-7 text-white/70">{lead}</p>
+              ) : null}
+
+              {highlight ? (
+                <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#f7de12]/20 bg-[#f7de12]/10 px-3 py-1.5 text-xs font-bold text-[#f7de12]">
                   <AlertCircle className="h-3.5 w-3.5" />
                   {highlight}
                 </div>
-              )}
+              ) : null}
+            </section>
+          ) : null}
+
+          <div className="rounded-[1.35rem] border border-white/10 bg-black/25 p-4">
+            <div className="flex items-center justify-between gap-3">
+              {stepOrder.map(item => {
+                const active = item === step;
+                const completed = getStepNumber(item) < getStepNumber(step);
+
+                return (
+                  <div key={item} className="flex min-w-0 flex-1 items-center">
+                    <div className="flex min-w-0 flex-1 flex-col items-center gap-2">
+                      <div
+                        className={[
+                          'grid h-8 w-8 place-items-center rounded-full border text-xs font-black transition',
+                          active
+                            ? 'border-[#f7de12] bg-[#f7de12] text-black'
+                            : completed
+                              ? 'border-[#f7de12]/40 bg-[#f7de12]/10 text-[#f7de12]'
+                              : 'border-white/10 bg-white/[0.035] text-white/45',
+                        ].join(' ')}
+                      >
+                        {getStepNumber(item)}
+                      </div>
+                      <p
+                        className={[
+                          'truncate text-center text-[0.68rem] font-bold uppercase tracking-[0.12em]',
+                          active ? 'text-white' : 'text-white/42',
+                        ].join(' ')}
+                      >
+                        {item}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          )}
+          </div>
 
           <form
-            onSubmit={handleSubmit(handleFormSubmit)}
-            className="space-y-6 pb-28"
+            onSubmit={handleSubmit(submitRegistration)}
+            className="space-y-5"
           >
-            {step === 'personal' && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {step === 'personal' ? (
+              <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+                <div className="mb-5">
+                  <p className={modalStyles.sectionTitle}>Personal details</p>
+                  <p className="mt-1 text-sm leading-6 text-white/55">
+                    Tell us who is registering for this event.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className={modalStyles.label}>First Name *</label>
+                    <label className={modalStyles.label} htmlFor="firstName">
+                      First Name *
+                    </label>
                     <input
+                      id="firstName"
+                      type="text"
+                      autoComplete="given-name"
                       className={modalStyles.input}
+                      placeholder="First name"
                       {...register('firstName')}
                     />
-                    {errors.firstName && (
+                    {errors.firstName ? (
                       <p className={modalStyles.errorText}>
                         {errors.firstName.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
+
                   <div>
-                    <label className={modalStyles.label}>Last Name *</label>
+                    <label className={modalStyles.label} htmlFor="lastName">
+                      Last Name *
+                    </label>
                     <input
+                      id="lastName"
+                      type="text"
+                      autoComplete="family-name"
                       className={modalStyles.input}
+                      placeholder="Last name"
                       {...register('lastName')}
                     />
-                    {errors.lastName && (
+                    {errors.lastName ? (
                       <p className={modalStyles.errorText}>
                         {errors.lastName.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
+
                   <div>
-                    <label className={modalStyles.label}>Email *</label>
+                    <label className={modalStyles.label} htmlFor="email">
+                      Email *
+                    </label>
                     <input
+                      id="email"
+                      type="email"
+                      autoComplete="email"
                       className={modalStyles.input}
+                      placeholder="you@example.com"
                       {...register('email')}
                     />
-                    {errors.email && (
+                    {errors.email ? (
                       <p className={modalStyles.errorText}>
                         {errors.email.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
+
                   <div>
-                    <label className={modalStyles.label}>Phone *</label>
+                    <label className={modalStyles.label} htmlFor="phone">
+                      Phone *
+                    </label>
                     <input
+                      id="phone"
+                      type="tel"
+                      autoComplete="tel"
                       className={modalStyles.input}
+                      placeholder="+234 801 234 5678"
                       {...register('phone')}
                     />
-                    {errors.phone && (
+                    {errors.phone ? (
                       <p className={modalStyles.errorText}>
                         {errors.phone.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
+
                   <div>
-                    <label className={modalStyles.label}>Country *</label>
+                    <label className={modalStyles.label} htmlFor="country">
+                      Country *
+                    </label>
                     <select
+                      id="country"
                       className={modalStyles.select}
                       {...register('country')}
                     >
@@ -343,150 +445,222 @@ export const EventRegistrationModal = ({
                         </option>
                       ))}
                     </select>
-                    {errors.country && (
+                    {errors.country ? (
                       <p className={modalStyles.errorText}>
                         {errors.country.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
+
                   <div>
-                    <label className={modalStyles.label}>City *</label>
+                    <label className={modalStyles.label} htmlFor="city">
+                      City *
+                    </label>
                     <input
+                      id="city"
+                      type="text"
+                      autoComplete="address-level2"
                       className={modalStyles.input}
+                      placeholder="City"
                       {...register('city')}
                     />
-                    {errors.city && (
+                    {errors.city ? (
                       <p className={modalStyles.errorText}>
                         {errors.city.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
                 </div>
 
-                <div>
+                <div className="mt-5">
                   <label className={modalStyles.label}>Attendance Type *</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+
+                  <div className="grid gap-3 sm:grid-cols-3">
                     {(['attendee', 'volunteer', 'both'] as const).map(
-                      option => (
-                        <button
-                          key={option}
-                          type="button"
-                          onClick={() => setValue('attendance_type', option)}
-                          className={`rounded-lg border px-3 py-2 text-sm capitalize transition ${
-                            watch('attendance_type') === option
-                              ? 'border-yellow-400 bg-yellow-400/10 text-yellow-100'
-                              : 'border-white/10 text-white/70 hover:border-white/30'
-                          }`}
-                        >
-                          {option}
-                        </button>
-                      )
+                      option => {
+                        const selected = attendanceType === option;
+
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() =>
+                              setValue('attendance_type', option, {
+                                shouldValidate: true,
+                              })
+                            }
+                            className={[
+                              'min-h-12 rounded-2xl border px-4 py-3 text-sm font-bold capitalize transition',
+                              selected
+                                ? 'border-[#f7de12] bg-[#f7de12]/10 text-[#f7de12]'
+                                : 'border-white/10 bg-black/25 text-white/65 hover:border-white/20 hover:bg-white/[0.04]',
+                            ].join(' ')}
+                          >
+                            {option}
+                          </button>
+                        );
+                      }
                     )}
                   </div>
                 </div>
-              </div>
-            )}
+              </section>
+            ) : null}
 
-            {step === 'volunteer' && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {VOLUNTEER_ROLES.map(role => (
-                    <button
-                      key={role.id}
-                      type="button"
-                      onClick={() => setValue('volunteer_role', role.id)}
-                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition ${
-                        volunteerRole === role.id
-                          ? 'border-yellow-400 bg-yellow-400/10 text-yellow-100'
-                          : 'border-white/10 text-white/70 hover:border-white/30'
-                      }`}
-                    >
-                      {role.icon}
-                      {role.label}
-                    </button>
-                  ))}
+            {step === 'volunteer' ? (
+              <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+                <div className="mb-5">
+                  <p className={modalStyles.sectionTitle}>Volunteer interest</p>
+                  <p className="mt-1 text-sm leading-6 text-white/55">
+                    Select the area where you would like to serve.
+                  </p>
                 </div>
-                {errors.volunteer_role && (
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {VOLUNTEER_ROLES.map(role => {
+                    const Icon = role.icon;
+                    const selected = volunteerRole === role.id;
+
+                    return (
+                      <button
+                        key={role.id}
+                        type="button"
+                        onClick={() =>
+                          setValue('volunteer_role', role.id, {
+                            shouldValidate: true,
+                          })
+                        }
+                        className={[
+                          'flex min-h-12 items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition',
+                          selected
+                            ? 'border-[#f7de12] bg-[#f7de12]/10 text-[#f7de12]'
+                            : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
+                        ].join(' ')}
+                      >
+                        <Icon className="h-4 w-4 flex-none" />
+                        <span>{role.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {errors.volunteer_role ? (
                   <p className={modalStyles.errorText}>
                     {errors.volunteer_role.message}
                   </p>
-                )}
+                ) : null}
 
-                {volunteerRole === 'other' && (
-                  <div>
-                    <label className={modalStyles.label}>Specify Role *</label>
+                {volunteerRole === 'other' ? (
+                  <div className="mt-4">
+                    <label className={modalStyles.label} htmlFor="customRole">
+                      Specify Role *
+                    </label>
                     <input
+                      id="customRole"
+                      type="text"
                       className={modalStyles.input}
+                      placeholder="Tell us where you would like to serve"
                       {...register('custom_role')}
                     />
-                    {errors.custom_role && (
+                    {errors.custom_role ? (
                       <p className={modalStyles.errorText}>
                         {errors.custom_role.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
-                )}
-              </div>
-            )}
+                ) : null}
+              </section>
+            ) : null}
 
-            {step === 'additional' && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {step === 'additional' ? (
+              <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+                <div className="mb-5">
+                  <p className={modalStyles.sectionTitle}>Additional details</p>
+                  <p className="mt-1 text-sm leading-6 text-white/55">
+                    Add any extra information that will help us prepare.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className={modalStyles.label}>Occupation *</label>
+                    <label className={modalStyles.label} htmlFor="occupation">
+                      Occupation *
+                    </label>
                     <input
+                      id="occupation"
+                      type="text"
                       className={modalStyles.input}
+                      placeholder="Occupation"
                       {...register('occupation')}
                     />
-                    {errors.occupation && (
+                    {errors.occupation ? (
                       <p className={modalStyles.errorText}>
                         {errors.occupation.message}
                       </p>
-                    )}
+                    ) : null}
                   </div>
+
                   <div>
-                    <label className={modalStyles.label}>
+                    <label
+                      className={modalStyles.label}
+                      htmlFor="previousExperience"
+                    >
                       Previous Experience
                     </label>
                     <input
+                      id="previousExperience"
+                      type="text"
                       className={modalStyles.input}
+                      placeholder="Optional"
                       {...register('previous_experience')}
                     />
                   </div>
-                </div>
-                <div>
-                  <label className={modalStyles.label}>Special Needs</label>
-                  <textarea
-                    className={modalStyles.textarea}
-                    rows={3}
-                    {...register('special_needs')}
-                  />
-                </div>
-                <div>
-                  <label className={modalStyles.label}>Expectations</label>
-                  <textarea
-                    className={modalStyles.textarea}
-                    rows={3}
-                    {...register('expectations')}
-                  />
-                </div>
-              </div>
-            )}
 
-            {ctaNote && (
-              <p className="text-xs text-white/60 text-center">{ctaNote}</p>
-            )}
+                  <div className="sm:col-span-2">
+                    <label className={modalStyles.label} htmlFor="specialNeeds">
+                      Special Needs
+                    </label>
+                    <textarea
+                      id="specialNeeds"
+                      className={modalStyles.textarea}
+                      rows={3}
+                      placeholder="Let us know how we can support you"
+                      {...register('special_needs')}
+                    />
+                  </div>
 
-            <div className="sticky bottom-0 -mx-6 lg:-mx-8 px-6 lg:px-8 pt-4 pb-3 bg-black/95 backdrop-blur border-t border-white/10">
-              <div className="flex items-center justify-between gap-3">
+                  <div className="sm:col-span-2">
+                    <label className={modalStyles.label} htmlFor="expectations">
+                      Expectations
+                    </label>
+                    <textarea
+                      id="expectations"
+                      className={modalStyles.textarea}
+                      rows={3}
+                      placeholder="What are you expecting from this event?"
+                      {...register('expectations')}
+                    />
+                  </div>
+                </div>
+              </section>
+            ) : null}
+
+            {ctaNote ? (
+              <p className="text-center text-xs leading-5 text-white/50">
+                {ctaNote}
+              </p>
+            ) : null}
+
+            <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[#070707]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   onClick={handlePrevStep}
-                  disabled={step === 'personal'}
-                  className="text-sm text-white/70 hover:text-white disabled:opacity-40"
+                  disabled={!canGoBack || isSubmitting}
+                  className={modalStyles.ghostButton}
                 >
                   Back
                 </button>
+
                 <button
                   type="button"
                   onClick={handleNextStep}
@@ -494,8 +668,8 @@ export const EventRegistrationModal = ({
                   className={modalStyles.primaryButton}
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center justify-center">
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    <span className="inline-flex items-center justify-center">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Submitting...
                     </span>
                   ) : step === 'additional' ? (
@@ -519,4 +693,4 @@ export const EventRegistrationModal = ({
       />
     </>
   );
-};
+}

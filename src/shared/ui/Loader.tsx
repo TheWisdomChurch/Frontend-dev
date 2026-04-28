@@ -1,365 +1,147 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { WisdomeHouseLogo } from '@/shared/assets';
 
 interface LoaderProps {
   label?: string;
+  subLabel?: string;
+  fullscreen?: boolean;
 }
 
-const VIDEO_BG_WEBM_SRC = '/_optimized/videos/videoBg.webm';
-const VIDEO_BG_MP4_SRC = '/videos/videoBg.mp4';
-
 export default function Loader({
-  label = 'Equipped Empowered for Greatness',
+  label = 'Equipped & Empowered for Greatness',
+  subLabel = 'Preparing your experience',
+  fullscreen = true,
 }: LoaderProps) {
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-
-  useEffect(() => {
-    // Simulate minimum display time for professionalism
-    const timer = setTimeout(() => {
-      setVideoLoaded(true);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <div
-      className="fixed inset-0 z-[1100] flex items-center justify-center overflow-hidden bg-[#030303]"
+      className={[
+        fullscreen ? 'fixed inset-0 z-[1100]' : 'relative min-h-[420px] w-full',
+        'flex items-center justify-center overflow-hidden bg-[#050505] text-white',
+      ].join(' ')}
       role="status"
       aria-live="polite"
+      aria-label={subLabel}
     >
-      {/* Background Video with fallback */}
-      <div className="absolute inset-0 h-full w-full overflow-hidden">
-        {!videoError && (
-          <video
-            className="absolute inset-0 h-full w-full object-cover opacity-55"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            onCanPlay={() => setVideoLoaded(true)}
-            onError={() => setVideoError(true)}
-            aria-hidden="true"
-            poster="/images/placeholder.webp"
-          >
-            <source src={VIDEO_BG_WEBM_SRC} type="video/webm" />
-            <source src={VIDEO_BG_MP4_SRC} type="video/mp4" />
-          </video>
-        )}
-        {/* Fallback gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e14] via-[#030303] to-[#000000]" />
-      </div>
+      <video
+        className="absolute inset-0 h-full w-full object-cover opacity-35"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster="/images/event-placeholder.webp"
+      >
+        <source src="/videos/videoBg.mp4" type="video/mp4" />
+      </video>
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(2,6,12,0.85),rgba(8,16,20,0.72)_40%,rgba(2,6,12,0.9))]" />
+      <div className="absolute inset-0 bg-black/70" />
 
-      {/* Animated Background Effects */}
-      <div className="absolute inset-0 loader-grid" />
-      <div className="loader-ambient loader-ambient-top" />
-      <div className="loader-ambient loader-ambient-bottom" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(247,222,18,0.18),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_28%),linear-gradient(180deg,rgba(5,5,5,0.45)_0%,rgba(5,5,5,0.82)_100%)]" />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-6 text-center">
-        {/* Loader Animation Stage */}
-        <div className="loader-stage relative mb-6 h-28 w-28 sm:h-32 sm:w-32">
-          <span className="loader-orbit loader-orbit-fast" />
-          <span className="loader-orbit loader-orbit-slow" />
-          <span className="loader-ripple" />
-          <div className="loader-core">
+      <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:46px_46px] [mask-image:radial-gradient(circle_at_50%_45%,black_22%,transparent_75%)] motion-safe:animate-[loader-grid_14s_linear_infinite]" />
+
+      <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f7de12]/10 blur-3xl motion-safe:animate-pulse sm:h-96 sm:w-96" />
+
+      <div className="relative z-10 flex w-full max-w-md flex-col items-center px-6 text-center">
+        <div className="relative grid h-32 w-32 place-items-center sm:h-36 sm:w-36">
+          <div className="absolute inset-0 rounded-full border border-[#f7de12]/20" />
+          <div className="absolute inset-0 rounded-full border-t border-[#f7de12] border-r-transparent border-b-transparent border-l-transparent motion-safe:animate-[loader-spin_1.8s_linear_infinite]" />
+          <div className="absolute inset-3 rounded-full border border-white/10" />
+          <div className="absolute inset-3 rounded-full border-r border-white/70 border-t-transparent border-b-transparent border-l-transparent motion-safe:animate-[loader-spin-reverse_3.2s_linear_infinite]" />
+          <div className="absolute inset-[-10px] rounded-full border border-[#f7de12]/25 opacity-70 motion-safe:animate-[loader-ripple_2.4s_ease-out_infinite]" />
+
+          <div className="relative grid h-24 w-24 place-items-center rounded-[2rem] border border-white/10 bg-black/60 shadow-2xl shadow-[#f7de12]/15 backdrop-blur-xl sm:h-28 sm:w-28">
+            <div className="absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_35%_20%,rgba(255,255,255,0.18),transparent_45%)]" />
             <Image
               src={WisdomeHouseLogo}
               alt="The Wisdom Church"
-              width={72}
-              height={72}
+              width={74}
+              height={74}
               priority
-              className="h-14 w-14 object-contain drop-shadow-[0_0_16px_rgba(247,222,18,0.4)] sm:h-16 sm:w-16"
+              className="relative h-16 w-16 object-contain drop-shadow-[0_0_18px_rgba(247,222,18,0.38)] sm:h-[72px] sm:w-[72px]"
             />
           </div>
         </div>
 
-        {/* Loading Text */}
-        <p className="max-w-xs text-sm font-semibold tracking-[0.08em] text-white sm:text-base">
-          {label}
-        </p>
-
-        {/* Progress Bar */}
-        <div
-          className="loader-progress mt-6 h-1 w-32 overflow-hidden rounded-full bg-gray-700"
-          aria-hidden="true"
-        >
-          <span className="loader-progress-fill" />
+        <div className="mt-7 space-y-2">
+          <p className="text-balance text-base font-semibold tracking-tight text-white sm:text-lg">
+            {label}
+          </p>
+          <p className="text-sm text-white/60">{subLabel}</p>
         </div>
 
-        {/* Animated Beads */}
-        <div className="mt-6 flex items-center gap-2" aria-hidden="true">
-          <span className="loader-bead h-1.5 w-1.5 rounded-full bg-[#f7de12]" />
-          <span className="loader-bead h-1.5 w-1.5 rounded-full bg-[#f7de12]" />
-          <span className="loader-bead h-1.5 w-1.5 rounded-full bg-[#f7de12]" />
-          <span className="loader-bead h-1.5 w-1.5 rounded-full bg-[#f7de12]" />
+        <div className="mt-7 h-1 w-56 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-transparent via-[#f7de12] to-transparent motion-safe:animate-[loader-progress_1.45s_ease-in-out_infinite]" />
+        </div>
+
+        <div className="mt-5 flex items-center gap-2" aria-hidden="true">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#f7de12] motion-safe:animate-[loader-dot_1.2s_ease-in-out_infinite]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#f7de12] motion-safe:animate-[loader-dot_1.2s_ease-in-out_0.15s_infinite]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#f7de12] motion-safe:animate-[loader-dot_1.2s_ease-in-out_0.3s_infinite]" />
         </div>
       </div>
 
-      <style jsx>{`
-        .loader-grid {
-          position: absolute;
-          inset: 0;
-          background-image:
-            linear-gradient(
-              to right,
-              rgba(255, 255, 255, 0.03) 1px,
-              transparent 1px
-            ),
-            linear-gradient(
-              to bottom,
-              rgba(255, 255, 255, 0.03) 1px,
-              transparent 1px
-            );
-          background-size: 50px 50px;
-          mask-image: radial-gradient(circle at center, black, transparent 75%);
-          animation: gridDrift 10s linear infinite;
-        }
-
-        .loader-ambient {
-          position: absolute;
-          width: 40vw;
-          height: 40vw;
-          border-radius: 999px;
-          filter: blur(80px);
-          opacity: 0.35;
-        }
-
-        .loader-ambient-top {
-          top: -10vw;
-          left: -8vw;
-          background: radial-gradient(
-            circle,
-            rgba(247, 222, 18, 0.35),
-            transparent 70%
-          );
-          animation: ambientFloat 6s ease-in-out infinite;
-        }
-
-        .loader-ambient-bottom {
-          right: -10vw;
-          bottom: -10vw;
-          background: radial-gradient(
-            circle,
-            rgba(255, 255, 255, 0.16),
-            transparent 70%
-          );
-          animation: ambientFloat 6s ease-in-out infinite reverse;
-        }
-
-        .loader-stage {
-          animation: stagePulse 2s ease-in-out infinite;
-        }
-
-        .loader-core {
-          position: absolute;
-          inset: 18px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 999px;
-          background:
-            radial-gradient(
-              circle at 35% 30%,
-              rgba(255, 255, 255, 0.2),
-              rgba(0, 0, 0, 0.8) 60%
-            ),
-            linear-gradient(
-              135deg,
-              rgba(247, 222, 18, 0.26),
-              rgba(0, 0, 0, 0.85)
-            );
-          border: 1px solid rgba(255, 255, 255, 0.24);
-          box-shadow:
-            0 0 0 1px rgba(247, 222, 18, 0.25),
-            0 12px 40px rgba(247, 222, 18, 0.24);
-          animation: coreBreath 2.3s ease-in-out infinite;
-        }
-
-        .loader-orbit {
-          position: absolute;
-          inset: 0;
-          border-radius: 999px;
-          border: 1px solid transparent;
-          pointer-events: none;
-        }
-
-        .loader-orbit-fast {
-          border-top-color: rgba(247, 222, 18, 0.95);
-          border-left-color: rgba(247, 222, 18, 0.5);
-          box-shadow: 0 0 28px rgba(247, 222, 18, 0.25);
-          animation: orbitFast 2.2s linear infinite;
-        }
-
-        .loader-orbit-slow {
-          inset: -9px;
-          border-right-color: rgba(255, 255, 255, 0.7);
-          border-bottom-color: rgba(247, 222, 18, 0.45);
-          opacity: 0.8;
-          animation: orbitSlow 3.8s linear infinite;
-        }
-
-        .loader-ripple {
-          position: absolute;
-          inset: -14px;
-          border-radius: 999px;
-          border: 1px solid rgba(247, 222, 18, 0.35);
-          animation: ripple 2.4s ease-out infinite;
-        }
-
-        .loader-progress {
-          margin-top: 14px;
-          width: min(240px, 70vw);
-          height: 3px;
-          overflow: hidden;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.18);
-        }
-
-        .loader-progress-fill {
-          display: block;
-          width: 40%;
-          height: 100%;
-          border-radius: 999px;
-          background: linear-gradient(
-            90deg,
-            rgba(247, 222, 18, 0.08),
-            #f7de12,
-            rgba(247, 222, 18, 0.08)
-          );
-          animation: progressSweep 1.8s ease-in-out infinite;
-        }
-
-        .loader-bead {
-          animation: beadPulse 1.4s ease-in-out infinite;
-        }
-
-        .loader-bead:nth-child(2) {
-          animation-delay: 0.1s;
-        }
-
-        .loader-bead:nth-child(3) {
-          animation-delay: 0.2s;
-        }
-
-        .loader-bead:nth-child(4) {
-          animation-delay: 0.3s;
-        }
-
-        @keyframes orbitFast {
-          from {
-            transform: rotate(0deg);
-          }
+      <style jsx global>{`
+        @keyframes loader-spin {
           to {
             transform: rotate(360deg);
           }
         }
 
-        @keyframes orbitSlow {
-          from {
-            transform: rotate(360deg);
-          }
+        @keyframes loader-spin-reverse {
           to {
-            transform: rotate(0deg);
+            transform: rotate(-360deg);
           }
         }
 
-        @keyframes stagePulse {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.02);
-          }
-        }
-
-        @keyframes coreBreath {
-          0%,
-          100% {
-            box-shadow:
-              0 0 0 1px rgba(247, 222, 18, 0.25),
-              0 12px 40px rgba(247, 222, 18, 0.24);
-          }
-          50% {
-            box-shadow:
-              0 0 0 1px rgba(247, 222, 18, 0.45),
-              0 14px 48px rgba(247, 222, 18, 0.34);
-          }
-        }
-
-        @keyframes ripple {
+        @keyframes loader-ripple {
           0% {
-            transform: scale(0.78);
-            opacity: 0;
-          }
-          35% {
+            transform: scale(0.92);
             opacity: 0.8;
           }
+
           100% {
-            transform: scale(1.12);
+            transform: scale(1.18);
             opacity: 0;
           }
         }
 
-        @keyframes progressSweep {
+        @keyframes loader-progress {
           0% {
             transform: translateX(-120%);
           }
+
           100% {
-            transform: translateX(250%);
+            transform: translateX(220%);
           }
         }
 
-        @keyframes beadPulse {
+        @keyframes loader-dot {
           0%,
           100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.5;
+            transform: translateY(0);
+            opacity: 0.35;
           }
+
           50% {
-            transform: translateY(-4px) scale(1.15);
+            transform: translateY(-5px);
             opacity: 1;
           }
         }
 
-        @keyframes ambientFloat {
-          0%,
-          100% {
-            transform: translate3d(0, 0, 0);
-          }
-          50% {
-            transform: translate3d(0, 14px, 0);
-          }
-        }
-
-        @keyframes gridDrift {
+        @keyframes loader-grid {
           0% {
-            transform: translate3d(0, 0, 0);
+            background-position:
+              0 0,
+              0 0;
           }
-          100% {
-            transform: translate3d(-50px, -50px, 0);
-          }
-        }
 
-        @media (prefers-reduced-motion: reduce) {
-          .loader-grid,
-          .loader-ambient,
-          .loader-stage,
-          .loader-core,
-          .loader-orbit,
-          .loader-ripple,
-          .loader-progress-fill,
-          .loader-bead {
-            animation: none !important;
+          100% {
+            background-position:
+              46px 46px,
+              46px 46px;
           }
         }
       `}</style>

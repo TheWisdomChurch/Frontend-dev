@@ -1,16 +1,13 @@
-// components/text/SemanticText.tsx
 'use client';
 
 import React, { forwardRef } from 'react';
-import { BaseText, BaseTextProps } from './baseText';
+import { BaseText, type BaseTextProps } from './baseText';
 
-// Hero Text - Largest, most prominent
 export const HeroText = forwardRef<HTMLHeadingElement, BaseTextProps>(
   (props, ref) => <BaseText ref={ref} as="h1" variant="hero" {...props} />
 );
 HeroText.displayName = 'HeroText';
 
-// Heading Components with progressive scaling
 export const H1 = forwardRef<HTMLHeadingElement, BaseTextProps>(
   (props, ref) => <BaseText ref={ref} as="h1" variant="h1" {...props} />
 );
@@ -41,7 +38,6 @@ export const H6 = forwardRef<HTMLHeadingElement, BaseTextProps>(
 );
 H6.displayName = 'H6';
 
-// Body Text Components
 export const BodyXL = forwardRef<HTMLParagraphElement, BaseTextProps>(
   (props, ref) => <BaseText ref={ref} as="p" variant="body-xl" {...props} />
 );
@@ -82,7 +78,11 @@ export const Caption = forwardRef<HTMLSpanElement, BaseTextProps>(
 );
 Caption.displayName = 'Caption';
 
-// Elegant Text Components
+export const Eyebrow = forwardRef<HTMLParagraphElement, BaseTextProps>(
+  (props, ref) => <BaseText ref={ref} as="p" variant="eyebrow" {...props} />
+);
+Eyebrow.displayName = 'Eyebrow';
+
 export const ElegantXL = forwardRef<HTMLParagraphElement, BaseTextProps>(
   (props, ref) => <BaseText ref={ref} as="p" variant="elegant-xl" {...props} />
 );

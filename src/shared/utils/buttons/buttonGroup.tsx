@@ -1,34 +1,53 @@
-// components/ui/ButtonGroup.tsx
 'use client';
 
 import React from 'react';
+import { cn } from '@/lib/cn';
 
 interface ButtonGroupProps {
   children: React.ReactNode;
-  direction?: 'horizontal' | 'vertical';
+  direction?: 'horizontal' | 'vertical' | 'responsive';
   spacing?: 'sm' | 'md' | 'lg';
   className?: string;
+  fullWidthOnMobile?: boolean;
+  align?: 'start' | 'center' | 'end' | 'between';
 }
 
-export const ButtonGroup: React.FC<ButtonGroupProps> = ({
+const spacingClasses = {
+  sm: 'gap-2',
+  md: 'gap-3',
+  lg: 'gap-4',
+};
+
+const alignClasses = {
+  start: 'justify-start',
+  center: 'justify-center',
+  end: 'justify-end',
+  between: 'justify-between',
+};
+
+export function ButtonGroup({
   children,
-  direction = 'horizontal',
+  direction = 'responsive',
   spacing = 'md',
-  className = '',
-}) => {
-  const spacingStyles = {
-    sm: direction === 'horizontal' ? 'space-x-1' : 'space-y-1',
-    md: direction === 'horizontal' ? 'space-x-2' : 'space-y-2',
-    lg: direction === 'horizontal' ? 'space-x-4' : 'space-y-4',
-  };
-
-  const directionStyle = direction === 'horizontal' ? 'flex-row' : 'flex-col';
-
+  className,
+  fullWidthOnMobile = true,
+  align = 'start',
+}: ButtonGroupProps) {
   return (
     <div
-      className={`flex ${directionStyle} ${spacingStyles[spacing]} ${className}`}
+      className={cn(
+        'flex min-w-0 flex-wrap items-center',
+        direction === 'horizontal' && 'flex-row',
+        direction === 'vertical' && 'flex-col items-stretch',
+        direction === 'responsive' && 'flex-col sm:flex-row',
+        spacingClasses[spacing],
+        alignClasses[align],
+        fullWidthOnMobile &&
+          '[&>button]:w-full [&>a]:w-full sm:[&>button]:w-auto sm:[&>a]:w-auto',
+        className
+      )}
     >
       {children}
     </div>
   );
-};
+}

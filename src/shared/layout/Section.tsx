@@ -1,22 +1,11 @@
-// components/layout/Section.tsx
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/cn';
 
+type SectionPadding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
 interface SectionProps {
   children: React.ReactNode;
-  padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  background?:
-    | 'none'
-    | 'primary'
-    | 'secondary'
-    | 'dark'
-    | 'light'
-    | 'custom'
-    | 'image';
-  customBackground?: string;
-  backgroundImage?: string;
-  overlay?: boolean;
-  overlayOpacity?: number;
+  padding?: SectionPadding;
   className?: string;
   fullHeight?: boolean;
   centered?: boolean;
@@ -25,85 +14,45 @@ interface SectionProps {
   perf?: 'auto' | 'none';
 }
 
+const paddingClasses: Record<SectionPadding, string> = {
+  none: '',
+  xs: 'py-6 sm:py-8',
+  sm: 'py-8 sm:py-10 lg:py-12',
+  md: 'py-10 sm:py-12 lg:py-16',
+  lg: 'py-12 sm:py-16 lg:py-20',
+  xl: 'py-14 sm:py-20 lg:py-24',
+  '2xl': 'py-16 sm:py-24 lg:py-28',
+};
+
 const Section = forwardRef<HTMLElement, SectionProps>(
   (
     {
       children,
       padding = 'lg',
-      background = 'none',
-      customBackground,
-      backgroundImage,
-      overlay = false,
-      overlayOpacity = 50,
-      className = '',
+      className,
       fullHeight = false,
       centered = false,
       style,
       id,
-      perf = 'auto',
+      perf = 'none',
     },
     ref
   ) => {
-    // REMOVED all vertical padding - only apply when explicitly requested
-    const paddingClasses = {
-      none: '',
-      xs: 'py-8 sm:py-10',
-      sm: 'py-10 sm:py-12',
-      md: 'py-12 sm:py-16 lg:py-20',
-      lg: 'py-16 sm:py-20 lg:py-24',
-      xl: 'py-20 sm:py-24 lg:py-28',
-      '2xl': 'py-24 sm:py-28 lg:py-32',
-    };
-
-    // Background colors
-    const backgroundStyles = {
-      none: {},
-      primary: { backgroundColor: 'var(--color-primary, #f7de12)' },
-      secondary: { backgroundColor: 'var(--color-secondary, #1f2937)' },
-      dark: { backgroundColor: 'var(--color-background, #000000)' },
-      light: { backgroundColor: 'var(--color-white, #ffffff)' },
-      custom: customBackground ? { backgroundColor: customBackground } : {},
-      image: backgroundImage
-        ? {
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }
-        : {},
-    };
-
-    const sectionClasses = cn(
-      'relative w-full overflow-hidden',
-      paddingClasses[padding],
-      fullHeight && 'min-h-screen',
-      centered && 'flex items-center',
-      perf === 'auto' && 'perf-section',
-      className
-    );
-
-    const combinedStyles = {
-      ...(background !== 'none' ? backgroundStyles[background] : {}),
-      ...style,
-    };
-
     return (
       <section
         ref={ref}
         id={id}
-        className={sectionClasses}
-        style={combinedStyles}
-        data-gsap="reveal"
-        data-scroll-block="true"
-      >
-        {background === 'image' && overlay && (
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: `rgba(0, 0, 0, ${overlayOpacity / 100})`,
-            }}
-          />
+        className={cn(
+          'relative w-full min-w-0 overflow-hidden',
+          paddingClasses[padding],
+          fullHeight && 'min-h-screen',
+          centered && 'flex items-center',
+          perf === 'auto' && 'perf-section',
+          className
         )}
-        <div className="relative z-10 w-full">{children}</div>
+        style={style}
+      >
+        <div className="relative z-10 w-full min-w-0">{children}</div>
       </section>
     );
   }
