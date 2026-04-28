@@ -1,565 +1,308 @@
-// components/ui/SpecialPage.tsx
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import HeroSection from '@/features/hero/PageHero';
-import { H1, H2, H3, SmallText } from '@/shared/text';
-import { hero_bg_1, WisdomeHouseLogo } from '@/shared/assets'; // Fixed: removed extra 'e'
-import { useSpecialEvents } from '@/shared/utils/hooks/useSpecial';
-import {
-  Section,
-  Container,
-  GridboxLayout,
-  FlexboxLayout,
-} from '@/shared/layout';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import Image from 'next/image';
+import { CalendarClock, Clock, MapPin, Star } from 'lucide-react';
 
-const SpecialPage = () => {
+import HeroSection from '@/features/hero/PageHero';
+import { hero_bg_1, WisdomeHouseLogo } from '@/shared/assets';
+import { useSpecialEvents } from '@/shared/utils/hooks/useSpecial';
+import { Container, Section } from '@/shared/layout';
+
+const annualTraditions = [
+  {
+    title: 'Celebration & Communion Service',
+    period: 'Every First Sunday of the Month',
+  },
+  {
+    title: `Worker's Retreat`,
+    period: 'Quarterly',
+  },
+  {
+    title: 'Christmas Celebration Service',
+    period: 'Every December',
+  },
+  {
+    title: "New Year's Crossover Service",
+    period: 'December 31st',
+  },
+];
+
+export default function SpecialPage() {
   const {
-    // State
-    isModalOpen,
-    selectedEvent,
-    formData,
-    formErrors,
-    isSubmitting,
-
-    // Refs
     headerRef,
     servicesRef,
     eventsRef,
     conferenceRef,
-
-    // Data
     specialEvents,
     weeklyServices,
-
-    // Handlers
-    handleInputChange,
-    handleSubmit,
     openModal,
-    closeModal,
   } = useSpecialEvents();
 
-  const { colorScheme } = useTheme();
   const featuredEvents = specialEvents.filter(event => event.featured);
   const regularEvents = specialEvents.filter(event => !event.featured);
 
   return (
-    <div className="overflow-x-hidden">
+    <main className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <HeroSection
         title="Special Events"
         subtitle="Celebrating God's Faithfulness Together"
         description="Join us for these meaningful celebrations and special services throughout the year as we worship, fellowship, and grow together in Christ."
         backgroundImage={hero_bg_1.src}
         showButtons={false}
-        showScrollIndicator={true}
+        showScrollIndicator
       />
 
-      {/* Header Section */}
       <Section
         ref={headerRef}
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: colorScheme.background }}
+        className="relative overflow-hidden bg-[#050505]"
       >
-        <Container size="xl">
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="lg"
-            className="text-center fade-up"
-          >
-            <H1
-              className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 md:mb-8 leading-tight"
-              style={{ color: colorScheme.heading }}
-            >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(247,222,18,0.13),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
+
+        <Container size="xl" className="relative z-10">
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              Special services
+            </p>
+            <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-5xl">
               Every Service at{' '}
-              <span style={{ color: colorScheme.primary }}>
-                The Wisdom House Church
-              </span>{' '}
-              is a Special Service
-            </H1>
-            <div
-              className="w-32 h-1 mx-auto mb-8 rounded-full"
-              style={{ background: colorScheme.primaryGradient }}
-            ></div>
-            <H3
-              className="text-base sm:text-lg md:text-xl leading-relaxed"
-              style={{ color: colorScheme.textSecondary }}
-            >
+              <span className="text-[#f7de12]">The Wisdom House Church</span> is
+              a Special Service
+            </h1>
+            <p className="mx-auto mt-4 max-w-3xl text-sm leading-7 text-white/65 sm:text-base">
               From our weekly worship gatherings to annual celebrations, every
-              moment at Wisdom House is an opportunity to encounter God's
+              moment at Wisdom House is an opportunity to encounter God&apos;s
               presence and experience transformative spiritual growth.
-            </H3>
-          </FlexboxLayout>
+            </p>
+          </div>
         </Container>
       </Section>
 
-      {/* Weekly Services Section */}
       <Section
         ref={servicesRef}
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: colorScheme.background }}
+        className="bg-[#080808]"
       >
         <Container size="xl">
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="lg"
-          >
-            <div className="text-center mb-12 md:mb-16 fade-up">
-              <H2 className="mb-6" style={{ color: colorScheme.heading }}>
-                Weekly Services Schedule
-              </H2>
-              <p
-                className="text-base sm:text-lg max-w-2xl mx-auto"
-                style={{ color: colorScheme.textSecondary }}
-              >
-                Join us throughout the week for powerful times of worship,
-                teaching, and fellowship
-              </p>
-            </div>
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              Weekly rhythm
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+              Weekly Services Schedule
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+              Join us throughout the week for powerful times of worship,
+              teaching, and fellowship.
+            </p>
+          </div>
 
-            <GridboxLayout
-              columns={1}
-              gap="lg"
-              responsive={{
-                sm: 1,
-                md: 3,
-                lg: 3,
-              }}
-              className="max-w-6xl mx-auto"
-            >
-              {weeklyServices.map((day, index) => (
-                <div
-                  key={day.day}
-                  className="rounded-2xl p-5 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-500 border fade-up"
-                  style={{
-                    backgroundColor: colorScheme.card,
-                    borderColor: colorScheme.border,
-                  }}
-                >
-                  <h3
-                    className="text-xl sm:text-2xl font-bold mb-5 md:mb-6 text-center"
-                    style={{ color: colorScheme.heading }}
-                  >
-                    {day.day}
-                  </h3>
-                  <div className="space-y-4">
-                    {day.services.map((service, serviceIndex) => (
-                      <div
-                        key={serviceIndex}
-                        className="rounded-xl p-4 shadow-md border-l-4"
-                        style={{
-                          backgroundColor: colorScheme.surface,
-                          borderColor: colorScheme.primary,
-                        }}
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <span
-                            className="text-base sm:text-lg font-semibold"
-                            style={{ color: colorScheme.text }}
-                          >
-                            {service.name}
-                          </span>
-                          <span
-                            className="inline-block px-2 py-1 rounded text-sm font-semibold"
-                            style={{
-                              backgroundColor: colorScheme.opacity.primary10,
-                              color: colorScheme.primaryDark,
-                            }}
-                          >
-                            {service.type}
-                          </span>
-                        </div>
-                        <p
-                          className="font-semibold"
-                          style={{ color: colorScheme.textSecondary }}
-                        >
-                          {service.time}
-                        </p>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {weeklyServices.map(day => (
+              <article
+                key={day.day}
+                className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/20 sm:rounded-[1.75rem] sm:p-6"
+              >
+                <h3 className="text-xl font-semibold text-white">{day.day}</h3>
+
+                <div className="mt-5 space-y-3">
+                  {day.services.map((service, index) => (
+                    <div
+                      key={`${day.day}-${service.name}-${index}`}
+                      className="rounded-2xl border border-white/10 bg-black/25 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <h4 className="text-sm font-semibold leading-6 text-white">
+                          {service.name}
+                        </h4>
+                        <span className="rounded-full bg-[#f7de12]/10 px-2.5 py-1 text-[11px] font-bold text-[#f7de12]">
+                          {service.type}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+
+                      <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-white/65">
+                        <Clock className="h-4 w-4 text-[#f7de12]" />
+                        {service.time}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </GridboxLayout>
-          </FlexboxLayout>
+              </article>
+            ))}
+          </div>
         </Container>
       </Section>
 
-      {/* Featured Events Section */}
       <Section
         ref={conferenceRef}
         padding="lg"
         fullHeight={false}
-        style={{
-          background: `linear-gradient(135deg, ${colorScheme.gray[800]} 0%, ${colorScheme.gray[900]} 50%, ${colorScheme.black} 100%)`,
-        }}
-        className="relative overflow-hidden"
+        className="relative overflow-hidden bg-[#050505]"
       >
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-10 animate-pulse"
-            style={{ backgroundColor: colorScheme.primary }}
-          ></div>
-          <div
-            className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full opacity-10 animate-pulse"
-            style={{
-              backgroundColor: colorScheme.primaryLight,
-              animationDelay: '1s',
-            }}
-          ></div>
-        </div>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_15%,rgba(247,222,18,0.12),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
         <Container size="xl" className="relative z-10">
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="lg"
-          >
-            <div className="text-center mb-16">
-              <H2 className="mb-6" style={{ color: colorScheme.text }}>
-                Major Events & Conferences
-              </H2>
-              <p
-                className="text-xl max-w-2xl mx-auto"
-                style={{ color: colorScheme.textSecondary }}
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              Featured events
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+              Major Events & Conferences
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+              Transformative gatherings designed for spiritual growth and divine
+              encounters.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            {featuredEvents.map(event => (
+              <article
+                key={event.id}
+                className="rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 transition hover:-translate-y-1 hover:border-[#f7de12]/35 sm:rounded-[2rem] sm:p-6"
               >
-                Transformative gatherings designed for spiritual growth and
-                divine encounters
-              </p>
-            </div>
+                <span className="inline-flex rounded-full bg-[#f7de12] px-3 py-1 text-xs font-extrabold uppercase text-black">
+                  {event.type}
+                </span>
 
-            <GridboxLayout
-              columns={1}
-              gap="lg"
-              responsive={{
-                sm: 1,
-                md: 1,
-                lg: 2,
-              }}
-              className="max-w-6xl mx-auto"
-            >
-              {featuredEvents.map((event, index) => (
-                <div
-                  key={event.id}
-                  className="rounded-3xl p-8 border border-opacity-20 hover:border-opacity-40 transition-all duration-500 hover:scale-105 backdrop-blur-lg"
-                  style={{
-                    backgroundColor: colorScheme.opacity.white10,
-                    borderColor: colorScheme.white,
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-6">
-                    <div>
-                      <span
-                        className="inline-block px-4 py-2 rounded-full text-sm font-black mb-4"
-                        style={{
-                          backgroundColor: colorScheme.primary,
-                          color: colorScheme.onPrimary,
-                        }}
-                      >
-                        {event.type.toUpperCase()}
-                      </span>
-                      <h3
-                        className="text-2xl md:text-3xl font-black mb-4"
-                        style={{ color: colorScheme.text }}
-                      >
-                        {event.title}
-                      </h3>
-                    </div>
-                  </div>
+                <h3 className="mt-5 text-2xl font-semibold leading-tight text-white">
+                  {event.title}
+                </h3>
 
-                  <div className="space-y-4 mb-6">
-                    <div
-                      className="flex items-center"
-                      style={{ color: colorScheme.textSecondary }}
-                    >
-                      <span className="font-semibold w-20">Date:</span>
-                      <span>{event.date}</span>
-                    </div>
-                    <div
-                      className="flex items-center"
-                      style={{ color: colorScheme.textSecondary }}
-                    >
-                      <span className="font-semibold w-20">Time:</span>
-                      <span>{event.time}</span>
-                    </div>
-                    <div
-                      className="flex items-center"
-                      style={{ color: colorScheme.textSecondary }}
-                    >
-                      <span className="font-semibold w-20">Location:</span>
-                      <span>{event.location}</span>
-                    </div>
-                  </div>
-
-                  <p
-                    className="mb-6 leading-relaxed"
-                    style={{ color: colorScheme.textSecondary }}
-                  >
-                    {event.description}
+                <div className="mt-5 space-y-3 text-sm text-white/62">
+                  <p className="flex gap-2">
+                    <CalendarClock className="h-4 w-4 flex-none text-[#f7de12]" />
+                    <span>{event.date}</span>
                   </p>
-
-                  <button
-                    onClick={() => openModal(event)}
-                    className="w-full py-4 rounded-xl font-black text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg"
-                    style={{
-                      background: colorScheme.primaryGradient,
-                      color: colorScheme.onPrimary,
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.backgroundColor =
-                        colorScheme.buttonHover;
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background =
-                        colorScheme.primaryGradient;
-                    }}
-                  >
-                    Register for Event
-                  </button>
+                  <p className="flex gap-2">
+                    <Clock className="h-4 w-4 flex-none text-white/35" />
+                    <span>{event.time}</span>
+                  </p>
+                  <p className="flex gap-2">
+                    <MapPin className="h-4 w-4 flex-none text-white/35" />
+                    <span>{event.location}</span>
+                  </p>
                 </div>
-              ))}
-            </GridboxLayout>
-          </FlexboxLayout>
+
+                <p className="mt-5 text-sm leading-7 text-white/65">
+                  {event.description}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => openModal(event)}
+                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                >
+                  Register for Event
+                </button>
+              </article>
+            ))}
+          </div>
         </Container>
       </Section>
 
-      {/* All Special Events Section */}
       <Section
         ref={eventsRef}
         padding="lg"
         fullHeight={false}
-        style={{ backgroundColor: colorScheme.backgroundSecondary }}
+        className="bg-[#080808]"
       >
         <Container size="xl">
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="lg"
-          >
-            <div className="text-center mb-16">
-              <H2 className="mb-6" style={{ color: colorScheme.heading }}>
-                All Special Events & Celebrations
-              </H2>
-              <p
-                className="text-xl max-w-2xl mx-auto"
-                style={{ color: colorScheme.textSecondary }}
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              All events
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+              All Special Events & Celebrations
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+              Mark your calendar for these meaningful celebrations and
+              gatherings throughout the year.
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {regularEvents.map(event => (
+              <button
+                key={event.id}
+                type="button"
+                onClick={() => openModal(event)}
+                className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] text-left shadow-2xl shadow-black/20 transition hover:-translate-y-1 hover:border-[#f7de12]/35 sm:rounded-[1.75rem]"
               >
-                Mark your calendar for these meaningful celebrations and
-                gatherings throughout the year
-              </p>
-            </div>
-
-            <GridboxLayout
-              columns={1}
-              gap="lg"
-              responsive={{
-                sm: 1,
-                md: 2,
-                lg: 3,
-              }}
-              className="max-w-6xl mx-auto"
-            >
-              {regularEvents.map((event, index) => (
-                <div
-                  key={event.id}
-                  className="event-card rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 overflow-hidden group cursor-pointer"
-                  onClick={() => openModal(event)}
-                  style={{ backgroundColor: colorScheme.card }}
-                >
-                  {/* Event Image Placeholder */}
-                  <div
-                    className="h-48 flex items-center justify-center relative overflow-hidden"
-                    style={{
-                      background: colorScheme.primaryGradient,
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black opacity-20"></div>
-                    <div className="relative z-10 group-hover:scale-110 transition-transform duration-500">
-                      <Image
-                        src={WisdomeHouseLogo} // Fixed: using correct variable name
-                        alt={event.title}
-                        width={80}
-                        height={80}
-                        className="object-contain"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span
-                        className="inline-block px-3 py-1 rounded-full text-xs font-semibold"
-                        style={{
-                          backgroundColor: colorScheme.surfaceVariant,
-                          color: colorScheme.textSecondary,
-                        }}
-                      >
-                        {event.type}
-                      </span>
-                    </div>
-
-                    <h3
-                      className="text-xl font-black mb-3 group-hover:transition-colors duration-300"
-                      style={{
-                        color: colorScheme.heading,
-                      }}
-                    >
-                      {event.title}
-                    </h3>
-
-                    <div className="space-y-2 mb-4">
-                      <div
-                        className="flex items-center text-sm"
-                        style={{ color: colorScheme.textSecondary }}
-                      >
-                        <span className="font-semibold w-12">Date:</span>
-                        <span>{event.date}</span>
-                      </div>
-                      <div
-                        className="flex items-center text-sm"
-                        style={{ color: colorScheme.textSecondary }}
-                      >
-                        <span className="font-semibold w-12">Time:</span>
-                        <span>{event.time}</span>
-                      </div>
-                    </div>
-
-                    <p
-                      className="text-sm leading-relaxed line-clamp-2"
-                      style={{ color: colorScheme.textSecondary }}
-                    >
-                      {event.description}
-                    </p>
-
-                    <button
-                      className="w-full mt-4 py-3 rounded-xl font-semibold transition-colors duration-300 group-hover:transition-colors"
-                      style={{
-                        backgroundColor: colorScheme.button,
-                        color: colorScheme.buttonText,
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.backgroundColor =
-                          colorScheme.buttonHover;
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.backgroundColor =
-                          colorScheme.button;
-                      }}
-                    >
-                      Learn More
-                    </button>
-                  </div>
+                <div className="relative grid h-44 place-items-center overflow-hidden bg-[#f7de12]">
+                  <div className="absolute inset-0 bg-black/15" />
+                  <Image
+                    src={WisdomeHouseLogo}
+                    alt={event.title}
+                    width={76}
+                    height={76}
+                    className="relative object-contain transition duration-300 group-hover:scale-110"
+                  />
                 </div>
-              ))}
-            </GridboxLayout>
-          </FlexboxLayout>
-        </Container>
-      </Section>
 
-      {/* Annual Traditions Section */}
-      <Section
-        padding="lg"
-        fullHeight={false}
-        style={{ backgroundColor: colorScheme.background }}
-      >
-        <Container size="xl">
-          <FlexboxLayout
-            direction="column"
-            justify="center"
-            align="center"
-            gap="lg"
-            className="text-center"
-          >
-            <H2 className="mb-1" style={{ color: colorScheme.heading }}>
-              Annual Traditions
-            </H2>
-            <SmallText
-              className="text-xl mb-4"
-              style={{ color: colorScheme.textSecondary }}
-            >
-              These are some of our beloved annual events that bring our church
-              family together
-            </SmallText>
+                <div className="p-5">
+                  <span className="inline-flex rounded-full bg-[#f7de12]/10 px-3 py-1 text-xs font-bold text-[#f7de12]">
+                    {event.type}
+                  </span>
 
-            <GridboxLayout
-              columns={1}
-              gap="lg"
-              responsive={{
-                sm: 1,
-                md: 2,
-                lg: 2,
-              }}
-              className="max-w-4xl mx-auto"
-            >
-              {[
-                {
-                  title: 'Celebration & Communion Service',
-                  period: 'Every First Sunday of the Month',
-                },
-                {
-                  title: `Worker's Retreat`,
-                  period: 'Quarterly',
-                },
-                {
-                  title: 'Christmas Celebration Service',
-                  period: 'Every December',
-                  description: '',
-                },
-                {
-                  title: "New Year's Crossover Service",
-                  period: 'December 31st',
-                },
-              ].map((tradition, index) => (
-                <div
-                  key={index}
-                  className="p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 border group hover:scale-105 text-center"
-                  style={{
-                    backgroundColor: colorScheme.card,
-                    borderColor: colorScheme.border,
-                  }}
-                >
-                  <div className="flex justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Image
-                      src={WisdomeHouseLogo} // Fixed: using correct variable name
-                      alt={tradition.title}
-                      width={60}
-                      height={60}
-                      className="object-contain"
-                    />
-                  </div>
-                  <h3
-                    className="text-xl font-bold mb-2"
-                    style={{ color: colorScheme.heading }}
-                  >
-                    {tradition.title}
+                  <h3 className="mt-4 text-lg font-semibold leading-tight text-white">
+                    {event.title}
                   </h3>
-                  <p
-                    className="font-semibold mb-3"
-                    style={{ color: colorScheme.primary }}
-                  >
-                    {tradition.period}
+
+                  <div className="mt-4 space-y-2 text-sm text-white/58">
+                    <p>Date: {event.date}</p>
+                    <p>Time: {event.time}</p>
+                  </div>
+
+                  <p className="mt-4 line-clamp-2 text-sm leading-6 text-white/62">
+                    {event.description}
                   </p>
-                  <p style={{ color: colorScheme.textSecondary }}>
-                    {tradition.description}
-                  </p>
+
+                  <span className="mt-5 inline-flex min-h-10 w-full items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black transition group-hover:bg-[#f7de12]">
+                    Learn More
+                  </span>
                 </div>
-              ))}
-            </GridboxLayout>
-          </FlexboxLayout>
+              </button>
+            ))}
+          </div>
         </Container>
       </Section>
-    </div>
-  );
-};
 
-export default SpecialPage;
+      <Section padding="lg" fullHeight={false} className="bg-[#050505]">
+        <Container size="xl">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              Church rhythm
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+              Annual Traditions
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+              These are some of our beloved annual events that bring our church
+              family together.
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
+            {annualTraditions.map(tradition => (
+              <article
+                key={tradition.title}
+                className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6 text-center shadow-2xl shadow-black/20 transition hover:-translate-y-1 hover:border-[#f7de12]/35"
+              >
+                <Star className="mx-auto mb-4 h-6 w-6 text-[#f7de12]" />
+                <h3 className="text-lg font-semibold text-white">
+                  {tradition.title}
+                </h3>
+                <p className="mt-2 text-sm font-semibold text-[#f7de12]">
+                  {tradition.period}
+                </p>
+              </article>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    </main>
+  );
+}

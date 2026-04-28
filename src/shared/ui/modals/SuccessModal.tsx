@@ -1,36 +1,43 @@
 'use client';
 
-import { BaseModal } from './Base';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { BaseModal, modalStyles } from './Base';
 import type { SuccessModalProps } from '@/lib/types';
 
-export const SuccessModal = ({
+export function SuccessModal({
   isOpen,
   onClose,
   title = 'Submission successful',
   message = 'Your information has been received. Thank you!',
   actionLabel = 'Done',
-}: SuccessModalProps) => {
+}: SuccessModalProps) {
   return (
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      title={title}
       maxWidth="max-w-md"
+      showCloseButton={false}
+      forceBottomSheet
     >
-      <div className="space-y-4 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/15">
-          <CheckCircle className="h-8 w-8 text-emerald-400" />
+      <div className="text-center">
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
+          <CheckCircle2 className="h-8 w-8" />
         </div>
-        <p className="text-sm text-white/80 leading-relaxed">{message}</p>
+
+        <h2 className="mt-5 text-balance text-2xl font-semibold tracking-tight text-white">
+          {title}
+        </h2>
+
+        <p className="mt-3 text-sm leading-7 text-white/65">{message}</p>
+
         <button
           type="button"
           onClick={onClose}
-          className="w-full rounded-lg bg-emerald-500/90 px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-500"
+          className={`${modalStyles.primaryButton} mt-7`}
         >
           {actionLabel}
         </button>
       </div>
     </BaseModal>
   );
-};
+}

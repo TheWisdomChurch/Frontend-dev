@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { ArrowLeft, CalendarClock, Loader2, MapPin } from 'lucide-react';
 
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
@@ -9,23 +10,31 @@ import PageHero from '@/features/hero/PageHero';
 
 function toDateKey(event: EventPublic): string | null {
   if (event.startAt) {
-    const d = new Date(event.startAt);
-    if (!Number.isNaN(d.getTime())) {
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const date = new Date(event.startAt);
+
+    if (!Number.isNaN(date.getTime())) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+        date.getDate()
+      ).padStart(2, '0')}`;
     }
   }
 
   const raw = event.date?.trim();
   if (!raw) return null;
+
   const date = new Date(`${raw}T00:00:00`);
   if (Number.isNaN(date.getTime())) return null;
 
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+    date.getDate()
+  ).padStart(2, '0')}`;
 }
 
 function formatDateKeyLabel(key: string): string {
   const date = new Date(`${key}T00:00:00`);
+
   if (Number.isNaN(date.getTime())) return key;
+
   return date.toLocaleDateString(undefined, {
     weekday: 'short',
     year: 'numeric',
@@ -41,7 +50,7 @@ export default function EventsCalendarPage() {
   useEffect(() => {
     let mounted = true;
 
-    const load = async () => {
+    const loadEvents = async () => {
       try {
         const items = await apiClient.listEvents();
         if (mounted) setEvents(items);
@@ -53,7 +62,8 @@ export default function EventsCalendarPage() {
       }
     };
 
-    load();
+    loadEvents();
+
     return () => {
       mounted = false;
     };
@@ -65,6 +75,7 @@ export default function EventsCalendarPage() {
     for (const event of events) {
       const key = toDateKey(event);
       if (!key) continue;
+
       const bucket = map.get(key) ?? [];
       bucket.push(event);
       map.set(key, bucket);
@@ -93,12 +104,16 @@ export default function EventsCalendarPage() {
     }
 
     const countMap = new Map<string, number>();
+
     for (const [key, list] of grouped) {
       countMap.set(key, list.length);
     }
 
     for (let day = 1; day <= daysInMonth; day += 1) {
-      const dateKey = `${currentYear}-${String(currentMonthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const dateKey = `${currentYear}-${String(currentMonthIndex + 1).padStart(2, '0')}-${String(
+        day
+      ).padStart(2, '0')}`;
+
       slots.push({
         dateKey,
         day,
@@ -110,108 +125,138 @@ export default function EventsCalendarPage() {
   }, [currentYear, currentMonthIndex, daysInMonth, firstWeekday, grouped]);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100">
+    <main className="min-h-screen bg-[#050505] text-white">
       <PageHero
         title="Events Calendar"
         subtitle="All upcoming services and programs in one view."
         description="Plan ahead and reserve your spot."
         compact
       />
-      <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-amber-300">
-              Events calendar
-            </p>
-            <h1 className="mt-2 text-3xl font-black sm:text-4xl">
-              {monthStart.toLocaleDateString(undefined, {
-                month: 'long',
-                year: 'numeric',
-              })}
-            </h1>
+
+      <section className="relative overflow-hidden bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(247,222,18,0.12),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
+
+        <div className="relative mx-auto max-w-6xl space-y-8">
+          <div className="flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                Events calendar
+              </p>
+              <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                {monthStart.toLocaleDateString(undefined, {
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60">
+                View this month’s published events and upcoming timeline.
+              </p>
+            </div>
+
+            <Link
+              href="/events"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/10 bg-black/30 px-5 text-sm font-bold text-white/80 transition hover:bg-white/[0.06]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to events
+            </Link>
           </div>
 
-          <Link
-            href="/events"
-            className="rounded-full border border-neutral-700 px-5 py-2.5 text-sm font-semibold text-neutral-200 transition hover:bg-neutral-900"
-          >
-            Back to events
-          </Link>
+          {loading ? (
+            <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.035]">
+              <Loader2 className="h-9 w-9 animate-spin text-[#f7de12]" />
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/25">
+                <div className="min-w-[760px]">
+                  <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold uppercase tracking-[0.18em] text-white/40">
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
+                      day => (
+                        <div key={day} className="py-2">
+                          {day}
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-2">
+                    {calendarSlots.map((slot, index) => (
+                      <div
+                        key={`${slot.dateKey || 'empty'}-${index}`}
+                        className="min-h-[96px] rounded-2xl border border-white/10 bg-black/25 p-3"
+                      >
+                        {slot.day ? (
+                          <>
+                            <p className="text-sm font-semibold text-white">
+                              {slot.day}
+                            </p>
+
+                            {slot.count > 0 ? (
+                              <p className="mt-3 inline-flex rounded-full bg-[#f7de12] px-2.5 py-1 text-xs font-extrabold text-black">
+                                {slot.count} event{slot.count > 1 ? 's' : ''}
+                              </p>
+                            ) : (
+                              <p className="mt-3 text-xs text-white/35">
+                                No event
+                              </p>
+                            )}
+                          </>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
+                <div className="flex items-center gap-3">
+                  <CalendarClock className="h-5 w-5 text-[#f7de12]" />
+                  <h2 className="text-xl font-semibold text-white">
+                    Upcoming timeline
+                  </h2>
+                </div>
+
+                {grouped.length === 0 ? (
+                  <p className="mt-4 text-sm leading-7 text-white/55">
+                    No published events available.
+                  </p>
+                ) : (
+                  <div className="mt-5 space-y-4">
+                    {grouped.map(([dateKey, list]) => (
+                      <article
+                        key={dateKey}
+                        className="rounded-2xl border border-white/10 bg-black/25 p-4"
+                      >
+                        <p className="text-sm font-bold text-[#f7de12]">
+                          {formatDateKeyLabel(dateKey)}
+                        </p>
+
+                        <ul className="mt-3 space-y-3">
+                          {list.map(event => (
+                            <li
+                              key={event.id}
+                              className="rounded-xl border border-white/10 bg-white/[0.03] p-3"
+                            >
+                              <p className="font-semibold text-white">
+                                {event.title}
+                              </p>
+
+                              <p className="mt-1 flex items-center gap-2 text-sm text-white/50">
+                                <MapPin className="h-4 w-4" />
+                                {event.location || 'Venue TBA'}
+                              </p>
+                            </li>
+                          ))}
+                        </ul>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-neutral-600 border-t-amber-300" />
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-wider text-neutral-400">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day}>{day}</div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-7 gap-2">
-              {calendarSlots.map((slot, index) => (
-                <div
-                  key={`${slot.dateKey || 'empty'}-${index}`}
-                  className="min-h-[76px] rounded-2xl border border-neutral-800 bg-neutral-900/60 p-2"
-                >
-                  {slot.day ? (
-                    <>
-                      <p className="text-sm font-semibold">{slot.day}</p>
-                      {slot.count > 0 ? (
-                        <p className="mt-2 inline-flex rounded-full bg-amber-300 px-2 py-0.5 text-[11px] font-semibold text-neutral-900">
-                          {slot.count} event{slot.count > 1 ? 's' : ''}
-                        </p>
-                      ) : (
-                        <p className="mt-2 text-[11px] text-neutral-500">
-                          No event
-                        </p>
-                      )}
-                    </>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-
-            <div className="rounded-3xl border border-neutral-800 bg-neutral-900/60 p-5">
-              <h2 className="text-lg font-bold">Upcoming timeline</h2>
-              {grouped.length === 0 ? (
-                <p className="mt-3 text-sm text-neutral-400">
-                  No published events available.
-                </p>
-              ) : (
-                <div className="mt-4 space-y-4">
-                  {grouped.map(([dateKey, list]) => (
-                    <div
-                      key={dateKey}
-                      className="rounded-2xl border border-neutral-800 p-4"
-                    >
-                      <p className="text-sm font-semibold text-amber-300">
-                        {formatDateKeyLabel(dateKey)}
-                      </p>
-                      <ul className="mt-2 space-y-2">
-                        {list.map(event => (
-                          <li
-                            key={event.id}
-                            className="text-sm text-neutral-200"
-                          >
-                            <span className="font-semibold">{event.title}</span>
-                            <span className="text-neutral-400">
-                              {' '}
-                              • {event.location || 'Venue TBA'}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </>
-        )}
       </section>
     </main>
   );

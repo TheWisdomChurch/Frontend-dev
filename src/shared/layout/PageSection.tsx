@@ -1,7 +1,7 @@
 import React from 'react';
+import { cn } from '@/lib/cn';
 import Section from './Section';
 import Container from './Container';
-import { cn } from '@/lib/cn';
 
 type Tone = 'page' | 'muted' | 'surface' | 'surface-strong' | 'none';
 
@@ -10,8 +10,8 @@ interface PageSectionProps {
   tone?: Tone;
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   container?: boolean;
-  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  containerPadding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  containerPadding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   containerClassName?: string;
   id?: string;
@@ -21,34 +21,32 @@ interface PageSectionProps {
 }
 
 const toneClassMap: Record<Tone, string> = {
-  page: 'page-section',
-  muted: 'page-section-muted',
-  surface: 'page-surface',
-  'surface-strong': 'page-surface-strong',
+  page: 'bg-[#050505] text-white',
+  muted: 'bg-[#080808] text-white',
+  surface: 'bg-[#0b0b0b] text-white',
+  'surface-strong': 'bg-[#111111] text-white',
   none: '',
 };
 
-const PageSection: React.FC<PageSectionProps> = ({
+export default function PageSection({
   children,
   tone = 'page',
-  padding = 'xl',
+  padding = 'lg',
   container = true,
   containerSize = 'xl',
-  containerPadding = 'xl',
-  className = '',
-  containerClassName = '',
+  containerPadding = 'md',
+  className,
+  containerClassName,
   id,
   fullHeight = false,
   centered = false,
   style,
-}) => {
-  const sectionClasses = cn(toneClassMap[tone], className);
-
+}: PageSectionProps) {
   return (
     <Section
       id={id}
       padding={padding}
-      className={sectionClasses}
+      className={cn(toneClassMap[tone], className)}
       fullHeight={fullHeight}
       centered={centered}
       style={style}
@@ -66,6 +64,4 @@ const PageSection: React.FC<PageSectionProps> = ({
       )}
     </Section>
   );
-};
-
-export default PageSection;
+}

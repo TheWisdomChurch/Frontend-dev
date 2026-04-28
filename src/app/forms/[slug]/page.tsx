@@ -1,24 +1,19 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
 import { Container, Section } from '@/shared/layout';
-import { H2, H3, BodyMD, BodySM } from '@/shared/text';
 import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient from '@/lib/api';
-import { PublicFormPayload, EventPublic, PublicFormField } from '@/lib';
+import type { EventPublic, PublicFormField, PublicFormPayload } from '@/lib';
 
-const fieldBaseClass =
-  'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
-const fieldSelectClass =
-  'w-full rounded-xl border border-white/20 bg-slate-950/90 px-4 py-3 text-base sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-yellow-400/60 transition';
-
-const labelClass = 'text-sm font-semibold text-white/80';
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const e164Re = /^\+[1-9]\d{7,14}$/;
+
 const COUNTRY_PHONE_CODES = [
   { iso: 'NG', name: 'Nigeria', dial: '+234' },
   { iso: 'GH', name: 'Ghana', dial: '+233' },
@@ -28,6 +23,7 @@ const COUNTRY_PHONE_CODES = [
   { iso: 'CA', name: 'Canada', dial: '+1' },
   { iso: 'GB', name: 'United Kingdom', dial: '+44' },
 ] as const;
+
 const MONTH_OPTIONS = [
   { value: '01', label: 'January' },
   { value: '02', label: 'February' },
@@ -43,19 +39,32 @@ const MONTH_OPTIONS = [
   { value: '12', label: 'December' },
 ] as const;
 
+const fieldShellClass =
+  'rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5';
+
+const fieldBaseClass =
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-[0.95rem] text-white outline-none transition placeholder:text-white/35 focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10';
+
+const fieldSelectClass =
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[#f7de12]/70 focus:ring-4 focus:ring-[#f7de12]/10';
+
+const labelClass =
+  'block text-[0.73rem] font-bold uppercase tracking-[0.16em] text-white/60';
+
 function onlyDigits(value: string): string {
   return value.replace(/\D/g, '');
 }
 
 function splitE164(value: string): { dial: string; national: string } | null {
   if (!value || typeof value !== 'string') return null;
+
   const trimmed = value.trim();
   if (!trimmed.startsWith('+')) return null;
 
-  const dialCandidates = COUNTRY_PHONE_CODES.map(c => c.dial).sort(
-    (a, b) => b.length - a.length
-  );
-  const dial = dialCandidates.find(d => trimmed.startsWith(d));
+  const dial = COUNTRY_PHONE_CODES.map(country => country.dial)
+    .sort((a, b) => b.length - a.length)
+    .find(candidate => trimmed.startsWith(candidate));
+
   if (!dial) return null;
 
   return {
@@ -65,12 +74,15 @@ function splitE164(value: string): { dial: string; national: string } | null {
 }
 
 function isPhoneLikeField(field: PublicFormField): boolean {
-  const fieldType = (field.type || '').toLowerCase();
-  if (fieldType === 'tel' || fieldType === 'phone' || fieldType === 'mobile') {
+  const fieldType = String(field.type || '').toLowerCase();
+
+  if (['tel', 'phone', 'mobile'].includes(fieldType)) {
     return true;
   }
-  const hay = `${field.key} ${field.label}`.toLowerCase();
-  return /(phone|mobile|tel|telephone|contact[-_\s]?number)/.test(hay);
+
+  const haystack = `${field.key} ${field.label}`.toLowerCase();
+
+  return /(phone|mobile|tel|telephone|contact[-_\s]?number)/.test(haystack);
 }
 
 function countWords(value: string): number {
@@ -85,12 +97,16 @@ function daysInMonth(month: number): number {
 
 function parseDDMM(value: string): { day: string; month: string } | null {
   if (!value || typeof value !== 'string') return null;
+
   const match = /^(\d{2})-(\d{2})$/.exec(value.trim());
   if (!match) return null;
+
   const day = Number(match[1]);
   const month = Number(match[2]);
+
   if (month < 1 || month > 12) return null;
   if (day < 1 || day > daysInMonth(month)) return null;
+
   return { day: match[1], month: match[2] };
 }
 
@@ -98,13 +114,11 @@ function parseDDMMPartial(
   value: string
 ): { day: string; month: string } | null {
   if (!value || typeof value !== 'string') return null;
+
   const match = /^(\d{2})-(\d{2})$/.exec(value.trim());
   if (!match) return null;
-  const day = match[1];
-  const month = match[2];
-  if (month !== '00' && (Number(month) < 1 || Number(month) > 12)) return null;
-  if (day !== '00' && (Number(day) < 1 || Number(day) > 31)) return null;
-  return { day, month };
+
+  return { day: match[1], month: match[2] };
 }
 
 function toDDMM(day: string, month: string): string {
@@ -117,6 +131,7 @@ function toDDMM(day: string, month: string): string {
 function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+
     reader.onload = () => resolve(String(reader.result || ''));
     reader.onerror = () => reject(new Error('Failed to read image file'));
     reader.readAsDataURL(file);
@@ -128,24 +143,25 @@ function applyTemplateVars(
   formTitle: string
 ): string {
   if (!input) return '';
+
   return input.replace(/\{\{\s*formTitle\s*\}\}/gi, formTitle);
 }
 
 function normalizeValue(value: unknown): string {
   if (Array.isArray(value)) {
-    return value
-      .map(item => normalizeValue(item))
-      .filter(Boolean)
-      .join('|');
+    return value.map(normalizeValue).filter(Boolean).join('|');
   }
+
   if (value === null || value === undefined) return '';
+
   return String(value).trim().toLowerCase();
 }
 
 function asNormalizedList(value: unknown): string[] {
   if (Array.isArray(value)) {
-    return value.map(item => normalizeValue(item)).filter(Boolean);
+    return value.map(normalizeValue).filter(Boolean);
   }
+
   const normalized = normalizeValue(value);
   return normalized ? [normalized] : [];
 }
@@ -164,21 +180,36 @@ function evaluateFieldRule(
 
   if (op === 'is_empty') return !left;
   if (op === 'not_empty') return Boolean(left);
+
   if (op === 'contains' || op === 'includes') {
     if (leftList.length > 1) return leftList.includes(right);
     return left.includes(right);
   }
+
   if (op === 'not_contains' || op === 'not_includes') {
     if (leftList.length > 1) return !leftList.includes(right);
     return !left.includes(right);
   }
-  if (op === 'in') return leftList.some(item => rightList.includes(item));
-  if (op === 'not_in') return leftList.every(item => !rightList.includes(item));
+
+  if (op === 'in') {
+    return leftList.some(item => rightList.includes(item));
+  }
+
+  if (op === 'not_in') {
+    return leftList.every(item => !rightList.includes(item));
+  }
+
   if (op === 'greater_than') return Number(left) > Number(right);
   if (op === 'less_than') return Number(left) < Number(right);
-  if (op === 'not_equals' || op === 'not_equal')
+
+  if (op === 'not_equals' || op === 'not_equal') {
     return !leftList.includes(right);
-  if (op === 'equals' && leftList.length > 1) return leftList.includes(right);
+  }
+
+  if (op === 'equals' && leftList.length > 1) {
+    return leftList.includes(right);
+  }
+
   return left === right;
 }
 
@@ -187,18 +218,22 @@ function isFieldVisible(
   answers: Record<string, unknown>
 ): boolean {
   const conditional = field.conditional;
+
   if (
     !conditional ||
     !Array.isArray(conditional.rules) ||
-    !conditional.rules.length
+    conditional.rules.length === 0
   ) {
     return true;
   }
 
   const matchMode =
-    (conditional.match || 'all').toLowerCase() === 'any' ? 'any' : 'all';
+    String(conditional.match || 'all').toLowerCase() === 'any' ? 'any' : 'all';
+
   const mode =
-    (conditional.mode || 'show').toLowerCase() === 'hide' ? 'hide' : 'show';
+    String(conditional.mode || 'show').toLowerCase() === 'hide'
+      ? 'hide'
+      : 'show';
 
   const didMatch =
     matchMode === 'any'
@@ -222,76 +257,102 @@ function isFieldVisible(
   return mode === 'hide' ? !didMatch : didMatch;
 }
 
+function getFieldInputType(field: PublicFormField): string {
+  const type = String(field.type || '').toLowerCase();
+
+  if (type === 'email') return 'email';
+  if (type === 'number') return 'number';
+  if (type === 'url') return 'url';
+
+  return 'text';
+}
+
 export default function PublicFormPage() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const formSlug = useMemo(() => {
     if (!pathname) return undefined;
+
     const segments = pathname.split('/').filter(Boolean);
     const formsIndex = segments.findIndex(segment => segment === 'forms');
-    if (formsIndex < 0) return undefined;
     const nextSegment = segments[formsIndex + 1];
+
     return nextSegment ? decodeURIComponent(nextSegment) : undefined;
   }, [pathname]);
 
   const [form, setForm] = useState<PublicFormPayload | null>(null);
   const [event, setEvent] = useState<EventPublic | null>(null);
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<Record<string, unknown>>({});
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
   const isStructuredPublicForm = useMemo(() => {
     const slug = (formSlug || '').toLowerCase();
+    const formType = String(form?.settings?.formType || '').toLowerCase();
+
     return (
       slug.includes('testimony') ||
       slug.includes('testimonial') ||
       slug.includes('leadership') ||
       slug.includes('member') ||
       slug.includes('membership') ||
-      (form?.settings?.formType || '').toLowerCase() === 'testimonial' ||
-      (form?.settings?.formType || '').toLowerCase() === 'leadership' ||
-      (form?.settings?.formType || '').toLowerCase() === 'member'
+      ['testimonial', 'leadership', 'member'].includes(formType)
     );
   }, [formSlug, form?.settings?.formType]);
+
   const isTestimonialForm = useMemo(() => {
     const slug = (formSlug || '').toLowerCase();
+    const formType = String(form?.settings?.formType || '').toLowerCase();
+
     return (
       slug.includes('testimony') ||
       slug.includes('testimonial') ||
-      (form?.settings?.formType || '').toLowerCase() === 'testimonial'
+      formType === 'testimonial'
     );
   }, [formSlug, form?.settings?.formType]);
+
   const returnPath = useMemo(() => {
     const raw = (searchParams.get('return_to') || '/').trim();
-    if (!raw) return '/';
-    if (!raw.startsWith('/')) return '/';
+
+    if (!raw || !raw.startsWith('/')) return '/';
+
     return raw;
   }, [searchParams]);
+
   const returnDelayMs = useMemo(() => {
     const raw = searchParams.get('return_delay_ms');
-    if (!raw) return 0;
-    const parsed = Number(raw);
+    const parsed = raw ? Number(raw) : 0;
+
     if (!Number.isFinite(parsed) || parsed < 0) return 0;
+
     return Math.min(parsed, 15000);
   }, [searchParams]);
+
   const returnLabel = useMemo(() => {
-    const raw = (searchParams.get('return_label') || '').trim();
-    return raw || 'Return to homepage';
+    return (searchParams.get('return_label') || '').trim() || 'Return home';
   }, [searchParams]);
 
   useEffect(() => {
-    if (!submitted || returnDelayMs <= 0) return;
+    if (!submitted || returnDelayMs <= 0) return undefined;
+
     const timer = window.setTimeout(() => {
       router.push(returnPath);
     }, returnDelayMs);
+
     return () => window.clearTimeout(timer);
   }, [submitted, returnDelayMs, returnPath, router]);
 
   useEffect(() => {
-    if (!formSlug) return;
+    if (!formSlug) {
+      setLoading(false);
+      setError('Invalid form link.');
+      return;
+    }
 
     let mounted = true;
 
@@ -307,29 +368,35 @@ export default function PublicFormPage() {
         setForm(formData);
 
         let resolvedEvent = formData.event ?? null;
+
         if (!resolvedEvent) {
           const eventsData = await apiClient
             .listEvents()
             .catch(() => [] as EventPublic[]);
+
           resolvedEvent = Array.isArray(eventsData)
-            ? eventsData.find(evt => evt.formSlug === formSlug) || null
+            ? eventsData.find(item => item.formSlug === formSlug) || null
             : null;
         }
+
         setEvent(resolvedEvent);
 
-        const defaults: Record<string, any> = {};
-        (formData?.fields || []).forEach((field: PublicFormField) => {
-          if (field.type === 'checkbox') {
-            defaults[field.key] = field.options?.length ? [] : false;
-          } else {
-            defaults[field.key] = '';
-          }
+        const defaults: Record<string, unknown> = {};
+
+        (formData.fields || []).forEach((field: PublicFormField) => {
+          defaults[field.key] =
+            field.type === 'checkbox'
+              ? field.options?.length
+                ? []
+                : false
+              : '';
         });
 
-        setAnswers(prev => ({ ...defaults, ...prev }));
+        setAnswers(current => ({ ...defaults, ...current }));
         setFieldErrors({});
       } catch (err: any) {
         if (!mounted) return;
+
         if (err?.statusCode === 404) {
           setError(
             'This form link is invalid, unpublished, or no longer available. Please contact support for the active link.'
@@ -345,6 +412,7 @@ export default function PublicFormPage() {
     };
 
     load();
+
     return () => {
       mounted = false;
     };
@@ -352,76 +420,78 @@ export default function PublicFormPage() {
 
   const presentation = useMemo(() => {
     const settings = form?.settings;
+    const formTitle = form?.title || 'Form';
+
     const title = isTestimonialForm
       ? form?.title || 'Share Your Testimony'
       : settings?.introTitle || event?.title || form?.title || 'Registration';
+
     const subtitle = isTestimonialForm
       ? form?.description || 'Tell us what God has done in your life.'
       : settings?.introSubtitle ||
         event?.description ||
         form?.description ||
         'Complete the form below to continue.';
-    const detailItems = settings?.introBullets || [];
-    const detailSubtexts = settings?.introBulletSubtexts || [];
-    const headerNote = settings?.formHeaderNote || '';
-    const sections = settings?.sections || [];
-    const successTitle =
-      applyTemplateVars(settings?.successModalTitle, form?.title || 'Form') ||
-      'Submission received';
-    const successSubtitle = applyTemplateVars(
-      settings?.successModalSubtitle,
-      form?.title || 'Form'
-    );
-    const successMessage =
-      applyTemplateVars(settings?.successModalMessage, form?.title || 'Form') ||
-      applyTemplateVars(settings?.successMessage, form?.title || 'Form') ||
-      'Your response has been received successfully.';
 
     return {
       title,
       subtitle,
-      detailItems,
-      detailSubtexts,
-      headerNote,
-      sections,
-      successTitle,
-      successSubtitle,
-      successMessage,
+      detailItems: settings?.introBullets || [],
+      detailSubtexts: settings?.introBulletSubtexts || [],
+      headerNote: settings?.formHeaderNote || '',
+      sections: settings?.sections || [],
+      successTitle:
+        applyTemplateVars(settings?.successModalTitle, formTitle) ||
+        'Submission received',
+      successSubtitle: applyTemplateVars(
+        settings?.successModalSubtitle,
+        formTitle
+      ),
+      successMessage:
+        applyTemplateVars(settings?.successModalMessage, formTitle) ||
+        applyTemplateVars(settings?.successMessage, formTitle) ||
+        'Your response has been received successfully.',
     };
   }, [event, form, isTestimonialForm]);
 
   const showHeroCopy = isStructuredPublicForm;
-  const sortedFields = useMemo(
-    () => (form?.fields || []).slice().sort((a, b) => a.order - b.order),
-    [form?.fields]
-  );
-  const visibleFields = useMemo(
-    () => sortedFields.filter(field => isFieldVisible(field, answers)),
-    [answers, sortedFields]
-  );
+
+  const sortedFields = useMemo(() => {
+    return (form?.fields || []).slice().sort((a, b) => a.order - b.order);
+  }, [form?.fields]);
+
+  const visibleFields = useMemo(() => {
+    return sortedFields.filter(field => isFieldVisible(field, answers));
+  }, [answers, sortedFields]);
 
   useEffect(() => {
     const visibleKeys = new Set(visibleFields.map(field => field.key));
-    setFieldErrors(prev => {
+
+    setFieldErrors(current => {
       const next: Record<string, string> = {};
       let changed = false;
-      Object.entries(prev).forEach(([key, message]) => {
+
+      Object.entries(current).forEach(([key, message]) => {
         if (visibleKeys.has(key)) {
           next[key] = message;
-          return;
+        } else {
+          changed = true;
         }
-        changed = true;
       });
-      return changed ? next : prev;
+
+      return changed ? next : current;
     });
   }, [visibleFields]);
 
-  const handleChange = (key: string, value: any) => {
-    setAnswers(prev => ({ ...prev, [key]: value }));
-    setFieldErrors(prev => {
-      if (!prev[key]) return prev;
-      const next = { ...prev };
+  const handleChange = (key: string, value: unknown) => {
+    setAnswers(current => ({ ...current, [key]: value }));
+
+    setFieldErrors(current => {
+      if (!current[key]) return current;
+
+      const next = { ...current };
       delete next[key];
+
       return next;
     });
   };
@@ -431,20 +501,30 @@ export default function PublicFormPage() {
     optionValue: string,
     checked: boolean
   ) => {
-    setAnswers(prev => {
-      const current = Array.isArray(prev[key]) ? prev[key] : [];
-      if (checked) return { ...prev, [key]: [...current, optionValue] };
+    setAnswers(current => {
+      const existing = Array.isArray(current[key]) ? current[key] : [];
+
       return {
-        ...prev,
-        [key]: current.filter((item: string) => item !== optionValue),
+        ...current,
+        [key]: checked
+          ? [...existing, optionValue]
+          : existing.filter((item: string) => item !== optionValue),
       };
+    });
+
+    setFieldErrors(current => {
+      if (!current[key]) return current;
+
+      const next = { ...current };
+      delete next[key];
+
+      return next;
     });
   };
 
-  const handleSubmit = async (
-    eventSubmit: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (eventSubmit: FormEvent<HTMLFormElement>) => {
     eventSubmit.preventDefault();
+
     if (!formSlug || !form) return;
 
     setSubmitting(true);
@@ -452,10 +532,12 @@ export default function PublicFormPage() {
 
     try {
       const nextFieldErrors: Record<string, string> = {};
-      const payloadValues: Record<string, any> = {};
+      const payloadValues: Record<string, unknown> = {};
+
       for (const field of visibleFields) {
         const rawValue = answers[field.key];
         const validation = field.validation;
+
         const maxWords =
           typeof validation?.maxWords === 'number'
             ? validation.maxWords
@@ -472,43 +554,52 @@ export default function PublicFormPage() {
             }
             continue;
           }
+
           if (!(rawValue instanceof File)) {
             nextFieldErrors[field.key] = 'Invalid image selected';
             continue;
           }
+
           if (!ACCEPTED_IMAGE_TYPES.includes(rawValue.type)) {
             nextFieldErrors[field.key] = 'Use JPEG, PNG, or WebP image';
             continue;
           }
+
           if (rawValue.size > MAX_IMAGE_BYTES) {
             nextFieldErrors[field.key] = 'Image must be 5MB or smaller';
             continue;
           }
+
           payloadValues[field.key] = await readFileAsDataURL(rawValue);
           continue;
         }
 
         if (field.type === 'checkbox' && field.options?.length) {
           const selected = Array.isArray(rawValue) ? rawValue : [];
+
           if (field.required && selected.length === 0) {
             nextFieldErrors[field.key] = `${field.label} is required`;
             continue;
           }
+
           payloadValues[field.key] = selected;
           continue;
         }
 
         if (field.type === 'checkbox') {
           const checked = Boolean(rawValue);
+
           if (field.required && !checked) {
             nextFieldErrors[field.key] = `${field.label} is required`;
             continue;
           }
+
           payloadValues[field.key] = checked;
           continue;
         }
 
         const value = typeof rawValue === 'string' ? rawValue.trim() : '';
+
         if (!value) {
           if (field.required) {
             nextFieldErrors[field.key] = `${field.label} is required`;
@@ -518,6 +609,7 @@ export default function PublicFormPage() {
 
         if (field.type === 'email') {
           const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
           if (!emailRe.test(value)) {
             nextFieldErrors[field.key] = 'Enter a valid email address';
             continue;
@@ -532,7 +624,7 @@ export default function PublicFormPage() {
 
         if (field.type === 'date' && !parseDDMM(value)) {
           nextFieldErrors[field.key] =
-            'Enter a valid date using DD-MM format (e.g. 24-12)';
+            'Enter a valid date using DD-MM format, e.g. 24-12';
           continue;
         }
 
@@ -560,700 +652,639 @@ export default function PublicFormPage() {
     }
   };
 
+  const renderField = (field: PublicFormField) => {
+    const value = answers[field.key];
+    const errorMessage = fieldErrors[field.key];
+
+    const fullWidth =
+      field.type === 'textarea' ||
+      field.type === 'radio' ||
+      field.type === 'checkbox' ||
+      field.type === 'image';
+
+    const wrapperClass = `${fullWidth ? 'md:col-span-2' : ''} ${fieldShellClass}`;
+
+    const Label = () => (
+      <span className={labelClass}>
+        {field.label}
+        {field.required ? <span className="text-[#f7de12]"> *</span> : null}
+      </span>
+    );
+
+    const Error = () =>
+      errorMessage ? (
+        <p className="text-sm leading-5 text-rose-300">{errorMessage}</p>
+      ) : null;
+
+    if (field.type === 'textarea') {
+      const maxWords =
+        typeof field.validation?.maxWords === 'number'
+          ? field.validation.maxWords
+          : /(testimony|prayer[-_\s]*request)/i.test(
+                `${field.key} ${field.label}`
+              )
+            ? 400
+            : undefined;
+
+      const wordCount = typeof value === 'string' ? countWords(value) : 0;
+
+      return (
+        <div key={field.key} className={wrapperClass}>
+          <label className="space-y-2">
+            <Label />
+            <textarea
+              className={`${fieldBaseClass} min-h-[140px] resize-y leading-7`}
+              placeholder={field.placeholder}
+              value={typeof value === 'string' ? value : ''}
+              onChange={event => handleChange(field.key, event.target.value)}
+            />
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              {typeof maxWords === 'number' ? (
+                <p className="text-xs text-white/45">
+                  {wordCount}/{maxWords} words
+                </p>
+              ) : (
+                <span />
+              )}
+              <Error />
+            </div>
+          </label>
+        </div>
+      );
+    }
+
+    if (field.type === 'select') {
+      return (
+        <div key={field.key} className={wrapperClass}>
+          <label className="space-y-2">
+            <Label />
+            <select
+              className={fieldSelectClass}
+              value={typeof value === 'string' ? value : ''}
+              onChange={event => handleChange(field.key, event.target.value)}
+            >
+              <option value="" disabled>
+                {field.placeholder || 'Select an option'}
+              </option>
+              {field.options?.map(option => (
+                <option
+                  key={option.value}
+                  value={option.value}
+                  className="bg-[#080808] text-white"
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <Error />
+          </label>
+        </div>
+      );
+    }
+
+    if (field.type === 'radio') {
+      return (
+        <div key={field.key} className={wrapperClass}>
+          <fieldset className="space-y-3">
+            <legend className={labelClass}>
+              {field.label}
+              {field.required ? (
+                <span className="text-[#f7de12]"> *</span>
+              ) : null}
+            </legend>
+
+            <div className="grid gap-2 sm:grid-cols-2">
+              {field.options?.map(option => (
+                <label
+                  key={option.value}
+                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-3 py-2 text-sm text-white/78 transition hover:bg-white/[0.045]"
+                >
+                  <input
+                    type="radio"
+                    name={field.key}
+                    value={option.value}
+                    checked={value === option.value}
+                    required={field.required}
+                    onChange={event =>
+                      handleChange(field.key, event.target.value)
+                    }
+                    className="accent-[#f7de12]"
+                  />
+                  {option.label}
+                </label>
+              ))}
+            </div>
+
+            <Error />
+          </fieldset>
+        </div>
+      );
+    }
+
+    if (field.type === 'checkbox' && field.options?.length) {
+      const currentValues = Array.isArray(value) ? value : [];
+
+      return (
+        <div key={field.key} className={wrapperClass}>
+          <fieldset className="space-y-3">
+            <legend className={labelClass}>
+              {field.label}
+              {field.required ? (
+                <span className="text-[#f7de12]"> *</span>
+              ) : null}
+            </legend>
+
+            <div className="grid gap-2 sm:grid-cols-2">
+              {field.options.map(option => (
+                <label
+                  key={option.value}
+                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-3 py-2 text-sm text-white/78 transition hover:bg-white/[0.045]"
+                >
+                  <input
+                    type="checkbox"
+                    checked={currentValues.includes(option.value)}
+                    onChange={event =>
+                      handleCheckboxOption(
+                        field.key,
+                        option.value,
+                        event.target.checked
+                      )
+                    }
+                    className="accent-[#f7de12]"
+                  />
+                  {option.label}
+                </label>
+              ))}
+            </div>
+
+            <Error />
+          </fieldset>
+        </div>
+      );
+    }
+
+    if (field.type === 'checkbox') {
+      return (
+        <div key={field.key} className={wrapperClass}>
+          <label className="flex items-start gap-3 text-sm leading-6 text-white/78">
+            <input
+              type="checkbox"
+              checked={Boolean(value)}
+              onChange={event => handleChange(field.key, event.target.checked)}
+              className="mt-1 accent-[#f7de12]"
+            />
+            <span>
+              {field.label}
+              {field.required ? (
+                <span className="text-[#f7de12]"> *</span>
+              ) : null}
+            </span>
+          </label>
+          <Error />
+        </div>
+      );
+    }
+
+    if (field.type === 'image') {
+      const selectedFile = value instanceof File ? value : null;
+      const fileKey = selectedFile
+        ? `${selectedFile.name}-${selectedFile.lastModified}`
+        : 'empty';
+
+      return (
+        <div key={field.key} className={wrapperClass}>
+          <label className="space-y-2">
+            <Label />
+            <input
+              key={fileKey}
+              type="file"
+              accept={ACCEPTED_IMAGE_TYPES.join(',')}
+              className={fieldBaseClass}
+              onChange={event =>
+                handleChange(field.key, event.target.files?.[0] || null)
+              }
+            />
+            <p className="text-xs leading-5 text-white/45">
+              JPEG, PNG, or WebP. Maximum file size is 5MB.
+            </p>
+            {selectedFile ? (
+              <p className="text-xs leading-5 text-white/65">
+                Selected: {selectedFile.name}
+              </p>
+            ) : null}
+            <Error />
+          </label>
+        </div>
+      );
+    }
+
+    if (isPhoneLikeField(field)) {
+      const parsed = splitE164(typeof value === 'string' ? value : '');
+      const currentDial = parsed?.dial ?? COUNTRY_PHONE_CODES[0].dial;
+      const currentNational = parsed?.national ?? '';
+
+      return (
+        <div key={field.key} className={fieldShellClass}>
+          <label className="space-y-2">
+            <Label />
+
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[170px_1fr]">
+              <select
+                className={fieldSelectClass}
+                value={currentDial}
+                onChange={event => {
+                  const nextDial = event.target.value;
+                  handleChange(
+                    field.key,
+                    `${nextDial}${onlyDigits(currentNational)}`
+                  );
+                }}
+              >
+                {COUNTRY_PHONE_CODES.map(country => (
+                  <option
+                    key={country.iso}
+                    value={country.dial}
+                    className="bg-[#080808] text-white"
+                  >
+                    {country.iso} {country.dial}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="tel"
+                className={fieldBaseClass}
+                placeholder={field.placeholder || '8012345678'}
+                value={currentNational}
+                onChange={event =>
+                  handleChange(
+                    field.key,
+                    `${currentDial}${onlyDigits(event.target.value)}`
+                  )
+                }
+              />
+            </div>
+
+            <p className="text-xs leading-5 text-white/45">
+              Use your country code and active phone number.
+            </p>
+            <Error />
+          </label>
+        </div>
+      );
+    }
+
+    if (field.type === 'date') {
+      const parsed = parseDDMMPartial(typeof value === 'string' ? value : '');
+      const selectedDay = parsed?.day === '00' ? '' : parsed?.day || '';
+      const selectedMonth = parsed?.month === '00' ? '' : parsed?.month || '';
+      const monthNumber = selectedMonth ? Number(selectedMonth) : 12;
+      const availableDays = Array.from(
+        { length: daysInMonth(monthNumber) },
+        (_, index) => String(index + 1).padStart(2, '0')
+      );
+
+      return (
+        <div key={field.key} className={fieldShellClass}>
+          <label className="space-y-2">
+            <Label />
+
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <select
+                className={fieldSelectClass}
+                value={selectedDay}
+                onChange={event =>
+                  handleChange(
+                    field.key,
+                    toDDMM(event.target.value, selectedMonth)
+                  )
+                }
+              >
+                <option value="">Day</option>
+                {availableDays.map(day => (
+                  <option key={day} value={day} className="bg-[#080808]">
+                    {day}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className={fieldSelectClass}
+                value={selectedMonth}
+                onChange={event =>
+                  handleChange(
+                    field.key,
+                    toDDMM(selectedDay, event.target.value)
+                  )
+                }
+              >
+                <option value="">Month</option>
+                {MONTH_OPTIONS.map(month => (
+                  <option
+                    key={month.value}
+                    value={month.value}
+                    className="bg-[#080808]"
+                  >
+                    {month.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <p className="text-xs leading-5 text-white/45">
+              Stored as DD-MM format.
+            </p>
+            <Error />
+          </label>
+        </div>
+      );
+    }
+
+    return (
+      <div key={field.key} className={wrapperClass}>
+        <label className="space-y-2">
+          <Label />
+          <input
+            type={getFieldInputType(field)}
+            className={fieldBaseClass}
+            placeholder={field.placeholder}
+            value={typeof value === 'string' ? value : ''}
+            onChange={event => handleChange(field.key, event.target.value)}
+          />
+          <Error />
+        </label>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <Section padding="none" className="relative overflow-hidden">
-        <div className="absolute inset-0">
+    <main className="min-h-screen bg-[#050505] text-white">
+      <Section padding="none" className="relative isolate overflow-hidden">
+        <div className="absolute inset-0 -z-20">
           <Image
             src={EventBannerMobile}
             alt={event?.title || form?.title || 'Event banner'}
             fill
+            priority
             sizes="(max-width: 768px) 100vw, 0px"
             className="object-cover md:hidden"
-            priority
           />
           <Image
             src={EventBannerDesktop}
             alt={event?.title || form?.title || 'Event banner'}
             fill
-            sizes="(max-width: 1024px) 100vw, 70vw"
-            className="hidden md:block object-cover"
             priority
+            sizes="(max-width: 1024px) 100vw, 100vw"
+            className="hidden object-cover md:block"
           />
         </div>
 
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 -z-10 bg-black/72" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(247,222,18,0.16),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.2),#050505_92%)]" />
 
         <Container
           size="xl"
-          className={`relative z-10 ${showHeroCopy ? 'py-12 sm:py-16' : 'py-2 sm:py-3'}`}
+          className={
+            showHeroCopy
+              ? 'relative z-10 py-14 sm:py-18 lg:py-20'
+              : 'relative z-10 py-6'
+          }
         >
           {showHeroCopy ? (
-            <div className="max-w-3xl space-y-3">
-              <H2 className="text-3xl sm:text-4xl font-black">
+            <div className="max-w-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                Public form
+              </p>
+              <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
                 {presentation.title}
-              </H2>
-              <BodyMD className="text-white/80">{presentation.subtitle}</BodyMD>
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/72 sm:text-base">
+                {presentation.subtitle}
+              </p>
             </div>
           ) : (
-            <div className="h-6 sm:h-8" aria-hidden />
+            <div className="h-8" aria-hidden />
           )}
         </Container>
       </Section>
 
-      <Section padding="none" className="bg-[#0b0b0b]">
-        <Container size="xl">
-          <div className="py-6 sm:py-8 lg:py-12">
-            {loading && (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 text-white/70">
+      <Section padding="none" className="relative overflow-hidden bg-[#050505]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(247,222,18,0.1),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
+
+        <Container size="xl" className="relative z-10">
+          <div className="py-8 sm:py-10 lg:py-14">
+            {loading ? (
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6 text-sm text-white/70 shadow-2xl shadow-black/25">
                 Loading form...
               </div>
-            )}
+            ) : null}
 
-            {!loading && error && (
-              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 sm:p-6 text-red-200">
+            {!loading && error ? (
+              <div className="rounded-[1.5rem] border border-rose-400/25 bg-rose-400/10 p-6 text-sm leading-7 text-rose-100 shadow-2xl shadow-black/25">
                 {error}
               </div>
-            )}
+            ) : null}
 
-            {!loading && form && !submitted && (
+            {!loading && form && !submitted ? (
               <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
-                <aside className="h-fit space-y-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5 xl:sticky xl:top-6">
-                  <div className="space-y-2">
-                    {!showHeroCopy && (
-                      <>
-                        <H3 className="text-2xl font-semibold">{form.title}</H3>
-                        {form.description && (
-                          <BodySM className="text-white/70">
-                            {form.description}
-                          </BodySM>
-                        )}
-                      </>
-                    )}
-                    {presentation.headerNote && (
-                      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-xs sm:text-sm text-white/75">
-                        {presentation.headerNote}
-                      </div>
-                    )}
-                  </div>
-                  <div className="rounded-xl border border-yellow-300/30 bg-yellow-300/10 px-4 py-3">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-yellow-300/90">
-                      Form Overview
+                <aside className="h-fit rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/25 backdrop-blur-xl xl:sticky xl:top-24">
+                  {!showHeroCopy ? (
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                        Public form
+                      </p>
+                      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white">
+                        {form.title}
+                      </h1>
+                      {form.description ? (
+                        <p className="mt-3 text-sm leading-7 text-white/62">
+                          {form.description}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                        Form details
+                      </p>
+                      <h2 className="mt-3 text-xl font-semibold text-white">
+                        Complete your response
+                      </h2>
+                      <p className="mt-2 text-sm leading-6 text-white/58">
+                        Please provide accurate details before submitting.
+                      </p>
+                    </div>
+                  )}
+
+                  {presentation.headerNote ? (
+                    <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-white/68">
+                      {presentation.headerNote}
+                    </div>
+                  ) : null}
+
+                  <div className="mt-5 rounded-2xl border border-[#f7de12]/25 bg-[#f7de12]/10 px-4 py-3">
+                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#f7de12]">
+                      Form overview
                     </p>
-                    <p className="mt-2 text-sm text-white/85">
+                    <p className="mt-2 text-sm leading-6 text-white/78">
                       {visibleFields.length} visible field
-                      {visibleFields.length === 1 ? '' : 's'} in this step.
+                      {visibleFields.length === 1 ? '' : 's'} to complete.
                     </p>
                   </div>
                 </aside>
 
                 <form
                   onSubmit={handleSubmit}
-                  className="space-y-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-6 lg:p-8"
+                  className="rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6 lg:p-8"
                 >
-                  {(presentation.detailItems.length > 0 ||
-                    presentation.sections.length > 0) && (
-                    <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-                      {presentation.detailItems.length > 0 && (
-                        <div className="space-y-3">
-                          {presentation.detailItems.map((item, index) => (
-                            <div
-                              key={`${item}-${index}`}
-                              className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
-                            >
-                              <p className="text-sm font-semibold text-white">
-                                {item}
-                              </p>
-                              {presentation.detailSubtexts[index] && (
-                                <p className="mt-1 text-xs sm:text-sm text-white/70">
-                                  {presentation.detailSubtexts[index]}
+                  {presentation.detailItems.length > 0 ||
+                  presentation.sections.length > 0 ? (
+                    <div className="mb-6 space-y-4 rounded-[1.25rem] border border-white/10 bg-black/25 p-4 sm:p-5">
+                      {presentation.detailItems.length > 0 ? (
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {presentation.detailItems.map(
+                            (item: string, index: number) => (
+                              <div
+                                key={`${item}-${index}`}
+                                className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                              >
+                                <p className="text-sm font-semibold text-white">
+                                  {item}
                                 </p>
-                              )}
-                            </div>
-                          ))}
+                                {presentation.detailSubtexts[index] ? (
+                                  <p className="mt-2 text-sm leading-6 text-white/58">
+                                    {presentation.detailSubtexts[index]}
+                                  </p>
+                                ) : null}
+                              </div>
+                            )
+                          )}
                         </div>
-                      )}
+                      ) : null}
 
-                      {presentation.sections.map(section => (
-                        <div
-                          key={section.id || section.title}
-                          className="space-y-2"
-                        >
-                          <h4 className="text-base font-semibold text-white">
+                      {presentation.sections.map((section: any) => (
+                        <section key={section.id || section.title}>
+                          <h3 className="text-base font-semibold text-white">
                             {section.title}
-                          </h4>
-                          {section.subtitle && (
-                            <p className="text-sm text-white/70">
+                          </h3>
+                          {section.subtitle ? (
+                            <p className="mt-1 text-sm leading-6 text-white/60">
                               {section.subtitle}
                             </p>
-                          )}
+                          ) : null}
+
                           {Array.isArray(section.items) &&
-                            section.items.length > 0 && (
-                              <div className="grid gap-2 sm:grid-cols-2">
-                                {section.items.map((item, index) => (
-                                  <div
-                                    key={`${section.title}-${item.title}-${index}`}
-                                    className="rounded-xl border border-white/10 bg-white/[0.02] p-3"
-                                  >
-                                    {item.eyebrow && (
-                                      <p className="text-[11px] uppercase tracking-[0.14em] text-yellow-300/90">
-                                        {item.eyebrow}
-                                      </p>
-                                    )}
-                                    <p className="mt-1 text-sm font-medium text-white">
-                                      {item.title}
+                          section.items.length > 0 ? (
+                            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                              {section.items.map((item: any, index: number) => (
+                                <div
+                                  key={`${section.title}-${item.title}-${index}`}
+                                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                                >
+                                  {item.eyebrow ? (
+                                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-[#f7de12]">
+                                      {item.eyebrow}
                                     </p>
-                                    {item.body && (
-                                      <p className="mt-1 text-xs sm:text-sm text-white/70">
-                                        {item.body}
-                                      </p>
-                                    )}
-                                    {item.linkText && item.linkUrl && (
-                                      <a
-                                        href={item.linkUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="mt-2 inline-block text-xs sm:text-sm font-semibold text-yellow-300 hover:underline"
-                                      >
-                                        {item.linkText}
-                                      </a>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                        </div>
+                                  ) : null}
+                                  <p className="mt-1 text-sm font-semibold text-white">
+                                    {item.title}
+                                  </p>
+                                  {item.body ? (
+                                    <p className="mt-2 text-sm leading-6 text-white/58">
+                                      {item.body}
+                                    </p>
+                                  ) : null}
+                                  {item.linkText && item.linkUrl ? (
+                                    <a
+                                      href={item.linkUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="mt-3 inline-flex text-sm font-bold text-[#f7de12] hover:underline"
+                                    >
+                                      {item.linkText}
+                                    </a>
+                                  ) : null}
+                                </div>
+                              ))}
+                            </div>
+                          ) : null}
+                        </section>
                       ))}
                     </div>
-                  )}
+                  ) : null}
 
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:gap-5">
-                    {visibleFields.map(field => {
-                      const value = answers[field.key];
-                      const fullWidth =
-                        field.type === 'textarea' ||
-                        field.type === 'radio' ||
-                        field.type === 'checkbox' ||
-                        field.type === 'image';
-
-                      if (field.type === 'textarea') {
-                        const maxWords =
-                          typeof field.validation?.maxWords === 'number'
-                            ? field.validation.maxWords
-                            : /(testimony|prayer[-_\s]*request)/i.test(
-                                  `${field.key} ${field.label}`
-                                )
-                              ? 400
-                              : undefined;
-                        const wordCount =
-                          typeof value === 'string' ? countWords(value) : 0;
-                        return (
-                          <div
-                            key={field.key}
-                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
-                          >
-                            <label className="space-y-2">
-                              <span className={labelClass}>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </span>
-                              <textarea
-                                className={`${fieldBaseClass} min-h-[120px]`}
-                                placeholder={field.placeholder}
-                                value={value || ''}
-                                onChange={e =>
-                                  handleChange(field.key, e.target.value)
-                                }
-                              />
-                              {typeof maxWords === 'number' && (
-                                <p className="text-xs text-white/60">
-                                  {wordCount}/{maxWords} words
-                                </p>
-                              )}
-                              {fieldErrors[field.key] && (
-                                <p className="text-xs text-red-300">
-                                  {fieldErrors[field.key]}
-                                </p>
-                              )}
-                            </label>
-                          </div>
-                        );
-                      }
-
-                      if (field.type === 'select') {
-                        return (
-                          <div
-                            key={field.key}
-                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
-                          >
-                            <label className="space-y-2">
-                              <span className={labelClass}>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </span>
-                              <select
-                                className={fieldSelectClass}
-                                value={value || ''}
-                                onChange={e =>
-                                  handleChange(field.key, e.target.value)
-                                }
-                              >
-                                <option value="" disabled>
-                                  {field.placeholder || 'Select an option'}
-                                </option>
-                                {field.options?.map(option => (
-                                  <option
-                                    key={option.value}
-                                    value={option.value}
-                                    className="bg-slate-900 text-white"
-                                  >
-                                    {option.label}
-                                  </option>
-                                ))}
-                              </select>
-                              {fieldErrors[field.key] && (
-                                <p className="text-xs text-red-300">
-                                  {fieldErrors[field.key]}
-                                </p>
-                              )}
-                            </label>
-                          </div>
-                        );
-                      }
-
-                      if (field.type === 'radio') {
-                        return (
-                          <div
-                            key={field.key}
-                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
-                          >
-                            <fieldset className="space-y-2">
-                              <legend className={labelClass}>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </legend>
-                              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
-                                {field.options?.map(option => (
-                                  <label
-                                    key={option.value}
-                                    className="flex items-center gap-2 text-sm text-white/80"
-                                  >
-                                    <input
-                                      type="radio"
-                                      name={field.key}
-                                      value={option.value}
-                                      checked={value === option.value}
-                                      onChange={e =>
-                                        handleChange(field.key, e.target.value)
-                                      }
-                                      required={field.required}
-                                      className="accent-yellow-400"
-                                    />
-                                    {option.label}
-                                  </label>
-                                ))}
-                              </div>
-                              {fieldErrors[field.key] && (
-                                <p className="text-xs text-red-300">
-                                  {fieldErrors[field.key]}
-                                </p>
-                              )}
-                            </fieldset>
-                          </div>
-                        );
-                      }
-
-                      if (field.type === 'checkbox' && field.options?.length) {
-                        const currentValues = Array.isArray(value) ? value : [];
-                        return (
-                          <div
-                            key={field.key}
-                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
-                          >
-                            <fieldset className="space-y-2">
-                              <legend className={labelClass}>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </legend>
-                              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
-                                {field.options.map(option => (
-                                  <label
-                                    key={option.value}
-                                    className="flex items-center gap-2 text-sm text-white/80"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      checked={currentValues.includes(
-                                        option.value
-                                      )}
-                                      onChange={e =>
-                                        handleCheckboxOption(
-                                          field.key,
-                                          option.value,
-                                          e.target.checked
-                                        )
-                                      }
-                                      className="accent-yellow-400"
-                                    />
-                                    {option.label}
-                                  </label>
-                                ))}
-                              </div>
-                              {fieldErrors[field.key] && (
-                                <p className="text-xs text-red-300">
-                                  {fieldErrors[field.key]}
-                                </p>
-                              )}
-                            </fieldset>
-                          </div>
-                        );
-                      }
-
-                      if (field.type === 'checkbox') {
-                        return (
-                          <div
-                            key={field.key}
-                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
-                          >
-                            <label className="flex items-center gap-2 text-sm text-white/80">
-                              <input
-                                type="checkbox"
-                                checked={Boolean(value)}
-                                onChange={e =>
-                                  handleChange(field.key, e.target.checked)
-                                }
-                                className="accent-yellow-400"
-                              />
-                              <span>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </span>
-                            </label>
-                            {fieldErrors[field.key] && (
-                              <p className="text-xs text-red-300">
-                                {fieldErrors[field.key]}
-                              </p>
-                            )}
-                          </div>
-                        );
-                      }
-
-                      if (field.type === 'image') {
-                        const selectedFile =
-                          value instanceof File ? value : null;
-                        const fileKey = selectedFile
-                          ? `${selectedFile.name}-${selectedFile.lastModified}`
-                          : 'empty';
-                        return (
-                          <div
-                            key={field.key}
-                            className={`${fullWidth ? 'md:col-span-2' : ''} rounded-xl border border-white/10 bg-white/[0.03] p-4`}
-                          >
-                            <label className="space-y-2">
-                              <span className={labelClass}>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </span>
-                              <input
-                                key={fileKey}
-                                type="file"
-                                accept={ACCEPTED_IMAGE_TYPES.join(',')}
-                                className={fieldBaseClass}
-                                onChange={e =>
-                                  handleChange(
-                                    field.key,
-                                    e.target.files?.[0] || null
-                                  )
-                                }
-                              />
-                              <p className="text-xs text-white/60">
-                                JPEG, PNG, or WebP. Max 5MB.
-                              </p>
-                              {selectedFile && (
-                                <p className="text-xs text-white/70">
-                                  Selected: {selectedFile.name}
-                                </p>
-                              )}
-                              {fieldErrors[field.key] && (
-                                <p className="text-xs text-red-300">
-                                  {fieldErrors[field.key]}
-                                </p>
-                              )}
-                            </label>
-                          </div>
-                        );
-                      }
-
-                      if (isPhoneLikeField(field)) {
-                        const parsed = splitE164(
-                          typeof value === 'string' ? value : ''
-                        );
-                        const currentDial =
-                          parsed?.dial ?? COUNTRY_PHONE_CODES[0].dial;
-                        const currentNational = parsed?.national ?? '';
-                        return (
-                          <div
-                            key={field.key}
-                            className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
-                          >
-                            <label className="space-y-2">
-                              <span className={labelClass}>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </span>
-                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-[170px_1fr]">
-                                <select
-                                  className={fieldSelectClass}
-                                  value={currentDial}
-                                  onChange={e => {
-                                    const nextDial = e.target.value;
-                                    handleChange(
-                                      field.key,
-                                      `${nextDial}${onlyDigits(currentNational)}`
-                                    );
-                                  }}
-                                >
-                                  {COUNTRY_PHONE_CODES.map(country => (
-                                    <option
-                                      key={country.iso}
-                                      value={country.dial}
-                                    >
-                                      {country.name} ({country.dial})
-                                    </option>
-                                  ))}
-                                </select>
-                                <input
-                                  type="tel"
-                                  className={fieldBaseClass}
-                                  placeholder="Phone number"
-                                  value={currentNational}
-                                  onChange={e => {
-                                    const national = onlyDigits(e.target.value);
-                                    handleChange(
-                                      field.key,
-                                      `${currentDial}${national}`
-                                    );
-                                  }}
-                                />
-                              </div>
-                              <p className="text-xs text-white/60">
-                                Stored as international format, e.g.
-                                +2348012345678
-                              </p>
-                              {fieldErrors[field.key] && (
-                                <p className="text-xs text-red-300">
-                                  {fieldErrors[field.key]}
-                                </p>
-                              )}
-                            </label>
-                          </div>
-                        );
-                      }
-
-                      if (field.type === 'date') {
-                        const parsed = parseDDMMPartial(
-                          typeof value === 'string' ? value : ''
-                        );
-                        const selectedMonth =
-                          parsed?.month && parsed.month !== '00'
-                            ? parsed.month
-                            : '';
-                        const selectedDay =
-                          parsed?.day && parsed.day !== '00' ? parsed.day : '';
-                        const monthNumber = Number(selectedMonth || '0');
-                        const maxDay =
-                          monthNumber >= 1 && monthNumber <= 12
-                            ? daysInMonth(monthNumber)
-                            : 31;
-                        const dayOptions = Array.from(
-                          { length: maxDay },
-                          (_, index) => String(index + 1).padStart(2, '0')
-                        );
-
-                        return (
-                          <div
-                            key={field.key}
-                            className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
-                          >
-                            <label className="space-y-2">
-                              <span className={labelClass}>
-                                {field.label}
-                                {field.required && (
-                                  <span className="text-yellow-300"> *</span>
-                                )}
-                              </span>
-                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                                <select
-                                  className={fieldSelectClass}
-                                  value={selectedDay}
-                                  disabled={!selectedMonth}
-                                  onChange={e => {
-                                    const nextDay = e.target.value;
-                                    handleChange(
-                                      field.key,
-                                      toDDMM(nextDay, selectedMonth)
-                                    );
-                                  }}
-                                >
-                                  <option value="" disabled>
-                                    Select day
-                                  </option>
-                                  {dayOptions.map(day => (
-                                    <option key={day} value={day}>
-                                      {day}
-                                    </option>
-                                  ))}
-                                </select>
-                                <select
-                                  className={fieldSelectClass}
-                                  value={selectedMonth}
-                                  onChange={e => {
-                                    const nextMonth = e.target.value;
-                                    const nextMax = daysInMonth(
-                                      Number(nextMonth || '1')
-                                    );
-                                    let nextDay = selectedDay;
-                                    if (nextDay && Number(nextDay) > nextMax) {
-                                      nextDay = String(nextMax).padStart(
-                                        2,
-                                        '0'
-                                      );
-                                    }
-                                    handleChange(
-                                      field.key,
-                                      toDDMM(nextDay, nextMonth)
-                                    );
-                                  }}
-                                >
-                                  <option value="" disabled>
-                                    Select month
-                                  </option>
-                                  {MONTH_OPTIONS.map(month => (
-                                    <option
-                                      key={month.value}
-                                      value={month.value}
-                                    >
-                                      {month.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              <p className="text-xs text-white/60">
-                                Format: DD-MM (year removed)
-                              </p>
-                              {fieldErrors[field.key] && (
-                                <p className="text-xs text-red-300">
-                                  {fieldErrors[field.key]}
-                                </p>
-                              )}
-                            </label>
-                          </div>
-                        );
-                      }
-
-                      const inputType =
-                        field.type === 'number' ? 'number' : field.type;
-
-                      return (
-                        <div
-                          key={field.key}
-                          className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
-                        >
-                          <label className="space-y-2">
-                            <span className={labelClass}>
-                              {field.label}
-                              {field.required && (
-                                <span className="text-yellow-300"> *</span>
-                              )}
-                            </span>
-                            <input
-                              type={inputType}
-                              className={fieldBaseClass}
-                              placeholder={field.placeholder}
-                              value={value || ''}
-                              onChange={e =>
-                                handleChange(field.key, e.target.value)
-                              }
-                            />
-                            {fieldErrors[field.key] && (
-                              <p className="text-xs text-red-300">
-                                {fieldErrors[field.key]}
-                              </p>
-                            )}
-                          </label>
-                        </div>
-                      );
-                    })}
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {visibleFields.map(renderField)}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  {error ? (
+                    <div className="mt-6 rounded-2xl border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm leading-6 text-rose-100">
+                      {error}
+                    </div>
+                  ) : null}
+
+                  <div className="mt-7 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] disabled:opacity-60"
+                      className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-7 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                     >
                       {submitting ? 'Submitting...' : 'Submit form'}
                     </button>
-                    <p className="text-xs text-white/60 sm:text-sm">
+
+                    <p className="text-sm leading-6 text-white/50">
                       We will follow up using the details you provide.
                     </p>
                   </div>
                 </form>
               </div>
-            )}
+            ) : null}
 
-            {!loading && submitted && (
-              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-6">
-                <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-emerald-400/40 bg-[#0f1e14] p-6 text-emerald-100 shadow-2xl">
-                  <p className="text-lg font-semibold">
-                    {presentation.successTitle}
-                  </p>
-                  {presentation.successSubtitle && (
-                    <p className="mt-1 text-sm text-emerald-200/90">
-                      {presentation.successSubtitle}
+            {!loading && submitted ? (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-6 backdrop-blur-sm">
+                <div className="w-full max-w-lg overflow-hidden rounded-[1.5rem] border border-emerald-400/25 bg-[#07140d] shadow-2xl shadow-black/50">
+                  <div className="border-b border-emerald-400/15 px-6 py-5">
+                    <p className="text-xl font-semibold text-emerald-100">
+                      {presentation.successTitle}
                     </p>
-                  )}
-                  <p className="mt-2 text-sm text-emerald-100/90">
-                    {presentation.successMessage}
-                  </p>
-                  <p className="mt-4 text-sm text-emerald-200/90">
-                    You can now return to the homepage.
-                  </p>
-                  <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                    <button
-                      type="button"
-                      onClick={() => router.push(returnPath)}
-                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
-                    >
-                      {returnLabel}
-                    </button>
-                    <Link
-                      href={returnPath}
-                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-emerald-200/40 px-6 py-3 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-100/10"
-                    >
-                      {returnPath}
-                    </Link>
+                    {presentation.successSubtitle ? (
+                      <p className="mt-1 text-sm leading-6 text-emerald-100/70">
+                        {presentation.successSubtitle}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="px-6 py-5">
+                    <p className="text-sm leading-7 text-emerald-100/82">
+                      {presentation.successMessage}
+                    </p>
+                    <p className="mt-4 text-sm leading-6 text-emerald-100/65">
+                      You can now return to the previous page.
+                    </p>
+
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={() => router.push(returnPath)}
+                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black transition hover:bg-[#ffe93d] sm:w-auto"
+                      >
+                        {returnLabel}
+                      </button>
+
+                      <Link
+                        href={returnPath}
+                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-emerald-100/20 px-6 text-sm font-bold text-emerald-100 transition hover:bg-emerald-100/10 sm:w-auto"
+                      >
+                        {returnPath}
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </Container>
       </Section>
-    </div>
+    </main>
   );
 }

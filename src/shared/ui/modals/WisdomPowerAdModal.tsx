@@ -23,7 +23,7 @@ export default function WisdomPowerAdModal({
   onClose,
 }: WisdomPowerAdModalProps) {
   const handleSubmit = useCallback(async () => {
-    await new Promise(resolve => setTimeout(resolve, 900));
+    await new Promise(resolve => window.setTimeout(resolve, 700));
   }, []);
 
   return (

@@ -5,8 +5,6 @@ import Image, { type StaticImageData } from 'next/image';
 import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import { Button } from '@/shared/utils/buttons';
-import { BodySM, BodyMD } from '@/shared/text';
 
 type EventAdConfig = {
   id: string;
@@ -125,15 +123,18 @@ export default function EventAdModal({
       title={safeEvent.title}
       maxWidth="max-w-4xl"
     >
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="space-y-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:space-y-0">
+        {/* Left Column */}
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-white/70">
-            <Sparkles className="h-3.5 w-3.5" style={{ color: primary }} />
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#f7de12]/20 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#f7de12]">
+            <Sparkles className="h-3.5 w-3.5" />
             Conference Registration
           </div>
 
+          {/* Event Image */}
           {safeEvent.image && (
-            <div className="relative h-40 overflow-hidden rounded-2xl border border-white/10 sm:h-52">
+            <div className="relative h-44 overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.04] sm:h-52">
               <Image
                 src={safeEvent.image}
                 alt={safeEvent.title}
@@ -142,72 +143,88 @@ export default function EventAdModal({
                 sizes="(max-width: 1024px) 100vw, 620px"
                 priority
               />
+              {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
             </div>
           )}
 
-          <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-            <BodySM className="leading-relaxed text-white/75">
+          {/* Description & Details Card */}
+          <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
+            <p className="text-sm italic leading-7 text-white/78">
               {safeEvent.description}
-            </BodySM>
+            </p>
 
-            <div className="flex flex-wrap gap-3 text-sm text-white/70">
+            {/* Meta information */}
+            <div className="flex flex-wrap gap-4">
               {dateRange && (
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" style={{ color: primary }} />
-                  <span>{dateRange}</span>
+                <div className="flex items-center gap-3">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                    <Calendar className="h-4 w-4" />
+                  </div>
+                  <span className="text-sm font-medium text-white/80">
+                    {dateRange}
+                  </span>
                 </div>
               )}
 
               {safeEvent.time && (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" style={{ color: primary }} />
-                  <span>{safeEvent.time}</span>
+                <div className="flex items-center gap-3">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                    <Clock className="h-4 w-4" />
+                  </div>
+                  <span className="text-sm font-medium text-white/80">
+                    {safeEvent.time}
+                  </span>
                 </div>
               )}
 
               {safeEvent.location && (
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" style={{ color: primary }} />
-                  <span>{safeEvent.location}</span>
+                <div className="flex items-center gap-3">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                    <MapPin className="h-4 w-4" />
+                  </div>
+                  <span className="text-sm font-medium text-white/80">
+                    {safeEvent.location}
+                  </span>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        <div className="space-y-4 rounded-2xl border border-white/10 bg-[#0b0b0b] p-5 sm:p-6">
+        {/* Right Column (Registration) */}
+        <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
           <div className="space-y-2">
-            <BodyMD className="font-semibold text-white">
+            <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/45">
+              Secure Your Spot
+            </p>
+            <h3 className="text-xl font-semibold tracking-tight text-white">
               {safeEvent.headline}
-            </BodyMD>
-            <BodySM className="text-white/70">
+            </h3>
+            <p className="text-sm leading-7 text-white/78">
               If you have not registered for WPC 2026, secure your seat now.
-            </BodySM>
+            </p>
           </div>
 
-          <Button
+          {/* CTA Button */}
+          <button
             type="button"
-            variant="primary"
-            size="lg"
-            curvature="lg"
             onClick={handleRegister}
-            className="w-full"
-            style={{
-              background: `linear-gradient(135deg, ${primary}, ${primaryDark})`,
-              color: '#FFFFFF',
-            }}
+            disabled={!registerUrl}
+            className="w-full rounded-2xl py-3.5 text-lg font-bold text-black shadow-lg shadow-[#f7de12]/20 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            style={{ backgroundColor: primary }}
           >
             {safeEvent.ctaLabel}
-          </Button>
+          </button>
 
-          <div className="flex items-center justify-between text-[11px] text-white/50">
+          {/* Note & Remind Later */}
+          <div className="flex items-center justify-between text-xs text-white/40">
             <span>{safeEvent.note}</span>
             {onRemindLater && (
               <button
                 type="button"
                 onClick={onRemindLater}
-                className="text-white/60 underline-offset-4 hover:text-white hover:underline"
+                className="underline-offset-4 hover:text-white hover:underline"
               >
                 Remind me later
               </button>

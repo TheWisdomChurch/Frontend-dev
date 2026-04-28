@@ -1,36 +1,22 @@
-// components/text/baseText.tsx
 'use client';
 
 import React, { forwardRef } from 'react';
+import { cn } from '@/lib/cn';
 import { useTheme } from '../contexts/ThemeContext';
-import { bricolageGrotesque, worksans, playfair } from '../fonts/fonts';
+import { bricolageGrotesque, playfair, worksans } from '../fonts/fonts';
 
-// ADD "black" to FontWeight type
-type FontWeight =
+export type FontWeight =
   | 'light'
   | 'regular'
   | 'medium'
   | 'semibold'
   | 'bold'
   | 'extrabold'
-  | 'black'; // ← ADD THIS LINE
+  | 'black';
 
-type FontSize =
-  | 'xs'
-  | 'sm'
-  | 'base'
-  | 'lg'
-  | 'xl'
-  | '2xl'
-  | '3xl'
-  | '4xl'
-  | '5xl'
-  | '6xl'
-  | '7xl'
-  | '8xl'
-  | '9xl';
+export type FontFamily = 'bricolage' | 'worksans' | 'playfair';
 
-type TextVariant =
+export type TextVariant =
   | 'hero'
   | 'h1'
   | 'h2'
@@ -42,65 +28,36 @@ type TextVariant =
   | 'body-lg'
   | 'body-md'
   | 'body-sm'
-  | 'body-responsive'
   | 'body-xs'
   | 'caption'
+  | 'eyebrow'
   | 'elegant-xl'
   | 'elegant-lg'
   | 'elegant-md';
 
 export interface BaseTextProps {
   children: React.ReactNode;
-  weight?: FontWeight;
-  // Responsive weight props
-  smWeight?: FontWeight;
-  mdWeight?: FontWeight;
-  lgWeight?: FontWeight;
-  xlWeight?: FontWeight;
-  color?: string;
-  margin?: string;
-  lineHeight?: string;
-  textDecoration?: 'none' | 'underline' | 'line-through';
-  fontSize?: FontSize;
-  xsFontSize?: FontSize;
-  smFontSize?: FontSize;
-  mdFontSize?: FontSize;
-  lgFontSize?: FontSize;
-  xlFontSize?: FontSize;
-  className?: string;
-  fontFamily?: 'bricolage' | 'worksans' | 'playfair';
   as?: React.ElementType;
-  useThemeColor?: boolean;
-  style?: React.CSSProperties;
   variant?: TextVariant;
+  weight?: FontWeight;
+  fontFamily?: FontFamily;
+  color?: string;
+  useThemeColor?: boolean;
+  textDecoration?: 'none' | 'underline' | 'line-through';
+  align?: 'left' | 'center' | 'right';
+  className?: string;
+  style?: React.CSSProperties;
   onMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-const fontFamilyMap: Record<string, string> = {
+const fontFamilyClassMap: Record<FontFamily, string> = {
   bricolage: bricolageGrotesque.className,
   worksans: worksans.className,
   playfair: playfair.className,
 };
 
-const fontSizeMap: Record<FontSize, string> = {
-  xs: 'text-xs',
-  sm: 'text-sm',
-  base: 'text-base',
-  lg: 'text-lg',
-  xl: 'text-xl',
-  '2xl': 'text-2xl',
-  '3xl': 'text-3xl',
-  '4xl': 'text-4xl',
-  '5xl': 'text-5xl',
-  '6xl': 'text-6xl',
-  '7xl': 'text-7xl',
-  '8xl': 'text-8xl',
-  '9xl': 'text-9xl',
-};
-
-// ADD "black" to weightClassMap
 const weightClassMap: Record<FontWeight, string> = {
   light: 'font-light',
   regular: 'font-normal',
@@ -108,244 +65,105 @@ const weightClassMap: Record<FontWeight, string> = {
   semibold: 'font-semibold',
   bold: 'font-bold',
   extrabold: 'font-extrabold',
-  black: 'font-black', // ← ADD THIS LINE
+  black: 'font-black',
 };
 
-// Professional variant system with responsive scaling
-const variantMap: Record<
-  TextVariant,
-  {
-    fontSize: {
-      base: FontSize;
-      sm?: FontSize;
-      md?: FontSize;
-      lg?: FontSize;
-      xl?: FontSize;
-    };
-    weight: {
-      base: FontWeight;
-      sm?: FontWeight;
-      md?: FontWeight;
-      lg?: FontWeight;
-      xl?: FontWeight;
-    };
-    fontFamily: string;
-    lineHeight?: string;
-  }
-> = {
-  // Hero - Largest, most prominent text
-  hero: {
-    fontSize: { base: '2xl', sm: '3xl', md: '4xl', lg: '5xl' },
-    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.2',
-  },
-  // Headings with progressive scaling
-  h1: {
-    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
-    weight: {
-      base: 'semibold',
-      sm: 'semibold',
-      md: 'semibold',
-      lg: 'semibold',
-    },
-    fontFamily: 'bricolage',
-    lineHeight: '1.25',
-  },
-  h2: {
-    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
-    weight: { base: 'medium', sm: 'semibold', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.35',
-  },
-  h3: {
-    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
-    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.4',
-  },
-  h4: {
-    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
-    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.45',
-  },
-  h5: {
-    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'xl' },
-    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.5',
-  },
-  h6: {
-    fontSize: { base: 'xs', sm: 'sm', md: 'base', lg: 'lg' },
-    weight: { base: 'medium', sm: 'medium', md: 'semibold', lg: 'semibold' },
-    fontFamily: 'bricolage',
-    lineHeight: '1.5',
-  },
-  // Body text - consistent readability
-  'body-xl': {
-    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: 'xl' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.55',
-  },
-  'body-lg': {
-    fontSize: { base: 'sm', sm: 'base', md: 'lg', lg: 'lg' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.55',
-  },
-  'body-md': {
-    fontSize: { base: 'xs', sm: 'sm', md: 'base', lg: 'base' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.55',
-  },
-  'body-sm': {
-    fontSize: { base: 'xs', sm: 'xs', md: 'sm', lg: 'sm' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.5',
-  },
-  'body-responsive': {
-    fontSize: { base: 'xs', sm: 'sm', md: 'base', lg: 'base' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.55',
-  },
-  'body-xs': {
-    fontSize: { base: 'xs', sm: 'xs', md: 'xs', lg: 'xs' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.4',
-  },
-  caption: {
-    fontSize: { base: 'xs', sm: 'xs', md: 'xs', lg: 'xs' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'worksans',
-    lineHeight: '1.4',
-  },
-  // Elegant text variants
-  'elegant-xl': {
-    fontSize: { base: 'xl', sm: '2xl', md: '3xl', lg: '4xl' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'playfair',
-    lineHeight: '1.4',
-  },
-  'elegant-lg': {
-    fontSize: { base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'playfair',
-    lineHeight: '1.4',
-  },
-  'elegant-md': {
-    fontSize: { base: 'base', sm: 'lg', md: 'xl', lg: '2xl' },
-    weight: { base: 'regular', sm: 'regular', md: 'regular', lg: 'regular' },
-    fontFamily: 'playfair',
-    lineHeight: '1.5',
-  },
+const alignClassMap = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
+
+const variantClassMap: Record<TextVariant, string> = {
+  hero: 'text-[2.15rem] leading-[1.04] tracking-[-0.045em] sm:text-5xl lg:text-6xl xl:text-[4rem] font-semibold text-balance',
+  h1: 'text-3xl leading-[1.08] tracking-[-0.04em] sm:text-4xl lg:text-5xl font-semibold text-balance',
+  h2: 'text-2xl leading-[1.12] tracking-[-0.035em] sm:text-3xl lg:text-4xl font-semibold text-balance',
+  h3: 'text-xl leading-[1.2] tracking-[-0.025em] sm:text-2xl lg:text-3xl font-semibold text-balance',
+  h4: 'text-lg leading-[1.25] tracking-[-0.02em] sm:text-xl lg:text-2xl font-semibold text-balance',
+  h5: 'text-base leading-[1.3] tracking-[-0.015em] sm:text-lg lg:text-xl font-semibold',
+  h6: 'text-sm leading-[1.35] tracking-[-0.01em] sm:text-base lg:text-lg font-semibold',
+
+  'body-xl':
+    'text-base leading-7 sm:text-lg sm:leading-8 lg:text-xl lg:leading-9 font-normal text-pretty',
+  'body-lg':
+    'text-[0.98rem] leading-7 sm:text-base sm:leading-7 lg:text-lg lg:leading-8 font-normal text-pretty',
+  'body-md':
+    'text-sm leading-6 sm:text-[0.95rem] sm:leading-7 lg:text-base lg:leading-7 font-normal text-pretty',
+  'body-sm':
+    'text-[0.82rem] leading-6 sm:text-sm sm:leading-6 font-normal text-pretty',
+  'body-xs': 'text-xs leading-5 sm:text-[0.8rem] sm:leading-5 font-normal',
+
+  caption: 'text-xs leading-5 font-medium tracking-[0.02em]',
+  eyebrow:
+    'text-[0.68rem] leading-5 font-bold uppercase tracking-[0.22em] sm:text-xs',
+
+  'elegant-xl':
+    'text-2xl leading-snug sm:text-3xl lg:text-4xl font-normal text-balance',
+  'elegant-lg':
+    'text-xl leading-snug sm:text-2xl lg:text-3xl font-normal text-balance',
+  'elegant-md':
+    'text-lg leading-snug sm:text-xl lg:text-2xl font-normal text-balance',
+};
+
+const variantFontFamilyMap: Record<TextVariant, FontFamily> = {
+  hero: 'bricolage',
+  h1: 'bricolage',
+  h2: 'bricolage',
+  h3: 'bricolage',
+  h4: 'bricolage',
+  h5: 'bricolage',
+  h6: 'bricolage',
+  'body-xl': 'worksans',
+  'body-lg': 'worksans',
+  'body-md': 'worksans',
+  'body-sm': 'worksans',
+  'body-xs': 'worksans',
+  caption: 'worksans',
+  eyebrow: 'worksans',
+  'elegant-xl': 'playfair',
+  'elegant-lg': 'playfair',
+  'elegant-md': 'playfair',
 };
 
 export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
   (
     {
       children,
-      color,
-      margin,
-      lineHeight,
-      textDecoration = 'none',
-      fontSize = 'base',
-      className = '',
-      fontFamily,
       as: Component = 'p',
-      useThemeColor = false,
-      style,
-      variant,
+      variant = 'body-md',
       weight,
-      smWeight,
-      mdWeight,
-      lgWeight,
-      xlWeight,
+      fontFamily,
+      color,
+      useThemeColor = false,
+      textDecoration = 'none',
+      align,
+      className,
+      style,
       ...props
     },
     ref
   ) => {
     const { colorScheme } = useTheme();
 
-    const variantSettings = variant ? variantMap[variant] : null;
-
-    // Get text color - use theme color if useThemeColor is true and no explicit color is provided
+    const resolvedFontFamily = fontFamily || variantFontFamilyMap[variant];
     const textColor = useThemeColor && !color ? colorScheme.text : color;
-
-    // Build responsive classes
-    const buildResponsiveClasses = () => {
-      const classes: string[] = [];
-
-      if (variantSettings) {
-        // Variant-based responsive sizing
-        const { fontSize: variantFontSize, weight: variantWeight } =
-          variantSettings;
-
-        // Base size and weight
-        classes.push(fontSizeMap[variantFontSize.base]);
-        classes.push(weightClassMap[variantWeight.base]);
-
-        // Responsive sizes
-        if (variantFontSize.sm)
-          classes.push(`sm:${fontSizeMap[variantFontSize.sm]}`);
-        if (variantFontSize.md)
-          classes.push(`md:${fontSizeMap[variantFontSize.md]}`);
-        if (variantFontSize.lg)
-          classes.push(`lg:${fontSizeMap[variantFontSize.lg]}`);
-        if (variantFontSize.xl)
-          classes.push(`xl:${fontSizeMap[variantFontSize.xl]}`);
-
-        // Responsive weights
-        if (variantWeight.sm)
-          classes.push(`sm:${weightClassMap[variantWeight.sm]}`);
-        if (variantWeight.md)
-          classes.push(`md:${weightClassMap[variantWeight.md]}`);
-        if (variantWeight.lg)
-          classes.push(`lg:${weightClassMap[variantWeight.lg]}`);
-        if (variantWeight.xl)
-          classes.push(`xl:${weightClassMap[variantWeight.xl]}`);
-      } else {
-        // Manual sizing and weights
-        classes.push(fontSizeMap[fontSize]);
-        if (weight) {
-          classes.push(weightClassMap[weight]);
-        }
-
-        // Responsive weights
-        if (smWeight) classes.push(`sm:${weightClassMap[smWeight]}`);
-        if (mdWeight) classes.push(`md:${weightClassMap[mdWeight]}`);
-        if (lgWeight) classes.push(`lg:${weightClassMap[lgWeight]}`);
-        if (xlWeight) classes.push(`xl:${weightClassMap[xlWeight]}`);
-      }
-
-      return classes.join(' ');
-    };
-
-    const finalFontFamily =
-      variantSettings?.fontFamily || fontFamily || 'worksans';
-    const resolvedFontFamily =
-      fontFamilyMap[finalFontFamily] || bricolageGrotesque.className;
-    const responsiveClasses = buildResponsiveClasses();
-    const finalLineHeight = lineHeight || variantSettings?.lineHeight;
-
-    const styles: React.CSSProperties = {
-      margin,
-      lineHeight: finalLineHeight,
-      textDecoration,
-      ...(textColor && { color: textColor }),
-      ...style,
-    };
 
     return (
       <Component
         ref={ref}
-        style={styles}
-        className={`${resolvedFontFamily} ${responsiveClasses} ${className}`}
+        className={cn(
+          'min-w-0 antialiased',
+          fontFamilyClassMap[resolvedFontFamily],
+          variantClassMap[variant],
+          weight && weightClassMap[weight],
+          align && alignClassMap[align],
+          className
+        )}
+        style={{
+          textDecoration,
+          ...(textColor ? { color: textColor } : {}),
+          ...style,
+        }}
         {...props}
       >
         {children}

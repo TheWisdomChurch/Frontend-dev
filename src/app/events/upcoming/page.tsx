@@ -1,78 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import HeroSection from '@/features/hero/PageHero';
-import {
-  H2,
-  H3,
-  BaseText,
-  LightText,
-  BodyMD,
-  SemiBoldText,
-} from '@/shared/text';
-import { hero_bg_2, NL } from '@/shared/assets';
+import Image from 'next/image';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+  CalendarClock,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  MapPin,
+} from 'lucide-react';
+
+import HeroSection from '@/features/hero/PageHero';
+import { hero_bg_2, NL } from '@/shared/assets';
 import { useUpcomingEvents } from '@/shared/utils/hooks/UpcomingHooks';
 
-import { ReminderModal } from '@/shared/ui/modals/reminderModal';
-
-import Image from 'next/image';
-
-// Import your images - you'll need to add these to your assets
-// import conferenceVideo from '@/shared/assets/videos/conference-bg.mp4';
-// import liftingImage from '@/shared/assets/images/lifting-event.jpg';
-
-const Upcoming = () => {
+export default function Upcoming() {
   const {
-    // State
     currentDate,
     view,
-    selectedEvent,
-    isModalOpen,
-    dateEvents,
-    isDateModalOpen,
-    isConferenceModalOpen,
-    isLiftingModalOpen,
-    isReminderModalOpen,
-    reminderEventType,
-    formData,
-    reminderFormData,
-    formErrors,
-    reminderFormErrors,
-    isSubmitting,
-    isSettingReminder,
-
-    // Refs
     calendarRef,
     eventsRef,
     conferenceRef,
     newsletterRef,
-
-    // Data
     months,
     years,
-    location,
     calendarGrid,
     currentMonthEvents,
-
-    // Handlers
     setView,
-    handleInputChange,
-    handleReminderInputChange,
-    handleSubmit,
-    handleReminderSubmit,
     handleEventClick,
     handleDateClick,
     openConferenceModal,
-    closeConferenceModal,
     openLiftingModal,
-    closeLiftingModal,
     openReminderModal,
-    closeReminderModal,
-    closeModal,
-    closeDateModal,
-    scrollToEvents,
     navigateMonth,
     navigateYear,
     selectMonth,
@@ -80,18 +40,12 @@ const Upcoming = () => {
   } = useUpcomingEvents();
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
-      {/* Toast Container */}
+    <main className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <ToastContainer
         position="top-right"
         autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
         pauseOnHover
+        draggable
         theme="dark"
         className="mt-16"
       />
@@ -102,460 +56,76 @@ const Upcoming = () => {
         description="Stay connected with all the activities, studies, and gatherings happening throughout the week. There's always something going on!"
         backgroundImage={hero_bg_2.src}
         showButtons={false}
-        showScrollIndicator={true}
+        showScrollIndicator
       />
 
-      {/* Happening This Month Section - Updated with Image */}
-      {/* Happening This Month Section - Updated with Image */}
-      {/* Happening This Month Section - Updated with Image */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-[#070707] to-[#0b0b0b] relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute top-0 left-0 w-48 h-48 md:w-72 md:h-72 bg-amber-500/20 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-20"></div>
-        <div className="absolute bottom-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-sky-500/15 rounded-full translate-x-1/3 translate-y-1/3 opacity-20"></div>
+      <section className="relative overflow-hidden bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(247,222,18,0.13),transparent_28%),radial-gradient(circle_at_90%_16%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="max-w-6xl mx-auto">
-            {/* Bold Header */}
-            <div className="text-center mb-12 md:mb-16 fade-up">
-              <BaseText
-                fontFamily="bricolage"
-                weight="black"
-                className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white mb-4 md:mb-6 tracking-tight"
-              >
-                UPCOMING <span className="text-yellow-500">EVENTS</span>
-              </BaseText>
-              <div className="w-20 h-1 md:w-24 md:h-2 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mb-4 md:mb-6 rounded-full"></div>
-              <BodyMD className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed">
-                Discover transformative experiences and spiritual gatherings
-                designed to uplift and inspire your journey
-              </BodyMD>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-              {/* Image Column - Fixed container size */}
-              <div className="flex justify-center lg:justify-start">
-                <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl lg:shadow-2xl transform hover:scale-105 transition-transform duration-500">
-                  <div className="relative w-full h-64 sm:h-72 md:h-80 lg:h-96">
-                    <Image
-                      src={NL}
-                      alt="7 Nights of Lifting - Transformative Nights of Worship"
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 40vw"
-                      priority
-                    />
-                    {/* Optional: Add a subtle border or background if needed */}
-                    <div className="absolute inset-0 border-2 border-white/10 rounded-2xl lg:rounded-3xl pointer-events-none"></div>
-                  </div>
-
-                  {/* Text below the image instead of overlay */}
-                  <div className="bg-black/50 p-4 md:p-6 text-center">
-                    <SemiBoldText className="text-xl md:text-2xl lg:text-3xl text-white mb-2">
-                      7 Nights of Lifting
-                    </SemiBoldText>
-                    <BodyMD className="text-white/70 text-sm md:text-base">
-                      Transformative Nights of Worship & Prayer
-                    </BodyMD>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content Column */}
-              <div className="space-y-6 md:space-y-8">
-                <H2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                  7 Nights of <span className="text-yellow-500">Lifting</span>
-                </H2>
-                <div className="space-y-4">
-                  <BodyMD className="text-base md:text-lg lg:text-xl text-white/70 leading-relaxed">
-                    Join us for seven powerful nights of worship, prayer, and
-                    spiritual elevation. Each night features special guests,
-                    anointed worship, and life-changing messages that will lift
-                    your spirit and strengthen your faith.
-                  </BodyMD>
-                  <BodyMD className="text-base md:text-lg lg:text-xl text-white/70 leading-relaxed">
-                    Don't miss this transformative experience where we come
-                    together as a community to seek God's presence and power in
-                    our lives.
-                  </BodyMD>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
-                  <button
-                    onClick={openLiftingModal}
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:shadow-xl lg:hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg"
-                  >
-                    Register to Attend
-                  </button>
-                  <button
-                    onClick={() => openReminderModal('lifting')}
-                    className="border-2 border-white/15 text-white/70 px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-xl md:rounded-2xl font-semibold text-sm sm:text-base md:text-lg hover:bg-white/10 hover:border-white/30 transition-all duration-300"
-                  >
-                    Remind Me Later
-                  </button>
-                </div>
-              </div>
-            </div>
+        <div className="relative mx-auto max-w-6xl">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              Featured program
+            </p>
+            <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+              Upcoming Events
+            </h1>
+            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+              Discover transformative experiences and spiritual gatherings
+              designed to uplift and inspire your journey.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* Professional Calendar Section - Made More Compact */}
-      <section
-        ref={calendarRef}
-        className="py-12 md:py-16 bg-black/50 text-white"
-      >
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <H2 className="mb-4 md:mb-6 text-3xl md:text-4xl lg:text-5xl font-black">
-                Event <span className="text-yellow-400">Calendar</span>
-              </H2>
-              <BodyMD className="text-base sm:text-lg md:text-xl text-white/70 mb-6 md:mb-8 max-w-2xl mx-auto">
-                Browse through our interactive calendar to stay updated with all
-                upcoming events and gatherings
-              </BodyMD>
-
-              {/* Calendar Controls */}
-              <div className="flex flex-col sm:flex-row items-center justify-between mb-6 bg-white/5 rounded-xl md:rounded-2xl shadow-xl p-4 md:p-6 gap-4">
-                <div className="flex items-center gap-2 md:gap-4">
-                  <button
-                    onClick={() => navigateYear('prev')}
-                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
-                  >
-                    <span className="text-xl md:text-2xl">‹‹</span>
-                  </button>
-                  <button
-                    onClick={() => navigateMonth('prev')}
-                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
-                  >
-                    <span className="text-xl md:text-2xl">‹</span>
-                  </button>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-6">
-                  <button
-                    onClick={() => setView(view === 'month' ? 'year' : 'month')}
-                    className="bg-yellow-400 text-white px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-yellow-500 transition-all duration-300 hover:scale-105 shadow-lg text-sm md:text-base"
-                  >
-                    {view === 'month' ? 'Month View' : 'Year View'}
-                  </button>
-                  <BaseText
-                    fontFamily="bricolage"
-                    weight="black"
-                    className="text-2xl md:text-3xl text-white text-center"
-                  >
-                    {view === 'month'
-                      ? `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`
-                      : currentDate.getFullYear()}
-                  </BaseText>
-                </div>
-
-                <div className="flex items-center gap-2 md:gap-4">
-                  <button
-                    onClick={() => navigateMonth('next')}
-                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
-                  >
-                    <span className="text-xl md:text-2xl">›</span>
-                  </button>
-                  <button
-                    onClick={() => navigateYear('next')}
-                    className="p-2 md:p-3 hover:bg-white/10 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110"
-                  >
-                    <span className="text-xl md:text-2xl">››</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Year Selector */}
-              <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-6">
-                {years.map(year => (
-                  <button
-                    key={year}
-                    onClick={() => selectYear(year)}
-                    className={`px-3 md:px-4 lg:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold transition-all duration-300 text-sm md:text-base ${
-                      currentDate.getFullYear() === year
-                        ? 'bg-yellow-400 text-white shadow-lg scale-105'
-                        : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:scale-105'
-                    }`}
-                  >
-                    {year}
-                  </button>
-                ))}
+          <div className="grid gap-8 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:p-8">
+            <div className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/30">
+              <div className="relative h-72 sm:h-80 lg:h-[420px]">
+                <Image
+                  src={NL}
+                  alt="7 Nights of Lifting - Transformative Nights of Worship"
+                  fill
+                  priority
+                  className="object-contain p-3"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                />
               </div>
             </div>
 
-            {view === 'year' ? (
-              /* Year View - More Compact */
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-8">
-                {months.map((month, index) => {
-                  const hasEvents = currentMonthEvents.length > 0;
-                  return (
-                    <div
-                      key={month}
-                      onClick={() => selectMonth(index)}
-                      className={`bg-white/5 rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 transform hover:scale-105 ${
-                        currentDate.getMonth() === index
-                          ? 'border-yellow-400 bg-yellow-400 bg-opacity-10'
-                          : hasEvents
-                            ? 'border-green-500 hover:border-green-400 bg-green-400 bg-opacity-5'
-                            : 'border-white/10 hover:border-white/10'
-                      }`}
-                    >
-                      <BaseText
-                        fontFamily="bricolage"
-                        weight="black"
-                        className="text-lg md:text-xl text-white mb-2"
-                      >
-                        {month}
-                      </BaseText>
-                      {hasEvents ? (
-                        <div className="space-y-1">
-                          <span className="inline-block bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                            {currentMonthEvents.length} event
-                            {currentMonthEvents.length > 1 ? 's' : ''}
-                          </span>
-                          <BodyMD className="text-xs text-white/50">
-                            Click to view events
-                          </BodyMD>
-                        </div>
-                      ) : (
-                        <BodyMD className="text-xs text-white/60">
-                          No events scheduled
-                        </BodyMD>
-                      )}
-                    </div>
-                  );
-                })}
+            <div className="space-y-5">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                Transformative nights of worship & prayer
+              </p>
+
+              <h2 className="text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                7 Nights of <span className="text-[#f7de12]">Lifting</span>
+              </h2>
+
+              <div className="space-y-3 text-sm leading-7 text-white/65 sm:text-base">
+                <p>
+                  Join us for seven powerful nights of worship, prayer, and
+                  spiritual elevation. Each night features special guests,
+                  anointed worship, and life-changing messages that will lift
+                  your spirit and strengthen your faith.
+                </p>
+                <p>
+                  Don&apos;t miss this transformative experience where we come
+                  together as a community to seek God&apos;s presence and power
+                  in our lives.
+                </p>
               </div>
-            ) : (
-              /* Month View - More Compact */
-              <div className="bg-white/5 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl overflow-hidden">
-                {/* Calendar Header */}
-                <div className="grid grid-cols-7 bg-black/50 border-b border-white/10">
-                  {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(
-                    day => (
-                      <div
-                        key={day}
-                        className="p-2 md:p-3 lg:p-4 text-center font-black text-white/70 text-xs md:text-sm uppercase tracking-wider"
-                      >
-                        {day}
-                      </div>
-                    )
-                  )}
-                </div>
 
-                {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-1 bg-white/5 p-1 md:p-2">
-                  {calendarGrid.map((day, index) => (
-                    <div
-                      key={index}
-                      className={`min-h-20 md:min-h-24 p-1 md:p-2 rounded-lg md:rounded-xl transition-all duration-300 ${
-                        !day.isCurrentMonth
-                          ? 'bg-black/50 text-white/70'
-                          : 'bg-white/5 hover:bg-white/10 text-white'
-                      } ${
-                        day.isToday
-                          ? 'bg-yellow-400 bg-opacity-20 border-2 border-yellow-400'
-                          : ''
-                      } ${
-                        day.events.length > 0
-                          ? 'cursor-pointer hover:scale-105'
-                          : ''
-                      }`}
-                      onClick={() => handleDateClick(day.date, day.events)}
-                    >
-                      <div
-                        className={`text-sm md:text-base font-bold mb-1 ${
-                          day.isToday
-                            ? 'text-yellow-400'
-                            : !day.isCurrentMonth
-                              ? 'text-white/70'
-                              : 'text-white'
-                        }`}
-                      >
-                        {day.date.getDate()}
-                      </div>
-                      <div className="space-y-1">
-                        {day.events.slice(0, 2).map((event, eventIndex) => (
-                          <div
-                            key={event.id}
-                            className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs p-1 rounded md:rounded-lg font-semibold cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                            title={event.title}
-                          >
-                            <div className="truncate">{event.title}</div>
-                          </div>
-                        ))}
-                        {day.events.length > 2 && (
-                          <div className="text-xs text-white/50 bg-white/5 px-1 py-0.5 rounded text-center">
-                            +{day.events.length - 2} more
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Current Month Events List - More Compact Cards */}
-            <div
-              ref={eventsRef}
-              className="mt-8 md:mt-12 bg-white/5 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl p-6 md:p-8 lg:p-10"
-            >
-              <H3 className="mb-6 text-2xl md:text-3xl font-black text-center">
-                Events for{' '}
-                <span className="text-yellow-400">
-                  {months[currentDate.getMonth()]} {currentDate.getFullYear()}
-                </span>
-              </H3>
-
-              {currentMonthEvents.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
-                  {currentMonthEvents.map(event => (
-                    <div
-                      key={event.id}
-                      className="event-card bg-gradient-to-br from-[#0b0b0b] to-[#111111] rounded-xl md:rounded-2xl p-4 md:p-6 border-l-4 border-yellow-400 hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
-                      onClick={() => handleEventClick(event)}
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          {event.logo && (
-                            <span className="text-xl md:text-2xl">
-                              {event.logo}
-                            </span>
-                          )}
-                          <span className="inline-block bg-yellow-400 bg-opacity-20 text-yellow-400 px-2 md:px-3 py-1 rounded-full text-xs font-black border border-yellow-400 border-opacity-30">
-                            {event.type}
-                          </span>
-                        </div>
-                      </div>
-                      <BaseText
-                        fontFamily="bricolage"
-                        weight="black"
-                        className="text-lg md:text-xl lg:text-2xl text-white mb-2 md:mb-3 group-hover:text-yellow-400 transition-colors duration-300"
-                      >
-                        {event.title}
-                      </BaseText>
-                      {event.description && (
-                        <BodyMD className="text-white/70 mb-3 md:mb-4 leading-relaxed text-sm md:text-base line-clamp-2">
-                          {event.description}
-                        </BodyMD>
-                      )}
-                      <div className="space-y-1 md:space-y-2 text-white/70 text-sm">
-                        <div className="flex items-center">
-                          <SemiBoldText className="w-12 md:w-16 text-white/50 text-xs md:text-sm">
-                            Date:
-                          </SemiBoldText>
-                          <BodyMD className="text-xs md:text-sm">
-                            {new Date(event.date).toLocaleDateString('en-US', {
-                              weekday: 'short',
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
-                          </BodyMD>
-                        </div>
-                        <div className="flex items-center">
-                          <SemiBoldText className="w-12 md:w-16 text-white/50 text-xs md:text-sm">
-                            Time:
-                          </SemiBoldText>
-                          <BodyMD className="text-xs md:text-sm">
-                            {event.time}
-                          </BodyMD>
-                        </div>
-                        <div className="flex items-center">
-                          <SemiBoldText className="w-12 md:w-16 text-white/50 text-xs md:text-sm">
-                            Where:
-                          </SemiBoldText>
-                          <BodyMD className="text-xs md:text-sm">
-                            {event.location}
-                          </BodyMD>
-                        </div>
-                      </div>
-                      <button className="w-full mt-3 md:mt-4 bg-yellow-400 text-white py-2 md:py-3 rounded-lg md:rounded-xl font-black hover:bg-yellow-500 transition-all duration-300 hover:scale-105 shadow-lg text-sm md:text-base">
-                        Add to Calendar
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 md:py-12">
-                  <div className="text-4xl md:text-6xl mb-3 md:mb-4">📅</div>
-                  <BaseText
-                    fontFamily="bricolage"
-                    weight="bold"
-                    className="text-lg md:text-xl lg:text-2xl text-white/50 mb-2 md:mb-3"
-                  >
-                    No events scheduled for {months[currentDate.getMonth()]}{' '}
-                    {currentDate.getFullYear()}
-                  </BaseText>
-                  <BodyMD className="text-white/60 text-sm md:text-base">
-                    Check back later for updates or browse other months.
-                  </BodyMD>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Wisdom Power Conference 2026 Banner with Video Background */}
-      {/* Wisdom Power Conference 2026 Banner with Video Background */}
-      <section
-        ref={conferenceRef}
-        className="min-h-[80vh] md:min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden"
-      >
-        {/* Video Background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="none"
-            className="absolute inset-0 w-full h-full object-cover opacity-40"
-            poster="/images/event-placeholder.webp"
-          >
-            <source src="/_optimized/videos/videoBg.webm" type="video/webm" />
-            <source src="/videos/videoBg.mp4" type="video/mp4" />
-            {/* Fallback image if video doesn't load */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900"></div>
-          </video>
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-        </div>
-
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -right-20 w-40 h-40 md:w-60 md:h-60 lg:w-80 lg:h-80 bg-yellow-400 rounded-full opacity-10 animate-pulse"></div>
-          <div
-            className="absolute -bottom-20 -left-20 w-48 h-48 md:w-72 md:h-72 lg:w-96 lg:h-96 bg-purple-500 rounded-full opacity-10 animate-pulse"
-            style={{ animationDelay: '1s' }}
-          ></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 py-16 md:py-24 lg:py-32">
-          <div className="max-w-4xl lg:max-w-5xl mx-auto text-center">
-            <div className="bg-white/5 backdrop-blur-lg rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 border border-white/10 shadow-2xl">
-              <H2 className="mb-4 md:mb-6 text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight">
-                WISDOM POWER <span className="text-yellow-400">CONFERENCE</span>{' '}
-                2026
-              </H2>
-              <div className="w-20 h-1 md:w-24 md:h-1.5 lg:w-32 lg:h-2 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mb-6 md:mb-8 rounded-full"></div>
-              <BodyMD className="text-lg md:text-xl lg:text-2xl xl:text-3xl mb-8 md:mb-10 lg:mb-12 opacity-90 leading-relaxed font-light">
-                The most anticipated spiritual gathering of the year is coming.
-                Experience powerful teachings, anointed worship, and
-                life-changing encounters.
-              </BodyMD>
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                 <button
-                  onClick={openConferenceModal}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 md:px-12 lg:px-16 py-3 md:py-4 lg:py-6 rounded-xl md:rounded-2xl font-black text-base md:text-lg lg:text-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 shadow-xl"
+                  type="button"
+                  onClick={openLiftingModal}
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
                 >
-                  Register for Event
+                  Register to Attend
                 </button>
+
                 <button
-                  onClick={() => openReminderModal('conference')}
-                  className="border-2 border-white/30 text-white px-8 md:px-12 lg:px-16 py-3 md:py-4 lg:py-6 rounded-xl md:rounded-2xl font-bold text-base md:text-lg lg:text-xl hover:bg-white/10 transition-all duration-500"
+                  type="button"
+                  onClick={() => openReminderModal('lifting')}
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/80 transition hover:bg-white/[0.08]"
                 >
                   Remind Me Later
                 </button>
@@ -565,49 +135,332 @@ const Upcoming = () => {
         </div>
       </section>
 
-      {/* Newsletter Section - More Compact */}
       <section
-        ref={newsletterRef}
-        className="py-16 md:py-20 lg:py-24 bg-gradient-to-br from-[#060606] to-[#0b0b0b]"
+        ref={calendarRef}
+        className="relative overflow-hidden bg-[#080808] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
       >
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl lg:max-w-4xl mx-auto text-center">
-            <H2 className="mb-4 md:mb-6 text-3xl md:text-4xl lg:text-5xl font-black text-white">
-              Stay <span className="text-yellow-500">Updated</span>
-            </H2>
-            <BodyMD className="text-lg md:text-xl text-white/70 mb-8 md:mb-10 lg:mb-12 max-w-2xl mx-auto leading-relaxed">
-              Get the latest news and updates about our upcoming programs and
-              events delivered to your inbox
-            </BodyMD>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                  Event calendar
+                </p>
+                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                  {view === 'month'
+                    ? `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`
+                    : currentDate.getFullYear()}
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60">
+                  Browse through our interactive calendar to stay updated with
+                  all upcoming events and gatherings.
+                </p>
+              </div>
 
-            <div className="bg-white/5 rounded-xl md:rounded-2xl lg:rounded-3xl p-6 md:p-8 lg:p-10 shadow-xl border border-white/10">
-              <form className="max-w-2xl mx-auto">
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="flex-1 px-4 md:px-6 py-3 md:py-4 rounded-lg md:rounded-xl border-2 border-white/10 focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-white/40 text-base md:text-lg font-semibold transition-all duration-300"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 md:px-8 lg:px-10 py-3 md:py-4 rounded-lg md:rounded-xl font-black text-base md:text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg whitespace-nowrap"
-                  >
-                    Subscribe Now
-                  </button>
-                </div>
-                <BodyMD className="text-xs md:text-sm text-white/60">
-                  By subscribing, you agree to receive updates about our events
-                  and programs. You can unsubscribe at any time. We respect your
-                  privacy.
-                </BodyMD>
-              </form>
+              <button
+                type="button"
+                onClick={() => setView(view === 'month' ? 'year' : 'month')}
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#f7de12] px-5 text-sm font-extrabold text-black"
+              >
+                {view === 'month' ? 'Year View' : 'Month View'}
+              </button>
             </div>
+
+            <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigateYear('prev')}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                >
+                  ‹‹
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigateMonth('prev')}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-2">
+                {years.map(year => (
+                  <button
+                    key={year}
+                    type="button"
+                    onClick={() => selectYear(year)}
+                    className={`rounded-full px-4 py-2 text-xs font-bold transition ${
+                      currentDate.getFullYear() === year
+                        ? 'bg-[#f7de12] text-black'
+                        : 'border border-white/10 bg-black/25 text-white/65 hover:bg-white/[0.06]'
+                    }`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigateMonth('next')}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigateYear('next')}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                >
+                  ››
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {view === 'year' ? (
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {months.map((month, index) => (
+                <button
+                  key={month}
+                  type="button"
+                  onClick={() => selectMonth(index)}
+                  className={`rounded-[1.25rem] border p-5 text-left transition hover:-translate-y-1 ${
+                    currentDate.getMonth() === index
+                      ? 'border-[#f7de12]/60 bg-[#f7de12]/10'
+                      : 'border-white/10 bg-white/[0.04] hover:border-[#f7de12]/35'
+                  }`}
+                >
+                  <p className="text-lg font-semibold text-white">{month}</p>
+                  <p className="mt-2 text-sm text-white/50">
+                    Click to view month
+                  </p>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="overflow-x-auto rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/25">
+              <div className="min-w-[760px]">
+                <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold uppercase tracking-[0.18em] text-white/40">
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
+                    day => (
+                      <div key={day} className="py-2">
+                        {day}
+                      </div>
+                    )
+                  )}
+                </div>
+
+                <div className="grid grid-cols-7 gap-2">
+                  {calendarGrid.map((day, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleDateClick(day.date, day.events)}
+                      className={`min-h-[104px] rounded-2xl border p-3 text-left transition ${
+                        day.isToday
+                          ? 'border-[#f7de12]/70 bg-[#f7de12]/10'
+                          : day.isCurrentMonth
+                            ? 'border-white/10 bg-black/25 hover:bg-white/[0.05]'
+                            : 'border-white/5 bg-black/10 text-white/30'
+                      } ${day.events.length > 0 ? 'cursor-pointer' : ''}`}
+                    >
+                      <p
+                        className={`text-sm font-semibold ${
+                          day.isToday ? 'text-[#f7de12]' : 'text-white'
+                        }`}
+                      >
+                        {day.date.getDate()}
+                      </p>
+
+                      <div className="mt-2 space-y-1">
+                        {day.events.slice(0, 2).map(event => (
+                          <div
+                            key={event.id}
+                            className="truncate rounded-full bg-[#f7de12] px-2 py-1 text-xs font-bold text-black"
+                            title={event.title}
+                          >
+                            {event.title}
+                          </div>
+                        ))}
+
+                        {day.events.length > 2 ? (
+                          <p className="text-xs text-white/45">
+                            +{day.events.length - 2} more
+                          </p>
+                        ) : null}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div
+            ref={eventsRef}
+            className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6"
+          >
+            <div className="mb-6 text-center">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                This month
+              </p>
+              <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
+                Events for {months[currentDate.getMonth()]}{' '}
+                {currentDate.getFullYear()}
+              </h3>
+            </div>
+
+            {currentMonthEvents.length > 0 ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                {currentMonthEvents.map(event => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => handleEventClick(event)}
+                    className="group rounded-[1.25rem] border border-white/10 bg-black/25 p-5 text-left transition hover:-translate-y-1 hover:border-[#f7de12]/35 hover:bg-white/[0.035]"
+                  >
+                    <span className="inline-flex rounded-full bg-[#f7de12]/10 px-3 py-1 text-xs font-bold text-[#f7de12]">
+                      {event.type}
+                    </span>
+
+                    <h4 className="mt-4 text-lg font-semibold leading-tight text-white group-hover:text-[#f7de12]">
+                      {event.title}
+                    </h4>
+
+                    {event.description ? (
+                      <p className="mt-3 line-clamp-2 text-sm leading-6 text-white/60">
+                        {event.description}
+                      </p>
+                    ) : null}
+
+                    <div className="mt-4 space-y-2 border-t border-white/10 pt-4 text-sm text-white/55">
+                      <p className="flex items-center gap-2">
+                        <CalendarClock className="h-4 w-4 text-[#f7de12]" />
+                        {new Date(event.date).toLocaleDateString('en-US', {
+                          weekday: 'short',
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-white/35" />
+                        {event.time}
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-white/35" />
+                        {event.location}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="py-10 text-center">
+                <p className="text-lg font-semibold text-white/70">
+                  No events scheduled for {months[currentDate.getMonth()]}{' '}
+                  {currentDate.getFullYear()}
+                </p>
+                <p className="mt-2 text-sm text-white/45">
+                  Check back later for updates or browse other months.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
-    </div>
-  );
-};
 
-export default Upcoming;
+      <section
+        ref={conferenceRef}
+        className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
+      >
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          className="absolute inset-0 h-full w-full object-cover opacity-35"
+          poster="/images/event-placeholder.webp"
+        >
+          <source src="/_optimized/videos/videoBg.webm" type="video/webm" />
+          <source src="/videos/videoBg.mp4" type="video/mp4" />
+        </video>
+
+        <div className="absolute inset-0 bg-black/70" />
+
+        <div className="relative mx-auto max-w-4xl rounded-[1.6rem] border border-white/10 bg-black/45 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-md sm:rounded-[2rem] sm:p-8 lg:p-10">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            Major gathering
+          </p>
+          <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Wisdom Power <span className="text-[#f7de12]">Conference</span> 2026
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
+            The most anticipated spiritual gathering of the year is coming.
+            Experience powerful teachings, anointed worship, and life-changing
+            encounters.
+          </p>
+
+          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={openConferenceModal}
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+            >
+              Register for Event
+            </button>
+            <button
+              type="button"
+              onClick={() => openReminderModal('conference')}
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/80 transition hover:bg-white/[0.08]"
+            >
+              Remind Me Later
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section
+        ref={newsletterRef}
+        className="bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
+      >
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            Newsletter
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            Stay Updated
+          </h2>
+          <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+            Get the latest news and updates about our upcoming programs and
+            events delivered to your inbox.
+          </p>
+
+          <form className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/25 sm:flex sm:gap-3 sm:p-5">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="min-h-12 w-full rounded-full border border-white/10 bg-black/30 px-5 text-sm text-white outline-none placeholder:text-white/35 focus:border-[#f7de12]/60 focus:ring-4 focus:ring-[#f7de12]/10"
+              required
+            />
+            <button
+              type="submit"
+              className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black sm:mt-0 sm:w-auto"
+            >
+              Subscribe
+            </button>
+          </form>
+
+          <p className="mt-4 text-xs leading-5 text-white/45">
+            By subscribing, you agree to receive updates about our events and
+            programs. You can unsubscribe at any time.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+}
