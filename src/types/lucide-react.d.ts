@@ -22,10 +22,19 @@ declare module 'lucide-react' {
   export const Briefcase: LucideIcon;
   export const Calendar: LucideIcon;
   export const CalendarClock: LucideIcon;
+  export const CalendarHeart: LucideIcon;
   export const CalendarPlus: LucideIcon;
   export const Building: LucideIcon;
   export const Banknote: LucideIcon;
   export const Baby: LucideIcon;
+  export const MailCheck: LucideIcon;
+  export const PackageCheck: LucideIcon;
+  export const Headphones: LucideIcon;
+  export const Store: LucideIcon;
+  export const ArrowRight: LucideIcon;
+  export const CheckCircle2: LucideIcon;
+  export const LifeBuoy: LucideIcon;
+  export const UserRound: LucideIcon;
   export const Check: LucideIcon;
   export const CheckCircle: LucideIcon;
   export const CheckCircle2: LucideIcon;
@@ -33,6 +42,7 @@ declare module 'lucide-react' {
   export const ChevronLeft: LucideIcon;
   export const ChevronRight: LucideIcon;
   export const ChevronUp: LucideIcon;
+  export const MessageCircleHeart: LucideIcon;
   export const Church: LucideIcon;
   export const Clock: LucideIcon;
   export const Copy: LucideIcon;
@@ -97,4 +107,7 @@ declare module 'lucide-react' {
   export const Lock: LucideIcon;
   export const Cookie: LucideIcon;
   export const Settings: LucideIcon;
+  export const CalendarDays: LucideIcon;
+  export const Clapperboard: LucideIcon;
+  export const Film: LucideIcon;
 }

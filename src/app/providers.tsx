@@ -32,11 +32,17 @@ export function Providers({ children }: { children: ReactNode }) {
                   <AppStartupLoader />
                   <ScrollHandler />
                   <GlobalScrollEffects />
-                  <ClientHeader />
-                  <main className="flex-1 flex flex-col min-h-screen page-gsap page-shell">
-                    {children}
-                  </main>
-                  <ClientFooter />
+
+                  <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-[#050505] text-white">
+                    <ClientHeader />
+
+                    <main className="page-shell page-gsap relative min-h-[calc(100svh-1px)] w-full flex-1 overflow-x-hidden">
+                      {children}
+                    </main>
+
+                    <ClientFooter />
+                  </div>
+
                   <ClientScrollToTop />
                   <CookieConsentBanner />
                 </ErrorBoundary>

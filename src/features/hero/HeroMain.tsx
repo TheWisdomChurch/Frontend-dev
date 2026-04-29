@@ -2,16 +2,22 @@
 'use client';
 
 import React, {
+  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useCallback,
-  useMemo,
 } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { CalendarClock, MapPin, PlayCircle, ChevronDown } from 'lucide-react';
+import {
+  ArrowRight,
+  CalendarClock,
+  ChevronDown,
+  MapPin,
+  PlayCircle,
+  Sparkles,
+} from 'lucide-react';
 import Image, { type StaticImageData } from 'next/image';
 
 import { useTheme } from '@/shared/contexts/ThemeContext';
@@ -31,62 +37,55 @@ if (
   typeof window !== 'undefined' &&
   typeof gsap.registerPlugin === 'function'
 ) {
-  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+  gsap.registerPlugin(ScrollTrigger);
 }
 
-const FALLBACK_COLOR_SCHEME: ColorScheme = {
-  primary: '#F7DE12',
-  primaryLight: '#FFF3A3',
-  primaryDark: '#C7A600',
-  secondary: '#FFFFFF',
-  background: '#050505',
-  surface: '#111111',
-  text: '#FFFFFF',
-  textSecondary: '#B3B3B3',
-  border: '#2A2A2A',
-  success: '#22C55E',
-  warning: '#F59E0B',
-  error: '#EF4444',
-  opacity: {
-    primary05: 'rgba(247,222,18,0.05)',
-    primary10: 'rgba(247,222,18,0.10)',
-    primary15: 'rgba(247,222,18,0.15)',
-    primary20: 'rgba(247,222,18,0.20)',
-    primary25: 'rgba(247,222,18,0.25)',
-    primary30: 'rgba(247,222,18,0.30)',
-    primary40: 'rgba(247,222,18,0.40)',
-    primary50: 'rgba(247,222,18,0.50)',
-    black10: 'rgba(0,0,0,0.10)',
-    black20: 'rgba(0,0,0,0.20)',
-    black30: 'rgba(0,0,0,0.30)',
-    black40: 'rgba(0,0,0,0.40)',
-    black50: 'rgba(0,0,0,0.50)',
-    white10: 'rgba(255,255,255,0.10)',
-    white20: 'rgba(255,255,255,0.20)',
-    white30: 'rgba(255,255,255,0.30)',
-  },
-};
-
 const API_ORIGIN = resolveConfiguredApiOrigin();
-
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
 
-function isStaticImageData(x: any): x is StaticImageData {
+const FALLBACK_UPCOMING = {
+  label: 'Upcoming',
+  title: 'Wisdom Power Conference 26',
+  date: 'Mar 21 - 23',
+  time: 'Morning Session • Evening Session',
+  location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
+  ctaLabel: 'Reserve a seat',
+  ctaTarget: '#programs',
+};
+
+const FALLBACK_SLIDE = {
+  id: 'fallback-hero-slide',
+  type: 'hero',
+  title: 'Welcome to The Wisdom Church',
+  subtitle: 'Equipped and empowered for greatness',
+  description:
+    'A Spirit-filled family helping believers grow in faith, purpose, and community.',
+  image: '/images/placeholder.webp',
+  upcoming: FALLBACK_UPCOMING,
+} as unknown as HeroSlide;
+
+interface HeroSectionProps {
+  primaryButtonText?: string;
+  secondaryButtonText?: string;
+  onPrimaryButtonClick?: () => void;
+  onSecondaryButtonClick?: () => void;
+  showWaveText?: boolean;
+  colorScheme?: ColorScheme;
+  slides?: HeroSlide[];
+}
+
+function isStaticImageData(value: unknown): value is StaticImageData {
   return (
-    !!x &&
-    typeof x === 'object' &&
-    typeof x.src === 'string' &&
-    'height' in x &&
-    'width' in x
+    !!value &&
+    typeof value === 'object' &&
+    typeof (value as StaticImageData).src === 'string' &&
+    'height' in value &&
+    'width' in value
   );
 }
 
-function isSimpleImage(image: any): boolean {
-  return typeof image === 'string' || isStaticImageData(image);
-}
-
 function normalizeImage(
-  image: any,
+  image: unknown,
   fallbackAlt = 'Slide image'
 ): {
   src: string;
@@ -102,30 +101,44 @@ function normalizeImage(
   }
 
   if (typeof image === 'object' && image !== null && 'src' in image) {
+    const typedImage = image as {
+      src?: string | StaticImageData;
+      alt?: string;
+      objectPosition?: string;
+    };
+
     const src =
-      typeof image.src === 'string' ? image.src : image.src?.src || '';
+      typeof typedImage.src === 'string'
+        ? typedImage.src
+        : typedImage.src?.src || '';
 
     return {
       src: src || '/images/placeholder.webp',
-      alt: image.alt || fallbackAlt,
-      objectPosition: image.objectPosition,
+      alt: typedImage.alt || fallbackAlt,
+      objectPosition: typedImage.objectPosition,
     };
   }
 
   return { src: '/images/placeholder.webp', alt: fallbackAlt };
 }
 
-interface HeroSectionProps {
-  primaryButtonText?: string;
-  secondaryButtonText?: string;
-  onPrimaryButtonClick?: () => void;
-  onSecondaryButtonClick?: () => void;
-  showWaveText?: boolean;
-  colorScheme?: ColorScheme;
-  slides?: HeroSlide[];
+function getVideoId(video: YouTubeVideo): string {
+  return (
+    String((video as any).id || '').trim() ||
+    String((video as any).videoId || '').trim()
+  );
 }
 
-const HeroSection = ({
+function getVideoThumbnail(video: YouTubeVideo): string {
+  return (
+    String((video as any).thumbnail || '').trim() ||
+    String((video as any)?.thumbnails?.medium?.url || '').trim() ||
+    String((video as any)?.thumbnails?.default?.url || '').trim() ||
+    '/images/placeholder.webp'
+  );
+}
+
+export default function HeroSection({
   primaryButtonText = 'Join Our Community',
   secondaryButtonText = 'Watch Live Stream',
   onPrimaryButtonClick,
@@ -133,91 +146,68 @@ const HeroSection = ({
   showWaveText = true,
   colorScheme: externalColorScheme,
   slides: externalSlides,
-}: HeroSectionProps) => {
-  const theme = useTheme();
-  const themeColors = theme?.colorScheme;
-  const colorScheme =
-    externalColorScheme || themeColors || FALLBACK_COLOR_SCHEME;
+}: HeroSectionProps) {
+  const { colorScheme: themeColorScheme } = useTheme();
+  const colorScheme = useMemo(
+    () => externalColorScheme ?? themeColorScheme,
+    [externalColorScheme, themeColorScheme]
+  );
 
   const { open } = useServiceUnavailable();
   const { slides: backendSlides } = useHeroContent();
 
-  const heroRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLHeadingElement>(null);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const buttonsRef = useRef<HTMLDivElement>(null);
-  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
-  const waveTextRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const subtitleRef = useRef<HTMLHeadingElement | null>(null);
+  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
+  const buttonsRef = useRef<HTMLDivElement | null>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement | null>(null);
+  const waveTextRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<HTMLDivElement | null>(null);
 
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
   const [videoLoading, setVideoLoading] = useState(false);
   const [isCompactMobile, setIsCompactMobile] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
-    const onResize = () => {
-      setIsCompactMobile(window.innerWidth < 768);
-    };
-
-    onResize();
-    window.addEventListener('resize', onResize, { passive: true });
-
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
-  const slideList: HeroSlide[] = useMemo(() => {
+  const safeSlides = useMemo<HeroSlide[]>(() => {
     const source = externalSlides || backendSlides;
-    return Array.isArray(source) ? source.filter(Boolean) : [];
+    const validSlides = Array.isArray(source) ? source.filter(Boolean) : [];
+
+    return validSlides.length > 0 ? validSlides : [FALLBACK_SLIDE];
   }, [externalSlides, backendSlides]);
 
-  const safeSlides: HeroSlide[] = useMemo(() => {
-    if (slideList.length > 0) return slideList;
-
-    return [
-      {
-        title: 'Welcome to The Wisdom Church',
-        subtitle: 'Equipped and empowered for greatness',
-        description:
-          'A Spirit-filled family helping believers grow in faith, purpose, and community.',
-        image: '/images/placeholder.webp',
-      } as HeroSlide,
-    ];
-  }, [slideList]);
-
   const currentSlideData = safeSlides[currentSlide] ?? safeSlides[0];
+  const upcoming = (currentSlideData as any)?.upcoming ?? FALLBACK_UPCOMING;
 
-  const fallbackUpcoming = {
-    label: 'Upcoming',
-    title: 'Wisdom Power Conference 26',
-    date: 'Mar 21 - 23',
-    time: 'Morning Session • Evening Session',
-    location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
-    ctaLabel: 'Reserve a seat',
-    ctaTarget: '#programs',
-  };
+  useWaveTextAnimation(
+    waveTextRef as React.RefObject<HTMLDivElement>,
+    showWaveText,
+    colorScheme
+  );
 
-  const upcoming = (currentSlideData as any)?.upcoming ?? fallbackUpcoming;
+  useEffect(() => {
+    setCurrentSlide(prev => Math.min(prev, safeSlides.length - 1));
+  }, [safeSlides.length]);
 
-  useWaveTextAnimation(waveTextRef, showWaveText, colorScheme);
+  useEffect(() => {
+    const handleResize = () => setIsCompactMobile(window.innerWidth < 768);
+
+    handleResize();
+    window.addEventListener('resize', handleResize, { passive: true });
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (safeSlides.length <= 1) return;
 
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % safeSlides.length);
-    }, 7000);
+    }, 7500);
 
-    return () => clearInterval(interval);
+    return () => window.clearInterval(interval);
   }, [safeSlides.length]);
-
-  const scrollToNextSection = useCallback(() => {
-    const nextSection = heroRef.current?.nextElementSibling;
-    if (nextSection instanceof HTMLElement) {
-      nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, []);
 
   const handleUnavailable = useCallback(
     (title?: string, message?: string) => {
@@ -232,48 +222,54 @@ const HeroSection = ({
     [open]
   );
 
+  const scrollToNextSection = useCallback(() => {
+    const nextSection = heroRef.current?.nextElementSibling;
+
+    if (nextSection instanceof HTMLElement) {
+      nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
   const handleUpcomingCta = useCallback(() => {
-    if (!upcoming?.ctaTarget) {
+    const target = upcoming?.ctaTarget;
+
+    if (!target || typeof target !== 'string') {
       handleUnavailable('Reservations opening soon');
       return;
     }
 
-    if (
-      typeof upcoming.ctaTarget === 'string' &&
-      upcoming.ctaTarget.startsWith('#')
-    ) {
-      const target = document.getElementById(upcoming.ctaTarget.slice(1));
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        handleUnavailable('Reservations opening soon');
+    if (target.startsWith('#')) {
+      const element = document.getElementById(target.slice(1));
+
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
       }
+
+      handleUnavailable('Reservations opening soon');
       return;
     }
 
-    if (typeof upcoming.ctaTarget === 'string') {
-      window.location.href = upcoming.ctaTarget;
-      return;
-    }
-
-    handleUnavailable('Reservations opening soon');
-  }, [upcoming, handleUnavailable]);
+    window.location.href = target;
+  }, [handleUnavailable, upcoming]);
 
   const handlePrimaryClick = useCallback(() => {
     if (onPrimaryButtonClick) {
       onPrimaryButtonClick();
       return;
     }
+
     handleUnavailable('Join our community');
-  }, [onPrimaryButtonClick, handleUnavailable]);
+  }, [handleUnavailable, onPrimaryButtonClick]);
 
   const handleSecondaryClick = useCallback(() => {
     if (onSecondaryButtonClick) {
       onSecondaryButtonClick();
       return;
     }
+
     handleUnavailable('Live stream coming soon');
-  }, [onSecondaryButtonClick, handleUnavailable]);
+  }, [handleUnavailable, onSecondaryButtonClick]);
 
   useEffect(() => {
     let mounted = true;
@@ -286,9 +282,7 @@ const HeroSection = ({
           method: 'GET',
           cache: 'no-store',
           credentials: 'omit',
-          headers: {
-            Accept: 'application/json',
-          },
+          headers: { Accept: 'application/json' },
         });
 
         if (!res.ok) return;
@@ -316,21 +310,22 @@ const HeroSection = ({
   useEffect(() => {
     if (!heroRef.current) return;
 
-    const prefersReduced = window.matchMedia(
+    const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    if (prefersReduced) return;
+
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      const parallaxEls = gsap.utils.toArray(
+      const parallaxElements = gsap.utils.toArray(
         '[data-parallax]'
       ) as HTMLElement[];
 
-      parallaxEls.forEach((el: HTMLElement) => {
-        const speed = Number(el.dataset.parallax ?? 0.2);
+      parallaxElements.forEach(element => {
+        const speed = Number(element.dataset.parallax ?? 0.14);
 
-        gsap.to(el, {
-          yPercent: speed * 20,
+        gsap.to(element, {
+          yPercent: speed * 16,
           ease: 'none',
           scrollTrigger: {
             trigger: heroRef.current,
@@ -348,59 +343,61 @@ const HeroSection = ({
   useEffect(() => {
     if (!heroRef.current) return;
 
-    const prefersReduced = window.matchMedia(
+    const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    if (prefersReduced) return;
+
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.fromTo(
-        waveTextRef.current,
-        { y: 12, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6 }
-      )
+      timeline
+        .fromTo(
+          waveTextRef.current,
+          { y: 14, opacity: 0, scale: 0.98 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.6 }
+        )
         .fromTo(
           titleRef.current,
-          { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.7 },
-          '-=0.25'
+          { y: 28, opacity: 0, filter: 'blur(8px)' },
+          { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.75 },
+          '-=0.28'
         )
         .fromTo(
           subtitleRef.current,
           { y: 18, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6 },
-          '-=0.35'
+          { y: 0, opacity: 1, duration: 0.55 },
+          '-=0.36'
         )
         .fromTo(
           descriptionRef.current,
           { y: 14, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.5 },
-          '-=0.35'
+          '-=0.32'
         )
         .fromTo(
           buttonsRef.current,
           { y: 12, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.5 },
-          '-=0.3'
+          '-=0.28'
         )
         .fromTo(
           cardsRef.current,
-          { y: 16, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6 },
-          '-=0.2'
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.62 },
+          '-=0.16'
         )
         .fromTo(
           scrollIndicatorRef.current,
-          { y: 10, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.45 },
-          '-=0.25'
+          { y: 8, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4 },
+          '-=0.28'
         );
 
       gsap.to(waveTextRef.current, {
-        y: 5,
-        duration: 1.8,
+        y: 4,
+        duration: 2.2,
         ease: 'sine.inOut',
         repeat: -1,
         yoyo: true,
@@ -416,330 +413,303 @@ const HeroSection = ({
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative w-full min-h-[82vh] overflow-hidden bg-black sm:min-h-[88vh] md:min-h-[95vh] lg:min-h-[100vh]"
+      className="relative min-h-[86svh] w-full overflow-hidden bg-[#030303] sm:min-h-[92svh] lg:min-h-screen"
     >
       {safeSlides.map((slide, index) => {
-        const img = normalizeImage(
-          slide.image,
+        const slideImage = normalizeImage(
+          (slide as any).image,
           (slide as any)?.title || `Slide ${index + 1}`
         );
 
+        const isActive = index === currentSlide;
+
         return (
           <div
-            key={index}
-            className={`absolute inset-0 transition-all duration-800 ease-in-out ${
-              index === currentSlide ? 'z-10 opacity-100' : 'z-0 opacity-0'
-            }`}
+            key={(slide as any)?.id || index}
+            className={[
+              'absolute inset-0 transition-all duration-700 ease-out',
+              isActive
+                ? 'z-10 scale-100 opacity-100'
+                : 'z-0 scale-[1.02] opacity-0',
+            ].join(' ')}
           >
-            <div className="relative h-full w-full" data-parallax="0.25">
+            <div className="relative h-full w-full" data-parallax="0.2">
               <Image
-                src={img.src}
-                alt={img.alt}
+                src={slideImage.src}
+                alt={slideImage.alt}
                 fill
                 priority={index === 0}
                 sizes="100vw"
-                quality={80}
+                quality={88}
                 className="object-cover"
                 style={{
-                  objectPosition:
-                    img.objectPosition ||
-                    (isSimpleImage(slide.image) ? 'center' : 'center 28%'),
+                  objectPosition: slideImage.objectPosition || 'center 28%',
                 }}
               />
 
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/70 sm:from-black/60 sm:via-black/35 sm:to-black/60"
-                data-parallax="0.15"
-              />
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent sm:from-black/75 sm:via-black/45"
-                data-parallax="0.1"
-              />
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 sm:from-black/35 sm:to-black/35"
-                data-parallax="0.08"
-              />
-              <div className="hero-matte absolute inset-0 opacity-30" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(247,222,18,0.16),transparent_30%),radial-gradient(circle_at_85%_18%,rgba(255,255,255,0.07),transparent_32%)]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/76 via-black/42 to-black/90" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/84 via-black/46 to-black/64 lg:from-black/84 lg:via-black/38 lg:to-black/30" />
             </div>
           </div>
         );
       })}
 
+      <div className="pointer-events-none absolute inset-0 z-10">
+        <div
+          className="absolute left-[-12%] top-[18%] h-72 w-72 rounded-full blur-3xl sm:h-96 sm:w-96"
+          style={{ background: colorScheme.opacity.primary15 }}
+        />
+        <div className="absolute bottom-[-14%] right-[-8%] h-96 w-96 rounded-full bg-white/[0.05] blur-3xl" />
+      </div>
+
       <Container
         size="xl"
-        className="relative z-20 flex min-h-[82vh] items-center px-4 pb-10 pt-8 sm:min-h-[88vh] sm:px-6 sm:pt-12 sm:pb-14 md:min-h-[95vh] md:px-8 lg:min-h-[100vh] lg:px-12 lg:pt-20"
+        className="relative z-20 flex min-h-[86svh] items-center px-4 pb-20 pt-20 sm:min-h-[92svh] sm:px-6 sm:pb-24 sm:pt-24 lg:min-h-screen lg:px-10"
       >
-        <div className="flex w-full max-w-6xl flex-col items-center gap-5 sm:items-start sm:gap-8 lg:gap-10">
-          {showWaveText && (
-            <div className="mb-4 mt-2 flex w-full justify-center sm:mt-8 sm:mb-7 sm:justify-start md:mb-8 lg:mt-12 lg:mb-9">
-              <div
-                ref={waveTextRef}
-                className="relative inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-2.5 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-3"
-                style={{ opacity: 0.97 }}
-              >
-                <span
-                  className="h-2 w-2 rounded-full shadow-[0_0_12px_currentColor]"
-                  style={{ backgroundColor: colorScheme.primary }}
-                />
-                <span
-                  className="flex items-center gap-2 text-[0.56rem] font-medium uppercase leading-tight tracking-[0.12em] sm:text-[0.7rem] md:text-[0.78rem]"
-                  style={{
-                    color: '#fff',
-                    textShadow: '0 2px 10px rgba(0,0,0,0.45)',
-                  }}
+        <div className="grid w-full items-center gap-7 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 xl:gap-14">
+          <div className="flex w-full flex-col items-center text-center sm:items-start sm:text-left">
+            {showWaveText ? (
+              <div className="mb-4 flex w-full justify-center sm:justify-start">
+                <div
+                  ref={waveTextRef}
+                  className="inline-flex max-w-full items-center gap-2 overflow-hidden rounded-full border border-white/15 bg-white/[0.08] px-3 py-2 shadow-[0_18px_60px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:px-4"
                 >
                   <span
-                    className="inline-block bg-clip-text text-transparent"
+                    className="h-2 w-2 flex-none rounded-full shadow-[0_0_18px_currentColor]"
+                    style={{ backgroundColor: colorScheme.primary }}
+                  />
+                  <span
+                    className="truncate bg-clip-text text-[0.62rem] font-bold uppercase tracking-[0.2em] text-transparent sm:text-[0.7rem]"
                     style={{
-                      backgroundImage: `linear-gradient(120deg, ${colorScheme.primaryLight} 0%, #ffffff 35%, ${colorScheme.primary} 70%, ${colorScheme.primaryDark} 100%)`,
+                      backgroundImage: `linear-gradient(120deg, ${colorScheme.primaryLight}, #ffffff 42%, ${colorScheme.primary})`,
                       WebkitBackgroundClip: 'text',
                     }}
                   >
-                    THE WAVE OF GREATNESS
+                    The Wave of Greatness
                   </span>
-                </span>
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-full"
-                  style={{
-                    boxShadow:
-                      '0 0 0 1px rgba(255,255,255,0.06), 0 18px 40px rgba(0,0,0,0.35)',
-                  }}
-                />
+                  <Sparkles
+                    className="h-3.5 w-3.5 flex-none"
+                    style={{ color: colorScheme.primary }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            ) : null}
 
-          <div className="relative flex w-full max-w-5xl flex-col gap-4 text-center sm:text-left sm:gap-5 md:gap-6 lg:gap-7">
-            <H1
-              ref={titleRef}
-              className="text-center font-medium leading-tight tracking-tight sm:text-left"
-              style={{
-                color: '#FFFFFF',
-                textShadow:
-                  '0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6)',
-              }}
-              useThemeColor={false}
-            >
-              <span className="block text-xl leading-[1.15] xs:text-[1.9rem] sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl">
-                {renderTitle((currentSlideData as any)?.title, colorScheme)}
-              </span>
-            </H1>
-
-            <div
-              className="h-px w-16 rounded-full sm:w-20 md:w-24 lg:w-28"
-              style={{
-                backgroundColor: colorScheme.primary,
-                backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
-                boxShadow: `0 0 12px ${colorScheme.opacity.primary30}`,
-              }}
-            />
-
-            {(currentSlideData as any)?.subtitle ? (
-              <H2
-                ref={subtitleRef}
-                className="text-center sm:text-left"
+            <div className="relative max-w-4xl">
+              <H1
+                ref={titleRef}
+                className="font-semibold leading-[0.98] tracking-[-0.052em]"
                 style={{
-                  color: colorScheme.primary,
+                  color: '#FFFFFF',
                   textShadow:
-                    '0 1px 6px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6)',
+                    '0 4px 26px rgba(0,0,0,0.78), 0 2px 10px rgba(0,0,0,0.65)',
                 }}
                 useThemeColor={false}
-                weight="medium"
-                smWeight="semibold"
               >
-                <span className="block text-[0.82rem] leading-[1.35] sm:text-base md:text-lg lg:text-xl xl:text-[1.35rem]">
-                  {renderSubtitle((currentSlideData as any)?.subtitle)}
+                <span className="block text-[2.2rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.4rem]">
+                  {renderTitle((currentSlideData as any)?.title, colorScheme)}
                 </span>
-              </H2>
-            ) : null}
+              </H1>
 
-            <p
-              ref={descriptionRef}
-              className="hidden max-w-2xl text-[12px] leading-relaxed text-white/80 sm:block sm:text-sm md:text-base"
-            >
-              {(currentSlideData as any)?.description ||
-                'A Spirit-filled family helping believers grow in faith, purpose, and community — equipped and empowered for greatness.'}
-            </p>
-
-            {isCompactMobile ? (
-              <p className="mx-auto max-w-sm text-[12px] leading-relaxed text-white/85 sm:mx-0">
-                A Spirit-filled family helping believers grow in faith and
-                purpose.
-              </p>
-            ) : null}
-
-            <div
-              ref={buttonsRef}
-              className="flex flex-col items-center justify-center gap-3 pt-1 sm:flex-row sm:justify-start sm:gap-4 md:gap-5"
-            >
-              <CustomButton
-                variant="primary"
-                size="md"
-                curvature="xl"
-                elevated
-                onClick={handlePrimaryClick}
-                className="group relative w-full overflow-hidden px-4 py-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] sm:w-auto sm:px-6 sm:py-3"
+              <div
+                className="mx-auto mt-5 h-px w-20 rounded-full sm:mx-0 sm:w-28"
                 style={{
-                  background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                  color: '#FFFFFF',
-                  boxShadow: `0 4px 15px ${colorScheme.opacity.primary25}`,
+                  backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
+                  boxShadow: `0 0 20px ${colorScheme.opacity.primary40}`,
                 }}
-              >
-                <span className="text-xs font-medium tracking-wide sm:text-sm">
-                  {primaryButtonText}
-                </span>
-              </CustomButton>
+              />
 
-              <CustomButton
-                variant="outline"
-                size="md"
-                curvature="xl"
-                onClick={handleSecondaryClick}
-                style={{
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
-                  borderWidth: '1.5px',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                }}
-                className={`w-full px-4 py-2 transition-all duration-200 hover:border-primary/80 hover:bg-white/10 sm:w-auto sm:px-6 sm:py-3 ${
-                  isCompactMobile ? 'hidden' : ''
-                }`}
-              >
-                <span className="text-xs font-medium tracking-wide sm:text-sm">
-                  {secondaryButtonText}
-                </span>
-              </CustomButton>
-
-              {isCompactMobile ? (
-                <button
-                  type="button"
-                  onClick={handleSecondaryClick}
-                  className="text-[12px] text-white/85 underline underline-offset-4"
+              {(currentSlideData as any)?.subtitle ? (
+                <H2
+                  ref={subtitleRef}
+                  className="mt-5 font-semibold"
+                  style={{
+                    color: colorScheme.primary,
+                    textShadow:
+                      '0 2px 14px rgba(0,0,0,0.75), 0 0 24px rgba(247,222,18,0.10)',
+                  }}
+                  useThemeColor={false}
+                  weight="medium"
                 >
-                  {secondaryButtonText}
-                </button>
+                  <span className="block text-sm leading-[1.45] sm:text-lg md:text-xl lg:text-2xl">
+                    {renderSubtitle((currentSlideData as any)?.subtitle)}
+                  </span>
+                </H2>
               ) : null}
+
+              <p
+                ref={descriptionRef}
+                className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/78 sm:mx-0 sm:text-base md:text-[1.02rem]"
+              >
+                {isCompactMobile
+                  ? 'A Spirit-filled family helping believers grow in faith and purpose.'
+                  : (currentSlideData as any)?.description ||
+                    'A Spirit-filled family helping believers grow in faith, purpose, and community — equipped and empowered for greatness.'}
+              </p>
+
+              <div
+                ref={buttonsRef}
+                className="mt-7 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:justify-start"
+              >
+                <CustomButton
+                  variant="primary"
+                  size="md"
+                  curvature="full"
+                  elevated
+                  onClick={handlePrimaryClick}
+                  className="group w-full px-6 py-3.5 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98] sm:w-auto"
+                  style={{
+                    background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
+                    color: '#111111',
+                    boxShadow: `0 18px 45px ${colorScheme.opacity.primary25}`,
+                  }}
+                >
+                  <span className="inline-flex items-center gap-2">
+                    {primaryButtonText}
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                </CustomButton>
+
+                <CustomButton
+                  variant="outline"
+                  size="md"
+                  curvature="full"
+                  onClick={handleSecondaryClick}
+                  className="group w-full border border-white/25 bg-white/[0.08] px-6 py-3.5 text-sm font-bold text-white shadow-[0_16px_45px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.14] sm:w-auto"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <PlayCircle className="h-4 w-4" />
+                    {secondaryButtonText}
+                  </span>
+                </CustomButton>
+              </div>
             </div>
           </div>
 
           <div
             ref={cardsRef}
-            className="hidden w-full grid-cols-1 gap-3 md:grid md:grid-cols-2 md:gap-4 lg:gap-5"
+            className="grid w-full gap-4 md:grid-cols-2 lg:grid-cols-1"
           >
-            <div
-              className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-xl sm:p-5"
-              data-parallax="0.12"
-              data-gsap="reveal"
-            >
-              <div className="flex items-center gap-3">
+            <div className="relative overflow-hidden rounded-[1.6rem] border border-white/15 bg-white/[0.08] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.38)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1 hover:bg-white/[0.11] sm:p-5">
+              <div
+                className="absolute inset-x-0 top-0 h-px"
+                style={{
+                  backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
+                }}
+              />
+
+              <div className="flex items-start gap-4">
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/30"
-                  style={{ background: colorScheme.primary }}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                  }}
                 >
                   <CalendarClock className="h-5 w-5 text-black" />
                 </div>
-                <div>
-                  <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-white/70">
+
+                <div className="min-w-0">
+                  <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-white/60">
                     {upcoming.label}
                   </p>
-                  <p className="text-sm font-medium text-white">
+                  <p className="mt-1 text-base font-semibold leading-snug text-white">
                     {upcoming.title}
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-2 text-[12px] text-white/85">
-                <div className="flex items-center gap-2">
-                  <CalendarClock className="h-4 w-4" />
+              <div className="mt-5 space-y-3 text-sm text-white/78">
+                <div className="flex items-center gap-3">
+                  <CalendarClock
+                    className="h-4 w-4 shrink-0"
+                    style={{ color: colorScheme.primary }}
+                  />
                   <span>
                     {upcoming.date} • {upcoming.time}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>{upcoming.location}</span>
+
+                <div className="flex items-center gap-3">
+                  <MapPin
+                    className="h-4 w-4 shrink-0"
+                    style={{ color: colorScheme.primary }}
+                  />
+                  <span className="line-clamp-2">{upcoming.location}</span>
                 </div>
               </div>
 
-              <div>
-                <CustomButton
-                  size="sm"
-                  curvature="full"
-                  elevated
-                  onClick={handleUpcomingCta}
-                  className="border border-white/20 px-4 py-2 text-[11px] font-medium hover:scale-[1.02]"
-                  style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                    color: '#FFFFFF',
-                  }}
-                >
+              <CustomButton
+                size="sm"
+                curvature="full"
+                elevated
+                onClick={handleUpcomingCta}
+                className="mt-5 border border-white/20 px-5 py-2.5 text-xs font-bold transition duration-300 hover:scale-[1.02]"
+                style={{
+                  background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                  color: '#111111',
+                }}
+              >
+                <span className="inline-flex items-center gap-2">
                   {upcoming.ctaLabel ?? 'Reserve a seat'}
-                </CustomButton>
-              </div>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </CustomButton>
             </div>
 
-            <div
-              className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/50 p-4 backdrop-blur-xl sm:p-5"
-              data-parallax="0.18"
-              data-gsap="reveal"
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/20">
-                  <PlayCircle className="h-5 w-5 text-white" />
+            <div className="relative overflow-hidden rounded-[1.6rem] border border-white/12 bg-black/45 p-4 shadow-[0_28px_90px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1 hover:bg-black/55 sm:p-5">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.08]">
+                  <PlayCircle className="h-6 w-6 text-white" />
                 </div>
-                <div className="leading-tight">
-                  <p className="text-[13px] font-medium text-white">
+
+                <div>
+                  <p className="text-base font-semibold text-white">
                     Watch live stream
                   </p>
-                  <p className="text-[10px] text-white/60">
+                  <p className="mt-1 text-xs text-white/55">
                     Latest message from YouTube
                   </p>
                 </div>
               </div>
 
               {latestVideo ? (
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <div className="relative h-20 w-full overflow-hidden rounded-xl border border-white/15 bg-black/60 sm:w-32">
+                <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <div className="relative h-28 w-full overflow-hidden rounded-2xl border border-white/15 bg-black sm:h-24 sm:w-36 sm:shrink-0">
                     <img
-                      src={
-                        latestVideo.thumbnail ||
-                        (latestVideo as any)?.thumbnails?.medium?.url ||
-                        (latestVideo as any)?.thumbnails?.default?.url ||
-                        '/images/placeholder.webp'
-                      }
+                      src={getVideoThumbnail(latestVideo)}
                       alt={latestVideo.title}
-                      className="absolute inset-0 h-full w-full object-cover"
+                      className="absolute inset-0 h-full w-full object-cover transition duration-500 hover:scale-105"
                       loading="lazy"
                       decoding="async"
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/35">
-                      <PlayCircle className="h-5 w-5 text-white" />
+                      <PlayCircle className="h-7 w-7 text-white drop-shadow-lg" />
                     </div>
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 text-[13px] font-medium text-white">
+                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-white">
                       {latestVideo.title}
                     </p>
-                    <p className="text-[11px] text-white/60">
-                      Tap to watch now
-                    </p>
-                  </div>
 
-                  <a
-                    href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex self-start rounded-full px-4 py-2 text-[11px] font-medium shadow-lg transition hover:scale-[1.04] sm:self-auto"
-                    style={{
-                      background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-                      color: '#FFFFFF',
-                    }}
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <PlayCircle className="h-4 w-4" /> Play
-                    </span>
-                  </a>
+                    {getVideoId(latestVideo) ? (
+                      <a
+                        href={`https://www.youtube.com/watch?v=${getVideoId(
+                          latestVideo
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition hover:scale-[1.03]"
+                        style={{
+                          background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                          color: '#111111',
+                        }}
+                      >
+                        Play now <PlayCircle className="h-4 w-4" />
+                      </a>
+                    ) : null}
+                  </div>
                 </div>
               ) : (
                 <CustomButton
@@ -747,99 +717,34 @@ const HeroSection = ({
                   size="sm"
                   curvature="full"
                   onClick={handleSecondaryClick}
-                  className="self-start border border-white/40 px-4 py-2 text-[11px] text-white hover:border-primary/80 hover:bg-white/10"
+                  className="mt-5 border border-white/30 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white hover:bg-white/[0.12]"
                 >
                   {videoLoading ? 'Loading…' : 'Watch'}
                 </CustomButton>
               )}
             </div>
           </div>
-
-          {isCompactMobile ? (
-            <div className="w-full space-y-3">
-              <div className="w-full rounded-2xl border border-white/15 bg-black/45 px-4 py-3 text-center backdrop-blur-xl">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-white/65">
-                  {upcoming.label}
-                </p>
-                <p className="mt-1 text-sm font-medium text-white">
-                  {upcoming.title}
-                </p>
-              </div>
-
-              <div className="w-full rounded-2xl border border-white/10 bg-black/55 p-3 backdrop-blur-xl">
-                <div className="mb-2 flex items-start gap-2">
-                  <PlayCircle className="mt-0.5 h-4 w-4 text-white" />
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium text-white">
-                      Latest message from YouTube
-                    </p>
-                    <p className="text-[10px] text-white/65">
-                      Tap to watch now
-                    </p>
-                  </div>
-                </div>
-
-                {latestVideo ? (
-                  <a
-                    href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-3 rounded-xl border border-white/15 bg-black/45 p-2.5"
-                  >
-                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-white/15 bg-black/60">
-                      <img
-                        src={
-                          latestVideo.thumbnail ||
-                          (latestVideo as any)?.thumbnails?.medium?.url ||
-                          (latestVideo as any)?.thumbnails?.default?.url ||
-                          '/images/placeholder.webp'
-                        }
-                        alt={latestVideo.title}
-                        className="absolute inset-0 h-full w-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/35">
-                        <PlayCircle className="h-4 w-4 text-white" />
-                      </div>
-                    </div>
-                    <p className="line-clamp-2 text-xs text-white/90">
-                      {latestVideo.title}
-                    </p>
-                  </a>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSecondaryClick}
-                    className="w-full rounded-xl border border-white/25 px-3 py-2 text-xs text-white/90"
-                  >
-                    {videoLoading ? 'Loading latest message…' : 'Watch live'}
-                  </button>
-                )}
-              </div>
-            </div>
-          ) : null}
         </div>
       </Container>
 
-      {safeSlides.length > 1 && (
-        <div className="absolute bottom-11 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-2.5 py-1.5 backdrop-blur-md sm:bottom-14">
-          {safeSlides.map((_, index) => (
+      {safeSlides.length > 1 ? (
+        <div className="absolute bottom-10 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/20 bg-black/45 px-3 py-2 backdrop-blur-2xl sm:bottom-14">
+          {safeSlides.map((slide, index) => (
             <button
-              key={index}
+              key={(slide as any)?.id || index}
               type="button"
               onClick={() => setCurrentSlide(index)}
-              className="rounded-full border border-white/25 transition-all duration-300 ease-out"
+              className="rounded-full transition-all duration-300 ease-out"
               style={{
-                width: currentSlide === index ? '12px' : '4px',
-                height: '4px',
+                width: currentSlide === index ? '26px' : '7px',
+                height: '7px',
                 backgroundColor:
                   currentSlide === index
                     ? colorScheme.primary
-                    : 'rgba(255,255,255,0.22)',
+                    : 'rgba(255,255,255,0.30)',
                 boxShadow:
                   currentSlide === index
-                    ? `0 0 8px ${colorScheme.opacity.primary30}`
+                    ? `0 0 18px ${colorScheme.opacity.primary40}`
                     : 'none',
               }}
               aria-label={`Go to slide ${index + 1}`}
@@ -847,14 +752,14 @@ const HeroSection = ({
             />
           ))}
         </div>
-      )}
+      ) : null}
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20">
         <div
-          className="mx-auto h-px w-[min(94%,1200px)] rounded-full opacity-90"
+          className="mx-auto h-px w-[min(94%,1280px)] rounded-full opacity-95"
           style={{
             backgroundImage: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary} 50%, transparent 100%)`,
-            boxShadow: `0 0 10px ${colorScheme.opacity.primary30}`,
+            boxShadow: `0 0 18px ${colorScheme.opacity.primary40}`,
           }}
         />
       </div>
@@ -866,7 +771,7 @@ const HeroSection = ({
       />
     </Section>
   );
-};
+}
 
 interface ScrollIndicatorsProps {
   scrollIndicatorRef: React.RefObject<HTMLDivElement | null>;
@@ -874,64 +779,55 @@ interface ScrollIndicatorsProps {
   colorScheme: ColorScheme;
 }
 
-const ScrollIndicators = ({
+function ScrollIndicators({
   scrollIndicatorRef,
   scrollToNextSection,
   colorScheme,
-}: ScrollIndicatorsProps) => (
-  <>
-    <div
-      ref={scrollIndicatorRef}
-      className="absolute bottom-0 left-1/2 z-30 hidden -translate-x-1/2 cursor-pointer sm:bottom-1.5 sm:block md:bottom-2"
-      onClick={scrollToNextSection}
-      aria-label="Scroll to next section"
-      role="button"
-      tabIndex={0}
-      onKeyDown={e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          scrollToNextSection();
-        }
-      }}
-    >
-      <div className="flex flex-col items-center">
-        <ChevronDown
-          className="h-5 w-5 animate-bounce md:h-6 md:w-6"
-          style={{
-            color: colorScheme.primary,
-            filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))',
-          }}
-        />
-        <span className="mt-1 text-xs font-medium tracking-wider text-white/60 sm:text-sm">
-          SCROLL
-        </span>
+}: ScrollIndicatorsProps) {
+  return (
+    <>
+      <div
+        ref={scrollIndicatorRef}
+        className="absolute bottom-2 left-1/2 z-30 hidden -translate-x-1/2 cursor-pointer sm:block"
+        onClick={scrollToNextSection}
+        aria-label="Scroll to next section"
+        role="button"
+        tabIndex={0}
+        onKeyDown={event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            scrollToNextSection();
+          }
+        }}
+      >
+        <div className="flex flex-col items-center">
+          <ChevronDown
+            className="h-6 w-6 animate-bounce"
+            style={{
+              color: colorScheme.primary,
+              filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.65))',
+            }}
+          />
+          <span className="mt-1 text-[0.62rem] font-bold tracking-[0.2em] text-white/55">
+            SCROLL
+          </span>
+        </div>
       </div>
-    </div>
 
-    <div
-      className="absolute bottom-0 left-1/2 z-30 -translate-x-1/2 cursor-pointer pb-1 sm:hidden"
-      onClick={scrollToNextSection}
-      aria-label="Scroll to next section"
-      role="button"
-      tabIndex={0}
-      onKeyDown={e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          scrollToNextSection();
-        }
-      }}
-    >
-      <div className="flex flex-col items-center">
+      <button
+        type="button"
+        className="absolute bottom-1 left-1/2 z-30 -translate-x-1/2 cursor-pointer pb-1 sm:hidden"
+        onClick={scrollToNextSection}
+        aria-label="Scroll to next section"
+      >
         <ChevronDown
-          className="h-3.5 w-3.5 animate-bounce"
+          className="h-4 w-4 animate-bounce"
           style={{
             color: colorScheme.primary,
             filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))',
           }}
         />
-      </div>
-    </div>
-  </>
-);
-
-export default HeroSection;
+      </button>
+    </>
+  );
+}
