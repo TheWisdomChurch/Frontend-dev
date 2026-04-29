@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import HeroHighlights from '@/features/hero/HeroHighlights';
@@ -9,21 +9,25 @@ import JoinUs from '@/features/events/JoinUs';
 import ResourceSection from '@/features/resources/Resource';
 import { apiClient } from '@/lib/api';
 
+const SectionFallback = ({ height = 'min-h-[360px]' }: { height?: string }) => (
+  <div className={`w-full ${height} animate-pulse bg-[#080808]`} />
+);
+
 const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
   ssr: true,
-  loading: () => <div className="h-[500px] animate-pulse bg-slate-900" />,
+  loading: () => <SectionFallback height="min-h-[72svh]" />,
 });
 
 const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
   ssr: true,
-  loading: () => <div className="h-[400px] animate-pulse bg-slate-900" />,
+  loading: () => <SectionFallback />,
 });
 
 const SeniorPastor = nextDynamic(
   () => import('@/features/leadership/SeniorPastor'),
   {
     ssr: true,
-    loading: () => <div className="h-[350px] animate-pulse bg-slate-900" />,
+    loading: () => <SectionFallback />,
   }
 );
 
@@ -31,7 +35,7 @@ const Testimonials = nextDynamic(
   () => import('@/features/testimonials/Testimonials'),
   {
     ssr: true,
-    loading: () => <div className="h-[400px] animate-pulse bg-slate-900" />,
+    loading: () => <SectionFallback />,
   }
 );
 
@@ -39,7 +43,7 @@ const OnlineGiving = nextDynamic(
   () => import('@/features/events/OnlineGiving'),
   {
     ssr: true,
-    loading: () => <div className="h-[350px] animate-pulse bg-slate-900" />,
+    loading: () => <SectionFallback />,
   }
 );
 
@@ -98,8 +102,7 @@ const fallbackEventAd: HomeEventAd = {
 };
 
 export default function Home() {
-  const theme = useTheme();
-  const colorScheme = theme?.colorScheme;
+  const { colorScheme } = useTheme();
 
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
@@ -111,7 +114,7 @@ export default function Home() {
   useEffect(() => {
     let mounted = true;
 
-    const loadHomepageContent = async () => {
+    async function loadHomepageContent() {
       try {
         const [adPayload, confessionPayload] = await Promise.all([
           apiClient.getHomepageAd(),
@@ -145,7 +148,7 @@ export default function Home() {
       } catch (error) {
         console.warn('Failed to load homepage content:', error);
       }
-    };
+    }
 
     loadHomepageContent();
 
@@ -163,8 +166,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const autoOpenDelayMs = 1200;
-    setNextAdAt(Date.now() + autoOpenDelayMs);
+    setNextAdAt(Date.now() + 1200);
   }, []);
 
   useEffect(() => {
@@ -189,101 +191,103 @@ export default function Home() {
   };
 
   const handleCloseModal = () => {
-    const closeCooldownMs = 1000 * 60 * 20;
-    persistAdCooldown(closeCooldownMs);
+    persistAdCooldown(1000 * 60 * 20);
     setShowModal(false);
   };
 
   const handleRemindLater = () => {
-    const remindCooldownMs = 1000 * 60 * 45;
-    persistAdCooldown(remindCooldownMs);
+    persistAdCooldown(1000 * 60 * 45);
     setShowModal(false);
   };
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#050505]">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#050505] text-white">
       <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-80"
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-0 opacity-70"
         style={{
-          background: `radial-gradient(circle at 20% 20%, ${
-            colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.2)'
-          } 0%, transparent 45%), radial-gradient(circle at 80% 10%, ${
-            colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'
-          } 0%, transparent 40%), radial-gradient(circle at 50% 90%, ${
-            colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.1)'
-          } 0%, transparent 40%)`,
-          filter: 'blur(60px)',
+          background: `
+            radial-gradient(circle at 18% 12%, ${
+              colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.18)'
+            } 0%, transparent 34%),
+            radial-gradient(circle at 82% 4%, ${
+              colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.10)'
+            } 0%, transparent 30%),
+            linear-gradient(180deg, #050505 0%, #070707 48%, #050505 100%)
+          `,
         }}
-        data-parallax-global="0.2"
       />
 
-      <main className="w-full flex-1">
-        <div className="flex flex-col">
-          <HeroMain />
+      <div className="relative z-10 flex w-full flex-col">
+        <HeroMain />
 
-          <div data-gsap="reveal">
-            <HeroHighlights />
-          </div>
+        <section className="home-section" data-gsap="reveal">
+          <HeroHighlights />
+        </section>
 
-          <div data-gsap="reveal">
-            <WhatWeDo />
-          </div>
+        <section className="home-section" data-gsap="reveal">
+          <WhatWeDo />
+        </section>
 
-          <div data-gsap="reveal">
-            <EventsShowcase />
-          </div>
+        <section className="home-section" data-gsap="reveal">
+          <EventsShowcase />
+        </section>
 
-          <div data-gsap="reveal">
-            <SeniorPastor />
-          </div>
+        <section className="home-section" data-gsap="reveal">
+          <SeniorPastor />
+        </section>
 
-          <div id="join">
-            <div data-gsap="reveal">
-              <JoinUs />
-            </div>
-          </div>
+        <section
+          id="join"
+          className="home-section scroll-mt-24"
+          data-gsap="reveal"
+        >
+          <JoinUs />
+        </section>
 
-          <div data-gsap="reveal">
-            <Testimonials />
-          </div>
+        <section className="home-section" data-gsap="reveal">
+          <Testimonials />
+        </section>
 
-          <div id="give" data-gsap="reveal">
-            <OnlineGiving />
-          </div>
+        <section
+          id="give"
+          className="home-section scroll-mt-24"
+          data-gsap="reveal"
+        >
+          <OnlineGiving />
+        </section>
 
-          <div data-gsap="reveal">
-            <ResourceSection />
-          </div>
-        </div>
+        <section className="home-section" data-gsap="reveal">
+          <ResourceSection />
+        </section>
+      </div>
 
-        <EventAdModal
-          open={showModal}
-          event={eventAd}
-          onClose={handleCloseModal}
-          onRemindLater={handleRemindLater}
+      <EventAdModal
+        open={showModal}
+        event={eventAd}
+        onClose={handleCloseModal}
+        onRemindLater={handleRemindLater}
+      />
+
+      {!showModal && (
+        <button
+          type="button"
+          aria-label="Open conference registration ad"
+          onClick={() => setShowModal(true)}
+          className="fixed bottom-4 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/80 px-3.5 py-2.5 text-[11px] font-semibold text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f7de12] sm:bottom-5 sm:px-4 sm:text-sm"
+        >
+          <span className="text-base">📢</span>
+          <span>WPC 2026</span>
+        </button>
+      )}
+
+      {!showModal && showConfessionPopup && (
+        <ConfessionPopup
+          onClose={() => setShowConfessionPopup(false)}
+          delay={1800}
+          content={confessionContent ?? undefined}
         />
-
-        {!showModal && (
-          <button
-            type="button"
-            aria-label="Open conference registration ad"
-            onClick={() => setShowModal(true)}
-            className="fixed bottom-4 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 px-3.5 py-2.5 text-[11px] font-medium text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 sm:bottom-5 sm:px-4 sm:text-sm"
-            style={{ animation: 'fade-up-keyframe 0.5s ease-out' }}
-          >
-            <span className="text-lg">📢</span>
-            <span>WPC 2026</span>
-          </button>
-        )}
-
-        {!showModal && showConfessionPopup && (
-          <ConfessionPopup
-            onClose={() => setShowConfessionPopup(false)}
-            delay={1800}
-            content={confessionContent ?? undefined}
-          />
-        )}
-      </main>
+      )}
     </div>
   );
 }

@@ -1,20 +1,28 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import type React from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+  ArrowRight,
+  Bell,
+  BookOpen,
+  CalendarDays,
+  Headphones,
+  Radio,
+  Search,
+  Sparkles,
+  Store,
+  Video,
+  X,
+} from 'lucide-react';
+
 import PageHero from '@/features/hero/PageHero';
-import { resourceLinks } from '@/lib/data';
+import { Container, Section } from '@/shared/layout';
+import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import { Radio, Sparkles, X, Video, Bell, Search } from 'lucide-react';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { resourceLinks } from '@/lib/data';
 
 type Category =
   | 'all'
@@ -25,14 +33,14 @@ type Category =
   | 'care'
   | 'books';
 
-const categories: Category[] = [
-  'all',
-  'media',
-  'live',
-  'events',
-  'store',
-  'care',
-  'books',
+const categories: Array<{ key: Category; label: string }> = [
+  { key: 'all', label: 'All' },
+  { key: 'media', label: 'Media' },
+  { key: 'live', label: 'Live' },
+  { key: 'events', label: 'Events' },
+  { key: 'store', label: 'Store' },
+  { key: 'care', label: 'Care' },
+  { key: 'books', label: 'Books' },
 ];
 
 const quickActions = [
@@ -44,7 +52,7 @@ const quickActions = [
   },
   {
     title: 'Latest sermon',
-    desc: 'Catch last gathering',
+    desc: 'Catch the latest message',
     href: '/resources/sermons',
     icon: Video,
   },
@@ -52,31 +60,39 @@ const quickActions = [
     title: 'Events',
     desc: 'Conferences & programs',
     href: '/events',
-    icon: Sparkles,
+    icon: CalendarDays,
   },
   {
     title: 'Store',
     desc: 'Merch, books, devotionals',
     href: '/resources/store',
-    icon: Sparkles,
+    icon: Store,
   },
   {
     title: 'Publications',
     desc: 'Books & study guides',
     href: '/resources/publications',
-    icon: Sparkles,
+    icon: BookOpen,
   },
   {
     title: 'Care & Counsel',
     desc: 'Pastoral support',
     href: '/pastoral',
-    icon: Bell,
+    icon: Headphones,
   },
 ] as const;
 
+const fallbackIcons = [
+  BookOpen,
+  Video,
+  CalendarDays,
+  Store,
+  Headphones,
+  Sparkles,
+];
+
 export default function ResourcesPage() {
   const { colorScheme } = useTheme();
-  const isDark = colorScheme.background === '#000000';
 
   const [activeCategory, setActiveCategory] = useState<Category>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -87,19 +103,22 @@ export default function ResourcesPage() {
     const term = searchTerm.trim().toLowerCase();
 
     return resourceLinks.filter(resource => {
+      const path = resource.path || '';
+
       const categoryMatch =
         activeCategory === 'all' ||
-        (activeCategory === 'media' && resource.path.includes('/sermons')) ||
+        (activeCategory === 'media' && path.includes('/sermons')) ||
         (activeCategory === 'live' && resource.isLiveService) ||
-        (activeCategory === 'events' && resource.path.includes('/events')) ||
-        (activeCategory === 'store' && resource.path.includes('/store')) ||
-        (activeCategory === 'care' && resource.path.includes('/pastoral')) ||
-        (activeCategory === 'books' && resource.path.includes('/publications'));
+        (activeCategory === 'events' && path.includes('/events')) ||
+        (activeCategory === 'store' && path.includes('/store')) ||
+        (activeCategory === 'care' && path.includes('/pastoral')) ||
+        (activeCategory === 'books' && path.includes('/publications'));
 
       if (!term) return categoryMatch;
 
       const haystack =
         `${resource.title} ${resource.subtitle} ${resource.description}`.toLowerCase();
+
       return categoryMatch && haystack.includes(term);
     });
   }, [activeCategory, searchTerm]);
@@ -113,7 +132,7 @@ export default function ResourcesPage() {
     setShowLiveModal(true);
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEmail('');
     setShowLiveModal(false);
@@ -130,66 +149,84 @@ export default function ResourcesPage() {
       />
 
       <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-50"
-          data-parallax-global="0.12"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-            backgroundSize: '34px 34px',
-            maskImage:
-              'radial-gradient(circle at 50% 34%, black 42%, transparent 92%)',
-            WebkitMaskImage:
-              'radial-gradient(circle at 50% 34%, black 42%, transparent 92%)',
-          }}
-        />
-        <div
-          className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"
-          data-parallax-global="0.18"
-          style={{ background: `${colorScheme.primary}14` }}
-        />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_16%,rgba(247,222,18,0.13),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(247,222,18,0.08),transparent_34%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+        </div>
 
-        <Container size="xl" className="relative z-10 space-y-5 sm:space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <Container size="xl" className="relative z-10 space-y-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <div
+                className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
+                style={{
+                  borderColor: `${colorScheme.primary}33`,
+                  background: `${colorScheme.primary}12`,
+                  color: colorScheme.primary,
+                }}
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
+                  Resources & Growth
+                </Caption>
+              </div>
+
+              <H2 className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Explore every ministry resource from one clean hub.
+              </H2>
+
+              <BodyMD className="mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
+                Find sermons, live services, events, publications, store links,
+                and care pathways without confusion.
+              </BodyMD>
+            </div>
+
+            <div className="rounded-full border border-white/10 bg-white/[0.045] px-4 py-2 text-sm text-white/60 backdrop-blur-xl">
+              {filteredResources.length} resources available
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {quickActions.map((item, index) => {
               const Icon = item.icon;
+
               return (
-                <ScrollFadeIn key={item.title} delay={index * 0.05}>
+                <ScrollFadeIn key={item.title} delay={index * 0.04}>
                   <Link
                     href={item.href}
-                    className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
-                    style={{ boxShadow: '0 12px 28px rgba(0,0,0,0.22)' }}
-                    data-parallax-global={index % 2 === 0 ? '0.08' : '0.12'}
+                    className="group relative block h-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                   >
                     <div
-                      className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                      style={{
-                        background: `radial-gradient(circle at 85% 15%, ${colorScheme.primary}18 0%, transparent 52%)`,
-                      }}
+                      className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
+                      style={{ background: `${colorScheme.primary}22` }}
                     />
-                    <div className="relative flex items-start gap-3">
+
+                    <div className="relative z-10 flex items-start gap-4">
                       <div
-                        className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
                         style={{
-                          backgroundColor: colorScheme.opacity.primary10,
+                          background: `${colorScheme.primary}18`,
+                          color: colorScheme.primary,
                         }}
                       >
-                        <Icon
-                          className="w-4 h-4"
-                          style={{ color: colorScheme.primary }}
-                        />
+                        <Icon className="h-5 w-5" />
                       </div>
+
                       <div className="min-w-0 flex-1">
-                        <Caption className="text-[10px] tracking-[0.18em] text-white/45 mb-1 block">
+                        <Caption className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-white/38">
                           {String(index + 1).padStart(2, '0')}
                         </Caption>
-                        <H3 className="text-sm sm:text-[15px] font-semibold leading-tight mb-1">
+
+                        <H3 className="text-base font-semibold leading-tight text-white">
                           {item.title}
                         </H3>
-                        <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
+
+                        <SmallText className="mt-2 block text-sm leading-6 text-white/58">
                           {item.desc}
                         </SmallText>
                       </div>
+
+                      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
                     </div>
                   </Link>
                 </ScrollFadeIn>
@@ -200,138 +237,125 @@ export default function ResourcesPage() {
       </Section>
 
       <Section padding="lg" className="relative overflow-hidden bg-[#070707]">
-        <Container size="xl" className="space-y-5 sm:space-y-6">
-          <div className="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-4 sm:gap-5 lg:gap-6 items-start">
-            <aside className="xl:sticky xl:top-24 space-y-4">
-              <div
-                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5"
-                style={{
-                  background:
-                    'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.2) 100%)',
-                  boxShadow: '0 16px 40px rgba(0,0,0,0.28)',
-                }}
-              >
-                <H2 className="text-lg sm:text-xl font-semibold mb-1.5 leading-tight">
+        <Container size="xl">
+          <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
+            <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
+              <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+                <H2 className="text-xl font-semibold leading-tight text-white">
                   Resource library
                 </H2>
-                <SmallText className="text-white/65 text-[11px] sm:text-xs leading-relaxed">
-                  Browse by category or search.
+
+                <SmallText className="mt-2 block text-sm leading-6 text-white/58">
+                  Browse by category or search by keyword.
                 </SmallText>
 
-                <div className="mt-4 grid grid-cols-2 gap-2">
-                  {categories.map(cat => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setActiveCategory(cat)}
-                      className={`rounded-xl border px-3 py-2 text-[11px] sm:text-xs font-semibold transition-colors ${
-                        activeCategory === cat
-                          ? 'text-black border-transparent'
-                          : 'text-white border-white/10 bg-white/[0.03] hover:bg-white/[0.06]'
-                      }`}
-                      style={
-                        activeCategory === cat
-                          ? {
-                              backgroundColor: colorScheme.primary,
-                              color: colorScheme.black,
-                            }
-                          : undefined
-                      }
-                    >
-                      {cat === 'all'
-                        ? 'All'
-                        : cat[0].toUpperCase() + cat.slice(1)}
-                    </button>
-                  ))}
+                <div className="mt-5 grid grid-cols-2 gap-2">
+                  {categories.map(cat => {
+                    const active = activeCategory === cat.key;
+
+                    return (
+                      <button
+                        key={cat.key}
+                        type="button"
+                        onClick={() => setActiveCategory(cat.key)}
+                        className={`rounded-2xl border px-3 py-2.5 text-xs font-bold transition ${
+                          active
+                            ? 'border-transparent text-black'
+                            : 'border-white/10 bg-white/[0.04] text-white/64 hover:bg-white/[0.08] hover:text-white'
+                        }`}
+                        style={
+                          active
+                            ? {
+                                backgroundColor: colorScheme.primary,
+                                color: '#000',
+                              }
+                            : undefined
+                        }
+                      >
+                        {cat.label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div
-                className="rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5"
-                style={{
-                  background:
-                    'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.18) 100%)',
-                }}
-              >
+              <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-xl">
                 <label className="relative block">
                   <span className="sr-only">Search resources</span>
-                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" />
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
                   <input
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     placeholder="Search resources..."
-                    className="w-full rounded-xl border border-white/10 bg-black/35 pl-9 pr-3 py-2.5 text-sm text-white outline-none transition focus:border-white/20 focus:ring-2 focus:ring-white/10"
+                    className="h-12 w-full rounded-2xl border border-white/12 bg-black/35 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
                   />
                 </label>
-                <Caption className="text-white/60 text-[11px] mt-2 block">
-                  Showing {filteredResources.length} resources
+
+                <Caption className="mt-3 block text-[11px] text-white/45">
+                  Showing {filteredResources.length} result
+                  {filteredResources.length === 1 ? '' : 's'}
                 </Caption>
               </div>
             </aside>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+            <div className="grid gap-4 sm:grid-cols-2">
               {filteredResources.map((resource, index) => {
-                const Icon = resource.icon || Sparkles;
+                const Icon = (resource.icon ||
+                  fallbackIcons[
+                    index % fallbackIcons.length
+                  ]) as typeof Sparkles;
+
                 return (
-                  <ScrollFadeIn key={resource.title} delay={index * 0.04}>
+                  <ScrollFadeIn key={resource.title} delay={index * 0.035}>
                     <Link
                       href={resource.path}
-                      onClick={e =>
-                        handleLiveServiceClick(e, resource.isLiveService)
-                      }
-                      className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-5 transition duration-300 hover:-translate-y-1 hover:border-white/20"
-                      style={{
-                        background:
-                          'linear-gradient(150deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 46%, rgba(0,0,0,0.2) 100%)',
-                        boxShadow: '0 16px 36px rgba(0,0,0,0.25)',
-                      }}
-                      data-parallax-global={index % 3 === 0 ? '0.08' : '0.12'}
+                      onClick={(
+                        e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+                      ) => handleLiveServiceClick(e, resource.isLiveService)}
+                      className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                     >
                       <div
-                        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                        style={{
-                          background: `radial-gradient(circle at 86% 12%, ${colorScheme.primary}16 0%, transparent 48%)`,
-                        }}
+                        className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
+                        style={{ background: `${colorScheme.primary}20` }}
                       />
 
-                      <div className="relative flex h-full flex-col gap-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-start gap-3 min-w-0">
+                      <div className="relative z-10 flex h-full flex-col">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex min-w-0 items-start gap-3">
                             <div
-                              className="h-10 w-10 rounded-xl border border-white/10 flex items-center justify-center shrink-0"
+                              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
                               style={{
-                                backgroundColor: colorScheme.opacity.primary10,
+                                background: `${colorScheme.primary}18`,
+                                color: colorScheme.primary,
                               }}
                             >
-                              <Icon
-                                className="w-4 h-4"
-                                style={{ color: colorScheme.primary }}
-                              />
+                              <Icon className="h-5 w-5" />
                             </div>
+
                             <div className="min-w-0">
-                              <Caption className="text-white/55 text-[10px] sm:text-[11px] block mb-1 leading-tight">
+                              <Caption className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-white/42">
                                 {resource.subtitle}
                               </Caption>
-                              <H3 className="text-sm sm:text-base font-semibold leading-tight text-white">
+
+                              <H3 className="line-clamp-2 text-base font-semibold leading-tight text-white sm:text-lg">
                                 {resource.title}
                               </H3>
                             </div>
                           </div>
-                          <span className="text-white/45 text-sm transition-transform duration-300 group-hover:translate-x-0.5">
-                            →
-                          </span>
+
+                          <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
                         </div>
 
-                        <BodyMD className="text-white/70 text-xs sm:text-sm leading-relaxed">
+                        <BodyMD className="mt-4 line-clamp-4 text-sm leading-7 text-white/62">
                           {resource.description}
                         </BodyMD>
 
-                        <div className="mt-auto pt-1">
+                        <div className="mt-auto pt-5">
                           <Caption
-                            className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.14em]"
+                            className="text-[11px] font-bold uppercase tracking-[0.16em]"
                             style={{ color: colorScheme.primary }}
                           >
-                            {resource.actionText || 'Read More →'}
+                            {resource.actionText || 'Read More'}
                           </Caption>
                         </div>
                       </div>
@@ -339,111 +363,105 @@ export default function ResourcesPage() {
                   </ScrollFadeIn>
                 );
               })}
+
+              {filteredResources.length === 0 && (
+                <div className="sm:col-span-2 rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-8 text-center">
+                  <Search
+                    className="mx-auto h-8 w-8"
+                    style={{ color: colorScheme.primary }}
+                  />
+                  <H3 className="mt-4 text-lg font-semibold text-white">
+                    No resources found
+                  </H3>
+                  <SmallText className="mt-2 block text-sm leading-6 text-white/55">
+                    Try another category or clear your search term.
+                  </SmallText>
+                </div>
+              )}
             </div>
           </div>
         </Container>
       </Section>
 
       {showLiveModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-0 sm:p-6">
-          <div
-            className="relative w-full max-w-md overflow-hidden rounded-t-3xl sm:rounded-3xl border"
-            style={{
-              background: isDark
-                ? `linear-gradient(145deg, ${colorScheme.surface}ee, ${colorScheme.surfaceVariant}cc)`
-                : 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-              borderColor: isDark ? '#333' : '#E5E7EB',
-              boxShadow: '0 30px 60px rgba(0,0,0,0.65)',
-            }}
-          >
-            <div className="flex justify-center pt-3 pb-1.5 sm:hidden">
-              <span className="h-1.5 w-12 rounded-full bg-black/20" />
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/75 p-0 backdrop-blur-sm sm:items-center sm:p-6">
+          <div className="relative w-full max-w-md overflow-hidden rounded-t-[2rem] border border-white/10 bg-[#101010] shadow-[0_30px_90px_rgba(0,0,0,0.7)] sm:rounded-[2rem]">
+            <div className="flex justify-center pb-1.5 pt-3 sm:hidden">
+              <span className="h-1.5 w-12 rounded-full bg-white/18" />
             </div>
 
             <button
               onClick={() => setShowLiveModal(false)}
-              className="absolute top-3 right-3 z-10 p-2 rounded-full bg-black/15 hover:bg-black/25 transition-colors"
-              style={{ color: isDark ? '#FFFFFF' : '#000000' }}
+              className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/18"
               aria-label="Close"
+              type="button"
             >
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" />
             </button>
 
-            <div className="p-5 sm:p-6 lg:p-7 space-y-4 sm:space-y-5">
-              <div className="text-center space-y-2">
+            <div className="space-y-5 p-6 sm:p-7">
+              <div className="text-center">
                 <div
-                  className="mx-auto inline-flex items-center justify-center w-12 h-12 rounded-2xl"
-                  style={{ backgroundColor: `${colorScheme.primary}20` }}
+                  className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
+                  style={{ backgroundColor: `${colorScheme.primary}18` }}
                 >
                   <Radio
-                    className="w-6 h-6"
+                    className="h-7 w-7"
                     style={{ color: colorScheme.primary }}
                   />
                 </div>
-                <H2
-                  className="text-lg sm:text-xl font-semibold leading-tight"
-                  style={{ color: isDark ? '#FFFFFF' : '#000000' }}
-                >
+
+                <H2 className="mt-4 text-xl font-semibold leading-tight text-white">
                   Never miss a live service
                 </H2>
-                <BodyMD
-                  className="text-sm leading-relaxed"
-                  style={{ color: isDark ? colorScheme.textSecondary : '#555' }}
-                >
+
+                <BodyMD className="mt-2 text-sm leading-7 text-white/62">
                   Get alerts for every stream and access the full video library.
                 </BodyMD>
               </div>
 
               <button
+                type="button"
                 onClick={() =>
                   window.open(
                     'https://www.youtube.com/@wisdomhousehq',
-                    '_blank'
+                    '_blank',
+                    'noopener,noreferrer'
                   )
                 }
-                className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition hover:scale-[1.01] flex items-center justify-center gap-2"
-                style={{ backgroundColor: '#FF0000', color: 'white' }}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#FF0000] text-sm font-bold text-white transition hover:scale-[1.01]"
               >
-                <Video className="w-4 h-4" />
+                <Video className="h-4 w-4" />
                 Subscribe on YouTube
               </button>
 
               <form onSubmit={handleEmailSubmit} className="space-y-3">
-                <label
-                  className="block text-xs sm:text-sm font-medium"
-                  style={{ color: isDark ? '#FFFFFF' : '#000000' }}
-                >
+                <label className="block text-sm font-semibold text-white/80">
                   Or get email reminders
                 </label>
+
                 <input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-3.5 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition text-sm"
-                  style={{
-                    backgroundColor: isDark ? colorScheme.surface : '#FFFFFF',
-                    borderColor: isDark ? '#333' : '#E5E7EB',
-                    color: isDark ? '#FFFFFF' : '#000000',
-                  }}
+                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
                 />
+
                 <button
                   type="submit"
-                  className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition hover:scale-[1.01]"
+                  className="h-12 w-full rounded-2xl text-sm font-bold transition hover:scale-[1.01]"
                   style={{
                     backgroundColor: colorScheme.primary,
-                    color: colorScheme.black,
+                    color: '#000',
                   }}
                 >
                   Notify me
                 </button>
               </form>
 
-              <p
-                className="text-[11px] sm:text-xs text-center leading-relaxed"
-                style={{ color: isDark ? colorScheme.textSecondary : '#666' }}
-              >
+              <p className="text-center text-xs leading-6 text-white/45">
                 We’ll email you before each live service starts.
               </p>
             </div>

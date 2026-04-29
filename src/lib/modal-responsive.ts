@@ -1,199 +1,304 @@
 /**
- * Modal Responsive Configuration
- * Optimized modal sizing and behavior for all screen sizes
+ * lib/modalResponsive.ts
+ * Professional modal responsive configuration.
  */
 
+import type React from 'react';
 import type { ScreenSize } from '@/lib/responsive';
+
+export type ModalSize = 'compact' | 'default' | 'large' | 'fullscreen';
+export type ModalOrientation = 'portrait' | 'landscape';
+export type BottomSheetThreshold = ScreenSize | 'none';
 
 export interface ModalResponsiveConfig {
   maxWidth: string;
   maxHeight: string;
   padding: string;
   borderRadius: string;
-  bottomSheetThreshold: ScreenSize;
+  bottomSheetThreshold: BottomSheetThreshold;
 }
 
-/**
- * Get responsive modal configuration based on screen size
- */
-export const getModalConfig = (
-  screenSize: ScreenSize
-): ModalResponsiveConfig => {
-  const configs: Record<ScreenSize, ModalResponsiveConfig> = {
+const modalConfigs = {
+  mobile: {
+    maxWidth: 'max-w-[calc(100vw-1rem)]',
+    maxHeight: 'max-h-[90dvh]',
+    padding: 'p-4',
+    borderRadius: 'rounded-t-3xl sm:rounded-3xl',
+    bottomSheetThreshold: 'mobile',
+  },
+  tablet: {
+    maxWidth: 'max-w-2xl',
+    maxHeight: 'max-h-[88dvh]',
+    padding: 'p-6',
+    borderRadius: 'rounded-3xl',
+    bottomSheetThreshold: 'tablet',
+  },
+  desktop: {
+    maxWidth: 'max-w-3xl',
+    maxHeight: 'max-h-[86dvh]',
+    padding: 'p-7',
+    borderRadius: 'rounded-3xl',
+    bottomSheetThreshold: 'none',
+  },
+  large: {
+    maxWidth: 'max-w-4xl',
+    maxHeight: 'max-h-[86dvh]',
+    padding: 'p-8',
+    borderRadius: 'rounded-[2rem]',
+    bottomSheetThreshold: 'none',
+  },
+  tv: {
+    maxWidth: 'max-w-5xl',
+    maxHeight: 'max-h-[82dvh]',
+    padding: 'p-10',
+    borderRadius: 'rounded-[2.25rem]',
+    bottomSheetThreshold: 'none',
+  },
+} as const satisfies Record<ScreenSize, ModalResponsiveConfig>;
+
+const sizeOverrides = {
+  compact: {
     mobile: {
-      maxWidth: 'max-w-sm',
-      maxHeight: 'max-h-[90vh]',
+      maxWidth: 'max-w-[calc(100vw-1rem)]',
+      maxHeight: 'max-h-[72dvh]',
       padding: 'p-4',
-      borderRadius: 'rounded-t-3xl',
-      bottomSheetThreshold: 'mobile',
     },
     tablet: {
-      maxWidth: 'max-w-2xl',
-      maxHeight: 'max-h-[85vh]',
-      padding: 'p-6',
-      borderRadius: 'rounded-2xl',
-      bottomSheetThreshold: 'tablet',
+      maxWidth: 'max-w-md',
+      maxHeight: 'max-h-[76dvh]',
+      padding: 'p-5',
     },
     desktop: {
-      maxWidth: 'max-w-3xl',
-      maxHeight: 'max-h-[80vh]',
-      padding: 'p-8',
-      borderRadius: 'rounded-2xl',
-      bottomSheetThreshold: 'none' as any,
+      maxWidth: 'max-w-lg',
+      maxHeight: 'max-h-[76dvh]',
+      padding: 'p-6',
     },
     large: {
-      maxWidth: 'max-w-4xl',
-      maxHeight: 'max-h-[85vh]',
-      padding: 'p-10',
-      borderRadius: 'rounded-3xl',
-      bottomSheetThreshold: 'none' as any,
+      maxWidth: 'max-w-xl',
+      maxHeight: 'max-h-[76dvh]',
+      padding: 'p-7',
     },
     tv: {
-      maxWidth: 'max-w-5xl',
-      maxHeight: 'max-h-[80vh]',
-      padding: 'p-12',
-      borderRadius: 'rounded-3xl',
-      bottomSheetThreshold: 'none' as any,
+      maxWidth: 'max-w-2xl',
+      maxHeight: 'max-h-[74dvh]',
+      padding: 'p-8',
     },
-  };
+  },
 
-  return configs[screenSize] || configs.mobile;
+  default: {},
+
+  large: {
+    mobile: {
+      maxWidth: 'max-w-[calc(100vw-1rem)]',
+      maxHeight: 'max-h-[92dvh]',
+      padding: 'p-4',
+    },
+    tablet: {
+      maxWidth: 'max-w-3xl',
+      maxHeight: 'max-h-[90dvh]',
+      padding: 'p-6',
+    },
+    desktop: {
+      maxWidth: 'max-w-4xl',
+      maxHeight: 'max-h-[88dvh]',
+      padding: 'p-7',
+    },
+    large: {
+      maxWidth: 'max-w-5xl',
+      maxHeight: 'max-h-[88dvh]',
+      padding: 'p-8',
+    },
+    tv: {
+      maxWidth: 'max-w-6xl',
+      maxHeight: 'max-h-[86dvh]',
+      padding: 'p-10',
+    },
+  },
+
+  fullscreen: {
+    mobile: {
+      maxWidth: 'max-w-full',
+      maxHeight: 'h-[100dvh]',
+      padding: 'p-4',
+      borderRadius: 'rounded-none',
+      bottomSheetThreshold: 'none',
+    },
+    tablet: {
+      maxWidth: 'max-w-full',
+      maxHeight: 'h-[100dvh]',
+      padding: 'p-6',
+      borderRadius: 'rounded-none',
+      bottomSheetThreshold: 'none',
+    },
+    desktop: {
+      maxWidth: 'max-w-full',
+      maxHeight: 'h-[100dvh]',
+      padding: 'p-8',
+      borderRadius: 'rounded-none',
+      bottomSheetThreshold: 'none',
+    },
+    large: {
+      maxWidth: 'max-w-full',
+      maxHeight: 'h-[100dvh]',
+      padding: 'p-10',
+      borderRadius: 'rounded-none',
+      bottomSheetThreshold: 'none',
+    },
+    tv: {
+      maxWidth: 'max-w-full',
+      maxHeight: 'h-[100dvh]',
+      padding: 'p-12',
+      borderRadius: 'rounded-none',
+      bottomSheetThreshold: 'none',
+    },
+  },
+} as const satisfies Record<
+  ModalSize,
+  Partial<Record<ScreenSize, Partial<ModalResponsiveConfig>>>
+>;
+
+const maxWidthToCss: Record<string, string> = {
+  'max-w-xs': '20rem',
+  'max-w-sm': '24rem',
+  'max-w-md': '28rem',
+  'max-w-lg': '32rem',
+  'max-w-xl': '36rem',
+  'max-w-2xl': '42rem',
+  'max-w-3xl': '48rem',
+  'max-w-4xl': '56rem',
+  'max-w-5xl': '64rem',
+  'max-w-6xl': '72rem',
+  'max-w-full': '100%',
+  'max-w-[calc(100vw-1rem)]': 'calc(100vw - 1rem)',
 };
 
-/**
- * Modal sizing based on content type
- */
-export const getModalSizeByType = (
-  type: 'compact' | 'default' | 'large' | 'fullscreen',
+const maxHeightToCss: Record<string, string> = {
+  'max-h-[72dvh]': '72dvh',
+  'max-h-[74dvh]': '74dvh',
+  'max-h-[76dvh]': '76dvh',
+  'max-h-[82dvh]': '82dvh',
+  'max-h-[86dvh]': '86dvh',
+  'max-h-[88dvh]': '88dvh',
+  'max-h-[90dvh]': '90dvh',
+  'max-h-[92dvh]': '92dvh',
+  'h-[100dvh]': '100dvh',
+};
+
+export function getModalConfig(screenSize: ScreenSize): ModalResponsiveConfig {
+  return modalConfigs[screenSize] ?? modalConfigs.mobile;
+}
+
+export function getModalSizeByType(
+  type: ModalSize,
   screenSize: ScreenSize
-): ModalResponsiveConfig => {
+): ModalResponsiveConfig {
   const baseConfig = getModalConfig(screenSize);
 
-  const adjustments: Record<
-    'compact' | 'default' | 'large' | 'fullscreen',
-    Partial<ModalResponsiveConfig>
-  > = {
-    compact: {
-      maxWidth: screenSize === 'mobile' ? 'max-w-xs' : 'max-w-sm',
-      maxHeight: 'max-h-[70vh]',
-    },
-    default: baseConfig,
-    large: {
-      maxWidth:
-        screenSize === 'mobile'
-          ? 'max-w-sm'
-          : screenSize === 'tablet'
-            ? 'max-w-3xl'
-            : 'max-w-4xl',
-      maxHeight: 'max-h-[90vh]',
-    },
-    fullscreen: {
-      maxWidth:
-        screenSize === 'mobile'
-          ? 'max-w-full'
-          : screenSize === 'tablet'
-            ? 'max-w-5xl'
-            : 'max-w-full',
-      maxHeight: '100vh',
-      padding:
-        screenSize === 'mobile'
-          ? 'p-4'
-          : screenSize === 'tablet'
-            ? 'p-6'
-            : 'p-8',
-    },
-  };
+  const overrideMap = sizeOverrides[type] as Partial<
+    Record<ScreenSize, Partial<ModalResponsiveConfig>>
+  >;
+
+  const override = overrideMap[screenSize] ?? {};
 
   return {
     ...baseConfig,
-    ...adjustments[type],
+    ...override,
   };
-};
+}
 
-/**
- * Get modal styles as CSS object
- */
-export const getModalStylesBySize = (
+export function getModalClassNames(
   screenSize: ScreenSize,
-  type: 'compact' | 'default' | 'large' | 'fullscreen' = 'default'
-): React.CSSProperties => {
+  type: ModalSize = 'default',
+  extra?: string
+): string {
   const config = getModalSizeByType(type, screenSize);
 
-  // Parse max-width and max-height to pixel values for inline styles
-  const maxWidthMap: Record<string, string> = {
-    'max-w-xs': '320px',
-    'max-w-sm': '384px',
-    'max-w-md': '448px',
-    'max-w-lg': '512px',
-    'max-w-2xl': '672px',
-    'max-w-3xl': '768px',
-    'max-w-4xl': '896px',
-    'max-w-5xl': '1024px',
-    'max-w-full': '100%',
-  };
+  return [
+    config.maxWidth,
+    config.maxHeight,
+    config.padding,
+    config.borderRadius,
+    'w-full overflow-hidden',
+    extra,
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
 
-  const maxHeightMap: Record<string, string> = {
-    'max-h-[70vh]': '70vh',
-    'max-h-[80vh]': '80vh',
-    'max-h-[85vh]': '85vh',
-    'max-h-[90vh]': '90vh',
-    '100vh': '100vh',
-  };
+export function getModalStylesBySize(
+  screenSize: ScreenSize,
+  type: ModalSize = 'default'
+): React.CSSProperties {
+  const config = getModalSizeByType(type, screenSize);
 
   return {
-    maxWidth: maxWidthMap[config.maxWidth] || '512px',
-    maxHeight: maxHeightMap[config.maxHeight] || '85vh',
+    maxWidth: maxWidthToCss[config.maxWidth] ?? '42rem',
+    maxHeight: maxHeightToCss[config.maxHeight] ?? '86dvh',
   };
-};
+}
 
-/**
- * Adjust modal behavior based on screen orientation
- */
-export const getModalOrientationStyles = (
-  orientation: 'portrait' | 'landscape',
+export function getModalOrientationConfig(
+  orientation: ModalOrientation,
   screenSize: ScreenSize
-): Partial<ModalResponsiveConfig> => {
+): Partial<ModalResponsiveConfig> {
   if (orientation === 'landscape' && screenSize === 'mobile') {
     return {
-      maxHeight: 'max-h-[80vh]',
+      maxHeight: 'max-h-[76dvh]',
       padding: 'p-3',
+      borderRadius: 'rounded-2xl',
     };
   }
 
   return {};
-};
+}
 
-/**
- * Check if modal should use bottom sheet based on screen size and device
- */
-export const shouldUseBottomSheet = (
-  screenSize: ScreenSize,
-  isTouchDevice: boolean,
-  forceBottomSheet?: boolean
-): boolean => {
+export function shouldUseBottomSheet({
+  screenSize,
+  isTouchDevice,
+  forceBottomSheet = false,
+  disabled = false,
+}: {
+  screenSize: ScreenSize;
+  isTouchDevice: boolean;
+  forceBottomSheet?: boolean;
+  disabled?: boolean;
+}): boolean {
+  if (disabled) return false;
   if (forceBottomSheet) return true;
   if (!isTouchDevice) return false;
 
-  return screenSize === 'mobile' || screenSize === 'tablet';
-};
+  return screenSize === 'mobile';
+}
 
-/**
- * Get safe area insets for modals (for notched devices)
- */
-export const getSafeAreaInsets = (): {
+export function getSafeAreaInsets(): {
   top: string;
   bottom: string;
   left: string;
   right: string;
-} => {
-  if (typeof window === 'undefined') {
-    return { top: '0', bottom: '0', left: '0', right: '0' };
-  }
-
+} {
   return {
     top: 'max(env(safe-area-inset-top), 0px)',
     bottom: 'max(env(safe-area-inset-bottom), 0px)',
     left: 'max(env(safe-area-inset-left), 0px)',
     right: 'max(env(safe-area-inset-right), 0px)',
   };
-};
+}
+
+export function getModalSafeAreaStyle(): React.CSSProperties {
+  const safeArea = getSafeAreaInsets();
+
+  return {
+    paddingTop: safeArea.top,
+    paddingBottom: safeArea.bottom,
+    paddingLeft: safeArea.left,
+    paddingRight: safeArea.right,
+  };
+}
+
+export function isFullscreenModal(type: ModalSize): boolean {
+  return type === 'fullscreen';
+}
+
+export function isCompactModal(type: ModalSize): boolean {
+  return type === 'compact';
+}

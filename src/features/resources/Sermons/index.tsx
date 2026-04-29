@@ -1074,9 +1074,9 @@ const FeaturedSection = ({
 
   return (
     <Section
-      background="dark"
       padding="lg"
       fullHeight={false}
+      className="relative overflow-hidden"
       style={{ backgroundColor: themeStyles.sectionBackground }}
     >
       <Container size="xl">
@@ -1729,12 +1729,15 @@ const SermonUtil = () => {
       </Section>
 
       <Section
-        background="image"
-        backgroundImage={Banner_2.src}
-        overlay
-        overlayOpacity={50}
         padding="lg"
         fullHeight={false}
+        className="relative overflow-hidden bg-black"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.82), rgba(0,0,0,0.9)), url(${Banner_2.src})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
       >
         <Container size="xl">
           <div className="mb-6 sm:mb-8">

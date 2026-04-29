@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 
@@ -92,11 +91,7 @@ export const viewport: Viewport = {
   themeColor: '#050505',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   const orgSchema = {
     '@context': 'https://schema.org',
     '@type': 'Church',
@@ -143,11 +138,16 @@ export default function RootLayout({
         bricolageGrotesque.variable,
         worksans.variable,
         playfair.variable,
-        'antialiased'
+        'scroll-smooth antialiased'
       )}
       suppressHydrationWarning
     >
-      <body className={cn(worksans.className, 'font-sans')}>
+      <body
+        className={cn(
+          worksans.className,
+          'min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white'
+        )}
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

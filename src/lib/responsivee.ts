@@ -1,32 +1,49 @@
 // lib/responsive.ts
 
-// Base responsive configuration
+export const breakpoints = {
+  xs: 375,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  '2xl': 1536,
+} as const;
+
+export type Breakpoint = keyof typeof breakpoints;
+export type ViewportSize = 'mobile' | 'tablet' | 'desktop';
+
+export type ResponsiveRecord = Readonly<Record<ViewportSize, string>>;
+export type BreakpointRecord = Partial<
+  Readonly<Record<Breakpoint | 'base', string>>
+>;
+
+const cx = (...classes: Array<string | false | null | undefined>) =>
+  classes.filter(Boolean).join(' ');
+
 export const responsive = {
-  // Text Sizes
   heading: {
-    mobile: 'text-lg',
-    tablet: 'text-xl',
-    desktop: 'text-2xl',
+    mobile: 'text-lg leading-tight',
+    tablet: 'text-xl leading-tight',
+    desktop: 'text-2xl leading-tight',
   },
   body: {
-    mobile: 'text-xs',
-    tablet: 'text-sm',
-    desktop: 'text-base',
+    mobile: 'text-xs leading-relaxed',
+    tablet: 'text-sm leading-relaxed',
+    desktop: 'text-base leading-relaxed',
   },
   price: {
-    mobile: 'text-lg',
-    tablet: 'text-xl',
-    desktop: 'text-2xl',
+    mobile: 'text-lg font-semibold',
+    tablet: 'text-xl font-semibold',
+    desktop: 'text-2xl font-semibold',
   },
 
-  // Components
   button: {
-    mobile: 'py-2.5 text-sm',
-    tablet: 'py-3 text-base',
-    desktop: 'py-3.5 text-base',
+    mobile: 'px-4 py-2.5 text-sm',
+    tablet: 'px-5 py-3 text-sm',
+    desktop: 'px-6 py-3.5 text-base',
   },
   modal: {
-    mobile: 'max-h-[85vh]',
+    mobile: 'max-h-[85vh] w-[calc(100vw-24px)]',
     tablet: 'max-h-[90vh] max-w-2xl',
     desktop: 'max-h-[90vh] max-w-3xl',
   },
@@ -36,7 +53,6 @@ export const responsive = {
     desktop: 'h-72',
   },
 
-  // Spacing
   padding: {
     mobile: 'p-4',
     tablet: 'p-6',
@@ -48,63 +64,80 @@ export const responsive = {
     desktop: 'gap-5',
   },
 
-  // Hero Section Specific Styles
   hero: {
     title: {
-      base: 'text-2xl',
-      xs: 'xs:text-3xl',
-      sm: 'sm:text-4xl',
-      md: 'md:text-5xl',
-      lg: 'lg:text-6xl',
-      xl: 'xl:text-7xl',
+      base: 'text-[2.25rem] leading-[0.98] tracking-[-0.055em]',
+      xs: 'xs:text-[2.65rem]',
+      sm: 'sm:text-5xl',
+      md: 'md:text-6xl',
+      lg: 'lg:text-[4.8rem]',
+      xl: 'xl:text-[5.8rem]',
     },
     subtitle: {
-      base: 'text-sm',
-      xs: 'xs:text-base',
+      base: 'text-sm leading-[1.45]',
       sm: 'sm:text-lg',
       md: 'md:text-xl',
       lg: 'lg:text-2xl',
-      xl: 'xl:text-3xl',
     },
     description: {
-      base: 'text-xs',
-      xs: 'xs:text-sm',
+      base: 'text-sm leading-7',
       sm: 'sm:text-base',
-      md: 'md:text-lg',
-      lg: 'lg:text-xl',
-      xl: 'xl:text-2xl',
+      md: 'md:text-[1.05rem]',
     },
     button: {
-      base: 'text-xs px-4 py-2.5',
-      xs: 'xs:text-sm xs:px-5 xs:py-3',
-      sm: 'sm:text-base sm:px-6 sm:py-3.5',
-      md: 'md:text-lg md:px-7 md:py-4',
+      base: 'px-5 py-3 text-sm',
+      sm: 'sm:px-6 sm:py-3.5',
+      md: 'md:text-base',
     },
     container: {
-      base: 'px-3',
-      xs: 'xs:px-4',
-      sm: 'sm:px-5',
-      md: 'md:px-6',
-      lg: 'lg:px-8',
+      base: 'px-4',
+      sm: 'sm:px-6',
+      lg: 'lg:px-12',
     },
     spacing: {
-      titleBottom: 'mb-2',
-      subtitleBottom: 'mb-3',
-      descriptionBottom: 'mb-4',
-      buttonsGap: 'gap-2',
+      sectionY: 'py-14 sm:py-18 lg:py-24',
+      titleBottom: 'mb-4 sm:mb-5',
+      subtitleBottom: 'mb-4',
+      descriptionBottom: 'mb-6',
+      buttonsGap: 'gap-3 sm:gap-4',
     },
+  },
+
+  layout: {
+    section: {
+      tight: 'py-10 sm:py-12 lg:py-14',
+      default: 'py-14 sm:py-18 lg:py-20',
+      relaxed: 'py-16 sm:py-20 lg:py-24',
+      hero: 'min-h-[86vh] sm:min-h-[92vh] lg:min-h-screen',
+    },
+    container: {
+      default: 'mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8',
+      narrow: 'mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8',
+      wide: 'mx-auto w-full max-w-[88rem] px-4 sm:px-6 lg:px-10',
+    },
+    grid: {
+      two: 'grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-8',
+      three: 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3',
+      feature: 'grid grid-cols-1 gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10',
+    },
+  },
+
+  surface: {
+    card: 'rounded-[1.75rem] border border-white/10 bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl',
+    cardHover:
+      'transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]',
+    panel:
+      'rounded-[2rem] border border-white/10 bg-white/[0.045] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl',
+    input:
+      'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[#F7DE12]/10',
+    select:
+      'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10',
   },
 } as const;
 
-// Types
-export type ViewportSize = 'mobile' | 'tablet' | 'desktop';
 export type ResponsiveConfig = typeof responsive;
 export type ResponsiveKey = keyof ResponsiveConfig;
 
-// Define the shape of responsive values
-type ResponsiveRecord = Record<ViewportSize, string>;
-
-// Type guard to check if a value is a ResponsiveRecord
 function isResponsiveRecord(value: unknown): value is ResponsiveRecord {
   return (
     typeof value === 'object' &&
@@ -115,7 +148,12 @@ function isResponsiveRecord(value: unknown): value is ResponsiveRecord {
   );
 }
 
-// Helper function to get responsive value based on viewport
+export function resolveViewport(width: number): ViewportSize {
+  if (width >= breakpoints.lg) return 'desktop';
+  if (width >= breakpoints.md) return 'tablet';
+  return 'mobile';
+}
+
 export function getResponsiveValue<T extends ResponsiveKey>(
   key: T,
   viewport: ViewportSize
@@ -126,53 +164,71 @@ export function getResponsiveValue<T extends ResponsiveKey>(
     return value[viewport];
   }
 
-  // For hero values which have a different structure
-  return JSON.stringify(value);
+  return '';
 }
 
-// Helper function to get hero responsive value
+export function responsiveClass(record: BreakpointRecord): string {
+  const parts: string[] = [];
+
+  if (record.base) parts.push(record.base);
+
+  (Object.keys(breakpoints) as Breakpoint[]).forEach(bp => {
+    const value = record[bp];
+    if (value) parts.push(`${bp}:${value}`);
+  });
+
+  return parts.join(' ');
+}
+
+export function mergeResponsive(
+  ...classes: Array<string | false | null | undefined>
+): string {
+  return cx(...classes);
+}
+
 export function getHeroResponsiveValue<
   T extends keyof (typeof responsive)['hero'],
->(key: T, viewport?: ViewportSize): string | Record<string, string> {
+>(key: T): string {
   const value = responsive.hero[key];
 
-  // If it's a string (like spacing values), return as is
-  if (typeof value === 'string') {
-    return value;
-  }
+  if (typeof value === 'string') return value;
 
-  // If it's an object and we have a viewport, try to get that specific value
-  if (viewport && typeof value === 'object' && value !== null) {
-    const viewportValue = (value as Record<string, string>)[viewport];
-    if (viewportValue) {
-      return viewportValue;
-    }
-  }
-
-  // Otherwise return the entire object
-  return value as Record<string, string>;
+  return Object.values(value).join(' ');
 }
 
-// Get all hero styles as a complete object
 export function getHeroResponsiveStyles() {
   return responsive.hero;
 }
 
-// Breakpoints configuration
-export const breakpoints = {
-  xs: 375,
-  sm: 640,
-  md: 768,
-  lg: 1024,
-  xl: 1280,
-  '2xl': 1536,
-} as const;
+export function getSurfaceClass(
+  key: keyof typeof responsive.surface,
+  extra?: string
+): string {
+  return cx(responsive.surface[key], extra);
+}
 
-export type Breakpoint = keyof typeof breakpoints;
+export function getLayoutClass<
+  T extends keyof typeof responsive.layout,
+  K extends keyof (typeof responsive.layout)[T],
+>(group: T, key: K, extra?: string): string {
+  return cx(responsive.layout[group][key] as string, extra);
+}
 
-// Type-safe responsive configuration
+export function getViewportFromWindow(): ViewportSize {
+  if (typeof window === 'undefined') return 'desktop';
+  return resolveViewport(window.innerWidth);
+}
+
+export function isAtLeastBreakpoint(width: number, breakpoint: Breakpoint) {
+  return width >= breakpoints[breakpoint];
+}
+
 export type ResponsiveConfigType = {
   [K in ResponsiveKey]: K extends 'hero'
     ? (typeof responsive)['hero']
-    : ResponsiveRecord;
+    : K extends 'layout'
+      ? (typeof responsive)['layout']
+      : K extends 'surface'
+        ? (typeof responsive)['surface']
+        : ResponsiveRecord;
 };
