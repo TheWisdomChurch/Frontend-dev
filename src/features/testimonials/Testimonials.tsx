@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ArrowRight,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   HeartHandshake,
   Loader2,
   MessageCircleHeart,
@@ -32,21 +34,21 @@ const TESTIMONIAL_FORM_BASE_URL =
 
 const stats = [
   {
-    label: 'Real stories',
-    value: 'Faith journeys',
-    detail: 'Stories of salvation, healing, care, hope, and transformation.',
+    label: 'Faith stories',
+    value: 'Real journeys',
+    detail: 'Stories of salvation, healing, hope, care, and transformation.',
     icon: Sparkles,
   },
   {
-    label: 'Community impact',
-    value: 'Shared strength',
-    detail: 'Each testimony helps someone else keep trusting God.',
+    label: 'Shared strength',
+    value: 'Community impact',
+    detail: 'Every story can encourage someone still trusting God.',
     icon: Users,
   },
   {
-    label: 'Care pathway',
-    value: 'Prayer & follow-up',
-    detail: 'Testimonies often connect to pastoral care and discipleship.',
+    label: 'Next step',
+    value: 'Prayer & care',
+    detail: 'Some stories open the door to prayer, support, and follow-up.',
     icon: HeartHandshake,
   },
 ];
@@ -60,27 +62,46 @@ const mapTestimony = (item: ApiTestimonial): UiTestimony => {
   return {
     id: item.id,
     name: fullName,
-    title: item.isAnonymous ? 'Anonymous member' : 'Church member',
+    title: item.isAnonymous ? 'Shared anonymously' : 'Wisdom House family',
     quote: item.testimony,
   };
 };
 
-function TestimonyCard({ testimony }: { testimony: UiTestimony }) {
+function TestimonyPreview({
+  testimony,
+  active,
+  onClick,
+}: {
+  testimony: UiTestimony;
+  active: boolean;
+  onClick: () => void;
+}) {
   return (
-    <article className="group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[#d7bb75]/35 hover:bg-white/[0.075] sm:p-6">
-      <div className="pointer-events-none absolute -right-14 -top-14 h-32 w-32 rounded-full bg-[#d7bb75]/10 blur-3xl transition group-hover:bg-[#d7bb75]/20" />
-
-      <Quote className="h-8 w-8 text-[#d7bb75]" />
-
-      <p className="mt-5 line-clamp-6 text-[0.95rem] leading-7 text-white/72">
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group w-full rounded-2xl border p-4 text-left transition duration-300 ${
+        active
+          ? 'border-[#d7bb75]/45 bg-[#d7bb75]/12'
+          : 'border-white/10 bg-white/[0.045] hover:border-white/18 hover:bg-white/[0.07]'
+      }`}
+    >
+      <p className="line-clamp-2 text-sm leading-6 text-white/72">
         {testimony.quote}
       </p>
-
-      <div className="mt-6 border-t border-white/10 pt-4">
-        <p className="font-semibold text-white">{testimony.name}</p>
-        <p className="mt-1 text-sm text-white/50">{testimony.title}</p>
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <span className="truncate text-sm font-semibold text-white">
+          {testimony.name}
+        </span>
+        <ArrowRight
+          className={`h-4 w-4 shrink-0 transition ${
+            active
+              ? 'text-[#d7bb75]'
+              : 'text-white/30 group-hover:translate-x-1 group-hover:text-white/70'
+          }`}
+        />
       </div>
-    </article>
+    </button>
   );
 }
 
@@ -89,6 +110,7 @@ export default function TestimoniesPage() {
   const router = useRouter();
 
   const [testimonies, setTestimonies] = useState<UiTestimony[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [shareUrl, setShareUrl] = useState(TESTIMONIAL_FORM_BASE_URL);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -142,22 +164,49 @@ export default function TestimoniesPage() {
     }
   }, [searchParams]);
 
+  const visibleTestimonies = useMemo(
+    () => testimonies.slice(0, 12),
+    [testimonies]
+  );
+
+  const activeTestimony = visibleTestimonies[activeIndex];
+
+  const goNext = useCallback(() => {
+    setActiveIndex(prev =>
+      visibleTestimonies.length ? (prev + 1) % visibleTestimonies.length : 0
+    );
+  }, [visibleTestimonies.length]);
+
+  const goPrev = useCallback(() => {
+    setActiveIndex(prev =>
+      visibleTestimonies.length
+        ? (prev - 1 + visibleTestimonies.length) % visibleTestimonies.length
+        : 0
+    );
+  }, [visibleTestimonies.length]);
+
+  useEffect(() => {
+    if (visibleTestimonies.length <= 1) return;
+
+    const timer = window.setInterval(goNext, 7000);
+    return () => window.clearInterval(timer);
+  }, [goNext, visibleTestimonies.length]);
+
+  useEffect(() => {
+    if (activeIndex >= visibleTestimonies.length) setActiveIndex(0);
+  }, [activeIndex, visibleTestimonies.length]);
+
   const closeSuccessModal = () => {
     setShowSuccessModal(false);
     router.replace('/testimonies');
   };
-
-  const visibleTestimonies = useMemo(
-    () => testimonies.slice(0, 24),
-    [testimonies]
-  );
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       <PageHero
         title="Stories of growth, healing, salvation, and real transformation."
         subtitle="Testimonies help the church remember that God is still working through worship, discipleship, care, and faithful obedience."
-        note="These stories are not here to decorate the website. They are here to strengthen faith, encourage perseverance, and make God’s faithfulness visible."
+        note="Read stories from the Wisdom House family, then share what God has done in your own life."
         chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
       />
 
@@ -202,7 +251,7 @@ export default function TestimoniesPage() {
       <Section padding="none" className="relative bg-[#050505]">
         <Container size="xl" className="py-4 sm:py-6 lg:py-8">
           <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
-            <div className="grid gap-0 lg:grid-cols-[0.78fr_1.22fr]">
+            <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
               <div className="border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
                 <div className="inline-flex items-center gap-2 rounded-full border border-[#d7bb75]/25 bg-[#d7bb75]/10 px-3 py-1.5 text-[#d7bb75]">
                   <MessageCircleHeart className="h-3.5 w-3.5" />
@@ -212,15 +261,16 @@ export default function TestimoniesPage() {
                 </div>
 
                 <h2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-                  Approved testimonies from the community.
+                  Be encouraged by what God is doing in people’s lives.
                 </h2>
 
                 <p className="mt-4 max-w-lg text-[0.95rem] leading-7 text-white/62">
-                  Every testimony is reviewed before publishing, so the stories
-                  shown here remain clear, honouring, and helpful to the church.
+                  Browse recent stories from the Wisdom House family. Each story
+                  is shared to strengthen faith, build gratitude, and remind
+                  someone that God is still working.
                 </p>
 
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
                   <a
                     href={shareUrl}
                     target="_blank"
@@ -242,27 +292,91 @@ export default function TestimoniesPage() {
 
               <div className="p-4 sm:p-6 lg:p-8">
                 {loading ? (
-                  <div className="flex min-h-[320px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20">
+                  <div className="flex min-h-[420px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20">
                     <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm text-white/70">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Loading approved testimonies...
+                      Loading stories...
                     </div>
                   </div>
-                ) : visibleTestimonies.length === 0 ? (
-                  <div className="flex min-h-[320px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20 px-6 text-center">
+                ) : !activeTestimony ? (
+                  <div className="flex min-h-[420px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20 px-6 text-center">
                     <div className="max-w-sm">
                       <CheckCircle2 className="mx-auto h-9 w-9 text-[#d7bb75]" />
                       <p className="mt-4 text-sm leading-6 text-white/62">
-                        No approved testimonies yet. Once testimonies are
-                        reviewed and approved, they will appear here.
+                        Stories will appear here soon. You can be the first to
+                        share what God has done in your life.
                       </p>
+
+                      <a
+                        href={shareUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-[#d7bb75] px-5 py-3 text-sm font-bold text-black"
+                      >
+                        Share your story
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
                     </div>
                   </div>
                 ) : (
-                  <div className="grid max-h-[760px] gap-4 overflow-y-auto pr-1 sm:grid-cols-2 xl:grid-cols-3">
-                    {visibleTestimonies.map(testimony => (
-                      <TestimonyCard key={testimony.id} testimony={testimony} />
-                    ))}
+                  <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+                    <article className="relative flex min-h-[420px] flex-col justify-between overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/30 p-6 shadow-[0_24px_90px_rgba(0,0,0,0.35)] sm:p-8">
+                      <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#d7bb75]/10 blur-3xl" />
+
+                      <div className="relative z-10">
+                        <Quote className="h-10 w-10 text-[#d7bb75]" />
+
+                        <p className="mt-7 text-xl leading-9 text-white/82 sm:text-2xl sm:leading-10">
+                          “{activeTestimony.quote}”
+                        </p>
+                      </div>
+
+                      <div className="relative z-10 mt-8 flex flex-col gap-5 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <p className="text-lg font-semibold text-white">
+                            {activeTestimony.name}
+                          </p>
+                          <p className="mt-1 text-sm text-white/48">
+                            {activeTestimony.title}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={goPrev}
+                            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-white transition hover:bg-white/[0.1]"
+                            aria-label="Previous testimony"
+                          >
+                            <ChevronLeft className="h-5 w-5" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={goNext}
+                            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-white transition hover:bg-white/[0.1]"
+                            aria-label="Next testimony"
+                          >
+                            <ChevronRight className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+
+                    <aside className="flex gap-3 overflow-x-auto pb-1 lg:max-h-[420px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1">
+                      {visibleTestimonies.map((testimony, index) => (
+                        <div
+                          key={testimony.id}
+                          className="min-w-[280px] lg:min-w-0"
+                        >
+                          <TestimonyPreview
+                            testimony={testimony}
+                            active={index === activeIndex}
+                            onClick={() => setActiveIndex(index)}
+                          />
+                        </div>
+                      ))}
+                    </aside>
                   </div>
                 )}
               </div>
@@ -273,8 +387,8 @@ export default function TestimoniesPage() {
 
       <ActionBanner
         eyebrow="Share your story"
-        title="If God has done something meaningful in your life through this church season, we would love to hear it."
-        description="Testimonies encourage people who are still praying, still waiting, and still trying to trust God well."
+        title="If God has done something meaningful in your life, your story may encourage someone else."
+        description="Share your testimony and help the church celebrate God’s faithfulness with gratitude and wisdom."
         primaryHref={shareUrl}
         primaryLabel="Share a testimony"
         primaryTargetBlank
@@ -286,7 +400,7 @@ export default function TestimoniesPage() {
         isOpen={showSuccessModal}
         onClose={closeSuccessModal}
         title="Testimony submitted"
-        message="Thank you. Your testimony has been received and is now in the admin approval queue."
+        message="Thank you. Your testimony has been received and will be reviewed before it appears publicly."
         actionLabel="Continue"
       />
     </div>
