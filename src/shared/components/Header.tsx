@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -22,12 +23,12 @@ export default function Header() {
   const pathname = usePathname() || '/';
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const navItems = useMemo(() => NAV_ITEMS, []);
+
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
     return pathname === href || pathname.startsWith(`${href}/`);
   };
-
-  const navItems = useMemo(() => NAV_ITEMS, []);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -63,10 +64,27 @@ export default function Header() {
           <Link
             href="/"
             className="site-header__brand"
-            aria-label="Wisdom Church home"
+            aria-label="The Wisdom Church home"
           >
-            <span className="site-header__brand-mark">W</span>
-            <span className="site-header__brand-text">Wisdom Church</span>
+            <span className="site-header__brand-logo">
+              <Image
+                src="/logo.webp"
+                alt="The Wisdom Church logo"
+                width={44}
+                height={44}
+                priority
+                className="site-header__brand-image"
+              />
+            </span>
+
+            <span className="site-header__brand-divider" aria-hidden="true" />
+
+            <span className="site-header__brand-copy">
+              <span className="site-header__brand-line">The Wisdom</span>
+              <span className="site-header__brand-line site-header__brand-line--strong">
+                Church
+              </span>
+            </span>
           </Link>
 
           <nav
@@ -77,7 +95,9 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`site-header__nav-link ${isActive(item.href) ? 'is-active' : ''}`}
+                className={`site-header__nav-link ${
+                  isActive(item.href) ? 'is-active' : ''
+                }`}
               >
                 {item.label}
               </Link>
@@ -112,6 +132,22 @@ export default function Header() {
         />
 
         <div className="site-header__mobile-panel" id="mobile-navigation">
+          <div className="site-header__mobile-brand">
+            <Image
+              src="/logo.webp"
+              alt="The Wisdom Church logo"
+              width={46}
+              height={46}
+              className="site-header__mobile-brand-image"
+            />
+            <div>
+              <p className="site-header__mobile-brand-kicker">Welcome to</p>
+              <p className="site-header__mobile-brand-name">
+                The Wisdom Church
+              </p>
+            </div>
+          </div>
+
           <nav
             className="site-header__mobile-nav"
             aria-label="Mobile navigation"
@@ -120,7 +156,9 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`site-header__mobile-link ${isActive(item.href) ? 'is-active' : ''}`}
+                className={`site-header__mobile-link ${
+                  isActive(item.href) ? 'is-active' : ''
+                }`}
               >
                 <span>{item.label}</span>
                 <span aria-hidden="true">→</span>
