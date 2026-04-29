@@ -60,7 +60,7 @@ const FALLBACK_SLIDE = {
   subtitle: 'Equipped and empowered for greatness',
   description:
     'A Spirit-filled family helping believers grow in faith, purpose, and community.',
-  image: '/images/placeholder.webp',
+  image: '/images/lader.jpeg', // ← Changed to your image
   upcoming: FALLBACK_UPCOMING,
 } as unknown as HeroSlide;
 
