@@ -465,9 +465,9 @@ export default function HeroSection({
 
       <Container
         size="xl"
-        className="relative z-20 flex min-h-[86svh] items-center px-4 pb-20 pt-20 sm:min-h-[92svh] sm:px-6 sm:pb-24 sm:pt-24 lg:min-h-screen lg:px-10"
+        className="relative z-20 flex min-h-[86svh] items-center px-4 pb-20 pt-16 sm:min-h-[92svh] sm:px-6 sm:pb-28 sm:pt-20 lg:min-h-screen lg:px-10"
       >
-        <div className="grid w-full items-center gap-7 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 xl:gap-14">
+        <div className="grid w-full items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 xl:gap-16">
           <div className="flex w-full flex-col items-center text-center sm:items-start sm:text-left">
             {showWaveText ? (
               <div className="mb-4 flex w-full justify-center sm:justify-start">
@@ -503,11 +503,11 @@ export default function HeroSection({
                 style={{
                   color: '#FFFFFF',
                   textShadow:
-                    '0 4px 26px rgba(0,0,0,0.78), 0 2px 10px rgba(0,0,0,0.65)',
+                    '0 6px 30px rgba(0,0,0,0.82), 0 2px 12px rgba(0,0,0,0.68)',
                 }}
                 useThemeColor={false}
               >
-                <span className="block text-[2.2rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.4rem]">
+                <span className="block text-[1.95rem] sm:text-[2.8rem] md:text-5xl lg:text-[4rem] xl:text-[4.8rem]">
                   {renderTitle((currentSlideData as any)?.title, colorScheme)}
                 </span>
               </H1>
@@ -523,16 +523,16 @@ export default function HeroSection({
               {(currentSlideData as any)?.subtitle ? (
                 <H2
                   ref={subtitleRef}
-                  className="mt-5 font-semibold"
+                  className="mt-6 font-medium"
                   style={{
                     color: colorScheme.primary,
                     textShadow:
-                      '0 2px 14px rgba(0,0,0,0.75), 0 0 24px rgba(247,222,18,0.10)',
+                      '0 3px 16px rgba(0,0,0,0.80), 0 0 28px rgba(247,222,18,0.12)',
                   }}
                   useThemeColor={false}
                   weight="medium"
                 >
-                  <span className="block text-sm leading-[1.45] sm:text-lg md:text-xl lg:text-2xl">
+                  <span className="block text-sm leading-relaxed sm:text-base md:text-lg lg:text-xl">
                     {renderSubtitle((currentSlideData as any)?.subtitle)}
                   </span>
                 </H2>
@@ -540,7 +540,7 @@ export default function HeroSection({
 
               <p
                 ref={descriptionRef}
-                className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/78 sm:mx-0 sm:text-base md:text-[1.02rem]"
+                className="mx-auto mt-6 max-w-3xl text-sm leading-relaxed text-white/75 sm:mx-0 sm:text-[0.95rem] md:text-base"
               >
                 {isCompactMobile
                   ? 'A Spirit-filled family helping believers grow in faith and purpose.'
@@ -550,7 +550,7 @@ export default function HeroSection({
 
               <div
                 ref={buttonsRef}
-                className="mt-7 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:justify-start"
+                className="mt-8 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row sm:justify-start"
               >
                 <CustomButton
                   variant="primary"
@@ -558,16 +558,16 @@ export default function HeroSection({
                   curvature="full"
                   elevated
                   onClick={handlePrimaryClick}
-                  className="group w-full px-6 py-3.5 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98] sm:w-auto"
+                  className="group w-full px-8 py-3.5 text-sm font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-[0.96] sm:w-auto"
                   style={{
                     background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                     color: '#111111',
-                    boxShadow: `0 18px 45px ${colorScheme.opacity.primary25}`,
+                    boxShadow: `0 20px 50px ${colorScheme.opacity.primary28}`,
                   }}
                 >
                   <span className="inline-flex items-center gap-2">
                     {primaryButtonText}
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
                   </span>
                 </CustomButton>
 
@@ -576,7 +576,7 @@ export default function HeroSection({
                   size="md"
                   curvature="full"
                   onClick={handleSecondaryClick}
-                  className="group w-full border border-white/25 bg-white/[0.08] px-6 py-3.5 text-sm font-bold text-white shadow-[0_16px_45px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.14] sm:w-auto"
+                  className="group w-full border border-white/30 bg-white/[0.10] px-8 py-3.5 text-sm font-bold text-white shadow-[0_18px_50px_rgba(0,0,0,0.32)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.16] hover:border-white/40 sm:w-auto"
                 >
                   <span className="inline-flex items-center gap-2">
                     <PlayCircle className="h-4 w-4" />
@@ -589,9 +589,9 @@ export default function HeroSection({
 
           <div
             ref={cardsRef}
-            className="grid w-full gap-4 md:grid-cols-2 lg:grid-cols-1"
+            className="grid w-full gap-5 md:grid-cols-2 lg:grid-cols-1"
           >
-            <div className="relative overflow-hidden rounded-[1.6rem] border border-white/15 bg-white/[0.08] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.38)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1 hover:bg-white/[0.11] sm:p-5">
+            <div className="group relative overflow-hidden rounded-[1.8rem] border border-white/18 bg-white/[0.09] p-5 shadow-[0 32px 100px rgba(0,0,0,0.42)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1.5 hover:bg-white/[0.13] hover:border-white/25 hover:shadow-[0 40px 120px rgba(0,0,0,0.48)] sm:p-6">
               <div
                 className="absolute inset-x-0 top-0 h-px"
                 style={{
@@ -644,20 +644,21 @@ export default function HeroSection({
                 curvature="full"
                 elevated
                 onClick={handleUpcomingCta}
-                className="mt-5 border border-white/20 px-5 py-2.5 text-xs font-bold transition duration-300 hover:scale-[1.02]"
+                className="mt-6 px-6 py-2.5 text-xs font-bold transition-all duration-300 hover:scale-[1.04] hover:shadow-lg active:scale-[0.97]"
                 style={{
-                  background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
+                  background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
                   color: '#111111',
+                  boxShadow: `0 8px 24px ${colorScheme.opacity.primary20}`,
                 }}
               >
                 <span className="inline-flex items-center gap-2">
                   {upcoming.ctaLabel ?? 'Reserve a seat'}
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </CustomButton>
             </div>
 
-            <div className="relative overflow-hidden rounded-[1.6rem] border border-white/12 bg-black/45 p-4 shadow-[0_28px_90px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1 hover:bg-black/55 sm:p-5">
+            <div className="group relative overflow-hidden rounded-[1.8rem] border border-white/14 bg-black/50 p-5 shadow-[0 32px 100px rgba(0,0,0,0.40)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1.5 hover:bg-black/60 hover:border-white/22 hover:shadow-[0 40px 120px rgba(0,0,0,0.46)] sm:p-6">
               <div className="flex items-start gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.08]">
                   <PlayCircle className="h-6 w-6 text-white" />
