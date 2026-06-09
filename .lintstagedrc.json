@@ -1,7 +1,6 @@
 {
   "*.{js,jsx,ts,tsx}": [
-    "node ./node_modules/prettier/bin/prettier.cjs --cache --write --ignore-unknown",
-    "node ./node_modules/eslint/bin/eslint.js --cache --cache-location .cache/eslint/ --fix --max-warnings 0 --no-warn-ignored"
+    "node ./node_modules/prettier/bin/prettier.cjs --cache --write --ignore-unknown"
   ],
   "*.{json,md,mdx,css,scss,html,yml,yaml}": [
     "node ./node_modules/prettier/bin/prettier.cjs --cache --write --ignore-unknown"
