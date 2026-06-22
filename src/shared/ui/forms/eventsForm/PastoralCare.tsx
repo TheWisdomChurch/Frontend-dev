@@ -230,9 +230,7 @@ const PastoralCareUnit = () => {
           <BodyLG
             className="text-base sm:text-lg max-w-2xl mx-auto opacity-80"
             style={{
-              color: isDarkMode
-                ? '#f5f6f7'Secondary
-                : '#f5f6f7'Tertiary,
+              color: 'rgba(255,255,255,0.65)',
             }}
           >
             Let us be part of your special moments. Register for pastoral care
@@ -249,7 +247,7 @@ const PastoralCareUnit = () => {
               background: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
               borderColor: isDarkMode
                 ? 'rgba(255,255,255,0.12)'
-                : 'rgba(255,255,255,0.12)'Light,
+                : 'rgba(255,255,255,0.12)',
             }}
           >
             {/* Form Header */}
@@ -721,8 +719,8 @@ const PastoralCareUnit = () => {
                     className="text-center mt-4 opacity-70"
                     style={{
                       color: isDarkMode
-                        ? '#f5f6f7'Secondary
-                        : '#f5f6f7'Tertiary,
+                        ? 'rgba(255,255,255,0.60)'
+                        : 'rgba(255,255,255,0.42)',
                     }}
                   >
                     We&apos;ll contact you within 24-48 hours to discuss your
@@ -745,7 +743,7 @@ const PastoralCareUnit = () => {
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
             <div
               className="h-10 w-10 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: rgba(201,150,26,0.10) }}
+              style={{ backgroundColor: 'rgba(201,150,26,0.10)' }}
             >
               <CheckCircle2
                 className="w-5 h-5 text-[var(--app-primary)]"

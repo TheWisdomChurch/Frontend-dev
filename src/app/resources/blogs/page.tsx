@@ -1,13 +1,6 @@
 ﻿import HeroSection from '@/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
 import { hero_bg_2 } from '@/shared/assets';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 
 const BlogPage = () => {

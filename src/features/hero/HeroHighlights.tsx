@@ -16,7 +16,6 @@ import {
 
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Container } from '@/shared/layout';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 
 /* =============================================================================

@@ -2,15 +2,9 @@
 
 import Link from 'next/link';
 import type { JSX } from 'react';
-import { BodyMD, BodySM, Caption, H2, H3 } from '@/shared/text';
+import { BodyMD, BodySM, Caption, H3 } from '@/shared/text';
 import PageHero from '@/features/hero/PageHero';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+import { Section, PageSection } from '@/shared/layout';
 
 type Section = {
   title: string;
