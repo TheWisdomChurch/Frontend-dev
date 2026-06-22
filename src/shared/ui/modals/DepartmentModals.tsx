@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useMemo, useState, type ComponentType } from 'react';
 import { useForm } from 'react-hook-form';
@@ -488,7 +488,7 @@ export function JoinUsModal({
       <div className="space-y-5">
         <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
           <div className="flex items-start gap-3">
-            <div className="grid h-12 w-12 flex-none place-items-center rounded-2xl border border-[#f7de12]/20 bg-[#f7de12]/10 text-[#f7de12]">
+            <div className="grid h-12 w-12 flex-none place-items-center rounded-2xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
               <DepartmentIcon className="h-5 w-5" />
             </div>
             <div className="min-w-0">
@@ -515,9 +515,9 @@ export function JoinUsModal({
                     className={[
                       'mx-auto grid h-8 w-8 place-items-center rounded-full border text-xs font-black transition',
                       active
-                        ? 'border-[#f7de12] bg-[#f7de12] text-black'
+                        ? 'border-[var(--app-primary)] bg-[var(--app-primary)] text-black'
                         : completed
-                          ? 'border-[#f7de12]/40 bg-[#f7de12]/10 text-[#f7de12]'
+                          ? 'border-[var(--app-primary)]/40 bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                           : 'border-white/10 bg-white/[0.035] text-white/45',
                     ].join(' ')}
                   >
@@ -538,7 +538,7 @@ export function JoinUsModal({
 
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full bg-[#f7de12] transition-all duration-500"
+              className="h-full rounded-full bg-[var(--app-primary)] transition-all duration-500"
               style={{
                 width:
                   step === 'personal'
@@ -673,12 +673,12 @@ export function JoinUsModal({
                       className={[
                         'rounded-2xl border p-4 text-left transition hover:-translate-y-0.5',
                         selected
-                          ? 'border-[#f7de12] bg-[#f7de12]/10 text-[#f7de12]'
+                          ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                           : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
                       ].join(' ')}
                     >
                       <div className="flex items-start gap-3">
-                        <div className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-[#f7de12]/10">
+                        <div className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-[var(--app-primary)]/10">
                           <Icon className="h-4 w-4" />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -719,7 +719,7 @@ export function JoinUsModal({
                         className={[
                           'rounded-2xl border p-4 text-center transition',
                           selected
-                            ? 'border-[#f7de12] bg-[#f7de12]/10 text-[#f7de12]'
+                            ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                             : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
                         ].join(' ')}
                       >
@@ -739,9 +739,9 @@ export function JoinUsModal({
                 ) : null}
               </div>
 
-              <div className="mt-6 rounded-2xl border border-[#f7de12]/20 bg-[#f7de12]/10 p-4">
+              <div className="mt-6 rounded-2xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 p-4">
                 <div className="flex items-start gap-3">
-                  <Target className="mt-0.5 h-5 w-5 flex-none text-[#f7de12]" />
+                  <Target className="mt-0.5 h-5 w-5 flex-none text-[var(--app-primary)]" />
                   <div>
                     <p className="text-sm font-semibold text-white">
                       Department requirements
@@ -750,7 +750,7 @@ export function JoinUsModal({
                       {departmentConfig.skills.map(skill => (
                         <span
                           key={skill}
-                          className="rounded-full bg-[#f7de12]/10 px-3 py-1 text-xs font-semibold text-[#f7de12]"
+                          className="rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-semibold text-[var(--app-primary)]"
                         >
                           {skill}
                         </span>
@@ -795,11 +795,11 @@ export function JoinUsModal({
                         className={[
                           'rounded-2xl border p-4 text-center transition',
                           selected
-                            ? 'border-[#f7de12] bg-[#f7de12]/10 text-[#f7de12]'
+                            ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                             : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
                         ].join(' ')}
                       >
-                        <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-xl bg-[#f7de12]/10">
+                        <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-xl bg-[var(--app-primary)]/10">
                           <Icon className="h-4 w-4" />
                         </div>
                         <p className="text-sm font-semibold">{item.label}</p>
@@ -895,7 +895,7 @@ export function JoinUsModal({
                 <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 p-4">
                   <input
                     type="checkbox"
-                    className="mt-1 h-4 w-4 rounded border-white/30 accent-[#f7de12]"
+                    className="mt-1 h-4 w-4 rounded border-white/30 accent-[var(--app-primary)]"
                     {...register('agreeToTerms')}
                   />
                   <span>
@@ -917,7 +917,7 @@ export function JoinUsModal({
                 <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 p-4">
                   <input
                     type="checkbox"
-                    className="mt-1 h-4 w-4 rounded border-white/30 accent-[#f7de12]"
+                    className="mt-1 h-4 w-4 rounded border-white/30 accent-[var(--app-primary)]"
                     {...register('agreeToTraining')}
                   />
                   <span>
@@ -937,9 +937,9 @@ export function JoinUsModal({
                 </label>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-[#f7de12]/20 bg-[#f7de12]/10 p-4">
+              <div className="mt-5 rounded-2xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 p-4">
                 <div className="flex items-start gap-3">
-                  <MessageSquare className="mt-0.5 h-5 w-5 flex-none text-[#f7de12]" />
+                  <MessageSquare className="mt-0.5 h-5 w-5 flex-none text-[var(--app-primary)]" />
                   <div>
                     <p className="text-sm font-semibold text-white">
                       What happens after you apply?
@@ -951,7 +951,7 @@ export function JoinUsModal({
                         'Orientation and training session scheduling',
                       ].map(item => (
                         <li key={item} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-3.5 w-3.5 flex-none text-[#f7de12]" />
+                          <Check className="mt-0.5 h-3.5 w-3.5 flex-none text-[var(--app-primary)]" />
                           <span>{item}</span>
                         </li>
                       ))}

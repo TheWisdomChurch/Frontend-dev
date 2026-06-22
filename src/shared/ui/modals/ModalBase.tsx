@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   memo,
@@ -32,18 +32,18 @@ interface BaseModalProps {
 }
 
 export const modalStyles = {
-  sectionTitle: 'text-xs font-bold uppercase tracking-[0.18em] text-[#f7de12]',
+  sectionTitle: 'text-xs font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]',
   label:
     'mb-2 block text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/60',
   input:
-    'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10',
+    'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   select:
-    'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-sm text-white outline-none transition focus:border-[#f7de12]/70 focus:ring-4 focus:ring-[#f7de12]/10',
+    'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-sm text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   textarea:
-    'min-h-[130px] w-full resize-y rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10',
+    'min-h-[130px] w-full resize-y rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   errorText: 'mt-2 text-xs leading-5 text-rose-300',
   primaryButton:
-    'inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d] disabled:cursor-not-allowed disabled:opacity-60',
+    'inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d] disabled:cursor-not-allowed disabled:opacity-60',
   ghostButton:
     'inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/82 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-60',
 };
@@ -212,7 +212,7 @@ export const BaseModal = memo(function BaseModal({
         {isLoading ? (
           <div className="absolute inset-0 z-30 grid place-items-center bg-black/65 backdrop-blur-sm">
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/45 px-5 py-4">
-              <Loader2 className="h-6 w-6 animate-spin text-[#f7de12]" />
+              <Loader2 className="h-6 w-6 animate-spin text-[var(--app-primary)]" />
               <p className="text-sm text-white/75">{loadingText}</p>
             </div>
           </div>

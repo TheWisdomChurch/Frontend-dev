@@ -308,7 +308,7 @@ export default function EventsShowcase() {
           className="absolute inset-0 opacity-90"
           style={{
             background:
-              'radial-gradient(circle at 15% 15%, rgba(247,222,18,0.12), transparent 32%), radial-gradient(circle at 90% 10%, rgba(255,255,255,0.07), transparent 28%), radial-gradient(circle at 50% 100%, rgba(247,222,18,0.08), transparent 34%)',
+              'radial-gradient(circle at 15% 15%, rgba(201,150,26,0.10), transparent 32%), radial-gradient(circle at 90% 10%, rgba(255,255,255,0.07), transparent 28%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.06), transparent 34%)',
           }}
         />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
@@ -355,7 +355,7 @@ export default function EventsShowcase() {
                   onClick={() => setCategory(cat)}
                   className={`rounded-full border px-4 py-2 text-[0.78rem] font-semibold transition sm:text-sm ${
                     isActive
-                      ? 'border-transparent text-black shadow-[0_14px_35px_rgba(247,222,18,0.18)]'
+                      ? 'border-transparent text-black shadow-[0_14px_35px_rgba(201,150,26,0.20)]'
                       : 'border-white/15 bg-white/[0.04] text-white/70 hover:border-white/25 hover:bg-white/[0.08] hover:text-white'
                   }`}
                   style={

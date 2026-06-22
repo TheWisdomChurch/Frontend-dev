@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useRef, useState } from 'react';
 import {
@@ -280,7 +280,7 @@ export function EventDetailsModal({
 
           <div className="mt-4 grid gap-3 text-sm leading-6 text-white/72">
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-              <Calendar className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <Calendar className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
               <div className="min-w-0">
                 <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
                   Date
@@ -292,7 +292,7 @@ export function EventDetailsModal({
             </div>
 
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-              <Clock className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <Clock className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
               <div className="min-w-0">
                 <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
                   Time
@@ -304,7 +304,7 @@ export function EventDetailsModal({
             </div>
 
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-              <MapPin className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <MapPin className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
               <div className="min-w-0">
                 <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
                   Location

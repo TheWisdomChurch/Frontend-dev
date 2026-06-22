@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import HeroSection from '@/features/hero/PageHero';
 import { hero_bg_3 } from '@/shared/assets';
@@ -123,10 +123,10 @@ export default function WeeklyPage() {
       />
 
       <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(247,222,18,0.12),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
         <Container size="xl" className="relative z-10">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Weekly rhythm
             </p>
             <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
@@ -153,7 +153,7 @@ export default function WeeklyPage() {
                   {daySchedule.services.map(service => (
                     <article
                       key={`${daySchedule.day}-${service.name}`}
-                      className="rounded-[1.25rem] border border-white/10 bg-black/30 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#f7de12]/35 hover:bg-white/[0.035]"
+                      className="rounded-[1.25rem] border border-white/10 bg-black/30 p-5 transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.035]"
                     >
                       <div className="mb-4 flex items-center justify-between gap-3">
                         <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-white/70">
@@ -168,7 +168,7 @@ export default function WeeklyPage() {
                         {service.name}
                       </h3>
 
-                      <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#f7de12]">
+                      <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[var(--app-primary)]">
                         <CalendarClock className="h-4 w-4" />
                         {service.time}
                       </div>
@@ -193,7 +193,7 @@ export default function WeeklyPage() {
       <Section padding="lg" className="relative overflow-hidden bg-[#080808]">
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               First visit
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
@@ -208,9 +208,9 @@ export default function WeeklyPage() {
             {expectations.map(item => (
               <article
                 key={item.title}
-                className="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/20 transition duration-300 hover:border-[#f7de12]/35"
+                className="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/20 transition duration-300 hover:border-[var(--app-primary)]/35"
               >
-                <CheckCircle2 className="mb-4 h-5 w-5 text-[#f7de12]" />
+                <CheckCircle2 className="mb-4 h-5 w-5 text-[var(--app-primary)]" />
                 <h3 className="text-base font-semibold text-white">
                   {item.title}
                 </h3>

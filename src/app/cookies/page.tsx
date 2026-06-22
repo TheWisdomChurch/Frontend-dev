@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import {
   CheckCircle2,
   Cookie,
@@ -52,7 +52,7 @@ export default function CookiesPage() {
       />
 
       <Section padding="xl" className="relative overflow-hidden bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(247,222,18,0.13),transparent_28%),radial-gradient(circle_at_85%_25%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_85%_25%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.28] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(circle_at_50%_30%,black_22%,transparent_78%)]" />
 
         <Container size="xl" className="relative z-10">
@@ -60,14 +60,14 @@ export default function CookiesPage() {
             <div className="overflow-hidden rounded-[1.7rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/35 backdrop-blur-xl sm:rounded-[2rem]">
               <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
                 <aside className="relative border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                  <div className="absolute right-0 top-0 h-56 w-56 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#f7de12]/10 blur-3xl" />
+                  <div className="absolute right-0 top-0 h-56 w-56 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
 
                   <div className="relative">
-                    <div className="mb-6 grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-[#f7de12]/10 text-[#f7de12]">
+                    <div className="mb-6 grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                       <Lock className="h-7 w-7" />
                     </div>
 
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                       Privacy notice
                     </p>
 
@@ -83,7 +83,7 @@ export default function CookiesPage() {
 
                     <div className="mt-7 rounded-2xl border border-white/10 bg-black/25 p-4">
                       <div className="flex gap-3">
-                        <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#f7de12]" />
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[var(--app-primary)]" />
                         <p className="text-sm leading-6 text-white/68">
                           Your submitted form data is used for church
                           communication and request handling only.
@@ -101,10 +101,10 @@ export default function CookiesPage() {
                       return (
                         <article
                           key={card.title}
-                          className="rounded-[1.25rem] border border-white/10 bg-black/25 p-5 transition duration-200 hover:border-[#f7de12]/35 hover:bg-white/[0.035] sm:p-6"
+                          className="rounded-[1.25rem] border border-white/10 bg-black/25 p-5 transition duration-200 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.035] sm:p-6"
                         >
                           <div className="flex items-start gap-4">
-                            <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-white/10 bg-[#f7de12]/10 text-[#f7de12]">
+                            <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-white/10 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                               <Icon className="h-5 w-5" />
                             </div>
 
@@ -119,7 +119,7 @@ export default function CookiesPage() {
                                     key={item}
                                     className="flex gap-3 text-sm leading-6 text-white/65"
                                   >
-                                    <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[#f7de12]" />
+                                    <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[var(--app-primary)]" />
                                     <span>{item}</span>
                                   </li>
                                 ))}
@@ -131,11 +131,11 @@ export default function CookiesPage() {
                     })}
                   </div>
 
-                  <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-[#f7de12]/10 p-5 sm:p-6">
+                  <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-[var(--app-primary)]/10 p-5 sm:p-6">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <div className="flex items-center gap-3">
-                          <Mail className="h-5 w-5 text-[#f7de12]" />
+                          <Mail className="h-5 w-5 text-[var(--app-primary)]" />
                           <h2 className="text-lg font-semibold text-white">
                             Questions about privacy?
                           </h2>
@@ -149,7 +149,7 @@ export default function CookiesPage() {
 
                       <Link
                         href="/contact"
-                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#f7de12] px-5 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--app-primary)] px-5 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
                       >
                         Contact us
                       </Link>

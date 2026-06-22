@@ -199,15 +199,7 @@ export default function HeroSection({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    if (safeSlides.length <= 1) return;
-
-    const interval = window.setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % safeSlides.length);
-    }, 7500);
-
-    return () => window.clearInterval(interval);
-  }, [safeSlides.length]);
+  // Auto-rotation intentionally disabled — user controls slide navigation
 
   const handleUnavailable = useCallback(
     (title?: string, message?: string) => {
@@ -447,9 +439,9 @@ export default function HeroSection({
                 }}
               />
 
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(247,222,18,0.16),transparent_30%),radial-gradient(circle_at_85%_18%,rgba(255,255,255,0.07),transparent_32%)]" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/76 via-black/42 to-black/90" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/84 via-black/46 to-black/64 lg:from-black/84 lg:via-black/38 lg:to-black/30" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(201,150,26,0.14),transparent_30%),radial-gradient(circle_at_85%_18%,rgba(255,255,255,0.07),transparent_32%)]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/28 to-black/82" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/72 via-black/32 to-black/18 lg:from-black/72 lg:via-black/24 lg:to-black/10" />
             </div>
           </div>
         );
@@ -527,7 +519,7 @@ export default function HeroSection({
                   style={{
                     color: colorScheme.primary,
                     textShadow:
-                      '0 3px 16px rgba(0,0,0,0.80), 0 0 28px rgba(247,222,18,0.12)',
+                      '0 3px 16px rgba(0,0,0,0.80), 0 0 28px rgba(201,150,26,0.12)',
                   }}
                   useThemeColor={false}
                   weight="medium"

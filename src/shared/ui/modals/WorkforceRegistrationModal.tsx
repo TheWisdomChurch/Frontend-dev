@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -149,7 +149,7 @@ export function WorkforceRegistrationModal({
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
           <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5 flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#f7de12]/10 text-[#f7de12]">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                 <Users className="h-5 w-5" />
               </div>
 
@@ -320,7 +320,7 @@ export function WorkforceRegistrationModal({
                 <input
                   id="existingMember"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-white/30 accent-[#f7de12]"
+                  className="h-4 w-4 rounded border-white/30 accent-[var(--app-primary)]"
                   {...register('isExistingMember')}
                 />
                 <label

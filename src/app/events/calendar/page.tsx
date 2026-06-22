@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
@@ -134,12 +134,12 @@ export default function EventsCalendarPage() {
       />
 
       <section className="relative overflow-hidden bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(247,222,18,0.12),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
 
         <div className="relative mx-auto max-w-6xl space-y-8">
           <div className="flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Events calendar
               </p>
               <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -164,7 +164,7 @@ export default function EventsCalendarPage() {
 
           {loading ? (
             <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.035]">
-              <Loader2 className="h-9 w-9 animate-spin text-[#f7de12]" />
+              <Loader2 className="h-9 w-9 animate-spin text-[var(--app-primary)]" />
             </div>
           ) : (
             <>
@@ -193,7 +193,7 @@ export default function EventsCalendarPage() {
                             </p>
 
                             {slot.count > 0 ? (
-                              <p className="mt-3 inline-flex rounded-full bg-[#f7de12] px-2.5 py-1 text-xs font-extrabold text-black">
+                              <p className="mt-3 inline-flex rounded-full bg-[var(--app-primary)] px-2.5 py-1 text-xs font-extrabold text-black">
                                 {slot.count} event{slot.count > 1 ? 's' : ''}
                               </p>
                             ) : (
@@ -211,7 +211,7 @@ export default function EventsCalendarPage() {
 
               <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
                 <div className="flex items-center gap-3">
-                  <CalendarClock className="h-5 w-5 text-[#f7de12]" />
+                  <CalendarClock className="h-5 w-5 text-[var(--app-primary)]" />
                   <h2 className="text-xl font-semibold text-white">
                     Upcoming timeline
                   </h2>
@@ -228,7 +228,7 @@ export default function EventsCalendarPage() {
                         key={dateKey}
                         className="rounded-2xl border border-white/10 bg-black/25 p-4"
                       >
-                        <p className="text-sm font-bold text-[#f7de12]">
+                        <p className="text-sm font-bold text-[var(--app-primary)]">
                           {formatDateKeyLabel(dateKey)}
                         </p>
 

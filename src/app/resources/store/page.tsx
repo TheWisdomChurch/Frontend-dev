@@ -261,7 +261,7 @@ export default function StorePage() {
         className="relative bg-[#050505]"
       >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(247,222,18,0.12),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(247,222,18,0.08),transparent_34%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
         </div>
 
@@ -331,7 +331,7 @@ export default function StorePage() {
                   placeholder="Search products, scripture, gifts..."
                   value={filters.searchTerm}
                   onChange={e => handleSearch(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-11 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-11 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                 />
 
                 {filters.searchTerm && (
@@ -351,7 +351,7 @@ export default function StorePage() {
                 <select
                   value={filters.selectedCategory}
                   onChange={e => handleCategoryClick(e.target.value)}
-                  className="h-12 w-full appearance-none rounded-2xl border border-white/12 bg-[#111] pl-11 pr-10 text-sm text-white outline-none transition hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                  className="h-12 w-full appearance-none rounded-2xl border border-white/12 bg-[#111] pl-11 pr-10 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                 >
                   {categories.map(category => (
                     <option key={category.value} value={category.value}>
@@ -407,7 +407,7 @@ export default function StorePage() {
                   onClick={() => handleCategoryClick(category.value)}
                   className={`shrink-0 rounded-full border px-4 py-2.5 text-sm font-bold transition ${
                     active
-                      ? 'border-transparent text-black shadow-[0_14px_35px_rgba(247,222,18,0.16)]'
+                      ? 'border-transparent text-black shadow-[0_14px_35px_rgba(201,150,26,0.13)]'
                       : 'border-white/12 bg-white/[0.045] text-white/64 hover:bg-white/[0.08] hover:text-white'
                   }`}
                   style={
@@ -661,7 +661,7 @@ export default function StorePage() {
         fullHeight={false}
         className="relative overflow-hidden bg-[#070707]"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(247,222,18,0.12),transparent_34%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.10),transparent_34%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto max-w-3xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 text-center shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-8 lg:p-10">

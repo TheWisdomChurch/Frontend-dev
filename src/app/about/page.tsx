@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+﻿export const dynamic = 'force-dynamic';
 
 import Image from 'next/image';
 import {
@@ -127,7 +127,7 @@ export default function AboutPage() {
       <Section padding="lg" className="border-y border-white/10 bg-[#080808]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               House culture
             </p>
             <h2 className="text-balance text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
@@ -144,7 +144,7 @@ export default function AboutPage() {
       <Section padding="lg" className="bg-[#050505]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Leadership
             </p>
             <h2 className="text-balance text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
@@ -170,7 +170,7 @@ export default function AboutPage() {
               },
             ].map((person, index) => (
               <ScrollFadeIn key={person.name} delay={0.05 * index}>
-                <article className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/30 transition duration-300 hover:border-[#f7de12]/35 sm:rounded-[2rem]">
+                <article className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/30 transition duration-300 hover:border-[var(--app-primary)]/35 sm:rounded-[2rem]">
                   <div className="grid gap-0 sm:grid-cols-[220px_1fr]">
                     <div className="relative h-72 bg-black sm:h-full sm:min-h-[300px]">
                       <Image
@@ -184,7 +184,7 @@ export default function AboutPage() {
                     </div>
 
                     <div className="flex flex-col justify-center space-y-4 p-5 sm:p-6 lg:p-7">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f7de12]">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--app-primary)]">
                         {person.role}
                       </p>
 

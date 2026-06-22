@@ -42,7 +42,7 @@ type Particle = {
 };
 
 const CARD_SHELL =
-  'giving-card group relative overflow-hidden rounded-[1.75rem] border border-white/12 bg-white/[0.065] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.38)] backdrop-blur-2xl transition-all duration-500 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.09] sm:p-6';
+  'giving-card group relative overflow-hidden rounded-[1.75rem] border border-white/12 bg-white/[0.065] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.38)] backdrop-blur-md transition-all duration-500 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.09] sm:p-6';
 
 const CARD_TITLE = 'text-[0.95rem] font-semibold leading-snug text-white';
 const CARD_DESC = 'text-[0.82rem] leading-relaxed text-white/68';
@@ -298,7 +298,7 @@ export default function OnlineGiving() {
             className="absolute inset-0 opacity-90"
             style={{
               background:
-                'radial-gradient(circle at 18% 18%, rgba(247,222,18,0.12), transparent 32%), radial-gradient(circle at 82% 22%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 50% 100%, rgba(247,222,18,0.08), transparent 38%)',
+                'radial-gradient(circle at 18% 18%, rgba(201,150,26,0.10), transparent 32%), radial-gradient(circle at 82% 22%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.06), transparent 38%)',
             }}
           />
 

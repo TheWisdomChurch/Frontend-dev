@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import {
@@ -21,7 +21,7 @@ import { useTheme } from '@/shared/contexts/ThemeContext';
 export default function EngagementSection() {
   const { colorScheme } = useTheme();
 
-  const primary = colorScheme?.primary ?? '#f7de12';
+  const primary = colorScheme?.primary ?? 'var(--app-primary)';
   const features = [
     {
       icon: Volume2,

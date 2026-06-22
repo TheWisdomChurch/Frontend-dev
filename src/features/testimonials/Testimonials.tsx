@@ -188,7 +188,7 @@ export default function TestimoniesPage() {
   useEffect(() => {
     if (visibleTestimonies.length <= 1) return;
 
-    const timer = window.setInterval(goNext, 7000);
+    const timer = window.setInterval(goNext, 12000);
     return () => window.clearInterval(timer);
   }, [goNext, visibleTestimonies.length]);
 

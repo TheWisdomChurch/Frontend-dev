@@ -153,10 +153,10 @@ type QuickValues = z.infer<typeof quickSchema>;
 type ModalValues = z.infer<typeof modalSchema>;
 
 const inputClass =
-  'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[#F7DE12]/10';
+  'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const selectClass =
-  'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10';
+  'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -350,7 +350,7 @@ export default function JoinWisdomHouse() {
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(circle at 14% 18%, rgba(247,222,18,0.14), transparent 32%), radial-gradient(circle at 88% 12%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 50% 100%, rgba(247,222,18,0.09), transparent 34%)',
+              'radial-gradient(circle at 14% 18%, rgba(201,150,26,0.11), transparent 32%), radial-gradient(circle at 88% 12%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.07), transparent 34%)',
           }}
         />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
@@ -645,7 +645,7 @@ export default function JoinWisdomHouse() {
               onClick={() => setExisting(false)}
               className={`rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
                 !existing
-                  ? 'bg-[#F7DE12] text-black'
+                  ? 'bg-[var(--app-primary)] text-black'
                   : 'text-white/65 hover:bg-white/[0.06] hover:text-white'
               }`}
             >
@@ -657,7 +657,7 @@ export default function JoinWisdomHouse() {
               onClick={() => setExisting(true)}
               className={`rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
                 existing
-                  ? 'bg-[#F7DE12] text-black'
+                  ? 'bg-[var(--app-primary)] text-black'
                   : 'text-white/65 hover:bg-white/[0.06] hover:text-white'
               }`}
             >

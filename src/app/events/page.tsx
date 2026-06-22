@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
@@ -112,12 +112,12 @@ export default function EventsPage() {
       />
 
       <section className="relative overflow-hidden bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(247,222,18,0.12),transparent_28%),radial-gradient(circle_at_90%_18%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_18%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
 
         <div className="relative mx-auto max-w-6xl">
           <div className="mb-8 flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Wisdom Church Calendar
               </p>
               <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -136,7 +136,7 @@ export default function EventsPage() {
 
               <Link
                 href="/events/calendar"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#f7de12] px-5 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
               >
                 Open calendar
                 <ArrowRight className="h-4 w-4" />
@@ -146,11 +146,11 @@ export default function EventsPage() {
 
           {loading ? (
             <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.035]">
-              <Loader2 className="h-9 w-9 animate-spin text-[#f7de12]" />
+              <Loader2 className="h-9 w-9 animate-spin text-[var(--app-primary)]" />
             </div>
           ) : events.length === 0 ? (
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 text-center shadow-2xl shadow-black/25 sm:p-10">
-              <CalendarPlus className="mx-auto h-12 w-12 text-[#f7de12]" />
+              <CalendarPlus className="mx-auto h-12 w-12 text-[var(--app-primary)]" />
               <h2 className="mt-5 text-xl font-semibold text-white">
                 No published events yet.
               </h2>
@@ -169,7 +169,7 @@ export default function EventsPage() {
                 return (
                   <article
                     key={event.id}
-                    className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/25 transition duration-300 hover:-translate-y-1 hover:border-[#f7de12]/35 sm:rounded-[1.75rem]"
+                    className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/25 transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/35 sm:rounded-[1.75rem]"
                   >
                     <div className="relative h-52 w-full overflow-hidden bg-black">
                       <img
@@ -192,7 +192,7 @@ export default function EventsPage() {
 
                       <div className="space-y-2 border-t border-white/10 pt-4">
                         <p className="flex items-start gap-2 text-sm leading-6 text-white/72">
-                          <CalendarClock className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+                          <CalendarClock className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
                           <span>{formatWhen(event)}</span>
                         </p>
 
@@ -207,7 +207,7 @@ export default function EventsPage() {
                       {registerHref ? (
                         <a
                           href={registerHref}
-                          className="inline-flex min-h-10 items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black transition hover:bg-[#f7de12]"
+                          className="inline-flex min-h-10 items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black transition hover:bg-[var(--app-primary)]"
                         >
                           Register
                         </a>

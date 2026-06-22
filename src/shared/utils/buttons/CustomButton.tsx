@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { forwardRef } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -34,7 +34,7 @@ export interface ButtonProps extends Omit<
 }
 
 const baseClasses =
-  'group relative inline-flex min-w-0 shrink-0 items-center justify-center overflow-hidden border font-bold outline-none transition-all duration-300 ease-out focus-visible:ring-4 focus-visible:ring-[#f7de12]/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:transform-none';
+  'group relative inline-flex min-w-0 shrink-0 items-center justify-center overflow-hidden border font-bold outline-none transition-all duration-300 ease-out focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:transform-none';
 
 const sizeClasses: Record<ButtonSize, string> = {
   xs: 'min-h-8 px-3 text-xs gap-1.5',
@@ -55,15 +55,15 @@ const radiusClasses = {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'border-[#f7de12] bg-[#f7de12] text-black shadow-[#f7de12]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
+    'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-[var(--app-primary)]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
   'accent-yellow':
-    'border-[#f7de12] bg-[#f7de12] text-black shadow-[#f7de12]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
+    'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-[var(--app-primary)]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
   'accent-orange':
     'border-orange-500 bg-orange-500 text-white shadow-orange-500/20 hover:border-orange-400 hover:bg-orange-400',
   secondary:
     'border-white/10 bg-white/[0.07] text-white hover:border-white/20 hover:bg-white/[0.11]',
   outline:
-    'border-white/15 bg-transparent text-white hover:border-[#f7de12]/50 hover:bg-[#f7de12]/10 hover:text-[#f7de12]',
+    'border-white/15 bg-transparent text-white hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/10 hover:text-[var(--app-primary)]',
   ghost:
     'border-transparent bg-transparent text-white/78 hover:bg-white/[0.08] hover:text-white',
   dark: 'border-white/10 bg-black/55 text-white hover:border-white/20 hover:bg-black/75',

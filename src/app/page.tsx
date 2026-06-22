@@ -212,19 +212,15 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#050505] text-white">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[var(--app-surface)] text-white">
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 opacity-70"
+        className="pointer-events-none fixed inset-0 z-0 opacity-60"
         style={{
           background: `
-            radial-gradient(circle at 18% 12%, ${
-              colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.18)'
-            } 0%, transparent 34%),
-            radial-gradient(circle at 82% 4%, ${
-              colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.10)'
-            } 0%, transparent 30%),
-            linear-gradient(180deg, #050505 0%, #070707 48%, #050505 100%)
+            radial-gradient(circle at 18% 12%, rgba(201, 150, 26, 0.12) 0%, transparent 34%),
+            radial-gradient(circle at 82% 4%, rgba(201, 150, 26, 0.07) 0%, transparent 30%),
+            linear-gradient(180deg, var(--app-surface) 0%, var(--app-surface-2) 48%, var(--app-surface) 100%)
           `,
         }}
       />
@@ -236,39 +232,39 @@ export default function Home() {
           <HeroHighlights />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section className="home-section perf-section" data-gsap="reveal">
           <WhatWeDo />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section className="home-section perf-section" data-gsap="reveal">
           <EventsShowcase />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section className="home-section perf-section" data-gsap="reveal">
           <SeniorPastor />
         </section>
 
         <section
           id="join"
-          className="home-section scroll-mt-24"
+          className="home-section perf-section scroll-mt-24"
           data-gsap="reveal"
         >
           <JoinUs />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section className="home-section perf-section" data-gsap="reveal">
           <Testimonials />
         </section>
 
         <section
-          id="give"
-          className="home-section scroll-mt-24"
+          id="giving"
+          className="home-section perf-section scroll-mt-24"
           data-gsap="reveal"
         >
           <OnlineGiving />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section className="home-section perf-section" data-gsap="reveal">
           <ResourceSection />
         </section>
       </div>
@@ -285,7 +281,7 @@ export default function Home() {
           type="button"
           aria-label="Open conference registration ad"
           onClick={() => setShowModal(true)}
-          className="fixed bottom-4 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/80 px-3.5 py-2.5 text-[11px] font-semibold text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f7de12] sm:bottom-5 sm:px-4 sm:text-sm"
+          className="fixed bottom-4 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/80 px-3.5 py-2.5 text-[11px] font-semibold text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] sm:bottom-5 sm:px-4 sm:text-sm"
         >
           <span className="text-base">📢</span>
           <span>WPC 2026</span>
@@ -294,8 +290,13 @@ export default function Home() {
 
       {!showModal && showConfessionPopup && (
         <ConfessionPopup
-          onClose={() => setShowConfessionPopup(false)}
-          delay={1800}
+          onClose={() => {
+            setShowConfessionPopup(false);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('wisdom_welcomed', 'true');
+            }
+          }}
+          delay={0}
           content={confessionContent ?? undefined}
         />
       )}

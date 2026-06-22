@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import {
@@ -80,7 +80,7 @@ export default function ConfessionPopup({
               </div>
 
               <div className="min-w-0">
-                <Caption className="uppercase tracking-[0.18em] text-[#f7de12]">
+                <Caption className="uppercase tracking-[0.18em] text-[var(--app-primary)]">
                   The Wisdom Church
                 </Caption>
                 <h3 className="mt-1 text-lg font-semibold text-white">
@@ -102,8 +102,8 @@ export default function ConfessionPopup({
                 key={item.label}
                 className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 text-center"
               >
-                <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-full bg-[#f7de12]/10">
-                  <item.icon className="h-4 w-4 text-[#f7de12]" />
+                <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-full bg-[var(--app-primary)]/10">
+                  <item.icon className="h-4 w-4 text-[var(--app-primary)]" />
                 </div>
                 <Caption className="text-white/75">{item.label}</Caption>
               </div>
@@ -131,7 +131,7 @@ export default function ConfessionPopup({
         </div>
       ) : (
         <div className="space-y-5">
-          <div className="rounded-[1.35rem] border border-white/10 bg-[#f7de12]/10 p-5">
+          <div className="rounded-[1.35rem] border border-white/10 bg-[var(--app-primary)]/10 p-5">
             <PlayfairText
               as="p"
               className="text-center text-base italic leading-8 text-white"

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
@@ -45,11 +45,11 @@ export default function GivingModal({
       forceBottomSheet
     >
       <div className="space-y-5">
-        <section className="relative overflow-hidden rounded-[1.35rem] border border-[#f7de12]/20 bg-[#f7de12]/10 p-5 sm:p-6">
-          <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#f7de12]/20 blur-3xl" />
+        <section className="relative overflow-hidden rounded-[1.35rem] border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 p-5 sm:p-6">
+          <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/20 blur-3xl" />
 
           <div className="relative flex gap-4">
-            <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+            <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
               <Gift className="h-5 w-5" />
             </div>
 
@@ -59,7 +59,7 @@ export default function GivingModal({
                 give, not reluctantly or under compulsion, for God loves a
                 cheerful giver.”
               </p>
-              <p className="mt-3 text-sm font-bold text-[#f7de12]">
+              <p className="mt-3 text-sm font-bold text-[var(--app-primary)]">
                 2 Corinthians 9:7
               </p>
             </div>
@@ -76,7 +76,7 @@ export default function GivingModal({
             </div>
 
             <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-white/55 sm:flex">
-              <ShieldCheck className="h-4 w-4 text-[#f7de12]" />
+              <ShieldCheck className="h-4 w-4 text-[var(--app-primary)]" />
               Secure giving
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function GivingModal({
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <span className="text-lg font-black text-[#f7de12]">
+                        <span className="text-lg font-black text-[var(--app-primary)]">
                           {account.bank.charAt(0)}
                         </span>
                       )}
@@ -137,7 +137,7 @@ export default function GivingModal({
                             'grid h-10 w-10 flex-none place-items-center rounded-full transition',
                             isCopied
                               ? 'bg-emerald-400/15 text-emerald-300'
-                              : 'bg-[#f7de12]/10 text-[#f7de12] hover:bg-[#f7de12]/20',
+                              : 'bg-[var(--app-primary)]/10 text-[var(--app-primary)] hover:bg-[var(--app-primary)]/20',
                           ].join(' ')}
                           aria-label={
                             isCopied

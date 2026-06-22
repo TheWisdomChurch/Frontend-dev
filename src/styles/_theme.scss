@@ -1,4 +1,4 @@
-.page-shell,
+﻿.page-shell,
 .page-section {
   background-color: var(--color-pageBackground, #050505);
   color: var(--color-text, #f5f6f7);
@@ -40,7 +40,7 @@
 }
 
 .text-accent {
-  color: var(--color-primary, #f7de12);
+  color: var(--color-primary, var(--app-primary));
 }
 
 .border-muted {
@@ -67,9 +67,9 @@
 
 .input-base:focus {
   outline: none;
-  border-color: var(--color-primary, #f7de12);
+  border-color: var(--color-primary, var(--app-primary));
   box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--color-primary, #f7de12) 20%, transparent);
+    color-mix(in srgb, var(--color-primary, var(--app-primary)) 20%, transparent);
 }
 
 .bg-white {

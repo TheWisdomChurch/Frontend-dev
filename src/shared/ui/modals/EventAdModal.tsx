@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo } from 'react';
 import Image, { type StaticImageData } from 'next/image';
@@ -28,7 +28,7 @@ type Props = {
   onRemindLater?: () => void;
 };
 
-const FALLBACK_PRIMARY = '#F7DE12';
+const FALLBACK_PRIMARY = 'var(--app-primary)';
 const FALLBACK_PRIMARY_DARK = '#C7A600';
 
 const formatDate = (iso?: string) => {
@@ -127,7 +127,7 @@ export default function EventAdModal({
         {/* Left Column */}
         <div className="space-y-4">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#f7de12]/20 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#f7de12]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
             <Sparkles className="h-3.5 w-3.5" />
             Conference Registration
           </div>
@@ -158,7 +158,7 @@ export default function EventAdModal({
             <div className="flex flex-wrap gap-4">
               {dateRange && (
                 <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
                     <Calendar className="h-4 w-4" />
                   </div>
                   <span className="text-sm font-medium text-white/80">
@@ -169,7 +169,7 @@ export default function EventAdModal({
 
               {safeEvent.time && (
                 <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
                     <Clock className="h-4 w-4" />
                   </div>
                   <span className="text-sm font-medium text-white/80">
@@ -180,7 +180,7 @@ export default function EventAdModal({
 
               {safeEvent.location && (
                 <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
                     <MapPin className="h-4 w-4" />
                   </div>
                   <span className="text-sm font-medium text-white/80">
@@ -211,7 +211,7 @@ export default function EventAdModal({
             type="button"
             onClick={handleRegister}
             disabled={!registerUrl}
-            className="w-full rounded-2xl py-3.5 text-lg font-bold text-black shadow-lg shadow-[#f7de12]/20 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-2xl py-3.5 text-lg font-bold text-black shadow-lg shadow-[var(--app-primary)]/20 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             style={{ backgroundColor: primary }}
           >
             {safeEvent.ctaLabel}

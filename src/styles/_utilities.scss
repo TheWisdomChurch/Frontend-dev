@@ -54,6 +54,51 @@
   }
 }
 
+/* =============================================================================
+   Design system utility classes — use these instead of inline style={}
+============================================================================= */
+
+.gradient-primary {
+  background: linear-gradient(
+    135deg,
+    var(--app-primary) 0%,
+    var(--app-primary-dark) 100%
+  );
+}
+
+.gradient-primary-text {
+  background: linear-gradient(
+    120deg,
+    var(--app-primary-light) 0%,
+    #ffffff 42%,
+    var(--app-primary) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-dark-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.28) 50%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+}
+
+.surface-glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.surface-glass-heavy {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
 .hero-container {
   position: relative;
   width: 100vw;
