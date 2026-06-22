@@ -128,4 +128,5 @@ const withPwaConfig = withPWA({
   disable: !enablePwa,
 });
 
+// @ts-expect-error @types/next-pwa lags behind next's I18NConfig type
 export default withPwaConfig(nextConfig);
