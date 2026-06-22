@@ -27,9 +27,8 @@ echo "[pre-push] Running repository validation checks..."
 
 echo "[pre-push] TypeScript..."
 mkdir -p .cache/tsc
-# Skip TypeScript check during push - errors will be caught during development
-# node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck --incremental --tsBuildInfoFile .cache/tsc/pre-push.tsbuildinfo
-echo "[pre-push] TypeScript check skipped (will be validated during development)."
+node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck --incremental --tsBuildInfoFile .cache/tsc/pre-push.tsbuildinfo
+echo "[pre-push] TypeScript passed."
 
 echo "[pre-push] ESLint..."
 node ./node_modules/eslint/bin/eslint.js . --cache --cache-location .cache/eslint/ --max-warnings 0 --no-warn-ignored

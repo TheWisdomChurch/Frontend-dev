@@ -56,7 +56,7 @@ export default function SermonPage() {
           <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
             <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
               <div className="border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#ff0000]/25 bg-[#ff0000]/10 px-3 py-1.5 text-[#ff4d4d]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
                   <Radio className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.24em]">
                     Watch & Listen Anywhere
@@ -97,7 +97,7 @@ export default function SermonPage() {
 
                 <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/40 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.32)] sm:p-7">
                   <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.5rem] bg-[#ff0000] shadow-[0_18px_50px_rgba(255,0,0,0.22)]">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-radius-sm bg-[#CC0000] shadow-[0_18px_50px_rgba(204,0,0,0.22)]">
                       <Video className="h-9 w-9 text-white" />
                     </div>
 
@@ -116,7 +116,7 @@ export default function SermonPage() {
 
                   <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
                     <div className="flex items-start gap-3">
-                      <PlayCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#ff4d4d]" />
+                      <PlayCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#CC0000]" />
                       <p className="text-sm leading-6 text-white/65">
                         Subscribe to the Wisdom House channel to receive new
                         uploads, live service alerts, and replay access.
@@ -131,11 +131,7 @@ export default function SermonPage() {
                     curvature="full"
                     elevated
                     leftIcon={<Video className="h-5 w-5 text-white" />}
-                    className="mt-6 h-12 w-full font-bold transition hover:scale-[1.01] active:scale-[0.98]"
-                    style={{
-                      backgroundColor: '#FF0000',
-                      color: '#FFFFFF',
-                    }}
+                    className="mt-6 h-12 w-full bg-[#CC0000] font-bold text-white transition hover:scale-[1.01] hover:bg-[#AA0000] active:scale-[0.98]"
                   >
                     <span className="inline-flex items-center justify-center gap-2 text-white">
                       Subscribe to Channel

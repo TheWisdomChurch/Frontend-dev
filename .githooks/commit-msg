@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${SKIP_GIT_HOOKS:-0}" == "1" ]]; then
+  echo "[commit-msg] SKIP_GIT_HOOKS=1, skipping checks."
+  exit 0
+fi
+
+echo "[commit-msg] Validating commit message format..."
+node ./node_modules/@commitlint/cli/cli.js --edit "$1"
+echo "[commit-msg] Commit message valid."

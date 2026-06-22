@@ -8,9 +8,10 @@ fi
 
 chmod +x .githooks/pre-commit
 chmod +x .githooks/pre-push
+chmod +x .githooks/commit-msg
 chmod +x .githooks/setup-hook 2>/dev/null || true
 
 git config core.hooksPath .githooks
 
 echo "[hooks:setup] core.hooksPath set to .githooks"
-echo "[hooks:setup] Enabled hooks: pre-commit, pre-push"
+echo "[hooks:setup] Enabled hooks: pre-commit, commit-msg, pre-push"

@@ -429,7 +429,7 @@ export default function ResourcesPage() {
                     'noopener,noreferrer'
                   )
                 }
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#FF0000] text-sm font-bold text-white transition hover:scale-[1.01]"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-radius-sm bg-[#CC0000] text-sm font-bold text-white transition hover:scale-[1.01] hover:bg-[#AA0000]"
               >
                 <Video className="h-4 w-4" />
                 Subscribe on YouTube
