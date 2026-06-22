@@ -1,6 +1,26 @@
-﻿export const dynamic = 'force-dynamic';
-
+﻿import type { Metadata } from 'next';
 import Image from 'next/image';
+
+export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description:
+    'Learn about The Wisdom Church vision, leadership, mission, and culture. Discover how we disciple believers and serve our city.',
+  openGraph: {
+    title: 'About Us | The Wisdom Church',
+    description: 'Learn about The Wisdom Church vision, leadership, mission, and culture.',
+    url: 'https://wisdomchurchhq.org/about',
+    images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Us | The Wisdom Church',
+    description: 'Learn about The Wisdom Church vision, leadership, mission, and culture.',
+    images: ['https://wisdomchurchhq.org/og-image.webp'],
+  },
+  alternates: { canonical: '/about' },
+};
 import {
   BookOpen,
   HeartHandshake,
