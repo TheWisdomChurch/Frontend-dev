@@ -23,7 +23,6 @@ import {
 
 import { Container, Section } from '@/shared/layout';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { H2, BodySM, SmallText, Caption } from '@/shared/text';
@@ -156,7 +155,7 @@ const inputClass =
   'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const selectClass =
-  'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'w-full rounded-2xl border border-white/12 bg-[var(--app-surface-3)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -165,7 +164,6 @@ function FieldError({ message }: { message?: string }) {
 }
 
 export default function JoinWisdomHouse() {
-  const { colorScheme } = useTheme();
   const { open } = useServiceUnavailable();
 
   const [submitted, setSubmitted] = useState(false);
@@ -343,7 +341,7 @@ export default function JoinWisdomHouse() {
     <Section
       padding="none"
       fullHeight={false}
-      className="relative overflow-hidden bg-[#050505]"
+      className="relative overflow-hidden bg-[var(--app-surface)]"
     >
       <div className="pointer-events-none absolute inset-0">
         <div
@@ -363,9 +361,9 @@ export default function JoinWisdomHouse() {
               <div
                 className="mb-5 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
                 style={{
-                  borderColor: `${colorScheme.primary}33`,
-                  background: `${colorScheme.primary}12`,
-                  color: colorScheme.primary,
+                  borderColor: `rgba(201,150,26,0.20)`,
+                  background: `rgba(201,150,26,0.07)`,
+                  color: 'var(--app-primary)',
                 }}
               >
                 <Sparkles className="h-3.5 w-3.5" />
@@ -402,8 +400,7 @@ export default function JoinWisdomHouse() {
                   className="rounded-2xl border border-white/10 bg-white/[0.05] p-4 backdrop-blur-xl"
                 >
                   <p
-                    className="text-2xl font-semibold"
-                    style={{ color: colorScheme.primary }}
+                    className="text-2xl font-semibold text-[var(--app-primary)]"
                   >
                     {value}
                   </p>
@@ -422,7 +419,7 @@ export default function JoinWisdomHouse() {
                 <div
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
                   style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark || colorScheme.primary})`,
+                    background: `linear-gradient(135deg, var(--app-primary), ${var(--app-primary-dark)})`,
                   }}
                 >
                   <HeartHandshake className="h-5 w-5 text-black" />
@@ -486,7 +483,7 @@ export default function JoinWisdomHouse() {
                   disabled={quickSubmitting}
                   className="mt-1 h-12 w-full font-semibold"
                   style={{
-                    backgroundColor: colorScheme.primary,
+                    backgroundColor: 'var(--app-primary)',
                     color: '#000',
                   }}
                 >
@@ -609,8 +606,8 @@ export default function JoinWisdomHouse() {
                   <div
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
                     style={{
-                      background: `${colorScheme.primary}18`,
-                      color: colorScheme.primary,
+                      background: `rgba(201,150,26,0.09)`,
+                      color: 'var(--app-primary)',
                     }}
                   >
                     <Icon className="h-5 w-5" />
@@ -808,7 +805,7 @@ export default function JoinWisdomHouse() {
             disabled={modalSubmitting}
             className="h-12 w-full font-semibold"
             style={{
-              backgroundColor: colorScheme.primary,
+              backgroundColor: 'var(--app-primary)',
               color: '#000',
             }}
           >

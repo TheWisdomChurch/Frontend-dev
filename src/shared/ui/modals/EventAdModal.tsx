@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import Image, { type StaticImageData } from 'next/image';
 import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
 
 type EventAdConfig = {
@@ -28,8 +27,6 @@ type Props = {
   onRemindLater?: () => void;
 };
 
-const FALLBACK_PRIMARY = 'var(--app-primary)';
-const FALLBACK_PRIMARY_DARK = '#C7A600';
 
 const formatDate = (iso?: string) => {
   if (!iso) return '';
@@ -71,10 +68,6 @@ export default function EventAdModal({
   onClose,
   onRemindLater,
 }: Props) {
-  const theme = useTheme();
-  const colorScheme = theme?.colorScheme;
-  const primary = colorScheme?.primary || FALLBACK_PRIMARY;
-  const primaryDark = colorScheme?.primaryDark || FALLBACK_PRIMARY_DARK;
 
   const safeEvent = {
     title: event?.title || 'Special Event',
@@ -211,8 +204,7 @@ export default function EventAdModal({
             type="button"
             onClick={handleRegister}
             disabled={!registerUrl}
-            className="w-full rounded-2xl py-3.5 text-lg font-bold text-black shadow-lg shadow-[var(--app-primary)]/20 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-            style={{ backgroundColor: primary }}
+            className="w-full rounded-2xl bg-[var(--app-primary)] py-3.5 text-lg font-bold text-black shadow-lg shadow-[var(--app-primary)]/20 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {safeEvent.ctaLabel}
           </button>

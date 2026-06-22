@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -14,8 +14,6 @@ import {
 
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/shared/assets';
-import { lightShades } from '@/shared/colors/colorScheme';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { Container, Section } from '@/shared/layout';
 import { BodySM, Caption, H3, SmallText } from '@/shared/text';
 import { apiClient } from '@/lib/api';
@@ -138,7 +136,6 @@ function statusFromRange(startAt?: string, endAt?: string): string {
 }
 
 export default function EventsShowcase() {
-  const { colorScheme = lightShades } = useTheme();
 
   const [category, setCategory] = useState<ShowcaseCategory>('program');
   const [active, setActive] = useState(0);
@@ -302,7 +299,7 @@ export default function EventsShowcase() {
   const current = activeSlides[active];
 
   return (
-    <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
+    <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface)]">
       <div className="pointer-events-none absolute inset-0">
         <div
           className="absolute inset-0 opacity-90"
@@ -317,14 +314,7 @@ export default function EventsShowcase() {
       <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <div
-              className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-              style={{
-                borderColor: `${colorScheme.primary}33`,
-                background: `${colorScheme.primary}12`,
-                color: colorScheme.primary,
-              }}
-            >
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
               <ActiveIcon className="h-3.5 w-3.5" />
               <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
                 {activeMeta.eyebrow}
@@ -355,14 +345,9 @@ export default function EventsShowcase() {
                   onClick={() => setCategory(cat)}
                   className={`rounded-full border px-4 py-2 text-[0.78rem] font-semibold transition sm:text-sm ${
                     isActive
-                      ? 'border-transparent text-black shadow-[0_14px_35px_rgba(201,150,26,0.20)]'
+                      ? 'border-transparent bg-[var(--app-primary)] text-black shadow-[0_14px_35px_rgba(201,150,26,0.20)]'
                       : 'border-white/15 bg-white/[0.04] text-white/70 hover:border-white/25 hover:bg-white/[0.08] hover:text-white'
                   }`}
-                  style={
-                    isActive
-                      ? { backgroundColor: colorScheme.primary }
-                      : undefined
-                  }
                 >
                   {CATEGORY_LABELS[cat]}
                 </button>
@@ -416,10 +401,7 @@ export default function EventsShowcase() {
                   <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-7 lg:p-9">
                     <div className="max-w-2xl">
                       <div className="mb-4 flex flex-wrap items-center gap-2">
-                        <span
-                          className="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-black"
-                          style={{ backgroundColor: colorScheme.primary }}
-                        >
+                        <span className="inline-flex items-center rounded-full bg-[var(--app-primary)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-black">
                           {current.badge}
                         </span>
 
@@ -444,19 +426,13 @@ export default function EventsShowcase() {
 
                       <div className="mt-5 flex flex-wrap gap-3 text-xs text-white/78 sm:text-sm">
                         <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/35 px-3 py-2 backdrop-blur-xl">
-                          <Calendar
-                            className="h-4 w-4"
-                            style={{ color: colorScheme.primary }}
-                          />
+                          <Calendar className="h-4 w-4 text-[var(--app-primary)]" />
                           <span>{current.date}</span>
                         </div>
 
                         {current.location && (
                           <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/12 bg-black/35 px-3 py-2 backdrop-blur-xl">
-                            <MapPin
-                              className="h-4 w-4 shrink-0"
-                              style={{ color: colorScheme.primary }}
-                            />
+                            <MapPin className="h-4 w-4 shrink-0 text-[var(--app-primary)]" />
                             <span className="truncate">{current.location}</span>
                           </div>
                         )}
@@ -467,8 +443,7 @@ export default function EventsShowcase() {
                           <button
                             type="button"
                             onClick={() => setReelModal(current)}
-                            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
-                            style={{ backgroundColor: colorScheme.primary }}
+                            className="inline-flex items-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
                           >
                             {current.cta} <Play className="h-4 w-4" />
                           </button>
@@ -476,8 +451,7 @@ export default function EventsShowcase() {
                           current.href && (
                             <a
                               href={current.href}
-                              className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
-                              style={{ backgroundColor: colorScheme.primary }}
+                              className="inline-flex items-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
                             >
                               {current.cta}
                               <ArrowRight className="h-4 w-4" />
@@ -506,10 +480,7 @@ export default function EventsShowcase() {
             ) : (
               <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
                 <div className="max-w-sm">
-                  <ActiveIcon
-                    className="mx-auto h-8 w-8"
-                    style={{ color: colorScheme.primary }}
-                  />
+                  <ActiveIcon className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
                   <p className="mt-4 text-sm leading-6 text-white/62">
                     {activeMeta.empty}
                   </p>
@@ -554,10 +525,9 @@ export default function EventsShowcase() {
                     <div className="min-w-0 flex-1">
                       <div className="mb-2 flex items-center gap-2">
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${
+                          className={`h-1.5 w-1.5 rounded-full bg-[var(--app-primary)] ${
                             selected ? 'opacity-100' : 'opacity-45'
                           }`}
-                          style={{ backgroundColor: colorScheme.primary }}
                         />
                         <Caption
                           className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-white/45"
@@ -607,14 +577,7 @@ export default function EventsShowcase() {
           maxWidth="max-w-3xl"
         >
           <div className="space-y-4">
-            <div
-              className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-              style={{
-                borderColor: `${colorScheme.primary}33`,
-                background: `${colorScheme.primary}12`,
-                color: colorScheme.primary,
-              }}
-            >
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
               <Play className="h-3.5 w-3.5" />
               <p className="text-[10px] font-bold uppercase tracking-[0.18em]">
                 Reel

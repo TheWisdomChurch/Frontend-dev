@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Container, Section } from '@/shared/layout';
 import PageHero from '@/features/hero/PageHero';
 import { H3, BodySM, Caption, SmallText } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
 
@@ -31,7 +30,6 @@ function initials(firstName?: string, lastName?: string) {
 }
 
 export default function LeadershipPage() {
-  const { colorScheme } = useTheme();
   const [leaders, setLeaders] = useState<LeadershipMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -73,7 +71,7 @@ export default function LeadershipPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Leadership at Wisdom Church"
         subtitle="Guided by vision, grounded in service."
@@ -127,7 +125,7 @@ export default function LeadershipPage() {
                             <div
                               className="h-14 w-14 rounded-full flex items-center justify-center text-sm font-semibold"
                               style={{
-                                background: `linear-gradient(140deg, ${colorScheme.primary} 0%, #1f2937 100%)`,
+                                background: `linear-gradient(140deg, var(--app-primary) 0%, #1f2937 100%)`,
                               }}
                             >
                               {initials(leader.firstName, leader.lastName)}

@@ -40,7 +40,7 @@ export default function Upcoming() {
   } = useUpcomingEvents();
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
+    <main className="min-h-screen overflow-x-hidden bg-[var(--app-surface)] text-white">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -59,7 +59,7 @@ export default function Upcoming() {
         showScrollIndicator
       />
 
-      <section className="relative overflow-hidden bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <section className="relative overflow-hidden bg-[var(--app-surface)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_16%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
         <div className="relative mx-auto max-w-6xl">
@@ -137,7 +137,7 @@ export default function Upcoming() {
 
       <section
         ref={calendarRef}
-        className="relative overflow-hidden bg-[#080808] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
+        className="relative overflow-hidden bg-[var(--app-surface-2)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
       >
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
@@ -426,7 +426,7 @@ export default function Upcoming() {
 
       <section
         ref={newsletterRef}
-        className="bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
+        className="bg-[var(--app-surface)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
       >
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

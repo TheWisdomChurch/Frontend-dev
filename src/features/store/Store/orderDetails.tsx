@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -79,7 +79,7 @@ interface OrderDetails {
 const OrderConfirmation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const cartItems = useAppSelector(state => state.cart.items);
   const cartTotal = useAppSelector(state => state.cart.total);
 
@@ -95,15 +95,15 @@ const OrderConfirmation = () => {
   const isDarkMode = isDark;
 
   // Theme-based styles
-  const cardBackground = isDarkMode ? colorScheme.card : colorScheme.surface;
-  const textColor = isDarkMode ? colorScheme.text : colorScheme.heading;
+  const cardBackground = isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)';
+  const textColor = isDarkMode ? '#f5f6f7' : '#ffffff';
   const labelColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode ? colorScheme.border : colorScheme.border;
-  const successColor = colorScheme.success;
-  const warningColor = colorScheme.warning;
-  const infoColor = colorScheme.info;
+    ? '#f5f6f7'Secondary
+    : '#f5f6f7'Tertiary;
+  const borderColor = isDarkMode ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.12)';
+  const successColor = '#22c55e';
+  const warningColor = '#eab308';
+  const infoColor = '#3b82f6';
 
   // Mock order status timeline
   const statusSteps = [
@@ -270,8 +270,7 @@ const OrderConfirmation = () => {
       <div className="min-h-screen flex items-center justify-center">
         <FlexboxLayout direction="column" align="center" gap="lg">
           <Loader2
-            className="w-12 h-12 animate-spin"
-            style={{ color: colorScheme.primary }}
+            className="w-12 h-12 animate-spin text-[var(--app-primary)]"
           />
           <H3 style={{ color: textColor }}>Loading Order Details...</H3>
         </FlexboxLayout>
@@ -285,7 +284,7 @@ const OrderConfirmation = () => {
         <FlexboxLayout direction="column" align="center" gap="lg">
           <AlertCircle
             className="w-16 h-16"
-            style={{ color: colorScheme.error }}
+            style={{ color: '#ef4444' }}
           />
           <H3 style={{ color: textColor }}>Order Not Found</H3>
           <Caption style={{ color: labelColor }}>
@@ -295,8 +294,8 @@ const OrderConfirmation = () => {
             variant="primary"
             onClick={() => router.push('/')}
             style={{
-              backgroundColor: colorScheme.primary,
-              color: colorScheme.black,
+              backgroundColor: 'var(--app-primary)',
+              color: '#000000',
             }}
           >
             Return to Home
@@ -611,8 +610,7 @@ const OrderConfirmation = () => {
                     <div className="text-right">
                       <BaseText
                         weight="bold"
-                        className="text-2xl"
-                        style={{ color: colorScheme.primary }}
+                        className="text-2xl text-[var(--app-primary)]"
                       >
                         NGN {orderDetails.total.toLocaleString()}
                       </BaseText>
@@ -750,8 +748,8 @@ const OrderConfirmation = () => {
                     className="p-4 rounded-xl mt-4"
                     style={{
                       backgroundColor: isDarkMode
-                        ? colorScheme.opacity.info10
-                        : colorScheme.opacity.info20,
+                        ? rgba(59,130,246,0.06)
+                        : rgba(59,130,246,0.12),
                       border: `1px solid ${infoColor}40`,
                     }}
                   >
@@ -808,11 +806,10 @@ const OrderConfirmation = () => {
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: `${colorScheme.primary}15` }}
+                  style={{ backgroundColor: `var(--app-primary)15` }}
                 >
                   <User
-                    className="w-5 h-5"
-                    style={{ color: colorScheme.primary }}
+                    className="w-5 h-5 text-[var(--app-primary)]"
                   />
                 </div>
                 <div>
@@ -979,8 +976,8 @@ const OrderConfirmation = () => {
               curvature="full"
               onClick={() => router.push('/')}
               style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: 'var(--app-primary)',
+                color: '#000000',
               }}
               className="w-full"
             >

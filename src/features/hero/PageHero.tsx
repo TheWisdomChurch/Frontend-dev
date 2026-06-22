@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -44,7 +44,7 @@ export default function PageHero({
   return (
     <Section
       padding="none"
-      className="relative isolate overflow-hidden bg-[#050505] text-white"
+      className="relative isolate overflow-hidden bg-[var(--app-surface)] text-white"
     >
       {backgroundImage ? (
         <div className="absolute inset-0 -z-30">

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -15,7 +15,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import GivingModal from '@/shared/ui/modals/GivingModal';
 import { useOnlineGiving } from '@/shared/utils/hooks/Onlinegiving';
@@ -54,7 +53,6 @@ function GivingCard({
   option,
   index,
   isVisible,
-  colorScheme,
   onGive,
   setCardRef,
   onHover,
@@ -63,7 +61,6 @@ function GivingCard({
   option: GivingOption;
   index: number;
   isVisible: boolean;
-  colorScheme: any;
   onGive: (option: GivingOption) => void;
   setCardRef?: (el: HTMLDivElement | null, index: number) => void;
   onHover?: (index: number) => void;
@@ -79,25 +76,12 @@ function GivingCard({
       onMouseEnter={() => onHover?.(index)}
       onMouseLeave={() => onLeave?.(index)}
     >
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-80"
-        style={{
-          backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
-        }}
-      />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent opacity-80" />
 
-      <div
-        className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full blur-3xl transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: `${colorScheme.primary}22`, opacity: 0.45 }}
-      />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-45 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
 
       <div className="relative z-10 flex h-full flex-col">
-        <div
-          className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 shadow-lg"
-          style={{
-            background: `linear-gradient(135deg, ${colorScheme.primary} 0%, ${colorScheme.primary}cc 100%)`,
-          }}
-        >
+        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-[var(--app-primary)] shadow-lg">
           <Gift className="h-5 w-5 text-black" />
         </div>
 
@@ -136,7 +120,6 @@ function GivingCard({
 }
 
 export default function OnlineGiving() {
-  const { colorScheme } = useTheme();
   const { open } = useServiceUnavailable();
 
   const [givingOptions, setGivingOptions] = useState<GivingOption[]>([]);
@@ -287,7 +270,7 @@ export default function OnlineGiving() {
         ref={sectionRef}
         padding="none"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#050505]"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
       >
         <div
           className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -309,7 +292,7 @@ export default function OnlineGiving() {
               key={particle.id}
               className="giving-float absolute rounded-full"
               style={{
-                background: `radial-gradient(circle, ${colorScheme.primary}30, transparent 70%)`,
+                background: 'radial-gradient(circle, rgba(201,150,26,0.19), transparent 70%)',
                 width: `${particle.size}px`,
                 height: `${particle.size}px`,
                 left: `${particle.left}%`,
@@ -331,7 +314,7 @@ export default function OnlineGiving() {
               top: `${mousePosition.y}px`,
               width: '440px',
               height: '440px',
-              background: `radial-gradient(circle, ${colorScheme.primary}18 0%, transparent 70%)`,
+              background: 'radial-gradient(circle, rgba(201,150,26,0.09) 0%, transparent 70%)',
               transform: 'translate(-50%, -50%)',
               opacity: isHovered !== null ? 0.45 : 0.12,
               filter: 'blur(46px)',
@@ -352,20 +335,10 @@ export default function OnlineGiving() {
                   priority={false}
                 />
               </div>
-              <div
-                className="absolute -inset-3 rounded-full border opacity-30"
-                style={{ borderColor: colorScheme.primary }}
-              />
+              <div className="absolute -inset-3 rounded-full border border-[var(--app-primary)] opacity-30" />
             </div>
 
-            <div
-              className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-              style={{
-                borderColor: `${colorScheme.primary}33`,
-                background: `${colorScheme.primary}12`,
-                color: colorScheme.primary,
-              }}
-            >
+            <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
               <Sparkles className="h-3.5 w-3.5" />
               <span className="text-[10px] font-bold uppercase tracking-[0.24em]">
                 Worship through generosity
@@ -401,10 +374,7 @@ export default function OnlineGiving() {
             </div>
           ) : givingOptions.length === 0 ? (
             <div className="mx-auto max-w-lg rounded-[1.75rem] border border-white/10 bg-white/[0.06] p-8 text-center shadow-2xl backdrop-blur-xl">
-              <Gift
-                className="mx-auto h-8 w-8"
-                style={{ color: colorScheme.primary }}
-              />
+              <Gift className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
               <H3
                 className="mt-4 text-lg font-semibold text-white"
                 useThemeColor={false}
@@ -486,8 +456,7 @@ export default function OnlineGiving() {
                               option={option}
                               index={index}
                               isVisible
-                              colorScheme={colorScheme}
-                              onGive={handleGiveNowWithTracking}
+                                              onGive={handleGiveNowWithTracking}
                             />
                           </div>
                         </div>
@@ -504,8 +473,7 @@ export default function OnlineGiving() {
                     option={option}
                     index={index}
                     isVisible={isVisible}
-                    colorScheme={colorScheme}
-                    onGive={handleGiveNowWithTracking}
+                          onGive={handleGiveNowWithTracking}
                     setCardRef={addCardRef}
                     onHover={handleCardHover}
                     onLeave={handleCardLeave}
@@ -554,8 +522,7 @@ export default function OnlineGiving() {
                         option={option}
                         index={index}
                         isVisible={isVisible}
-                        colorScheme={colorScheme}
-                        onGive={handleGiveNowWithTracking}
+                                  onGive={handleGiveNowWithTracking}
                       />
                     </div>
                   ))}
@@ -573,13 +540,7 @@ export default function OnlineGiving() {
             }`}
           >
             <div className="mx-auto max-w-2xl overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.03] p-6 text-center shadow-[0_24px_80px_rgba(0,0,0,0.38)] backdrop-blur-2xl sm:p-7">
-              <div
-                className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl"
-                style={{
-                  background: `${colorScheme.primary}18`,
-                  color: colorScheme.primary,
-                }}
-              >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.10] text-[var(--app-primary)]">
                 <HeartHandshake className="h-6 w-6" />
               </div>
 
@@ -605,11 +566,7 @@ export default function OnlineGiving() {
                   size="sm"
                   curvature="full"
                   leftIcon={<Phone className="h-4 w-4" />}
-                  className="h-11 w-full px-4 text-[0.82rem] font-semibold transition hover:scale-[1.01] sm:text-sm"
-                  style={{
-                    backgroundColor: colorScheme.primary,
-                    color: '#000000',
-                  }}
+                  className="h-11 w-full bg-[var(--app-primary)] px-4 text-[0.82rem] font-semibold text-black transition hover:scale-[1.01] sm:text-sm"
                 >
                   Contact Us
                 </Button>
@@ -619,11 +576,7 @@ export default function OnlineGiving() {
                   size="sm"
                   curvature="full"
                   leftIcon={<ShieldCheck className="h-4 w-4" />}
-                  className="h-11 w-full border px-4 text-[0.82rem] font-semibold text-white transition hover:bg-white/10 sm:text-sm"
-                  style={{
-                    borderColor: `${colorScheme.primary}88`,
-                    color: '#FFFFFF',
-                  }}
+                  className="h-11 w-full border border-[var(--app-primary)]/50 px-4 text-[0.82rem] font-semibold text-white transition hover:bg-white/10 sm:text-sm"
                   onClick={() =>
                     open({
                       title: 'More ways to give',

@@ -8,7 +8,6 @@ import { ArrowRight, Sparkles, Users } from 'lucide-react';
 import { Container, Section } from '@/shared/layout';
 import { BodySM, Caption, H3, SmallText } from '@/shared/text';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { useLeadership } from '@/hooks/useLeadership';
 import { pastorsData } from '@/lib/data';
 
@@ -128,11 +127,10 @@ function LeaderCard({
 }
 
 export default function AssociatePastors() {
-  const { colorScheme } = useTheme();
   const router = useRouter();
   const { leaders } = useLeadership();
 
-  const primary = colorScheme.primary;
+  const primary = var(--app-primary);
 
   const highlights = useMemo<Leader[]>(() => {
     const source =
@@ -146,7 +144,7 @@ export default function AssociatePastors() {
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative overflow-hidden bg-[#070707] py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[var(--app-surface-2)] py-16 sm:py-20 lg:py-24"
     >
       <div className="pointer-events-none absolute inset-0">
         <div
@@ -208,8 +206,8 @@ export default function AssociatePastors() {
             className="px-6 py-3 text-sm font-bold text-black transition duration-300 hover:-translate-y-0.5"
             rightIcon={<ArrowRight className="h-4 w-4" />}
             style={{
-              background: `linear-gradient(135deg, ${primary}, ${colorScheme.primaryDark})`,
-              boxShadow: `0 16px 38px ${colorScheme.opacity.primary20}`,
+              background: `linear-gradient(135deg, ${primary}, var(--app-primary-dark))`,
+              boxShadow: `0 16px 38px ${rgba(201,150,26,0.20)}`,
             }}
             onClick={() => router.push('/leadership')}
           >

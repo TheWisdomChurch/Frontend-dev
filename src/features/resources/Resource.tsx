@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, {
   type ElementType,
@@ -25,7 +25,6 @@ import {
 
 import { Container, Section } from '@/shared/layout';
 import { Caption, H3, BodySM, SmallText } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { resourceLinks } from '@/lib/data';
 import type { YouTubeVideo } from '@/lib/types';
 import apiClient from '@/lib/api';
@@ -63,8 +62,6 @@ function getResourceHref(item: ResourceLink) {
 }
 
 export default function ResourceSection() {
-  const { colorScheme } = useTheme();
-
   const highlight = useMemo(
     () => (resourceLinks as ResourceLink[]).slice(0, 4),
     []
@@ -183,7 +180,7 @@ export default function ResourceSection() {
       ref={sectionRef}
       id="resources"
       padding="lg"
-      className="relative overflow-hidden bg-[#050505]"
+      className="relative overflow-hidden bg-[var(--app-surface)]"
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
@@ -193,14 +190,7 @@ export default function ResourceSection() {
       <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <div
-              className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-              style={{
-                borderColor: `${colorScheme.primary}33`,
-                background: `${colorScheme.primary}12`,
-                color: colorScheme.primary,
-              }}
-            >
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
               <Sparkles className="h-3.5 w-3.5" />
               <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
                 Resources & Media
@@ -233,12 +223,7 @@ export default function ResourceSection() {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
           <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-white/[0.055] p-4 shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-5 lg:p-6">
-            <div
-              className="absolute inset-x-0 top-0 h-px"
-              style={{
-                backgroundImage: `linear-gradient(90deg, transparent, ${colorScheme.primary}, transparent)`,
-              }}
-            />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent" />
 
             <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
               <div className="flex flex-col justify-between rounded-[1.5rem] border border-white/10 bg-black/35 p-5 sm:p-6">
@@ -246,7 +231,7 @@ export default function ResourceSection() {
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/70">
                     <span
                       className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: colorScheme.primary }}
+                      className="bg-[var(--app-primary)]"
                     />
                     Live & on-demand
                   </div>
@@ -315,7 +300,7 @@ export default function ResourceSection() {
                       <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white/80 backdrop-blur-xl">
                         <Radio
                           className="h-3.5 w-3.5"
-                          style={{ color: colorScheme.primary }}
+                          className="text-[var(--app-primary)]"
                         />
                         Latest message
                       </div>
@@ -334,7 +319,7 @@ export default function ResourceSection() {
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
-                            style={{ backgroundColor: colorScheme.primary }}
+                            className="bg-[var(--app-primary)]"
                           >
                             <PlayCircle className="h-4 w-4" />
                             Play now
@@ -356,7 +341,7 @@ export default function ResourceSection() {
                     <div className="max-w-sm">
                       <PlayCircle
                         className="mx-auto h-9 w-9"
-                        style={{ color: colorScheme.primary }}
+                        className="text-[var(--app-primary)]"
                       />
                       <p className="mt-4 text-sm leading-6 text-white/62">
                         Latest message coming soon.
@@ -382,13 +367,7 @@ export default function ResourceSection() {
                     className="group relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                   >
                     <div className="flex items-start gap-4">
-                      <div
-                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
-                        style={{
-                          background: `${colorScheme.primary}18`,
-                          color: colorScheme.primary,
-                        }}
-                      >
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.10] text-[var(--app-primary)]">
                         <Icon className="h-5 w-5" />
                       </div>
 
@@ -422,13 +401,7 @@ export default function ResourceSection() {
               className="rounded-[1.75rem] border border-white/10 bg-black/35 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-2xl"
             >
               <div className="flex items-start gap-3">
-                <div
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
-                  style={{
-                    backgroundColor: colorScheme.primary,
-                    color: '#000',
-                  }}
-                >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                   <Bell className="h-5 w-5" />
                 </div>
 
@@ -486,7 +459,7 @@ export default function ResourceSection() {
                   type="submit"
                   disabled={submitting}
                   className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-bold text-black transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
-                  style={{ backgroundColor: colorScheme.primary }}
+                  className="bg-[var(--app-primary)]"
                 >
                   {submitting ? (
                     <>

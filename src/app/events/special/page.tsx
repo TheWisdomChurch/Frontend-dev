@@ -42,7 +42,7 @@ export default function SpecialPage() {
   const regularEvents = specialEvents.filter(event => !event.featured);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
+    <main className="min-h-screen overflow-x-hidden bg-[var(--app-surface)] text-white">
       <HeroSection
         title="Special Events"
         subtitle="Celebrating God's Faithfulness Together"
@@ -56,7 +56,7 @@ export default function SpecialPage() {
         ref={headerRef}
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#050505]"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
@@ -83,7 +83,7 @@ export default function SpecialPage() {
         ref={servicesRef}
         padding="lg"
         fullHeight={false}
-        className="bg-[#080808]"
+        className="bg-[var(--app-surface-2)]"
       >
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
@@ -139,7 +139,7 @@ export default function SpecialPage() {
         ref={conferenceRef}
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#050505]"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_15%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
@@ -207,7 +207,7 @@ export default function SpecialPage() {
         ref={eventsRef}
         padding="lg"
         fullHeight={false}
-        className="bg-[#080808]"
+        className="bg-[var(--app-surface-2)]"
       >
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
@@ -270,7 +270,7 @@ export default function SpecialPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" fullHeight={false} className="bg-[#050505]">
+      <Section padding="lg" fullHeight={false} className="bg-[var(--app-surface)]">
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

@@ -2,7 +2,6 @@
 
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/cn';
-import { useTheme } from '../contexts/ThemeContext';
 import { bricolageGrotesque, playfair, worksans } from '../fonts/fonts';
 
 export type FontWeight =
@@ -143,10 +142,8 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
     },
     ref
   ) => {
-    const { colorScheme } = useTheme();
-
     const resolvedFontFamily = fontFamily || variantFontFamilyMap[variant];
-    const textColor = useThemeColor && !color ? colorScheme.text : color;
+    const textColor = color ?? undefined;
 
     return (
       <Component

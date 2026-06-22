@@ -1,21 +1,14 @@
-// components/utils/ScrollToTop.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { ChevronUp } from 'lucide-react';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 
 const ScrollToTop: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { colorScheme } = useTheme();
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY > 300);
     };
 
     window.addEventListener('scroll', toggleVisibility);
@@ -31,20 +24,10 @@ const ScrollToTop: React.FC = () => {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-6 right-6 p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-50"
-      style={{
-        backgroundColor: colorScheme.primary,
-        color: colorScheme.black,
-      }}
+      className="fixed bottom-6 right-6 z-50 rounded-full bg-[var(--app-primary)] p-3 text-black shadow-lg transition-all duration-300 hover:scale-110 hover:bg-[var(--app-primary-dark)]"
       aria-label="Scroll to top"
-      onMouseEnter={e => {
-        e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.backgroundColor = colorScheme.primary;
-      }}
     >
-      <ChevronUp className="w-5 h-5" />
+      <ChevronUp className="h-5 w-5" />
     </button>
   );
 };

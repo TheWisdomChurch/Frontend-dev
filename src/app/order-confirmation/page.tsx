@@ -1,4 +1,4 @@
-﻿// src/app/order-confirmation/page.tsx
+// src/app/order-confirmation/page.tsx
 'use client';
 
 import { Suspense, useEffect } from 'react';
@@ -18,7 +18,6 @@ import {
 import { Container, Section } from '@/shared/layout';
 import { H2, BaseText, LightText } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import OrderConfirmation from '@/features/store/Store/orderDetails';
 import PageHero from '@/features/hero/PageHero';
 
@@ -41,7 +40,6 @@ const nextSteps = [
 ];
 
 function SimpleConfirmation() {
-  const { colorScheme } = useTheme();
 
   useEffect(() => {
     gsap.fromTo(
@@ -59,7 +57,7 @@ function SimpleConfirmation() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
@@ -70,7 +68,7 @@ function SimpleConfirmation() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#050505]"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.11),transparent_34%),radial-gradient(circle_at_15%_30%,rgba(255,255,255,0.06),transparent_30%)]" />
@@ -84,9 +82,9 @@ function SimpleConfirmation() {
                 <div
                   className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border shadow-[0_20px_70px_rgba(0,0,0,0.35)]"
                   style={{
-                    backgroundColor: `${colorScheme.success}18`,
-                    borderColor: `${colorScheme.success}30`,
-                    color: colorScheme.success,
+                    backgroundColor: `${'#22c55e'}18`,
+                    borderColor: `${'#22c55e'}30`,
+                    color: '#22c55e',
                   }}
                 >
                   <CheckCircle2 className="h-12 w-12" />
@@ -124,8 +122,8 @@ function SimpleConfirmation() {
                       leftIcon={<ShoppingBag className="h-5 w-5" />}
                       className="h-12 w-full px-6 font-bold sm:w-auto"
                       style={{
-                        backgroundColor: colorScheme.primary,
-                        color: colorScheme.black,
+                        backgroundColor: 'var(--app-primary)',
+                        color: '#000000',
                       }}
                     >
                       Continue Shopping
@@ -140,8 +138,8 @@ function SimpleConfirmation() {
                       leftIcon={<Home className="h-5 w-5" />}
                       className="h-12 w-full border px-6 font-bold text-white sm:w-auto"
                       style={{
-                        borderColor: `${colorScheme.primary}88`,
-                        color: colorScheme.primary,
+                        borderColor: `var(--app-primary)88`,
+                        color: 'var(--app-primary)',
                       }}
                     >
                       Back to Home
@@ -153,8 +151,7 @@ function SimpleConfirmation() {
               <div className="p-6 sm:p-8 lg:p-10">
                 <div className="confirmation-animate mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-white/65">
                   <PackageCheck
-                    className="h-3.5 w-3.5"
-                    style={{ color: colorScheme.primary }}
+                    className="h-3.5 w-3.5 text-[var(--app-primary)]"
                   />
                   <span className="text-[10px] font-bold uppercase tracking-[0.22em]">
                     What happens next
@@ -175,8 +172,8 @@ function SimpleConfirmation() {
                           <div
                             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
                             style={{
-                              backgroundColor: `${colorScheme.primary}18`,
-                              color: colorScheme.primary,
+                              backgroundColor: `rgba(201,150,26,0.09)`,
+                              color: 'var(--app-primary)',
                             }}
                           >
                             <Icon className="h-5 w-5" />
@@ -204,8 +201,7 @@ function SimpleConfirmation() {
 
                   <Link
                     href="/contact"
-                    className="mt-4 inline-flex items-center gap-2 text-sm font-bold"
-                    style={{ color: colorScheme.primary }}
+                    className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[var(--app-primary)]"
                   >
                     Contact support
                     <ArrowRight className="h-4 w-4" />

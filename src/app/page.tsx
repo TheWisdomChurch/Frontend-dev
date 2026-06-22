@@ -1,8 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import HeroHighlights from '@/features/hero/HeroHighlights';
 import EventsShowcase from '@/features/events/EventsShowcase';
 import JoinUs from '@/features/events/JoinUs';
@@ -10,7 +9,7 @@ import ResourceSection from '@/features/resources/Resource';
 import { apiClient } from '@/lib/api';
 
 const SectionFallback = ({ height = 'min-h-[360px]' }: { height?: string }) => (
-  <div className={`w-full ${height} animate-pulse bg-[#080808]`} />
+  <div className={`w-full ${height} animate-pulse bg-[var(--app-surface-2)]`} />
 );
 
 const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
@@ -102,8 +101,6 @@ const fallbackEventAd: HomeEventAd = {
 };
 
 export default function Home() {
-  const { colorScheme } = useTheme();
-
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
   const [showConfessionPopup, setShowConfessionPopup] = useState(false);

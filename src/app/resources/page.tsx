@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import type React from 'react';
 import { useMemo, useState } from 'react';
@@ -21,7 +21,6 @@ import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { resourceLinks } from '@/lib/data';
 
 type Category =
@@ -92,7 +91,6 @@ const fallbackIcons = [
 ];
 
 export default function ResourcesPage() {
-  const { colorScheme } = useTheme();
 
   const [activeCategory, setActiveCategory] = useState<Category>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -139,7 +137,7 @@ export default function ResourcesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Resource Center"
         subtitle="Everything you need in one place."
@@ -148,7 +146,7 @@ export default function ResourcesPage() {
         compact
       />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
+      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_16%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
@@ -160,9 +158,9 @@ export default function ResourcesPage() {
               <div
                 className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
                 style={{
-                  borderColor: `${colorScheme.primary}33`,
-                  background: `${colorScheme.primary}12`,
-                  color: colorScheme.primary,
+                  borderColor: `rgba(201,150,26,0.20)`,
+                  background: `rgba(201,150,26,0.07)`,
+                  color: 'var(--app-primary)',
                 }}
               >
                 <Sparkles className="h-3.5 w-3.5" />
@@ -198,15 +196,15 @@ export default function ResourcesPage() {
                   >
                     <div
                       className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
-                      style={{ background: `${colorScheme.primary}22` }}
+                      style={{ background: `rgba(201,150,26,0.13)` }}
                     />
 
                     <div className="relative z-10 flex items-start gap-4">
                       <div
                         className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
                         style={{
-                          background: `${colorScheme.primary}18`,
-                          color: colorScheme.primary,
+                          background: `rgba(201,150,26,0.09)`,
+                          color: 'var(--app-primary)',
                         }}
                       >
                         <Icon className="h-5 w-5" />
@@ -236,7 +234,7 @@ export default function ResourcesPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#070707]">
+      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface-2)]">
         <Container size="xl">
           <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
             <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
@@ -266,7 +264,7 @@ export default function ResourcesPage() {
                         style={
                           active
                             ? {
-                                backgroundColor: colorScheme.primary,
+                                backgroundColor: 'var(--app-primary)',
                                 color: '#000',
                               }
                             : undefined
@@ -316,7 +314,7 @@ export default function ResourcesPage() {
                     >
                       <div
                         className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
-                        style={{ background: `${colorScheme.primary}20` }}
+                        style={{ background: `rgba(201,150,26,0.12)` }}
                       />
 
                       <div className="relative z-10 flex h-full flex-col">
@@ -325,8 +323,8 @@ export default function ResourcesPage() {
                             <div
                               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
                               style={{
-                                background: `${colorScheme.primary}18`,
-                                color: colorScheme.primary,
+                                background: `rgba(201,150,26,0.09)`,
+                                color: 'var(--app-primary)',
                               }}
                             >
                               <Icon className="h-5 w-5" />
@@ -352,8 +350,7 @@ export default function ResourcesPage() {
 
                         <div className="mt-auto pt-5">
                           <Caption
-                            className="text-[11px] font-bold uppercase tracking-[0.16em]"
-                            style={{ color: colorScheme.primary }}
+                            className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]"
                           >
                             {resource.actionText || 'Read More'}
                           </Caption>
@@ -367,8 +364,7 @@ export default function ResourcesPage() {
               {filteredResources.length === 0 && (
                 <div className="sm:col-span-2 rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-8 text-center">
                   <Search
-                    className="mx-auto h-8 w-8"
-                    style={{ color: colorScheme.primary }}
+                    className="mx-auto h-8 w-8 text-[var(--app-primary)]"
                   />
                   <H3 className="mt-4 text-lg font-semibold text-white">
                     No resources found
@@ -403,11 +399,10 @@ export default function ResourcesPage() {
               <div className="text-center">
                 <div
                   className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{ backgroundColor: `${colorScheme.primary}18` }}
+                  style={{ backgroundColor: `rgba(201,150,26,0.09)` }}
                 >
                   <Radio
-                    className="h-7 w-7"
-                    style={{ color: colorScheme.primary }}
+                    className="h-7 w-7 text-[var(--app-primary)]"
                   />
                 </div>
 
@@ -453,7 +448,7 @@ export default function ResourcesPage() {
                   type="submit"
                   className="h-12 w-full rounded-2xl text-sm font-bold transition hover:scale-[1.01]"
                   style={{
-                    backgroundColor: colorScheme.primary,
+                    backgroundColor: 'var(--app-primary)',
                     color: '#000',
                   }}
                 >

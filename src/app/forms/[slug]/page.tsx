@@ -46,7 +46,7 @@ const fieldBaseClass =
   'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-[0.95rem] text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const fieldSelectClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-surface-2)] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const labelClass =
   'block text-[0.73rem] font-bold uppercase tracking-[0.16em] text-white/60';
@@ -730,7 +730,7 @@ export default function PublicFormPage() {
                 <option
                   key={option.value}
                   value={option.value}
-                  className="bg-[#080808] text-white"
+                  className="bg-[var(--app-surface-2)] text-white"
                 >
                   {option.label}
                 </option>
@@ -904,7 +904,7 @@ export default function PublicFormPage() {
                   <option
                     key={country.iso}
                     value={country.dial}
-                    className="bg-[#080808] text-white"
+                    className="bg-[var(--app-surface-2)] text-white"
                   >
                     {country.iso} {country.dial}
                   </option>
@@ -962,7 +962,7 @@ export default function PublicFormPage() {
               >
                 <option value="">Day</option>
                 {availableDays.map(day => (
-                  <option key={day} value={day} className="bg-[#080808]">
+                  <option key={day} value={day} className="bg-[var(--app-surface-2)]">
                     {day}
                   </option>
                 ))}
@@ -983,7 +983,7 @@ export default function PublicFormPage() {
                   <option
                     key={month.value}
                     value={month.value}
-                    className="bg-[#080808]"
+                    className="bg-[var(--app-surface-2)]"
                   >
                     {month.label}
                   </option>
@@ -1018,7 +1018,7 @@ export default function PublicFormPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--app-surface)] text-white">
       <Section padding="none" className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-20">
           <Image
@@ -1068,7 +1068,7 @@ export default function PublicFormPage() {
         </Container>
       </Section>
 
-      <Section padding="none" className="relative overflow-hidden bg-[#050505]">
+      <Section padding="none" className="relative overflow-hidden bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(201,150,26,0.09),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
 
         <Container size="xl" className="relative z-10">

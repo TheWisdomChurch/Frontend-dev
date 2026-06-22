@@ -39,7 +39,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
     ref
   ) => {
     return (
-      <section
+      <Section
         ref={ref}
         id={id}
         className={cn(
@@ -53,7 +53,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
         style={style}
       >
         <div className="relative z-10 w-full min-w-0">{children}</div>
-      </section>
+      </Section>
     );
   }
 );

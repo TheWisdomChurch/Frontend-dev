@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import Image from 'next/image';
@@ -53,7 +53,7 @@ export default function StorePage() {
     state => state.products
   );
   const { itemCount } = useAppSelector(state => state.cart);
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
 
   const [showSearchAlert, setShowSearchAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -67,16 +67,16 @@ export default function StorePage() {
   const productsRef = useRef<HTMLDivElement>(null);
 
   const cardBackground = isDark ? 'rgba(255,255,255,0.055)' : '#ffffff';
-  const borderColor = isDark ? 'rgba(255,255,255,0.12)' : colorScheme.border;
-  const textColor = colorScheme.text || '#ffffff';
+  const borderColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.12)';
+  const textColor = '#ffffff';
   const secondaryTextColor =
-    colorScheme.textSecondary || 'rgba(255,255,255,0.6)';
+    '#f5f6f7'Secondary || 'rgba(255,255,255,0.6)';
   const inputBackground = isDark
     ? 'rgba(255,255,255,0.06)'
-    : colorScheme.surface;
+    : 'rgba(255,255,255,0.05)';
   const inputBorderColor = isDark
     ? 'rgba(255,255,255,0.14)'
-    : colorScheme.border;
+    : 'rgba(255,255,255,0.12)';
 
   const categories = useMemo(
     () => [
@@ -224,7 +224,7 @@ export default function StorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Wisdom House Store"
         subtitle="Wear Your Faith, Share The Message"
@@ -241,8 +241,8 @@ export default function StorePage() {
         onClick={() => dispatch(toggleCart())}
         className="fixed bottom-6 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition duration-300 hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
         style={{
-          background: colorScheme.primaryGradient || colorScheme.primary,
-          color: colorScheme.black,
+          background: 'linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))',
+          color: '#000000',
         }}
         aria-label="Open cart"
       >
@@ -258,7 +258,7 @@ export default function StorePage() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative bg-[#050505]"
+        className="relative bg-[var(--app-surface)]"
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
@@ -271,9 +271,9 @@ export default function StorePage() {
               <div
                 className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
                 style={{
-                  borderColor: `${colorScheme.primary}33`,
-                  background: `${colorScheme.primary}12`,
-                  color: colorScheme.primary,
+                  borderColor: `rgba(201,150,26,0.20)`,
+                  background: `rgba(201,150,26,0.07)`,
+                  color: 'var(--app-primary)',
                 }}
               >
                 <Sparkles className="h-3.5 w-3.5" />
@@ -309,8 +309,7 @@ export default function StorePage() {
                   className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 text-center backdrop-blur-xl"
                 >
                   <p
-                    className="text-xl font-bold"
-                    style={{ color: colorScheme.primary }}
+                    className="text-xl font-bold text-[var(--app-primary)]"
                   >
                     {value}
                   </p>
@@ -322,7 +321,7 @@ export default function StorePage() {
             </div>
           </div>
 
-          <div className="sticky top-3 z-30 rounded-[1.75rem] border border-white/10 bg-[#080808]/85 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-4">
+          <div className="sticky top-3 z-30 rounded-[1.75rem] border border-white/10 bg-[var(--app-surface-2)]/85 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-4">
             <div className="grid gap-3 lg:grid-cols-[1fr_280px_auto] lg:items-center">
               <label className="relative block">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
@@ -413,8 +412,8 @@ export default function StorePage() {
                   style={
                     active
                       ? {
-                          backgroundColor: colorScheme.primary,
-                          color: colorScheme.black,
+                          backgroundColor: 'var(--app-primary)',
+                          color: '#000000',
                         }
                       : undefined
                   }
@@ -428,7 +427,7 @@ export default function StorePage() {
         </Container>
       </Section>
 
-      <Section padding="lg" fullHeight={false} className="bg-[#050505]">
+      <Section padding="lg" fullHeight={false} className="bg-[var(--app-surface)]">
         <Container size="xl">
           <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -487,8 +486,8 @@ export default function StorePage() {
                   elevated
                   className="mt-6 font-bold"
                   style={{
-                    backgroundColor: colorScheme.primary,
-                    color: colorScheme.black,
+                    backgroundColor: 'var(--app-primary)',
+                    color: '#000000',
                   }}
                 >
                   View All Products
@@ -548,8 +547,7 @@ export default function StorePage() {
 
                         <div className="absolute inset-x-4 bottom-4 translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                           <span
-                            className="flex h-11 w-full items-center justify-center rounded-full text-sm font-bold text-black"
-                            style={{ backgroundColor: colorScheme.primary }}
+                            className="flex h-11 w-full items-center justify-center rounded-full text-sm font-bold text-black bg-[var(--app-primary)]"
                           >
                             {soldOut ? 'View Product' : 'Quick View'}
                           </span>
@@ -585,8 +583,7 @@ export default function StorePage() {
                         <div className="mt-4 flex items-end gap-2">
                           <BaseText
                             weight="bold"
-                            className="text-2xl"
-                            style={{ color: colorScheme.primary }}
+                            className="text-2xl text-[var(--app-primary)]"
                             useThemeColor={false}
                           >
                             {product.price}
@@ -632,16 +629,16 @@ export default function StorePage() {
                           disabled={soldOut}
                           className="mt-5 h-11 w-full font-bold transition hover:scale-[1.01]"
                           style={{
-                            backgroundColor: colorScheme.primary,
-                            color: colorScheme.black,
+                            backgroundColor: 'var(--app-primary)',
+                            color: '#000000',
                           }}
                           onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
                             e.currentTarget.style.backgroundColor =
-                              colorScheme.primaryDark || colorScheme.primary;
+                              var(--app-primary-dark);
                           }}
                           onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
                             e.currentTarget.style.backgroundColor =
-                              colorScheme.primary;
+                              var(--app-primary);
                           }}
                         >
                           {soldOut ? 'Out of Stock' : 'Add to Cart'}
@@ -659,7 +656,7 @@ export default function StorePage() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#070707]"
+        className="relative overflow-hidden bg-[var(--app-surface-2)]"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.10),transparent_34%)]" />
 
@@ -667,9 +664,9 @@ export default function StorePage() {
           <div className="mx-auto max-w-3xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 text-center shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-8 lg:p-10">
             <div
               className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
-              style={{ backgroundColor: `${colorScheme.primary}18` }}
+              style={{ backgroundColor: `rgba(201,150,26,0.09)` }}
             >
-              <Tag className="h-7 w-7" style={{ color: colorScheme.primary }} />
+              <Tag className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
             <H3
@@ -695,18 +692,18 @@ export default function StorePage() {
                 <div
                   className="mx-auto max-w-md rounded-2xl border p-6"
                   style={{
-                    backgroundColor: `${colorScheme.success}12`,
-                    borderColor: `${colorScheme.success}30`,
+                    backgroundColor: `${'#22c55e'}12`,
+                    borderColor: `${'#22c55e'}30`,
                   }}
                 >
                   <CheckCircle2
                     className="mx-auto h-10 w-10"
-                    style={{ color: colorScheme.success }}
+                    style={{ color: '#22c55e' }}
                   />
                   <SmallText
                     weight="bold"
                     className="mt-3 block text-lg"
-                    style={{ color: colorScheme.success }}
+                    style={{ color: '#22c55e' }}
                   >
                     You&apos;re In!
                   </SmallText>
@@ -748,7 +745,7 @@ export default function StorePage() {
                     disabled={isSubmittingEmail || !email}
                     className="h-12 px-6 font-bold transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
                     style={{
-                      backgroundColor: colorScheme.primary,
+                      backgroundColor: 'var(--app-primary)',
                       color: '#000000',
                     }}
                   >
