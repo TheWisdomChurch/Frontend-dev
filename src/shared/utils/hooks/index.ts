@@ -9,7 +9,6 @@ export * from './useAssociate';
 export * from './useDormantAction';
 export * from './useHeroSection';
 export * from './useJoin';
-export * from './useScroll';
 export * from './useSeniorPastor';
 export * from './useSermon';
 export * from './useSpecial';

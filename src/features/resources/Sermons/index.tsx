@@ -60,7 +60,7 @@ const SeriesCard = ({
         <div
           className={`flex h-12 w-12 items-center justify-center rounded-xl border-2 bg-gradient-to-br shadow-md transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 ${
             'color' in group ? group.color : 'from-gray-400 to-gray-600'
-          }`} className="border-[]"
+          }`}
         >
           <div
             className="relative h-8 w-8 overflow-hidden rounded-full border-2 sm:h-10 sm:w-10"
