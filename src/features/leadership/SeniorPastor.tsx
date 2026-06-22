@@ -76,7 +76,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
 
   const goToLeadership = () => router.push('/leadership');
 
-  const primary = var(--app-primary) || 'var(--app-primary)';
+  const primary = 'var(--app-primary)';
 
   return (
     <Section

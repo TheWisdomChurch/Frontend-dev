@@ -69,8 +69,7 @@ export default function StorePage() {
   const cardBackground = isDark ? 'rgba(255,255,255,0.055)' : '#ffffff';
   const borderColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.12)';
   const textColor = '#ffffff';
-  const secondaryTextColor =
-    '#f5f6f7'Secondary || 'rgba(255,255,255,0.6)';
+  const secondaryTextColor = 'rgba(255,255,255,0.60)';
   const inputBackground = isDark
     ? 'rgba(255,255,255,0.06)'
     : 'rgba(255,255,255,0.05)';
@@ -633,12 +632,10 @@ export default function StorePage() {
                             color: '#000000',
                           }}
                           onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                            e.currentTarget.style.backgroundColor =
-                              var(--app-primary-dark);
+                            e.currentTarget.style.backgroundColor = 'var(--app-primary-dark)';
                           }}
                           onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-                            e.currentTarget.style.backgroundColor =
-                              var(--app-primary);
+                            e.currentTarget.style.backgroundColor = 'var(--app-primary)';
                           }}
                         >
                           {soldOut ? 'Out of Stock' : 'Add to Cart'}

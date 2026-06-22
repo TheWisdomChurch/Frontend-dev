@@ -40,8 +40,8 @@ const SeriesCard = ({
       cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
       textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? '#f5f6f7'Secondary
-        : '#f5f6f7'Tertiary,
+        ? 'rgba(255,255,255,0.60)'
+        : 'rgba(255,255,255,0.42)',
       borderColor: 'rgba(255,255,255,0.12)',
     }),
     [isDarkMode]
@@ -60,7 +60,7 @@ const SeriesCard = ({
         <div
           className={`flex h-12 w-12 items-center justify-center rounded-xl border-2 bg-gradient-to-br shadow-md transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 ${
             'color' in group ? group.color : 'from-gray-400 to-gray-600'
-          }`} className="border-[var(--app-primary)]"
+          }`} className="border-[]"
         >
           <div
             className="relative h-8 w-8 overflow-hidden rounded-full border-2 sm:h-10 sm:w-10"
@@ -109,8 +109,8 @@ const SeriesCard = ({
             className="rounded-full px-2 py-1 text-xs font-medium md:text-sm"
             style={{
               backgroundColor: isDarkMode
-                ? rgba(201,150,26,0.10)
-                : rgba(201,150,26,0.20),
+                ? 'rgba(201,150,26,0.10)'
+                : 'rgba(201,150,26,0.20)',
               color: 'var(--app-primary)',
             }}
           >
@@ -145,7 +145,7 @@ const SeriesCard = ({
                     className="flex items-center"
                   >
                     <div
-                      className="mr-2 h-1 w-1 rounded-full bg-[var(--app-primary)]"
+                      className="mr-2 h-1 w-1 rounded-full bg-[]"
                     />
                     <LightText
                       className="truncate text-xs md:text-sm"
@@ -159,7 +159,7 @@ const SeriesCard = ({
               {group.uniqueSeries.length > 2 && (
                 <div className="flex items-center">
                   <div
-                    className="mr-2 h-1 w-1 rounded-full bg-[var(--app-primary)]"
+                    className="mr-2 h-1 w-1 rounded-full bg-[]"
                   />
                   <LightText
                     className="text-xs md:text-sm"
@@ -178,12 +178,12 @@ const SeriesCard = ({
         style={{ borderColor: themeStyles.borderColor }}
       >
         <BaseText
-          className="text-sm font-semibold transition-colors group-hover:text-primaryDark md:text-base md:font-bold text-[var(--app-primary)]"
+          className="text-sm font-semibold transition-colors group-hover:text-primaryDark md:text-base md:font-bold text-[]"
         >
           {isUngrouped ? 'View Series' : 'View Category'}
         </BaseText>
         <span
-          className="transform transition-transform group-hover:translate-x-1 text-[var(--app-primary)]"
+          className="transform transition-transform group-hover:translate-x-1 text-[]"
         >
           →
         </span>
@@ -207,8 +207,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
       cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
       textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? '#f5f6f7'Secondary
-        : '#f5f6f7'Tertiary,
+        ? 'rgba(255,255,255,0.60)'
+        : 'rgba(255,255,255,0.42)',
       borderColor: 'rgba(255,255,255,0.12)',
       modalBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
       modalTextColor: isDarkMode ? '#f5f6f7' : '#ffffff',
@@ -230,16 +230,16 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = var(--app-primary-dark);
+      e.currentTarget.style.backgroundColor = 'var(--app-primary-dark)';
     },
-    [var(--app-primary-dark)]
+    []
   );
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = var(--app-primary);
+      e.currentTarget.style.backgroundColor = 'var(--app-primary)';
     },
-    [var(--app-primary)]
+    []
   );
 
   return (
@@ -295,8 +295,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             className="rounded px-2 py-1 text-xs font-medium"
             style={{
               backgroundColor: isDarkMode
-                ? rgba(201,150,26,0.10)
-                : rgba(201,150,26,0.20),
+                ? 'rgba(201,150,26,0.10)'
+                : 'rgba(201,150,26,0.20)',
               color: 'var(--app-primary)',
             }}
           >
@@ -306,8 +306,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             className="rounded px-2 py-1 text-xs font-medium"
             style={{
               backgroundColor: isDarkMode
-                ? 'rgba(255,255,255,0.05)'Variant
-                : rgba(0,0,0,0.10),
+                ? 'rgba(255,255,255,0.05)'
+                : 'rgba(0,0,0,0.10)',
               color: themeStyles.secondaryTextColor,
             }}
           >
@@ -371,18 +371,18 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
                 style={{
                   color: themeStyles.modalTextColor,
                   backgroundColor: isDarkMode
-                    ? rgba(255,255,255,0.10)
-                    : rgba(0,0,0,0.10),
+                    ? 'rgba(255,255,255,0.10)'
+                    : 'rgba(0,0,0,0.10)',
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.backgroundColor = isDarkMode
-                    ? rgba(255,255,255,0.20)
-                    : rgba(0,0,0,0.20);
+                    ? 'rgba(255,255,255,0.20)'
+                    : 'rgba(0,0,0,0.20)';
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.backgroundColor = isDarkMode
-                    ? rgba(255,255,255,0.10)
-                    : rgba(0,0,0,0.10);
+                    ? 'rgba(255,255,255,0.10)'
+                    : 'rgba(0,0,0,0.10)';
                 }}
               >
                 <span className="text-2xl leading-none">×</span>
@@ -581,11 +581,11 @@ const SearchFiltersComponent = ({
 
           <div className="text-left lg:text-right">
             <LightText
-              className="text-sm text-[var(--app-primary)]"
+              className="text-sm text-[]"
             >
               Showing{' '}
               <BaseText
-                className="inline font-semibold text-[var(--app-primary)]"
+                className="inline font-semibold text-[]"
               >
                 {filteredVideos.length}
               </BaseText>{' '}
@@ -639,13 +639,13 @@ const QuickFilters = ({
             className="rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm"
             style={{
               backgroundColor: isActive
-                ? var(--app-primary)
+                ? 'var(--app-primary)'
                 : isDarkMode
-                  ? rgba(255,255,255,0.10)
-                  : rgba(0,0,0,0.10),
+                  ? 'rgba(255,255,255,0.10)'
+                  : 'rgba(0,0,0,0.10)',
               color: isActive ? '#000000' : 'var(--app-primary)',
               borderColor: isActive
-                ? var(--app-primary)
+                ? 'var(--app-primary)'
                 : `var(--app-primary)50`,
             }}
           >
@@ -727,8 +727,8 @@ const ResultsToolbar = ({
               className="mt-1 text-xs sm:text-sm"
               style={{
                 color: isDarkMode
-                  ? '#f5f6f7'Secondary
-                  : '#f5f6f7'Tertiary,
+                  ? 'rgba(255,255,255,0.60)'
+                  : 'rgba(255,255,255,0.42)',
               }}
             >
               {activeFilters.join(' • ')}
@@ -769,7 +769,7 @@ const ResultsToolbar = ({
           {activeFilters.length > 0 && (
             <button
               onClick={onClear}
-              className="text-xs font-semibold sm:text-sm text-[var(--app-primary)]"
+              className="text-xs font-semibold sm:text-sm text-[]"
             >
               Clear all
             </button>
@@ -813,8 +813,8 @@ const MobileHorizontalScroll = ({
           className="text-sm md:text-base"
           style={{
             color: isDark
-              ? '#f5f6f7'Secondary
-              : '#f5f6f7'Tertiary,
+              ? 'rgba(255,255,255,0.60)'
+              : 'rgba(255,255,255,0.42)',
           }}
         >
           ← Scroll horizontally →
@@ -882,8 +882,8 @@ const MobileHorizontalGrid = ({
             className="text-sm md:text-base"
             style={{
               color: isDark
-                ? '#f5f6f7'Secondary
-                : '#f5f6f7'Tertiary,
+                ? 'rgba(255,255,255,0.60)'
+                : 'rgba(255,255,255,0.42)',
             }}
           >
             ← Scroll horizontally →
@@ -994,8 +994,8 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                   className="text-sm"
                   style={{
                     color: isDarkMode
-                      ? '#f5f6f7'Secondary
-                      : '#f5f6f7'Tertiary,
+                      ? 'rgba(255,255,255,0.60)'
+                      : 'rgba(255,255,255,0.42)',
                   }}
                 >
                   {section.description}
@@ -1006,7 +1006,7 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                 onClick={() =>
                   onSelectGroup(section.searchTerms, section.groupName)
                 }
-                className="text-sm font-semibold transition-colors text-[var(--app-primary)]"
+                className="text-sm font-semibold transition-colors text-[]"
               >
                 View all
               </button>
@@ -1055,8 +1055,8 @@ const FeaturedSection = ({
         : 'rgba(255,255,255,0.06)',
       textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? '#f5f6f7'Secondary
-        : '#f5f6f7'Tertiary,
+        ? 'rgba(255,255,255,0.60)'
+        : 'rgba(255,255,255,0.42)',
       cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
       borderColor: 'rgba(255,255,255,0.12)',
     }),
@@ -1114,7 +1114,7 @@ const FeaturedSection = ({
                     >
                       <LightText
                         className="text-sm md:text-base"
-                        style={{ color: '#f5f6f7'Secondary }}
+                        style={{ color: 'rgba(255,255,255,0.60)' }}
                       >
                         Loading latest content...
                       </LightText>
@@ -1153,8 +1153,8 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? rgba(201,150,26,0.10)
-                              : rgba(201,150,26,0.20),
+                              ? 'rgba(201,150,26,0.10)'
+                              : 'rgba(201,150,26,0.20)',
                             color: 'var(--app-primary)',
                           }}
                         >
@@ -1164,8 +1164,8 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? 'rgba(255,255,255,0.05)'Variant
-                              : rgba(0,0,0,0.10),
+                              ? 'rgba(255,255,255,0.05)'
+                              : 'rgba(0,0,0,0.10)',
                             color: 'var(--app-primary)',
                           }}
                         >
@@ -1175,8 +1175,8 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? rgba(201,150,26,0.10)
-                              : rgba(201,150,26,0.20),
+                              ? 'rgba(201,150,26,0.10)'
+                              : 'rgba(201,150,26,0.20)',
                             color: 'var(--app-primary)',
                           }}
                         >
@@ -1248,8 +1248,8 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? rgba(201,150,26,0.10)
-                              : rgba(201,150,26,0.20),
+                              ? 'rgba(201,150,26,0.10)'
+                              : 'rgba(201,150,26,0.20)',
                             color: 'var(--app-primary)',
                           }}
                         >
@@ -1259,8 +1259,8 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? 'rgba(255,255,255,0.05)'Variant
-                              : rgba(0,0,0,0.10),
+                              ? 'rgba(255,255,255,0.05)'
+                              : 'rgba(0,0,0,0.10)',
                             color: 'var(--app-primary)',
                           }}
                         >
@@ -1270,8 +1270,8 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? rgba(201,150,26,0.10)
-                              : rgba(201,150,26,0.20),
+                              ? 'rgba(201,150,26,0.10)'
+                              : 'rgba(201,150,26,0.20)',
                             color: 'var(--app-primary)',
                           }}
                         >
@@ -1325,8 +1325,8 @@ const FeaturedSection = ({
                         className="rounded px-3 py-1 text-xs font-medium md:text-sm"
                         style={{
                           backgroundColor: isDarkMode
-                            ? 'rgba(255,255,255,0.05)'Variant
-                            : rgba(0,0,0,0.10),
+                            ? 'rgba(255,255,255,0.05)'
+                            : 'rgba(0,0,0,0.10)',
                           color: themeStyles.secondaryTextColor,
                         }}
                       >
@@ -1349,7 +1349,7 @@ const FeaturedSection = ({
                             backgroundColor:
                               currentVideo?.id === video.id
                                 ? isDarkMode
-                                  ? rgba(201,150,26,0.10)
+                                  ? 'rgba(201,150,26,0.10)'
                                   : rgba(201,150,26,0.20)
                                 : themeStyles.cardBackground,
                             borderColor:
@@ -1385,7 +1385,7 @@ const FeaturedSection = ({
                             </div>
                             {currentVideo?.id === video.id && (
                               <div
-                                className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-[var(--app-primary)]"
+                                className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-[]"
                               />
                             )}
                           </div>
@@ -1430,8 +1430,8 @@ const FeaturedSection = ({
                               className="flex-shrink-0 rounded px-2 py-1 text-xs font-medium"
                               style={{
                                 backgroundColor: isDarkMode
-                                  ? rgba(239,68,68,0.10)
-                                  : rgba(239,68,68,0.20),
+                                  ? 'rgba(239,68,68,0.10)'
+                                  : 'rgba(239,68,68,0.20)',
                                 color: '#ef4444',
                               }}
                             >
@@ -1446,7 +1446,7 @@ const FeaturedSection = ({
                       <div className="mt-4 text-center">
                         <button
                           onClick={handleViewMore}
-                          className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold transition-colors md:text-base md:font-bold text-[var(--app-primary)]"
+                          className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold transition-colors md:text-base md:font-bold text-[]"
                         >
                           View More Series
                           <svg
@@ -1491,16 +1491,16 @@ const SermonUtil = () => {
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = var(--app-primary-dark);
+      e.currentTarget.style.backgroundColor = 'var(--app-primary-dark)';
     },
-    [var(--app-primary-dark)]
+    []
   );
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = var(--app-primary);
+      e.currentTarget.style.backgroundColor = 'var(--app-primary)';
     },
-    [var(--app-primary)]
+    []
   );
 
   const sermonState = useSermonUtil();
@@ -1548,8 +1548,8 @@ const SermonUtil = () => {
         : 'rgba(255,255,255,0.06)',
       textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? '#f5f6f7'Secondary
-        : '#f5f6f7'Tertiary,
+        ? 'rgba(255,255,255,0.60)'
+        : 'rgba(255,255,255,0.42)',
       cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
       borderColor: 'rgba(255,255,255,0.12)',
       inputBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',

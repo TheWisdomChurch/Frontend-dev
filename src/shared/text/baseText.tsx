@@ -133,7 +133,7 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       weight,
       fontFamily,
       color,
-      useThemeColor = false,
+      useThemeColor: _useThemeColor = false,
       textDecoration = 'none',
       align,
       className,

@@ -12,7 +12,6 @@ import {
 } from '@/shared/layout';
 import { H2, H3, H4, BaseText, Caption } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { storeClient } from '@/lib/api/storeClient';
 import {
   CheckCircle,
@@ -79,7 +78,6 @@ interface OrderDetails {
 const OrderConfirmation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isDark } = useTheme();
   const cartItems = useAppSelector(state => state.cart.items);
   const cartTotal = useAppSelector(state => state.cart.total);
 
@@ -92,15 +90,10 @@ const OrderConfirmation = () => {
   const orderId = searchParams.get('orderId');
   const amount = searchParams.get('amount');
 
-  const isDarkMode = isDark;
-
-  // Theme-based styles
-  const cardBackground = isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)';
-  const textColor = isDarkMode ? '#f5f6f7' : '#ffffff';
-  const labelColor = isDarkMode
-    ? '#f5f6f7'Secondary
-    : '#f5f6f7'Tertiary;
-  const borderColor = isDarkMode ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.12)';
+  const cardBackground = 'rgba(255,255,255,0.05)';
+  const textColor = '#f5f6f7';
+  const labelColor = 'rgba(255,255,255,0.55)';
+  const borderColor = 'rgba(255,255,255,0.12)';
   const successColor = '#22c55e';
   const warningColor = '#eab308';
   const infoColor = '#3b82f6';
@@ -748,8 +741,8 @@ const OrderConfirmation = () => {
                     className="p-4 rounded-xl mt-4"
                     style={{
                       backgroundColor: isDarkMode
-                        ? rgba(59,130,246,0.06)
-                        : rgba(59,130,246,0.12),
+                        ? 'rgba(59,130,246,0.06)'
+                        : 'rgba(59,130,246,0.12)',
                       border: `1px solid ${infoColor}40`,
                     }}
                   >

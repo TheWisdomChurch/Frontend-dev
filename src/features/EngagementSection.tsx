@@ -1,10 +1,7 @@
 'use client';
 
-import React from 'react';
 import {
-  CheckCircle2,
   Heart,
-  MessageSquare,
   Users2,
   Volume2,
   Zap,

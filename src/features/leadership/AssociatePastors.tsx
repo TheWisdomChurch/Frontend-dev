@@ -130,7 +130,7 @@ export default function AssociatePastors() {
   const router = useRouter();
   const { leaders } = useLeadership();
 
-  const primary = var(--app-primary);
+  const primary = 'var(--app-primary)';
 
   const highlights = useMemo<Leader[]>(() => {
     const source =

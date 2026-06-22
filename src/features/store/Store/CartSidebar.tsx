@@ -36,14 +36,14 @@ const CartSidebar: React.FC = () => {
   // Theme-based styles
   const sidebarBackground = isDark ? '#0b0c10' : '#ffffff';
   const textColor = '#f5f6f7';
-  const secondaryTextColor = '#f5f6f7'Secondary;
+  const secondaryTextColor = 'rgba(255,255,255,0.60)';
   const borderColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.12)';
   const itemBackground = isDark
     ? 'rgba(255,255,255,0.04)'
     : 'rgba(255,255,255,0.06)';
   const hoverBackground = isDark
-    ? rgba(255,255,255,0.10)
-    : rgba(0,0,0,0.10);
+    ? 'rgba(255,255,255,0.10)'
+    : 'rgba(0,0,0,0.10)';
 
   useEffect(() => {
     if (sidebarRef.current && overlayRef.current) {
@@ -196,8 +196,8 @@ const CartSidebar: React.FC = () => {
                       }}
                       onMouseEnter={e => {
                         e.currentTarget.style.backgroundColor = isDark
-                          ? rgba(239,68,68,0.10)
-                          : rgba(239,68,68,0.20);
+                          ? 'rgba(239,68,68,0.10)'
+                          : 'rgba(239,68,68,0.20)';
                       }}
                       onMouseLeave={e => {
                         e.currentTarget.style.backgroundColor = 'transparent';
@@ -220,7 +220,7 @@ const CartSidebar: React.FC = () => {
                         }}
                         onMouseEnter={e => {
                           e.currentTarget.style.borderColor =
-                            var(--app-primary);
+                            'var(--app-primary)';
                           e.currentTarget.style.backgroundColor =
                             hoverBackground;
                         }}
@@ -249,7 +249,7 @@ const CartSidebar: React.FC = () => {
                         }}
                         onMouseEnter={e => {
                           e.currentTarget.style.borderColor =
-                            var(--app-primary);
+                            'var(--app-primary)';
                           e.currentTarget.style.backgroundColor =
                             hoverBackground;
                         }}
@@ -313,10 +313,10 @@ const CartSidebar: React.FC = () => {
                 color: '#000000',
               }}
               onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor = var(--app-primary-dark);
+                e.currentTarget.style.backgroundColor = 'var(--app-primary-dark)';
               }}
               onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor = var(--app-primary);
+                e.currentTarget.style.backgroundColor = 'var(--app-primary)';
               }}
             >
               Proceed to Checkout

@@ -63,9 +63,9 @@ const OnlinePaymentModal = ({
   const modalRef = useRef<HTMLDivElement>(null);
 
   const modalBackground = '#000000';
-  const textColor = var(--app-primary);
+  const textColor = 'var(--app-primary)';
   const subtitleTextColor = '#ffffff';
-  const borderColor = var(--app-primary);
+  const borderColor = 'var(--app-primary)';
 
   useEffect(() => {
     setMounted(true);
@@ -177,7 +177,7 @@ const OnlinePaymentModal = ({
             <button
               onClick={handleClose}
               className={`absolute ${isMobile ? 'top-2.5 right-2.5 p-1' : 'top-2.5 right-2.5 p-1'}`}
-              style={{ backgroundColor: rgba(201,150,26,0.10) }}
+              style={{ backgroundColor: 'rgba(201,150,26,0.10)' }}
             >
               <X className="w-3 h-3" style={{ color: textColor }} />
             </button>
@@ -342,12 +342,12 @@ const CheckoutForm = () => {
     : '#f9fafb';
   const inputBorderColor = isDark
     ? 'rgba(255,255,255,0.14)'
-    : 'rgba(255,255,255,0.12)'Light;
+    : 'rgba(255,255,255,0.12)';
   const textColor = '#f5f6f7';
-  const labelColor = '#f5f6f7'Secondary;
+  const labelColor = 'rgba(255,255,255,0.60)';
   const borderColor = isDark
     ? 'rgba(255,255,255,0.14)'
-    : 'rgba(255,255,255,0.12)'Light;
+    : 'rgba(255,255,255,0.12)';
 
   // Delivery fee (10% of total, min 1000)
   const deliveryFee = Math.max(1000, total * 0.1);
@@ -616,7 +616,7 @@ const CheckoutForm = () => {
               weight="semibold"
               className="text-xs px-3 py-1 rounded-full"
               style={{
-                backgroundColor: rgba(201,150,26,0.10),
+                backgroundColor: 'rgba(201,150,26,0.10)',
                 color: 'var(--app-primary)',
               }}
             >
@@ -785,8 +785,8 @@ const CheckoutForm = () => {
                 className="p-6 rounded-2xl"
                 style={{
                   backgroundColor: isDark
-                    ? rgba(59,130,246,0.06)
-                    : rgba(59,130,246,0.12),
+                    ? 'rgba(59,130,246,0.06)'
+                    : 'rgba(59,130,246,0.12)',
                   border: `1px solid rgba(59,130,246,0.25)`,
                 }}
               >
@@ -838,8 +838,8 @@ const CheckoutForm = () => {
                     className="p-4 rounded-xl mt-2"
                     style={{
                       backgroundColor: isDark
-                        ? rgba(234,179,8,0.06)
-                        : rgba(234,179,8,0.12),
+                        ? 'rgba(234,179,8,0.06)'
+                        : 'rgba(234,179,8,0.12)',
                       border: `1px solid rgba(234,179,8,0.25)`,
                     }}
                   >
@@ -1068,8 +1068,8 @@ const CheckoutForm = () => {
               className="p-6 rounded-2xl mb-6"
               style={{
                 backgroundColor: isDark
-                  ? rgba(234,179,8,0.06)
-                  : rgba(234,179,8,0.12),
+                  ? 'rgba(234,179,8,0.06)'
+                  : 'rgba(234,179,8,0.12)',
                 border: `1px solid rgba(234,179,8,0.25)`,
               }}
             >
@@ -1337,8 +1337,8 @@ const CheckoutForm = () => {
           style={{
             backgroundColor:
               isFormValid && !isSubmitting
-                ? var(--app-primary)
-                : '#f5f6f7'Tertiary,
+                ? 'var(--app-primary)'
+                : 'rgba(255,255,255,0.42)',
             color: '#000000',
           }}
         >
