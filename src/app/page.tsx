@@ -106,7 +106,7 @@ export default function Home() {
 
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
-  const [showConfessionPopup, setShowConfessionPopup] = useState(true);
+  const [showConfessionPopup, setShowConfessionPopup] = useState(false);
   const [eventAd, setEventAd] = useState<HomeEventAd>(fallbackEventAd);
   const [confessionContent, setConfessionContent] =
     useState<HomeConfessionContent | null>(null);
@@ -167,6 +167,17 @@ export default function Home() {
 
   useEffect(() => {
     setNextAdAt(Date.now() + 1200);
+  }, []);
+
+  useEffect(() => {
+    const alreadyWelcomed = typeof window !== 'undefined' && localStorage.getItem('wisdom_welcomed');
+    if (alreadyWelcomed) return;
+
+    const timer = window.setTimeout(() => {
+      setShowConfessionPopup(true);
+    }, 10000);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {

@@ -4,14 +4,18 @@
   --app-header-height: 72px;
   --app-radius: 18px;
   --app-border: rgba(255, 255, 255, 0.12);
-  --app-surface: #050505;
-  --app-surface-2: #0d0f12;
-  --app-surface-3: #15181d;
+  --app-surface: #060504;
+  --app-surface-2: #0e0c0a;
+  --app-surface-3: #17140f;
   --app-text: #f7f7f5;
   --app-muted: #b8b8b0;
   --app-subtle: #8d8d86;
-  --app-primary: #f7de12;
-  --app-primary-dark: #d4bc0f;
+  --app-primary: #C9961A;
+  --app-primary-light: #E8B44A;
+  --app-primary-dark: #A0740C;
+  --radius-sm: 0.75rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 2rem;
 }
 
 /* =========================
@@ -28,7 +32,7 @@ html {
   width: 100%;
   min-height: 100%;
   overflow-x: clip;
-  background: #050505;
+  background: #060504;
   scroll-behavior: smooth;
 }
 
@@ -38,7 +42,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: clip;
-  background: #050505;
+  background: #060504;
   color: var(--app-text);
   font-size: 15.5px;
   line-height: 1.6;
@@ -54,7 +58,7 @@ body > div,
 
 .page-shell {
   min-height: 100svh;
-  background: #050505;
+  background: #060504;
 }
 
 .page-shell > * {
@@ -133,9 +137,25 @@ h4,
 h5,
 h6 {
   color: var(--app-text);
-  letter-spacing: -0.025em;
-  line-height: 1.1;
   text-wrap: balance;
+}
+
+h1,
+h2 {
+  font-family: var(--font-playfair), 'Georgia', serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-bricolage), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 h1 {

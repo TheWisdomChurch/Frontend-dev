@@ -2,22 +2,16 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faInstagram,
-  faYoutube,
-  faFacebook,
-  faXTwitter,
-} from '@fortawesome/free-brands-svg-icons';
-import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react';
+import { MapPin, Mail, Phone, ArrowUpRight, Instagram, Youtube, Facebook, Twitter } from 'lucide-react';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/layout';
 
 const quickLinks = [
   { href: '/about', label: 'About' },
+  { href: '/leadership', label: 'Leadership' },
   { href: '/events', label: 'Events' },
   { href: '/resources/sermons', label: 'Sermons' },
-  { href: '/resources', label: 'Resources' },
+  { href: '/testimonies', label: 'Testimonies' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -26,28 +20,29 @@ const ministries = [
   { href: '/ministries/women', label: "Women's Ministry" },
   { href: '/ministries/youth', label: 'Youth Ministry' },
   { href: '/ministries/children', label: "Children's Ministry" },
+  { href: '/ministries/outreach', label: 'Outreach' },
 ];
 
 const socials = [
   {
     href: 'https://www.instagram.com/wisdomhousehq',
     label: 'Instagram',
-    icon: faInstagram,
+    Icon: Instagram,
   },
   {
     href: 'https://www.youtube.com/@wisdomhousehq',
     label: 'YouTube',
-    icon: faYoutube,
+    Icon: Youtube,
   },
   {
     href: 'https://www.facebook.com/wisdomhousehq',
     label: 'Facebook',
-    icon: faFacebook,
+    Icon: Facebook,
   },
   {
     href: 'https://x.com/wisdomhousehq',
     label: 'X',
-    icon: faXTwitter,
+    Icon: Twitter,
   },
 ];
 
@@ -88,10 +83,10 @@ export default function Footer() {
                 community.
               </p>
               <div className="grid gap-3 text-[11px] text-white/70 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                <div className="rounded-radius-sm border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/[0.05] px-4 py-3">
                   Sunday • 9:00 AM
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                <div className="rounded-radius-sm border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/[0.05] px-4 py-3">
                   Thursday • 6:00 PM
                 </div>
               </div>
@@ -190,7 +185,7 @@ export default function Footer() {
                     aria-label={item.label}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:text-white"
                   >
-                    <FontAwesomeIcon icon={item.icon} className="h-4 w-4" />
+                    <item.Icon className="h-4 w-4" />
                   </a>
                 ))}
               </div>

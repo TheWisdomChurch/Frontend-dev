@@ -26,13 +26,10 @@ export default {
           'sans-serif',
         ],
         headline: [
-          'var(--font-bricolage)',
-          'Inter',
-          'SF Pro Text',
-          'Segoe UI',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
+          'var(--font-playfair)',
+          'Georgia',
+          'Times New Roman',
+          'serif',
         ],
         code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
@@ -101,6 +98,9 @@ export default {
         '2xl': '16px',
         '3xl': '20px',
         '4xl': '24px',
+        'radius-sm': 'var(--radius-sm)',
+        'radius-md': 'var(--radius-md)',
+        'radius-lg': 'var(--radius-lg)',
       },
       keyframes: {
         'accordion-down': {
