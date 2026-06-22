@@ -417,10 +417,7 @@ export default function JoinWisdomHouse() {
             >
               <div className="mb-5 flex items-start gap-3">
                 <div
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
-                  style={{
-                    background: `linear-gradient(135deg, var(--app-primary), ${var(--app-primary-dark)})`,
-                  }}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))]"
                 >
                   <HeartHandshake className="h-5 w-5 text-black" />
                 </div>
