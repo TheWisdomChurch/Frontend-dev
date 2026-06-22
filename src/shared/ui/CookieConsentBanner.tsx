@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Button } from '@/shared/utils/buttons';
 import { BodySM, Caption } from '@/shared/text';
@@ -62,7 +61,6 @@ const writeCookies = (prefs: CookiePreferences) => {
 };
 
 export default function CookieConsentBanner() {
-  const { colorScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [bannerVisible, setBannerVisible] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -121,10 +119,7 @@ export default function CookieConsentBanner() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1">
-                  <ShieldCheck
-                    className="h-3.5 w-3.5"
-                    style={{ color: colorScheme.primary }}
-                  />
+                  <ShieldCheck className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                   <Caption className="uppercase tracking-[0.12em] text-white/70">
                     Cookie Settings
                   </Caption>
@@ -146,11 +141,7 @@ export default function CookieConsentBanner() {
                   variant="primary"
                   size="sm"
                   curvature="full"
-                  className="h-10 px-4 text-xs font-medium sm:text-sm"
-                  style={{
-                    background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                    color: colorScheme.black,
-                  }}
+                  className="h-10 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] px-4 text-xs font-medium text-black sm:text-sm"
                   onClick={() =>
                     applyPreferences({
                       essential: true,
@@ -165,11 +156,7 @@ export default function CookieConsentBanner() {
                   variant="outline"
                   size="sm"
                   curvature="full"
-                  className="h-10 px-4 text-xs font-medium sm:text-sm"
-                  style={{
-                    borderColor: `${colorScheme.primary}66`,
-                    color: '#ffffff',
-                  }}
+                  className="h-10 border-[var(--app-primary)]/40 px-4 text-xs font-medium text-white sm:text-sm"
                   onClick={() =>
                     applyPreferences({
                       essential: true,
@@ -263,10 +250,10 @@ export default function CookieConsentBanner() {
                 }`}
                 style={{
                   backgroundColor: item.enabled
-                    ? colorScheme.primary
+                    ? 'var(--app-primary)'
                     : 'rgba(255,255,255,0.14)',
                   borderColor: item.enabled
-                    ? colorScheme.primary
+                    ? 'var(--app-primary)'
                     : 'rgba(255,255,255,0.24)',
                 }}
               >
@@ -283,11 +270,7 @@ export default function CookieConsentBanner() {
               variant="outline"
               size="sm"
               curvature="full"
-              className="h-11 text-sm font-medium"
-              style={{
-                borderColor: `${colorScheme.primary}66`,
-                color: '#ffffff',
-              }}
+              className="h-11 border-[var(--app-primary)]/40 text-sm font-medium text-white"
               onClick={() =>
                 applyPreferences({
                   essential: true,
@@ -302,11 +285,7 @@ export default function CookieConsentBanner() {
               variant="primary"
               size="sm"
               curvature="full"
-              className="h-11 text-sm font-medium"
-              style={{
-                background: `linear-gradient(135deg, ${colorScheme.primary}, ${colorScheme.primaryDark})`,
-                color: colorScheme.black,
-              }}
+              className="h-11 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] text-sm font-medium text-black"
               onClick={() =>
                 applyPreferences({
                   essential: true,

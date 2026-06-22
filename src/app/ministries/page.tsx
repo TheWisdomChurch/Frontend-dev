@@ -1,4 +1,4 @@
-import {
+﻿import {
   BookOpenCheck,
   CalendarDays,
   HeartHandshake,
@@ -102,7 +102,7 @@ const stats = [
 
 export default function MinistriesPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Ministries that help every generation belong, mature, and serve well."
         subtitle="Wisdom Church ministries are designed to make discipleship practical, relational, and responsive to real life."
@@ -114,10 +114,10 @@ export default function MinistriesPage() {
         <StatStrip items={stats} />
       </ScrollFadeIn>
 
-      <Section padding="lg" className="bg-[#050505]">
+      <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Ministry areas
             </p>
             <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
@@ -131,7 +131,7 @@ export default function MinistriesPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="border-y border-white/10 bg-[#080808]">
+      <Section padding="lg" className="border-y border-white/10 bg-[var(--app-surface-2)]">
         <Container size="xl">
           <ScrollFadeIn data-parallax-global="0.08">
             <SplitSection
@@ -157,10 +157,10 @@ export default function MinistriesPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[#050505]">
+      <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Ministry values
             </p>
             <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">

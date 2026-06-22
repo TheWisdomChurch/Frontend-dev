@@ -1,142 +1,99 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import {
   CheckCircle2,
-  Users2,
   Heart,
-  Zap,
   MessageSquare,
+  Users2,
   Volume2,
+  Zap,
 } from 'lucide-react';
 import { Container, Section } from '@/shared/layout';
 import { H2, H3, BodyMD, BodySM, Caption } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 
-/**
- * IMPROVED ENGAGEMENT SECTION
- * Highlights key features and CTAs for user engagement
- * Uses design system colors, spacing, and typography
- */
+const features = [
+  {
+    icon: Volume2,
+    title: 'Inspiring Messages',
+    description: 'Powerful teachings that transform lives and strengthen faith',
+    cta: 'Listen Now',
+    href: '/resources/sermons',
+  },
+  {
+    icon: Users2,
+    title: 'Community',
+    description: 'Join our vibrant family of believers across online and in-person',
+    cta: 'Join Us',
+    href: '#join',
+  },
+  {
+    icon: Heart,
+    title: 'Service Opportunities',
+    description: 'Discover ways to use your gifts and make a real impact',
+    cta: 'Serve with Us',
+    href: '#join',
+  },
+  {
+    icon: Zap,
+    title: 'Spiritual Growth',
+    description: 'Resources, events, and mentorship to deepen your faith journey',
+    cta: 'Explore Resources',
+    href: '/resources',
+  },
+];
+
 export default function EngagementSection() {
-  const { colorScheme } = useTheme();
-
-  const primary = colorScheme?.primary ?? 'var(--app-primary)';
-  const features = [
-    {
-      icon: Volume2,
-      title: 'Inspiring Messages',
-      description:
-        'Powerful teachings that transform lives and strengthen faith',
-      color: primary,
-      cta: 'Listen Now',
-      action: () => (window.location.href = '/resources/sermons'),
-    },
-    {
-      icon: Users2,
-      title: 'Community',
-      description:
-        'Join our vibrant family of believers across online and in-person',
-      color: primary,
-      cta: 'Join Us',
-      action: () => (window.location.href = '#join'),
-    },
-    {
-      icon: Heart,
-      title: 'Service Opportunities',
-      description: 'Discover ways to use your gifts and make a real impact',
-      color: primary,
-      cta: 'Serve with Us',
-      action: () =>
-        document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' }),
-    },
-    {
-      icon: Zap,
-      title: 'Spiritual Growth',
-      description:
-        'Resources, events, and mentorship to deepen your faith journey',
-      color: primary,
-      cta: 'Explore Resources',
-      action: () => (window.location.href = '/resources'),
-    },
-  ];
-
   return (
     <Section
       padding="lg"
-      className="py-12 sm:py-16 md:py-20"
-      style={{ background: '#0a0a0a' }}
+      className="bg-[var(--app-surface-2)] py-12 sm:py-16 md:py-20"
     >
       <Container size="xl" className="space-y-12">
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-4">
-          <Caption
-            className="uppercase tracking-[0.2em] text-xs font-semibold"
-            style={{ color: primary }}
-          >
+        <div className="mx-auto max-w-3xl space-y-4 text-center">
+          <Caption className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--app-primary)]">
             Why Choose Us
           </Caption>
-          <H2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+          <H2 className="text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
             Experience the Power of Faith
           </H2>
-          <BodyMD className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto">
+          <BodyMD className="mx-auto max-w-2xl text-base text-white/70 sm:text-lg">
             Whether you're seeking spiritual growth, community connection, or
             ways to serve others, we've got something meaningful for you.
           </BodyMD>
         </div>
 
-        {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
           {features.map((feature, idx) => {
             const IconComponent = feature.icon;
             return (
               <div
                 key={idx}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:from-white/8 hover:to-white/[0.05]"
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-8 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:from-white/[0.08] hover:to-white/[0.05]"
               >
-                {/* Accent border on hover */}
-                <div
-                  className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                  style={{
-                    background: `linear-gradient(135deg, ${primary}20 0%, transparent 100%)`,
-                  }}
-                />
+                <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-[var(--app-primary)]/[0.12] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                 <div className="relative space-y-4">
-                  {/* Icon */}
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{
-                      background: `${primary}15`,
-                      borderColor: `${primary}30`,
-                      borderWidth: '1px',
-                    }}
-                  >
-                    <IconComponent
-                      className="w-6 h-6"
-                      style={{ color: primary }}
-                    />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.09] transition-all duration-300 group-hover:scale-110">
+                    <IconComponent className="h-6 w-6 text-[var(--app-primary)]" />
                   </div>
 
-                  {/* Title and Description */}
                   <div className="space-y-2">
                     <H3 className="text-xl font-bold text-white">
                       {feature.title}
                     </H3>
-                    <BodySM className="text-white/60 leading-relaxed">
+                    <BodySM className="leading-relaxed text-white/60">
                       {feature.description}
                     </BodySM>
                   </div>
 
-                  {/* CTA Button */}
-                  <button
-                    onClick={feature.action}
-                    className="inline-flex items-center gap-2 font-semibold text-sm py-2 px-0 transition-all duration-300 group/cta"
-                    style={{ color: primary }}
+                  <a
+                    href={feature.href}
+                    className="group/cta inline-flex items-center gap-2 py-2 text-sm font-semibold text-[var(--app-primary)] transition-all duration-300"
                   >
                     {feature.cta}
                     <svg
-                      className="w-4 h-4 transition-transform duration-300 group-hover/cta:translate-x-1"
+                      className="h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-1"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -148,31 +105,26 @@ export default function EngagementSection() {
                         d="M9 5l7 7-7 7"
                       />
                     </svg>
-                  </button>
+                  </a>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-          <button
-            onClick={() => (window.location.href = '/about')}
-            className="px-8 py-4 rounded-xl font-semibold text-black transition-all duration-300 hover:scale-105 shadow-lg"
-            style={{
-              background: primary,
-            }}
+        <div className="flex flex-col justify-center gap-4 pt-6 sm:flex-row">
+          <a
+            href="/about"
+            className="rounded-xl bg-[var(--app-primary)] px-8 py-4 font-semibold text-black shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--app-primary-light)]"
           >
             Learn More About Us
-          </button>
-          <button
-            onClick={() => (window.location.href = '#join')}
-            className="px-8 py-4 rounded-xl font-semibold border-2 text-white transition-all duration-300 hover:bg-white/10"
-            style={{ borderColor: primary }}
+          </a>
+          <a
+            href="#join"
+            className="rounded-xl border-2 border-[var(--app-primary)]/50 px-8 py-4 font-semibold text-white transition-all duration-300 hover:bg-white/10"
           >
             Get Involved
-          </button>
+          </a>
         </div>
       </Container>
     </Section>

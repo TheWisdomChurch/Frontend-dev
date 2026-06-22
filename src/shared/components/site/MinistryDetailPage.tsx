@@ -1,4 +1,4 @@
-import type { LucideIcon } from 'lucide-react';
+﻿import type { LucideIcon } from 'lucide-react';
 import { CalendarDays, HeartHandshake, MapPin, Users } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
@@ -57,7 +57,7 @@ export default function MinistryDetailPage({
   config,
 }: MinistryDetailPageProps) {
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title={config.hero.title}
         subtitle={config.hero.subtitle}
@@ -70,7 +70,7 @@ export default function MinistryDetailPage({
         <StatStrip items={config.stats} />
       </ScrollFadeIn>
 
-      <Section padding="lg" className="bg-[#050505]">
+      <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl">
           <ScrollFadeIn data-parallax-global="0.08">
             <SplitSection
@@ -86,10 +86,10 @@ export default function MinistryDetailPage({
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[#080808] border-y border-white/10">
+      <Section padding="lg" className="bg-[var(--app-surface-2)] border-y border-white/10">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
               What this ministry does
             </p>
             <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
@@ -102,10 +102,10 @@ export default function MinistryDetailPage({
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[#050505]">
+      <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Next steps
             </p>
             <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">

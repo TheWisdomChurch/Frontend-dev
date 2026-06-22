@@ -23,7 +23,6 @@ import {
 } from '@/shared/layout';
 import { cn } from '@/lib/cn';
 import { gsap } from 'gsap';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { seniorPastorData } from '@/lib/data';
 
 interface SeniorPastorProps {
@@ -31,7 +30,6 @@ interface SeniorPastorProps {
 }
 
 export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
-  const { colorScheme } = useTheme();
   const router = useRouter();
 
   const { sectionRef, isVisible } = useSeniorPastor();
@@ -78,7 +76,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
 
   const goToLeadership = () => router.push('/leadership');
 
-  const primary = colorScheme.primary || 'var(--app-primary)';
+  const primary = var(--app-primary) || 'var(--app-primary)';
 
   return (
     <Section
@@ -234,7 +232,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md"
                     style={{
                       background:
-                        colorScheme.opacity?.primary20 ??
+                        rgba(201,150,26,0.20) ??
                         'rgba(255,255,255,0.14)',
                       border: '1px solid rgba(255,255,255,0.2)',
                     }}

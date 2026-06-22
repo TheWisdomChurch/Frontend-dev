@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -58,15 +58,14 @@ const OnlinePaymentModal = ({
   onClose: () => void;
   onSelectTransfer: () => void;
 }) => {
-  const { colorScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const modalBackground = colorScheme.black;
-  const textColor = colorScheme.primary;
-  const subtitleTextColor = colorScheme.white;
-  const borderColor = colorScheme.primary;
+  const modalBackground = '#000000';
+  const textColor = var(--app-primary);
+  const subtitleTextColor = '#ffffff';
+  const borderColor = var(--app-primary);
 
   useEffect(() => {
     setMounted(true);
@@ -164,8 +163,7 @@ const OnlinePaymentModal = ({
         {isMobile && (
           <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
             <div
-              className="w-10 h-1 rounded-full"
-              style={{ backgroundColor: colorScheme.primary }}
+              className="w-10 h-1 rounded-full bg-[var(--app-primary)]"
             />
           </div>
         )}
@@ -179,7 +177,7 @@ const OnlinePaymentModal = ({
             <button
               onClick={handleClose}
               className={`absolute ${isMobile ? 'top-2.5 right-2.5 p-1' : 'top-2.5 right-2.5 p-1'}`}
-              style={{ backgroundColor: colorScheme.opacity.primary10 }}
+              style={{ backgroundColor: rgba(201,150,26,0.10) }}
             >
               <X className="w-3 h-3" style={{ color: textColor }} />
             </button>
@@ -269,8 +267,8 @@ const OnlinePaymentModal = ({
                 }}
                 className="w-full py-2"
                 style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
+                  backgroundColor: 'var(--app-primary)',
+                  color: '#000000',
                 }}
               >
                 <SmallText weight="semibold" className="text-sm">
@@ -306,7 +304,7 @@ const CheckoutForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { items, total } = useAppSelector(state => state.cart);
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
 
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -338,18 +336,18 @@ const CheckoutForm = () => {
   const [orderId] = useState(generateOrderId());
 
   // Theme-based styles
-  const cardBackground = isDark ? 'rgba(255,255,255,0.04)' : colorScheme.white;
+  const cardBackground = isDark ? 'rgba(255,255,255,0.04)' : '#ffffff';
   const inputBackground = isDark
     ? 'rgba(255,255,255,0.04)'
-    : colorScheme.gray[50];
+    : '#f9fafb';
   const inputBorderColor = isDark
     ? 'rgba(255,255,255,0.14)'
-    : colorScheme.borderLight;
-  const textColor = colorScheme.text;
-  const labelColor = colorScheme.textSecondary;
+    : 'rgba(255,255,255,0.12)'Light;
+  const textColor = '#f5f6f7';
+  const labelColor = '#f5f6f7'Secondary;
   const borderColor = isDark
     ? 'rgba(255,255,255,0.14)'
-    : colorScheme.borderLight;
+    : 'rgba(255,255,255,0.12)'Light;
 
   // Delivery fee (10% of total, min 1000)
   const deliveryFee = Math.max(1000, total * 0.1);
@@ -363,7 +361,7 @@ const CheckoutForm = () => {
       title: 'Bank Transfer',
       description: 'Transfer to our account and upload proof',
       icon: Building,
-      color: colorScheme.info,
+      color: '#3b82f6',
       fee: 0,
     },
     {
@@ -371,7 +369,7 @@ const CheckoutForm = () => {
       title: 'Online Payment',
       description: 'Pay instantly with card or digital wallet',
       icon: CreditCard,
-      color: colorScheme.success,
+      color: '#22c55e',
       fee: 0,
     },
     {
@@ -379,7 +377,7 @@ const CheckoutForm = () => {
       title: 'Pay on Delivery',
       description: 'Pay when your order arrives (Delivery fee applies)',
       icon: Truck,
-      color: colorScheme.warning,
+      color: '#eab308',
       fee: deliveryFee,
     },
   ];
@@ -618,8 +616,8 @@ const CheckoutForm = () => {
               weight="semibold"
               className="text-xs px-3 py-1 rounded-full"
               style={{
-                backgroundColor: colorScheme.opacity.primary10,
-                color: colorScheme.primary,
+                backgroundColor: rgba(201,150,26,0.10),
+                color: 'var(--app-primary)',
               }}
             >
               #ORDER-REF
@@ -685,7 +683,7 @@ const CheckoutForm = () => {
                   style={{
                     backgroundColor: inputBackground,
                     borderColor: formErrors[field]
-                      ? colorScheme.error
+                      ? '#ef4444'
                       : inputBorderColor,
                     color: textColor,
                   }}
@@ -787,14 +785,14 @@ const CheckoutForm = () => {
                 className="p-6 rounded-2xl"
                 style={{
                   backgroundColor: isDark
-                    ? colorScheme.opacity.info10
-                    : colorScheme.opacity.info20,
-                  border: `1px solid ${colorScheme.info}40`,
+                    ? rgba(59,130,246,0.06)
+                    : rgba(59,130,246,0.12),
+                  border: `1px solid rgba(59,130,246,0.25)`,
                 }}
               >
                 <H4
                   className="text-lg font-bold mb-4 flex items-center gap-2"
-                  style={{ color: colorScheme.info }}
+                  style={{ color: '#3b82f6' }}
                 >
                   <Building className="w-5 h-5" />
                   Bank Transfer Details
@@ -840,20 +838,20 @@ const CheckoutForm = () => {
                     className="p-4 rounded-xl mt-2"
                     style={{
                       backgroundColor: isDark
-                        ? colorScheme.opacity.warning10
-                        : colorScheme.opacity.warning20,
-                      border: `1px solid ${colorScheme.warning}40`,
+                        ? rgba(234,179,8,0.06)
+                        : rgba(234,179,8,0.12),
+                      border: `1px solid rgba(234,179,8,0.25)`,
                     }}
                   >
                     <FlexboxLayout align="center" gap="sm" className="mb-2">
                       <AlertCircle
                         className="w-4 h-4"
-                        style={{ color: colorScheme.warning }}
+                        style={{ color: '#eab308' }}
                       />
                       <Caption
                         weight="semibold"
                         className="text-sm"
-                        style={{ color: colorScheme.warning }}
+                        style={{ color: '#eab308' }}
                       >
                         Important Instructions
                       </Caption>
@@ -865,7 +863,7 @@ const CheckoutForm = () => {
                       <li className="flex items-start gap-2">
                         <CheckCircle
                           className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          style={{ color: colorScheme.success }}
+                          style={{ color: '#22c55e' }}
                         />
                         <span>
                           Transfer the exact amount:{' '}
@@ -875,7 +873,7 @@ const CheckoutForm = () => {
                       <li className="flex items-start gap-2">
                         <CheckCircle
                           className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          style={{ color: colorScheme.success }}
+                          style={{ color: '#22c55e' }}
                         />
                         <span>
                           Use the account name:{' '}
@@ -885,7 +883,7 @@ const CheckoutForm = () => {
                       <li className="flex items-start gap-2">
                         <CheckCircle
                           className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          style={{ color: colorScheme.success }}
+                          style={{ color: '#22c55e' }}
                         />
                         <span>
                           Take a screenshot/snapshot of your transfer
@@ -895,7 +893,7 @@ const CheckoutForm = () => {
                       <li className="flex items-start gap-2">
                         <CheckCircle
                           className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          style={{ color: colorScheme.success }}
+                          style={{ color: '#22c55e' }}
                         />
                         <span>
                           Upload the payment slip below with your bank details
@@ -930,7 +928,7 @@ const CheckoutForm = () => {
                         style={{
                           backgroundColor: inputBackground,
                           borderColor: formErrors.customerAccountName
-                            ? colorScheme.error
+                            ? '#ef4444'
                             : inputBorderColor,
                           color: textColor,
                         }}
@@ -958,7 +956,7 @@ const CheckoutForm = () => {
                         style={{
                           backgroundColor: inputBackground,
                           borderColor: formErrors.customerBankName
-                            ? colorScheme.error
+                            ? '#ef4444'
                             : inputBorderColor,
                           color: textColor,
                         }}
@@ -991,7 +989,7 @@ const CheckoutForm = () => {
                         style={{
                           backgroundColor: inputBackground,
                           borderColor: formErrors.paymentSlip
-                            ? colorScheme.error
+                            ? '#ef4444'
                             : borderColor,
                         }}
                       >
@@ -999,7 +997,7 @@ const CheckoutForm = () => {
                           <>
                             <CheckCircle
                               className="w-8 h-8 mb-2"
-                              style={{ color: colorScheme.success }}
+                              style={{ color: '#22c55e' }}
                             />
                             <BaseText weight="semibold" className="text-center">
                               {formData.paymentSlip.name}
@@ -1070,14 +1068,14 @@ const CheckoutForm = () => {
               className="p-6 rounded-2xl mb-6"
               style={{
                 backgroundColor: isDark
-                  ? colorScheme.opacity.warning10
-                  : colorScheme.opacity.warning20,
-                border: `1px solid ${colorScheme.warning}40`,
+                  ? rgba(234,179,8,0.06)
+                  : rgba(234,179,8,0.12),
+                border: `1px solid rgba(234,179,8,0.25)`,
               }}
             >
               <H4
                 className="text-lg font-bold mb-4 flex items-center gap-2"
-                style={{ color: colorScheme.warning }}
+                style={{ color: '#eab308' }}
               >
                 <Truck className="w-5 h-5" />
                 Pay on Delivery Details
@@ -1086,7 +1084,7 @@ const CheckoutForm = () => {
                 <FlexboxLayout align="center" gap="sm">
                   <CheckCircle
                     className="w-5 h-5"
-                    style={{ color: colorScheme.success }}
+                    style={{ color: '#22c55e' }}
                   />
                   <Caption>
                     You can pay with <strong>cash</strong> or{' '}
@@ -1096,7 +1094,7 @@ const CheckoutForm = () => {
                 <FlexboxLayout align="center" gap="sm">
                   <CheckCircle
                     className="w-5 h-5"
-                    style={{ color: colorScheme.success }}
+                    style={{ color: '#22c55e' }}
                   />
                   <Caption>
                     Our delivery agent will bring a POS machine for card
@@ -1106,7 +1104,7 @@ const CheckoutForm = () => {
                 <FlexboxLayout align="center" gap="sm">
                   <CheckCircle
                     className="w-5 h-5"
-                    style={{ color: colorScheme.success }}
+                    style={{ color: '#22c55e' }}
                   />
                   <Caption>
                     Delivery within 3-5 business days in Lagos, 7-10 days
@@ -1118,11 +1116,11 @@ const CheckoutForm = () => {
                   <FlexboxLayout align="center" gap="sm">
                     <Banknote
                       className="w-4 h-4"
-                      style={{ color: colorScheme.warning }}
+                      style={{ color: '#eab308' }}
                     />
                     <Caption
                       weight="semibold"
-                      style={{ color: colorScheme.warning }}
+                      style={{ color: '#eab308' }}
                     >
                       Delivery Fee: NGN {deliveryFee.toLocaleString()} added to
                       your total
@@ -1166,7 +1164,7 @@ const CheckoutForm = () => {
                   style={{
                     backgroundColor: inputBackground,
                     borderColor: formErrors.address
-                      ? colorScheme.error
+                      ? '#ef4444'
                       : inputBorderColor,
                     color: textColor,
                   }}
@@ -1203,7 +1201,7 @@ const CheckoutForm = () => {
                       style={{
                         backgroundColor: inputBackground,
                         borderColor: formErrors[field]
-                          ? colorScheme.error
+                          ? '#ef4444'
                           : inputBorderColor,
                         color: textColor,
                       }}
@@ -1299,8 +1297,7 @@ const CheckoutForm = () => {
                 <div className="text-right">
                   <BaseText
                     weight="bold"
-                    className="text-2xl"
-                    style={{ color: colorScheme.primary }}
+                    className="text-2xl text-[var(--app-primary)]"
                   >
                     NGN {grandTotal.toLocaleString()}
                   </BaseText>
@@ -1340,9 +1337,9 @@ const CheckoutForm = () => {
           style={{
             backgroundColor:
               isFormValid && !isSubmitting
-                ? colorScheme.primary
-                : colorScheme.textTertiary,
-            color: colorScheme.black,
+                ? var(--app-primary)
+                : '#f5f6f7'Tertiary,
+            color: '#000000',
           }}
         >
           {isSubmitting ? (
@@ -1358,7 +1355,7 @@ const CheckoutForm = () => {
         {!isFormValid && (
           <Caption
             className="text-center text-sm"
-            style={{ color: colorScheme.warning }}
+            style={{ color: '#eab308' }}
           >
             Please fill in all required fields correctly to complete your order.
           </Caption>

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/ui/fonts/color/colorScheme.ts
 
 type BackgroundColor = string;
@@ -237,7 +237,7 @@ export const darkShades: ColorScheme = {
 
   opacity: createOpacityColors(
     '#C9961A',
-    '#050505',
+    'var(--app-surface)',
     '#FFFFFF',
     '#F59E0B',
     '#EF4444',

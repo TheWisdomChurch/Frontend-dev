@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+﻿import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 
 import '@/app/globals.scss';
@@ -88,7 +88,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: '#050505',
+  themeColor: 'var(--app-surface)',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -145,7 +145,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={cn(
           worksans.className,
-          'min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white'
+          'min-h-screen overflow-x-hidden bg-[var(--app-surface)] font-sans text-white'
         )}
       >
         <script

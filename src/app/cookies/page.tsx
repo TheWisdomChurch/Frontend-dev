@@ -43,7 +43,7 @@ const privacyCards = [
 
 export default function CookiesPage() {
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Cookies & Privacy"
         subtitle="How we use essential data to keep the site secure."
@@ -51,7 +51,7 @@ export default function CookiesPage() {
         compact
       />
 
-      <Section padding="xl" className="relative overflow-hidden bg-[#050505]">
+      <Section padding="xl" className="relative overflow-hidden bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_85%_25%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.28] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(circle_at_50%_30%,black_22%,transparent_78%)]" />
 

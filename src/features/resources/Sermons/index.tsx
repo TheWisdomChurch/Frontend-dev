@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { H2, BaseText, LightText, H1 } from '@/shared/text';
@@ -32,19 +32,19 @@ const SeriesCard = ({
   isUngrouped = false,
   onClick,
 }: SeriesCardProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
-      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
-      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
+      cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
+      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? colorScheme.textSecondary
-        : colorScheme.textTertiary,
-      borderColor: colorScheme.border,
+        ? '#f5f6f7'Secondary
+        : '#f5f6f7'Tertiary,
+      borderColor: 'rgba(255,255,255,0.12)',
     }),
-    [isDarkMode, colorScheme]
+    [isDarkMode]
   );
 
   return (
@@ -60,12 +60,11 @@ const SeriesCard = ({
         <div
           className={`flex h-12 w-12 items-center justify-center rounded-xl border-2 bg-gradient-to-br shadow-md transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 ${
             'color' in group ? group.color : 'from-gray-400 to-gray-600'
-          }`}
-          style={{ borderColor: colorScheme.primary }}
+          }`} className="border-[var(--app-primary)]"
         >
           <div
             className="relative h-8 w-8 overflow-hidden rounded-full border-2 sm:h-10 sm:w-10"
-            style={{ borderColor: `${colorScheme.primary}30` }}
+            style={{ borderColor: 'rgba(201,150,26,0.19)' }}
           >
             <Image
               src={WisdomeHouseLogo}
@@ -110,9 +109,9 @@ const SeriesCard = ({
             className="rounded-full px-2 py-1 text-xs font-medium md:text-sm"
             style={{
               backgroundColor: isDarkMode
-                ? colorScheme.opacity.primary10
-                : colorScheme.opacity.primary20,
-              color: colorScheme.primary,
+                ? rgba(201,150,26,0.10)
+                : rgba(201,150,26,0.20),
+              color: 'var(--app-primary)',
             }}
           >
             {group.uniqueSeries.length} series
@@ -146,8 +145,7 @@ const SeriesCard = ({
                     className="flex items-center"
                   >
                     <div
-                      className="mr-2 h-1 w-1 rounded-full"
-                      style={{ backgroundColor: colorScheme.primary }}
+                      className="mr-2 h-1 w-1 rounded-full bg-[var(--app-primary)]"
                     />
                     <LightText
                       className="truncate text-xs md:text-sm"
@@ -161,8 +159,7 @@ const SeriesCard = ({
               {group.uniqueSeries.length > 2 && (
                 <div className="flex items-center">
                   <div
-                    className="mr-2 h-1 w-1 rounded-full"
-                    style={{ backgroundColor: colorScheme.primary }}
+                    className="mr-2 h-1 w-1 rounded-full bg-[var(--app-primary)]"
                   />
                   <LightText
                     className="text-xs md:text-sm"
@@ -181,14 +178,12 @@ const SeriesCard = ({
         style={{ borderColor: themeStyles.borderColor }}
       >
         <BaseText
-          className="text-sm font-semibold transition-colors group-hover:text-primaryDark md:text-base md:font-bold"
-          style={{ color: colorScheme.primary }}
+          className="text-sm font-semibold transition-colors group-hover:text-primaryDark md:text-base md:font-bold text-[var(--app-primary)]"
         >
           {isUngrouped ? 'View Series' : 'View Category'}
         </BaseText>
         <span
-          className="transform transition-transform group-hover:translate-x-1"
-          style={{ color: colorScheme.primary }}
+          className="transform transition-transform group-hover:translate-x-1 text-[var(--app-primary)]"
         >
           →
         </span>
@@ -202,23 +197,23 @@ interface SermonCardProps {
 }
 
 const SermonCardComponent = ({ video }: SermonCardProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const [showPlayer, setShowPlayer] = useState(false);
 
   const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
-      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
-      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
+      cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
+      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? colorScheme.textSecondary
-        : colorScheme.textTertiary,
-      borderColor: colorScheme.border,
-      modalBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
-      modalTextColor: isDarkMode ? colorScheme.text : colorScheme.heading,
+        ? '#f5f6f7'Secondary
+        : '#f5f6f7'Tertiary,
+      borderColor: 'rgba(255,255,255,0.12)',
+      modalBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
+      modalTextColor: isDarkMode ? '#f5f6f7' : '#ffffff',
     }),
-    [isDarkMode, colorScheme]
+    [isDarkMode]
   );
 
   const formatDate = useCallback((dateString: string): string => {
@@ -235,16 +230,16 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
+      e.currentTarget.style.backgroundColor = var(--app-primary-dark);
     },
-    [colorScheme.primaryDark]
+    [var(--app-primary-dark)]
   );
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = colorScheme.primary;
+      e.currentTarget.style.backgroundColor = var(--app-primary);
     },
-    [colorScheme.primary]
+    [var(--app-primary)]
   );
 
   return (
@@ -274,8 +269,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
               curvature="full"
               className="px-4 py-2 text-sm font-semibold shadow-md transition-colors"
               style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: 'var(--app-primary)',
+                color: '#000000',
               }}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
@@ -300,9 +295,9 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             className="rounded px-2 py-1 text-xs font-medium"
             style={{
               backgroundColor: isDarkMode
-                ? colorScheme.opacity.primary10
-                : colorScheme.opacity.primary20,
-              color: colorScheme.primary,
+                ? rgba(201,150,26,0.10)
+                : rgba(201,150,26,0.20),
+              color: 'var(--app-primary)',
             }}
           >
             {video.series}
@@ -311,8 +306,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
             className="rounded px-2 py-1 text-xs font-medium"
             style={{
               backgroundColor: isDarkMode
-                ? colorScheme.surfaceVariant
-                : colorScheme.opacity.black10,
+                ? 'rgba(255,255,255,0.05)'Variant
+                : rgba(0,0,0,0.10),
               color: themeStyles.secondaryTextColor,
             }}
           >
@@ -376,18 +371,18 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
                 style={{
                   color: themeStyles.modalTextColor,
                   backgroundColor: isDarkMode
-                    ? colorScheme.opacity.white10
-                    : colorScheme.opacity.black10,
+                    ? rgba(255,255,255,0.10)
+                    : rgba(0,0,0,0.10),
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.opacity.white20
-                    : colorScheme.opacity.black20;
+                    ? rgba(255,255,255,0.20)
+                    : rgba(0,0,0,0.20);
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.backgroundColor = isDarkMode
-                    ? colorScheme.opacity.white10
-                    : colorScheme.opacity.black10;
+                    ? rgba(255,255,255,0.10)
+                    : rgba(0,0,0,0.10);
                 }}
               >
                 <span className="text-2xl leading-none">×</span>
@@ -460,18 +455,18 @@ const SearchFiltersComponent = ({
   handleYearChange,
   filteredVideos,
 }: SearchFiltersProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
-      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
-      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
-      borderColor: colorScheme.border,
-      inputBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
-      inputBorderColor: colorScheme.border,
+      cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
+      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
+      borderColor: 'rgba(255,255,255,0.12)',
+      inputBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
+      inputBorderColor: 'rgba(255,255,255,0.12)',
     }),
-    [isDarkMode, colorScheme]
+    [isDarkMode]
   );
 
   return (
@@ -586,13 +581,11 @@ const SearchFiltersComponent = ({
 
           <div className="text-left lg:text-right">
             <LightText
-              className="text-sm"
-              style={{ color: colorScheme.primary }}
+              className="text-sm text-[var(--app-primary)]"
             >
               Showing{' '}
               <BaseText
-                className="inline font-semibold"
-                style={{ color: colorScheme.primary }}
+                className="inline font-semibold text-[var(--app-primary)]"
               >
                 {filteredVideos.length}
               </BaseText>{' '}
@@ -616,7 +609,7 @@ const QuickFilters = ({
   onSelectGroup,
   onReset,
 }: QuickFiltersProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const chips = useMemo(
@@ -646,14 +639,14 @@ const QuickFilters = ({
             className="rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm"
             style={{
               backgroundColor: isActive
-                ? colorScheme.primary
+                ? var(--app-primary)
                 : isDarkMode
-                  ? colorScheme.opacity.white10
-                  : colorScheme.opacity.black10,
-              color: isActive ? colorScheme.black : colorScheme.primary,
+                  ? rgba(255,255,255,0.10)
+                  : rgba(0,0,0,0.10),
+              color: isActive ? '#000000' : 'var(--app-primary)',
               borderColor: isActive
-                ? colorScheme.primary
-                : `${colorScheme.primary}50`,
+                ? var(--app-primary)
+                : `var(--app-primary)50`,
             }}
           >
             {group.name}
@@ -666,8 +659,8 @@ const QuickFilters = ({
         className="rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm"
         style={{
           backgroundColor: 'transparent',
-          color: colorScheme.primary,
-          borderColor: `${colorScheme.primary}50`,
+          color: 'var(--app-primary)',
+          borderColor: `var(--app-primary)50`,
         }}
       >
         Reset
@@ -699,7 +692,7 @@ const ResultsToolbar = ({
   onSortChange,
   onClear,
 }: ResultsToolbarProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const activeFilters = [
@@ -716,14 +709,14 @@ const ResultsToolbar = ({
   return (
     <div
       className="mb-6 rounded-2xl border p-4 sm:mb-8 sm:p-5"
-      style={{ borderColor: `${colorScheme.primary}40` }}
+      style={{ borderColor: `var(--app-primary)40` }}
     >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <BaseText
             className="text-sm font-semibold"
             style={{
-              color: isDarkMode ? colorScheme.text : colorScheme.heading,
+              color: isDarkMode ? '#f5f6f7' : '#ffffff',
             }}
           >
             Results: {filteredCount} of {totalCount}
@@ -734,8 +727,8 @@ const ResultsToolbar = ({
               className="mt-1 text-xs sm:text-sm"
               style={{
                 color: isDarkMode
-                  ? colorScheme.textSecondary
-                  : colorScheme.textTertiary,
+                  ? '#f5f6f7'Secondary
+                  : '#f5f6f7'Tertiary,
               }}
             >
               {activeFilters.join(' • ')}
@@ -748,7 +741,7 @@ const ResultsToolbar = ({
             <label
               className="text-xs font-semibold sm:text-sm"
               style={{
-                color: isDarkMode ? colorScheme.text : colorScheme.heading,
+                color: isDarkMode ? '#f5f6f7' : '#ffffff',
               }}
             >
               Sort by
@@ -761,10 +754,10 @@ const ResultsToolbar = ({
               className="rounded-lg border px-3 py-2 text-xs sm:text-sm"
               style={{
                 backgroundColor: isDarkMode
-                  ? colorScheme.surface
-                  : colorScheme.white,
-                borderColor: `${colorScheme.primary}40`,
-                color: isDarkMode ? colorScheme.text : colorScheme.heading,
+                  ? 'rgba(255,255,255,0.05)'
+                  : '#ffffff',
+                borderColor: `var(--app-primary)40`,
+                color: isDarkMode ? '#f5f6f7' : '#ffffff',
               }}
             >
               <option value="newest">Newest</option>
@@ -776,8 +769,7 @@ const ResultsToolbar = ({
           {activeFilters.length > 0 && (
             <button
               onClick={onClear}
-              className="text-xs font-semibold sm:text-sm"
-              style={{ color: colorScheme.primary }}
+              className="text-xs font-semibold sm:text-sm text-[var(--app-primary)]"
             >
               Clear all
             </button>
@@ -797,7 +789,7 @@ const MobileHorizontalScroll = ({
   groupedSeries,
   handleGroupClick,
 }: MobileHorizontalScrollProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const horizontalScrollRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -821,8 +813,8 @@ const MobileHorizontalScroll = ({
           className="text-sm md:text-base"
           style={{
             color: isDark
-              ? colorScheme.textSecondary
-              : colorScheme.textTertiary,
+              ? '#f5f6f7'Secondary
+              : '#f5f6f7'Tertiary,
           }}
         >
           ← Scroll horizontally →
@@ -866,7 +858,7 @@ const MobileHorizontalGrid = ({
   displayedVideos,
   horizontalGridRef,
 }: MobileHorizontalGridProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
 
   return (
     <div className="block lg:hidden">
@@ -890,8 +882,8 @@ const MobileHorizontalGrid = ({
             className="text-sm md:text-base"
             style={{
               color: isDark
-                ? colorScheme.textSecondary
-                : colorScheme.textTertiary,
+                ? '#f5f6f7'Secondary
+                : '#f5f6f7'Tertiary,
             }}
           >
             ← Scroll horizontally →
@@ -929,7 +921,7 @@ interface CuratedSectionsProps {
 }
 
 const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const curatedGroups = useMemo(
@@ -993,7 +985,7 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                 <BaseText
                   className="text-lg font-semibold sm:text-xl"
                   style={{
-                    color: isDarkMode ? colorScheme.text : colorScheme.heading,
+                    color: isDarkMode ? '#f5f6f7' : '#ffffff',
                   }}
                 >
                   {section.title}
@@ -1002,8 +994,8 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                   className="text-sm"
                   style={{
                     color: isDarkMode
-                      ? colorScheme.textSecondary
-                      : colorScheme.textTertiary,
+                      ? '#f5f6f7'Secondary
+                      : '#f5f6f7'Tertiary,
                   }}
                 >
                   {section.description}
@@ -1014,8 +1006,7 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                 onClick={() =>
                   onSelectGroup(section.searchTerms, section.groupName)
                 }
-                className="text-sm font-semibold transition-colors"
-                style={{ color: colorScheme.primary }}
+                className="text-sm font-semibold transition-colors text-[var(--app-primary)]"
               >
                 View all
               </button>
@@ -1054,22 +1045,22 @@ const FeaturedSection = ({
   handleWatchSeries,
   handleViewMore,
 }: FeaturedSectionProps) => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const themeStyles = useMemo(
     () => ({
       sectionBackground: isDarkMode
-        ? colorScheme.background
-        : colorScheme.backgroundSecondary,
-      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
+        ? 'rgba(0,0,0,0.95)'
+        : 'rgba(255,255,255,0.06)',
+      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? colorScheme.textSecondary
-        : colorScheme.textTertiary,
-      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
-      borderColor: colorScheme.border,
+        ? '#f5f6f7'Secondary
+        : '#f5f6f7'Tertiary,
+      cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
+      borderColor: 'rgba(255,255,255,0.12)',
     }),
-    [isDarkMode, colorScheme]
+    [isDarkMode]
   );
 
   return (
@@ -1105,7 +1096,7 @@ const FeaturedSection = ({
               <div className="w-full lg:w-8/12 xl:w-7/12">
                 <div
                   className="overflow-hidden rounded-2xl border-2 bg-black shadow-xl"
-                  style={{ borderColor: `${colorScheme.primary}20` }}
+                  style={{ borderColor: `rgba(201,150,26,0.12)` }}
                 >
                   {currentVideo ? (
                     <div className="relative aspect-video w-full">
@@ -1119,11 +1110,11 @@ const FeaturedSection = ({
                   ) : (
                     <div
                       className="flex aspect-video w-full items-center justify-center rounded-2xl"
-                      style={{ backgroundColor: colorScheme.black }}
+                      style={{ backgroundColor: '#000000' }}
                     >
                       <LightText
                         className="text-sm md:text-base"
-                        style={{ color: colorScheme.textSecondary }}
+                        style={{ color: '#f5f6f7'Secondary }}
                       >
                         Loading latest content...
                       </LightText>
@@ -1162,9 +1153,9 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.opacity.primary10
-                              : colorScheme.opacity.primary20,
-                            color: colorScheme.primary,
+                              ? rgba(201,150,26,0.10)
+                              : rgba(201,150,26,0.20),
+                            color: 'var(--app-primary)',
                           }}
                         >
                           {currentVideo.series}
@@ -1173,9 +1164,9 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.surfaceVariant
-                              : colorScheme.opacity.black10,
-                            color: colorScheme.primary,
+                              ? 'rgba(255,255,255,0.05)'Variant
+                              : rgba(0,0,0,0.10),
+                            color: 'var(--app-primary)',
                           }}
                         >
                           {currentVideo.preacher}
@@ -1184,9 +1175,9 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.opacity.primary10
-                              : colorScheme.opacity.primary20,
-                            color: colorScheme.primary,
+                              ? rgba(201,150,26,0.10)
+                              : rgba(201,150,26,0.20),
+                            color: 'var(--app-primary)',
                           }}
                         >
                           {new Date(
@@ -1212,8 +1203,8 @@ const FeaturedSection = ({
                           curvature="full"
                           className="flex-1 py-3 font-semibold transition-colors"
                           style={{
-                            backgroundColor: colorScheme.primary,
-                            color: colorScheme.black,
+                            backgroundColor: 'var(--app-primary)',
+                            color: '#000000',
                           }}
                           onClick={handleWatchSeries}
                         >
@@ -1257,9 +1248,9 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.opacity.primary10
-                              : colorScheme.opacity.primary20,
-                            color: colorScheme.primary,
+                              ? rgba(201,150,26,0.10)
+                              : rgba(201,150,26,0.20),
+                            color: 'var(--app-primary)',
                           }}
                         >
                           {currentVideo.series}
@@ -1268,9 +1259,9 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.surfaceVariant
-                              : colorScheme.opacity.black10,
-                            color: colorScheme.primary,
+                              ? 'rgba(255,255,255,0.05)'Variant
+                              : rgba(0,0,0,0.10),
+                            color: 'var(--app-primary)',
                           }}
                         >
                           {currentVideo.preacher}
@@ -1279,9 +1270,9 @@ const FeaturedSection = ({
                           className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
                           style={{
                             backgroundColor: isDarkMode
-                              ? colorScheme.opacity.primary10
-                              : colorScheme.opacity.primary20,
-                            color: colorScheme.primary,
+                              ? rgba(201,150,26,0.10)
+                              : rgba(201,150,26,0.20),
+                            color: 'var(--app-primary)',
                           }}
                         >
                           {new Date(
@@ -1306,8 +1297,8 @@ const FeaturedSection = ({
                         curvature="full"
                         className="mb-6 w-full py-3 font-semibold transition-colors"
                         style={{
-                          backgroundColor: colorScheme.primary,
-                          color: colorScheme.black,
+                          backgroundColor: 'var(--app-primary)',
+                          color: '#000000',
                         }}
                         onClick={handleWatchSeries}
                       >
@@ -1334,8 +1325,8 @@ const FeaturedSection = ({
                         className="rounded px-3 py-1 text-xs font-medium md:text-sm"
                         style={{
                           backgroundColor: isDarkMode
-                            ? colorScheme.surfaceVariant
-                            : colorScheme.opacity.black10,
+                            ? 'rgba(255,255,255,0.05)'Variant
+                            : rgba(0,0,0,0.10),
                           color: themeStyles.secondaryTextColor,
                         }}
                       >
@@ -1358,12 +1349,12 @@ const FeaturedSection = ({
                             backgroundColor:
                               currentVideo?.id === video.id
                                 ? isDarkMode
-                                  ? colorScheme.opacity.primary10
-                                  : colorScheme.opacity.primary20
+                                  ? rgba(201,150,26,0.10)
+                                  : rgba(201,150,26,0.20)
                                 : themeStyles.cardBackground,
                             borderColor:
                               currentVideo?.id === video.id
-                                ? `${colorScheme.primary}30`
+                                ? 'rgba(201,150,26,0.19)'
                                 : themeStyles.borderColor,
                           }}
                           onClick={() => handleVideoSelect(video)}
@@ -1394,8 +1385,7 @@ const FeaturedSection = ({
                             </div>
                             {currentVideo?.id === video.id && (
                               <div
-                                className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white"
-                                style={{ backgroundColor: colorScheme.primary }}
+                                className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-[var(--app-primary)]"
                               />
                             )}
                           </div>
@@ -1440,9 +1430,9 @@ const FeaturedSection = ({
                               className="flex-shrink-0 rounded px-2 py-1 text-xs font-medium"
                               style={{
                                 backgroundColor: isDarkMode
-                                  ? colorScheme.opacity.error10
-                                  : colorScheme.opacity.error20,
-                                color: colorScheme.error,
+                                  ? rgba(239,68,68,0.10)
+                                  : rgba(239,68,68,0.20),
+                                color: '#ef4444',
                               }}
                             >
                               NEW
@@ -1456,8 +1446,7 @@ const FeaturedSection = ({
                       <div className="mt-4 text-center">
                         <button
                           onClick={handleViewMore}
-                          className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold transition-colors md:text-base md:font-bold"
-                          style={{ color: colorScheme.primary }}
+                          className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold transition-colors md:text-base md:font-bold text-[var(--app-primary)]"
                         >
                           View More Series
                           <svg
@@ -1488,7 +1477,7 @@ const FeaturedSection = ({
 };
 
 const SermonUtil = () => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const [isClient, setIsClient] = useState(false);
@@ -1502,16 +1491,16 @@ const SermonUtil = () => {
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
+      e.currentTarget.style.backgroundColor = var(--app-primary-dark);
     },
-    [colorScheme.primaryDark]
+    [var(--app-primary-dark)]
   );
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = colorScheme.primary;
+      e.currentTarget.style.backgroundColor = var(--app-primary);
     },
-    [colorScheme.primary]
+    [var(--app-primary)]
   );
 
   const sermonState = useSermonUtil();
@@ -1555,18 +1544,18 @@ const SermonUtil = () => {
   const themeStyles = useMemo(
     () => ({
       sectionBackground: isDarkMode
-        ? colorScheme.background
-        : colorScheme.backgroundSecondary,
-      textColor: isDarkMode ? colorScheme.text : colorScheme.heading,
+        ? 'rgba(0,0,0,0.95)'
+        : 'rgba(255,255,255,0.06)',
+      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
       secondaryTextColor: isDarkMode
-        ? colorScheme.textSecondary
-        : colorScheme.textTertiary,
-      cardBackground: isDarkMode ? colorScheme.card : colorScheme.surface,
-      borderColor: colorScheme.border,
-      inputBackground: isDarkMode ? colorScheme.surface : colorScheme.white,
-      inputBorderColor: colorScheme.border,
+        ? '#f5f6f7'Secondary
+        : '#f5f6f7'Tertiary,
+      cardBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
+      borderColor: 'rgba(255,255,255,0.12)',
+      inputBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
+      inputBorderColor: 'rgba(255,255,255,0.12)',
     }),
-    [isDarkMode, colorScheme]
+    [isDarkMode]
   );
 
   const clientReady = isClient;
@@ -1713,8 +1702,8 @@ const SermonUtil = () => {
                   curvature="full"
                   className="px-6 py-3 text-sm font-semibold shadow-lg transition-colors duration-200 hover:scale-105 hover:shadow-xl sm:px-8 sm:py-4 md:text-base lg:text-lg"
                   style={{
-                    backgroundColor: colorScheme.primary,
-                    color: colorScheme.black,
+                    backgroundColor: 'var(--app-primary)',
+                    color: '#000000',
                   }}
                   onClick={() => handleSeriesClick('all')}
                   onMouseEnter={handleMouseEnter}
@@ -1816,8 +1805,8 @@ const SermonUtil = () => {
                 curvature="full"
                 className="px-4 py-2 text-sm font-semibold shadow-md transition-colors sm:px-6 sm:py-3 md:text-base lg:text-lg"
                 style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
+                  backgroundColor: 'var(--app-primary)',
+                  color: '#000000',
                 }}
                 onClick={handleResetFilters}
                 onMouseEnter={handleMouseEnter}
@@ -1836,8 +1825,8 @@ const SermonUtil = () => {
                 curvature="full"
                 className="px-6 py-2 text-sm font-semibold shadow-md transition-colors duration-200 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none sm:px-8 sm:py-3 md:text-base lg:text-lg"
                 style={{
-                  backgroundColor: colorScheme.primary,
-                  color: colorScheme.black,
+                  backgroundColor: 'var(--app-primary)',
+                  color: '#000000',
                 }}
                 onClick={handleLoadMore}
                 disabled={loading}
@@ -1856,7 +1845,7 @@ const SermonUtil = () => {
                 style={{
                   width: '2rem',
                   height: '2rem',
-                  borderColor: colorScheme.primary,
+                  borderColor: 'var(--app-primary)',
                 }}
               />
             </FlexboxLayout>

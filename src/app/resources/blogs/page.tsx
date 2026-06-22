@@ -1,4 +1,4 @@
-import HeroSection from '@/features/hero/PageHero';
+﻿import HeroSection from '@/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
 import { hero_bg_2 } from '@/shared/assets';
 import {
@@ -69,7 +69,7 @@ const BlogPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <HeroSection
         title="Blog"
         subtitle="Insights for your spiritual journey"

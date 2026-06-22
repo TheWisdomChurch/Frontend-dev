@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import {
@@ -149,7 +149,7 @@ export default function PastoralPage() {
   const SelectedIcon = selectedService.icon;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Pastoral care should feel accessible, prayerful, and responsibly structured."
         subtitle="If you need guidance, prayer, crisis support, or help navigating a major life moment, this page is your starting point."
@@ -159,16 +159,16 @@ export default function PastoralPage() {
 
       <StatStrip items={stats} />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
+      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(215,187,117,0.14),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_36%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(201,150,26,0.12),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_36%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
         </div>
 
         <Container size="xl" className="relative z-10 space-y-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d7bb75]/25 bg-[#d7bb75]/10 px-3 py-1.5 text-[#d7bb75]">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 <p className="text-[10px] font-bold uppercase tracking-[0.24em]">
                   Care pathways
@@ -187,7 +187,7 @@ export default function PastoralPage() {
 
             <a
               href="/contact"
-              className="inline-flex w-fit items-center gap-2 rounded-full bg-[#d7bb75] px-5 py-3 text-sm font-bold text-black shadow-[0_16px_40px_rgba(215,187,117,0.18)] transition hover:scale-[1.01] hover:bg-[#ead69d]"
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black shadow-[0_16px_40px_rgba(215,187,117,0.18)] transition hover:scale-[1.01] hover:bg-[#ead69d]"
             >
               Request support
               <ArrowRight className="h-4 w-4" />
@@ -208,7 +208,7 @@ export default function PastoralPage() {
                       onClick={() => setActiveTab(service.id)}
                       className={`group rounded-[1.35rem] border p-4 text-left transition duration-300 ${
                         active
-                          ? 'border-[#d7bb75]/45 bg-[#d7bb75]/12 shadow-[0_16px_45px_rgba(0,0,0,0.24)]'
+                          ? 'border-[var(--app-primary)]/45 bg-[var(--app-primary)]/12 shadow-[0_16px_45px_rgba(0,0,0,0.24)]'
                           : 'border-white/8 bg-black/20 hover:border-white/16 hover:bg-white/[0.055]'
                       }`}
                     >
@@ -216,8 +216,8 @@ export default function PastoralPage() {
                         <div
                           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition ${
                             active
-                              ? 'bg-[#d7bb75] text-black'
-                              : 'bg-white/[0.06] text-[#d7bb75] group-hover:bg-white/[0.1]'
+                              ? 'bg-[var(--app-primary)] text-black'
+                              : 'bg-white/[0.06] text-[var(--app-primary)] group-hover:bg-white/[0.1]'
                           }`}
                         >
                           <Icon className="h-5 w-5" />
@@ -239,15 +239,15 @@ export default function PastoralPage() {
             </div>
 
             <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(0,0,0,0.28))] p-5 shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-7 lg:p-8">
-              <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#d7bb75]/10 blur-3xl" />
+              <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
 
               <div className="relative z-10 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
                 <div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-[#d7bb75]/20 bg-[#d7bb75]/12 text-[#d7bb75]">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/12 text-[var(--app-primary)]">
                     <SelectedIcon className="h-7 w-7" />
                   </div>
 
-                  <p className="mt-6 text-[0.66rem] font-bold uppercase tracking-[0.24em] text-[#d7bb75]">
+                  <p className="mt-6 text-[0.66rem] font-bold uppercase tracking-[0.24em] text-[var(--app-primary)]">
                     Care focus
                   </p>
 
@@ -264,10 +264,10 @@ export default function PastoralPage() {
                   {selectedService.features.map((feature, index) => (
                     <div
                       key={feature}
-                      className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-black/24 px-4 py-4 text-sm leading-6 text-white/72 transition duration-300 hover:border-[#d7bb75]/25 hover:bg-black/34"
+                      className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-black/24 px-4 py-4 text-sm leading-6 text-white/72 transition duration-300 hover:border-[var(--app-primary)]/25 hover:bg-black/34"
                       style={{ transitionDelay: `${index * 45}ms` }}
                     >
-                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#d7bb75]/14 text-[#d7bb75]">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/14 text-[var(--app-primary)]">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                       </span>
                       <span>{feature}</span>
@@ -282,11 +282,11 @@ export default function PastoralPage() {
 
       <Section
         padding="lg"
-        className="relative overflow-hidden border-y border-white/10 bg-[#080808]"
+        className="relative overflow-hidden border-y border-white/10 bg-[var(--app-surface-2)]"
       >
         <Container size="xl" className="space-y-8">
           <div className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] font-bold uppercase tracking-[0.24em] text-[#d7bb75]">
+            <p className="text-[0.66rem] font-bold uppercase tracking-[0.24em] text-[var(--app-primary)]">
               Care values
             </p>
             <h2 className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">

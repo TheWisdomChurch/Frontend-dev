@@ -27,7 +27,7 @@ export default function SermonPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Sermons & Teachings"
         subtitle="Catch up on every message"
@@ -45,7 +45,7 @@ export default function SermonPage() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#050505]"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,0,0,0.08),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.05),transparent_34%)]" />

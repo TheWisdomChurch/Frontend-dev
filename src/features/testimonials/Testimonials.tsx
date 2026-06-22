@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -82,7 +82,7 @@ function TestimonyPreview({
       onClick={onClick}
       className={`group w-full rounded-2xl border p-4 text-left transition duration-300 ${
         active
-          ? 'border-[#d7bb75]/45 bg-[#d7bb75]/12'
+          ? 'border-[var(--app-primary)]/45 bg-[var(--app-primary)]/12'
           : 'border-white/10 bg-white/[0.045] hover:border-white/18 hover:bg-white/[0.07]'
       }`}
     >
@@ -96,7 +96,7 @@ function TestimonyPreview({
         <ArrowRight
           className={`h-4 w-4 shrink-0 transition ${
             active
-              ? 'text-[#d7bb75]'
+              ? 'text-[var(--app-primary)]'
               : 'text-white/30 group-hover:translate-x-1 group-hover:text-white/70'
           }`}
         />
@@ -202,7 +202,7 @@ export default function TestimoniesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Stories of growth, healing, salvation, and real transformation."
         subtitle="Testimonies help the church remember that God is still working through worship, discipleship, care, and faithful obedience."
@@ -210,7 +210,7 @@ export default function TestimoniesPage() {
         chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
       />
 
-      <Section padding="none" className="relative overflow-hidden bg-[#050505]">
+      <Section padding="none" className="relative overflow-hidden bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(215,187,117,0.13),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_34%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
@@ -226,7 +226,7 @@ export default function TestimoniesPage() {
                   key={item.label}
                   className="rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl"
                 >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#d7bb75]/15 text-[#d7bb75]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--app-primary)]/15 text-[var(--app-primary)]">
                     <Icon className="h-5 w-5" />
                   </div>
 
@@ -248,12 +248,12 @@ export default function TestimoniesPage() {
         </Container>
       </Section>
 
-      <Section padding="none" className="relative bg-[#050505]">
+      <Section padding="none" className="relative bg-[var(--app-surface)]">
         <Container size="xl" className="py-4 sm:py-6 lg:py-8">
           <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
             <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
               <div className="border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#d7bb75]/25 bg-[#d7bb75]/10 px-3 py-1.5 text-[#d7bb75]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
                   <MessageCircleHeart className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.24em]">
                     Testimony stories
@@ -275,7 +275,7 @@ export default function TestimoniesPage() {
                     href={shareUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#d7bb75] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.01] hover:opacity-95"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.01] hover:opacity-95"
                   >
                     Share your testimony
                     <ArrowRight className="h-4 w-4" />
@@ -301,7 +301,7 @@ export default function TestimoniesPage() {
                 ) : !activeTestimony ? (
                   <div className="flex min-h-[420px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20 px-6 text-center">
                     <div className="max-w-sm">
-                      <CheckCircle2 className="mx-auto h-9 w-9 text-[#d7bb75]" />
+                      <CheckCircle2 className="mx-auto h-9 w-9 text-[var(--app-primary)]" />
                       <p className="mt-4 text-sm leading-6 text-white/62">
                         Stories will appear here soon. You can be the first to
                         share what God has done in your life.
@@ -311,7 +311,7 @@ export default function TestimoniesPage() {
                         href={shareUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-[#d7bb75] px-5 py-3 text-sm font-bold text-black"
+                        className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black"
                       >
                         Share your story
                         <ArrowRight className="h-4 w-4" />
@@ -321,10 +321,10 @@ export default function TestimoniesPage() {
                 ) : (
                   <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
                     <article className="relative flex min-h-[420px] flex-col justify-between overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/30 p-6 shadow-[0_24px_90px_rgba(0,0,0,0.35)] sm:p-8">
-                      <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#d7bb75]/10 blur-3xl" />
+                      <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
 
                       <div className="relative z-10">
-                        <Quote className="h-10 w-10 text-[#d7bb75]" />
+                        <Quote className="h-10 w-10 text-[var(--app-primary)]" />
 
                         <p className="mt-7 text-xl leading-9 text-white/82 sm:text-2xl sm:leading-10">
                           “{activeTestimony.quote}”

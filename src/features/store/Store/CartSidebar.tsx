@@ -29,21 +29,21 @@ const CartSidebar: React.FC = () => {
   const { items, total, itemCount, isCartOpen } = useAppSelector(
     state => state.cart
   );
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Theme-based styles
-  const sidebarBackground = isDark ? '#0b0c10' : colorScheme.white;
-  const textColor = colorScheme.text;
-  const secondaryTextColor = colorScheme.textSecondary;
-  const borderColor = isDark ? 'rgba(255,255,255,0.12)' : colorScheme.border;
+  const sidebarBackground = isDark ? '#0b0c10' : '#ffffff';
+  const textColor = '#f5f6f7';
+  const secondaryTextColor = '#f5f6f7'Secondary;
+  const borderColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.12)';
   const itemBackground = isDark
     ? 'rgba(255,255,255,0.04)'
-    : colorScheme.backgroundSecondary;
+    : 'rgba(255,255,255,0.06)';
   const hoverBackground = isDark
-    ? colorScheme.opacity.white10
-    : colorScheme.opacity.black10;
+    ? rgba(255,255,255,0.10)
+    : rgba(0,0,0,0.10);
 
   useEffect(() => {
     if (sidebarRef.current && overlayRef.current) {
@@ -181,8 +181,7 @@ const CartSidebar: React.FC = () => {
                       </LightText>
                       <BaseText
                         weight="bold"
-                        className="mt-1"
-                        style={{ color: colorScheme.primary }}
+                        className="mt-1 text-[var(--app-primary)]"
                       >
                         {item.price}
                       </BaseText>
@@ -192,13 +191,13 @@ const CartSidebar: React.FC = () => {
                       onClick={() => handleRemoveItem(item.id)}
                       className="p-1 rounded-full transition-colors"
                       style={{
-                        color: colorScheme.error,
+                        color: '#ef4444',
                         backgroundColor: 'transparent',
                       }}
                       onMouseEnter={e => {
                         e.currentTarget.style.backgroundColor = isDark
-                          ? colorScheme.opacity.error10
-                          : colorScheme.opacity.error20;
+                          ? rgba(239,68,68,0.10)
+                          : rgba(239,68,68,0.20);
                       }}
                       onMouseLeave={e => {
                         e.currentTarget.style.backgroundColor = 'transparent';
@@ -221,7 +220,7 @@ const CartSidebar: React.FC = () => {
                         }}
                         onMouseEnter={e => {
                           e.currentTarget.style.borderColor =
-                            colorScheme.primary;
+                            var(--app-primary);
                           e.currentTarget.style.backgroundColor =
                             hoverBackground;
                         }}
@@ -250,7 +249,7 @@ const CartSidebar: React.FC = () => {
                         }}
                         onMouseEnter={e => {
                           e.currentTarget.style.borderColor =
-                            colorScheme.primary;
+                            var(--app-primary);
                           e.currentTarget.style.backgroundColor =
                             hoverBackground;
                         }}
@@ -297,8 +296,7 @@ const CartSidebar: React.FC = () => {
               </BaseText>
               <BaseText
                 weight="bold"
-                className="text-2xl"
-                style={{ color: colorScheme.primary }}
+                className="text-2xl text-[var(--app-primary)]"
               >
                 ₦{total.toLocaleString()}
               </BaseText>
@@ -311,14 +309,14 @@ const CartSidebar: React.FC = () => {
               onClick={handleCheckout}
               className="w-full transition-all duration-300 transform hover:scale-105"
               style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
+                backgroundColor: 'var(--app-primary)',
+                color: '#000000',
               }}
               onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor = colorScheme.primaryDark;
+                e.currentTarget.style.backgroundColor = var(--app-primary-dark);
               }}
               onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor = colorScheme.primary;
+                e.currentTarget.style.backgroundColor = var(--app-primary);
               }}
             >
               Proceed to Checkout

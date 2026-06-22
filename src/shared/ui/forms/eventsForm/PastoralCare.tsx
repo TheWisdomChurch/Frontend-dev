@@ -38,7 +38,7 @@ interface PastoralCareFormData {
 }
 
 const PastoralCareUnit = () => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const [formData, setFormData] = useState<PastoralCareFormData>({
@@ -199,18 +199,17 @@ const PastoralCareUnit = () => {
       style={{
         backgroundColor: isDarkMode
           ? '#000000'
-          : colorScheme.backgroundSecondary,
+          : 'rgba(255,255,255,0.06)',
       }}
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div
-          className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-5 blur-3xl"
-          style={{ backgroundColor: colorScheme.primary }}
+          className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-5 blur-3xl bg-[var(--app-primary)]"
         />
         <div
           className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full opacity-5 blur-3xl"
-          style={{ backgroundColor: colorScheme.secondary }}
+          style={{ backgroundColor: 'var(--app-primary-dark)' }}
         />
       </div>
 
@@ -218,8 +217,7 @@ const PastoralCareUnit = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <Caption
-            className="text-sm font-semibold uppercase tracking-wider mb-4"
-            style={{ color: colorScheme.primary }}
+            className="text-sm font-semibold uppercase tracking-wider mb-4 text-[var(--app-primary)]"
           >
             Pastoral Care Services
           </Caption>
@@ -233,8 +231,8 @@ const PastoralCareUnit = () => {
             className="text-base sm:text-lg max-w-2xl mx-auto opacity-80"
             style={{
               color: isDarkMode
-                ? colorScheme.textSecondary
-                : colorScheme.textTertiary,
+                ? '#f5f6f7'Secondary
+                : '#f5f6f7'Tertiary,
             }}
           >
             Let us be part of your special moments. Register for pastoral care
@@ -248,17 +246,17 @@ const PastoralCareUnit = () => {
           <div
             className="rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl border"
             style={{
-              background: isDarkMode ? colorScheme.surface : colorScheme.white,
+              background: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
               borderColor: isDarkMode
-                ? colorScheme.border
-                : colorScheme.borderLight,
+                ? 'rgba(255,255,255,0.12)'
+                : 'rgba(255,255,255,0.12)'Light,
             }}
           >
             {/* Form Header */}
             <div
               className="p-5 md:p-7 text-center text-white"
               style={{
-                background: colorScheme.primaryGradient,
+                background: 'linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))',
               }}
             >
               <H3 className="text-xl md:text-2xl font-semibold mb-1">
@@ -277,8 +275,7 @@ const PastoralCareUnit = () => {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-4">
                     <User
-                      className="w-5 h-5"
-                      style={{ color: colorScheme.primary }}
+                      className="w-5 h-5 text-[var(--app-primary)]"
                     />
                     <H3
                       className="text-xl font-bold"
@@ -321,8 +318,7 @@ const PastoralCareUnit = () => {
                         </select>
                         <ChevronDown
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-                          size={20}
-                          style={{ color: colorScheme.primary }}
+                          size={20} className="text-[var(--app-primary)]"
                         />
                       </div>
                     </div>
@@ -481,13 +477,12 @@ const PastoralCareUnit = () => {
                 <div
                   className="space-y-6 pt-6 border-t"
                   style={{
-                    borderColor: isDarkMode ? colorScheme.border : '#E5E7EB',
+                    borderColor: isDarkMode ? 'rgba(255,255,255,0.12)' : '#E5E7EB',
                   }}
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <Calendar
-                      className="w-5 h-5"
-                      style={{ color: colorScheme.primary }}
+                      className="w-5 h-5 text-[var(--app-primary)]"
                     />
                     <H3
                       className="text-xl font-bold"
@@ -564,8 +559,7 @@ const PastoralCareUnit = () => {
                         </select>
                         <ChevronDown
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-                          size={20}
-                          style={{ color: colorScheme.primary }}
+                          size={20} className="text-[var(--app-primary)]"
                         />
                       </div>
                       {errors.eventType && (
@@ -607,8 +601,7 @@ const PastoralCareUnit = () => {
                         </select>
                         <ChevronDown
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-                          size={20}
-                          style={{ color: colorScheme.primary }}
+                          size={20} className="text-[var(--app-primary)]"
                         />
                       </div>
                       {errors.churchRole && (
@@ -653,13 +646,12 @@ const PastoralCareUnit = () => {
                 <div
                   className="pt-6 border-t"
                   style={{
-                    borderColor: isDarkMode ? colorScheme.border : '#E5E7EB',
+                    borderColor: isDarkMode ? 'rgba(255,255,255,0.12)' : '#E5E7EB',
                   }}
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <MessageCircle
-                      className="w-5 h-5"
-                      style={{ color: colorScheme.primary }}
+                      className="w-5 h-5 text-[var(--app-primary)]"
                     />
                     <H3
                       className="text-xl font-bold"
@@ -710,7 +702,7 @@ const PastoralCareUnit = () => {
                     disabled={isSubmitting}
                     className="w-full py-4 px-6 rounded-xl font-black text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     style={{
-                      background: colorScheme.primaryGradient,
+                      background: 'linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))',
                       color: '#000000',
                       boxShadow: '0 8px 25px rgba(245, 158, 11, 0.3)',
                     }}
@@ -729,8 +721,8 @@ const PastoralCareUnit = () => {
                     className="text-center mt-4 opacity-70"
                     style={{
                       color: isDarkMode
-                        ? colorScheme.textSecondary
-                        : colorScheme.textTertiary,
+                        ? '#f5f6f7'Secondary
+                        : '#f5f6f7'Tertiary,
                     }}
                   >
                     We&apos;ll contact you within 24-48 hours to discuss your
@@ -753,11 +745,10 @@ const PastoralCareUnit = () => {
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
             <div
               className="h-10 w-10 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: colorScheme.opacity.primary10 }}
+              style={{ backgroundColor: rgba(201,150,26,0.10) }}
             >
               <CheckCircle2
-                className="w-5 h-5"
-                style={{ color: colorScheme.primary }}
+                className="w-5 h-5 text-[var(--app-primary)]"
               />
             </div>
             <p className="text-white/80 text-sm leading-relaxed">

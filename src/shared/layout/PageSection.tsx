@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { cn } from '@/lib/cn';
 import Section from './Section';
 import Container from './Container';
@@ -21,10 +21,10 @@ interface PageSectionProps {
 }
 
 const toneClassMap: Record<Tone, string> = {
-  page: 'bg-[#050505] text-white',
-  muted: 'bg-[#080808] text-white',
+  page: 'bg-[var(--app-surface)] text-white',
+  muted: 'bg-[var(--app-surface-2)] text-white',
   surface: 'bg-[#0b0b0b] text-white',
-  'surface-strong': 'bg-[#111111] text-white',
+  'surface-strong': 'bg-[var(--app-surface-3)] text-white',
   none: '',
 };
 

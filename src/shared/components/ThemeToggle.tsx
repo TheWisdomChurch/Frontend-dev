@@ -21,7 +21,7 @@ export default function ThemeToggle({
   size = 'md',
   className = '',
 }: ThemeToggleProps) {
-  const { theme, resolvedTheme, setTheme, colorScheme, mounted } = useTheme();
+  const { theme, resolvedTheme, setTheme, mounted } = useTheme();
 
   const compact = size === 'sm';
   const activeIndex = Math.max(
@@ -92,8 +92,8 @@ export default function ThemeToggle({
             style={{
               width: `${pillWidth}%`,
               left: `${activeIndex * pillWidth}%`,
-              background: `linear-gradient(120deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-              boxShadow: `0 10px 30px ${colorScheme.opacity.primary20}, 0 1px 0 rgba(255,255,255,0.5) inset`,
+              background: 'linear-gradient(120deg, var(--app-primary) 0%, var(--app-primary-dark) 100%)',
+              boxShadow: '0 10px 30px rgba(201,150,26,0.20), 0 1px 0 rgba(255,255,255,0.5) inset',
             }}
             initial={{ opacity: 0.75, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}

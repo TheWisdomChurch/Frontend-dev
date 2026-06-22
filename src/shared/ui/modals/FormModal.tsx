@@ -650,7 +650,7 @@ export function EventRegistrationModal({
               </p>
             ) : null}
 
-            <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[#070707]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
+            <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[var(--app-surface-2)]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
               <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"

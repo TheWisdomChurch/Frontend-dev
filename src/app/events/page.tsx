@@ -103,7 +103,7 @@ export default function EventsPage() {
   }, [events]);
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--app-surface)] text-white">
       <PageHero
         title="Events & Programs"
         subtitle="Explore upcoming church events, weekly programs, and special gatherings."
@@ -111,7 +111,7 @@ export default function EventsPage() {
         compact
       />
 
-      <section className="relative overflow-hidden bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <section className="relative overflow-hidden bg-[var(--app-surface)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_18%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
 
         <div className="relative mx-auto max-w-6xl">

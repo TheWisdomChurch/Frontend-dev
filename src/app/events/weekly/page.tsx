@@ -110,7 +110,7 @@ const expectations = [
 
 export default function WeeklyPage() {
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--app-surface)] text-white">
       <HeroSection
         title="Weekly Services"
         subtitle="Regular gatherings for worship, teaching, and community."
@@ -122,7 +122,7 @@ export default function WeeklyPage() {
         showScrollIndicator
       />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
+      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
         <Container size="xl" className="relative z-10">
           <div className="mx-auto mb-10 max-w-3xl text-center">
@@ -190,7 +190,7 @@ export default function WeeklyPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#080808]">
+      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface-2)]">
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

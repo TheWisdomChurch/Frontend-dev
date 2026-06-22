@@ -7,7 +7,6 @@ import { useAppDispatch } from '@/shared/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Button } from '@/shared/utils/buttons';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { useWindowSize } from '@/shared/utils/hooks/useWindowSize';
 import {
   Container,
@@ -24,7 +23,6 @@ const ProductModal: React.FC<ProductModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { colorScheme } = useTheme();
   const dispatch = useAppDispatch();
   const windowSize = useWindowSize();
 

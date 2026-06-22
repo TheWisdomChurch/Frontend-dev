@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useCallback, useState } from 'react';
 import {
@@ -65,7 +65,7 @@ const inputClassName =
   'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const selectClassName =
-  'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'w-full rounded-2xl border border-white/12 bg-[var(--app-surface-3)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 function ModalShell({
   open,
@@ -220,7 +220,7 @@ export default function HeroHighlights() {
     <section className="relative z-30 -mt-8 sm:-mt-10 lg:-mt-12">
       <Container size="xl" className="relative pb-6 sm:pb-8">
         <div className="mx-auto w-full max-w-6xl px-2 sm:px-0">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#07070a]/90 shadow-[0_34px_100px_rgba(0,0,0,0.48)] backdrop-blur-2xl">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[var(--app-surface-2)]/90 shadow-[0_34px_100px_rgba(0,0,0,0.48)] backdrop-blur-2xl">
             <div
               className="hero-highlights-glow absolute inset-0 opacity-60"
               aria-hidden="true"
