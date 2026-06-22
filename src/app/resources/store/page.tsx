@@ -28,7 +28,6 @@ import {
 } from '@/lib/store/slices/productSlice';
 
 import ProductModal from '@/features/store/modals/ProductModal';
-import HeroSection from '@/features/hero/PageHero';
 import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
 import { hero_bg_1 } from '@/shared/assets';
 import Button from '@/shared/utils/buttons/CustomButton';
@@ -345,10 +344,12 @@ export default function StorePage() {
               </label>
 
               <label className="relative block">
+                <span className="sr-only">Filter by category</span>
                 <Filter className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
                 <select
                   value={filters.selectedCategory}
                   onChange={e => handleCategoryClick(e.target.value)}
+                  aria-label="Filter by category"
                   className="h-12 w-full appearance-none rounded-2xl border border-white/12 bg-[#111] pl-11 pr-10 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                 >
                   {categories.map(category => (
@@ -386,6 +387,7 @@ export default function StorePage() {
                 <button
                   type="button"
                   onClick={() => setShowSearchAlert(false)}
+                  aria-label="Dismiss alert"
                   className="text-yellow-100/70 transition hover:text-yellow-100"
                 >
                   <X className="h-4 w-4" />

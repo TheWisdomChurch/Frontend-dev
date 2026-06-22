@@ -316,8 +316,7 @@ export default function ResourceSection() {
                             href={recentVideoUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
-                            className="bg-[var(--app-primary)]"
+                            className="inline-flex items-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
                           >
                             <PlayCircle className="h-4 w-4" />
                             Play now
@@ -338,8 +337,7 @@ export default function ResourceSection() {
                   <div className="flex min-h-[320px] items-center justify-center p-6 text-center">
                     <div className="max-w-sm">
                       <PlayCircle
-                        className="mx-auto h-9 w-9"
-                        className="text-[var(--app-primary)]"
+                        className="mx-auto h-9 w-9 text-[var(--app-primary)]"
                       />
                       <p className="mt-4 text-sm leading-6 text-white/62">
                         Latest message coming soon.
@@ -456,8 +454,7 @@ export default function ResourceSection() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-bold text-black transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
-                  className="bg-[var(--app-primary)]"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] text-sm font-bold text-black transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {submitting ? (
                     <>

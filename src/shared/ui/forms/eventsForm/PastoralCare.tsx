@@ -315,8 +315,8 @@ const PastoralCareUnit = () => {
                           ))}
                         </select>
                         <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-                          size={20} className="text-[var(--app-primary)]"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
+                          size={20}
                         />
                       </div>
                     </div>
@@ -556,8 +556,8 @@ const PastoralCareUnit = () => {
                           ))}
                         </select>
                         <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-                          size={20} className="text-[var(--app-primary)]"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
+                          size={20}
                         />
                       </div>
                       {errors.eventType && (
@@ -598,8 +598,8 @@ const PastoralCareUnit = () => {
                           ))}
                         </select>
                         <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-                          size={20} className="text-[var(--app-primary)]"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
+                          size={20}
                         />
                       </div>
                       {errors.churchRole && (
