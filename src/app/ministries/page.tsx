@@ -1,4 +1,5 @@
-﻿import {
+﻿import type { Metadata } from 'next';
+import {
   BookOpenCheck,
   CalendarDays,
   HeartHandshake,
@@ -17,6 +18,25 @@ import {
   SplitSection,
   StatStrip,
 } from '@/shared/components/site/PublicPageBlocks';
+
+export const metadata: Metadata = {
+  title: 'Ministries — Get Connected',
+  description:
+    'Discover ministries for men, women, youth, children, and outreach at The Wisdom Church. Find your place to serve and grow.',
+  openGraph: {
+    title: 'Ministries — Get Connected | The Wisdom Church',
+    description: 'Discover ministries for men, women, youth, children, and outreach.',
+    url: 'https://wisdomchurchhq.org/ministries',
+    images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ministries | The Wisdom Church',
+    description: 'Discover ministries for men, women, youth, children, and outreach.',
+    images: ['https://wisdomchurchhq.org/og-image.webp'],
+  },
+  alternates: { canonical: '/ministries' },
+};
 
 const ministries = [
   {
