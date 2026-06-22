@@ -740,9 +740,7 @@ const OrderConfirmation = () => {
                   <div
                     className="p-4 rounded-xl mt-4"
                     style={{
-                      backgroundColor: isDarkMode
-                        ? 'rgba(59,130,246,0.06)'
-                        : 'rgba(59,130,246,0.12)',
+                      backgroundColor: 'rgba(59,130,246,0.06)',
                       border: `1px solid ${infoColor}40`,
                     }}
                   >

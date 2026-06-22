@@ -33,7 +33,7 @@ import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
 import { hero_bg_1 } from '@/shared/assets';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { Section, Container } from '@/shared/layout';
-import CartSidebar from '@/shared/ui/Store/CartSidebar';
+import CartSidebar from '@/features/store/Store/CartSidebar';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import type { Product } from '@/lib/types';
 import { storeClient } from '@/lib/api/storeClient';

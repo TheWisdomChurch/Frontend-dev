@@ -1348,9 +1348,7 @@ const FeaturedSection = ({
                           style={{
                             backgroundColor:
                               currentVideo?.id === video.id
-                                ? isDarkMode
-                                  ? 'rgba(201,150,26,0.10)'
-                                  : rgba(201,150,26,0.20)
+                                ? 'rgba(201,150,26,0.10)'
                                 : themeStyles.cardBackground,
                             borderColor:
                               currentVideo?.id === video.id

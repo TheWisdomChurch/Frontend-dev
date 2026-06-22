@@ -232,8 +232,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                     className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md"
                     style={{
                       background:
-                        rgba(201,150,26,0.20) ??
-                        'rgba(255,255,255,0.14)',
+                        'rgba(201,150,26,0.20)',
                       border: '1px solid rgba(255,255,255,0.2)',
                     }}
                   >

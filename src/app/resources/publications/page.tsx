@@ -2,6 +2,7 @@
 import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
 import { hero_bg_3 } from '@/shared/assets';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import { PageSection } from '@/shared/layout';
 
 const PublicationPage = () => {
   const publications = [
