@@ -207,7 +207,7 @@ export default function AssociatePastors() {
             rightIcon={<ArrowRight className="h-4 w-4" />}
             style={{
               background: `linear-gradient(135deg, ${primary}, var(--app-primary-dark))`,
-              boxShadow: `0 16px 38px ${rgba(201,150,26,0.20)}`,
+              boxShadow: '0 16px 38px rgba(201,150,26,0.20)',
             }}
             onClick={() => router.push('/leadership')}
           >

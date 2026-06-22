@@ -230,8 +230,7 @@ export default function ResourceSection() {
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/70">
                     <span
-                      className="h-2 w-2 rounded-full"
-                      className="bg-[var(--app-primary)]"
+                      className="h-2 w-2 rounded-full bg-[var(--app-primary)]"
                     />
                     Live & on-demand
                   </div>
@@ -299,8 +298,7 @@ export default function ResourceSection() {
                     <div className="absolute inset-x-0 bottom-0 p-5">
                       <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white/80 backdrop-blur-xl">
                         <Radio
-                          className="h-3.5 w-3.5"
-                          className="text-[var(--app-primary)]"
+                          className="h-3.5 w-3.5 text-[var(--app-primary)]"
                         />
                         Latest message
                       </div>
