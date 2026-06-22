@@ -60,7 +60,7 @@ export default function WhatWeDo() {
         >
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <span className="h-px w-8 rounded-full bg-[#f7de12]" />
+              <span className="h-px w-8 rounded-full bg-[var(--app-primary)]" />
               <span className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/45">
                 {String(index + 1).padStart(2, '0')}
               </span>
@@ -82,7 +82,7 @@ export default function WhatWeDo() {
             </BodySM>
           </div>
 
-          <div className="mt-6 h-px w-full bg-gradient-to-r from-[#f7de12]/45 via-white/10 to-transparent" />
+          <div className="mt-6 h-px w-full bg-gradient-to-r from-[var(--app-primary)]/45 via-white/10 to-transparent" />
         </div>
       </article>
     );
@@ -98,7 +98,7 @@ export default function WhatWeDo() {
       className="relative overflow-hidden bg-[#070707] py-16 sm:py-20 lg:py-24"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-10%] top-10 h-72 w-72 rounded-full bg-[#f7de12]/[0.07] blur-3xl" />
+        <div className="absolute left-[-10%] top-10 h-72 w-72 rounded-full bg-[var(--app-primary)]/[0.07] blur-3xl" />
         <div className="absolute right-[-8%] top-1/3 h-80 w-80 rounded-full bg-white/[0.045] blur-3xl" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
       </div>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -105,20 +105,20 @@ export function ReminderModal({
 
             <div className="mt-4 space-y-3 text-sm leading-6 text-white/72">
               <p className="flex items-start gap-3">
-                <Calendar className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+                <Calendar className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
                 <span>{eventDate}</span>
               </p>
 
               {event.location ? (
                 <p className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+                  <MapPin className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
                   <span>{event.location}</span>
                 </p>
               ) : null}
 
               {timeUntil ? (
                 <p className="flex items-start gap-3">
-                  <Clock className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+                  <Clock className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
                   <span>Starts {timeUntil}</span>
                 </p>
               ) : null}

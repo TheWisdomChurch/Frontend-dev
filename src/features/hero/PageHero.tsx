@@ -60,11 +60,11 @@ export default function PageHero({
         </div>
       ) : null}
 
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_15%,rgba(247,222,18,0.16),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_48%,#050505_100%)]" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_15%,rgba(201,150,26,0.14),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_48%,#050505_100%)]" />
 
-      <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-[#f7de12]/50 to-transparent" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/50 to-transparent" />
 
-      <div className="absolute left-1/2 top-8 -z-10 hidden h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[#f7de12]/[0.04] blur-3xl sm:block" />
+      <div className="absolute left-1/2 top-8 -z-10 hidden h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[var(--app-primary)]/[0.04] blur-3xl sm:block" />
 
       <Container size="xl">
         <div
@@ -86,7 +86,7 @@ export default function PageHero({
                   isAboutVariant ? '' : 'mx-auto',
                 ].join(' ')}
               >
-                <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[#f7de12]">
+                <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[var(--app-primary)]">
                   <Image
                     src={WisdomeHouseLogo}
                     alt=""
@@ -152,7 +152,7 @@ export default function PageHero({
               >
                 <Link
                   href="/contact"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[var(--app-primary-light)]"
                 >
                   {primaryButtonText}
                   <ArrowRight size={16} />
@@ -171,7 +171,7 @@ export default function PageHero({
           {isAboutVariant ? (
             <aside className="hidden lg:block">
               <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40">
-                <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[#f7de12]/10 blur-3xl" />
+                <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
 
                 <div className="relative space-y-5">
                   <div className="relative mx-auto h-28 w-28 overflow-hidden rounded-3xl border border-white/10 bg-black/40 p-4">
@@ -184,7 +184,7 @@ export default function PageHero({
                   </div>
 
                   <div className="text-center">
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                       Our foundation
                     </p>
                     <p className="mt-3 text-lg font-semibold leading-7 text-white">

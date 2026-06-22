@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
@@ -295,7 +295,7 @@ export function EventRegistrationModal({
               ) : null}
 
               {highlight ? (
-                <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#f7de12]/20 bg-[#f7de12]/10 px-3 py-1.5 text-xs font-bold text-[#f7de12]">
+                <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 px-3 py-1.5 text-xs font-bold text-[var(--app-primary)]">
                   <AlertCircle className="h-3.5 w-3.5" />
                   {highlight}
                 </div>
@@ -316,9 +316,9 @@ export function EventRegistrationModal({
                         className={[
                           'grid h-8 w-8 place-items-center rounded-full border text-xs font-black transition',
                           active
-                            ? 'border-[#f7de12] bg-[#f7de12] text-black'
+                            ? 'border-[var(--app-primary)] bg-[var(--app-primary)] text-black'
                             : completed
-                              ? 'border-[#f7de12]/40 bg-[#f7de12]/10 text-[#f7de12]'
+                              ? 'border-[var(--app-primary)]/40 bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                               : 'border-white/10 bg-white/[0.035] text-white/45',
                         ].join(' ')}
                       >
@@ -492,7 +492,7 @@ export function EventRegistrationModal({
                             className={[
                               'min-h-12 rounded-2xl border px-4 py-3 text-sm font-bold capitalize transition',
                               selected
-                                ? 'border-[#f7de12] bg-[#f7de12]/10 text-[#f7de12]'
+                                ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                                 : 'border-white/10 bg-black/25 text-white/65 hover:border-white/20 hover:bg-white/[0.04]',
                             ].join(' ')}
                           >
@@ -532,7 +532,7 @@ export function EventRegistrationModal({
                         className={[
                           'flex min-h-12 items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition',
                           selected
-                            ? 'border-[#f7de12] bg-[#f7de12]/10 text-[#f7de12]'
+                            ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                             : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
                         ].join(' ')}
                       >

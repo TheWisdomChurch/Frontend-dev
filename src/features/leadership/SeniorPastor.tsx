@@ -78,14 +78,14 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
 
   const goToLeadership = () => router.push('/leadership');
 
-  const primary = colorScheme.primary || '#fbbf24';
+  const primary = colorScheme.primary || 'var(--app-primary)';
 
   return (
     <Section
       ref={sectionRef}
       padding="none"
       className={cn(
-        'relative w-full overflow-hidden bg-slate-950 text-white',
+        'relative w-full overflow-hidden bg-[var(--app-surface-2)] text-white',
         'min-h-[420px] md:min-h-[480px]',
         className
       )}
@@ -93,7 +93,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.86), rgba(0,0,0,0.92)), url(${Bishop.src})`,
+          backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.72), rgba(0,0,0,0.80)), url(${Bishop.src})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

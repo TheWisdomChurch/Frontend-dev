@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ArrowRight,
   CalendarClock,
@@ -13,7 +13,6 @@ import {
   Sparkles,
   Users,
 } from 'lucide-react';
-import * as THREE from 'three';
 
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Container } from '@/shared/layout';
@@ -63,10 +62,10 @@ const actions = [
 ============================================================================= */
 
 const inputClassName =
-  'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[#F7DE12]/10';
+  'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const selectClassName =
-  'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10';
+  'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 function ModalShell({
   open,
@@ -91,7 +90,7 @@ function ModalShell({
     >
       <div className="space-y-5">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-[#F7DE12]" />
+          <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/65">
             Quick form
           </p>
@@ -132,7 +131,6 @@ type JoinState = {
 
 export default function HeroHighlights() {
   const serviceUnavailable = useServiceUnavailable();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [modal, setModal] = useState<ModalKey>(null);
 
@@ -217,110 +215,23 @@ export default function HeroHighlights() {
     [closeModal, showUnavailable]
   );
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.z = 6;
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
-
-    renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-
-    const geometry = new THREE.PlaneGeometry(7, 3.5, 72, 36);
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(0x09090d),
-      emissive: new THREE.Color(0x2b2105),
-      metalness: 0.38,
-      roughness: 0.82,
-      wireframe: false,
-    });
-
-    const plane = new THREE.Mesh(geometry, material);
-    plane.rotation.x = -0.58;
-    plane.rotation.z = -0.08;
-    scene.add(plane);
-
-    const keyLight = new THREE.DirectionalLight(0xf7de12, 0.75);
-    keyLight.position.set(2.6, 3.2, 4);
-
-    const fillLight = new THREE.PointLight(0xffffff, 0.4, 10);
-    fillLight.position.set(-3, -1, 3);
-
-    scene.add(keyLight);
-    scene.add(fillLight);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const width = Math.max(rect.width, 1);
-      const height = Math.max(rect.height, 1);
-
-      renderer.setSize(width, height, false);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    };
-
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    let frame = 0;
-    let rafId = 0;
-    let active = true;
-
-    const tick = () => {
-      if (!active) return;
-
-      frame += prefersReducedMotion ? 0.0005 : 0.0025;
-      plane.rotation.z = -0.08 + frame * 0.45;
-      plane.position.y = Math.sin(frame * 1.25) * 0.08;
-
-      renderer.render(scene, camera);
-      rafId = requestAnimationFrame(tick);
-    };
-
-    tick();
-
-    return () => {
-      active = false;
-      if (rafId) cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', resize);
-
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
-    };
-  }, []);
 
   return (
     <section className="relative z-30 -mt-8 sm:-mt-10 lg:-mt-12">
       <Container size="xl" className="relative pb-6 sm:pb-8">
         <div className="mx-auto w-full max-w-6xl px-2 sm:px-0">
           <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#07070a]/90 shadow-[0_34px_100px_rgba(0,0,0,0.48)] backdrop-blur-2xl">
-            <canvas
-              ref={canvasRef}
-              className="absolute inset-0 h-full w-full opacity-75"
+            <div
+              className="hero-highlights-glow absolute inset-0 opacity-60"
               aria-hidden="true"
             />
 
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(247,222,18,0.2),transparent_30%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_38%,rgba(0,0,0,0.45))]" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.18),transparent_30%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_38%,rgba(0,0,0,0.45))]" />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:42px_42px] opacity-20" />
 
             <div className="relative z-10 grid gap-4 p-4 sm:p-5 lg:grid-cols-[0.78fr_1.22fr] lg:items-stretch lg:p-6">
               <div className="rounded-[1.5rem] border border-white/10 bg-black/35 p-5 backdrop-blur-2xl sm:p-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#F7DE12]/20 bg-[#F7DE12]/10 px-3 py-1.5 text-[#F7DE12]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
                   <Sparkles className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.22em]">
                     Next Steps
@@ -338,11 +249,11 @@ export default function HeroHighlights() {
 
                 <div className="mt-5 flex flex-wrap gap-2 text-xs text-white/65">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-[#F7DE12]" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                     No spam
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
-                    <Clock className="h-3.5 w-3.5 text-[#F7DE12]" />
+                    <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                     Quick response
                   </span>
                 </div>
@@ -357,11 +268,11 @@ export default function HeroHighlights() {
                       key={action.key}
                       type="button"
                       onClick={() => openModal(action.key)}
-                      className="group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.075] p-4 text-left shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[#F7DE12]/40 hover:bg-white/[0.11] sm:p-5"
+                      className="group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.075] p-4 text-left shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.11] sm:p-5"
                     >
-                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#F7DE12]/70 to-transparent opacity-0 transition group-hover:opacity-100" />
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/70 to-transparent opacity-0 transition group-hover:opacity-100" />
 
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-black/35 text-[#F7DE12] shadow-lg transition group-hover:scale-105 group-hover:bg-[#F7DE12] group-hover:text-black">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-black/35 text-[var(--app-primary)] shadow-lg transition group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-black">
                         <Icon className="h-5 w-5" />
                       </div>
 
@@ -373,7 +284,7 @@ export default function HeroHighlights() {
                         {action.description}
                       </p>
 
-                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#F7DE12]">
+                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[var(--app-primary)]">
                         Continue
                         <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
                       </div>
@@ -440,7 +351,7 @@ export default function HeroHighlights() {
 
           <div className="space-y-3 rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-white/85">
-              <CalendarClock className="h-4 w-4 text-[#F7DE12]" />
+              <CalendarClock className="h-4 w-4 text-[var(--app-primary)]" />
               Appointment details
             </div>
 
@@ -478,11 +389,11 @@ export default function HeroHighlights() {
 
             <div className="flex flex-wrap gap-2 text-xs text-white/70">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-                <Clock className="h-3.5 w-3.5 text-[#F7DE12]" />
+                <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 Sundays 9:00 AM (WAT)
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-                <MapPin className="h-3.5 w-3.5 text-[#F7DE12]" />
+                <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 We&apos;ll email directions
               </span>
             </div>
@@ -497,7 +408,7 @@ export default function HeroHighlights() {
 
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F7DE12] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(247,222,18,0.2)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(201,150,26,0.25)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Confirm appointment <ArrowRight className="h-4 w-4" />
           </button>
@@ -517,7 +428,7 @@ export default function HeroHighlights() {
         <form className="space-y-4" onSubmit={onSubmitWatch}>
           <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F7DE12] text-black">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <Headphones className="h-5 w-5" />
               </div>
               <div>
@@ -552,7 +463,7 @@ export default function HeroHighlights() {
 
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F7DE12] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(247,222,18,0.2)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(201,150,26,0.25)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Notify me <ArrowRight className="h-4 w-4" />
           </button>
@@ -621,7 +532,7 @@ export default function HeroHighlights() {
 
           <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F7DE12] text-black">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <HeartHandshake className="h-5 w-5" />
               </div>
               <div>
@@ -645,7 +556,7 @@ export default function HeroHighlights() {
 
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F7DE12] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(247,222,18,0.2)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(201,150,26,0.25)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Send interest <ArrowRight className="h-4 w-4" />
           </button>

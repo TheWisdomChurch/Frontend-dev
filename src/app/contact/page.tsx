@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import {
@@ -56,7 +56,7 @@ const initialFormData: ContactFormData = {
 };
 
 const inputClassName =
-  'w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none transition duration-200 focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10';
+  'w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none transition duration-200 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const labelClassName =
   'block text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/55';
@@ -178,12 +178,12 @@ export default function ContactPage() {
       />
 
       <Section padding="xl" className="relative overflow-hidden bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(247,222,18,0.12),transparent_28%),radial-gradient(circle_at_90%_20%,rgba(255,255,255,0.06),transparent_26%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_20%,rgba(255,255,255,0.06),transparent_26%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:42px_42px] [mask-image:radial-gradient(circle_at_50%_35%,black_25%,transparent_78%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Visit • Call • Email
             </p>
             <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -199,7 +199,7 @@ export default function ContactPage() {
             <aside className="space-y-5 lg:sticky lg:top-24 lg:h-fit">
               <section className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/30 backdrop-blur-xl sm:rounded-[2rem]">
                 <div className="border-b border-white/10 px-5 py-5 sm:px-6">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f7de12]">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
                     Reach us
                   </p>
                   <h2 className="mt-2 text-xl font-semibold text-white">
@@ -216,7 +216,7 @@ export default function ContactPage() {
 
                     const card = (
                       <div className="group flex gap-4 p-5 transition duration-200 hover:bg-white/[0.035] sm:p-6">
-                        <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-white/10 bg-[#f7de12]/10 text-[#f7de12]">
+                        <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-white/10 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                           <Icon className="h-5 w-5" />
                         </div>
 
@@ -232,7 +232,7 @@ export default function ContactPage() {
                             </div>
 
                             {method.href ? (
-                              <ArrowUpRight className="mt-1 h-4 w-4 flex-none text-white/35 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#f7de12]" />
+                              <ArrowUpRight className="mt-1 h-4 w-4 flex-none text-white/35 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
                             ) : null}
                           </div>
 
@@ -248,7 +248,7 @@ export default function ContactPage() {
                           </div>
 
                           {method.href ? (
-                            <span className="mt-3 inline-flex text-sm font-bold text-[#f7de12]">
+                            <span className="mt-3 inline-flex text-sm font-bold text-[var(--app-primary)]">
                               {method.actionLabel || 'Reach out'}
                             </span>
                           ) : null}
@@ -282,7 +282,7 @@ export default function ContactPage() {
               <section className="rounded-[1.6rem] border border-white/10 bg-white/[0.035] p-5 shadow-2xl shadow-black/20 sm:rounded-[2rem] sm:p-6">
                 <div className="flex items-end justify-between gap-4">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f7de12]">
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
                       Social
                     </p>
                     <h2 className="mt-2 text-lg font-semibold text-white">
@@ -298,10 +298,10 @@ export default function ContactPage() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center justify-between rounded-2xl border border-white/10 bg-black/25 px-4 py-3 transition duration-200 hover:border-[#f7de12]/40 hover:bg-white/[0.045]"
+                      className="group flex items-center justify-between rounded-2xl border border-white/10 bg-black/25 px-4 py-3 transition duration-200 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.045]"
                     >
                       <span className="flex min-w-0 items-center gap-3">
-                        <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-[#f7de12]/10 text-[#f7de12]">
+                        <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                           <FontAwesomeIcon
                             icon={social.icon}
                             className="h-4 w-4"
@@ -318,7 +318,7 @@ export default function ContactPage() {
                         </span>
                       </span>
 
-                      <ArrowUpRight className="h-4 w-4 flex-none text-white/35 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#f7de12]" />
+                      <ArrowUpRight className="h-4 w-4 flex-none text-white/35 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
                     </a>
                   ))}
                 </div>
@@ -326,10 +326,10 @@ export default function ContactPage() {
             </aside>
 
             <section className="relative overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/35 backdrop-blur-xl sm:rounded-[2rem]">
-              <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#f7de12]/10 blur-3xl" />
+              <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
 
               <div className="relative border-b border-white/10 px-5 py-5 sm:px-6 lg:px-8">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f7de12]">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
                   Message us
                 </p>
                 <h2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
@@ -451,7 +451,7 @@ export default function ContactPage() {
                     disabled={submitting}
                     className="min-h-12 w-full px-7 text-sm font-extrabold text-black sm:w-auto"
                     style={{
-                      backgroundColor: '#f7de12',
+                      backgroundColor: 'var(--app-primary)',
                       color: '#050505',
                     }}
                   >

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
@@ -43,10 +43,10 @@ const fieldShellClass =
   'rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5';
 
 const fieldBaseClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-[0.95rem] text-white outline-none transition placeholder:text-white/35 focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10';
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-[0.95rem] text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const fieldSelectClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[#f7de12]/70 focus:ring-4 focus:ring-[#f7de12]/10';
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const labelClass =
   'block text-[0.73rem] font-bold uppercase tracking-[0.16em] text-white/60';
@@ -667,7 +667,7 @@ export default function PublicFormPage() {
     const Label = () => (
       <span className={labelClass}>
         {field.label}
-        {field.required ? <span className="text-[#f7de12]"> *</span> : null}
+        {field.required ? <span className="text-[var(--app-primary)]"> *</span> : null}
       </span>
     );
 
@@ -749,7 +749,7 @@ export default function PublicFormPage() {
             <legend className={labelClass}>
               {field.label}
               {field.required ? (
-                <span className="text-[#f7de12]"> *</span>
+                <span className="text-[var(--app-primary)]"> *</span>
               ) : null}
             </legend>
 
@@ -768,7 +768,7 @@ export default function PublicFormPage() {
                     onChange={event =>
                       handleChange(field.key, event.target.value)
                     }
-                    className="accent-[#f7de12]"
+                    className="accent-[var(--app-primary)]"
                   />
                   {option.label}
                 </label>
@@ -790,7 +790,7 @@ export default function PublicFormPage() {
             <legend className={labelClass}>
               {field.label}
               {field.required ? (
-                <span className="text-[#f7de12]"> *</span>
+                <span className="text-[var(--app-primary)]"> *</span>
               ) : null}
             </legend>
 
@@ -810,7 +810,7 @@ export default function PublicFormPage() {
                         event.target.checked
                       )
                     }
-                    className="accent-[#f7de12]"
+                    className="accent-[var(--app-primary)]"
                   />
                   {option.label}
                 </label>
@@ -831,12 +831,12 @@ export default function PublicFormPage() {
               type="checkbox"
               checked={Boolean(value)}
               onChange={event => handleChange(field.key, event.target.checked)}
-              className="mt-1 accent-[#f7de12]"
+              className="mt-1 accent-[var(--app-primary)]"
             />
             <span>
               {field.label}
               {field.required ? (
-                <span className="text-[#f7de12]"> *</span>
+                <span className="text-[var(--app-primary)]"> *</span>
               ) : null}
             </span>
           </label>
@@ -1040,7 +1040,7 @@ export default function PublicFormPage() {
         </div>
 
         <div className="absolute inset-0 -z-10 bg-black/72" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(247,222,18,0.16),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.2),#050505_92%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(201,150,26,0.13),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.2),#050505_92%)]" />
 
         <Container
           size="xl"
@@ -1052,7 +1052,7 @@ export default function PublicFormPage() {
         >
           {showHeroCopy ? (
             <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Public form
               </p>
               <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -1069,7 +1069,7 @@ export default function PublicFormPage() {
       </Section>
 
       <Section padding="none" className="relative overflow-hidden bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(247,222,18,0.1),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(201,150,26,0.09),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="py-8 sm:py-10 lg:py-14">
@@ -1090,7 +1090,7 @@ export default function PublicFormPage() {
                 <aside className="h-fit rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/25 backdrop-blur-xl xl:sticky xl:top-24">
                   {!showHeroCopy ? (
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                         Public form
                       </p>
                       <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white">
@@ -1104,7 +1104,7 @@ export default function PublicFormPage() {
                     </div>
                   ) : (
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                         Form details
                       </p>
                       <h2 className="mt-3 text-xl font-semibold text-white">
@@ -1122,8 +1122,8 @@ export default function PublicFormPage() {
                     </div>
                   ) : null}
 
-                  <div className="mt-5 rounded-2xl border border-[#f7de12]/25 bg-[#f7de12]/10 px-4 py-3">
-                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#f7de12]">
+                  <div className="mt-5 rounded-2xl border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-4 py-3">
+                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                       Form overview
                     </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">
@@ -1182,7 +1182,7 @@ export default function PublicFormPage() {
                                   className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
                                 >
                                   {item.eyebrow ? (
-                                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-[#f7de12]">
+                                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]">
                                       {item.eyebrow}
                                     </p>
                                   ) : null}
@@ -1199,7 +1199,7 @@ export default function PublicFormPage() {
                                       href={item.linkUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="mt-3 inline-flex text-sm font-bold text-[#f7de12] hover:underline"
+                                      className="mt-3 inline-flex text-sm font-bold text-[var(--app-primary)] hover:underline"
                                     >
                                       {item.linkText}
                                     </a>
@@ -1227,7 +1227,7 @@ export default function PublicFormPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-7 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                      className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-7 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[var(--app-primary-light)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                     >
                       {submitting ? 'Submitting...' : 'Submit form'}
                     </button>
@@ -1266,7 +1266,7 @@ export default function PublicFormPage() {
                       <button
                         type="button"
                         onClick={() => router.push(returnPath)}
-                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black transition hover:bg-[#ffe93d] sm:w-auto"
+                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black transition hover:bg-[var(--app-primary-light)] sm:w-auto"
                       >
                         {returnLabel}
                       </button>

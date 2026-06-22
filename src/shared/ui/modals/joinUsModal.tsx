@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { ArrowUpRight, CheckCircle2, ShieldCheck, Users2 } from 'lucide-react';
@@ -56,7 +56,7 @@ export default function JoinCommunityModal({
     >
       <div className="space-y-6">
         <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-5 text-center">
-          <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl border border-[#f7de12]/20 bg-[#f7de12]/10">
+          <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10">
             <div className="relative h-14 w-14">
               <Image
                 src={WisdomeHouseLogo}
@@ -85,7 +85,7 @@ export default function JoinCommunityModal({
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-[#f7de12]/35 hover:bg-white/[0.06]"
+                className="group rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.06]"
               >
                 <div className="flex items-center gap-4">
                   <div
@@ -108,7 +108,7 @@ export default function JoinCommunityModal({
                     </p>
                   </div>
 
-                  <div className="grid h-10 w-10 flex-none place-items-center rounded-full border border-white/10 bg-black/25 text-white/55 transition group-hover:border-[#f7de12]/40 group-hover:text-[#f7de12]">
+                  <div className="grid h-10 w-10 flex-none place-items-center rounded-full border border-white/10 bg-black/25 text-white/55 transition group-hover:border-[var(--app-primary)]/40 group-hover:text-[var(--app-primary)]">
                     <ArrowUpRight className="h-4 w-4" />
                   </div>
                 </div>
@@ -126,7 +126,7 @@ export default function JoinCommunityModal({
                 key={item.title}
                 className="rounded-[1.15rem] border border-white/10 bg-black/25 p-4 text-center"
               >
-                <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-[#f7de12]/10 text-[#f7de12]">
+                <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                   <Icon className="h-4 w-4" />
                 </div>
 
@@ -141,9 +141,9 @@ export default function JoinCommunityModal({
           })}
         </div>
 
-        <div className="rounded-[1.25rem] border border-[#f7de12]/20 bg-[#f7de12]/10 p-4">
+        <div className="rounded-[1.25rem] border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 p-4">
           <div className="flex items-start gap-3">
-            <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-[#f7de12]/10 text-[#f7de12]">
+            <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
               <CheckCircle2 className="h-5 w-5" />
             </div>
 

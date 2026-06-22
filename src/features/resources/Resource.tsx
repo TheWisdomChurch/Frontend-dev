@@ -186,7 +186,7 @@ export default function ResourceSection() {
       className="relative overflow-hidden bg-[#050505]"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(247,222,18,0.13),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(247,222,18,0.08),transparent_34%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
       </div>
 
@@ -461,7 +461,7 @@ export default function ResourceSection() {
                       }))
                     }
                     placeholder="Your name optional"
-                    className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                    className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                   />
                 </div>
 
@@ -478,7 +478,7 @@ export default function ResourceSection() {
                     placeholder="Email address"
                     type="email"
                     required
-                    className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                    className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                   />
                 </div>
 

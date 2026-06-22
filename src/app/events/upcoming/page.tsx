@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { ToastContainer } from 'react-toastify';
@@ -60,11 +60,11 @@ export default function Upcoming() {
       />
 
       <section className="relative overflow-hidden bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(247,222,18,0.13),transparent_28%),radial-gradient(circle_at_90%_16%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_16%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
         <div className="relative mx-auto max-w-6xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Featured program
             </p>
             <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -91,12 +91,12 @@ export default function Upcoming() {
             </div>
 
             <div className="space-y-5">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Transformative nights of worship & prayer
               </p>
 
               <h2 className="text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
-                7 Nights of <span className="text-[#f7de12]">Lifting</span>
+                7 Nights of <span className="text-[var(--app-primary)]">Lifting</span>
               </h2>
 
               <div className="space-y-3 text-sm leading-7 text-white/65 sm:text-base">
@@ -117,7 +117,7 @@ export default function Upcoming() {
                 <button
                   type="button"
                   onClick={openLiftingModal}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
                 >
                   Register to Attend
                 </button>
@@ -143,7 +143,7 @@ export default function Upcoming() {
           <div className="mb-8 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Event calendar
                 </p>
                 <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -160,7 +160,7 @@ export default function Upcoming() {
               <button
                 type="button"
                 onClick={() => setView(view === 'month' ? 'year' : 'month')}
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#f7de12] px-5 text-sm font-extrabold text-black"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--app-primary)] px-5 text-sm font-extrabold text-black"
               >
                 {view === 'month' ? 'Year View' : 'Month View'}
               </button>
@@ -192,7 +192,7 @@ export default function Upcoming() {
                     onClick={() => selectYear(year)}
                     className={`rounded-full px-4 py-2 text-xs font-bold transition ${
                       currentDate.getFullYear() === year
-                        ? 'bg-[#f7de12] text-black'
+                        ? 'bg-[var(--app-primary)] text-black'
                         : 'border border-white/10 bg-black/25 text-white/65 hover:bg-white/[0.06]'
                     }`}
                   >
@@ -229,8 +229,8 @@ export default function Upcoming() {
                   onClick={() => selectMonth(index)}
                   className={`rounded-[1.25rem] border p-5 text-left transition hover:-translate-y-1 ${
                     currentDate.getMonth() === index
-                      ? 'border-[#f7de12]/60 bg-[#f7de12]/10'
-                      : 'border-white/10 bg-white/[0.04] hover:border-[#f7de12]/35'
+                      ? 'border-[var(--app-primary)]/60 bg-[var(--app-primary)]/10'
+                      : 'border-white/10 bg-white/[0.04] hover:border-[var(--app-primary)]/35'
                   }`}
                 >
                   <p className="text-lg font-semibold text-white">{month}</p>
@@ -261,7 +261,7 @@ export default function Upcoming() {
                       onClick={() => handleDateClick(day.date, day.events)}
                       className={`min-h-[104px] rounded-2xl border p-3 text-left transition ${
                         day.isToday
-                          ? 'border-[#f7de12]/70 bg-[#f7de12]/10'
+                          ? 'border-[var(--app-primary)]/70 bg-[var(--app-primary)]/10'
                           : day.isCurrentMonth
                             ? 'border-white/10 bg-black/25 hover:bg-white/[0.05]'
                             : 'border-white/5 bg-black/10 text-white/30'
@@ -269,7 +269,7 @@ export default function Upcoming() {
                     >
                       <p
                         className={`text-sm font-semibold ${
-                          day.isToday ? 'text-[#f7de12]' : 'text-white'
+                          day.isToday ? 'text-[var(--app-primary)]' : 'text-white'
                         }`}
                       >
                         {day.date.getDate()}
@@ -279,7 +279,7 @@ export default function Upcoming() {
                         {day.events.slice(0, 2).map(event => (
                           <div
                             key={event.id}
-                            className="truncate rounded-full bg-[#f7de12] px-2 py-1 text-xs font-bold text-black"
+                            className="truncate rounded-full bg-[var(--app-primary)] px-2 py-1 text-xs font-bold text-black"
                             title={event.title}
                           >
                             {event.title}
@@ -304,7 +304,7 @@ export default function Upcoming() {
             className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6"
           >
             <div className="mb-6 text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 This month
               </p>
               <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
@@ -320,13 +320,13 @@ export default function Upcoming() {
                     key={event.id}
                     type="button"
                     onClick={() => handleEventClick(event)}
-                    className="group rounded-[1.25rem] border border-white/10 bg-black/25 p-5 text-left transition hover:-translate-y-1 hover:border-[#f7de12]/35 hover:bg-white/[0.035]"
+                    className="group rounded-[1.25rem] border border-white/10 bg-black/25 p-5 text-left transition hover:-translate-y-1 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.035]"
                   >
-                    <span className="inline-flex rounded-full bg-[#f7de12]/10 px-3 py-1 text-xs font-bold text-[#f7de12]">
+                    <span className="inline-flex rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-bold text-[var(--app-primary)]">
                       {event.type}
                     </span>
 
-                    <h4 className="mt-4 text-lg font-semibold leading-tight text-white group-hover:text-[#f7de12]">
+                    <h4 className="mt-4 text-lg font-semibold leading-tight text-white group-hover:text-[var(--app-primary)]">
                       {event.title}
                     </h4>
 
@@ -338,7 +338,7 @@ export default function Upcoming() {
 
                     <div className="mt-4 space-y-2 border-t border-white/10 pt-4 text-sm text-white/55">
                       <p className="flex items-center gap-2">
-                        <CalendarClock className="h-4 w-4 text-[#f7de12]" />
+                        <CalendarClock className="h-4 w-4 text-[var(--app-primary)]" />
                         {new Date(event.date).toLocaleDateString('en-US', {
                           weekday: 'short',
                           year: 'numeric',
@@ -393,11 +393,11 @@ export default function Upcoming() {
         <div className="absolute inset-0 bg-black/70" />
 
         <div className="relative mx-auto max-w-4xl rounded-[1.6rem] border border-white/10 bg-black/45 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-md sm:rounded-[2rem] sm:p-8 lg:p-10">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Major gathering
           </p>
           <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Wisdom Power <span className="text-[#f7de12]">Conference</span> 2026
+            Wisdom Power <span className="text-[var(--app-primary)]">Conference</span> 2026
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
             The most anticipated spiritual gathering of the year is coming.
@@ -409,7 +409,7 @@ export default function Upcoming() {
             <button
               type="button"
               onClick={openConferenceModal}
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
             >
               Register for Event
             </button>
@@ -429,7 +429,7 @@ export default function Upcoming() {
         className="bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
       >
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Newsletter
           </p>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -444,12 +444,12 @@ export default function Upcoming() {
             <input
               type="email"
               placeholder="Enter your email address"
-              className="min-h-12 w-full rounded-full border border-white/10 bg-black/30 px-5 text-sm text-white outline-none placeholder:text-white/35 focus:border-[#f7de12]/60 focus:ring-4 focus:ring-[#f7de12]/10"
+              className="min-h-12 w-full rounded-full border border-white/10 bg-black/30 px-5 text-sm text-white outline-none placeholder:text-white/35 focus:border-[var(--app-primary)]/60 focus:ring-4 focus:ring-[var(--app-primary)]/10"
               required
             />
             <button
               type="submit"
-              className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black sm:mt-0 sm:w-auto"
+              className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black sm:mt-0 sm:w-auto"
             >
               Subscribe
             </button>

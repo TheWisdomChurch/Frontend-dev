@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { CalendarClock, Clock, MapPin, Star } from 'lucide-react';
@@ -58,16 +58,16 @@ export default function SpecialPage() {
         fullHeight={false}
         className="relative overflow-hidden bg-[#050505]"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(247,222,18,0.13),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto max-w-4xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Special services
             </p>
             <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-5xl">
               Every Service at{' '}
-              <span className="text-[#f7de12]">The Wisdom House Church</span> is
+              <span className="text-[var(--app-primary)]">The Wisdom House Church</span> is
               a Special Service
             </h1>
             <p className="mx-auto mt-4 max-w-3xl text-sm leading-7 text-white/65 sm:text-base">
@@ -87,7 +87,7 @@ export default function SpecialPage() {
       >
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Weekly rhythm
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -117,13 +117,13 @@ export default function SpecialPage() {
                         <h4 className="text-sm font-semibold leading-6 text-white">
                           {service.name}
                         </h4>
-                        <span className="rounded-full bg-[#f7de12]/10 px-2.5 py-1 text-[11px] font-bold text-[#f7de12]">
+                        <span className="rounded-full bg-[var(--app-primary)]/10 px-2.5 py-1 text-[11px] font-bold text-[var(--app-primary)]">
                           {service.type}
                         </span>
                       </div>
 
                       <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-white/65">
-                        <Clock className="h-4 w-4 text-[#f7de12]" />
+                        <Clock className="h-4 w-4 text-[var(--app-primary)]" />
                         {service.time}
                       </p>
                     </div>
@@ -141,11 +141,11 @@ export default function SpecialPage() {
         fullHeight={false}
         className="relative overflow-hidden bg-[#050505]"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_15%,rgba(247,222,18,0.12),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_15%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Featured events
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -161,9 +161,9 @@ export default function SpecialPage() {
             {featuredEvents.map(event => (
               <article
                 key={event.id}
-                className="rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 transition hover:-translate-y-1 hover:border-[#f7de12]/35 sm:rounded-[2rem] sm:p-6"
+                className="rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 transition hover:-translate-y-1 hover:border-[var(--app-primary)]/35 sm:rounded-[2rem] sm:p-6"
               >
-                <span className="inline-flex rounded-full bg-[#f7de12] px-3 py-1 text-xs font-extrabold uppercase text-black">
+                <span className="inline-flex rounded-full bg-[var(--app-primary)] px-3 py-1 text-xs font-extrabold uppercase text-black">
                   {event.type}
                 </span>
 
@@ -173,7 +173,7 @@ export default function SpecialPage() {
 
                 <div className="mt-5 space-y-3 text-sm text-white/62">
                   <p className="flex gap-2">
-                    <CalendarClock className="h-4 w-4 flex-none text-[#f7de12]" />
+                    <CalendarClock className="h-4 w-4 flex-none text-[var(--app-primary)]" />
                     <span>{event.date}</span>
                   </p>
                   <p className="flex gap-2">
@@ -193,7 +193,7 @@ export default function SpecialPage() {
                 <button
                   type="button"
                   onClick={() => openModal(event)}
-                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
                 >
                   Register for Event
                 </button>
@@ -211,7 +211,7 @@ export default function SpecialPage() {
       >
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               All events
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -229,9 +229,9 @@ export default function SpecialPage() {
                 key={event.id}
                 type="button"
                 onClick={() => openModal(event)}
-                className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] text-left shadow-2xl shadow-black/20 transition hover:-translate-y-1 hover:border-[#f7de12]/35 sm:rounded-[1.75rem]"
+                className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] text-left shadow-2xl shadow-black/20 transition hover:-translate-y-1 hover:border-[var(--app-primary)]/35 sm:rounded-[1.75rem]"
               >
-                <div className="relative grid h-44 place-items-center overflow-hidden bg-[#f7de12]">
+                <div className="relative grid h-44 place-items-center overflow-hidden bg-[var(--app-primary)]">
                   <div className="absolute inset-0 bg-black/15" />
                   <Image
                     src={WisdomeHouseLogo}
@@ -243,7 +243,7 @@ export default function SpecialPage() {
                 </div>
 
                 <div className="p-5">
-                  <span className="inline-flex rounded-full bg-[#f7de12]/10 px-3 py-1 text-xs font-bold text-[#f7de12]">
+                  <span className="inline-flex rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-bold text-[var(--app-primary)]">
                     {event.type}
                   </span>
 
@@ -260,7 +260,7 @@ export default function SpecialPage() {
                     {event.description}
                   </p>
 
-                  <span className="mt-5 inline-flex min-h-10 w-full items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black transition group-hover:bg-[#f7de12]">
+                  <span className="mt-5 inline-flex min-h-10 w-full items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black transition group-hover:bg-[var(--app-primary)]">
                     Learn More
                   </span>
                 </div>
@@ -273,7 +273,7 @@ export default function SpecialPage() {
       <Section padding="lg" fullHeight={false} className="bg-[#050505]">
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Church rhythm
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
@@ -289,13 +289,13 @@ export default function SpecialPage() {
             {annualTraditions.map(tradition => (
               <article
                 key={tradition.title}
-                className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6 text-center shadow-2xl shadow-black/20 transition hover:-translate-y-1 hover:border-[#f7de12]/35"
+                className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6 text-center shadow-2xl shadow-black/20 transition hover:-translate-y-1 hover:border-[var(--app-primary)]/35"
               >
-                <Star className="mx-auto mb-4 h-6 w-6 text-[#f7de12]" />
+                <Star className="mx-auto mb-4 h-6 w-6 text-[var(--app-primary)]" />
                 <h3 className="text-lg font-semibold text-white">
                   {tradition.title}
                 </h3>
-                <p className="mt-2 text-sm font-semibold text-[#f7de12]">
+                <p className="mt-2 text-sm font-semibold text-[var(--app-primary)]">
                   {tradition.period}
                 </p>
               </article>
