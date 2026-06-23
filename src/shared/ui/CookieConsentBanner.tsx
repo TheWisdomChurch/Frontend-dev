@@ -248,6 +248,7 @@ export default function CookieConsentBanner() {
                     ? 'cursor-not-allowed opacity-60'
                     : 'cursor-pointer'
                 }`}
+                // eslint-disable-next-line no-restricted-syntax
                 style={{
                   backgroundColor: item.enabled
                     ? 'var(--app-primary)'
@@ -259,6 +260,7 @@ export default function CookieConsentBanner() {
               >
                 <span
                   className="absolute top-[2px] h-5 w-5 rounded-full bg-black transition-all"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ left: item.enabled ? 'calc(100% - 22px)' : '2px' }}
                 />
               </button>

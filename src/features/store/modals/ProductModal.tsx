@@ -8,13 +8,7 @@ import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Button } from '@/shared/utils/buttons';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
 import { useWindowSize } from '@/shared/utils/hooks/useWindowSize';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+import { FlexboxLayout } from '@/shared/layout';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import type { ProductModalProps } from '@/lib/types';
 

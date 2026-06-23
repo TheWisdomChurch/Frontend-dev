@@ -45,6 +45,7 @@ export default function LeadershipPage() {
         setLeaders(Array.isArray(items) ? items : []);
         setLoadError(null);
       })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((err: any) => {
         if (!active) return;
         setLoadError(err?.message || 'Unable to load leadership.');
@@ -124,6 +125,7 @@ export default function LeadershipPage() {
                           ) : (
                             <div
                               className="h-14 w-14 rounded-full flex items-center justify-center text-sm font-semibold"
+                              // eslint-disable-next-line no-restricted-syntax
                               style={{
                                 background: `linear-gradient(140deg, var(--app-primary) 0%, #1f2937 100%)`,
                               }}

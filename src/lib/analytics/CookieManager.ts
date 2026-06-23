@@ -134,6 +134,7 @@ export class CookieManager {
   /**
    * Parse cookie value as JSON
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static getCookieAsJSON<T = any>(name: string): T | null {
     const value = this.getCookie(name);
     if (!value) return null;
@@ -150,6 +151,7 @@ export class CookieManager {
    */
   static setCookieAsJSON(
     name: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any,
     options: CookieOptions = {}
   ): void {

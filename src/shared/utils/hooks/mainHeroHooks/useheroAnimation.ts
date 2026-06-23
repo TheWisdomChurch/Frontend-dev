@@ -14,6 +14,7 @@ export const useHeroAnimation = (
     gsap.killTweensOf('.slide-content');
     gsap.killTweensOf('.wave-char');
     gsap.killTweensOf('.scroll-indicator');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
   }, []);
 

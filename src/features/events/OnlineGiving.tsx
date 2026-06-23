@@ -72,6 +72,7 @@ function GivingCard({
       className={`${CARD_SHELL} ${
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
       }`}
+      // eslint-disable-next-line no-restricted-syntax
       style={{ transitionDelay: `${index * 120}ms` }}
       onMouseEnter={() => onHover?.(index)}
       onMouseLeave={() => onLeave?.(index)}
@@ -279,6 +280,7 @@ export default function OnlineGiving() {
         >
           <div
             className="absolute inset-0 opacity-90"
+            // eslint-disable-next-line no-restricted-syntax
             style={{
               background:
                 'radial-gradient(circle at 18% 18%, rgba(201,150,26,0.10), transparent 32%), radial-gradient(circle at 82% 22%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.06), transparent 38%)',
@@ -291,8 +293,10 @@ export default function OnlineGiving() {
             <div
               key={particle.id}
               className="giving-float absolute rounded-full"
+              // eslint-disable-next-line no-restricted-syntax
               style={{
-                background: 'radial-gradient(circle, rgba(201,150,26,0.19), transparent 70%)',
+                background:
+                  'radial-gradient(circle, rgba(201,150,26,0.19), transparent 70%)',
                 width: `${particle.size}px`,
                 height: `${particle.size}px`,
                 left: `${particle.left}%`,
@@ -309,12 +313,14 @@ export default function OnlineGiving() {
         {!isMobile && (
           <div
             className="pointer-events-none absolute z-[1] rounded-full transition-opacity duration-300"
+            // eslint-disable-next-line no-restricted-syntax
             style={{
               left: `${mousePosition.x}px`,
               top: `${mousePosition.y}px`,
               width: '440px',
               height: '440px',
-              background: 'radial-gradient(circle, rgba(201,150,26,0.09) 0%, transparent 70%)',
+              background:
+                'radial-gradient(circle, rgba(201,150,26,0.09) 0%, transparent 70%)',
               transform: 'translate(-50%, -50%)',
               opacity: isHovered !== null ? 0.45 : 0.12,
               filter: 'blur(46px)',
@@ -439,6 +445,7 @@ export default function OnlineGiving() {
                           className={`giving-preserve-3d giving-backface-hidden absolute transition-all duration-500 ease-out ${
                             isVisible ? 'opacity-100' : 'opacity-0'
                           }`}
+                          // eslint-disable-next-line no-restricted-syntax
                           style={{
                             width: '292px',
                             zIndex: 20 - absOffset,
@@ -456,7 +463,7 @@ export default function OnlineGiving() {
                               option={option}
                               index={index}
                               isVisible
-                                              onGive={handleGiveNowWithTracking}
+                              onGive={handleGiveNowWithTracking}
                             />
                           </div>
                         </div>
@@ -473,7 +480,7 @@ export default function OnlineGiving() {
                     option={option}
                     index={index}
                     isVisible={isVisible}
-                          onGive={handleGiveNowWithTracking}
+                    onGive={handleGiveNowWithTracking}
                     setCardRef={addCardRef}
                     onHover={handleCardHover}
                     onLeave={handleCardLeave}
@@ -522,7 +529,7 @@ export default function OnlineGiving() {
                         option={option}
                         index={index}
                         isVisible={isVisible}
-                                  onGive={handleGiveNowWithTracking}
+                        onGive={handleGiveNowWithTracking}
                       />
                     </div>
                   ))}

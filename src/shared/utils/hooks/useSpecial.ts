@@ -179,10 +179,6 @@ export const useSpecialEvents = () => {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Registration data:', {
-        ...formData,
-        event: selectedEvent?.title,
-      });
 
       // Close modal and reset form
       closeModal();

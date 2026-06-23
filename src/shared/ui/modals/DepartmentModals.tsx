@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React, { useEffect, useMemo, useState, type ComponentType } from 'react';
+import React, { useEffect, useState, type ComponentType } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import * as ZodResolvers from '@hookform/resolvers/zod';
@@ -9,7 +9,6 @@ import {
   Bell,
   BookOpen,
   Briefcase,
-  Building,
   Calendar,
   Check,
   ChevronRight,
@@ -539,6 +538,7 @@ export function JoinUsModal({
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
             <div
               className="h-full rounded-full bg-[var(--app-primary)] transition-all duration-500"
+              // eslint-disable-next-line no-restricted-syntax
               style={{
                 width:
                   step === 'personal'

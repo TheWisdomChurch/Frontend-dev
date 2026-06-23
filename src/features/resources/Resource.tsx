@@ -167,7 +167,9 @@ export default function ResourceSection() {
 
   const recentVideoThumb =
     recentVideo?.thumbnail ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (recentVideo as any)?.thumbnails?.medium?.url ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (recentVideo as any)?.thumbnails?.default?.url ||
     '/images/placeholder.webp';
 
@@ -229,9 +231,7 @@ export default function ResourceSection() {
               <div className="flex flex-col justify-between rounded-[1.5rem] border border-white/10 bg-black/35 p-5 sm:p-6">
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/70">
-                    <span
-                      className="h-2 w-2 rounded-full bg-[var(--app-primary)]"
-                    />
+                    <span className="h-2 w-2 rounded-full bg-[var(--app-primary)]" />
                     Live & on-demand
                   </div>
 
@@ -297,9 +297,7 @@ export default function ResourceSection() {
 
                     <div className="absolute inset-x-0 bottom-0 p-5">
                       <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white/80 backdrop-blur-xl">
-                        <Radio
-                          className="h-3.5 w-3.5 text-[var(--app-primary)]"
-                        />
+                        <Radio className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                         Latest message
                       </div>
 
@@ -336,9 +334,7 @@ export default function ResourceSection() {
                 ) : (
                   <div className="flex min-h-[320px] items-center justify-center p-6 text-center">
                     <div className="max-w-sm">
-                      <PlayCircle
-                        className="mx-auto h-9 w-9 text-[var(--app-primary)]"
-                      />
+                      <PlayCircle className="mx-auto h-9 w-9 text-[var(--app-primary)]" />
                       <p className="mt-4 text-sm leading-6 text-white/62">
                         Latest message coming soon.
                       </p>

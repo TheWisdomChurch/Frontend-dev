@@ -16,7 +16,7 @@ type Leader = (typeof pastorsData)[number] & {
   name?: string;
   firstName?: string;
   lastName?: string;
-  image?: any;
+  image?: string | { src: string };
   imageUrl?: string;
   role?: string;
   description?: string;
@@ -34,11 +34,10 @@ function getLeaderName(leader: Leader) {
 function LeaderCard({
   leader,
   index,
-  accent,
 }: {
   leader: Leader;
   index: number;
-  accent: string;
+  accent?: string;
 }) {
   const displayName = getLeaderName(leader);
   const displayImage = leader.image || leader.imageUrl;
@@ -53,8 +52,7 @@ function LeaderCard({
             src={displayImage}
             alt={displayName}
             fill
-            className="object-cover transition duration-700 ease-out group-hover:scale-105"
-            style={{ objectPosition: 'center 18%' }}
+            className="object-cover object-[center_18%] transition duration-700 ease-out group-hover:scale-105"
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 25vw"
             quality={88}
           />
@@ -67,19 +65,13 @@ function LeaderCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
 
         <div className="absolute left-4 top-4 rounded-full border border-black/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-black shadow-lg">
-          <span
-            className="absolute inset-0 rounded-full"
-            style={{ background: accent }}
-          />
+          <span className="absolute inset-0 rounded-full bg-[var(--app-primary)]" />
           <span className="relative z-10">{displayRole}</span>
         </div>
 
         <div className="absolute bottom-4 left-4 right-4">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/70 backdrop-blur-md">
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ background: accent }}
-            />
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
             {String(index + 1).padStart(2, '0')}
           </span>
         </div>
@@ -101,10 +93,7 @@ function LeaderCard({
               </Caption>
             </div>
 
-            <div
-              className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-white/10 bg-white/[0.06]"
-              style={{ color: accent }}
-            >
+            <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-white/10 bg-white/[0.06] text-[var(--app-primary)]">
               <Sparkles className="h-4 w-4" />
             </div>
           </div>
@@ -147,10 +136,7 @@ export default function AssociatePastors() {
       className="relative overflow-hidden bg-[var(--app-surface-2)] py-16 sm:py-20 lg:py-24"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute left-[-10%] top-16 h-72 w-72 rounded-full blur-3xl"
-          style={{ background: `${primary}14` }}
-        />
+        <div className="absolute left-[-10%] top-16 h-72 w-72 rounded-full blur-3xl bg-[var(--app-primary)]/[0.08]" />
         <div className="absolute right-[-8%] top-1/3 h-96 w-96 rounded-full bg-white/[0.045] blur-3xl" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-20" />
       </div>
@@ -159,14 +145,8 @@ export default function AssociatePastors() {
         <div className="mb-8 grid gap-5 lg:mb-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div className="min-w-0">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5">
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ background: primary }}
-              />
-              <Caption
-                className="text-[0.68rem] font-bold uppercase tracking-[0.18em]"
-                style={{ color: primary }}
-              >
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
+              <Caption className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                 Leadership
               </Caption>
             </div>
@@ -203,12 +183,8 @@ export default function AssociatePastors() {
             variant="primary"
             size="sm"
             curvature="full"
-            className="px-6 py-3 text-sm font-bold text-black transition duration-300 hover:-translate-y-0.5"
+            className="px-6 py-3 text-sm font-bold text-black transition duration-300 hover:-translate-y-0.5 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] shadow-[0_16px_38px_rgba(201,150,26,0.20)]"
             rightIcon={<ArrowRight className="h-4 w-4" />}
-            style={{
-              background: `linear-gradient(135deg, ${primary}, var(--app-primary-dark))`,
-              boxShadow: '0 16px 38px rgba(201,150,26,0.20)',
-            }}
             onClick={() => router.push('/leadership')}
           >
             View more

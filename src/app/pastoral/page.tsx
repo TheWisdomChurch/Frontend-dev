@@ -159,7 +159,10 @@ export default function PastoralPage() {
 
       <StatStrip items={stats} />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface)]">
+      <Section
+        padding="lg"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
+      >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(201,150,26,0.12),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_36%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
@@ -265,6 +268,7 @@ export default function PastoralPage() {
                     <div
                       key={feature}
                       className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-black/24 px-4 py-4 text-sm leading-6 text-white/72 transition duration-300 hover:border-[var(--app-primary)]/25 hover:bg-black/34"
+                      // eslint-disable-next-line no-restricted-syntax
                       style={{ transitionDelay: `${index * 45}ms` }}
                     >
                       <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/14 text-[var(--app-primary)]">

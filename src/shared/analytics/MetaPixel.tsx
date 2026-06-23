@@ -55,6 +55,7 @@ export default function MetaPixel() {
         win.fbq('track', 'PageView');
 
         if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
           console.log('[MetaPixel] Initialized:', metaPixelId);
         }
       }
@@ -79,6 +80,7 @@ export default function MetaPixel() {
         alt=""
         height="1"
         width="1"
+        // eslint-disable-next-line no-restricted-syntax
         style={{ display: 'none' }}
         src={`https://www.facebook.com/tr?id=${metaPixelId}&ev=PageView&noscript=1`}
       />

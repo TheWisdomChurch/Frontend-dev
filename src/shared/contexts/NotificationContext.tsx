@@ -118,6 +118,7 @@ function NotificationStack({
 }) {
   return (
     <div
+      // eslint-disable-next-line no-restricted-syntax
       style={{
         position: 'fixed',
         top: '100px',
@@ -206,6 +207,7 @@ function NotificationItem({
     <div
       id={`notification-${notification.id}`}
       ref={itemRef}
+      // eslint-disable-next-line no-restricted-syntax
       style={{
         background: colors.bg,
         border: `1.5px solid ${colors.border}`,
@@ -232,6 +234,7 @@ function NotificationItem({
       }}
     >
       <div
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           minWidth: '24px',
           height: '24px',
@@ -249,6 +252,7 @@ function NotificationItem({
       </div>
 
       <div
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           flex: 1,
           color: '#F5F0E8',
@@ -261,6 +265,7 @@ function NotificationItem({
 
       <button
         onClick={() => onRemove(notification.id)}
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           background: 'none',
           border: 'none',

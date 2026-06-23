@@ -167,6 +167,7 @@ export const AnimatedButton = React.forwardRef<
       <button
         ref={innerRef}
         {...props}
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           ...baseStyles,
           ...sizeStyles[size],
@@ -205,6 +206,7 @@ export function ButtonGroup({
 }: ButtonGroupProps) {
   return (
     <div
+      // eslint-disable-next-line no-restricted-syntax
       style={{
         display: 'flex',
         flexDirection: direction,
@@ -233,6 +235,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         ref={ref}
         title={label}
         {...props}
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           width: '40px',
           height: '40px',

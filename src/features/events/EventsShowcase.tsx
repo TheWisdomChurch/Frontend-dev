@@ -136,7 +136,6 @@ function statusFromRange(startAt?: string, endAt?: string): string {
 }
 
 export default function EventsShowcase() {
-
   const [category, setCategory] = useState<ShowcaseCategory>('program');
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -299,10 +298,14 @@ export default function EventsShowcase() {
   const current = activeSlides[active];
 
   return (
-    <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface)]">
+    <Section
+      padding="lg"
+      className="relative overflow-hidden bg-[var(--app-surface)]"
+    >
       <div className="pointer-events-none absolute inset-0">
         <div
           className="absolute inset-0 opacity-90"
+          // eslint-disable-next-line no-restricted-syntax
           style={{
             background:
               'radial-gradient(circle at 15% 15%, rgba(201,150,26,0.10), transparent 32%), radial-gradient(circle at 90% 10%, rgba(255,255,255,0.07), transparent 28%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.06), transparent 34%)',

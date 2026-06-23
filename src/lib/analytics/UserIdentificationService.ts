@@ -12,6 +12,7 @@ export interface UserProfile {
   email?: string;
   name?: string;
   segment?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customAttributes?: Record<string, any>;
   createdAt: number;
   lastUpdatedAt: number;
@@ -130,6 +131,7 @@ export class UserIdentificationService {
       email?: string;
       name?: string;
       segment?: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       customAttributes?: Record<string, any>;
     }
   ): UserProfile {

@@ -190,6 +190,7 @@ export class AnalyticsServiceV2 {
    */
   trackFormSubmission(
     formName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fields?: Record<string, any>,
     properties?: EventProperties
   ): void {
@@ -332,6 +333,7 @@ export class AnalyticsServiceV2 {
       email?: string;
       name?: string;
       segment?: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       customAttributes?: Record<string, any>;
     }
   ): void {
@@ -349,6 +351,7 @@ export class AnalyticsServiceV2 {
   /**
    * Set user properties
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setUserProperties(properties: Record<string, any>): void {
     if (!this.config.enableUserIdentification) return;
 
@@ -379,6 +382,7 @@ export class AnalyticsServiceV2 {
   /**
    * Create event with context
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private createEvent(eventData: any): AnalyticsEvent {
     return {
       id: this.generateEventId(),
@@ -510,6 +514,7 @@ export class AnalyticsServiceV2 {
     const prefix = '[Analytics]';
     if (level === 'error') console.error(prefix, message);
     else if (level === 'warn') console.warn(prefix, message);
+    // eslint-disable-next-line no-console
     else console.log(prefix, message);
   }
 

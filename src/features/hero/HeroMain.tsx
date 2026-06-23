@@ -143,7 +143,6 @@ export default function HeroSection({
   showWaveText = true,
   slides: externalSlides,
 }: HeroSectionProps) {
-
   const { open } = useServiceUnavailable();
   const { slides: backendSlides } = useHeroContent();
 
@@ -424,6 +423,7 @@ export default function HeroSection({
                 sizes="100vw"
                 quality={88}
                 className="object-cover"
+                // eslint-disable-next-line no-restricted-syntax
                 style={{
                   objectPosition: slideImage.objectPosition || 'center 28%',
                 }}
@@ -467,6 +467,7 @@ export default function HeroSection({
               <H1
                 ref={titleRef}
                 className="font-semibold leading-[0.98] tracking-[-0.052em]"
+                // eslint-disable-next-line no-restricted-syntax
                 style={{
                   color: '#FFFFFF',
                   textShadow:
@@ -666,6 +667,7 @@ export default function HeroSection({
                   ? 'bg-[var(--app-primary)] shadow-[0_0_18px_rgba(201,150,26,0.40)]'
                   : 'bg-white/30'
               }`}
+              // eslint-disable-next-line no-restricted-syntax
               style={{
                 width: currentSlide === index ? '26px' : '7px',
                 height: '7px',

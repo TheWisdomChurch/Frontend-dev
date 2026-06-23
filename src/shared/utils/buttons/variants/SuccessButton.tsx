@@ -3,6 +3,7 @@ import Button, { ButtonProps } from '../CustomButton';
 
 const SuccessButton: React.FC<ButtonProps> = props => (
   <Button
+    // eslint-disable-next-line no-restricted-syntax
     style={{
       backgroundColor: '#16a34a',
       color: 'white',

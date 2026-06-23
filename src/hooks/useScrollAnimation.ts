@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import type { ScrollTrigger as ScrollTriggerType } from 'gsap/ScrollTrigger';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 if (
@@ -45,7 +44,7 @@ export function useScrollAnimation(
 
 // Parallax scroll animation
 export function parallaxAnimation(elements: HTMLElement[]) {
-  elements.forEach((el, idx) => {
+  elements.forEach(el => {
     gsap.to(el, {
       y: -30,
       scrollTrigger: {

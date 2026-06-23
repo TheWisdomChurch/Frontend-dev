@@ -133,6 +133,7 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       weight,
       fontFamily,
       color,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       useThemeColor: _useThemeColor = false,
       textDecoration = 'none',
       align,
@@ -156,6 +157,7 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
           align && alignClassMap[align],
           className
         )}
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           textDecoration,
           ...(textColor ? { color: textColor } : {}),

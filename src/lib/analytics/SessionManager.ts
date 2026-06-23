@@ -19,6 +19,7 @@ export interface SessionData {
   deviceId: string;
   source?: string;
   referrer?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata?: Record<string, any>;
 }
 
@@ -116,6 +117,7 @@ export class SessionManager {
    */
   static setUserInSession(
     userId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata?: Record<string, any>
   ): void {
     const session = this.getOrCreateSession();

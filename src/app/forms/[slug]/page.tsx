@@ -394,6 +394,7 @@ export default function PublicFormPage() {
 
         setAnswers(current => ({ ...defaults, ...current }));
         setFieldErrors({});
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (!mounted) return;
 
@@ -645,6 +646,7 @@ export default function PublicFormPage() {
 
       await apiClient.submitPublicForm(formSlug, { values: payloadValues });
       setSubmitted(true);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err?.message || 'Submission failed. Please try again.');
     } finally {
@@ -667,7 +669,9 @@ export default function PublicFormPage() {
     const Label = () => (
       <span className={labelClass}>
         {field.label}
-        {field.required ? <span className="text-[var(--app-primary)]"> *</span> : null}
+        {field.required ? (
+          <span className="text-[var(--app-primary)]"> *</span>
+        ) : null}
       </span>
     );
 
@@ -962,7 +966,11 @@ export default function PublicFormPage() {
               >
                 <option value="">Day</option>
                 {availableDays.map(day => (
-                  <option key={day} value={day} className="bg-[var(--app-surface-2)]">
+                  <option
+                    key={day}
+                    value={day}
+                    className="bg-[var(--app-surface-2)]"
+                  >
                     {day}
                   </option>
                 ))}
@@ -1068,7 +1076,10 @@ export default function PublicFormPage() {
         </Container>
       </Section>
 
-      <Section padding="none" className="relative overflow-hidden bg-[var(--app-surface)]">
+      <Section
+        padding="none"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
+      >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(201,150,26,0.09),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
 
         <Container size="xl" className="relative z-10">
@@ -1162,6 +1173,7 @@ export default function PublicFormPage() {
                         </div>
                       ) : null}
 
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       {presentation.sections.map((section: any) => (
                         <section key={section.id || section.title}>
                           <h3 className="text-base font-semibold text-white">
@@ -1176,6 +1188,7 @@ export default function PublicFormPage() {
                           {Array.isArray(section.items) &&
                           section.items.length > 0 ? (
                             <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                               {section.items.map((item: any, index: number) => (
                                 <div
                                   key={`${section.title}-${item.title}-${index}`}

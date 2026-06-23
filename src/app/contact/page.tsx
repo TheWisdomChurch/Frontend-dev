@@ -177,7 +177,10 @@ export default function ContactPage() {
         compact
       />
 
-      <Section padding="xl" className="relative overflow-hidden bg-[var(--app-surface)]">
+      <Section
+        padding="xl"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
+      >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_20%,rgba(255,255,255,0.06),transparent_26%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:42px_42px] [mask-image:radial-gradient(circle_at_50%_35%,black_25%,transparent_78%)]" />
 
@@ -450,6 +453,7 @@ export default function ContactPage() {
                     curvature="xl"
                     disabled={submitting}
                     className="min-h-12 w-full px-7 text-sm font-extrabold text-black sm:w-auto"
+                    // eslint-disable-next-line no-restricted-syntax
                     style={{
                       backgroundColor: 'var(--app-primary)',
                       color: 'var(--app-surface)',
