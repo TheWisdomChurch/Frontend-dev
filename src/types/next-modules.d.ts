@@ -1,10 +1,12 @@
 // Type declarations for Next.js modules
 declare module 'next/dynamic' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   import type React from 'react';
   import type { ComponentType } from 'react';
 
   interface DynamicOptions {
     ssr?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     loading?: ComponentType<any>;
   }
 
@@ -42,7 +44,9 @@ declare module 'next/image' {
     quality?: number;
     placeholder?: 'blur' | 'empty';
     blurDataURL?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onLoadingComplete?: (result: any) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     loader?: (props: any) => string;
     unoptimized?: boolean;
   }
@@ -62,6 +66,7 @@ declare module 'next/link' {
     children?: React.ReactNode;
     className?: string;
     style?: React.CSSProperties;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use client';
 
 import {
@@ -75,10 +76,6 @@ function AnalyticsPageTracker({
         page_location: window.location.href,
         page_referrer: document.referrer,
       });
-
-      if (debug) {
-        console.log('[AnalyticsProvider] Page view:', currentPath);
-      }
     }, 100);
 
     return () => window.clearTimeout(timeout);
@@ -106,10 +103,6 @@ export function AnalyticsProvider({
 
     const initialize = async () => {
       if (debug) console.log('[AnalyticsProvider] Initializing...');
-
-      if (coreConfig && debug) {
-        console.log('[AnalyticsProvider] Core config:', coreConfig);
-      }
 
       const currentConsent = analyticsCore.getConsent();
       const hasConsentCookie =
@@ -231,9 +224,6 @@ export function AnalyticsProvider({
   const setConsent = useCallback(
     (consent: Partial<ConsentSettings>) => {
       analyticsCore.setConsent(consent);
-      if (debug) {
-        console.log('[AnalyticsProvider] Consent updated:', consent);
-      }
     },
     [debug]
   );

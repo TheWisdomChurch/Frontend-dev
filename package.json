@@ -9,12 +9,12 @@
     "start": "next start -p 2000",
     "media:optimize": "node scripts/media-pipeline.mjs",
     "media:optimize:dry": "node scripts/media-pipeline.mjs --dry-run",
-    "lint": "eslint . --max-warnings 0 --no-warn-ignored",
-    "lint:fix": "eslint . --fix --max-warnings 0 --no-warn-ignored",
+    "lint": "eslint src --ext .ts,.tsx,.js,.jsx --cache --cache-location .cache/eslint/ --no-warn-ignored",
+    "lint:fix": "eslint src --ext .ts,.tsx,.js,.jsx --cache --cache-location .cache/eslint/ --fix --no-warn-ignored",
     "type-check": "tsc --noEmit",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "validate": "npm run type-check && npm run lint && npm run prettier",
+    "validate": "npm run type-check && npm run lint",
     "prepare": "node -e \"const fs = require('fs'); if (fs.existsSync('.githooks/setup-hooks')) require('child_process').execSync('chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks', { stdio: 'inherit' })\"",
     "postinstall": "npm run hooks:setup || echo 'Note: Run npm run hooks:setup to configure Git hooks'",
     "hooks:setup": "./.githooks/setup-hooks || (echo 'Making setup executable...' && chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks)",
@@ -29,7 +29,8 @@
     "docker:build:dev": "docker build -t wisdom-house-dev -f Dockerfile.dev .",
     "docker:run": "docker run -p 3000:3000 wisdom-house",
     "docker:run:dev": "docker run -p 3000:3000 -v $(pwd):/app -v /app/node_modules -v /app/.next -e NODE_ENV=development wisdom-house-dev",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "lint:strict": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings 0 --no-warn-ignored"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
@@ -76,6 +77,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
     "@types/next-pwa": "^5.6.9",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",

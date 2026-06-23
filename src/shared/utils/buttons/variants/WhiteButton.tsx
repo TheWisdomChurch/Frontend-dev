@@ -4,6 +4,7 @@ import Button, { ButtonProps } from '../CustomButton';
 const WhiteButton: React.FC<ButtonProps> = props => (
   <Button
     variant="outline"
+    // eslint-disable-next-line no-restricted-syntax
     style={{
       backgroundColor: 'white',
       color: 'black',

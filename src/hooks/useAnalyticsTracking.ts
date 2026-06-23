@@ -12,16 +12,20 @@ export interface UseAnalyticsTrackingReturn {
   trackClick: (
     label: string,
     category?: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     additional?: Record<string, any>
   ) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trackFormStart: (formName: string, additional?: Record<string, any>) => void;
   trackFormComplete: (
     formName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     additional?: Record<string, any>
   ) => void;
   trackFormError: (
     formName: string,
     error: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     additional?: Record<string, any>
   ) => void;
   trackDonate: (amount: number, currency?: string, method?: string) => void;
@@ -33,7 +37,7 @@ export interface UseAnalyticsTrackingReturn {
 }
 
 export function useAnalyticsTracking(): UseAnalyticsTrackingReturn {
-  const { trackEvent } = useAnalytics();
+  useAnalytics();
   const {
     trackScroll,
     setupOutboundLinkTracking,

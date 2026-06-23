@@ -6,7 +6,6 @@ import {
   ShoppingBag,
   BookOpen,
   Heart,
-  MessageCircle,
 } from 'lucide-react';
 import {
   NavLink,

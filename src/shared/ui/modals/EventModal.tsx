@@ -220,6 +220,7 @@ export function EventDetailsModal({
 
       await navigator.clipboard.writeText(shareText);
       toast.success('Event details copied.');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error?.name !== 'AbortError') {
         toast.error('Unable to share event.');

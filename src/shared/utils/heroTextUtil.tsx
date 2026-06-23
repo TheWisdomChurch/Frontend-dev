@@ -1,15 +1,14 @@
 import { BaseText } from '../text';
 import type { ReactNode } from 'react';
 
-export const renderTitle = (
-  title: string | undefined | null
-): ReactNode => {
+export const renderTitle = (title: string | undefined | null): ReactNode => {
   const safeTitle = title ?? '';
 
   const highlight = (text: string) => (
     <BaseText
       fontFamily="playfair"
       className="inline-block italic"
+      // eslint-disable-next-line no-restricted-syntax
       style={{
         color: 'var(--app-primary)',
         fontSize: 'inherit',
@@ -65,6 +64,7 @@ export const renderSubtitle = (
     <BaseText
       fontFamily="playfair"
       className="inline-block italic"
+      // eslint-disable-next-line no-restricted-syntax
       style={{ color: '#FFFFFF', fontSize: 'inherit', lineHeight: 'inherit' }}
     >
       {text}

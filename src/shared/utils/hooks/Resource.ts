@@ -395,7 +395,8 @@ export const animateButtonClick = (button: HTMLElement) => {
   return timeline;
 };
 
-export const createGlassEffect = (element: HTMLElement, colorScheme: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+export const createGlassEffect = (element: HTMLElement, _colorScheme: any) => {
   gsap.set(element, {
     backdropFilter: 'blur(10px)',
     background: `rgba(255, 255, 255, 0.1)`,

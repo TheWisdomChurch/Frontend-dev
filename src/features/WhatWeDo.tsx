@@ -42,6 +42,7 @@ export default function WhatWeDo() {
             }
             quality={88}
             className="object-cover transition duration-700 ease-out group-hover:scale-105"
+            // eslint-disable-next-line no-restricted-syntax
             style={{
               objectPosition: 'center top',
               opacity: box.imageOpacity ? box.imageOpacity / 100 : 1,

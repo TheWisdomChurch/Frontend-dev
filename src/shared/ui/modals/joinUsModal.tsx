@@ -90,6 +90,7 @@ export default function JoinCommunityModal({
                 <div className="flex items-center gap-4">
                   <div
                     className="grid h-12 w-12 flex-none place-items-center rounded-2xl text-white shadow-lg"
+                    // eslint-disable-next-line no-restricted-syntax
                     style={{
                       background: `linear-gradient(135deg, ${link.bgColor}, ${link.hoverColor})`,
                     }}

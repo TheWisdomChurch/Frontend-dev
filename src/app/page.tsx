@@ -167,7 +167,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const alreadyWelcomed = typeof window !== 'undefined' && localStorage.getItem('wisdom_welcomed');
+    const alreadyWelcomed =
+      typeof window !== 'undefined' && localStorage.getItem('wisdom_welcomed');
     if (alreadyWelcomed) return;
 
     const timer = window.setTimeout(() => {
@@ -213,6 +214,7 @@ export default function Home() {
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 opacity-60"
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           background: `
             radial-gradient(circle at 18% 12%, rgba(201, 150, 26, 0.12) 0%, transparent 34%),

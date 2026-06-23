@@ -85,6 +85,7 @@ const SheetTrigger = React.forwardRef<HTMLButtonElement, SheetTriggerProps>(
     const { setOpen } = useSheet();
 
     if (asChild && React.isValidElement(children)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const childProps: any = {
         onClick: (e: React.MouseEvent) => {
           (children.props as any)?.onClick?.(e);
@@ -111,7 +112,8 @@ interface SheetOverlayProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const SheetOverlay = React.forwardRef<HTMLDivElement, SheetOverlayProps>(
-  ({ className, overlayClassName, ...props }, ref) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ({ className: _className, overlayClassName, ...props }, ref) => {
     const { open, setOpen } = useSheet();
 
     if (!open) return null;
@@ -144,7 +146,14 @@ interface SheetContentProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
   (
-    { side = 'right', className, children, disableOutsideClose, ...props },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    {
+      side = 'right',
+      className,
+      children,
+      disableOutsideClose: _disableOutsideClose,
+      ...props
+    },
     ref
   ) => {
     const { open, setOpen } = useSheet();

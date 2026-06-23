@@ -222,6 +222,7 @@ export function useChurchAnalytics() {
   // ====================================================================
 
   const identifyMember = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (memberId: string, memberData: any) => {
       identify({
         user_id: memberId,

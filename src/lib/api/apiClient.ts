@@ -11,6 +11,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -19,6 +20,7 @@ export interface ApiResponse<T = any> {
   statusCode?: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface PaginatedResponse<T = any> {
   items: T[];
   total: number;
@@ -110,8 +112,10 @@ class APIClient {
   /**
    * GET request
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async get<T = any>(
     url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any
   ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.get<ApiResponse<T>>(url, config);
@@ -120,9 +124,12 @@ class APIClient {
   /**
    * POST request
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async post<T = any>(
     url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any
   ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.post<ApiResponse<T>>(url, data, config);
@@ -131,9 +138,12 @@ class APIClient {
   /**
    * PUT request
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async put<T = any>(
     url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any
   ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.put<ApiResponse<T>>(url, data, config);
@@ -142,9 +152,12 @@ class APIClient {
   /**
    * PATCH request
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async patch<T = any>(
     url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any
   ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.patch<ApiResponse<T>>(url, data, config);
@@ -153,8 +166,10 @@ class APIClient {
   /**
    * DELETE request
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async delete<T = any>(
     url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any
   ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.delete<ApiResponse<T>>(url, config);

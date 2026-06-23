@@ -385,20 +385,22 @@ export const useJoinWisdomHouse = () => {
     cardRefs.current[index] = el;
   }, []);
 
-  const handleCardEnter = useCallback((index: number, e: React.MouseEvent) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleCardEnter = useCallback((index: number, _e: React.MouseEvent) => {
     // Use GSAP animation instead of direct style manipulation
     cardAnimator.animateCardEnter(index, false);
   }, []);
 
-  const handleCardLeave = useCallback((index: number, e: React.MouseEvent) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleCardLeave = useCallback((index: number, _e: React.MouseEvent) => {
     cardAnimator.animateCardLeave(index, false);
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
   const handleFormSubmit = useCallback(async (data: any) => {
     setIsSubmitting(true);
     try {
       // API call to submit form data
-      console.log('Submitting application:', data);
 
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
