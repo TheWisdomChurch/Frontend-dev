@@ -31,8 +31,8 @@ import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
 import { hero_bg_1 } from '@/shared/assets';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { Section, Container } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import CartSidebar from '@/features/store/Store/CartSidebar';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import type { Product } from '@/lib/types';
 import { storeClient } from '@/lib/api/storeClient';
 import PageHero from '@/features/hero/PageHero';
@@ -51,8 +51,6 @@ export default function StorePage() {
     state => state.products
   );
   const { itemCount } = useAppSelector(state => state.cart);
-  const { isDark } = useTheme();
-
   const [showSearchAlert, setShowSearchAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -63,17 +61,6 @@ export default function StorePage() {
   const [loadingProducts, setLoadingProducts] = useState(true);
 
   const productsRef = useRef<HTMLDivElement>(null);
-
-  const borderColor = isDark
-    ? 'rgba(255,255,255,0.12)'
-    : 'rgba(255,255,255,0.12)';
-  const textColor = '#ffffff';
-  const inputBackground = isDark
-    ? 'rgba(255,255,255,0.06)'
-    : 'rgba(255,255,255,0.05)';
-  const inputBorderColor = isDark
-    ? 'rgba(255,255,255,0.14)'
-    : 'rgba(255,255,255,0.12)';
 
   const categories = useMemo(
     () => [
@@ -236,13 +223,7 @@ export default function StorePage() {
       <button
         type="button"
         onClick={() => dispatch(toggleCart())}
-        className="fixed bottom-6 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition duration-300 hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          background:
-            'linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))',
-          color: '#000000',
-        }}
+        className="fixed bottom-6 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] text-black shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition duration-300 hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
         aria-label="Open cart"
       >
         <ShoppingBag className="h-6 w-6" />
@@ -261,21 +242,13 @@ export default function StorePage() {
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10 space-y-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div
-                className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  borderColor: `rgba(201,150,26,0.20)`,
-                  background: `rgba(201,150,26,0.07)`,
-                  color: 'var(--app-primary)',
-                }}
-              >
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
                   Wisdom House Store
@@ -491,11 +464,6 @@ export default function StorePage() {
                   curvature="full"
                   elevated
                   className="mt-6 font-bold"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: 'var(--app-primary)',
-                    color: '#000000',
-                  }}
                 >
                   View All Products
                 </Button>
@@ -514,9 +482,7 @@ export default function StorePage() {
                   return (
                     <article
                       key={product.id}
-                      className="product-card group overflow-hidden rounded-[1.75rem] border bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ borderColor }}
+                      className="product-card group overflow-hidden rounded-[1.75rem] border border-white/[0.12] bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                     >
                       <button
                         type="button"
@@ -634,11 +600,6 @@ export default function StorePage() {
                           onClick={() => handleQuickView(product)}
                           disabled={soldOut}
                           className="mt-5 h-11 w-full font-bold transition hover:scale-[1.01]"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: 'var(--app-primary)',
-                            color: '#000000',
-                          }}
                           onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
                             e.currentTarget.style.backgroundColor =
                               'var(--app-primary-dark)';
@@ -669,11 +630,7 @@ export default function StorePage() {
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto max-w-3xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 text-center shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-8 lg:p-10">
-            <div
-              className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ backgroundColor: `rgba(201,150,26,0.09)` }}
-            >
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
               <Tag className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
@@ -697,24 +654,11 @@ export default function StorePage() {
 
             <div className="mt-8">
               {emailSubmitted ? (
-                <div
-                  className="mx-auto max-w-md rounded-2xl border p-6"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: `${'#22c55e'}12`,
-                    borderColor: `${'#22c55e'}30`,
-                  }}
-                >
-                  <CheckCircle2
-                    className="mx-auto h-10 w-10"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: '#22c55e' }}
-                  />
+                <div className="mx-auto max-w-md rounded-2xl border border-green-500/20 bg-green-500/[0.07] p-6">
+                  <CheckCircle2 className="mx-auto h-10 w-10 text-green-500" />
                   <SmallText
                     weight="bold"
-                    className="mt-3 block text-lg"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: '#22c55e' }}
+                    className="mt-3 block text-lg text-green-500"
                   >
                     You&apos;re In!
                   </SmallText>
@@ -738,13 +682,7 @@ export default function StorePage() {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="your@email.com"
                       required
-                      className="h-12 w-full rounded-2xl border pl-12 pr-4 text-base text-white outline-none transition placeholder:text-white/40 focus:ring-4 focus:ring-yellow-400/10"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        backgroundColor: inputBackground,
-                        borderColor: inputBorderColor,
-                        color: textColor,
-                      }}
+                      className="h-12 w-full rounded-2xl border border-white/[0.14] bg-white/[0.06] pl-12 pr-4 text-base text-white outline-none transition placeholder:text-white/40 focus:ring-4 focus:ring-yellow-400/10"
                     />
                   </label>
 
@@ -756,11 +694,6 @@ export default function StorePage() {
                     elevated
                     disabled={isSubmittingEmail || !email}
                     className="h-12 px-6 font-bold transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      backgroundColor: 'var(--app-primary)',
-                      color: '#000000',
-                    }}
                   >
                     {isSubmittingEmail ? (
                       <span className="inline-flex items-center gap-2">

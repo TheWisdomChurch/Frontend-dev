@@ -16,8 +16,10 @@ import {
   X,
 } from 'lucide-react';
 
+import Button from '@/shared/utils/buttons/CustomButton';
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { resourceLinks } from '@/lib/data';
@@ -150,21 +152,13 @@ export default function ResourcesPage() {
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_16%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10 space-y-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div
-                className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  borderColor: `rgba(201,150,26,0.20)`,
-                  background: `rgba(201,150,26,0.07)`,
-                  color: 'var(--app-primary)',
-                }}
-              >
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
                   Resources & Growth
@@ -196,21 +190,10 @@ export default function ResourcesPage() {
                     href={item.href}
                     className="group relative block h-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                   >
-                    <div
-                      className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ background: `rgba(201,150,26,0.13)` }}
-                    />
+                    <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                     <div className="relative z-10 flex items-start gap-4">
-                      <div
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          background: `rgba(201,150,26,0.09)`,
-                          color: 'var(--app-primary)',
-                        }}
-                      >
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
                         <Icon className="h-5 w-5" />
                       </div>
 
@@ -320,23 +303,12 @@ export default function ResourcesPage() {
                       ) => handleLiveServiceClick(e, resource.isLiveService)}
                       className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                     >
-                      <div
-                        className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ background: `rgba(201,150,26,0.12)` }}
-                      />
+                      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[var(--app-primary)]/[0.12] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                       <div className="relative z-10 flex h-full flex-col">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex min-w-0 items-start gap-3">
-                            <div
-                              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{
-                                background: `rgba(201,150,26,0.09)`,
-                                color: 'var(--app-primary)',
-                              }}
-                            >
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
                               <Icon className="h-5 w-5" />
                             </div>
 
@@ -403,11 +375,7 @@ export default function ResourcesPage() {
 
             <div className="space-y-5 p-6 sm:p-7">
               <div className="text-center">
-                <div
-                  className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ backgroundColor: `rgba(201,150,26,0.09)` }}
-                >
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
                   <Radio className="h-7 w-7 text-[var(--app-primary)]" />
                 </div>
 
@@ -449,17 +417,13 @@ export default function ResourcesPage() {
                   className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                 />
 
-                <button
+                <Button
                   type="submit"
-                  className="h-12 w-full rounded-2xl text-sm font-bold transition hover:scale-[1.01]"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: 'var(--app-primary)',
-                    color: '#000',
-                  }}
+                  variant="primary"
+                  className="h-12 w-full rounded-2xl text-sm font-bold hover:scale-[1.01]"
                 >
                   Notify me
-                </button>
+                </Button>
               </form>
 
               <p className="text-center text-xs leading-6 text-white/45">

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
@@ -344,30 +345,15 @@ export default function JoinWisdomHouse() {
       className="relative overflow-hidden bg-[var(--app-surface)]"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute inset-0"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            background:
-              'radial-gradient(circle at 14% 18%, rgba(201,150,26,0.11), transparent 32%), radial-gradient(circle at 88% 12%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.07), transparent 34%)',
-          }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+        <div className="join-us-glow-overlay absolute inset-0" />
+        <GridBackground />
       </div>
 
       <Container size="xl" className="relative z-10 py-14 sm:py-18 lg:py-24">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
           <div className="space-y-7">
             <div>
-              <div
-                className="mb-5 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  borderColor: `rgba(201,150,26,0.20)`,
-                  background: `rgba(201,150,26,0.07)`,
-                  color: 'var(--app-primary)',
-                }}
-              >
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
                   Join the workforce
@@ -477,11 +463,6 @@ export default function JoinWisdomHouse() {
                   curvature="full"
                   disabled={quickSubmitting}
                   className="mt-1 h-12 w-full font-semibold"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: 'var(--app-primary)',
-                    color: '#000',
-                  }}
                 >
                   <span className="inline-flex items-center justify-center gap-2">
                     {quickSubmitting ? (
@@ -601,14 +582,7 @@ export default function JoinWisdomHouse() {
 
               return (
                 <div key={item.title} className="flex gap-3">
-                  <div
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      background: `rgba(201,150,26,0.09)`,
-                      color: 'var(--app-primary)',
-                    }}
-                  >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
                     <Icon className="h-5 w-5" />
                   </div>
 
@@ -803,11 +777,6 @@ export default function JoinWisdomHouse() {
             curvature="full"
             disabled={modalSubmitting}
             className="h-12 w-full font-semibold"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: 'var(--app-primary)',
-              color: '#000',
-            }}
           >
             <span className="inline-flex items-center justify-center gap-2">
               {modalSubmitting ? (

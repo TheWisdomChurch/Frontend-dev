@@ -1,13 +1,10 @@
-﻿import React from 'react';
+import React from 'react';
 import Button, { ButtonProps } from '../CustomButton';
 
 const SuccessButton: React.FC<ButtonProps> = props => (
   <Button
-    // eslint-disable-next-line no-restricted-syntax
-    style={{
-      backgroundColor: '#16a34a',
-      color: 'white',
-    }}
+    variant="ghost"
+    className="bg-[#16a34a] text-white hover:bg-[#15803d]"
     {...props}
   />
 );

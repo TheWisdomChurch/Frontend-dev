@@ -17,6 +17,9 @@ import {
 
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
+import { Card } from '@/shared/ui/cards';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
+import GridBackground from '@/shared/ui/GridBackground';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { ActionBanner } from '@/shared/components/site/PublicPageBlocks';
 import apiClient from '@/lib/api';
@@ -210,10 +213,13 @@ export default function TestimoniesPage() {
         chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
       />
 
-      <Section padding="none" className="relative overflow-hidden bg-[var(--app-surface)]">
+      <Section
+        padding="none"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
+      >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(215,187,117,0.13),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_34%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10 py-14 sm:py-18 lg:py-20">
@@ -222,9 +228,11 @@ export default function TestimoniesPage() {
               const Icon = item.icon;
 
               return (
-                <div
+                <Card
                   key={item.label}
-                  className="rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl"
+                  variant="glass"
+                  padding="sm"
+                  className="bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)]"
                 >
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--app-primary)]/15 text-[var(--app-primary)]">
                     <Icon className="h-5 w-5" />
@@ -241,7 +249,7 @@ export default function TestimoniesPage() {
                   <p className="mt-2 text-sm leading-6 text-white/58">
                     {item.detail}
                   </p>
-                </div>
+                </Card>
               );
             })}
           </div>
@@ -250,7 +258,11 @@ export default function TestimoniesPage() {
 
       <Section padding="none" className="relative bg-[var(--app-surface)]">
         <Container size="xl" className="py-4 sm:py-6 lg:py-8">
-          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
+          <Card
+            variant="glass"
+            padding="none"
+            className="overflow-hidden rounded-[2rem] bg-white/[0.045] shadow-[0_30px_100px_rgba(0,0,0,0.42)]"
+          >
             <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
               <div className="border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
                 <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
@@ -342,23 +354,25 @@ export default function TestimoniesPage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <button
-                            type="button"
+                          <CustomButton
+                            variant="ghost"
+                            size="icon"
                             onClick={goPrev}
-                            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-white transition hover:bg-white/[0.1]"
                             aria-label="Previous testimony"
+                            className="h-11 w-11 rounded-full border border-white/12 bg-white/[0.06] hover:bg-white/[0.1]"
                           >
                             <ChevronLeft className="h-5 w-5" />
-                          </button>
+                          </CustomButton>
 
-                          <button
-                            type="button"
+                          <CustomButton
+                            variant="ghost"
+                            size="icon"
                             onClick={goNext}
-                            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-white transition hover:bg-white/[0.1]"
                             aria-label="Next testimony"
+                            className="h-11 w-11 rounded-full border border-white/12 bg-white/[0.06] hover:bg-white/[0.1]"
                           >
                             <ChevronRight className="h-5 w-5" />
-                          </button>
+                          </CustomButton>
                         </div>
                       </div>
                     </article>
@@ -381,7 +395,7 @@ export default function TestimoniesPage() {
                 )}
               </div>
             </div>
-          </div>
+          </Card>
         </Container>
       </Section>
 

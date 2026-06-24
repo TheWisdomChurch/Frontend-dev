@@ -10,6 +10,8 @@ import { BodySM, Caption, H3, SmallText } from '@/shared/text';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { useLeadership } from '@/hooks/useLeadership';
 import { pastorsData } from '@/lib/data';
+import { Card } from '@/shared/ui/cards';
+import GridBackground from '@/shared/ui/GridBackground';
 
 type Leader = (typeof pastorsData)[number] & {
   id?: string | number;
@@ -138,7 +140,7 @@ export default function AssociatePastors() {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-10%] top-16 h-72 w-72 rounded-full blur-3xl bg-[var(--app-primary)]/[0.08]" />
         <div className="absolute right-[-8%] top-1/3 h-96 w-96 rounded-full bg-white/[0.045] blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-20" />
+        <GridBackground className="opacity-20" />
       </div>
 
       <Container size="xl" className="relative z-10 px-4 sm:px-6 lg:px-10">
@@ -159,12 +161,15 @@ export default function AssociatePastors() {
             </H3>
           </div>
 
-          <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+          <Card
+            padding="sm"
+            className="rounded-[1.25rem] bg-white/[0.035] sm:p-5"
+          >
             <BodySM className="max-w-3xl text-sm leading-7 text-white/68 sm:text-base">
               Trusted voices helping steward the vision. Each carries a unique
               grace for the house.
             </BodySM>
-          </div>
+          </Card>
         </div>
 
         <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">

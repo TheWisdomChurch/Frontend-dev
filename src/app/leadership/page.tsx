@@ -123,13 +123,7 @@ export default function LeadershipPage() {
                               className="h-14 w-14 rounded-full object-cover border border-white/15"
                             />
                           ) : (
-                            <div
-                              className="h-14 w-14 rounded-full flex items-center justify-center text-sm font-semibold"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{
-                                background: `linear-gradient(140deg, var(--app-primary) 0%, #1f2937 100%)`,
-                              }}
-                            >
+                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(140deg,var(--app-primary)_0%,#1f2937_100%)] text-sm font-semibold">
                               {initials(leader.firstName, leader.lastName)}
                             </div>
                           )}

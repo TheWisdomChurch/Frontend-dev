@@ -25,7 +25,6 @@ import {
   Loader2,
 } from 'lucide-react';
 
-// Order status types
 type OrderStatus =
   | 'pending'
   | 'processing'
@@ -84,15 +83,6 @@ const OrderConfirmation = () => {
   const orderId = searchParams.get('orderId');
   const amount = searchParams.get('amount');
 
-  const cardBackground = 'rgba(255,255,255,0.05)';
-  const textColor = '#f5f6f7';
-  const labelColor = 'rgba(255,255,255,0.55)';
-  const borderColor = 'rgba(255,255,255,0.12)';
-  const successColor = '#22c55e';
-  const warningColor = '#eab308';
-  const infoColor = '#3b82f6';
-
-  // Mock order status timeline
   const statusSteps = [
     { id: 'pending', label: 'Order Placed', icon: Clock, active: true },
     { id: 'processing', label: 'Processing', icon: Package, active: false },
@@ -100,7 +90,6 @@ const OrderConfirmation = () => {
     { id: 'delivered', label: 'Delivered', icon: CheckCircle, active: false },
   ];
 
-  // Fetch order details (backend-ready)
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
@@ -141,29 +130,27 @@ const OrderConfirmation = () => {
     fetchOrderDetails();
   }, [orderId, amount, cartItems, cartTotal]);
 
-  // Payment method display config
   const paymentMethodConfig = {
     transfer: {
       icon: Building,
       label: 'Bank Transfer',
-      color: infoColor,
+      color: '#3b82f6',
       description: 'Transfer to our bank account',
     },
     online: {
       icon: CreditCard,
       label: 'Online Payment',
-      color: successColor,
+      color: '#22c55e',
       description: 'Paid with card/digital wallet',
     },
     delivery: {
       icon: Truck,
       label: 'Pay on Delivery',
-      color: warningColor,
+      color: '#eab308',
       description: 'Pay when order arrives',
     },
   };
 
-  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -176,7 +163,6 @@ const OrderConfirmation = () => {
     });
   };
 
-  // Handle print
   const handlePrint = () => {
     setIsPrinting(true);
     setTimeout(() => {
@@ -185,7 +171,6 @@ const OrderConfirmation = () => {
     }, 500);
   };
 
-  // Handle share
   const handleShare = async () => {
     setIsSharing(true);
     try {
@@ -196,7 +181,6 @@ const OrderConfirmation = () => {
           url: window.location.href,
         });
       } else {
-        // Fallback: Copy to clipboard
         await navigator.clipboard.writeText(window.location.href);
         alert('Order link copied to clipboard!');
       }
@@ -207,10 +191,8 @@ const OrderConfirmation = () => {
     }
   };
 
-  // Handle download receipt
   const handleDownloadReceipt = () => {
     setIsDownloading(true);
-    // Simulate download
     setTimeout(() => {
       const receiptContent = `
         WISDOM HOUSE STORE
@@ -218,23 +200,23 @@ const OrderConfirmation = () => {
         =====================
         Order ID: ${orderDetails?.orderId}
         Date: ${orderDetails ? formatDate(orderDetails.orderDate) : ''}
-        
+
         Customer Information:
         ${orderDetails?.customer.firstName} ${orderDetails?.customer.lastName}
         ${orderDetails?.customer.email}
         ${orderDetails?.customer.phone}
         ${orderDetails?.customer.address ? `${orderDetails.customer.address}, ${orderDetails.customer.city}, ${orderDetails.customer.state} ${orderDetails.customer.zipCode}` : ''}
-        
+
         Payment Method: ${orderDetails?.paymentMethod.toUpperCase()}
         Payment Status: ${orderDetails?.paymentStatus.toUpperCase()}
-        
+
         Items:
         ${orderDetails?.items.map(item => `${item.name} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - NGN ${(parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity).toLocaleString()}`).join('\n')}
-        
+
         Subtotal: NGN ${orderDetails?.subtotal.toLocaleString()}
         ${orderDetails?.deliveryFee ? `Delivery Fee: NGN ${orderDetails.deliveryFee.toLocaleString()}` : ''}
         Total: NGN ${orderDetails?.total.toLocaleString()}
-        
+
         Thank you for your order!
         =====================
       `;
@@ -257,12 +239,7 @@ const OrderConfirmation = () => {
       <div className="min-h-screen flex items-center justify-center">
         <FlexboxLayout direction="column" align="center" gap="lg">
           <Loader2 className="w-12 h-12 animate-spin text-[var(--app-primary)]" />
-          <H3
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: textColor }}
-          >
-            Loading Order Details...
-          </H3>
+          <H3 className="text-white">Loading Order Details...</H3>
         </FlexboxLayout>
       </div>
     );
@@ -272,32 +249,13 @@ const OrderConfirmation = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <FlexboxLayout direction="column" align="center" gap="lg">
-          <AlertCircle
-            className="w-16 h-16"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: '#ef4444' }}
-          />
-          <H3
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: textColor }}
-          >
-            Order Not Found
-          </H3>
-          <Caption
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: labelColor }}
-          >
-            The order you're looking for doesn't exist or has been removed.
+          <AlertCircle className="w-16 h-16 text-red-500" />
+          <H3 className="text-white">Order Not Found</H3>
+          <Caption className="text-white/55">
+            The order you&apos;re looking for doesn&apos;t exist or has been
+            removed.
           </Caption>
-          <Button
-            variant="primary"
-            onClick={() => router.push('/')}
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: 'var(--app-primary)',
-              color: '#000000',
-            }}
-          >
+          <Button variant="primary" onClick={() => router.push('/')}>
             Return to Home
           </Button>
         </FlexboxLayout>
@@ -329,38 +287,18 @@ const OrderConfirmation = () => {
       <div className="text-center mb-8 print-section">
         <FlexboxLayout direction="column" align="center" gap="sm">
           <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-            <CheckCircle
-              className="w-10 h-10"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: successColor }}
-            />
+            <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <H2
-            fontFamily="bricolage"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: successColor }}
-            weight="bold"
-          >
+          <H2 fontFamily="bricolage" className="text-green-500" weight="bold">
             Order Confirmed!
           </H2>
-          <Caption
-            className="text-lg"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: labelColor }}
-          >
+          <Caption className="text-lg text-white/55">
             Thank you for your purchase
           </Caption>
-          <BaseText
-            weight="semibold"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: textColor }}
-          >
+          <BaseText weight="semibold" className="text-white">
             Order ID: {orderDetails.orderId}
           </BaseText>
-          <Caption
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: labelColor }}
-          >
+          <Caption className="text-white/55">
             {formatDate(orderDetails.orderDate)}
           </Caption>
         </FlexboxLayout>
@@ -373,11 +311,7 @@ const OrderConfirmation = () => {
           size="sm"
           onClick={handlePrint}
           disabled={isPrinting}
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            borderColor: borderColor,
-            color: textColor,
-          }}
+          className="border-white/[0.12] text-white"
         >
           <FlexboxLayout align="center" gap="xs">
             {isPrinting ? (
@@ -394,11 +328,7 @@ const OrderConfirmation = () => {
           size="sm"
           onClick={handleShare}
           disabled={isSharing}
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            borderColor: borderColor,
-            color: textColor,
-          }}
+          className="border-white/[0.12] text-white"
         >
           <FlexboxLayout align="center" gap="xs">
             {isSharing ? (
@@ -415,11 +345,7 @@ const OrderConfirmation = () => {
           size="sm"
           onClick={handleDownloadReceipt}
           disabled={isDownloading}
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            borderColor: borderColor,
-            color: textColor,
-          }}
+          className="border-white/[0.12] text-white"
         >
           <FlexboxLayout align="center" gap="xs">
             {isDownloading ? (
@@ -433,29 +359,11 @@ const OrderConfirmation = () => {
       </div>
 
       {/* Status Timeline */}
-      <div
-        className="rounded-2xl p-6 mb-6 shadow-lg border print-section"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          backgroundColor: cardBackground,
-          borderColor: borderColor,
-        }}
-      >
-        <H3
-          className="text-lg font-bold mb-6"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ color: textColor }}
-        >
-          Order Status
-        </H3>
+      <div className="rounded-2xl p-6 mb-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+        <H3 className="text-lg font-bold mb-6 text-white">Order Status</H3>
 
         <div className="relative">
-          {/* Timeline line */}
-          <div
-            className="absolute left-8 top-10 bottom-10 w-0.5"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ backgroundColor: borderColor }}
-          />
+          <div className="absolute left-8 top-10 bottom-10 w-0.5 bg-white/[0.12]" />
 
           <div className="space-y-8">
             {statusSteps.map((step, index) => {
@@ -464,45 +372,27 @@ const OrderConfirmation = () => {
               const isCompleted =
                 index <
                 statusSteps.findIndex(s => s.id === orderDetails.status);
+              const isActive = isCompleted || isCurrentStep;
 
               return (
                 <FlexboxLayout key={step.id} align="center" gap="md">
                   <div className="relative z-10">
                     <div
-                      className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                      className={`w-16 h-16 rounded-full flex items-center justify-center border-2 ${
                         isCurrentStep ? 'animate-pulse' : ''
+                      } ${
+                        isActive
+                          ? 'bg-green-500/20 border-green-500'
+                          : 'bg-white/[0.11] border-white/[0.12]'
                       }`}
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        backgroundColor:
-                          isCompleted || isCurrentStep
-                            ? `${successColor}20`
-                            : `${labelColor}20`,
-                        border: `2px solid ${
-                          isCompleted || isCurrentStep
-                            ? successColor
-                            : borderColor
-                        }`,
-                      }}
                     >
                       <Icon
-                        className="w-6 h-6"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          color:
-                            isCompleted || isCurrentStep
-                              ? successColor
-                              : labelColor,
-                        }}
+                        className={`w-6 h-6 ${isActive ? 'text-green-500' : 'text-white/55'}`}
                       />
                     </div>
                     {isCompleted && (
                       <div className="absolute -top-1 -right-1">
-                        <CheckCircle
-                          className="w-6 h-6"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: successColor }}
-                        />
+                        <CheckCircle className="w-6 h-6 text-green-500" />
                       </div>
                     )}
                   </div>
@@ -510,19 +400,11 @@ const OrderConfirmation = () => {
                   <div className="flex-1">
                     <BaseText
                       weight="bold"
-                      className="text-base mb-1"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        color:
-                          isCompleted || isCurrentStep ? textColor : labelColor,
-                      }}
+                      className={`text-base mb-1 ${isActive ? 'text-white' : 'text-white/55'}`}
                     >
                       {step.label}
                     </BaseText>
-                    <Caption
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: labelColor }}
-                    >
+                    <Caption className="text-white/55">
                       {isCurrentStep
                         ? 'Your order is currently at this stage'
                         : isCompleted
@@ -541,78 +423,33 @@ const OrderConfirmation = () => {
         {/* Left Column */}
         <div className="space-y-6">
           {/* Order Summary */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-lg font-bold mb-6 flex items-center gap-2"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: textColor }}
-            >
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
               <Package className="w-5 h-5" />
               Order Summary
             </H3>
 
             <div className="space-y-4">
               {orderDetails.items.map((item, index) => (
-                <div
-                  key={index}
-                  className="pb-4 border-b"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderColor: `${borderColor}40` }}
-                >
+                <div key={index} className="pb-4 border-b border-white/[0.07]">
                   <FlexboxLayout justify="between" align="start">
                     <div className="flex-1">
-                      <BaseText
-                        weight="semibold"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: textColor }}
-                      >
+                      <BaseText weight="semibold" className="text-white">
                         {item.name}
                       </BaseText>
                       <div className="flex flex-wrap gap-2 mt-2">
-                        <Caption
-                          className="px-2 py-1 rounded-full text-xs"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: `${infoColor}15`,
-                            color: infoColor,
-                          }}
-                        >
+                        <Caption className="px-2 py-1 rounded-full text-xs bg-blue-500/15 text-blue-500">
                           {item.selectedSize}
                         </Caption>
-                        <Caption
-                          className="px-2 py-1 rounded-full text-xs"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: `${warningColor}15`,
-                            color: warningColor,
-                          }}
-                        >
+                        <Caption className="px-2 py-1 rounded-full text-xs bg-yellow-500/15 text-yellow-500">
                           {item.selectedColor}
                         </Caption>
-                        <Caption
-                          className="px-2 py-1 rounded-full text-xs"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: `${borderColor}30`,
-                            color: labelColor,
-                          }}
-                        >
+                        <Caption className="px-2 py-1 rounded-full text-xs bg-white/[0.08] text-white/55">
                           Qty: {item.quantity}
                         </Caption>
                       </div>
                     </div>
-                    <BaseText
-                      weight="bold"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: textColor }}
-                    >
+                    <BaseText weight="bold" className="text-white">
                       NGN{' '}
                       {(
                         parseFloat(item.price.replace(/[^\d.]/g, '')) *
@@ -625,12 +462,7 @@ const OrderConfirmation = () => {
 
               <div className="space-y-3 pt-4">
                 <FlexboxLayout justify="between">
-                  <Caption
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
-                    Subtotal
-                  </Caption>
+                  <Caption className="text-white/55">Subtotal</Caption>
                   <BaseText weight="semibold">
                     NGN {orderDetails.subtotal.toLocaleString()}
                   </BaseText>
@@ -638,23 +470,14 @@ const OrderConfirmation = () => {
 
                 {orderDetails.deliveryFee > 0 && (
                   <FlexboxLayout justify="between">
-                    <Caption
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: labelColor }}
-                    >
-                      Delivery Fee
-                    </Caption>
+                    <Caption className="text-white/55">Delivery Fee</Caption>
                     <BaseText weight="semibold">
                       NGN {orderDetails.deliveryFee.toLocaleString()}
                     </BaseText>
                   </FlexboxLayout>
                 )}
 
-                <div
-                  className="pt-4 border-t"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderColor: borderColor }}
-                >
+                <div className="pt-4 border-t border-white/[0.12]">
                   <FlexboxLayout justify="between">
                     <BaseText weight="bold" className="text-lg">
                       Total Amount
@@ -667,11 +490,7 @@ const OrderConfirmation = () => {
                         NGN {orderDetails.total.toLocaleString()}
                       </BaseText>
                       {orderDetails.deliveryFee > 0 && (
-                        <Caption
-                          className="text-sm mt-1"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: labelColor }}
-                        >
+                        <Caption className="text-sm mt-1 text-white/55">
                           Includes NGN{' '}
                           {orderDetails.deliveryFee.toLocaleString()} delivery
                           fee
@@ -685,19 +504,8 @@ const OrderConfirmation = () => {
           </div>
 
           {/* Payment Information */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-lg font-bold mb-6 flex items-center gap-2"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: textColor }}
-            >
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
               <CreditCard className="w-5 h-5" />
               Payment Information
             </H3>
@@ -720,17 +528,10 @@ const OrderConfirmation = () => {
                   />
                 </div>
                 <div>
-                  <BaseText
-                    weight="bold"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
-                  >
+                  <BaseText weight="bold" className="text-white">
                     {paymentConfig.label}
                   </BaseText>
-                  <Caption
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
+                  <Caption className="text-white/55">
                     {paymentConfig.description}
                   </Caption>
                 </div>
@@ -738,11 +539,7 @@ const OrderConfirmation = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Caption
-                    className="text-sm mb-1"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
+                  <Caption className="text-sm mb-1 text-white/55">
                     Payment Status
                   </Caption>
                   <div className="flex items-center gap-2">
@@ -757,16 +554,13 @@ const OrderConfirmation = () => {
                     />
                     <BaseText
                       weight="semibold"
-                      className="capitalize"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        color:
-                          orderDetails.paymentStatus === 'completed'
-                            ? successColor
-                            : orderDetails.paymentStatus === 'processing'
-                              ? warningColor
-                              : labelColor,
-                      }}
+                      className={`capitalize ${
+                        orderDetails.paymentStatus === 'completed'
+                          ? 'text-green-500'
+                          : orderDetails.paymentStatus === 'processing'
+                            ? 'text-yellow-500'
+                            : 'text-white/55'
+                      }`}
                     >
                       {orderDetails.paymentStatus}
                     </BaseText>
@@ -774,11 +568,7 @@ const OrderConfirmation = () => {
                 </div>
 
                 <div>
-                  <Caption
-                    className="text-sm mb-1"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
+                  <Caption className="text-sm mb-1 text-white/55">
                     Order Status
                   </Caption>
                   <div className="flex items-center gap-2">
@@ -793,16 +583,13 @@ const OrderConfirmation = () => {
                     />
                     <BaseText
                       weight="semibold"
-                      className="capitalize"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        color:
-                          orderDetails.status === 'delivered'
-                            ? successColor
-                            : orderDetails.status === 'shipped'
-                              ? infoColor
-                              : warningColor,
-                      }}
+                      className={`capitalize ${
+                        orderDetails.status === 'delivered'
+                          ? 'text-green-500'
+                          : orderDetails.status === 'shipped'
+                            ? 'text-blue-500'
+                            : 'text-yellow-500'
+                      }`}
                     >
                       {orderDetails.status}
                     </BaseText>
@@ -813,28 +600,14 @@ const OrderConfirmation = () => {
               {/* Bank Transfer Details */}
               {orderDetails.paymentMethod === 'transfer' &&
                 orderDetails.bankDetails && (
-                  <div
-                    className="p-4 rounded-xl mt-4"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      backgroundColor: 'rgba(59,130,246,0.06)',
-                      border: `1px solid ${infoColor}40`,
-                    }}
-                  >
-                    <H4
-                      className="text-sm font-bold mb-3 flex items-center gap-2"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: infoColor }}
-                    >
+                  <div className="p-4 rounded-xl mt-4 bg-blue-500/[0.06] border border-blue-500/25">
+                    <H4 className="text-sm font-bold mb-3 flex items-center gap-2 text-blue-500">
                       <Building className="w-4 h-4" />
                       Your Bank Transfer Details
                     </H4>
                     <div className="space-y-2">
                       <FlexboxLayout justify="between">
-                        <Caption
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: labelColor }}
-                        >
+                        <Caption className="text-white/55">
                           Account Name:
                         </Caption>
                         <BaseText weight="semibold">
@@ -842,12 +615,7 @@ const OrderConfirmation = () => {
                         </BaseText>
                       </FlexboxLayout>
                       <FlexboxLayout justify="between">
-                        <Caption
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: labelColor }}
-                        >
-                          Bank Name:
-                        </Caption>
+                        <Caption className="text-white/55">Bank Name:</Caption>
                         <BaseText weight="semibold">
                           {orderDetails.bankDetails.customerBankName}
                         </BaseText>
@@ -862,112 +630,57 @@ const OrderConfirmation = () => {
         {/* Right Column */}
         <div className="space-y-6">
           {/* Customer Information */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-lg font-bold mb-6 flex items-center gap-2"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: textColor }}
-            >
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
               <User className="w-5 h-5" />
               Customer Information
             </H3>
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ backgroundColor: `var(--app-primary)15` }}
-                >
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--app-primary)]/[0.15]">
                   <User className="w-5 h-5 text-[var(--app-primary)]" />
                 </div>
                 <div>
-                  <BaseText
-                    weight="bold"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
-                  >
+                  <BaseText weight="bold" className="text-white">
                     {orderDetails.customer.firstName}{' '}
                     {orderDetails.customer.lastName}
                   </BaseText>
-                  <Caption
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
-                    Primary Contact
-                  </Caption>
+                  <Caption className="text-white/55">Primary Contact</Caption>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <FlexboxLayout align="center" gap="sm">
-                  <Mail
-                    className="w-4 h-4"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  />
-                  <Caption
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
-                  >
+                  <Mail className="w-4 h-4 text-white/55" />
+                  <Caption className="text-white">
                     {orderDetails.customer.email}
                   </Caption>
                 </FlexboxLayout>
 
                 <FlexboxLayout align="center" gap="sm">
-                  <Phone
-                    className="w-4 h-4"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  />
-                  <Caption
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
-                  >
+                  <Phone className="w-4 h-4 text-white/55" />
+                  <Caption className="text-white">
                     {orderDetails.customer.phone}
                   </Caption>
                 </FlexboxLayout>
 
-                {/* Shipping Address */}
                 {orderDetails.customer.address && (
-                  <div
-                    className="pt-3 border-t"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ borderColor: `${borderColor}40` }}
-                  >
+                  <div className="pt-3 border-t border-white/[0.07]">
                     <FlexboxLayout align="start" gap="sm" className="mb-2">
-                      <MapPin
-                        className="w-4 h-4 mt-0.5"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: labelColor }}
-                      />
+                      <MapPin className="w-4 h-4 mt-0.5 text-white/55" />
                       <div>
                         <Caption
                           weight="semibold"
-                          className="text-sm mb-1"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: textColor }}
+                          className="text-sm mb-1 text-white"
                         >
                           Shipping Address
                         </Caption>
                         <div className="space-y-1">
-                          <Caption
-                            // eslint-disable-next-line no-restricted-syntax
-                            style={{ color: labelColor }}
-                          >
+                          <Caption className="text-white/55">
                             {orderDetails.customer.address}
                           </Caption>
-                          <Caption
-                            // eslint-disable-next-line no-restricted-syntax
-                            style={{ color: labelColor }}
-                          >
+                          <Caption className="text-white/55">
                             {orderDetails.customer.city},{' '}
                             {orderDetails.customer.state}{' '}
                             {orderDetails.customer.zipCode}
@@ -982,20 +695,9 @@ const OrderConfirmation = () => {
           </div>
 
           {/* Next Steps */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-lg font-bold mb-6"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: textColor }}
-            >
-              What's Next?
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 text-white">
+              What&apos;s Next?
             </H3>
 
             <div className="space-y-4">
@@ -1007,19 +709,13 @@ const OrderConfirmation = () => {
                   <div>
                     <BaseText
                       weight="semibold"
-                      className="text-sm mb-1"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: textColor }}
+                      className="text-sm mb-1 text-white"
                     >
                       Payment Verification
                     </BaseText>
-                    <Caption
-                      className="text-xs"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: labelColor }}
-                    >
+                    <Caption className="text-xs text-white/55">
                       Our team will verify your bank transfer within 24 hours.
-                      You'll receive a confirmation email.
+                      You&apos;ll receive a confirmation email.
                     </Caption>
                   </div>
                 </div>
@@ -1032,18 +728,12 @@ const OrderConfirmation = () => {
                 <div>
                   <BaseText
                     weight="semibold"
-                    className="text-sm mb-1"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
+                    className="text-sm mb-1 text-white"
                   >
                     Order Confirmation Email
                   </BaseText>
-                  <Caption
-                    className="text-xs"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
-                    We've sent a confirmation email to{' '}
+                  <Caption className="text-xs text-white/55">
+                    We&apos;ve sent a confirmation email to{' '}
                     {orderDetails.customer.email} with your order details.
                   </Caption>
                 </div>
@@ -1056,18 +746,12 @@ const OrderConfirmation = () => {
                 <div>
                   <BaseText
                     weight="semibold"
-                    className="text-sm mb-1"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
+                    className="text-sm mb-1 text-white"
                   >
                     Processing Time
                   </BaseText>
-                  <Caption
-                    className="text-xs"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
-                    Orders are processed within 24-48 hours. You'll receive
+                  <Caption className="text-xs text-white/55">
+                    Orders are processed within 24-48 hours. You&apos;ll receive
                     updates via email and SMS.
                   </Caption>
                 </div>
@@ -1080,17 +764,11 @@ const OrderConfirmation = () => {
                 <div>
                   <BaseText
                     weight="semibold"
-                    className="text-sm mb-1"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
+                    className="text-sm mb-1 text-white"
                   >
                     Need Help?
                   </BaseText>
-                  <Caption
-                    className="text-xs"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
+                  <Caption className="text-xs text-white/55">
                     Contact our support team at +234-XXX-XXXX or email
                     support@wisdomhouse.com
                   </Caption>
@@ -1106,11 +784,6 @@ const OrderConfirmation = () => {
               size="lg"
               curvature="full"
               onClick={() => router.push('/')}
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: 'var(--app-primary)',
-                color: '#000000',
-              }}
               className="w-full"
             >
               Continue Shopping
@@ -1121,12 +794,7 @@ const OrderConfirmation = () => {
               size="lg"
               curvature="full"
               onClick={() => router.push('/orders')}
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                borderColor: borderColor,
-                color: textColor,
-              }}
-              className="w-full"
+              className="w-full border-white/[0.12] text-white"
             >
               View All Orders
             </Button>
@@ -1136,10 +804,7 @@ const OrderConfirmation = () => {
 
       {/* Print Notice */}
       <div className="mt-8 text-center no-print">
-        <Caption
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ color: labelColor }}
-        >
+        <Caption className="text-white/55">
           Keep this confirmation for your records. You can print this page or
           save it as PDF.
         </Caption>

@@ -1,20 +1,16 @@
 ﻿'use client';
 
 import { useMemo, useState } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import {
   ArrowUpRight,
+  Camera,
   Mail,
   MapPin,
   Phone,
-  type LucideIcon,
+  PlayCircle,
+  Users,
 } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faFacebook,
-  faInstagram,
-  faYoutube,
-  type IconDefinition,
-} from '@fortawesome/free-brands-svg-icons';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
@@ -34,7 +30,7 @@ type SocialLink = {
   platform: string;
   handle: string;
   href: string;
-  icon: IconDefinition;
+  icon: LucideIcon;
 };
 
 type ContactFormData = {
@@ -106,19 +102,19 @@ export default function ContactPage() {
         platform: 'Instagram',
         handle: '@wisdomhousehq',
         href: 'https://instagram.com/wisdomhousehq',
-        icon: faInstagram,
+        icon: Camera,
       },
       {
         platform: 'Facebook',
         handle: '@wisdomhousehq',
         href: 'https://facebook.com/wisdomhousehq',
-        icon: faFacebook,
+        icon: Users,
       },
       {
         platform: 'YouTube',
         handle: 'Wisdom House',
         href: 'https://youtube.com/@wisdomhousehq',
-        icon: faYoutube,
+        icon: PlayCircle,
       },
     ],
     []
@@ -305,10 +301,7 @@ export default function ContactPage() {
                     >
                       <span className="flex min-w-0 items-center gap-3">
                         <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
-                          <FontAwesomeIcon
-                            icon={social.icon}
-                            className="h-4 w-4"
-                          />
+                          <social.icon className="h-4 w-4" />
                         </span>
 
                         <span className="min-w-0">
@@ -453,11 +446,6 @@ export default function ContactPage() {
                     curvature="xl"
                     disabled={submitting}
                     className="min-h-12 w-full px-7 text-sm font-extrabold text-black sm:w-auto"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      backgroundColor: 'var(--app-primary)',
-                      color: 'var(--app-surface)',
-                    }}
                   >
                     {submitting ? 'Sending...' : 'Send Message'}
                   </Button>

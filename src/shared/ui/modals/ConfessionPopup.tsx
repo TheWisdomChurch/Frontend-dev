@@ -9,7 +9,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { BaseModal, modalStyles } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Base';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { PlayfairText } from '@/shared/text/FontText';
 import { BodyMD, Caption } from '@/shared/text';
 import { confessionContent } from '@/lib/data';
@@ -29,7 +30,7 @@ interface WelcomeModalProps {
 
 export default function ConfessionPopup({
   onClose,
-  delay = 2400,
+  delay = 10000,
   content,
 }: WelcomeModalProps) {
   const {
@@ -111,22 +112,22 @@ export default function ConfessionPopup({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <button
-              type="button"
+            <CustomButton
+              variant="ghost"
               onClick={showConfession}
-              className={modalStyles.ghostButton}
+              className="w-full"
             >
               <BookOpen className="mr-2 h-4 w-4" />
               Read Confession
-            </button>
+            </CustomButton>
 
-            <button
-              type="button"
+            <CustomButton
+              variant="primary"
               onClick={handleClose}
-              className={modalStyles.primaryButton}
+              className="w-full"
             >
               Continue
-            </button>
+            </CustomButton>
           </div>
         </div>
       ) : (
@@ -157,22 +158,22 @@ export default function ConfessionPopup({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <button
-              type="button"
+            <CustomButton
+              variant="ghost"
               onClick={showWelcome}
-              className={modalStyles.ghostButton}
+              className="w-full"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
-            </button>
+            </CustomButton>
 
-            <button
-              type="button"
+            <CustomButton
+              variant="primary"
               onClick={handleClose}
-              className={modalStyles.primaryButton}
+              className="w-full"
             >
               I Believe It
-            </button>
+            </CustomButton>
           </div>
 
           <p className="text-center text-xs leading-5 text-white/45">

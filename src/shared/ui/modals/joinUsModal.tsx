@@ -1,23 +1,24 @@
 ﻿'use client';
 
 import Image from 'next/image';
-import { ArrowUpRight, CheckCircle2, ShieldCheck, Users2 } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faInstagram,
-  faWhatsapp,
-  faYoutube,
-} from '@fortawesome/free-brands-svg-icons';
+  ArrowUpRight,
+  CheckCircle2,
+  MessageCircle,
+  ShieldCheck,
+  Users2,
+} from 'lucide-react';
+import { Camera, PlayCircle } from 'lucide-react';
 
 import { communityLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { BaseModal } from './Base';
 import type { JoinCommunityModalProps } from '@/lib/types';
 
-const faIconMap = {
-  whatsapp: faWhatsapp,
-  instagram: faInstagram,
-  youtube: faYoutube,
+const iconMap = {
+  whatsapp: MessageCircle,
+  instagram: Camera,
+  youtube: PlayCircle,
 };
 
 const communityStats = [
@@ -75,8 +76,8 @@ export default function JoinCommunityModal({
 
         <div className="grid gap-3">
           {communityLinks.map(link => {
-            const faIcon = link.iconFA
-              ? faIconMap[link.icon as keyof typeof faIconMap]
+            const Icon = link.iconFA
+              ? iconMap[link.icon as keyof typeof iconMap]
               : null;
 
             return (
@@ -95,9 +96,7 @@ export default function JoinCommunityModal({
                       background: `linear-gradient(135deg, ${link.bgColor}, ${link.hoverColor})`,
                     }}
                   >
-                    {faIcon ? (
-                      <FontAwesomeIcon icon={faIcon} className="h-5 w-5" />
-                    ) : null}
+                    {Icon ? <Icon className="h-5 w-5" /> : null}
                   </div>
 
                   <div className="min-w-0 flex-1">

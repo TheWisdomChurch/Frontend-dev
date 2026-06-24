@@ -213,15 +213,7 @@ export default function Home() {
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[var(--app-surface)] text-white">
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 opacity-60"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          background: `
-            radial-gradient(circle at 18% 12%, rgba(201, 150, 26, 0.12) 0%, transparent 34%),
-            radial-gradient(circle at 82% 4%, rgba(201, 150, 26, 0.07) 0%, transparent 30%),
-            linear-gradient(180deg, var(--app-surface) 0%, var(--app-surface-2) 48%, var(--app-surface) 100%)
-          `,
-        }}
+        className="home-page-glow pointer-events-none fixed inset-0 z-0 opacity-60"
       />
 
       <div className="relative z-10 flex w-full flex-col">

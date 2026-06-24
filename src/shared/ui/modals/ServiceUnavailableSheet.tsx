@@ -1,7 +1,8 @@
 ﻿'use client';
 
 import { Clock, Sparkles, X } from 'lucide-react';
-import { BaseModal, modalStyles } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Base';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 import type { ServiceUnavailableSheetProps } from '@/lib/types';
 
 export default function ServiceUnavailableSheet({
@@ -29,14 +30,15 @@ export default function ServiceUnavailableSheet({
             Heads up
           </div>
 
-          <button
+          <CustomButton
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white/60 transition hover:text-white"
             aria-label="Close modal"
-            type="button"
+            className="h-9 w-9 rounded-full border border-white/10 bg-white/[0.06] text-white/60 hover:text-white"
           >
             <X className="h-4 w-4" />
-          </button>
+          </CustomButton>
         </div>
 
         <div className="relative mt-5">
@@ -51,13 +53,13 @@ export default function ServiceUnavailableSheet({
           <span>We will reopen this shortly. Thanks for your patience.</span>
         </div>
 
-        <button
-          type="button"
+        <CustomButton
+          variant="primary"
           onClick={onClose}
-          className={`${modalStyles.primaryButton} mt-6`}
+          className="mt-6 w-full"
         >
           {actionLabel}
-        </button>
+        </CustomButton>
       </div>
     </BaseModal>
   );

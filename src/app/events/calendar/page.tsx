@@ -7,6 +7,7 @@ import { ArrowLeft, CalendarClock, Loader2, MapPin } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import PageHero from '@/features/hero/PageHero';
+import { Container, Section } from '@/shared/layout';
 
 function toDateKey(event: EventPublic): string | null {
   if (event.startAt) {
@@ -133,10 +134,10 @@ export default function EventsCalendarPage() {
         compact
       />
 
-      <section className="relative overflow-hidden bg-[var(--app-surface)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <Section padding="lg" className="bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
 
-        <div className="relative mx-auto max-w-6xl space-y-8">
+        <Container size="lg" className="space-y-8">
           <div className="flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -256,8 +257,8 @@ export default function EventsCalendarPage() {
               </div>
             </>
           )}
-        </div>
-      </section>
+        </Container>
+      </Section>
     </main>
   );
 }

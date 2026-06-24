@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { MouseEvent } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useAppDispatch, useAppSelector } from '@/shared/utils/hooks/redux';
@@ -15,7 +14,6 @@ import { useRouter } from 'next/navigation';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { BaseText, LightText } from '@/shared/text';
 import { FlexboxLayout } from '@/shared/layout';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 
 const CartSidebar: React.FC = () => {
   const router = useRouter();
@@ -23,23 +21,8 @@ const CartSidebar: React.FC = () => {
   const { items, total, itemCount, isCartOpen } = useAppSelector(
     state => state.cart
   );
-  const { isDark } = useTheme();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-
-  // Theme-based styles
-  const sidebarBackground = isDark ? '#0b0c10' : '#ffffff';
-  const textColor = '#f5f6f7';
-  const secondaryTextColor = 'rgba(255,255,255,0.60)';
-  const borderColor = isDark
-    ? 'rgba(255,255,255,0.12)'
-    : 'rgba(255,255,255,0.12)';
-  const itemBackground = isDark
-    ? 'rgba(255,255,255,0.04)'
-    : 'rgba(255,255,255,0.06)';
-  const hoverBackground = isDark
-    ? 'rgba(255,255,255,0.10)'
-    : 'rgba(0,0,0,0.10)';
 
   useEffect(() => {
     if (sidebarRef.current && overlayRef.current) {
@@ -61,10 +44,6 @@ const CartSidebar: React.FC = () => {
     }
   }, [isCartOpen]);
 
-  const handleOverlayClick = () => {
-    dispatch(toggleCart());
-  };
-
   const handleRemoveItem = (itemId: string) => {
     dispatch(removeFromCart(itemId));
   };
@@ -85,51 +64,30 @@ const CartSidebar: React.FC = () => {
     <>
       <div
         ref={overlayRef}
-        className="fixed inset-0 bg-black/50 z-40 opacity-0"
-        onClick={handleOverlayClick}
+        className="fixed inset-0 z-40 bg-black/50 opacity-0"
+        onClick={() => dispatch(toggleCart())}
       />
 
       <div
         ref={sidebarRef}
-        className="fixed right-0 top-0 h-full w-full max-w-md z-50 shadow-2xl flex flex-col"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          backgroundColor: sidebarBackground,
-          borderLeft: `1px solid ${borderColor}`,
-        }}
+        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col border-l border-white/[0.12] bg-[var(--app-surface)] shadow-2xl"
       >
         {/* Header */}
-        <div
-          className="p-6 border-b"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ borderColor: borderColor }}
-        >
+        <div className="border-b border-white/[0.12] p-6">
           <FlexboxLayout justify="between" align="center">
             <BaseText
               fontFamily="bricolage"
               weight="bold"
-              className="text-2xl"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: textColor }}
+              className="text-2xl text-white"
             >
               Your Cart ({itemCount})
             </BaseText>
             <button
+              type="button"
               onClick={() => dispatch(toggleCart())}
-              className="p-2 rounded-full transition-colors"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: 'transparent',
-                color: textColor,
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.backgroundColor = hoverBackground;
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+              className="rounded-full p-2 text-white transition-colors hover:bg-white/10"
             >
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" />
             </button>
           </FlexboxLayout>
         </div>
@@ -144,23 +102,11 @@ const CartSidebar: React.FC = () => {
               gap="md"
               className="h-full text-center"
             >
-              <ShoppingBag
-                className="w-16 h-16"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: secondaryTextColor }}
-              />
-              <BaseText
-                weight="semibold"
-                className="text-xl"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: textColor }}
-              >
+              <ShoppingBag className="h-16 w-16 text-white/60" />
+              <BaseText weight="semibold" className="text-xl text-white">
                 Your cart is empty
               </BaseText>
-              <LightText
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: secondaryTextColor }}
-              >
+              <LightText className="text-white/60">
                 Add some items to get started
               </LightText>
             </FlexboxLayout>
@@ -169,25 +115,17 @@ const CartSidebar: React.FC = () => {
               {items.map(item => (
                 <div
                   key={item.id}
-                  className="rounded-2xl p-4 space-y-3"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ backgroundColor: itemBackground }}
+                  className="space-y-3 rounded-2xl bg-white/[0.04] p-4"
                 >
                   <FlexboxLayout justify="between" align="start">
                     <div className="flex-1">
                       <BaseText
                         weight="semibold"
-                        className="text-lg"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: textColor }}
+                        className="text-lg text-white"
                       >
                         {item.name}
                       </BaseText>
-                      <LightText
-                        className="text-sm"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: secondaryTextColor }}
-                      >
+                      <LightText className="text-sm text-white/60">
                         {item.selectedSize} • {item.selectedColor}
                       </LightText>
                       <BaseText
@@ -199,90 +137,43 @@ const CartSidebar: React.FC = () => {
                     </div>
 
                     <button
+                      type="button"
                       onClick={() => handleRemoveItem(item.id)}
-                      className="p-1 rounded-full transition-colors"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        color: '#ef4444',
-                        backgroundColor: 'transparent',
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.backgroundColor = isDark
-                          ? 'rgba(239,68,68,0.10)'
-                          : 'rgba(239,68,68,0.20)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                      }}
+                      className="rounded-full p-1 text-red-500 transition-colors hover:bg-red-500/10"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </FlexboxLayout>
 
                   <FlexboxLayout justify="between" align="center">
                     <FlexboxLayout align="center" gap="sm">
                       <button
+                        type="button"
                         onClick={() =>
                           handleUpdateQuantity(item.id, item.quantity - 1)
                         }
-                        className="w-8 h-8 rounded-full border flex items-center justify-center transition-colors"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          borderColor: borderColor,
-                          color: textColor,
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.borderColor =
-                            'var(--app-primary)';
-                          e.currentTarget.style.backgroundColor =
-                            hoverBackground;
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.borderColor = borderColor;
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                        }}
+                        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.12] text-white transition-colors hover:border-[var(--app-primary)] hover:bg-white/10"
                       >
-                        <Minus className="w-3 h-3" />
+                        <Minus className="h-3 w-3" />
                       </button>
                       <BaseText
                         weight="bold"
-                        className="w-8 text-center"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: textColor }}
+                        className="w-8 text-center text-white"
                       >
                         {item.quantity}
                       </BaseText>
                       <button
+                        type="button"
                         onClick={() =>
                           handleUpdateQuantity(item.id, item.quantity + 1)
                         }
-                        className="w-8 h-8 rounded-full border flex items-center justify-center transition-colors"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          borderColor: borderColor,
-                          color: textColor,
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.borderColor =
-                            'var(--app-primary)';
-                          e.currentTarget.style.backgroundColor =
-                            hoverBackground;
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.borderColor = borderColor;
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                        }}
+                        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.12] text-white transition-colors hover:border-[var(--app-primary)] hover:bg-white/10"
                       >
-                        <Plus className="w-3 h-3" />
+                        <Plus className="h-3 w-3" />
                       </button>
                     </FlexboxLayout>
 
-                    <BaseText
-                      weight="bold"
-                      className="text-lg"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: textColor }}
-                    >
+                    <BaseText weight="bold" className="text-lg text-white">
                       ₦
                       {(
                         parseFloat(item.price.replace(/[^\d.]/g, '')) *
@@ -298,18 +189,9 @@ const CartSidebar: React.FC = () => {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div
-            className="p-6 border-t space-y-4"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderColor: borderColor }}
-          >
+          <div className="space-y-4 border-t border-white/[0.12] p-6">
             <FlexboxLayout justify="between" align="center">
-              <BaseText
-                weight="semibold"
-                className="text-xl"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: textColor }}
-              >
+              <BaseText weight="semibold" className="text-xl text-white">
                 Total:
               </BaseText>
               <BaseText
@@ -325,19 +207,7 @@ const CartSidebar: React.FC = () => {
               curvature="full"
               elevated={true}
               onClick={handleCheckout}
-              className="w-full transition-all duration-300 transform hover:scale-105"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: 'var(--app-primary)',
-                color: '#000000',
-              }}
-              onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor =
-                  'var(--app-primary-dark)';
-              }}
-              onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor = 'var(--app-primary)';
-              }}
+              className="w-full transition-all duration-300 hover:scale-105"
             >
               Proceed to Checkout
             </Button>
@@ -346,18 +216,7 @@ const CartSidebar: React.FC = () => {
               size="md"
               curvature="full"
               onClick={() => dispatch(clearCart())}
-              className="w-full"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                borderColor: borderColor,
-                color: textColor,
-              }}
-              onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor = hoverBackground;
-              }}
-              onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+              className="w-full text-white hover:bg-white/10"
             >
               Clear Cart
             </Button>

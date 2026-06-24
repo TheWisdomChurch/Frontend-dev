@@ -15,6 +15,7 @@ import {
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/shared/assets';
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import { BodySM, Caption, H3, SmallText } from '@/shared/text';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
@@ -303,15 +304,8 @@ export default function EventsShowcase() {
       className="relative overflow-hidden bg-[var(--app-surface)]"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute inset-0 opacity-90"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            background:
-              'radial-gradient(circle at 15% 15%, rgba(201,150,26,0.10), transparent 32%), radial-gradient(circle at 90% 10%, rgba(255,255,255,0.07), transparent 28%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.06), transparent 34%)',
-          }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+        <div className="events-glow-overlay absolute inset-0 opacity-90" />
+        <GridBackground />
       </div>
 
       <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">

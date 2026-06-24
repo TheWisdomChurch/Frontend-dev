@@ -162,7 +162,11 @@ function EventsSectionExample() {
 /**
  * EXAMPLE 7: Event Card with Click Tracking
  */
-function EventCardExample({ event }: { event: any }) {
+function EventCardExample({
+  event,
+}: {
+  event: { title: string; time: string; capacity: number };
+}) {
   const clickRef = useClickTracking<HTMLDivElement>(
     `Event Card: ${event.title}`
   );
@@ -264,7 +268,7 @@ function ContactFormExample() {
 
   const handleFieldChange = (field: string, value: string) => {
     trackFieldChange(field, { value, type: 'text' });
-    setFormData((prev: any) => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

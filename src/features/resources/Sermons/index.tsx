@@ -6,7 +6,6 @@ import YouTubePlayer from './YoutubePlayer';
 import Image from 'next/image';
 import { Banner_2, WisdomeHouseLogo } from '@/shared/assets';
 import { useSermonUtil } from '@/shared/utils/hooks/useSermon';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import {
   YouTubeVideo,
   GroupedSeriesData,
@@ -31,196 +30,109 @@ const SeriesCard = ({
   group,
   isUngrouped = false,
   onClick,
-}: SeriesCardProps) => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
-
-  const themeStyles = useMemo(
-    () => ({
-      cardBackground: isDarkMode
-        ? 'rgba(255,255,255,0.05)'
-        : 'rgba(255,255,255,0.05)',
-      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
-      secondaryTextColor: isDarkMode
-        ? 'rgba(255,255,255,0.60)'
-        : 'rgba(255,255,255,0.42)',
-      borderColor: 'rgba(255,255,255,0.12)',
-    }),
-    [isDarkMode]
-  );
-
-  return (
-    <div
-      className="series-card group w-[280px] flex-shrink-0 cursor-pointer rounded-2xl border p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:w-auto sm:p-6"
-      onClick={onClick}
-      // eslint-disable-next-line no-restricted-syntax
-      style={{
-        backgroundColor: themeStyles.cardBackground,
-        borderColor: themeStyles.borderColor,
-      }}
-    >
-      <div className="mb-3 flex items-start justify-between sm:mb-4">
-        <div
-          className={`flex h-12 w-12 items-center justify-center rounded-xl border-2 bg-gradient-to-br shadow-md transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 ${
-            'color' in group ? group.color : 'from-gray-400 to-gray-600'
-          }`}
-        >
-          <div
-            className="relative h-8 w-8 overflow-hidden rounded-full border-2 sm:h-10 sm:w-10"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderColor: 'rgba(201,150,26,0.19)' }}
-          >
-            <Image
-              src={WisdomeHouseLogo}
-              alt="WisdomHouse"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 32px, 40px"
-            />
-          </div>
-        </div>
-
-        {group.latestThumbnail && (
-          <img
-            src={group.latestThumbnail}
-            alt={group.name}
-            className="h-10 w-12 rounded-lg object-cover shadow-sm transition-shadow group-hover:shadow-md sm:h-12 sm:w-16"
-            loading="lazy"
-            decoding="async"
+}: SeriesCardProps) => (
+  <div
+    className="series-card group w-[280px] flex-shrink-0 cursor-pointer rounded-2xl border border-white/[0.12] bg-white/[0.05] p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:w-auto sm:p-6"
+    onClick={onClick}
+  >
+    <div className="mb-3 flex items-start justify-between sm:mb-4">
+      <div
+        className={`flex h-12 w-12 items-center justify-center rounded-xl border-2 bg-gradient-to-br shadow-md transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 ${
+          'color' in group ? group.color : 'from-gray-400 to-gray-600'
+        }`}
+      >
+        <div className="relative h-8 w-8 overflow-hidden rounded-full border-2 border-[var(--app-primary)]/20 sm:h-10 sm:w-10">
+          <Image
+            src={WisdomeHouseLogo}
+            alt="WisdomHouse"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 32px, 40px"
           />
-        )}
+        </div>
       </div>
 
-      <BaseText
-        className="mb-2 line-clamp-2 text-base font-semibold leading-tight transition-colors group-hover:text-primary md:text-lg lg:text-xl md:font-bold"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{ color: themeStyles.textColor }}
-      >
-        {group.name}
-      </BaseText>
+      {group.latestThumbnail && (
+        <img
+          src={group.latestThumbnail}
+          alt={group.name}
+          className="h-10 w-12 rounded-lg object-cover shadow-sm transition-shadow group-hover:shadow-md sm:h-12 sm:w-16"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+    </div>
 
-      <LightText
-        className="mb-2 line-clamp-2 text-xs leading-relaxed md:text-sm sm:mb-3"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{ color: themeStyles.secondaryTextColor }}
-      >
-        {'description' in group
-          ? group.description
-          : `${group.count} messages available`}
-      </LightText>
+    <BaseText className="mb-2 line-clamp-2 text-base font-semibold leading-tight text-white transition-colors group-hover:text-primary md:text-lg lg:text-xl md:font-bold">
+      {group.name}
+    </BaseText>
 
-      {!isUngrouped && 'uniqueSeries' in group && (
-        <div className="mb-2">
-          <span
-            className="rounded-full px-2 py-1 text-xs font-medium md:text-sm"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: isDarkMode
-                ? 'rgba(201,150,26,0.10)'
-                : 'rgba(201,150,26,0.20)',
-              color: 'var(--app-primary)',
-            }}
-          >
-            {group.uniqueSeries.length} series
-          </span>
+    <LightText className="mb-2 line-clamp-2 text-xs leading-relaxed text-white/60 md:text-sm sm:mb-3">
+      {'description' in group
+        ? group.description
+        : `${group.count} messages available`}
+    </LightText>
+
+    {!isUngrouped && 'uniqueSeries' in group && (
+      <div className="mb-2">
+        <span className="rounded-full bg-[var(--app-primary)]/10 px-2 py-1 text-xs font-medium text-[var(--app-primary)] md:text-sm">
+          {group.uniqueSeries.length} series
+        </span>
+      </div>
+    )}
+
+    <LightText className="mb-3 text-sm text-white/60 md:text-base sm:mb-4">
+      {group.count} {group.count === 1 ? 'message' : 'messages'}
+    </LightText>
+
+    {!isUngrouped &&
+      'uniqueSeries' in group &&
+      group.uniqueSeries.length > 0 && (
+        <div className="mt-2">
+          <LightText className="mb-1 text-xs font-medium text-white/60 md:text-sm">
+            Includes:
+          </LightText>
+          <div className="space-y-1">
+            {group.uniqueSeries
+              .slice(0, 2)
+              .map((seriesName: string, idx: number) => (
+                <div key={`${seriesName}-${idx}`} className="flex items-center">
+                  <div className="mr-2 h-1 w-1 rounded-full bg-white/40" />
+                  <LightText className="truncate text-xs text-white/60 md:text-sm">
+                    {seriesName}
+                  </LightText>
+                </div>
+              ))}
+
+            {group.uniqueSeries.length > 2 && (
+              <div className="flex items-center">
+                <div className="mr-2 h-1 w-1 rounded-full bg-white/40" />
+                <LightText className="text-xs text-white/60 md:text-sm">
+                  +{group.uniqueSeries.length - 2} more
+                </LightText>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
-      <LightText
-        className="mb-3 text-sm md:text-base sm:mb-4"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{ color: themeStyles.secondaryTextColor }}
-      >
-        {group.count} {group.count === 1 ? 'message' : 'messages'}
-      </LightText>
-
-      {!isUngrouped &&
-        'uniqueSeries' in group &&
-        group.uniqueSeries.length > 0 && (
-          <div className="mt-2">
-            <LightText
-              className="mb-1 text-xs font-medium md:text-sm"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: themeStyles.secondaryTextColor }}
-            >
-              Includes:
-            </LightText>
-            <div className="space-y-1">
-              {group.uniqueSeries
-                .slice(0, 2)
-                .map((seriesName: string, idx: number) => (
-                  <div
-                    key={`${seriesName}-${idx}`}
-                    className="flex items-center"
-                  >
-                    <div className="mr-2 h-1 w-1 rounded-full bg-[]" />
-                    <LightText
-                      className="truncate text-xs md:text-sm"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: themeStyles.secondaryTextColor }}
-                    >
-                      {seriesName}
-                    </LightText>
-                  </div>
-                ))}
-
-              {group.uniqueSeries.length > 2 && (
-                <div className="flex items-center">
-                  <div className="mr-2 h-1 w-1 rounded-full bg-[]" />
-                  <LightText
-                    className="text-xs md:text-sm"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: themeStyles.secondaryTextColor }}
-                  >
-                    +{group.uniqueSeries.length - 2} more
-                  </LightText>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-      <div
-        className="mt-2 flex items-center justify-between border-t pt-3"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{ borderColor: themeStyles.borderColor }}
-      >
-        <BaseText className="text-sm font-semibold transition-colors group-hover:text-primaryDark md:text-base md:font-bold text-[]">
-          {isUngrouped ? 'View Series' : 'View Category'}
-        </BaseText>
-        <span className="transform transition-transform group-hover:translate-x-1 text-[]">
-          →
-        </span>
-      </div>
+    <div className="mt-2 flex items-center justify-between border-t border-white/[0.12] pt-3">
+      <BaseText className="text-sm font-semibold text-white transition-colors group-hover:text-primaryDark md:text-base md:font-bold">
+        {isUngrouped ? 'View Series' : 'View Category'}
+      </BaseText>
+      <span className="transform text-white transition-transform group-hover:translate-x-1">
+        →
+      </span>
     </div>
-  );
-};
+  </div>
+);
 
 interface SermonCardProps {
   video: YouTubeVideo;
 }
 
 const SermonCardComponent = ({ video }: SermonCardProps) => {
-  const { isDark } = useTheme();
   const [showPlayer, setShowPlayer] = useState(false);
-
-  const isDarkMode = isDark;
-
-  const themeStyles = useMemo(
-    () => ({
-      cardBackground: isDarkMode
-        ? 'rgba(255,255,255,0.05)'
-        : 'rgba(255,255,255,0.05)',
-      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
-      secondaryTextColor: isDarkMode
-        ? 'rgba(255,255,255,0.60)'
-        : 'rgba(255,255,255,0.42)',
-      borderColor: 'rgba(255,255,255,0.12)',
-      modalBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
-      modalTextColor: isDarkMode ? '#f5f6f7' : '#ffffff',
-    }),
-    [isDarkMode]
-  );
 
   const formatDate = useCallback((dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -234,29 +146,8 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
     return parseInt(count || '0', 10).toLocaleString();
   }, []);
 
-  const handleMouseEnter = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = 'var(--app-primary-dark)';
-    },
-    []
-  );
-
-  const handleMouseLeave = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = 'var(--app-primary)';
-    },
-    []
-  );
-
   return (
-    <div
-      className="overflow-hidden rounded-xl border shadow-sm transition-all duration-200 hover:shadow-md"
-      // eslint-disable-next-line no-restricted-syntax
-      style={{
-        backgroundColor: themeStyles.cardBackground,
-        borderColor: themeStyles.borderColor,
-      }}
-    >
+    <div className="overflow-hidden rounded-xl border border-white/[0.12] bg-white/[0.05] shadow-sm transition-all duration-200 hover:shadow-md">
       <div
         className="relative h-40 cursor-pointer overflow-hidden sm:h-44"
         onClick={() => setShowPlayer(true)}
@@ -274,14 +165,7 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
               variant="primary"
               size="sm"
               curvature="full"
-              className="px-4 py-2 text-sm font-semibold shadow-md transition-colors"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: 'var(--app-primary)',
-                color: '#000000',
-              }}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+              className="px-4 py-2 text-sm font-semibold shadow-md"
             >
               Watch Now
             </Button>
@@ -299,54 +183,26 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
 
       <div className="p-6">
         <FlexboxLayout gap="sm" className="mb-3">
-          <span
-            className="rounded px-2 py-1 text-xs font-medium"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: isDarkMode
-                ? 'rgba(201,150,26,0.10)'
-                : 'rgba(201,150,26,0.20)',
-              color: 'var(--app-primary)',
-            }}
-          >
+          <span className="rounded bg-[var(--app-primary)]/10 px-2 py-1 text-xs font-medium text-[var(--app-primary)]">
             {video.series}
           </span>
-          <span
-            className="rounded px-2 py-1 text-xs font-medium"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: isDarkMode
-                ? 'rgba(255,255,255,0.05)'
-                : 'rgba(0,0,0,0.10)',
-              color: themeStyles.secondaryTextColor,
-            }}
-          >
+          <span className="rounded bg-white/[0.05] px-2 py-1 text-xs font-medium text-white/60">
             {video.preacher}
           </span>
         </FlexboxLayout>
 
-        <H1
-          className="mb-3 line-clamp-2 text-lg font-bold leading-tight md:text-xl lg:text-2xl"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ color: themeStyles.textColor }}
-        >
+        <H1 className="mb-3 line-clamp-2 text-lg font-bold leading-tight text-white md:text-xl lg:text-2xl">
           {video.title}
         </H1>
 
-        <LightText
-          className="mb-4 line-clamp-2 text-sm leading-relaxed md:text-base"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ color: themeStyles.secondaryTextColor }}
-        >
+        <LightText className="mb-4 line-clamp-2 text-sm leading-relaxed text-white/60 md:text-base">
           {video.description}
         </LightText>
 
         <FlexboxLayout
           justify="between"
           align="center"
-          className="text-sm md:text-base"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ color: themeStyles.secondaryTextColor }}
+          className="text-sm text-white/60 md:text-base"
         >
           <span>{formatDate(video.publishedAt)}</span>
           <span>{video.duration}</span>
@@ -355,52 +211,20 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
 
       {showPlayer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4">
-          <div
-            className="flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border shadow-2xl"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: themeStyles.modalBackground,
-              borderColor: themeStyles.borderColor,
-            }}
-          >
+          <div className="flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-white/[0.12] bg-white/[0.05] shadow-2xl">
             <FlexboxLayout
               justify="between"
               align="center"
-              className="flex-shrink-0 border-b p-4"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                borderColor: themeStyles.borderColor,
-                backgroundColor: themeStyles.modalBackground,
-              }}
+              className="flex-shrink-0 border-b border-white/[0.12] bg-white/[0.05] p-4"
             >
-              <BaseText
-                className="line-clamp-1 pr-4 text-lg font-semibold md:text-xl"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: themeStyles.modalTextColor }}
-              >
+              <BaseText className="line-clamp-1 pr-4 text-lg font-semibold text-white md:text-xl">
                 {video.title}
               </BaseText>
 
               <button
+                type="button"
                 onClick={() => setShowPlayer(false)}
-                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  color: themeStyles.modalTextColor,
-                  backgroundColor: isDarkMode
-                    ? 'rgba(255,255,255,0.10)'
-                    : 'rgba(0,0,0,0.10)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.backgroundColor = isDarkMode
-                    ? 'rgba(255,255,255,0.20)'
-                    : 'rgba(0,0,0,0.20)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.backgroundColor = isDarkMode
-                    ? 'rgba(255,255,255,0.10)'
-                    : 'rgba(0,0,0,0.10)';
-                }}
+                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               >
                 <span className="text-2xl leading-none">×</span>
               </button>
@@ -415,24 +239,12 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
               />
             </div>
 
-            <div
-              className="flex-shrink-0 border-t p-4"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderColor: themeStyles.borderColor }}
-            >
+            <div className="flex-shrink-0 border-t border-white/[0.12] p-4">
               <FlexboxLayout direction="column" gap="sm">
-                <BaseText
-                  className="text-base font-semibold"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: themeStyles.modalTextColor }}
-                >
+                <BaseText className="text-base font-semibold text-white">
                   {video.series} • {video.preacher}
                 </BaseText>
-                <LightText
-                  className="text-sm"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: themeStyles.secondaryTextColor }}
-                >
+                <LightText className="text-sm text-white/60">
                   Published on {formatDate(video.publishedAt)} •{' '}
                   {formatViewCount(video.viewCount)} views
                 </LightText>
@@ -461,6 +273,9 @@ interface SearchFiltersProps {
   filteredVideos: YouTubeVideo[];
 }
 
+const inputClass =
+  'w-full rounded-lg border border-white/[0.12] bg-white/[0.05] px-4 py-2 text-sm text-white placeholder-white/40 focus:border-transparent focus:ring-2 focus:ring-primary';
+
 const SearchFiltersComponent = ({
   searchTerm,
   selectedSeries,
@@ -474,156 +289,107 @@ const SearchFiltersComponent = ({
   handlePreacherChange,
   handleYearChange,
   filteredVideos,
-}: SearchFiltersProps) => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
+}: SearchFiltersProps) => (
+  <div className="mx-auto mb-10 max-w-6xl sm:mb-12">
+    <div className="rounded-2xl border border-white/[0.12] bg-white/[0.05] p-5 sm:p-6">
+      <div className="grid grid-cols-1 items-end gap-4 lg:grid-cols-6">
+        <div className="lg:col-span-2">
+          <label
+            htmlFor="sermon-search"
+            className="mb-2 block text-sm font-medium text-white"
+          >
+            Search
+          </label>
+          <input
+            id="sermon-search"
+            type="text"
+            value={searchTerm}
+            onChange={e => handleSearchChange(e.target.value)}
+            placeholder="Title, series, preacher, or keywords..."
+            className={inputClass}
+          />
+        </div>
 
-  const themeStyles = useMemo(
-    () => ({
-      cardBackground: isDarkMode
-        ? 'rgba(255,255,255,0.05)'
-        : 'rgba(255,255,255,0.05)',
-      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
-      borderColor: 'rgba(255,255,255,0.12)',
-      inputBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
-      inputBorderColor: 'rgba(255,255,255,0.12)',
-    }),
-    [isDarkMode]
-  );
+        <div>
+          <label
+            htmlFor="sermon-series"
+            className="mb-2 block text-sm font-medium text-white"
+          >
+            Series
+          </label>
+          <select
+            id="sermon-series"
+            value={selectedSeries}
+            onChange={e => handleSeriesFilterChange(e.target.value)}
+            className={inputClass}
+          >
+            {seriesOptions.map((series: string) => (
+              <option key={series} value={series}>
+                {series === 'all'
+                  ? 'All Series'
+                  : series.startsWith('group:')
+                    ? `Group: ${series.replace('group:', '').trim()}`
+                    : series}
+              </option>
+            ))}
+          </select>
+        </div>
 
-  return (
-    <div className="mx-auto mb-10 max-w-6xl sm:mb-12">
-      <div
-        className="rounded-2xl border p-5 sm:p-6"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          backgroundColor: themeStyles.cardBackground,
-          borderColor: themeStyles.borderColor,
-        }}
-      >
-        <div className="grid grid-cols-1 items-end gap-4 lg:grid-cols-6">
-          <div className="lg:col-span-2">
-            <label
-              className="mb-2 block text-sm font-medium"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: themeStyles.textColor }}
-            >
-              Search
-            </label>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={e => handleSearchChange(e.target.value)}
-              placeholder="Title, series, preacher, or keywords..."
-              className="w-full rounded-lg border px-4 py-2 text-sm placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-primary"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: themeStyles.inputBackground,
-                borderColor: themeStyles.inputBorderColor,
-                color: themeStyles.textColor,
-              }}
-            />
-          </div>
+        <div>
+          <label
+            htmlFor="sermon-preacher"
+            className="mb-2 block text-sm font-medium text-white"
+          >
+            Preacher
+          </label>
+          <select
+            id="sermon-preacher"
+            value={selectedPreacher}
+            onChange={e => handlePreacherChange(e.target.value)}
+            className={inputClass}
+          >
+            {preacherOptions.map((preacher: string) => (
+              <option key={preacher} value={preacher}>
+                {preacher === 'all' ? 'All Preachers' : preacher}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          <div>
-            <label
-              className="mb-2 block text-sm font-medium"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: themeStyles.textColor }}
-            >
-              Series
-            </label>
-            <select
-              value={selectedSeries}
-              onChange={e => handleSeriesFilterChange(e.target.value)}
-              className="w-full rounded-lg border px-4 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: themeStyles.inputBackground,
-                borderColor: themeStyles.inputBorderColor,
-                color: themeStyles.textColor,
-              }}
-            >
-              {seriesOptions.map((series: string) => (
-                <option key={series} value={series}>
-                  {series === 'all'
-                    ? 'All Series'
-                    : series.startsWith('group:')
-                      ? `Group: ${series.replace('group:', '').trim()}`
-                      : series}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div>
+          <label
+            htmlFor="sermon-year"
+            className="mb-2 block text-sm font-medium text-white"
+          >
+            Year
+          </label>
+          <select
+            id="sermon-year"
+            value={selectedYear}
+            onChange={e => handleYearChange(e.target.value)}
+            className={inputClass}
+          >
+            {yearOptions.map((year: string) => (
+              <option key={year} value={year}>
+                {year === 'all' ? 'All Years' : year}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          <div>
-            <label
-              className="mb-2 block text-sm font-medium"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: themeStyles.textColor }}
-            >
-              Preacher
-            </label>
-            <select
-              value={selectedPreacher}
-              onChange={e => handlePreacherChange(e.target.value)}
-              className="w-full rounded-lg border px-4 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: themeStyles.inputBackground,
-                borderColor: themeStyles.inputBorderColor,
-                color: themeStyles.textColor,
-              }}
-            >
-              {preacherOptions.map((preacher: string) => (
-                <option key={preacher} value={preacher}>
-                  {preacher === 'all' ? 'All Preachers' : preacher}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label
-              className="mb-2 block text-sm font-medium"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: themeStyles.textColor }}
-            >
-              Year
-            </label>
-            <select
-              value={selectedYear}
-              onChange={e => handleYearChange(e.target.value)}
-              className="w-full rounded-lg border px-4 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: themeStyles.inputBackground,
-                borderColor: themeStyles.inputBorderColor,
-                color: themeStyles.textColor,
-              }}
-            >
-              {yearOptions.map((year: string) => (
-                <option key={year} value={year}>
-                  {year === 'all' ? 'All Years' : year}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="text-left lg:text-right">
-            <LightText className="text-sm text-[]">
-              Showing{' '}
-              <BaseText className="inline font-semibold text-[]">
-                {filteredVideos.length}
-              </BaseText>{' '}
-              messages
-            </LightText>
-          </div>
+        <div className="text-left lg:text-right">
+          <LightText className="text-sm text-white/60">
+            Showing{' '}
+            <BaseText className="inline font-semibold text-white">
+              {filteredVideos.length}
+            </BaseText>{' '}
+            messages
+          </LightText>
         </div>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 interface QuickFiltersProps {
   selectedSeries: string;
@@ -636,9 +402,6 @@ const QuickFilters = ({
   onSelectGroup,
   onReset,
 }: QuickFiltersProps) => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
-
   const chips = useMemo(
     () => [
       'Monday Morning Prayers',
@@ -662,20 +425,13 @@ const QuickFilters = ({
         return (
           <button
             key={group.name}
+            type="button"
             onClick={() => onSelectGroup(group.searchTerms, group.name)}
-            className="rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: isActive
-                ? 'var(--app-primary)'
-                : isDarkMode
-                  ? 'rgba(255,255,255,0.10)'
-                  : 'rgba(0,0,0,0.10)',
-              color: isActive ? '#000000' : 'var(--app-primary)',
-              borderColor: isActive
-                ? 'var(--app-primary)'
-                : `var(--app-primary)50`,
-            }}
+            className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm ${
+              isActive
+                ? 'border-[var(--app-primary)] bg-[var(--app-primary)] text-black'
+                : 'border-[var(--app-primary)]/50 bg-white/10 text-[var(--app-primary)]'
+            }`}
           >
             {group.name}
           </button>
@@ -683,14 +439,9 @@ const QuickFilters = ({
       })}
 
       <button
+        type="button"
         onClick={onReset}
-        className="rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          backgroundColor: 'transparent',
-          color: 'var(--app-primary)',
-          borderColor: `var(--app-primary)50`,
-        }}
+        className="rounded-full border border-[var(--app-primary)]/50 bg-transparent px-3 py-1.5 text-xs font-semibold text-[var(--app-primary)] transition sm:text-sm hover:bg-white/10"
       >
         Reset
       </button>
@@ -721,9 +472,6 @@ const ResultsToolbar = ({
   onSortChange,
   onClear,
 }: ResultsToolbarProps) => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
-
   const activeFilters = [
     searchTerm ? `Search: "${searchTerm}"` : null,
     selectedSeries !== 'all'
@@ -736,33 +484,15 @@ const ResultsToolbar = ({
   ].filter(Boolean);
 
   return (
-    <div
-      className="mb-6 rounded-2xl border p-4 sm:mb-8 sm:p-5"
-      // eslint-disable-next-line no-restricted-syntax
-      style={{ borderColor: `var(--app-primary)40` }}
-    >
+    <div className="mb-6 rounded-2xl border border-[var(--app-primary)]/25 p-4 sm:mb-8 sm:p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <BaseText
-            className="text-sm font-semibold"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              color: isDarkMode ? '#f5f6f7' : '#ffffff',
-            }}
-          >
+          <BaseText className="text-sm font-semibold text-white">
             Results: {filteredCount} of {totalCount}
           </BaseText>
 
           {activeFilters.length > 0 && (
-            <LightText
-              className="mt-1 text-xs sm:text-sm"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                color: isDarkMode
-                  ? 'rgba(255,255,255,0.60)'
-                  : 'rgba(255,255,255,0.42)',
-              }}
-            >
+            <LightText className="mt-1 text-xs text-white/60 sm:text-sm">
               {activeFilters.join(' • ')}
             </LightText>
           )}
@@ -771,28 +501,18 @@ const ResultsToolbar = ({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
             <label
-              className="text-xs font-semibold sm:text-sm"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                color: isDarkMode ? '#f5f6f7' : '#ffffff',
-              }}
+              htmlFor="sermon-sort"
+              className="text-xs font-semibold text-white sm:text-sm"
             >
               Sort by
             </label>
             <select
+              id="sermon-sort"
               value={sortBy}
               onChange={e =>
                 onSortChange(e.target.value as 'newest' | 'oldest' | 'popular')
               }
-              className="rounded-lg border px-3 py-2 text-xs sm:text-sm"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: isDarkMode
-                  ? 'rgba(255,255,255,0.05)'
-                  : '#ffffff',
-                borderColor: `var(--app-primary)40`,
-                color: isDarkMode ? '#f5f6f7' : '#ffffff',
-              }}
+              className="rounded-lg border border-[var(--app-primary)]/25 bg-white/[0.05] px-3 py-2 text-xs text-white sm:text-sm"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
@@ -802,8 +522,9 @@ const ResultsToolbar = ({
 
           {activeFilters.length > 0 && (
             <button
+              type="button"
               onClick={onClear}
-              className="text-xs font-semibold sm:text-sm text-[]"
+              className="text-xs font-semibold text-[var(--app-primary)] sm:text-sm hover:underline"
             >
               Clear all
             </button>
@@ -823,7 +544,6 @@ const MobileHorizontalScroll = ({
   groupedSeries,
   handleGroupClick,
 }: MobileHorizontalScrollProps) => {
-  const { isDark } = useTheme();
   const horizontalScrollRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -843,13 +563,7 @@ const MobileHorizontalScroll = ({
       </div>
 
       <div className="mt-2 text-center">
-        <LightText
-          className="text-sm md:text-base"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            color: isDark ? 'rgba(255,255,255,0.60)' : 'rgba(255,255,255,0.42)',
-          }}
-        >
+        <LightText className="text-sm text-white/60 md:text-base">
           ← Scroll horizontally →
         </LightText>
       </div>
@@ -890,43 +604,31 @@ interface MobileHorizontalGridProps {
 const MobileHorizontalGrid = ({
   displayedVideos,
   horizontalGridRef,
-}: MobileHorizontalGridProps) => {
-  const { isDark } = useTheme();
-
-  return (
-    <div className="block lg:hidden">
-      <div
-        ref={horizontalGridRef}
-        className="scrollbar-hide flex snap-x snap-mandatory space-x-4 overflow-x-auto pb-4 pl-4"
-      >
-        {displayedVideos.map((video: YouTubeVideo) => (
-          <div
-            key={video.id}
-            className="sermon-card w-[280px] flex-shrink-0 snap-start"
-          >
-            <SermonCardComponent video={video} />
-          </div>
-        ))}
-      </div>
-
-      {displayedVideos.length > 1 && (
-        <div className="mt-2 text-center">
-          <LightText
-            className="text-sm md:text-base"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              color: isDark
-                ? 'rgba(255,255,255,0.60)'
-                : 'rgba(255,255,255,0.42)',
-            }}
-          >
-            ← Scroll horizontally →
-          </LightText>
+}: MobileHorizontalGridProps) => (
+  <div className="block lg:hidden">
+    <div
+      ref={horizontalGridRef}
+      className="scrollbar-hide flex snap-x snap-mandatory space-x-4 overflow-x-auto pb-4 pl-4"
+    >
+      {displayedVideos.map((video: YouTubeVideo) => (
+        <div
+          key={video.id}
+          className="sermon-card w-[280px] flex-shrink-0 snap-start"
+        >
+          <SermonCardComponent video={video} />
         </div>
-      )}
+      ))}
     </div>
-  );
-};
+
+    {displayedVideos.length > 1 && (
+      <div className="mt-2 text-center">
+        <LightText className="text-sm text-white/60 md:text-base">
+          ← Scroll horizontally →
+        </LightText>
+      </div>
+    )}
+  </div>
+);
 
 interface DesktopSermonsGridProps {
   displayedVideos: YouTubeVideo[];
@@ -955,9 +657,6 @@ interface CuratedSectionsProps {
 }
 
 const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
-
   const curatedGroups = useMemo(
     () => [
       {
@@ -1016,33 +715,20 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
           <div key={section.title} className="mb-8 sm:mb-10">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <BaseText
-                  className="text-lg font-semibold sm:text-xl"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    color: isDarkMode ? '#f5f6f7' : '#ffffff',
-                  }}
-                >
+                <BaseText className="text-lg font-semibold text-white sm:text-xl">
                   {section.title}
                 </BaseText>
-                <LightText
-                  className="text-sm"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    color: isDarkMode
-                      ? 'rgba(255,255,255,0.60)'
-                      : 'rgba(255,255,255,0.42)',
-                  }}
-                >
+                <LightText className="text-sm text-white/60">
                   {section.description}
                 </LightText>
               </div>
 
               <button
+                type="button"
                 onClick={() =>
                   onSelectGroup(section.searchTerms, section.groupName)
                 }
-                className="text-sm font-semibold transition-colors text-[]"
+                className="text-sm font-semibold text-[var(--app-primary)] transition-colors hover:underline"
               >
                 View all
               </button>
@@ -1080,357 +766,197 @@ const FeaturedSection = ({
   handleVideoSelect,
   handleWatchSeries,
   handleViewMore,
-}: FeaturedSectionProps) => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
+}: FeaturedSectionProps) => (
+  <Section
+    padding="lg"
+    fullHeight={false}
+    className="relative overflow-hidden bg-black/[0.95]"
+  >
+    <Container size="xl">
+      <FlexboxLayout
+        direction="column"
+        justify="center"
+        align="center"
+        gap="lg"
+        className="w-full text-center"
+      >
+        <H2 className="mb-8 text-2xl font-bold text-white md:mb-12 md:text-3xl lg:text-4xl xl:text-5xl md:font-extrabold">
+          Latest from WisdomHouse
+        </H2>
 
-  const themeStyles = useMemo(
-    () => ({
-      sectionBackground: isDarkMode
-        ? 'rgba(0,0,0,0.95)'
-        : 'rgba(255,255,255,0.06)',
-      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
-      secondaryTextColor: isDarkMode
-        ? 'rgba(255,255,255,0.60)'
-        : 'rgba(255,255,255,0.42)',
-      cardBackground: isDarkMode
-        ? 'rgba(255,255,255,0.05)'
-        : 'rgba(255,255,255,0.05)',
-      borderColor: 'rgba(255,255,255,0.12)',
-    }),
-    [isDarkMode]
-  );
-
-  return (
-    <Section
-      padding="lg"
-      fullHeight={false}
-      className="relative overflow-hidden"
-      // eslint-disable-next-line no-restricted-syntax
-      style={{ backgroundColor: themeStyles.sectionBackground }}
-    >
-      <Container size="xl">
-        <FlexboxLayout
-          direction="column"
-          justify="center"
-          align="center"
-          gap="lg"
-          className="w-full text-center"
-        >
-          <H2
-            className="mb-8 text-2xl font-bold md:mb-12 md:text-3xl lg:text-4xl xl:text-5xl md:font-extrabold"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: themeStyles.textColor }}
-          >
-            Latest from WisdomHouse
-          </H2>
-
-          <div
-            className="mx-auto w-full max-w-7xl rounded-2xl border p-4 shadow-lg sm:p-6 lg:p-8"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: themeStyles.cardBackground,
-              borderColor: themeStyles.borderColor,
-            }}
-          >
-            <div className="flex w-full flex-col items-start gap-8 lg:flex-row lg:gap-12">
-              <div className="w-full lg:w-8/12 xl:w-7/12">
-                <div
-                  className="overflow-hidden rounded-2xl border-2 bg-black shadow-xl"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderColor: `rgba(201,150,26,0.12)` }}
-                >
-                  {currentVideo ? (
-                    <div className="relative aspect-video w-full">
-                      <YouTubePlayer
-                        key={playerKey}
-                        videoId={currentVideo.id}
-                        title={currentVideo.title}
-                        className="absolute inset-0 h-full w-full"
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className="flex aspect-video w-full items-center justify-center rounded-2xl"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ backgroundColor: '#000000' }}
-                    >
-                      <LightText
-                        className="text-sm md:text-base"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: 'rgba(255,255,255,0.60)' }}
-                      >
-                        Loading latest content...
-                      </LightText>
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-6 hidden text-left lg:block">
-                  <div className="mb-3">
-                    <BaseText
-                      className="text-sm font-semibold uppercase tracking-wide md:text-base md:font-bold"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: themeStyles.textColor }}
-                    >
-                      {currentVideo === videos[0]
-                        ? 'Latest Upload'
-                        : 'Now Playing'}
-                    </BaseText>
+        <div className="mx-auto w-full max-w-7xl rounded-2xl border border-white/[0.12] bg-white/[0.05] p-4 shadow-lg sm:p-6 lg:p-8">
+          <div className="flex w-full flex-col items-start gap-8 lg:flex-row lg:gap-12">
+            <div className="w-full lg:w-8/12 xl:w-7/12">
+              <div className="overflow-hidden rounded-2xl border-2 border-[var(--app-primary)]/12 bg-black shadow-xl">
+                {currentVideo ? (
+                  <div className="relative aspect-video w-full">
+                    <YouTubePlayer
+                      key={playerKey}
+                      videoId={currentVideo.id}
+                      title={currentVideo.title}
+                      className="absolute inset-0 h-full w-full"
+                    />
                   </div>
-
-                  <BaseText
-                    className="mb-4 text-xl font-bold leading-tight md:text-2xl lg:text-3xl md:font-extrabold"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: themeStyles.textColor }}
-                  >
-                    {currentVideo?.title || 'New Content Coming Soon'}
-                  </BaseText>
-
-                  {currentVideo && (
-                    <>
-                      <FlexboxLayout
-                        justify="start"
-                        align="center"
-                        gap="sm"
-                        className="mb-4 flex-wrap"
-                      >
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: isDarkMode
-                              ? 'rgba(201,150,26,0.10)'
-                              : 'rgba(201,150,26,0.20)',
-                            color: 'var(--app-primary)',
-                          }}
-                        >
-                          {currentVideo.series}
-                        </span>
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: isDarkMode
-                              ? 'rgba(255,255,255,0.05)'
-                              : 'rgba(0,0,0,0.10)',
-                            color: 'var(--app-primary)',
-                          }}
-                        >
-                          {currentVideo.preacher}
-                        </span>
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: isDarkMode
-                              ? 'rgba(201,150,26,0.10)'
-                              : 'rgba(201,150,26,0.20)',
-                            color: 'var(--app-primary)',
-                          }}
-                        >
-                          {new Date(
-                            currentVideo.publishedAt
-                          ).toLocaleDateString()}
-                        </span>
-                      </FlexboxLayout>
-
-                      <div className="mb-6">
-                        <LightText
-                          className="text-sm leading-relaxed md:text-base"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: themeStyles.secondaryTextColor }}
-                        >
-                          {currentVideo.description ||
-                            'Watch our latest content from WisdomHouse.'}
-                        </LightText>
-                      </div>
-
-                      <div className="flex gap-4">
-                        <Button
-                          variant="primary"
-                          size="md"
-                          curvature="full"
-                          className="flex-1 py-3 font-semibold transition-colors"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: 'var(--app-primary)',
-                            color: '#000000',
-                          }}
-                          onClick={handleWatchSeries}
-                        >
-                          View Full Series
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
+                ) : (
+                  <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-black">
+                    <LightText className="text-sm text-white/60 md:text-base">
+                      Loading latest content...
+                    </LightText>
+                  </div>
+                )}
               </div>
 
-              <div className="w-full lg:w-4/12 xl:w-5/12">
-                <div className="mb-6 lg:hidden">
-                  <div className="mb-3">
-                    <BaseText
-                      className="text-sm font-semibold uppercase tracking-wide md:text-base md:font-bold"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: themeStyles.textColor }}
-                    >
-                      {currentVideo === videos[0]
-                        ? 'Latest Upload'
-                        : 'Now Playing'}
-                    </BaseText>
-                  </div>
-
-                  <BaseText
-                    className="mb-4 line-clamp-3 text-xl font-bold leading-tight md:text-2xl md:font-extrabold"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: themeStyles.textColor }}
-                  >
-                    {currentVideo?.title || 'New Content Coming Soon'}
+              <div className="mt-6 hidden text-left lg:block">
+                <div className="mb-3">
+                  <BaseText className="text-sm font-semibold uppercase tracking-wide text-white md:text-base md:font-bold">
+                    {currentVideo === videos[0]
+                      ? 'Latest Upload'
+                      : 'Now Playing'}
                   </BaseText>
+                </div>
 
-                  {currentVideo && (
-                    <>
-                      <FlexboxLayout
-                        justify="start"
-                        align="center"
-                        gap="sm"
-                        className="mb-4 flex-wrap"
-                      >
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: isDarkMode
-                              ? 'rgba(201,150,26,0.10)'
-                              : 'rgba(201,150,26,0.20)',
-                            color: 'var(--app-primary)',
-                          }}
-                        >
-                          {currentVideo.series}
-                        </span>
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: isDarkMode
-                              ? 'rgba(255,255,255,0.05)'
-                              : 'rgba(0,0,0,0.10)',
-                            color: 'var(--app-primary)',
-                          }}
-                        >
-                          {currentVideo.preacher}
-                        </span>
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor: isDarkMode
-                              ? 'rgba(201,150,26,0.10)'
-                              : 'rgba(201,150,26,0.20)',
-                            color: 'var(--app-primary)',
-                          }}
-                        >
-                          {new Date(
-                            currentVideo.publishedAt
-                          ).toLocaleDateString()}
-                        </span>
-                      </FlexboxLayout>
+                <BaseText className="mb-4 text-xl font-bold leading-tight text-white md:text-2xl lg:text-3xl md:font-extrabold">
+                  {currentVideo?.title || 'New Content Coming Soon'}
+                </BaseText>
 
-                      <div className="mb-4">
-                        <LightText
-                          className="max-h-24 overflow-y-auto pr-2 text-sm leading-relaxed md:text-base"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: themeStyles.secondaryTextColor }}
-                        >
-                          {currentVideo.description ||
-                            'Watch our latest content from WisdomHouse.'}
-                        </LightText>
-                      </div>
+                {currentVideo && (
+                  <>
+                    <FlexboxLayout
+                      justify="start"
+                      align="center"
+                      gap="sm"
+                      className="mb-4 flex-wrap"
+                    >
+                      <span className="rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--app-primary)] sm:text-sm">
+                        {currentVideo.series}
+                      </span>
+                      <span className="rounded-full bg-white/[0.05] px-3 py-1 text-xs font-medium text-[var(--app-primary)] sm:text-sm">
+                        {currentVideo.preacher}
+                      </span>
+                      <span className="rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--app-primary)] sm:text-sm">
+                        {new Date(
+                          currentVideo.publishedAt
+                        ).toLocaleDateString()}
+                      </span>
+                    </FlexboxLayout>
 
+                    <div className="mb-6">
+                      <LightText className="text-sm leading-relaxed text-white/60 md:text-base">
+                        {currentVideo.description ||
+                          'Watch our latest content from WisdomHouse.'}
+                      </LightText>
+                    </div>
+
+                    <div className="flex gap-4">
                       <Button
                         variant="primary"
                         size="md"
                         curvature="full"
-                        className="mb-6 w-full py-3 font-semibold transition-colors"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          backgroundColor: 'var(--app-primary)',
-                          color: '#000000',
-                        }}
+                        className="flex-1 py-3 font-semibold"
                         onClick={handleWatchSeries}
                       >
                         View Full Series
                       </Button>
-                    </>
-                  )}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="w-full lg:w-4/12 xl:w-5/12">
+              <div className="mb-6 lg:hidden">
+                <div className="mb-3">
+                  <BaseText className="text-sm font-semibold uppercase tracking-wide text-white md:text-base md:font-bold">
+                    {currentVideo === videos[0]
+                      ? 'Latest Upload'
+                      : 'Now Playing'}
+                  </BaseText>
                 </div>
 
-                {recentVideos.length > 0 && (
-                  <div className="lg:mt-0">
+                <BaseText className="mb-4 line-clamp-3 text-xl font-bold leading-tight text-white md:text-2xl md:font-extrabold">
+                  {currentVideo?.title || 'New Content Coming Soon'}
+                </BaseText>
+
+                {currentVideo && (
+                  <>
                     <FlexboxLayout
-                      justify="between"
+                      justify="start"
                       align="center"
-                      className="mb-4"
+                      gap="sm"
+                      className="mb-4 flex-wrap"
                     >
-                      <BaseText
-                        className="text-lg font-semibold md:text-xl md:font-bold"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: themeStyles.textColor }}
-                      >
-                        Recent Uploads
-                      </BaseText>
-                      <span
-                        className="rounded px-3 py-1 text-xs font-medium md:text-sm"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          backgroundColor: isDarkMode
-                            ? 'rgba(255,255,255,0.05)'
-                            : 'rgba(0,0,0,0.10)',
-                          color: themeStyles.secondaryTextColor,
-                        }}
-                      >
-                        {recentVideos.length} videos
+                      <span className="rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--app-primary)] sm:text-sm">
+                        {currentVideo.series}
+                      </span>
+                      <span className="rounded-full bg-white/[0.05] px-3 py-1 text-xs font-medium text-[var(--app-primary)] sm:text-sm">
+                        {currentVideo.preacher}
+                      </span>
+                      <span className="rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--app-primary)] sm:text-sm">
+                        {new Date(
+                          currentVideo.publishedAt
+                        ).toLocaleDateString()}
                       </span>
                     </FlexboxLayout>
 
-                    <div className="max-h-96 space-y-3 overflow-y-auto pr-2">
-                      {recentVideos.map((video: YouTubeVideo) => (
+                    <div className="mb-4">
+                      <LightText className="max-h-24 overflow-y-auto pr-2 text-sm leading-relaxed text-white/60 md:text-base">
+                        {currentVideo.description ||
+                          'Watch our latest content from WisdomHouse.'}
+                      </LightText>
+                    </div>
+
+                    <Button
+                      variant="primary"
+                      size="md"
+                      curvature="full"
+                      className="mb-6 w-full py-3 font-semibold"
+                      onClick={handleWatchSeries}
+                    >
+                      View Full Series
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              {recentVideos.length > 0 && (
+                <div className="lg:mt-0">
+                  <FlexboxLayout
+                    justify="between"
+                    align="center"
+                    className="mb-4"
+                  >
+                    <BaseText className="text-lg font-semibold text-white md:text-xl md:font-bold">
+                      Recent Uploads
+                    </BaseText>
+                    <span className="rounded bg-white/[0.05] px-3 py-1 text-xs font-medium text-white/60 md:text-sm">
+                      {recentVideos.length} videos
+                    </span>
+                  </FlexboxLayout>
+
+                  <div className="max-h-96 space-y-3 overflow-y-auto pr-2">
+                    {recentVideos.map((video: YouTubeVideo) => {
+                      const isActive = currentVideo?.id === video.id;
+                      return (
                         <div
                           key={video.id}
                           className={`group flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-all ${
-                            currentVideo?.id === video.id
-                              ? 'border-primary/30 shadow-sm'
-                              : isDarkMode
-                                ? 'border-white/10 hover:bg-white/5'
-                                : 'border-gray-200 hover:bg-gray-50'
+                            isActive
+                              ? 'border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10'
+                              : 'border-white/10 bg-white/[0.05] hover:bg-white/[0.08]'
                           }`}
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            backgroundColor:
-                              currentVideo?.id === video.id
-                                ? 'rgba(201,150,26,0.10)'
-                                : themeStyles.cardBackground,
-                            borderColor:
-                              currentVideo?.id === video.id
-                                ? 'rgba(201,150,26,0.19)'
-                                : themeStyles.borderColor,
-                          }}
                           onClick={() => handleVideoSelect(video)}
                         >
                           <div className="relative flex-shrink-0">
                             <img
                               src={video.thumbnail}
                               alt={video.title}
-                              className="h-12 w-16 rounded border object-cover"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{ borderColor: themeStyles.borderColor }}
+                              className="h-12 w-16 rounded border border-white/[0.12] object-cover"
                               loading="lazy"
                               decoding="async"
                             />
                             <div
                               className={`absolute inset-0 flex items-center justify-center rounded bg-black bg-opacity-50 transition-opacity ${
-                                currentVideo?.id === video.id
+                                isActive
                                   ? 'opacity-100'
                                   : 'opacity-0 group-hover:opacity-100'
                               }`}
@@ -1443,43 +969,23 @@ const FeaturedSection = ({
                                 <path d="M8 5v14l11-7z" />
                               </svg>
                             </div>
-                            {currentVideo?.id === video.id && (
-                              <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-[]" />
+                            {isActive && (
+                              <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-[var(--app-primary)]" />
                             )}
                           </div>
 
                           <div className="min-w-0 flex-1">
-                            <BaseText
-                              className="truncate text-sm font-medium leading-tight md:font-semibold"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{ color: themeStyles.textColor }}
-                            >
+                            <BaseText className="truncate text-sm font-medium leading-tight text-white md:font-semibold">
                               {video.title}
                             </BaseText>
                             <div className="mt-1 flex items-center gap-2">
-                              <LightText
-                                className="truncate text-xs"
-                                // eslint-disable-next-line no-restricted-syntax
-                                style={{
-                                  color: themeStyles.secondaryTextColor,
-                                }}
-                              >
+                              <LightText className="truncate text-xs text-white/60">
                                 {video.series}
                               </LightText>
-                              <span
-                                className="text-xs"
-                                // eslint-disable-next-line no-restricted-syntax
-                                style={{ color: themeStyles.borderColor }}
-                              >
+                              <span className="text-xs text-white/[0.12]">
                                 •
                               </span>
-                              <LightText
-                                className="text-xs"
-                                // eslint-disable-next-line no-restricted-syntax
-                                style={{
-                                  color: themeStyles.secondaryTextColor,
-                                }}
-                              >
+                              <LightText className="text-xs text-white/60">
                                 {new Date(
                                   video.publishedAt
                                 ).toLocaleDateString()}
@@ -1488,61 +994,50 @@ const FeaturedSection = ({
                           </div>
 
                           {video === videos[0] && (
-                            <span
-                              className="flex-shrink-0 rounded px-2 py-1 text-xs font-medium"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{
-                                backgroundColor: isDarkMode
-                                  ? 'rgba(239,68,68,0.10)'
-                                  : 'rgba(239,68,68,0.20)',
-                                color: '#ef4444',
-                              }}
-                            >
+                            <span className="flex-shrink-0 rounded bg-red-500/10 px-2 py-1 text-xs font-medium text-red-500">
                               NEW
                             </span>
                           )}
                         </div>
-                      ))}
-                    </div>
-
-                    {videos.length > 5 && (
-                      <div className="mt-4 text-center">
-                        <button
-                          onClick={handleViewMore}
-                          className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold transition-colors md:text-base md:font-bold text-[]"
-                        >
-                          View More Series
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    )}
+                      );
+                    })}
                   </div>
-                )}
-              </div>
+
+                  {videos.length > 5 && (
+                    <div className="mt-4 text-center">
+                      <button
+                        type="button"
+                        onClick={handleViewMore}
+                        className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold text-[var(--app-primary)] transition-colors hover:underline md:text-base md:font-bold"
+                      >
+                        View More Series
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        </FlexboxLayout>
-      </Container>
-    </Section>
-  );
-};
+        </div>
+      </FlexboxLayout>
+    </Container>
+  </Section>
+);
 
 const SermonUtil = () => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
-
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -1551,20 +1046,6 @@ const SermonUtil = () => {
     });
     return () => cancelAnimationFrame(timer);
   }, []);
-
-  const handleMouseEnter = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = 'var(--app-primary-dark)';
-    },
-    []
-  );
-
-  const handleMouseLeave = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = 'var(--app-primary)';
-    },
-    []
-  );
 
   const sermonState = useSermonUtil();
 
@@ -1604,28 +1085,7 @@ const SermonUtil = () => {
     handleViewMore,
   } = sermonState;
 
-  const themeStyles = useMemo(
-    () => ({
-      sectionBackground: isDarkMode
-        ? 'rgba(0,0,0,0.95)'
-        : 'rgba(255,255,255,0.06)',
-      textColor: isDarkMode ? '#f5f6f7' : '#ffffff',
-      secondaryTextColor: isDarkMode
-        ? 'rgba(255,255,255,0.60)'
-        : 'rgba(255,255,255,0.42)',
-      cardBackground: isDarkMode
-        ? 'rgba(255,255,255,0.05)'
-        : 'rgba(255,255,255,0.05)',
-      borderColor: 'rgba(255,255,255,0.12)',
-      inputBackground: isDarkMode ? 'rgba(255,255,255,0.05)' : '#ffffff',
-      inputBorderColor: 'rgba(255,255,255,0.12)',
-    }),
-    [isDarkMode]
-  );
-
-  const clientReady = isClient;
-
-  const featuredSection = clientReady ? (
+  const featuredSection = isClient ? (
     <FeaturedSection
       videos={videos}
       recentVideos={recentVideos}
@@ -1645,12 +1105,7 @@ const SermonUtil = () => {
     <div className="sermon-util">
       {featuredSection}
 
-      <Section
-        padding="lg"
-        fullHeight={false}
-        // eslint-disable-next-line no-restricted-syntax
-        style={{ backgroundColor: themeStyles.sectionBackground }}
-      >
+      <Section padding="lg" fullHeight={false} className="bg-black/[0.95]">
         <Container size="xl">
           {!videos.length ? (
             <FlexboxLayout
@@ -1661,16 +1116,8 @@ const SermonUtil = () => {
               className="text-center"
             >
               <div className="animate-pulse">
-                <div
-                  className="mx-auto mb-4 h-8 w-1/4 rounded"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ backgroundColor: themeStyles.sectionBackground }}
-                />
-                <div
-                  className="mx-auto mb-12 h-4 w-1/2 rounded"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ backgroundColor: themeStyles.cardBackground }}
-                />
+                <div className="mx-auto mb-4 h-8 w-1/4 rounded bg-black/[0.95]" />
+                <div className="mx-auto mb-12 h-4 w-1/2 rounded bg-white/[0.05]" />
               </div>
 
               <GridboxLayout
@@ -1682,9 +1129,7 @@ const SermonUtil = () => {
                 {[1, 2, 3, 4, 5, 6].map(i => (
                   <div
                     key={i}
-                    className="h-64 rounded-2xl animate-pulse"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ backgroundColor: themeStyles.cardBackground }}
+                    className="h-64 animate-pulse rounded-2xl bg-white/[0.05]"
                   />
                 ))}
               </GridboxLayout>
@@ -1696,11 +1141,7 @@ const SermonUtil = () => {
                 gap="lg"
                 className="mb-10 sm:mb-12"
               >
-                <BaseText
-                  className="text-center text-xl font-bold md:text-2xl lg:text-3xl xl:text-4xl md:font-extrabold"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: themeStyles.textColor }}
-                >
+                <BaseText className="text-center text-xl font-bold text-white md:text-2xl lg:text-3xl xl:text-4xl md:font-extrabold">
                   Featured Categories
                 </BaseText>
 
@@ -1722,11 +1163,7 @@ const SermonUtil = () => {
                   gap="lg"
                   className="mb-10 sm:mb-12"
                 >
-                  <BaseText
-                    className="text-center text-xl font-bold md:text-2xl lg:text-3xl xl:text-4xl md:font-extrabold"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: themeStyles.textColor }}
-                  >
+                  <BaseText className="text-center text-xl font-bold text-white md:text-2xl lg:text-3xl xl:text-4xl md:font-extrabold">
                     More Sermons
                   </BaseText>
 
@@ -1744,11 +1181,7 @@ const SermonUtil = () => {
                     </div>
 
                     <div className="mt-2 text-center">
-                      <LightText
-                        className="text-sm md:text-base"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: themeStyles.secondaryTextColor }}
-                      >
+                      <LightText className="text-sm text-white/60 md:text-base">
                         ← Scroll horizontally →
                       </LightText>
                     </div>
@@ -1773,14 +1206,7 @@ const SermonUtil = () => {
                   size="lg"
                   curvature="full"
                   className="px-6 py-3 text-sm font-semibold shadow-lg transition-colors duration-200 hover:scale-105 hover:shadow-xl sm:px-8 sm:py-4 md:text-base lg:text-lg"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: 'var(--app-primary)',
-                    color: '#000000',
-                  }}
                   onClick={() => handleSeriesClick('all')}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
                 >
                   View Complete Library
                 </Button>
@@ -1866,11 +1292,7 @@ const SermonUtil = () => {
               gap="md"
               className="py-8 text-center sm:py-12"
             >
-              <LightText
-                className="mb-3 text-base md:text-lg lg:text-xl sm:mb-4"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: themeStyles.secondaryTextColor }}
-              >
+              <LightText className="mb-3 text-base text-white/60 md:text-lg lg:text-xl sm:mb-4">
                 No sermons found matching your criteria.
               </LightText>
 
@@ -1879,14 +1301,7 @@ const SermonUtil = () => {
                 size="md"
                 curvature="full"
                 className="px-4 py-2 text-sm font-semibold shadow-md transition-colors sm:px-6 sm:py-3 md:text-base lg:text-lg"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  backgroundColor: 'var(--app-primary)',
-                  color: '#000000',
-                }}
                 onClick={handleResetFilters}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
               >
                 Clear all filters
               </Button>
@@ -1900,15 +1315,8 @@ const SermonUtil = () => {
                 size="lg"
                 curvature="full"
                 className="px-6 py-2 text-sm font-semibold shadow-md transition-colors duration-200 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none sm:px-8 sm:py-3 md:text-base lg:text-lg"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  backgroundColor: 'var(--app-primary)',
-                  color: '#000000',
-                }}
                 onClick={handleLoadMore}
                 disabled={loading}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
               >
                 {loading ? 'Loading...' : 'Load More Videos'}
               </Button>
@@ -1917,15 +1325,7 @@ const SermonUtil = () => {
 
           {loading && (
             <FlexboxLayout justify="center" className="py-6 sm:py-8">
-              <div
-                className="mx-auto animate-spin rounded-full border-b-2"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  width: '2rem',
-                  height: '2rem',
-                  borderColor: 'var(--app-primary)',
-                }}
-              />
+              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-[var(--app-primary)]" />
             </FlexboxLayout>
           )}
         </Container>

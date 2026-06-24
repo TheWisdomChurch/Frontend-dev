@@ -3,18 +3,13 @@
 import { useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { ArrowRight } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faInstagram,
-  faFacebook,
-  faTwitter,
-} from '@fortawesome/free-brands-svg-icons';
+import { ArrowRight, Camera, MessageCircle, Users } from 'lucide-react';
 import { Bishop } from '@/shared/assets';
 import { H1, P } from '@/shared/text';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { useSeniorPastor } from '@/shared/utils/hooks/useSeniorPastor';
 import { Container, Section, FlexboxLayout } from '@/shared/layout';
+import { Card } from '@/shared/ui/cards';
 import { cn } from '@/lib/cn';
 import { gsap } from 'gsap';
 import { seniorPastorData } from '@/lib/data';
@@ -69,8 +64,6 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
   }, [isVisible]);
 
   const goToLeadership = () => router.push('/leadership');
-
-  const primary = 'var(--app-primary)';
 
   return (
     <Section
@@ -137,18 +130,11 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                         'noopener,noreferrer'
                       )
                     }
-                    variant="primary"
+                    variant="ghost"
                     size="xs"
                     curvature="full"
-                    leftIcon={
-                      <FontAwesomeIcon icon={faInstagram} className="w-4 h-4" />
-                    }
-                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold shadow-lg min-w-max"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      background: 'linear-gradient(135deg, #E4405F, #C13584)',
-                      color: '#fff',
-                    }}
+                    leftIcon={<Camera className="w-4 h-4" />}
+                    className="bg-[linear-gradient(135deg,#E4405F,#C13584)] px-4 py-2 text-[11px] font-semibold text-white shadow-lg hover:opacity-90 min-w-max sm:text-[13px]"
                   >
                     Instagram
                   </Button>
@@ -161,19 +147,11 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                         'noopener,noreferrer'
                       )
                     }
-                    variant="outline"
+                    variant="ghost"
                     size="xs"
                     curvature="full"
-                    leftIcon={
-                      <FontAwesomeIcon icon={faFacebook} className="w-4 h-4" />
-                    }
-                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold min-w-max"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.08)',
-                      color: '#fff',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                    }}
+                    leftIcon={<Users className="w-4 h-4" />}
+                    className="border border-white/30 bg-white/[0.08] px-4 py-2 text-[11px] font-semibold text-white min-w-max sm:text-[13px]"
                   >
                     Facebook
                   </Button>
@@ -186,19 +164,11 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                         'noopener,noreferrer'
                       )
                     }
-                    variant="outline"
+                    variant="ghost"
                     size="xs"
                     curvature="full"
-                    leftIcon={
-                      <FontAwesomeIcon icon={faTwitter} className="w-4 h-4" />
-                    }
-                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold min-w-max"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.08)',
-                      color: '#fff',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                    }}
+                    leftIcon={<MessageCircle className="w-4 h-4" />}
+                    className="border border-white/30 bg-white/[0.08] px-4 py-2 text-[11px] font-semibold text-white min-w-max sm:text-[13px]"
                   >
                     X (Twitter)
                   </Button>
@@ -217,22 +187,13 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                   alt="Bishop Gabriel Ayilara"
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 480px"
-                  className="object-cover"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ objectPosition: 'center 20%' }}
+                  className="object-cover [object-position:center_20%]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
 
                 <div className="hidden md:flex absolute bottom-4 left-4 right-4 items-center justify-between text-sm font-semibold text-white">
                   <span className="text-white/90">Bishop Gabriel Ayilara</span>
-                  <span
-                    className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      background: 'rgba(201,150,26,0.20)',
-                      border: '1px solid rgba(255,255,255,0.2)',
-                    }}
-                  >
+                  <span className="rounded-full border border-white/20 bg-[var(--app-primary)]/20 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-md">
                     Senior Pastor
                   </span>
                 </div>
@@ -241,7 +202,11 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
           </div>
 
           <div className="mt-8 md:mt-10 w-full">
-            <div className="rounded-2xl border border-white/12 bg-white/5 backdrop-blur-xl p-5 md:p-6">
+            <Card
+              variant="glass"
+              padding="md"
+              className="rounded-2xl bg-white/5 md:p-6"
+            >
               <P className="text-[11px] md:text-xs uppercase tracking-[0.2em] text-white/60">
                 Leadership
               </P>
@@ -260,13 +225,11 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
                   curvature="full"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                   className="w-full sm:w-auto px-5 py-2 text-[13px] font-semibold shadow-lg"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ backgroundColor: primary, color: '#0b0b0b' }}
                 >
                   View leadership
                 </Button>
               </div>
-            </div>
+            </Card>
           </div>
         </FlexboxLayout>
       </Container>
