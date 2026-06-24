@@ -16,6 +16,8 @@ import {
 
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Container } from '@/shared/layout';
+import { Card } from '@/shared/ui/cards';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 
 /* =============================================================================
@@ -214,7 +216,6 @@ export default function HeroHighlights() {
     [closeModal, showUnavailable]
   );
 
-
   return (
     <section className="relative z-30 -mt-8 sm:-mt-10 lg:-mt-12">
       <Container size="xl" className="relative pb-6 sm:pb-8">
@@ -348,7 +349,10 @@ export default function HeroHighlights() {
             </select>
           </div>
 
-          <div className="space-y-3 rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
+          <Card
+            padding="sm"
+            className="space-y-3 rounded-[1.35rem] bg-white/[0.045]"
+          >
             <div className="flex items-center gap-2 text-sm font-semibold text-white/85">
               <CalendarClock className="h-4 w-4 text-[var(--app-primary)]" />
               Appointment details
@@ -396,7 +400,7 @@ export default function HeroHighlights() {
                 We&apos;ll email directions
               </span>
             </div>
-          </div>
+          </Card>
 
           <textarea
             placeholder="Notes (optional) — kids, first time, prayer request, accessibility needs…"
@@ -405,12 +409,13 @@ export default function HeroHighlights() {
             onChange={e => setVisit(p => ({ ...p, notes: e.target.value }))}
           />
 
-          <button
+          <CustomButton
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(201,150,26,0.25)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
+            variant="primary"
+            className="w-full shadow-[0_18px_45px_rgba(201,150,26,0.25)] hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Confirm appointment <ArrowRight className="h-4 w-4" />
-          </button>
+          </CustomButton>
 
           <p className="text-xs leading-5 text-white/50">
             We confirm by email and send a reminder. No spam, ever.
@@ -425,7 +430,7 @@ export default function HeroHighlights() {
         subtitle="Drop your email and we’ll remind you 30 minutes before we go live."
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
-          <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
+          <Card padding="sm" className="rounded-[1.35rem] bg-white/[0.045]">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <Headphones className="h-5 w-5" />
@@ -440,7 +445,7 @@ export default function HeroHighlights() {
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
 
           <input
             type="text"
@@ -460,12 +465,13 @@ export default function HeroHighlights() {
             required
           />
 
-          <button
+          <CustomButton
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(201,150,26,0.25)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
+            variant="primary"
+            className="w-full shadow-[0_18px_45px_rgba(201,150,26,0.25)] hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Notify me <ArrowRight className="h-4 w-4" />
-          </button>
+          </CustomButton>
 
           <p className="text-xs leading-5 text-white/50">
             Service reminders only. No spam.
@@ -529,7 +535,7 @@ export default function HeroHighlights() {
             </select>
           </div>
 
-          <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
+          <Card padding="sm" className="rounded-[1.35rem] bg-white/[0.045]">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <HeartHandshake className="h-5 w-5" />
@@ -544,7 +550,7 @@ export default function HeroHighlights() {
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
 
           <textarea
             placeholder="Any experience? (optional) — music instrument, camera, design, admin, teaching…"
@@ -553,12 +559,13 @@ export default function HeroHighlights() {
             onChange={e => setJoin(p => ({ ...p, experience: e.target.value }))}
           />
 
-          <button
+          <CustomButton
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(201,150,26,0.25)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
+            variant="primary"
+            className="w-full shadow-[0_18px_45px_rgba(201,150,26,0.25)] hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Send interest <ArrowRight className="h-4 w-4" />
-          </button>
+          </CustomButton>
 
           <p className="text-xs leading-5 text-white/50">
             We’ll reach out by email or phone if provided. No spam.

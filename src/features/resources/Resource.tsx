@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import { Caption, H3, BodySM, SmallText } from '@/shared/text';
 import { resourceLinks } from '@/lib/data';
 import type { YouTubeVideo } from '@/lib/types';
@@ -186,7 +187,7 @@ export default function ResourceSection() {
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+        <GridBackground />
       </div>
 
       <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">

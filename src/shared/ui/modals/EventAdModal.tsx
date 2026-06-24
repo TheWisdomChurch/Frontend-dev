@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Image, { type StaticImageData } from 'next/image';
 import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Base';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 
 type EventAdConfig = {
   id: string;
@@ -26,7 +27,6 @@ type Props = {
   onClose: () => void;
   onRemindLater?: () => void;
 };
-
 
 const formatDate = (iso?: string) => {
   if (!iso) return '';
@@ -68,7 +68,6 @@ export default function EventAdModal({
   onClose,
   onRemindLater,
 }: Props) {
-
   const safeEvent = {
     title: event?.title || 'Special Event',
     headline: event?.headline || 'Register now',
@@ -200,26 +199,27 @@ export default function EventAdModal({
           </div>
 
           {/* CTA Button */}
-          <button
-            type="button"
+          <CustomButton
+            variant="primary"
             onClick={handleRegister}
             disabled={!registerUrl}
-            className="w-full rounded-2xl bg-[var(--app-primary)] py-3.5 text-lg font-bold text-black shadow-lg shadow-[var(--app-primary)]/20 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full py-3.5 text-lg font-bold"
           >
             {safeEvent.ctaLabel}
-          </button>
+          </CustomButton>
 
           {/* Note & Remind Later */}
           <div className="flex items-center justify-between text-xs text-white/40">
             <span>{safeEvent.note}</span>
             {onRemindLater && (
-              <button
-                type="button"
+              <CustomButton
+                variant="ghost"
+                size="xs"
                 onClick={onRemindLater}
-                className="underline-offset-4 hover:text-white hover:underline"
+                className="text-xs text-white/40 underline-offset-4 hover:text-white hover:underline"
               >
                 Remind me later
-              </button>
+              </CustomButton>
             )}
           </div>
         </div>

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import { H2, BaseText, LightText } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import OrderConfirmation from '@/features/store/Store/orderDetails';
@@ -71,22 +72,14 @@ function SimpleConfirmation() {
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.11),transparent_34%),radial-gradient(circle_at_15%_30%,rgba(255,255,255,0.06),transparent_30%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
             <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
               <div className="confirmation-animate border-b border-white/10 p-6 text-center sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                <div
-                  className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border shadow-[0_20px_70px_rgba(0,0,0,0.35)]"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: `${'#22c55e'}18`,
-                    borderColor: `${'#22c55e'}30`,
-                    color: '#22c55e',
-                  }}
-                >
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10 text-green-500 shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
                   <CheckCircle2 className="h-12 w-12" />
                 </div>
 
@@ -121,11 +114,6 @@ function SimpleConfirmation() {
                       curvature="full"
                       leftIcon={<ShoppingBag className="h-5 w-5" />}
                       className="h-12 w-full px-6 font-bold sm:w-auto"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        backgroundColor: 'var(--app-primary)',
-                        color: '#000000',
-                      }}
                     >
                       Continue Shopping
                     </Button>
@@ -137,12 +125,7 @@ function SimpleConfirmation() {
                       size="lg"
                       curvature="full"
                       leftIcon={<Home className="h-5 w-5" />}
-                      className="h-12 w-full border px-6 font-bold text-white sm:w-auto"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        borderColor: `var(--app-primary)88`,
-                        color: 'var(--app-primary)',
-                      }}
+                      className="h-12 w-full border border-[var(--app-primary)]/50 px-6 font-bold text-[var(--app-primary)] sm:w-auto"
                     >
                       Back to Home
                     </Button>
@@ -170,14 +153,7 @@ function SimpleConfirmation() {
                         style={{ transitionDelay: `${index * 60}ms` }}
                       >
                         <div className="flex gap-4">
-                          <div
-                            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
-                            // eslint-disable-next-line no-restricted-syntax
-                            style={{
-                              backgroundColor: `rgba(201,150,26,0.09)`,
-                              color: 'var(--app-primary)',
-                            }}
-                          >
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
                             <Icon className="h-5 w-5" />
                           </div>
 

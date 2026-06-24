@@ -14,6 +14,7 @@ import {
 
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import {
   ActionBanner,
   FeatureGrid,
@@ -165,7 +166,7 @@ export default function PastoralPage() {
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(201,150,26,0.12),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_36%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10 space-y-8">

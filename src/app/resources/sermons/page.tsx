@@ -8,6 +8,7 @@ import PageHero from '@/features/hero/PageHero';
 import SermonUtil from '@/shared/ui/Sermons';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
 
@@ -48,8 +49,8 @@ export default function SermonPage() {
         className="relative overflow-hidden bg-[var(--app-surface)]"
       >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,0,0,0.08),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.05),transparent_34%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.05),transparent_34%)]" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10">

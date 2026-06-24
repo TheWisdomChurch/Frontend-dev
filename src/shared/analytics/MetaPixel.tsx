@@ -80,8 +80,7 @@ export default function MetaPixel() {
         alt=""
         height="1"
         width="1"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{ display: 'none' }}
+        className="hidden"
         src={`https://www.facebook.com/tr?id=${metaPixelId}&ev=PageView&noscript=1`}
       />
     </noscript>

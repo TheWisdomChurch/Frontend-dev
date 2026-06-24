@@ -537,16 +537,13 @@ export function JoinUsModal({
 
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full bg-[var(--app-primary)] transition-all duration-500"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                width:
-                  step === 'personal'
-                    ? '33%'
-                    : step === 'department'
-                      ? '66%'
-                      : '100%',
-              }}
+              className={`h-full rounded-full bg-[var(--app-primary)] transition-all duration-500 ${
+                step === 'personal'
+                  ? 'w-1/3'
+                  : step === 'department'
+                    ? 'w-2/3'
+                    : 'w-full'
+              }`}
             />
           </div>
         </div>

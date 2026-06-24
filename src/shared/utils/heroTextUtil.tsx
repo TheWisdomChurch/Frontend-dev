@@ -7,14 +7,7 @@ export const renderTitle = (title: string | undefined | null): ReactNode => {
   const highlight = (text: string) => (
     <BaseText
       fontFamily="playfair"
-      className="inline-block italic"
-      // eslint-disable-next-line no-restricted-syntax
-      style={{
-        color: 'var(--app-primary)',
-        fontSize: 'inherit',
-        lineHeight: 'inherit',
-        textShadow: '0 0 20px rgba(201,150,26,0.40)',
-      }}
+      className="hero-text-highlight inline-block italic"
     >
       {text}
     </BaseText>
@@ -63,9 +56,7 @@ export const renderSubtitle = (
   const whitePlayfair = (text: string) => (
     <BaseText
       fontFamily="playfair"
-      className="inline-block italic"
-      // eslint-disable-next-line no-restricted-syntax
-      style={{ color: '#FFFFFF', fontSize: 'inherit', lineHeight: 'inherit' }}
+      className="hero-text-white-inherit inline-block italic"
     >
       {text}
     </BaseText>

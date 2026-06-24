@@ -7,6 +7,7 @@ import HeroSection from '@/features/hero/PageHero';
 import { hero_bg_1, WisdomeHouseLogo } from '@/shared/assets';
 import { useSpecialEvents } from '@/shared/utils/hooks/useSpecial';
 import { Container, Section } from '@/shared/layout';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 
 const annualTraditions = [
   {
@@ -67,8 +68,10 @@ export default function SpecialPage() {
             </p>
             <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-5xl">
               Every Service at{' '}
-              <span className="text-[var(--app-primary)]">The Wisdom House Church</span> is
-              a Special Service
+              <span className="text-[var(--app-primary)]">
+                The Wisdom House Church
+              </span>{' '}
+              is a Special Service
             </h1>
             <p className="mx-auto mt-4 max-w-3xl text-sm leading-7 text-white/65 sm:text-base">
               From our weekly worship gatherings to annual celebrations, every
@@ -190,13 +193,14 @@ export default function SpecialPage() {
                   {event.description}
                 </p>
 
-                <button
-                  type="button"
+                <CustomButton
+                  variant="primary"
+                  curvature="full"
                   onClick={() => openModal(event)}
-                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                  className="mt-6 w-full hover:-translate-y-0.5"
                 >
                   Register for Event
-                </button>
+                </CustomButton>
               </article>
             ))}
           </div>
@@ -270,7 +274,11 @@ export default function SpecialPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" fullHeight={false} className="bg-[var(--app-surface)]">
+      <Section
+        padding="lg"
+        fullHeight={false}
+        className="bg-[var(--app-surface)]"
+      >
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

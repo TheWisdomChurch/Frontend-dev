@@ -239,11 +239,7 @@ const PastoralCareUnit = () => {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-4">
                     <User className="w-5 h-5 text-[var(--app-primary)]" />
-                    <H3
-                      className="text-xl font-bold"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <H3 className="text-xl font-bold text-white">
                       Personal Information
                     </H3>
                   </div>
@@ -252,12 +248,14 @@ const PastoralCareUnit = () => {
                     {/* Title */}
                     <div>
                       <label
+                        htmlFor="title"
                         className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Title *
                       </label>
                       <div className="relative">
                         <select
+                          id="title"
                           name="title"
                           value={formData.title}
                           onChange={handleInputChange}
@@ -431,22 +429,10 @@ const PastoralCareUnit = () => {
                 </div>
 
                 {/* Event Details Section */}
-                <div
-                  className="space-y-6 pt-6 border-t"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    borderColor: isDarkMode
-                      ? 'rgba(255,255,255,0.12)'
-                      : '#E5E7EB',
-                  }}
-                >
+                <div className="space-y-6 border-t border-white/[0.12] pt-6">
                   <div className="flex items-center gap-3 mb-4">
                     <Calendar className="w-5 h-5 text-[var(--app-primary)]" />
-                    <H3
-                      className="text-xl font-bold"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <H3 className="text-xl font-bold text-white">
                       Event Details
                     </H3>
                   </div>
@@ -455,6 +441,7 @@ const PastoralCareUnit = () => {
                     {/* Event Date */}
                     <div>
                       <label
+                        htmlFor="eventDate"
                         className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Event Date *
@@ -465,6 +452,7 @@ const PastoralCareUnit = () => {
                           size={20}
                         />
                         <input
+                          id="eventDate"
                           type="date"
                           name="eventDate"
                           value={formData.eventDate}
@@ -488,12 +476,14 @@ const PastoralCareUnit = () => {
                     {/* Event Type */}
                     <div>
                       <label
+                        htmlFor="eventType"
                         className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Event Type *
                       </label>
                       <div className="relative">
                         <select
+                          id="eventType"
                           name="eventType"
                           value={formData.eventType}
                           onChange={handleInputChange}
@@ -529,12 +519,14 @@ const PastoralCareUnit = () => {
                     {/* Church Role */}
                     <div>
                       <label
+                        htmlFor="churchRole"
                         className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Church Role Requested *
                       </label>
                       <div className="relative">
                         <select
+                          id="churchRole"
                           name="churchRole"
                           value={formData.churchRole}
                           onChange={handleInputChange}
@@ -598,32 +590,16 @@ const PastoralCareUnit = () => {
                 </div>
 
                 {/* Additional Comments */}
-                <div
-                  className="pt-6 border-t"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    borderColor: isDarkMode
-                      ? 'rgba(255,255,255,0.12)'
-                      : '#E5E7EB',
-                  }}
-                >
+                <div className="border-t border-white/[0.12] pt-6">
                   <div className="flex items-center gap-3 mb-4">
                     <MessageCircle className="w-5 h-5 text-[var(--app-primary)]" />
-                    <H3
-                      className="text-xl font-bold"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <H3 className="text-xl font-bold text-white">
                       Additional Information
                     </H3>
                   </div>
 
                   <div>
-                    <label
-                      className="block text-sm font-semibold mb-2"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <label className="mb-2 block text-sm font-semibold text-white">
                       Additional Comments or Special Requests
                     </label>
                     <div className="relative">
@@ -658,14 +634,7 @@ const PastoralCareUnit = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 px-6 rounded-xl font-black text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      background:
-                        'linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))',
-                      color: '#000000',
-                      boxShadow: '0 8px 25px rgba(245, 158, 11, 0.3)',
-                    }}
+                    className="w-full rounded-xl bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] px-6 py-4 font-black text-lg text-black shadow-[0_8px_25px_rgba(245,158,11,0.3)] transition-all duration-300 hover:scale-105 disabled:cursor-not-allowed disabled:transform-none disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center justify-center gap-2">
@@ -677,15 +646,7 @@ const PastoralCareUnit = () => {
                     )}
                   </button>
 
-                  <BodyMD
-                    className="text-center mt-4 opacity-70"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      color: isDarkMode
-                        ? 'rgba(255,255,255,0.60)'
-                        : 'rgba(255,255,255,0.42)',
-                    }}
-                  >
+                  <BodyMD className="mt-4 text-center text-white/60">
                     We&apos;ll contact you within 24-48 hours to discuss your
                     event details and confirm arrangements.
                   </BodyMD>
@@ -704,11 +665,7 @@ const PastoralCareUnit = () => {
           forceBottomSheet
         >
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-            <div
-              className="h-10 w-10 rounded-full flex items-center justify-center"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ backgroundColor: 'rgba(201,150,26,0.10)' }}
-            >
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--app-primary)]/10">
               <CheckCircle2 className="w-5 h-5 text-[var(--app-primary)]" />
             </div>
             <p className="text-white/80 text-sm leading-relaxed">

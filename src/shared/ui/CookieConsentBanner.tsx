@@ -247,21 +247,16 @@ export default function CookieConsentBanner() {
                   item.locked
                     ? 'cursor-not-allowed opacity-60'
                     : 'cursor-pointer'
+                } ${
+                  item.enabled
+                    ? 'border-[var(--app-primary)] bg-[var(--app-primary)]'
+                    : 'border-white/[0.24] bg-white/[0.14]'
                 }`}
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  backgroundColor: item.enabled
-                    ? 'var(--app-primary)'
-                    : 'rgba(255,255,255,0.14)',
-                  borderColor: item.enabled
-                    ? 'var(--app-primary)'
-                    : 'rgba(255,255,255,0.24)',
-                }}
               >
                 <span
-                  className="absolute top-[2px] h-5 w-5 rounded-full bg-black transition-all"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ left: item.enabled ? 'calc(100% - 22px)' : '2px' }}
+                  className={`absolute top-[2px] h-5 w-5 rounded-full bg-black transition-all ${
+                    item.enabled ? 'left-[calc(100%_-_22px)]' : 'left-[2px]'
+                  }`}
                 />
               </button>
             </div>

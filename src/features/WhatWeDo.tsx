@@ -7,6 +7,8 @@ import type { ServiceBox } from '@/lib/types';
 import { H2, BodySM } from '@/shared/text';
 import { useWhatWeDo } from '@/shared/utils/hooks/useWhatwedo';
 import { Section, Container } from '@/shared/layout';
+import { Card } from '@/shared/ui/cards';
+import GridBackground from '@/shared/ui/GridBackground';
 
 export default function WhatWeDo() {
   const { sectionRef, headingRef, textRef, addToBoxesRef } = useWhatWeDo();
@@ -41,12 +43,9 @@ export default function WhatWeDo() {
                 : '(max-width: 768px) 100vw, 50vw'
             }
             quality={88}
-            className="object-cover transition duration-700 ease-out group-hover:scale-105"
+            className="object-cover [object-position:center_top] transition duration-700 ease-out group-hover:scale-105"
             // eslint-disable-next-line no-restricted-syntax
-            style={{
-              objectPosition: 'center top',
-              opacity: box.imageOpacity ? box.imageOpacity / 100 : 1,
-            }}
+            style={{ opacity: box.imageOpacity ? box.imageOpacity / 100 : 1 }}
           />
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
@@ -101,7 +100,7 @@ export default function WhatWeDo() {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-10%] top-10 h-72 w-72 rounded-full bg-[var(--app-primary)]/[0.07] blur-3xl" />
         <div className="absolute right-[-8%] top-1/3 h-80 w-80 rounded-full bg-white/[0.045] blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+        <GridBackground />
       </div>
 
       <Container size="xl" className="relative z-10 px-4 sm:px-6 lg:px-10">
@@ -121,14 +120,15 @@ export default function WhatWeDo() {
             </H2>
           </div>
 
-          <div
+          <Card
             ref={textRef}
-            className="rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5"
+            padding="sm"
+            className="rounded-[1.25rem] bg-white/[0.035] sm:p-5"
           >
             <BodySM className="max-w-3xl text-sm leading-7 text-white/68 sm:text-base">
               {missionStatement}
             </BodySM>
-          </div>
+          </Card>
         </div>
 
         <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2 lg:gap-6">

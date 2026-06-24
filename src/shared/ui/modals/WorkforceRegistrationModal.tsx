@@ -7,6 +7,7 @@ import { Loader2, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { BaseModal, modalStyles } from './Base';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { SuccessModal } from './SuccessModal';
 import apiClient, { mapValidationErrors } from '@/lib/api';
 import {
@@ -409,10 +410,11 @@ export function WorkforceRegistrationModal({
           </section>
 
           <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[var(--app-surface-2)]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
-            <button
+            <CustomButton
               type="submit"
+              variant="primary"
               disabled={!isValid || isSubmitting}
-              className={modalStyles.primaryButton}
+              className="w-full"
             >
               {isSubmitting ? (
                 <span className="inline-flex items-center justify-center">
@@ -422,7 +424,7 @@ export function WorkforceRegistrationModal({
               ) : (
                 'Submit Workforce Details'
               )}
-            </button>
+            </CustomButton>
           </div>
         </form>
       </BaseModal>

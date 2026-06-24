@@ -1,15 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import { gsap } from 'gsap';
+import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '@/shared/utils/hooks/redux';
 import { clearCart } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/utils/buttons';
 import { FlexboxLayout } from '@/shared/layout';
 import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { storeClient } from '@/lib/api/storeClient';
 import {
   CreditCard,
@@ -19,12 +16,11 @@ import {
   CheckCircle,
   AlertCircle,
   Loader2,
-  X,
   User,
   Banknote,
 } from 'lucide-react';
+import OnlinePaymentModal from './OnlinePaymentModal';
 
-// Payment method types
 type PaymentMethod = 'transfer' | 'online' | 'delivery';
 
 interface FormData {
@@ -42,255 +38,10 @@ interface FormData {
   customerBankName?: string;
 }
 
-// Online Payment Modal Component (matches ProductModal design)
-const OnlinePaymentModal = ({
-  isOpen,
-  onClose,
-  onSelectTransfer,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelectTransfer: () => void;
-}) => {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  const textColor = 'var(--app-primary)';
-  const subtitleTextColor = '#ffffff';
-  const borderColor = 'var(--app-primary)';
-
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // FULL SCROLL LOCK
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.touchAction = 'none';
-    } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      const tl = gsap.timeline();
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 20 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-        );
-      }
-    }
-  }, [isOpen, isMobile]);
-
-  const handleClose = () => {
-    if (modalRef.current) {
-      if (isMobile) {
-        gsap.to(modalRef.current, {
-          y: '100%',
-          opacity: 0,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
-      } else {
-        gsap.to(modalRef.current, {
-          opacity: 0,
-          scale: 0.95,
-          y: 20,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
-      }
-    } else {
-      onClose();
-    }
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) handleClose();
-  };
-
-  if (!mounted || !isOpen) return null;
-
-  return createPortal(
-    <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${isMobile ? 'pb-0' : ''}`}
-      onClick={handleBackdropClick}
-    >
-      <div
-        ref={modalRef}
-        className={`
-          w-full mx-auto overflow-hidden border shadow-xl bg-black border-[var(--app-primary)]
-          ${isMobile ? 'rounded-t-2xl rounded-b-none max-h-[85vh]' : 'rounded-2xl max-w-md max-h-[85vh]'}
-        `}
-      >
-        {/* Mobile Drag Handle */}
-        {isMobile && (
-          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
-            <div className="w-10 h-1 rounded-full bg-[var(--app-primary)]" />
-          </div>
-        )}
-
-        <div className="flex flex-col h-full">
-          {/* Modal Header */}
-          <div className="relative h-12 flex items-center justify-center border-b border-[var(--app-primary)] px-4">
-            <button
-              onClick={handleClose}
-              className={`absolute bg-[rgba(201,150,26,0.10)] ${isMobile ? 'top-2.5 right-2.5 p-1' : 'top-2.5 right-2.5 p-1'}`}
-            >
-              <X className="w-3 h-3 text-[var(--app-primary)]" />
-            </button>
-
-            <H4
-              fontFamily="bricolage"
-              className="text-base text-[var(--app-primary)]"
-              useThemeColor={false}
-              weight="bold"
-            >
-              Service Unavailable
-            </H4>
-          </div>
-
-          {/* Modal Content */}
-          <div
-            className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(85vh-7rem)]' : 'p-5 max-h-[calc(85vh-8rem)]'}`}
-          >
-            <div className="space-y-4">
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-3">
-                  <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400" />
-                </div>
-
-                <SmallText
-                  weight="semibold"
-                  className="text-sm mb-1 text-[var(--app-primary)]"
-                >
-                  Online Payment Temporarily Unavailable
-                </SmallText>
-
-                <Caption className="text-xs mb-3 text-white">
-                  Our online payment gateway is currently undergoing
-                  maintenance. Please use our bank transfer option or pay on
-                  delivery.
-                </Caption>
-              </div>
-
-              <div className="space-y-2">
-                <FlexboxLayout align="center" gap="sm">
-                  <div className="w-4 h-4 rounded-full bg-blue-400/20 flex items-center justify-center flex-shrink-0">
-                    <Building className="w-2.5 h-2.5 text-blue-400" />
-                  </div>
-                  <Caption
-                    className="text-xs"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: subtitleTextColor }}
-                  >
-                    <strong>Bank Transfer:</strong> Transfer to our account and
-                    upload payment proof
-                  </Caption>
-                </FlexboxLayout>
-
-                <FlexboxLayout align="center" gap="sm">
-                  <div className="w-4 h-4 rounded-full bg-yellow-400/20 flex items-center justify-center flex-shrink-0">
-                    <Truck className="w-2.5 h-2.5 text-yellow-400" />
-                  </div>
-                  <Caption
-                    className="text-xs"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: subtitleTextColor }}
-                  >
-                    <strong>Pay on Delivery:</strong> Pay with cash or card when
-                    your order arrives
-                  </Caption>
-                </FlexboxLayout>
-              </div>
-            </div>
-          </div>
-
-          {/* Modal Footer */}
-          <div
-            className={`border-t p-3 ${isMobile ? '' : ''}`}
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderColor: borderColor }}
-          >
-            <FlexboxLayout direction="column" gap="xs">
-              <Button
-                variant="primary"
-                size="md"
-                curvature="xl"
-                onClick={() => {
-                  handleClose();
-                  onSelectTransfer();
-                }}
-                className="w-full py-2"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  backgroundColor: 'var(--app-primary)',
-                  color: '#000000',
-                }}
-              >
-                <SmallText weight="semibold" className="text-sm">
-                  Use Bank Transfer
-                </SmallText>
-              </Button>
-
-              <Button
-                variant="outline"
-                size="md"
-                curvature="xl"
-                onClick={handleClose}
-                className="w-full py-2"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  borderColor: borderColor,
-                  color: textColor,
-                }}
-              >
-                <SmallText weight="medium" className="text-sm">
-                  Close
-                </SmallText>
-              </Button>
-            </FlexboxLayout>
-          </div>
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-};
-
 const CheckoutForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { items, total } = useAppSelector(state => state.cart);
-  const { isDark } = useTheme();
 
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -312,7 +63,6 @@ const CheckoutForm = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // Generate unique order ID (combination of timestamp and random string)
   const generateOrderId = () => {
     const timestamp = Date.now().toString(36);
     const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -321,24 +71,10 @@ const CheckoutForm = () => {
 
   const [orderId] = useState(generateOrderId());
 
-  // Theme-based styles
-  const cardBackground = isDark ? 'rgba(255,255,255,0.04)' : '#ffffff';
-  const inputBackground = isDark ? 'rgba(255,255,255,0.04)' : '#f9fafb';
-  const inputBorderColor = isDark
-    ? 'rgba(255,255,255,0.14)'
-    : 'rgba(255,255,255,0.12)';
-  const textColor = '#f5f6f7';
-  const labelColor = 'rgba(255,255,255,0.60)';
-  const borderColor = isDark
-    ? 'rgba(255,255,255,0.14)'
-    : 'rgba(255,255,255,0.12)';
-
-  // Delivery fee (10% of total, min 1000)
   const deliveryFee = Math.max(1000, total * 0.1);
   const grandTotal =
     formData.paymentMethod === 'delivery' ? total + deliveryFee : total;
 
-  // Payment method options
   const paymentMethods = [
     {
       id: 'transfer',
@@ -366,7 +102,6 @@ const CheckoutForm = () => {
     },
   ];
 
-  // Bank details
   const bankDetails = {
     bankName: 'Keystone Bank',
     accountName: 'Wisdom House Store',
@@ -374,7 +109,6 @@ const CheckoutForm = () => {
   };
 
   useEffect(() => {
-    // Reset payment slip and customer bank details when switching methods
     if (formData.paymentMethod !== 'transfer') {
       setFormData(prev => ({
         ...prev,
@@ -395,8 +129,6 @@ const CheckoutForm = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-
-    // Clear error for this field
     if (formErrors[name]) {
       setFormErrors(prev => {
         const newErrors = { ...prev };
@@ -409,14 +141,13 @@ const CheckoutForm = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type and size
       const validTypes = [
         'image/jpeg',
         'image/png',
         'image/jpg',
         'application/pdf',
       ];
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 5 * 1024 * 1024;
 
       if (!validTypes.includes(file.type)) {
         setFormErrors(prev => ({
@@ -441,7 +172,6 @@ const CheckoutForm = () => {
         return newErrors;
       });
 
-      // Simulate upload progress
       setUploadProgress(0);
       const interval = setInterval(() => {
         setUploadProgress(prev => {
@@ -464,19 +194,16 @@ const CheckoutForm = () => {
       'phone',
     ];
 
-    // Basic form validation (always required)
     requiredFields.forEach(field => {
       if (!formData[field]) {
         errors[field] = 'This field is required';
       }
     });
 
-    // Email validation
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = 'Please enter a valid email address';
     }
 
-    // Phone validation (Nigerian format)
     if (
       formData.phone &&
       !/^(\+234|0)[789]\d{9}$/.test(formData.phone.replace(/\s/g, ''))
@@ -484,7 +211,6 @@ const CheckoutForm = () => {
       errors.phone = 'Please enter a valid Nigerian phone number';
     }
 
-    // Shipping address validation (only required for delivery)
     if (formData.paymentMethod === 'delivery') {
       const shippingFields: (keyof FormData)[] = [
         'address',
@@ -499,7 +225,6 @@ const CheckoutForm = () => {
       });
     }
 
-    // Payment method specific validations
     if (formData.paymentMethod === 'transfer') {
       if (!formData.paymentSlip) {
         errors.paymentSlip = 'Please upload your payment slip';
@@ -556,7 +281,6 @@ const CheckoutForm = () => {
 
       await storeClient.createOrder(orderPayload);
 
-      // Clear cart and redirect to confirmation with order data
       dispatch(clearCart());
       router.push(
         `/order-confirmation?orderId=${orderId}&amount=${grandTotal}`
@@ -571,52 +295,34 @@ const CheckoutForm = () => {
       setIsSubmitting(false);
     }
   };
+
   const isFormValid = Object.keys(formErrors).length === 0;
+
+  const inputClass = (field: string) =>
+    `w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200 bg-white/[0.04] text-white ${
+      formErrors[field] ? 'border-red-500' : 'border-white/[0.14]'
+    }`;
 
   return (
     <div className="max-w-4xl mx-auto">
       {/* Order ID Display */}
-      <div
-        className="rounded-2xl p-4 mb-6 shadow-lg border"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          backgroundColor: cardBackground,
-          borderColor: borderColor,
-        }}
-      >
+      <div className="rounded-2xl p-4 mb-6 shadow-lg border bg-white/[0.04] border-white/[0.14]">
         <FlexboxLayout justify="between" align="center">
           <div>
-            <Caption
-              className="text-sm mb-1"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: labelColor }}
-            >
+            <Caption className="text-sm mb-1 text-white/60">
               Order Reference
             </Caption>
-            <BaseText
-              weight="bold"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: textColor }}
-            >
+            <BaseText weight="bold" className="text-white">
               {orderId}
             </BaseText>
           </div>
           <div className="text-right">
-            <Caption
-              className="text-sm mb-1"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: labelColor }}
-            >
+            <Caption className="text-sm mb-1 text-white/60">
               Keep this for reference
             </Caption>
             <BaseText
               weight="semibold"
-              className="text-xs px-3 py-1 rounded-full"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: 'rgba(201,150,26,0.10)',
-                color: 'var(--app-primary)',
-              }}
+              className="text-xs px-3 py-1 rounded-full bg-[var(--app-primary-10)] text-[var(--app-primary)]"
             >
               #ORDER-REF
             </BaseText>
@@ -624,7 +330,6 @@ const CheckoutForm = () => {
         </FlexboxLayout>
       </div>
 
-      {/* Online Payment Modal */}
       {showOnlinePaymentModal && (
         <OnlinePaymentModal
           isOpen={showOnlinePaymentModal}
@@ -637,30 +342,15 @@ const CheckoutForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Personal Information */}
-        <div
-          className="rounded-2xl p-6 shadow-lg border"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            backgroundColor: cardBackground,
-            borderColor: borderColor,
-          }}
-        >
-          <H3
-            className="text-xl font-bold mb-6"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: textColor }}
-          >
+        <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.04] border-white/[0.14]">
+          <H3 className="text-xl font-bold mb-6 text-white">
             Contact Information
           </H3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {['firstName', 'lastName', 'email', 'phone'].map(field => (
               <div key={field}>
-                <label
-                  className="block text-sm font-medium mb-2"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: labelColor }}
-                >
+                <label className="block text-sm font-medium mb-2 text-white/60">
                   {field === 'firstName'
                     ? 'First Name *'
                     : field === 'lastName'
@@ -681,17 +371,7 @@ const CheckoutForm = () => {
                   required
                   value={formData[field as keyof FormData] as string}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200 ${
-                    formErrors[field] ? 'border-red-500' : ''
-                  }`}
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: inputBackground,
-                    borderColor: formErrors[field]
-                      ? '#ef4444'
-                      : inputBorderColor,
-                    color: textColor,
-                  }}
+                  className={inputClass(field)}
                   placeholder={
                     field === 'phone'
                       ? 'e.g., 08012345678 or +2348012345678'
@@ -707,22 +387,10 @@ const CheckoutForm = () => {
             ))}
           </div>
         </div>
+
         {/* Payment Method Selection */}
-        <div
-          className="rounded-2xl p-6 shadow-lg border"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            backgroundColor: cardBackground,
-            borderColor: borderColor,
-          }}
-        >
-          <H3
-            className="text-xl font-bold mb-6"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: textColor }}
-          >
-            Payment Method
-          </H3>
+        <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.04] border-white/[0.14]">
+          <H3 className="text-xl font-bold mb-6 text-white">Payment Method</H3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {paymentMethods.map(method => {
@@ -743,19 +411,20 @@ const CheckoutForm = () => {
                       }));
                     }
                   }}
-                  className={`p-4 rounded-2xl border-2 transition-all duration-300 text-left ${
-                    isSelected ? 'ring-2 ring-offset-2' : 'hover:scale-[1.02]'
+                  className={`p-4 rounded-2xl transition-all duration-300 text-left text-white bg-white/[0.04] ${
+                    isSelected
+                      ? 'border-2 ring-2 ring-offset-2'
+                      : 'border border-white/[0.14] hover:scale-[1.02]'
                   }`}
                   // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: inputBackground,
-                    borderColor: isSelected ? method.color : borderColor,
-                    borderWidth: isSelected ? '2px' : '1px',
-                    color: textColor,
-                    ...(isSelected && {
-                      boxShadow: `0 0 0 2px ${method.color}20`,
-                    }),
-                  }}
+                  style={
+                    isSelected
+                      ? {
+                          borderColor: method.color,
+                          boxShadow: `0 0 0 2px ${method.color}20`,
+                        }
+                      : undefined
+                  }
                 >
                   <FlexboxLayout align="center" gap="sm" className="mb-2">
                     <div
@@ -791,36 +460,18 @@ const CheckoutForm = () => {
             })}
           </div>
 
-          {/* Payment Method Details */}
+          {/* Bank Transfer Details */}
           {formData.paymentMethod === 'transfer' && (
             <div className="space-y-6">
-              {/* Bank Details */}
-              <div
-                className="p-6 rounded-2xl"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  backgroundColor: isDark
-                    ? 'rgba(59,130,246,0.06)'
-                    : 'rgba(59,130,246,0.12)',
-                  border: `1px solid rgba(59,130,246,0.25)`,
-                }}
-              >
-                <H4
-                  className="text-lg font-bold mb-4 flex items-center gap-2"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: '#3b82f6' }}
-                >
+              <div className="p-6 rounded-2xl bg-blue-500/[0.06] border border-blue-500/25">
+                <H4 className="text-lg font-bold mb-4 flex items-center gap-2 text-blue-500">
                   <Building className="w-5 h-5" />
                   Bank Transfer Details
                 </H4>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Caption
-                        className="text-sm mb-1"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: labelColor }}
-                      >
+                      <Caption className="text-sm mb-1 text-white/60">
                         Bank Name
                       </Caption>
                       <BaseText weight="semibold">
@@ -828,11 +479,7 @@ const CheckoutForm = () => {
                       </BaseText>
                     </div>
                     <div>
-                      <Caption
-                        className="text-sm mb-1"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: labelColor }}
-                      >
+                      <Caption className="text-sm mb-1 text-white/60">
                         Account Name
                       </Caption>
                       <BaseText weight="semibold">
@@ -840,11 +487,7 @@ const CheckoutForm = () => {
                       </BaseText>
                     </div>
                     <div>
-                      <Caption
-                        className="text-sm mb-1"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: labelColor }}
-                      >
+                      <Caption className="text-sm mb-1 text-white/60">
                         Account Number
                       </Caption>
                       <BaseText weight="semibold" className="text-lg">
@@ -853,75 +496,40 @@ const CheckoutForm = () => {
                     </div>
                   </div>
 
-                  <div
-                    className="p-4 rounded-xl mt-2"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      backgroundColor: isDark
-                        ? 'rgba(234,179,8,0.06)'
-                        : 'rgba(234,179,8,0.12)',
-                      border: `1px solid rgba(234,179,8,0.25)`,
-                    }}
-                  >
+                  <div className="p-4 rounded-xl mt-2 bg-yellow-500/[0.06] border border-yellow-500/25">
                     <FlexboxLayout align="center" gap="sm" className="mb-2">
-                      <AlertCircle
-                        className="w-4 h-4"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: '#eab308' }}
-                      />
+                      <AlertCircle className="w-4 h-4 text-yellow-500" />
                       <Caption
                         weight="semibold"
-                        className="text-sm"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ color: '#eab308' }}
+                        className="text-sm text-yellow-500"
                       >
                         Important Instructions
                       </Caption>
                     </FlexboxLayout>
-                    <ul
-                      className="space-y-2 text-sm"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: labelColor }}
-                    >
+                    <ul className="space-y-2 text-sm text-white/60">
                       <li className="flex items-start gap-2">
-                        <CheckCircle
-                          className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: '#22c55e' }}
-                        />
+                        <CheckCircle className="w-3 h-3 mt-0.5 flex-shrink-0 text-green-500" />
                         <span>
                           Transfer the exact amount:{' '}
                           <strong>NGN {grandTotal.toLocaleString()}</strong>
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle
-                          className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: '#22c55e' }}
-                        />
+                        <CheckCircle className="w-3 h-3 mt-0.5 flex-shrink-0 text-green-500" />
                         <span>
                           Use the account name:{' '}
                           <strong>{bankDetails.accountName}</strong>
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle
-                          className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: '#22c55e' }}
-                        />
+                        <CheckCircle className="w-3 h-3 mt-0.5 flex-shrink-0 text-green-500" />
                         <span>
                           Take a screenshot/snapshot of your transfer
                           confirmation
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle
-                          className="w-3 h-3 mt-0.5 flex-shrink-0"
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{ color: '#22c55e' }}
-                        />
+                        <CheckCircle className="w-3 h-3 mt-0.5 flex-shrink-0 text-green-500" />
                         <span>
                           Upload the payment slip below with your bank details
                         </span>
@@ -949,17 +557,7 @@ const CheckoutForm = () => {
                         value={formData.customerAccountName || ''}
                         onChange={handleInputChange}
                         placeholder="Enter the account name you used for transfer"
-                        className={`w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200 ${
-                          formErrors.customerAccountName ? 'border-red-500' : ''
-                        }`}
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          backgroundColor: inputBackground,
-                          borderColor: formErrors.customerAccountName
-                            ? '#ef4444'
-                            : inputBorderColor,
-                          color: textColor,
-                        }}
+                        className={inputClass('customerAccountName')}
                       />
                       {formErrors.customerAccountName && (
                         <Caption className="text-red-500 text-xs mt-1">
@@ -978,17 +576,7 @@ const CheckoutForm = () => {
                         value={formData.customerBankName || ''}
                         onChange={handleInputChange}
                         placeholder="e.g., First Bank, GTBank, Access Bank"
-                        className={`w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200 ${
-                          formErrors.customerBankName ? 'border-red-500' : ''
-                        }`}
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          backgroundColor: inputBackground,
-                          borderColor: formErrors.customerBankName
-                            ? '#ef4444'
-                            : inputBorderColor,
-                          color: textColor,
-                        }}
+                        className={inputClass('customerBankName')}
                       />
                       {formErrors.customerBankName && (
                         <Caption className="text-red-500 text-xs mt-1">
@@ -1012,24 +600,15 @@ const CheckoutForm = () => {
                       />
                       <label
                         htmlFor="paymentSlip"
-                        className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 hover:border-yellow-400 ${
-                          formErrors.paymentSlip ? 'border-red-500' : ''
+                        className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 hover:border-yellow-400 bg-white/[0.04] ${
+                          formErrors.paymentSlip
+                            ? 'border-red-500'
+                            : 'border-white/[0.14]'
                         }`}
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{
-                          backgroundColor: inputBackground,
-                          borderColor: formErrors.paymentSlip
-                            ? '#ef4444'
-                            : borderColor,
-                        }}
                       >
                         {formData.paymentSlip ? (
                           <>
-                            <CheckCircle
-                              className="w-8 h-8 mb-2"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{ color: '#22c55e' }}
-                            />
+                            <CheckCircle className="w-8 h-8 mb-2 text-green-500" />
                             <BaseText weight="semibold" className="text-center">
                               {formData.paymentSlip.name}
                             </BaseText>
@@ -1042,36 +621,20 @@ const CheckoutForm = () => {
                                 />
                               </div>
                             )}
-                            <Caption
-                              className="text-xs mt-1"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{ color: labelColor }}
-                            >
+                            <Caption className="text-xs mt-1 text-white/60">
                               Click to change file
                             </Caption>
                           </>
                         ) : (
                           <>
-                            <Upload
-                              className="w-8 h-8 mb-2"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{ color: labelColor }}
-                            />
+                            <Upload className="w-8 h-8 mb-2 text-white/60" />
                             <BaseText weight="semibold" className="text-center">
                               Click to upload payment slip
                             </BaseText>
-                            <Caption
-                              className="text-sm mt-1"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{ color: labelColor }}
-                            >
+                            <Caption className="text-sm mt-1 text-white/60">
                               Upload screenshot/snapshot of your transfer
                             </Caption>
-                            <Caption
-                              className="text-xs mt-1"
-                              // eslint-disable-next-line no-restricted-syntax
-                              style={{ color: labelColor }}
-                            >
+                            <Caption className="text-xs mt-1 text-white/60">
                               JPG, PNG or PDF (max 5MB)
                             </Caption>
                           </>
@@ -1084,11 +647,7 @@ const CheckoutForm = () => {
                       </Caption>
                     )}
 
-                    <Caption
-                      className="text-xs mt-2"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: labelColor }}
-                    >
+                    <Caption className="text-xs mt-2 text-white/60">
                       <strong>What to upload:</strong> Screenshot of successful
                       transfer, bank transfer receipt, or mobile banking
                       confirmation showing amount, date, and our account
@@ -1100,54 +659,30 @@ const CheckoutForm = () => {
             </div>
           )}
 
+          {/* Pay on Delivery Details */}
           {formData.paymentMethod === 'delivery' && (
-            <div
-              className="p-6 rounded-2xl mb-6"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                backgroundColor: isDark
-                  ? 'rgba(234,179,8,0.06)'
-                  : 'rgba(234,179,8,0.12)',
-                border: `1px solid rgba(234,179,8,0.25)`,
-              }}
-            >
-              <H4
-                className="text-lg font-bold mb-4 flex items-center gap-2"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: '#eab308' }}
-              >
+            <div className="p-6 rounded-2xl mb-6 bg-yellow-500/[0.06] border border-yellow-500/25">
+              <H4 className="text-lg font-bold mb-4 flex items-center gap-2 text-yellow-500">
                 <Truck className="w-5 h-5" />
                 Pay on Delivery Details
               </H4>
               <div className="space-y-3">
                 <FlexboxLayout align="center" gap="sm">
-                  <CheckCircle
-                    className="w-5 h-5"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: '#22c55e' }}
-                  />
+                  <CheckCircle className="w-5 h-5 text-green-500" />
                   <Caption>
                     You can pay with <strong>cash</strong> or{' '}
                     <strong>card</strong> when your order arrives
                   </Caption>
                 </FlexboxLayout>
                 <FlexboxLayout align="center" gap="sm">
-                  <CheckCircle
-                    className="w-5 h-5"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: '#22c55e' }}
-                  />
+                  <CheckCircle className="w-5 h-5 text-green-500" />
                   <Caption>
                     Our delivery agent will bring a POS machine for card
                     payments
                   </Caption>
                 </FlexboxLayout>
                 <FlexboxLayout align="center" gap="sm">
-                  <CheckCircle
-                    className="w-5 h-5"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: '#22c55e' }}
-                  />
+                  <CheckCircle className="w-5 h-5 text-green-500" />
                   <Caption>
                     Delivery within 3-5 business days in Lagos, 7-10 days
                     elsewhere
@@ -1156,16 +691,8 @@ const CheckoutForm = () => {
 
                 <div className="mt-4 p-4 rounded-xl bg-yellow-50 dark:bg-yellow-900/20">
                   <FlexboxLayout align="center" gap="sm">
-                    <Banknote
-                      className="w-4 h-4"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: '#eab308' }}
-                    />
-                    <Caption
-                      weight="semibold"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: '#eab308' }}
-                    >
+                    <Banknote className="w-4 h-4 text-yellow-500" />
+                    <Caption weight="semibold" className="text-yellow-500">
                       Delivery Fee: NGN {deliveryFee.toLocaleString()} added to
                       your total
                     </Caption>
@@ -1175,50 +702,31 @@ const CheckoutForm = () => {
             </div>
           )}
         </div>
+
         {/* Shipping Address (Only for delivery) */}
         {formData.paymentMethod === 'delivery' && (
-          <div
-            className="rounded-2xl p-6 shadow-lg border"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-xl font-bold mb-6"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ color: textColor }}
-            >
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.04] border-white/[0.14]">
+            <H3 className="text-xl font-bold mb-6 text-white">
               Shipping Address
             </H3>
 
             <div className="space-y-4">
               <div>
                 <label
-                  className="block text-sm font-medium mb-2"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: labelColor }}
+                  htmlFor="address"
+                  className="block text-sm font-medium mb-2 text-white/60"
                 >
                   Address *
                 </label>
                 <input
+                  id="address"
                   type="text"
                   name="address"
                   required
+                  placeholder="Street address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200 ${
-                    formErrors.address ? 'border-red-500' : ''
-                  }`}
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    backgroundColor: inputBackground,
-                    borderColor: formErrors.address
-                      ? '#ef4444'
-                      : inputBorderColor,
-                    color: textColor,
-                  }}
+                  className={inputClass('address')}
                 />
                 {formErrors.address && (
                   <Caption className="text-red-500 text-xs mt-1">
@@ -1231,9 +739,8 @@ const CheckoutForm = () => {
                 {['city', 'state', 'zipCode'].map(field => (
                   <div key={field}>
                     <label
-                      className="block text-sm font-medium mb-2"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: labelColor }}
+                      htmlFor={field}
+                      className="block text-sm font-medium mb-2 text-white/60"
                     >
                       {field === 'city'
                         ? 'City *'
@@ -1242,22 +749,20 @@ const CheckoutForm = () => {
                           : 'ZIP Code *'}
                     </label>
                     <input
+                      id={field}
                       type="text"
                       name={field}
                       required
+                      placeholder={
+                        field === 'city'
+                          ? 'City'
+                          : field === 'state'
+                            ? 'State / Province'
+                            : 'ZIP / Postal code'
+                      }
                       value={formData[field as keyof FormData] as string}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200 ${
-                        formErrors[field] ? 'border-red-500' : ''
-                      }`}
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        backgroundColor: inputBackground,
-                        borderColor: formErrors[field]
-                          ? '#ef4444'
-                          : inputBorderColor,
-                        color: textColor,
-                      }}
+                      className={inputClass(field)}
                     />
                     {formErrors[field] && (
                       <Caption className="text-red-500 text-xs mt-1">
@@ -1270,44 +775,20 @@ const CheckoutForm = () => {
             </div>
           </div>
         )}
+
         {/* Order Summary */}
-        <div
-          className="rounded-2xl p-6 shadow-lg border"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            backgroundColor: cardBackground,
-            borderColor: borderColor,
-          }}
-        >
-          <H3
-            className="text-xl font-bold mb-6"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: textColor }}
-          >
-            Order Summary
-          </H3>
+        <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.04] border-white/[0.14]">
+          <H3 className="text-xl font-bold mb-6 text-white">Order Summary</H3>
 
           <div className="space-y-4">
             <div className="mb-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-900">
-              <Caption
-                className="text-sm font-medium mb-1"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: labelColor }}
-              >
+              <Caption className="text-sm font-medium mb-1 text-white/60">
                 Order ID
               </Caption>
-              <BaseText
-                weight="bold"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: textColor }}
-              >
+              <BaseText weight="bold" className="text-white">
                 {orderId}
               </BaseText>
-              <Caption
-                className="text-xs mt-1"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ color: labelColor }}
-              >
+              <Caption className="text-xs mt-1 text-white/60">
                 Please save this reference for future inquiries
               </Caption>
             </div>
@@ -1315,27 +796,15 @@ const CheckoutForm = () => {
             {items.map(item => (
               <FlexboxLayout key={item.id} justify="between" align="center">
                 <div className="flex-1">
-                  <BaseText
-                    weight="semibold"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: textColor }}
-                  >
+                  <BaseText weight="semibold" className="text-white">
                     {item.name}
                   </BaseText>
-                  <Caption
-                    className="text-sm"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
+                  <Caption className="text-sm text-white/60">
                     {item.selectedSize} | {item.selectedColor} | Qty:{' '}
                     {item.quantity}
                   </Caption>
                 </div>
-                <BaseText
-                  weight="bold"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: textColor }}
-                >
+                <BaseText weight="bold" className="text-white">
                   NGN{' '}
                   {(
                     parseFloat(item.price.replace(/[^\d.]/g, '')) *
@@ -1345,18 +814,9 @@ const CheckoutForm = () => {
               </FlexboxLayout>
             ))}
 
-            <div
-              className="space-y-3 border-t pt-4"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderColor: borderColor }}
-            >
+            <div className="space-y-3 border-t border-white/[0.14] pt-4">
               <FlexboxLayout justify="between">
-                <Caption
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ color: labelColor }}
-                >
-                  Subtotal
-                </Caption>
+                <Caption className="text-white/60">Subtotal</Caption>
                 <BaseText weight="semibold">
                   NGN {total.toLocaleString()}
                 </BaseText>
@@ -1364,12 +824,7 @@ const CheckoutForm = () => {
 
               {formData.paymentMethod === 'delivery' && (
                 <FlexboxLayout justify="between">
-                  <Caption
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ color: labelColor }}
-                  >
-                    Delivery Fee
-                  </Caption>
+                  <Caption className="text-white/60">Delivery Fee</Caption>
                   <BaseText weight="semibold">
                     NGN {deliveryFee.toLocaleString()}
                   </BaseText>
@@ -1378,9 +833,7 @@ const CheckoutForm = () => {
 
               <FlexboxLayout
                 justify="between"
-                className="pt-3 border-t"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderColor: borderColor }}
+                className="pt-3 border-t border-white/[0.14]"
               >
                 <BaseText weight="bold" className="text-lg">
                   Total Amount:
@@ -1393,11 +846,7 @@ const CheckoutForm = () => {
                     NGN {grandTotal.toLocaleString()}
                   </BaseText>
                   {formData.paymentMethod === 'delivery' && (
-                    <Caption
-                      className="text-sm mt-1"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ color: labelColor }}
-                    >
+                    <Caption className="text-sm mt-1 text-white/60">
                       Includes NGN {deliveryFee.toLocaleString()} delivery fee
                     </Caption>
                   )}
@@ -1406,7 +855,7 @@ const CheckoutForm = () => {
             </div>
           </div>
         </div>
-        {/* Submit Button */}
+
         {formErrors.submit && (
           <div className="p-4 rounded-2xl bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800">
             <FlexboxLayout align="center" gap="sm">
@@ -1426,14 +875,6 @@ const CheckoutForm = () => {
           elevated={true}
           disabled={!isFormValid || isSubmitting}
           className="w-full transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{
-            backgroundColor:
-              isFormValid && !isSubmitting
-                ? 'var(--app-primary)'
-                : 'rgba(255,255,255,0.42)',
-            color: '#000000',
-          }}
         >
           {isSubmitting ? (
             <FlexboxLayout align="center" gap="sm">
@@ -1444,13 +885,9 @@ const CheckoutForm = () => {
             `Confirm Order - NGN ${grandTotal.toLocaleString()}`
           )}
         </Button>
-        {/* Form validation notice */}
+
         {!isFormValid && (
-          <Caption
-            className="text-center text-sm"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ color: '#eab308' }}
-          >
+          <Caption className="text-center text-sm text-yellow-500">
             Please fill in all required fields correctly to complete your order.
           </Caption>
         )}

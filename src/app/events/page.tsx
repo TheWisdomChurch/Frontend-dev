@@ -12,6 +12,7 @@ import {
 
 import { EventBannerDesktop } from '@/shared/assets';
 import PageHero from '@/features/hero/PageHero';
+import { Container, Section } from '@/shared/layout';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 
@@ -111,10 +112,10 @@ export default function EventsPage() {
         compact
       />
 
-      <section className="relative overflow-hidden bg-[var(--app-surface)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <Section padding="lg" className="bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_18%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
 
-        <div className="relative mx-auto max-w-6xl">
+        <Container size="lg">
           <div className="mb-8 flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -218,8 +219,8 @@ export default function EventsPage() {
               })}
             </div>
           )}
-        </div>
-      </section>
+        </Container>
+      </Section>
     </main>
   );
 }

@@ -1,7 +1,8 @@
 'use client';
 
 import { CheckCircle2 } from 'lucide-react';
-import { BaseModal, modalStyles } from './Base';
+import { BaseModal } from './Base';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 import type { SuccessModalProps } from '@/lib/types';
 
 export function SuccessModal({
@@ -30,13 +31,13 @@ export function SuccessModal({
 
         <p className="mt-3 text-sm leading-7 text-white/65">{message}</p>
 
-        <button
-          type="button"
+        <CustomButton
+          variant="primary"
           onClick={onClose}
-          className={`${modalStyles.primaryButton} mt-7`}
+          className="mt-7 w-full"
         >
           {actionLabel}
-        </button>
+        </CustomButton>
       </div>
     </BaseModal>
   );

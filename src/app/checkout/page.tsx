@@ -9,6 +9,7 @@ import { useAppSelector } from '@/shared/utils/hooks/redux';
 import CheckoutForm from '@/features/store/Store/checkoutForm';
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -47,13 +48,14 @@ export default function CheckoutPage() {
                 Add some resources from the store before proceeding to checkout.
               </p>
 
-              <button
-                type="button"
+              <CustomButton
+                variant="primary"
+                curvature="full"
                 onClick={() => router.push('/resources/store')}
-                className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                className="mt-7 hover:-translate-y-0.5"
               >
                 Back to Store
-              </button>
+              </CustomButton>
             </div>
           </Container>
         </Section>

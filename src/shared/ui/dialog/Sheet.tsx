@@ -146,11 +146,11 @@ interface SheetContentProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
   (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     {
       side = 'right',
       className,
       children,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       disableOutsideClose: _disableOutsideClose,
       ...props
     },

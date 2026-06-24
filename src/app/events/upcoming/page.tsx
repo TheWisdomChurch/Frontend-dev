@@ -13,6 +13,7 @@ import {
 
 import HeroSection from '@/features/hero/PageHero';
 import { hero_bg_2, NL } from '@/shared/assets';
+import { Container, Section } from '@/shared/layout';
 import { useUpcomingEvents } from '@/shared/utils/hooks/UpcomingHooks';
 
 export default function Upcoming() {
@@ -59,10 +60,10 @@ export default function Upcoming() {
         showScrollIndicator
       />
 
-      <section className="relative overflow-hidden bg-[var(--app-surface)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <Section padding="lg" className="bg-[var(--app-surface)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_16%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
 
-        <div className="relative mx-auto max-w-6xl">
+        <Container size="lg">
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Featured program
@@ -96,7 +97,8 @@ export default function Upcoming() {
               </p>
 
               <h2 className="text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
-                7 Nights of <span className="text-[var(--app-primary)]">Lifting</span>
+                7 Nights of{' '}
+                <span className="text-[var(--app-primary)]">Lifting</span>
               </h2>
 
               <div className="space-y-3 text-sm leading-7 text-white/65 sm:text-base">
@@ -132,14 +134,15 @@ export default function Upcoming() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      <section
+      <Section
         ref={calendarRef}
-        className="relative overflow-hidden bg-[var(--app-surface-2)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
+        padding="lg"
+        className="bg-[var(--app-surface-2)]"
       >
-        <div className="mx-auto max-w-6xl">
+        <Container size="lg">
           <div className="mb-8 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -269,7 +272,9 @@ export default function Upcoming() {
                     >
                       <p
                         className={`text-sm font-semibold ${
-                          day.isToday ? 'text-[var(--app-primary)]' : 'text-white'
+                          day.isToday
+                            ? 'text-[var(--app-primary)]'
+                            : 'text-white'
                         }`}
                       >
                         {day.date.getDate()}
@@ -370,13 +375,10 @@ export default function Upcoming() {
               </div>
             )}
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      <section
-        ref={conferenceRef}
-        className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
-      >
+      <Section ref={conferenceRef} padding="none" className="py-16 lg:py-24">
         <video
           autoPlay
           muted
@@ -392,12 +394,16 @@ export default function Upcoming() {
 
         <div className="absolute inset-0 bg-black/70" />
 
-        <div className="relative mx-auto max-w-4xl rounded-[1.6rem] border border-white/10 bg-black/45 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-md sm:rounded-[2rem] sm:p-8 lg:p-10">
+        <Container
+          size="md"
+          className="relative rounded-[1.6rem] border border-white/10 bg-black/45 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-md sm:rounded-[2rem] sm:p-8 lg:p-10"
+        >
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Major gathering
           </p>
           <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Wisdom Power <span className="text-[var(--app-primary)]">Conference</span> 2026
+            Wisdom Power{' '}
+            <span className="text-[var(--app-primary)]">Conference</span> 2026
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
             The most anticipated spiritual gathering of the year is coming.
@@ -421,14 +427,15 @@ export default function Upcoming() {
               Remind Me Later
             </button>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      <section
+      <Section
         ref={newsletterRef}
-        className="bg-[var(--app-surface)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20"
+        padding="lg"
+        className="bg-[var(--app-surface)]"
       >
-        <div className="mx-auto max-w-3xl text-center">
+        <Container size="sm" className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Newsletter
           </p>
@@ -459,8 +466,8 @@ export default function Upcoming() {
             By subscribing, you agree to receive updates about our events and
             programs. You can unsubscribe at any time.
           </p>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </main>
   );
 }

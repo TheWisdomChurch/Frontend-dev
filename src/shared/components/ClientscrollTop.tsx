@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Bell, ChevronUp } from 'lucide-react';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 
 export default function ClientScrollToTop() {
   const [visible, setVisible] = useState(false);
@@ -24,16 +25,17 @@ export default function ClientScrollToTop() {
       >
         <Bell className="h-4 w-4" />
       </Link>
-      <button
-        type="button"
+      <CustomButton
+        variant="ghost"
+        size="icon"
         aria-label="Scroll to top"
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-slate-950/90 text-white shadow-lg transition hover:border-white/40 ${
+        className={`h-11 w-11 rounded-xl border border-white/20 bg-slate-950/90 shadow-lg hover:border-white/40 ${
           visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
         <ChevronUp className="h-5 w-5" />
-      </button>
+      </CustomButton>
     </div>
   );
 }

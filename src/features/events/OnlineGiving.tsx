@@ -29,6 +29,8 @@ import type { GivingOption } from '@/lib/types';
 import { H2, BaseText, BodySM, Caption, H3 } from '@/shared/text';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { Section, Container } from '@/shared/layout';
+import { Card } from '@/shared/ui/cards';
+import GridBackground from '@/shared/ui/GridBackground';
 import { WisdomeHouseLogo } from '@/shared/assets';
 
 type Particle = {
@@ -278,16 +280,9 @@ export default function OnlineGiving() {
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          <div
-            className="absolute inset-0 opacity-90"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              background:
-                'radial-gradient(circle at 18% 18%, rgba(201,150,26,0.10), transparent 32%), radial-gradient(circle at 82% 22%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 50% 100%, rgba(201,150,26,0.06), transparent 38%)',
-            }}
-          />
+          <div className="giving-glow-overlay absolute inset-0 opacity-90" />
 
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-30" />
+          <GridBackground className="opacity-30" />
 
           {particles.map(particle => (
             <div
@@ -379,7 +374,11 @@ export default function OnlineGiving() {
               </div>
             </div>
           ) : givingOptions.length === 0 ? (
-            <div className="mx-auto max-w-lg rounded-[1.75rem] border border-white/10 bg-white/[0.06] p-8 text-center shadow-2xl backdrop-blur-xl">
+            <Card
+              variant="glass"
+              padding="lg"
+              className="mx-auto max-w-lg rounded-[1.75rem] bg-white/[0.06] text-center shadow-2xl"
+            >
               <Gift className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
               <H3
                 className="mt-4 text-lg font-semibold text-white"
@@ -394,7 +393,7 @@ export default function OnlineGiving() {
                 Our online giving channels will appear here once they are
                 published from the admin portal.
               </Caption>
-            </div>
+            </Card>
           ) : (
             <>
               <div className="hidden lg:block">

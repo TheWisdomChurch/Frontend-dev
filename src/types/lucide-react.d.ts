@@ -24,6 +24,7 @@ declare module 'lucide-react' {
   export const BookOpenCheck: LucideIcon;
   export const Briefcase: LucideIcon;
   export const Building: LucideIcon;
+  export const Camera: LucideIcon;
   export const Calendar: LucideIcon;
   export const CalendarClock: LucideIcon;
   export const CalendarDays: LucideIcon;

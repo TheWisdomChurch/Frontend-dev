@@ -466,13 +466,7 @@ export default function HeroSection({
             <div className="relative max-w-4xl">
               <H1
                 ref={titleRef}
-                className="font-semibold leading-[0.98] tracking-[-0.052em]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{
-                  color: '#FFFFFF',
-                  textShadow:
-                    '0 6px 30px rgba(0,0,0,0.82), 0 2px 12px rgba(0,0,0,0.68)',
-                }}
+                className="hero-title-shadow font-semibold leading-[0.98] tracking-[-0.052em]"
                 useThemeColor={false}
               >
                 <span className="block text-[1.95rem] sm:text-[2.8rem] md:text-5xl lg:text-[4rem] xl:text-[4.8rem]">

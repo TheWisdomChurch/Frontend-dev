@@ -97,15 +97,11 @@ export default function ThemeToggle({
           <motion.div
             key={theme}
             layoutId="theme-pill"
-            className="absolute inset-y-0 rounded-full"
+            className="absolute inset-y-0 rounded-full bg-[linear-gradient(120deg,var(--app-primary)_0%,var(--app-primary-dark)_100%)] shadow-[0_10px_30px_rgba(201,150,26,0.20),0_1px_0_rgba(255,255,255,0.5)_inset]"
             // eslint-disable-next-line no-restricted-syntax
             style={{
               width: `${pillWidth}%`,
               left: `${activeIndex * pillWidth}%`,
-              background:
-                'linear-gradient(120deg, var(--app-primary) 0%, var(--app-primary-dark) 100%)',
-              boxShadow:
-                '0 10px 30px rgba(201,150,26,0.20), 0 1px 0 rgba(255,255,255,0.5) inset',
             }}
             initial={{ opacity: 0.75, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}

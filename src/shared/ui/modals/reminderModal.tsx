@@ -8,6 +8,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
 import { BaseModal, modalStyles } from './Base';
+import CustomButton from '@/shared/utils/buttons/CustomButton';
 import { SuccessModal } from './SuccessModal';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { reminderSchema, type ReminderFormSchema } from '@/lib/validation';
@@ -165,10 +166,11 @@ export function ReminderModal({
               ) : null}
             </div>
 
-            <button
+            <CustomButton
               type="submit"
+              variant="primary"
               disabled={!isValid || isProcessing}
-              className={modalStyles.primaryButton}
+              className="w-full"
             >
               {isProcessing ? (
                 <span className="inline-flex items-center justify-center">
@@ -178,7 +180,7 @@ export function ReminderModal({
               ) : (
                 'Set Reminder'
               )}
-            </button>
+            </CustomButton>
           </form>
         </div>
       </BaseModal>
