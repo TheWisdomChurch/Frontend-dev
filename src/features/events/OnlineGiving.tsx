@@ -43,7 +43,7 @@ type Particle = {
 };
 
 const CARD_SHELL =
-  'giving-card group relative overflow-hidden rounded-[1.75rem] border border-white/12 bg-white/[0.065] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.38)] backdrop-blur-md transition-all duration-500 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.09] sm:p-6';
+  'giving-card group relative overflow-hidden rounded-xl border border-white/12 bg-white/[0.065] p-5 transition-all duration-300 ease-out hover:border-white/25 hover:bg-white/[0.09] sm:p-6';
 
 const CARD_TITLE = 'text-[0.95rem] font-semibold leading-snug text-white';
 const CARD_DESC = 'text-[0.82rem] leading-relaxed text-white/68';
@@ -377,7 +377,7 @@ export default function OnlineGiving() {
             <Card
               variant="glass"
               padding="lg"
-              className="mx-auto max-w-lg rounded-[1.75rem] bg-white/[0.06] text-center shadow-2xl"
+              className="mx-auto max-w-lg rounded-xl bg-white/[0.06] text-center"
             >
               <Gift className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
               <H3
@@ -557,7 +557,7 @@ export default function OnlineGiving() {
                 : 'translate-y-8 opacity-0'
             }`}
           >
-            <div className="mx-auto max-w-2xl overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.03] p-6 text-center shadow-[0_24px_80px_rgba(0,0,0,0.38)] backdrop-blur-2xl sm:p-7">
+            <div className="mx-auto max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-white/[0.06] p-6 text-center sm:p-7">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.10] text-[var(--app-primary)]">
                 <HeartHandshake className="h-6 w-6" />
               </div>

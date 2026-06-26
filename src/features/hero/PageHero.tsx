@@ -169,7 +169,7 @@ export default function PageHero({
 
           {isAboutVariant ? (
             <aside className="hidden lg:block">
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40">
+              <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] p-6">
                 <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
 
                 <div className="relative space-y-5">

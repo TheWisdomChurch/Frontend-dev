@@ -18,14 +18,12 @@ import {
   Mail,
   PlayCircle,
   Radio,
-  Sparkles,
   UserRound,
   Video,
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
-import GridBackground from '@/shared/ui/GridBackground';
 import { Caption, H3, BodySM, SmallText, BodyMD } from '@/shared/text';
 import { resourceLinks } from '@/lib/data';
 import type { YouTubeVideo } from '@/lib/types';
@@ -180,171 +178,152 @@ export default function ResourceSection() {
     : null;
 
   return (
-    <Section
-      ref={sectionRef}
-      id="resources"
-      padding="lg"
-      className="relative overflow-hidden bg-[var(--app-surface)]"
-    >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(201,150,26,0.06),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(201,150,26,0.04),transparent_30%)]" />
-      </div>
-
-      <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">
+    <Section ref={sectionRef} id="resources" padding="lg" className="bg-white">
+      <Container size="xl" className="space-y-8 sm:space-y-10">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
-              <Sparkles className="h-3.5 w-3.5" />
-              <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                Resources & Media
-              </Caption>
-            </div>
-
+          <div>
+            <p className="mb-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+              Resources & Media
+            </p>
             <H3
-              className="text-2xl font-semibold leading-tight tracking-tight text-[var(--app-text)] sm:text-3xl lg:text-5xl"
+              className="text-2xl font-semibold leading-tight tracking-tight text-[var(--app-text)] sm:text-3xl lg:text-4xl"
               useThemeColor={false}
             >
-              Streams, sermons, events, and pastoral care
+              Sermons, events &amp; pastoral care
             </H3>
-
-            <BodySM
-              className="mt-4 max-w-2xl text-[0.92rem] leading-7 text-[var(--app-muted)] sm:text-base"
-              useThemeColor={false}
-            >
-              Catch up on sermons, join a live service, register for events, or
-              request pastoral moments from one focused media hub.
-            </BodySM>
           </div>
 
           <Link
             href="/resources"
-            className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--app-border)] bg-white px-5 py-3 text-sm font-bold text-[var(--app-text)] shadow-sm transition hover:border-[var(--app-primary)]/30 hover:bg-[var(--app-surface-2)]"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--app-border)] px-5 py-2.5 text-sm font-semibold text-[var(--app-text)] transition hover:border-[var(--app-primary)]/40 hover:text-[var(--app-primary)]"
           >
             View all resources <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
-          <div className="relative overflow-hidden rounded-[2rem] border border-[var(--app-border)] bg-white p-4 shadow-[0_12px_40px_rgba(0,0,0,0.08)] sm:p-5 lg:p-6">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent" />
-
-            <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
-              <div className="flex flex-col justify-between rounded-[1.5rem] border border-white/[0.08] bg-[var(--app-dark)] p-5 sm:p-6">
-                <div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/70">
-                    <span className="h-2 w-2 rounded-full bg-[var(--app-primary)]" />
-                    Live & on-demand
-                  </div>
-
-                  <SmallText
-                    className="mt-6 text-white/55"
-                    useThemeColor={false}
-                  >
-                    This week
-                  </SmallText>
-
-                  <H3
-                    className="mt-2 text-xl font-semibold text-white sm:text-2xl"
-                    useThemeColor={false}
-                  >
-                    Latest from YouTube
-                  </H3>
-
-                  <BodySM
-                    className="mt-3 text-sm leading-7 text-white/62 sm:text-base"
-                    useThemeColor={false}
-                  >
-                    Stream Sundays & Thursdays. Turn on reminders so you never
-                    miss a service, teaching, or special broadcast.
-                  </BodySM>
+          <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+            <div className="flex flex-col justify-between rounded-xl border border-white/[0.08] bg-[var(--app-dark)] p-5 sm:p-6">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/70">
+                  <span className="h-2 w-2 rounded-full bg-[var(--app-primary)]" />
+                  Live & on-demand
                 </div>
 
-                <div className="mt-6 grid grid-cols-1 gap-3 text-sm text-white/68 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                  {[
-                    ['Sundays', '9:00 AM WAT'],
-                    ['Midweek', 'Thu • 6:00 PM'],
-                    ['Replays', 'YouTube archive'],
-                  ].map(([title, value]) => (
-                    <div
-                      key={title}
-                      className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-2)] p-3"
+                <SmallText className="mt-6 text-white/55" useThemeColor={false}>
+                  This week
+                </SmallText>
+
+                <H3
+                  className="mt-2 text-xl font-semibold text-white sm:text-2xl"
+                  useThemeColor={false}
+                >
+                  Latest from YouTube
+                </H3>
+
+                <BodySM
+                  className="mt-3 text-sm leading-7 text-white/62 sm:text-base"
+                  useThemeColor={false}
+                >
+                  Stream Sundays & Thursdays. Turn on reminders so you never
+                  miss a service, teaching, or special broadcast.
+                </BodySM>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 gap-3 text-sm text-white/68 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                {[
+                  ['Sundays', '9:00 AM WAT'],
+                  ['Midweek', 'Thu • 6:00 PM'],
+                  ['Replays', 'YouTube archive'],
+                ].map(([title, value]) => (
+                  <div
+                    key={title}
+                    className="rounded-lg border border-white/10 bg-white/[0.06] p-3"
+                  >
+                    <BodySM
+                      weight="semibold"
+                      className="text-white"
+                      useThemeColor={false}
                     >
-                      <BodySM weight="semibold" className="text-[var(--app-text)]">
-                        {title}
-                      </BodySM>
-                      <Caption className="mt-1 text-[var(--app-muted)]">{value}</Caption>
-                    </div>
-                  ))}
+                      {title}
+                    </BodySM>
+                    <Caption
+                      className="mt-1 text-white/55"
+                      useThemeColor={false}
+                    >
+                      {value}
+                    </Caption>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black/50">
+              {loadingRecent ? (
+                <div className="flex min-h-[320px] items-center justify-center p-6">
+                  <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm text-white/70">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Loading latest message...
+                  </div>
                 </div>
-              </div>
+              ) : recentVideo ? (
+                <>
+                  <img
+                    src={recentVideoThumb}
+                    alt={recentVideo.title}
+                    className="h-[320px] w-full object-cover sm:h-[360px] lg:h-full"
+                    loading="lazy"
+                    decoding="async"
+                  />
 
-              <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/50">
-                {loadingRecent ? (
-                  <div className="flex min-h-[320px] items-center justify-center p-6">
-                    <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm text-white/70">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Loading latest message...
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/30 to-black/88" />
+
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white/80 backdrop-blur-xl">
+                      <Radio className="h-3.5 w-3.5 text-[var(--app-primary)]" />
+                      Latest message
                     </div>
-                  </div>
-                ) : recentVideo ? (
-                  <>
-                    <img
-                      src={recentVideoThumb}
-                      alt={recentVideo.title}
-                      className="h-[320px] w-full object-cover sm:h-[360px] lg:h-full"
-                      loading="lazy"
-                      decoding="async"
-                    />
 
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/30 to-black/88" />
+                    <SmallText
+                      className="line-clamp-2 text-base font-semibold leading-snug text-white sm:text-lg"
+                      useThemeColor={false}
+                    >
+                      {recentVideo.title}
+                    </SmallText>
 
-                    <div className="absolute inset-x-0 bottom-0 p-5">
-                      <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white/80 backdrop-blur-xl">
-                        <Radio className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                        Latest message
-                      </div>
-
-                      <SmallText
-                        className="line-clamp-2 text-base font-semibold leading-snug text-white sm:text-lg"
-                        useThemeColor={false}
-                      >
-                        {recentVideo.title}
-                      </SmallText>
-
-                      <div className="mt-4 flex flex-wrap gap-3">
-                        {recentVideoUrl && (
-                          <Link
-                            href={recentVideoUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
-                          >
-                            <PlayCircle className="h-4 w-4" />
-                            Play now
-                          </Link>
-                        )}
-
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      {recentVideoUrl && (
                         <Link
-                          href="/resources/sermons"
-                          className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-5 py-3 text-sm font-bold text-white backdrop-blur-xl transition hover:bg-white/[0.12]"
+                          href={recentVideoUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
                         >
-                          Sermons
-                          <ArrowRight className="h-4 w-4" />
+                          <PlayCircle className="h-4 w-4" />
+                          Play now
                         </Link>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex min-h-[320px] items-center justify-center p-6 text-center">
-                    <div className="max-w-sm">
-                      <PlayCircle className="mx-auto h-9 w-9 text-[var(--app-primary)]" />
-                      <BodySM className="mt-4 text-white/62">
-                        Latest message coming soon.
-                      </BodySM>
+                      )}
+
+                      <Link
+                        href="/resources/sermons"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-5 py-3 text-sm font-bold text-white backdrop-blur-xl transition hover:bg-white/[0.12]"
+                      >
+                        Sermons
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </div>
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <div className="flex min-h-[320px] items-center justify-center p-6 text-center">
+                  <div className="max-w-sm">
+                    <PlayCircle className="mx-auto h-9 w-9 text-[var(--app-primary)]" />
+                    <BodySM className="mt-4 text-white/62">
+                      Latest message coming soon.
+                    </BodySM>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -359,33 +338,31 @@ export default function ResourceSection() {
                   <Link
                     key={`${title}-${index}`}
                     href={href}
-                    className="group relative overflow-hidden rounded-[1.5rem] border border-[var(--app-border)] bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/30 hover:shadow-md"
+                    className="group flex items-center gap-4 rounded-xl border border-[var(--app-border)] p-4 transition duration-200 hover:border-[var(--app-primary)]/30"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.10] text-[var(--app-primary)]">
-                        <Icon className="h-5 w-5" />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <SmallText
-                          weight="bold"
-                          className="line-clamp-1 text-[var(--app-text)]"
-                          useThemeColor={false}
-                        >
-                          {title}
-                        </SmallText>
-
-                        <Caption
-                          className="mt-1 line-clamp-2 text-[0.8rem] leading-5 text-[var(--app-muted)]"
-                          useThemeColor={false}
-                        >
-                          {item.description ||
-                            'Explore this resource from Wisdom House.'}
-                        </Caption>
-                      </div>
-
-                      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:translate-x-1 group-hover:text-[var(--app-primary)]" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+                      <Icon className="h-5 w-5" />
                     </div>
+
+                    <div className="min-w-0 flex-1">
+                      <SmallText
+                        weight="bold"
+                        className="line-clamp-1 text-[var(--app-text)]"
+                        useThemeColor={false}
+                      >
+                        {title}
+                      </SmallText>
+
+                      <Caption
+                        className="mt-0.5 line-clamp-1 text-[0.8rem] leading-5 text-[var(--app-muted)]"
+                        useThemeColor={false}
+                      >
+                        {item.description ||
+                          'Explore this resource from Wisdom House.'}
+                      </Caption>
+                    </div>
+
+                    <ArrowRight className="h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:translate-x-1 group-hover:text-[var(--app-primary)]" />
                   </Link>
                 );
               })}
@@ -393,23 +370,23 @@ export default function ResourceSection() {
 
             <form
               onSubmit={handleSubscribe}
-              className="rounded-[1.75rem] border border-white/10 bg-black/35 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-2xl"
+              className="rounded-xl border border-[var(--app-border)] p-5"
             >
-              <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                   <Bell className="h-5 w-5" />
                 </div>
 
                 <div>
                   <SmallText
                     weight="bold"
-                    className="text-white"
+                    className="text-[var(--app-text)]"
                     useThemeColor={false}
                   >
                     Service reminders
                   </SmallText>
                   <Caption
-                    className="mt-1 text-[0.8rem] leading-5 text-white/55"
+                    className="mt-0.5 text-[0.8rem] leading-5 text-[var(--app-muted)]"
                     useThemeColor={false}
                   >
                     Get updates for sermons, live streams, and special programs.
@@ -417,9 +394,9 @@ export default function ResourceSection() {
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3">
+              <div className="mt-4 grid gap-3">
                 <div className="relative">
-                  <UserRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+                  <UserRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
                   <input
                     value={subscriber.name}
                     onChange={e =>
@@ -428,13 +405,13 @@ export default function ResourceSection() {
                         name: e.target.value,
                       }))
                     }
-                    placeholder="Your name optional"
-                    className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+                    placeholder="Your name (optional)"
+                    className="h-11 w-full rounded-lg border border-[var(--app-border)] bg-white pl-10 pr-4 text-sm text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-subtle)] focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10"
                   />
                 </div>
 
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
                   <input
                     value={subscriber.email}
                     onChange={e =>
@@ -446,7 +423,7 @@ export default function ResourceSection() {
                     placeholder="Email address"
                     type="email"
                     required
-                    className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+                    className="h-11 w-full rounded-lg border border-[var(--app-border)] bg-white pl-10 pr-4 text-sm text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-subtle)] focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10"
                   />
                 </div>
 

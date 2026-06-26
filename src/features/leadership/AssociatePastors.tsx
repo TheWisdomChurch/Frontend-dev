@@ -47,7 +47,7 @@ function LeaderCard({
   const displayDescription = leader.description || leader.bio;
 
   return (
-    <article className="group relative h-full overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.045] shadow-[0_18px_55px_rgba(0,0,0,0.35)] backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.065] hover:shadow-[0_28px_75px_rgba(0,0,0,0.45)]">
+    <article className="group relative h-full overflow-hidden rounded-xl border border-white/10 bg-white/[0.045] transition duration-300 hover:border-white/20 hover:bg-white/[0.065]">
       <div className="relative h-64 overflow-hidden bg-black sm:h-72 lg:h-76">
         {displayImage ? (
           <Image
@@ -161,10 +161,7 @@ export default function AssociatePastors() {
             </H3>
           </div>
 
-          <Card
-            padding="sm"
-            className="rounded-[1.25rem] bg-white/[0.035] sm:p-5"
-          >
+          <Card padding="sm" className="rounded-xl bg-white/[0.035] sm:p-5">
             <BodySM className="max-w-3xl text-sm leading-7 text-white/68 sm:text-base">
               Trusted voices helping steward the vision. Each carries a unique
               grace for the house.

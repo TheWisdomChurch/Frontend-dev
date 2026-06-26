@@ -2,13 +2,11 @@
 
 import Image from 'next/image';
 
-import { whatWeDoData, missionStatement } from '@/lib/data';
+import { whatWeDoData } from '@/lib/data';
 import type { ServiceBox } from '@/lib/types';
-import { H2, H3, BodySM } from '@/shared/text';
+import { H2, H3 } from '@/shared/text';
 import { useWhatWeDo } from '@/shared/utils/hooks/useWhatwedo';
 import { Section, Container } from '@/shared/layout';
-import { Card } from '@/shared/ui/cards';
-import GridBackground from '@/shared/ui/GridBackground';
 
 export default function WhatWeDo() {
   const { sectionRef, headingRef, textRef, addToBoxesRef } = useWhatWeDo();
@@ -19,7 +17,7 @@ export default function WhatWeDo() {
         key={box.id}
         ref={el => addToBoxesRef(el as HTMLDivElement | null, index)}
         className={[
-          'group relative flex h-full min-h-0 overflow-hidden rounded-[1.4rem] border border-white/10 bg-[#0b0b0b] shadow-[0_18px_55px_rgba(0,0,0,0.32)] transition duration-500 hover:-translate-y-1 hover:border-white/18 hover:bg-[#101010] hover:shadow-[0_24px_75px_rgba(0,0,0,0.42)]',
+          'group relative flex h-full min-h-0 overflow-hidden rounded-xl border border-white/10 bg-[#0b0b0b] transition duration-300 hover:border-white/18 hover:bg-[#101010]',
           featured
             ? 'flex-col lg:min-h-[430px] lg:flex-row'
             : 'flex-col min-h-[420px]',
@@ -74,13 +72,7 @@ export default function WhatWeDo() {
             >
               {box.title}
             </H3>
-
-            <BodySM className="mt-3 max-w-2xl text-sm leading-7 text-white/68 sm:text-[0.95rem]">
-              {box.description}
-            </BodySM>
           </div>
-
-          <div className="mt-6 h-px w-full bg-gradient-to-r from-[var(--app-primary)]/45 via-white/10 to-transparent" />
         </div>
       </article>
     );
@@ -93,40 +85,21 @@ export default function WhatWeDo() {
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative overflow-hidden bg-[var(--app-dark-2)] py-16 sm:py-20 lg:py-24"
+      className="bg-[var(--app-dark-2)] py-16 sm:py-20 lg:py-24"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-10%] top-10 h-72 w-72 rounded-full bg-[var(--app-primary)]/[0.07] blur-3xl" />
-        <div className="absolute right-[-8%] top-1/3 h-80 w-80 rounded-full bg-white/[0.045] blur-3xl" />
-        <GridBackground />
-      </div>
-
-      <Container size="xl" className="relative z-10 px-4 sm:px-6 lg:px-10">
-        <div className="mb-8 grid gap-5 lg:mb-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div className="min-w-0">
-            <div className="mb-4 inline-flex items-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/60">
-              What to expect
-            </div>
-
-            <H2
-              ref={headingRef}
-              className="max-w-2xl text-left text-[1.85rem] font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-4xl lg:text-[2.75rem]"
-              useThemeColor={false}
-              weight="semibold"
-            >
-              A Sunday experience that feels personal
-            </H2>
-          </div>
-
-          <Card
-            ref={textRef}
-            padding="sm"
-            className="rounded-[1.25rem] bg-white/[0.035] sm:p-5"
+      <Container size="xl" className="px-4 sm:px-6 lg:px-10">
+        <div className="mb-10 lg:mb-12">
+          <p className="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+            What to expect
+          </p>
+          <H2
+            ref={headingRef}
+            className="max-w-xl text-left text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl"
+            useThemeColor={false}
+            weight="semibold"
           >
-            <BodySM className="max-w-3xl text-sm leading-7 text-white/68 sm:text-base">
-              {missionStatement}
-            </BodySM>
-          </Card>
+            A Sunday experience that feels personal
+          </H2>
         </div>
 
         <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2 lg:gap-6">
