@@ -16,7 +16,7 @@ import { BaseModal } from '@/shared/ui/modals/Base';
 import { Container } from '@/shared/layout';
 import { Card } from '@/shared/ui/cards';
 import { Button } from '@/shared/utils/buttons';
-import { H3, H4, SmallText, BodySM, Caption, Eyebrow } from '@/shared/text';
+import { H3, H4, SmallText, BodySM, Caption } from '@/shared/text';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 
 /* =============================================================================

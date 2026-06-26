@@ -14,15 +14,7 @@ import {
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
-import {
-  H2,
-  H3,
-  BodyLG,
-  BodyMD,
-  BodySM,
-  SmallText,
-  Caption,
-} from '@/shared/text';
+import { H2, BodyLG, BodyMD, BodySM, SmallText } from '@/shared/text';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { ActionBanner } from '@/shared/components/site/PublicPageBlocks';
 import apiClient from '@/lib/api';

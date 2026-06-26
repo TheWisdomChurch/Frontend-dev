@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowDown, ArrowRight } from 'lucide-react';
 
 import { WisdomeHouseLogo } from '@/shared/assets';
-import { H1, BodyLG, BodyMD, BodySM, Eyebrow } from '@/shared/text';
+import { H1, BodyLG, BodyMD, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 
 export type PageHeroProps = {
