@@ -4,13 +4,11 @@ import React, { useCallback, useState } from 'react';
 import {
   ArrowRight,
   CalendarClock,
-  CheckCircle2,
   Clock,
   Headphones,
   HeartHandshake,
   MapPin,
   PlayCircle,
-  Sparkles,
   Users,
 } from 'lucide-react';
 
@@ -90,14 +88,7 @@ function ModalShell({
       subtitle={subtitle}
       maxWidth="max-w-2xl"
     >
-      <div className="space-y-5">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-          <Eyebrow className="text-white/65">Quick form</Eyebrow>
-        </div>
-
-        {children}
-      </div>
+      <div className="space-y-5">{children}</div>
     </BaseModal>
   );
 }
@@ -216,80 +207,49 @@ export default function HeroHighlights() {
   );
 
   return (
-    <section className="relative z-30 -mt-8 sm:-mt-10 lg:-mt-12">
-      <Container size="xl" className="relative pb-6 sm:pb-8">
-        <div className="mx-auto w-full max-w-6xl px-2 sm:px-0">
-          <div className="relative overflow-hidden rounded-[2rem] border border-[var(--app-border)] bg-white shadow-[0_24px_80px_rgba(0,0,0,0.10)]">
-            <div
-              className="hero-highlights-glow absolute inset-0 opacity-40"
-              aria-hidden="true"
-            />
+    <section className="border-t border-[var(--app-border)] bg-white py-14 sm:py-16 lg:py-20">
+      <Container size="xl">
+        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start lg:gap-12">
+          <div>
+            <p className="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+              Next Steps
+            </p>
+            <H3 className="text-[var(--app-text)]">
+              Take your next step with Wisdom House
+            </H3>
+          </div>
 
-            <div className="relative z-10 grid gap-4 p-4 sm:p-5 lg:grid-cols-[0.78fr_1.22fr] lg:items-stretch lg:p-6">
-              <div className="rounded-[1.5rem] border border-[var(--app-border)] bg-[var(--app-surface-2)] p-5 sm:p-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.22em]">
-                    Next Steps
-                  </span>
-                </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {actions.map(action => {
+              const Icon = action.icon;
 
-                <H3 className="mt-4 text-[var(--app-text)]">
-                  Take your next step with Wisdom House
-                </H3>
+              return (
+                <Button
+                  key={action.key}
+                  type="button"
+                  onClick={() => openModal(action.key)}
+                  variant="ghost"
+                  className="group rounded-xl border border-[var(--app-border)] p-5 !justify-start text-left transition duration-200 hover:border-[var(--app-primary)]/40"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--app-primary)]/10 text-[var(--app-primary)] transition group-hover:bg-[var(--app-primary)] group-hover:text-black">
+                    <Icon className="h-5 w-5" />
+                  </div>
 
-                <BodySM className="mt-3 max-w-md text-[var(--app-muted)]">
-                  Plan a visit, watch live, or join a serve team. We made the
-                  first step simple, fast, and welcoming.
-                </BodySM>
+                  <H4 className="mt-4 text-sm font-semibold text-[var(--app-text)] sm:text-base">
+                    {action.label}
+                  </H4>
 
-                <div className="mt-5 flex flex-wrap gap-2 text-xs text-[var(--app-muted)]">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--app-border)] bg-white px-3 py-1.5">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    No spam
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--app-border)] bg-white px-3 py-1.5">
-                    <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    Quick response
-                  </span>
-                </div>
-              </div>
+                  <SmallText className="mt-2 min-h-[38px] leading-5 text-[var(--app-muted)]">
+                    {action.description}
+                  </SmallText>
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                {actions.map(action => {
-                  const Icon = action.icon;
-
-                  return (
-                    <Button
-                      key={action.key}
-                      type="button"
-                      onClick={() => openModal(action.key)}
-                      variant="ghost"
-                      className="group relative overflow-hidden rounded-[1.5rem] border border-[var(--app-border)] bg-[var(--app-surface-2)] p-4 !justify-start text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/40 hover:bg-white hover:shadow-md sm:p-5"
-                    >
-                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/50 to-transparent opacity-0 transition group-hover:opacity-100" />
-
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-primary)]/10 text-[var(--app-primary)] shadow-sm transition group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-black">
-                        <Icon className="h-5 w-5" />
-                      </div>
-
-                      <H4 className="mt-4 text-sm font-semibold text-[var(--app-text)] sm:text-base">
-                        {action.label}
-                      </H4>
-
-                      <SmallText className="mt-2 min-h-[38px] leading-5 text-[var(--app-muted)]">
-                        {action.description}
-                      </SmallText>
-
-                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[var(--app-primary)]">
-                        Continue
-                        <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
-                      </div>
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
+                  <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[var(--app-primary)]">
+                    Continue
+                    <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                  </div>
+                </Button>
+              );
+            })}
           </div>
         </div>
       </Container>
@@ -346,10 +306,7 @@ export default function HeroHighlights() {
             </select>
           </div>
 
-          <Card
-            padding="sm"
-            className="space-y-3 rounded-[1.35rem] bg-white/[0.045]"
-          >
+          <Card padding="sm" className="space-y-3 rounded-xl bg-white/[0.045]">
             <div className="flex items-center gap-2 text-sm font-semibold text-white/85">
               <CalendarClock className="h-4 w-4 text-[var(--app-primary)]" />
               Appointment details
@@ -427,7 +384,7 @@ export default function HeroHighlights() {
         subtitle="Drop your email and we’ll remind you 30 minutes before we go live."
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
-          <Card padding="sm" className="rounded-[1.35rem] bg-white/[0.045]">
+          <Card padding="sm" className="rounded-xl bg-white/[0.045]">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <Headphones className="h-5 w-5" />
@@ -532,7 +489,7 @@ export default function HeroHighlights() {
             </select>
           </div>
 
-          <Card padding="sm" className="rounded-[1.35rem] bg-white/[0.045]">
+          <Card padding="sm" className="rounded-xl bg-white/[0.045]">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <HeartHandshake className="h-5 w-5" />

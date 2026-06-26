@@ -4,10 +4,10 @@
   --app-header-height: 72px;
   --app-radius: 18px;
 
-  /* Surfaces — warm white / cream */
-  --app-surface: #faf8f4;
-  --app-surface-2: #f2ede6;
-  --app-surface-3: #e8e2d8;
+  /* Surfaces — clean white */
+  --app-surface: #ffffff;
+  --app-surface-2: #f5f5f5;
+  --app-surface-3: #ebebeb;
 
   /* Typography */
   --app-text: #0d0b08;
@@ -31,9 +31,9 @@
   --app-dark-3: #17140f;
 
   /* Radius scale */
-  --radius-sm: 0.75rem;
-  --radius-md: 1.25rem;
-  --radius-lg: 2rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
 
   /* Status */
   --status-success: #22c55e;
@@ -799,92 +799,6 @@ body.menu-open {
   color: #ffffff;
   font-size: inherit;
   line-height: inherit;
-}
-
-.events-glow-overlay {
-  background:
-    radial-gradient(
-      circle at 15% 15%,
-      rgba(201, 150, 26, 0.1),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(255, 255, 255, 0.07),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(201, 150, 26, 0.06),
-      transparent 34%
-    );
-}
-
-.join-us-glow-overlay {
-  background:
-    radial-gradient(
-      circle at 14% 18%,
-      rgba(201, 150, 26, 0.11),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 88% 12%,
-      rgba(255, 255, 255, 0.08),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(201, 150, 26, 0.07),
-      transparent 34%
-    );
-}
-
-.giving-glow-overlay {
-  background:
-    radial-gradient(
-      circle at 18% 18%,
-      rgba(201, 150, 26, 0.1),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 82% 22%,
-      rgba(255, 255, 255, 0.08),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(201, 150, 26, 0.06),
-      transparent 38%
-    );
-}
-
-.home-page-glow {
-  background:
-    radial-gradient(
-      circle at 18% 12%,
-      rgba(201, 150, 26, 0.1) 0%,
-      transparent 34%
-    ),
-    radial-gradient(
-      circle at 82% 4%,
-      rgba(201, 150, 26, 0.06) 0%,
-      transparent 30%
-    ),
-    linear-gradient(
-      180deg,
-      var(--app-surface) 0%,
-      var(--app-surface-2) 48%,
-      var(--app-surface) 100%
-    );
-}
-
-.hero-highlights-glow {
-  animation: pulse-glow 6s ease-in-out infinite;
-  background: radial-gradient(
-    ellipse at 20% 50%,
-    rgba(201, 150, 26, 0.08) 0%,
-    transparent 60%
-  );
 }
 
 @keyframes fade-up-keyframe {

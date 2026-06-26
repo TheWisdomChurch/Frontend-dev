@@ -7,17 +7,12 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  HeartHandshake,
   Loader2,
-  MessageCircleHeart,
   Quote,
-  Sparkles,
-  Users,
 } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
-import { Card } from '@/shared/ui/cards';
 import { Button } from '@/shared/utils/buttons';
 import {
   H2,
@@ -28,7 +23,6 @@ import {
   SmallText,
   Caption,
 } from '@/shared/text';
-import GridBackground from '@/shared/ui/GridBackground';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { ActionBanner } from '@/shared/components/site/PublicPageBlocks';
 import apiClient from '@/lib/api';
@@ -43,27 +37,6 @@ type UiTestimony = {
 
 const TESTIMONIAL_FORM_BASE_URL =
   process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/share-testimony';
-
-const stats = [
-  {
-    label: 'Faith stories',
-    value: 'Real journeys',
-    detail: 'Stories of salvation, healing, hope, care, and transformation.',
-    icon: Sparkles,
-  },
-  {
-    label: 'Shared strength',
-    value: 'Community impact',
-    detail: 'Every story can encourage someone still trusting God.',
-    icon: Users,
-  },
-  {
-    label: 'Next step',
-    value: 'Prayer & care',
-    detail: 'Some stories open the door to prayer, support, and follow-up.',
-    icon: HeartHandshake,
-  },
-];
 
 const mapTestimony = (item: ApiTestimonial): UiTestimony => {
   const fullName =
@@ -221,189 +194,113 @@ export default function TestimoniesPage() {
         chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
       />
 
-      <Section
-        padding="none"
-        className="relative overflow-hidden bg-[var(--app-dark)]"
-      >
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(215,187,117,0.13),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_34%)]" />
-          <GridBackground />
-        </div>
-
-        <Container size="xl" className="relative z-10 py-14 sm:py-18 lg:py-20">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {stats.map(item => {
-              const Icon = item.icon;
-
-              return (
-                <Card
-                  key={item.label}
-                  variant="glass"
-                  padding="sm"
-                  className="bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)]"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--app-primary)]/15 text-[var(--app-primary)]">
-                    <Icon className="h-5 w-5" />
-                  </div>
-
-                  <Caption className="mt-5 font-bold uppercase tracking-[0.22em] text-white/45">
-                    {item.label}
-                  </Caption>
-
-                  <H3 className="mt-2 text-lg font-semibold text-white">
-                    {item.value}
-                  </H3>
-
-                  <SmallText className="mt-2 leading-6 text-white/58">
-                    {item.detail}
-                  </SmallText>
-                </Card>
-              );
-            })}
+      <Section padding="none" className="bg-[var(--app-dark)]">
+        <Container size="xl" className="py-14 sm:py-16 lg:py-20">
+          <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                Testimony stories
+              </p>
+              <H2 className="max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
+                What God is doing in people&apos;s lives.
+              </H2>
+            </div>
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-[var(--app-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-black"
+            >
+              Share your story
+              <ArrowRight className="h-4 w-4" />
+            </a>
           </div>
-        </Container>
-      </Section>
 
-      <Section padding="none" className="relative bg-[var(--app-dark)]">
-        <Container size="xl" className="py-4 sm:py-6 lg:py-8">
-          <Card
-            variant="glass"
-            padding="none"
-            className="overflow-hidden rounded-[2rem] bg-white/[0.045] shadow-[0_30px_100px_rgba(0,0,0,0.42)]"
-          >
-            <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
-                  <MessageCircleHeart className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                    Testimony stories
-                  </span>
+          <div>
+            {loading ? (
+              <div className="flex min-h-[360px] items-center justify-center border border-white/10">
+                <div className="flex items-center gap-3 text-sm text-white/50">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading stories...
                 </div>
-
-                <H2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-                  Be encouraged by what God is doing in people&apos;s lives.
-                </H2>
-
-                <BodyMD className="mt-4 max-w-lg leading-7 text-white/62">
-                  Browse recent stories from the Wisdom House family. Each story
-                  is shared to strengthen faith, build gratitude, and remind
-                  someone that God is still working.
-                </BodyMD>
-
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+              </div>
+            ) : !activeTestimony ? (
+              <div className="flex min-h-[360px] items-center justify-center border border-white/10 px-6 text-center">
+                <div className="max-w-sm">
+                  <CheckCircle2 className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
+                  <SmallText className="mt-4 leading-6 text-white/60">
+                    Be the first to share what God has done in your life.
+                  </SmallText>
                   <a
                     href={shareUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.01] hover:opacity-95"
+                    className="mt-5 inline-flex items-center gap-2 bg-[var(--app-primary)] px-5 py-2.5 text-sm font-semibold text-black"
                   >
-                    Share your testimony
+                    Share your story
                     <ArrowRight className="h-4 w-4" />
-                  </a>
-
-                  <a
-                    href="/events"
-                    className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.05] px-5 py-3 text-sm font-bold text-white transition hover:bg-white/[0.09]"
-                  >
-                    Join a service
                   </a>
                 </div>
               </div>
-
-              <div className="p-4 sm:p-6 lg:p-8">
-                {loading ? (
-                  <div className="flex min-h-[420px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20">
-                    <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm text-white/70">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Loading stories...
-                    </div>
+            ) : (
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
+                <article className="flex min-h-[360px] flex-col justify-between border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+                  <div>
+                    <Quote className="h-8 w-8 text-[var(--app-primary)]" />
+                    <BodyLG className="mt-6 line-clamp-4 text-white/80">
+                      &ldquo;{activeTestimony.quote}&rdquo;
+                    </BodyLG>
                   </div>
-                ) : !activeTestimony ? (
-                  <div className="flex min-h-[420px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20 px-6 text-center">
-                    <div className="max-w-sm">
-                      <CheckCircle2 className="mx-auto h-9 w-9 text-[var(--app-primary)]" />
-                      <SmallText className="mt-4 leading-6 text-white/62">
-                        Stories will appear here soon. You can be the first to
-                        share what God has done in your life.
+
+                  <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <BodyMD className="font-semibold text-white">
+                        {activeTestimony.name}
+                      </BodyMD>
+                      <SmallText className="mt-1 text-white/45">
+                        {activeTestimony.title}
                       </SmallText>
-
-                      <a
-                        href={shareUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black"
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={goPrev}
+                        aria-label="Previous testimony"
+                        className="h-9 w-9 border border-white/12 text-white/60 hover:text-white"
                       >
-                        Share your story
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={goNext}
+                        aria-label="Next testimony"
+                        className="h-9 w-9 border border-white/12 text-white/60 hover:text-white"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                ) : (
-                  <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
-                    <article className="relative flex min-h-[420px] flex-col justify-between overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/30 p-6 shadow-[0_24px_90px_rgba(0,0,0,0.35)] sm:p-8">
-                      <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
+                </article>
 
-                      <div className="relative z-10">
-                        <Quote className="h-10 w-10 text-[var(--app-primary)]" />
-
-                        <BodyLG className="mt-7 text-white/82">
-                          "{activeTestimony.quote}"
-                        </BodyLG>
-                      </div>
-
-                      <div className="relative z-10 mt-8 flex flex-col gap-5 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                          <BodyMD className="text-lg font-semibold text-white">
-                            {activeTestimony.name}
-                          </BodyMD>
-                          <SmallText className="mt-1 text-white/48">
-                            {activeTestimony.title}
-                          </SmallText>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={goPrev}
-                            aria-label="Previous testimony"
-                            className="h-11 w-11 rounded-full border border-white/12 bg-white/[0.06] hover:bg-white/[0.1]"
-                          >
-                            <ChevronLeft className="h-5 w-5" />
-                          </Button>
-
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={goNext}
-                            aria-label="Next testimony"
-                            className="h-11 w-11 rounded-full border border-white/12 bg-white/[0.06] hover:bg-white/[0.1]"
-                          >
-                            <ChevronRight className="h-5 w-5" />
-                          </Button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <aside className="flex gap-3 overflow-x-auto pb-1 lg:max-h-[420px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1">
-                      {visibleTestimonies.map((testimony, index) => (
-                        <div
-                          key={testimony.id}
-                          className="min-w-[280px] lg:min-w-0"
-                        >
-                          <TestimonyPreview
-                            testimony={testimony}
-                            active={index === activeIndex}
-                            onClick={() => setActiveIndex(index)}
-                          />
-                        </div>
-                      ))}
-                    </aside>
-                  </div>
-                )}
+                <aside className="flex gap-2 overflow-x-auto pb-1 lg:max-h-[360px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden">
+                  {visibleTestimonies.map((testimony, index) => (
+                    <div
+                      key={testimony.id}
+                      className="min-w-[240px] lg:min-w-0"
+                    >
+                      <TestimonyPreview
+                        testimony={testimony}
+                        active={index === activeIndex}
+                        onClick={() => setActiveIndex(index)}
+                      />
+                    </div>
+                  ))}
+                </aside>
               </div>
-            </div>
-          </Card>
+            )}
+          </div>
         </Container>
       </Section>
 

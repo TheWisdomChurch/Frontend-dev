@@ -212,12 +212,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[var(--app-surface)] text-[var(--app-text)]">
-      <div
-        aria-hidden="true"
-        className="home-page-glow pointer-events-none fixed inset-0 z-0 opacity-60"
-      />
-
-      <div className="relative z-10 flex w-full flex-col">
+      <div className="relative flex w-full flex-col">
         <HeroMain />
 
         <section className="home-section" data-gsap="reveal">

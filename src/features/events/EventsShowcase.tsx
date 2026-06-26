@@ -15,8 +15,7 @@ import {
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/shared/assets';
 import { Container, Section } from '@/shared/layout';
-import GridBackground from '@/shared/ui/GridBackground';
-import { BodyMD, BodySM, Caption, Eyebrow, H3, SmallText } from '@/shared/text';
+import { BodySM, Caption, Eyebrow, H3, SmallText } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
@@ -300,35 +299,16 @@ export default function EventsShowcase() {
   const current = activeSlides[active];
 
   return (
-    <Section
-      padding="lg"
-      className="relative overflow-hidden bg-[var(--app-surface-2)]"
-    >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.07),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(201,150,26,0.05),transparent_28%)]" />
-      </div>
-
-      <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
-              <ActiveIcon className="h-3.5 w-3.5" />
-              <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                {activeMeta.eyebrow}
-              </Caption>
-            </div>
-
-            <H3 className="text-2xl font-semibold leading-tight tracking-tight text-[var(--app-text)] sm:text-3xl lg:text-5xl">
+    <Section padding="lg" className="bg-white">
+      <Container size="xl" className="space-y-8 sm:space-y-10">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="mb-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+              {activeMeta.eyebrow}
+            </p>
+            <H3 className="text-2xl font-semibold leading-tight tracking-tight text-[var(--app-text)] sm:text-3xl lg:text-4xl">
               What&apos;s happening now
             </H3>
-
-            <BodySM
-              className="mt-4 max-w-xl text-[0.92rem] leading-7 text-[var(--app-muted)] sm:text-base"
-              useThemeColor={false}
-            >
-              Live programs, church media stories, and recent reels from your
-              backend — beautifully presented for members and first-time guests.
-            </BodySM>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -343,7 +323,7 @@ export default function EventsShowcase() {
                   variant={isActive ? 'primary' : 'ghost'}
                   size="sm"
                   curvature="full"
-                  className={`text-[0.78rem] sm:text-sm ${isActive ? 'shadow-[0_14px_35px_rgba(201,150,26,0.20)]' : 'border-[var(--app-border)] bg-white text-[var(--app-muted)] hover:border-[var(--app-primary)]/30 hover:text-[var(--app-text)]'}`}
+                  className={`text-[0.78rem] sm:text-sm ${isActive ? '' : 'border-[var(--app-border)] bg-white text-[var(--app-muted)] hover:border-[var(--app-primary)]/30 hover:text-[var(--app-text)]'}`}
                 >
                   {CATEGORY_LABELS[cat]}
                 </Button>
@@ -353,7 +333,7 @@ export default function EventsShowcase() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.65fr)] xl:gap-6">
-          <div className="relative min-h-[430px] overflow-hidden rounded-[2rem] border border-white/12 bg-[#0c0c0f] shadow-[0_32px_100px_rgba(0,0,0,0.42)] sm:min-h-[520px] lg:min-h-[560px]">
+          <div className="relative min-h-[430px] overflow-hidden rounded-xl bg-[#0c0c0f] sm:min-h-[520px] lg:min-h-[560px]">
             {isLoading ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm text-white/70 backdrop-blur-xl">
@@ -506,14 +486,14 @@ export default function EventsShowcase() {
                   type="button"
                   onClick={() => setActive(idx)}
                   variant="ghost"
-                  className={`group relative min-w-[290px] overflow-hidden rounded-[1.5rem] border p-3 !justify-start text-left transition lg:min-w-0 ${
+                  className={`group relative min-w-[290px] overflow-hidden rounded-lg border p-3 !justify-start text-left transition lg:min-w-0 ${
                     selected
-                      ? 'border-[var(--app-primary)]/30 bg-[var(--app-dark)] shadow-[0_12px_40px_rgba(0,0,0,0.28)]'
+                      ? 'border-[var(--app-primary)]/30 bg-[var(--app-dark)]'
                       : 'border-[var(--app-border)] bg-[var(--app-dark-2)] hover:border-[var(--app-primary)]/20 hover:bg-[var(--app-dark)]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black">
+                    <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-md border border-white/10 bg-black">
                       <img
                         src={slide.imageUrl}
                         alt={slide.title}

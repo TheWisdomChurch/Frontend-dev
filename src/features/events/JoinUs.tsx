@@ -402,7 +402,7 @@ export default function JoinWisdomHouse() {
 
             <form
               onSubmit={onQuickSubmit}
-              className="rounded-[2rem] border border-white/12 bg-white/[0.065] p-5 shadow-[0_24px_90px_rgba(0,0,0,0.38)] backdrop-blur-2xl sm:p-6"
+              className="rounded-xl border border-white/12 bg-white/[0.065] p-5 sm:p-6"
             >
               <div className="mb-5 flex items-start gap-3">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))]">
@@ -515,7 +515,7 @@ export default function JoinWisdomHouse() {
                     handleOpenModal(dept.title);
                   }}
                   variant="ghost"
-                  className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 !justify-start text-left shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085] ${
+                  className={`group relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.055] p-5 !justify-start text-left transition duration-300 hover:border-white/22 hover:bg-white/[0.085] ${
                     index === 0 ? 'sm:col-span-2 lg:col-span-1' : ''
                   }`}
                 >
@@ -565,7 +565,7 @@ export default function JoinWisdomHouse() {
           </div>
         </div>
 
-        <div className="mt-10 rounded-[2rem] border border-white/10 bg-black/30 p-5 backdrop-blur-2xl sm:p-6">
+        <div className="mt-10 rounded-xl border border-white/10 bg-black/30 p-5 sm:p-6">
           <div className="grid gap-4 sm:grid-cols-3">
             {[
               {

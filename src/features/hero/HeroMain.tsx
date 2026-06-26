@@ -539,7 +539,7 @@ export default function HeroSection({
             ref={cardsRef}
             className="grid w-full gap-5 md:grid-cols-2 lg:grid-cols-1"
           >
-            <div className="group relative overflow-hidden rounded-[1.8rem] border border-white/18 bg-white/[0.09] p-5 shadow-[0 32px 100px rgba(0,0,0,0.42)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1.5 hover:bg-white/[0.13] hover:border-white/25 hover:shadow-[0 40px 120px rgba(0,0,0,0.48)] sm:p-6">
+            <div className="group relative overflow-hidden rounded-xl border border-white/18 bg-white/[0.09] p-5 backdrop-blur-xl transition duration-300 hover:bg-white/[0.13] hover:border-white/25 sm:p-6">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent" />
 
               <div className="flex items-start gap-4">
@@ -583,7 +583,7 @@ export default function HeroSection({
               </Button>
             </div>
 
-            <div className="group relative overflow-hidden rounded-[1.8rem] border border-white/14 bg-black/50 p-5 shadow-[0 32px 100px rgba(0,0,0,0.40)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1.5 hover:bg-black/60 hover:border-white/22 hover:shadow-[0 40px 120px rgba(0,0,0,0.46)] sm:p-6">
+            <div className="group relative overflow-hidden rounded-xl border border-white/14 bg-black/50 p-5 backdrop-blur-xl transition duration-300 hover:bg-black/60 hover:border-white/22 sm:p-6">
               <div className="flex items-start gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.08]">
                   <PlayCircle className="h-6 w-6 text-white" />
