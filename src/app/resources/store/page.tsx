@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import Image from 'next/image';
@@ -216,7 +216,7 @@ export default function StorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Wisdom House Store"
         subtitle="Wear Your Faith, Share The Message"
@@ -249,7 +249,7 @@ export default function StorePage() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative bg-[var(--app-surface)]"
+        className="relative bg-[var(--app-dark)]"
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
@@ -301,7 +301,7 @@ export default function StorePage() {
             </div>
           </div>
 
-          <div className="sticky top-3 z-30 rounded-[1.75rem] border border-white/10 bg-[var(--app-surface-2)]/85 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-4">
+          <div className="sticky top-3 z-30 rounded-[1.75rem] border border-white/10 bg-[var(--app-dark-2)]/85 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-4">
             <div className="grid gap-3 lg:grid-cols-[1fr_280px_auto] lg:items-center">
               <label className="relative block">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
@@ -409,11 +409,7 @@ export default function StorePage() {
         </Container>
       </Section>
 
-      <Section
-        padding="lg"
-        fullHeight={false}
-        className="bg-[var(--app-surface)]"
-      >
+      <Section padding="lg" fullHeight={false} className="bg-[var(--app-dark)]">
         <Container size="xl">
           <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -635,7 +631,7 @@ export default function StorePage() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[var(--app-surface-2)]"
+        className="relative overflow-hidden bg-[var(--app-dark-2)]"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.10),transparent_34%)]" />
 

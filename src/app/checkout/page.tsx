@@ -26,7 +26,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <main className="min-h-screen bg-[var(--app-surface)] text-white">
+      <main className="min-h-screen bg-[var(--app-dark)] text-white">
         <PageHero
           title="Checkout"
           subtitle="Complete your order securely."
@@ -34,7 +34,7 @@ export default function CheckoutPage() {
           compact
         />
 
-        <Section padding="xl" className="bg-[var(--app-surface)]">
+        <Section padding="xl" className="bg-[var(--app-dark)]">
           <Container size="xl">
             <div className="checkout-section mx-auto flex min-h-[52vh] max-w-xl flex-col items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.04] px-5 py-12 text-center shadow-2xl shadow-black/30 sm:px-8">
               <div className="mb-5 grid h-16 w-16 place-items-center rounded-2xl border border-white/10 bg-white/[0.05]">
@@ -65,7 +65,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--app-surface)] text-white">
+    <main className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Checkout"
         subtitle="Complete your order securely."
@@ -73,7 +73,7 @@ export default function CheckoutPage() {
         compact
       />
 
-      <Section padding="xl" className="bg-[var(--app-surface)]">
+      <Section padding="xl" className="bg-[var(--app-dark)]">
         <Container size="xl">
           <div className="checkout-section mx-auto mb-8 max-w-3xl text-center">
             <Eyebrow className="text-[var(--app-primary)]">

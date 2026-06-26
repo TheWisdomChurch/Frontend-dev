@@ -213,7 +213,7 @@ export default function TestimoniesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Stories of growth, healing, salvation, and real transformation."
         subtitle="Testimonies help the church remember that God is still working through worship, discipleship, care, and faithful obedience."
@@ -223,7 +223,7 @@ export default function TestimoniesPage() {
 
       <Section
         padding="none"
-        className="relative overflow-hidden bg-[var(--app-surface)]"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(215,187,117,0.13),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_34%)]" />
@@ -264,7 +264,7 @@ export default function TestimoniesPage() {
         </Container>
       </Section>
 
-      <Section padding="none" className="relative bg-[var(--app-surface)]">
+      <Section padding="none" className="relative bg-[var(--app-dark)]">
         <Container size="xl" className="py-4 sm:py-6 lg:py-8">
           <Card
             variant="glass"

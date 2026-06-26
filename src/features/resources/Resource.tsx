@@ -187,8 +187,7 @@ export default function ResourceSection() {
       className="relative overflow-hidden bg-[var(--app-surface)]"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
-        <GridBackground />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(201,150,26,0.06),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(201,150,26,0.04),transparent_30%)]" />
       </div>
 
       <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">
@@ -202,14 +201,14 @@ export default function ResourceSection() {
             </div>
 
             <H3
-              className="text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl lg:text-5xl"
+              className="text-2xl font-semibold leading-tight tracking-tight text-[var(--app-text)] sm:text-3xl lg:text-5xl"
               useThemeColor={false}
             >
               Streams, sermons, events, and pastoral care
             </H3>
 
             <BodySM
-              className="mt-4 max-w-2xl text-[0.92rem] leading-7 text-white/65 sm:text-base"
+              className="mt-4 max-w-2xl text-[0.92rem] leading-7 text-[var(--app-muted)] sm:text-base"
               useThemeColor={false}
             >
               Catch up on sermons, join a live service, register for events, or
@@ -219,18 +218,18 @@ export default function ResourceSection() {
 
           <Link
             href="/resources"
-            className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-bold text-white backdrop-blur-xl transition hover:bg-white/[0.11]"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--app-border)] bg-white px-5 py-3 text-sm font-bold text-[var(--app-text)] shadow-sm transition hover:border-[var(--app-primary)]/30 hover:bg-[var(--app-surface-2)]"
           >
             View all resources <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-white/[0.055] p-4 shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-5 lg:p-6">
+          <div className="relative overflow-hidden rounded-[2rem] border border-[var(--app-border)] bg-white p-4 shadow-[0_12px_40px_rgba(0,0,0,0.08)] sm:p-5 lg:p-6">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent" />
 
             <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
-              <div className="flex flex-col justify-between rounded-[1.5rem] border border-white/10 bg-black/35 p-5 sm:p-6">
+              <div className="flex flex-col justify-between rounded-[1.5rem] border border-white/[0.08] bg-[var(--app-dark)] p-5 sm:p-6">
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/70">
                     <span className="h-2 w-2 rounded-full bg-[var(--app-primary)]" />
@@ -268,12 +267,12 @@ export default function ResourceSection() {
                   ].map(([title, value]) => (
                     <div
                       key={title}
-                      className="rounded-2xl border border-white/10 bg-white/[0.045] p-3"
+                      className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-2)] p-3"
                     >
-                      <BodySM weight="semibold" className="text-white">
+                      <BodySM weight="semibold" className="text-[var(--app-text)]">
                         {title}
                       </BodySM>
-                      <Caption className="mt-1 text-white/55">{value}</Caption>
+                      <Caption className="mt-1 text-[var(--app-muted)]">{value}</Caption>
                     </div>
                   ))}
                 </div>
@@ -360,7 +359,7 @@ export default function ResourceSection() {
                   <Link
                     key={`${title}-${index}`}
                     href={href}
-                    className="group relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
+                    className="group relative overflow-hidden rounded-[1.5rem] border border-[var(--app-border)] bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/30 hover:shadow-md"
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.10] text-[var(--app-primary)]">
@@ -370,14 +369,14 @@ export default function ResourceSection() {
                       <div className="min-w-0 flex-1">
                         <SmallText
                           weight="bold"
-                          className="line-clamp-1 text-white"
+                          className="line-clamp-1 text-[var(--app-text)]"
                           useThemeColor={false}
                         >
                           {title}
                         </SmallText>
 
                         <Caption
-                          className="mt-1 line-clamp-2 text-[0.8rem] leading-5 text-white/55"
+                          className="mt-1 line-clamp-2 text-[0.8rem] leading-5 text-[var(--app-muted)]"
                           useThemeColor={false}
                         >
                           {item.description ||
@@ -385,7 +384,7 @@ export default function ResourceSection() {
                         </Caption>
                       </div>
 
-                      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
+                      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:translate-x-1 group-hover:text-[var(--app-primary)]" />
                     </div>
                   </Link>
                 );

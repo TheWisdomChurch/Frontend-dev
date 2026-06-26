@@ -64,7 +64,7 @@ const BlogPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <HeroSection
         title="Blog"
         subtitle="Insights for your spiritual journey"

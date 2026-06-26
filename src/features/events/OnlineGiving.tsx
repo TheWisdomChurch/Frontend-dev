@@ -273,7 +273,7 @@ export default function OnlineGiving() {
         ref={sectionRef}
         padding="none"
         fullHeight={false}
-        className="relative overflow-hidden bg-[var(--app-surface)]"
+        className="relative overflow-hidden bg-[var(--app-dark-2)]"
       >
         <div
           className="pointer-events-none absolute inset-0 overflow-hidden"

@@ -72,7 +72,7 @@ export default function LeadershipPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Leadership at Wisdom Church"
         subtitle="Guided by vision, grounded in service."

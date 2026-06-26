@@ -131,7 +131,7 @@ export default function TestimoniesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Stories of growth, healing, salvation, and real transformation."
         subtitle="Testimonies help the church remember that God is still working through worship, discipleship, care, and faithful obedience."
@@ -141,7 +141,7 @@ export default function TestimoniesPage() {
 
       <StatStrip items={stats} />
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl" className="space-y-6 sm:space-y-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-3">

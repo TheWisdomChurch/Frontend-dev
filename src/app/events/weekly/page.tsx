@@ -111,7 +111,7 @@ const expectations = [
 
 export default function WeeklyPage() {
   return (
-    <main className="min-h-screen bg-[var(--app-surface)] text-white">
+    <main className="min-h-screen bg-[var(--app-dark)] text-white">
       <HeroSection
         title="Weekly Services"
         subtitle="Regular gatherings for worship, teaching, and community."
@@ -125,7 +125,7 @@ export default function WeeklyPage() {
 
       <Section
         padding="lg"
-        className="relative overflow-hidden bg-[var(--app-surface)]"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
         <Container size="xl" className="relative z-10">
@@ -196,7 +196,7 @@ export default function WeeklyPage() {
 
       <Section
         padding="lg"
-        className="relative overflow-hidden bg-[var(--app-surface-2)]"
+        className="relative overflow-hidden bg-[var(--app-dark-2)]"
       >
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">

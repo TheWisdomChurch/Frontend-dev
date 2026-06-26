@@ -302,11 +302,10 @@ export default function EventsShowcase() {
   return (
     <Section
       padding="lg"
-      className="relative overflow-hidden bg-[var(--app-surface)]"
+      className="relative overflow-hidden bg-[var(--app-surface-2)]"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div className="events-glow-overlay absolute inset-0 opacity-90" />
-        <GridBackground />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.07),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(201,150,26,0.05),transparent_28%)]" />
       </div>
 
       <Container size="xl" className="relative z-10 space-y-8 sm:space-y-10">
@@ -319,12 +318,12 @@ export default function EventsShowcase() {
               </Caption>
             </div>
 
-            <H3 className="text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl lg:text-5xl">
+            <H3 className="text-2xl font-semibold leading-tight tracking-tight text-[var(--app-text)] sm:text-3xl lg:text-5xl">
               What&apos;s happening now
             </H3>
 
             <BodySM
-              className="mt-4 max-w-xl text-[0.92rem] leading-7 text-white/65 sm:text-base"
+              className="mt-4 max-w-xl text-[0.92rem] leading-7 text-[var(--app-muted)] sm:text-base"
               useThemeColor={false}
             >
               Live programs, church media stories, and recent reels from your
@@ -344,7 +343,7 @@ export default function EventsShowcase() {
                   variant={isActive ? 'primary' : 'ghost'}
                   size="sm"
                   curvature="full"
-                  className={`text-[0.78rem] sm:text-sm ${isActive ? 'shadow-[0_14px_35px_rgba(201,150,26,0.20)]' : 'border-white/15 bg-white/[0.04] text-white/70 hover:border-white/25 hover:bg-white/[0.08] hover:text-white'}`}
+                  className={`text-[0.78rem] sm:text-sm ${isActive ? 'shadow-[0_14px_35px_rgba(201,150,26,0.20)]' : 'border-[var(--app-border)] bg-white text-[var(--app-muted)] hover:border-[var(--app-primary)]/30 hover:text-[var(--app-text)]'}`}
                 >
                   {CATEGORY_LABELS[cat]}
                 </Button>
@@ -509,8 +508,8 @@ export default function EventsShowcase() {
                   variant="ghost"
                   className={`group relative min-w-[290px] overflow-hidden rounded-[1.5rem] border p-3 !justify-start text-left transition lg:min-w-0 ${
                     selected
-                      ? 'border-white/22 bg-white/[0.09] shadow-[0_18px_55px_rgba(0,0,0,0.32)]'
-                      : 'border-white/10 bg-white/[0.035] hover:border-white/18 hover:bg-white/[0.065]'
+                      ? 'border-[var(--app-primary)]/30 bg-[var(--app-dark)] shadow-[0_12px_40px_rgba(0,0,0,0.28)]'
+                      : 'border-[var(--app-border)] bg-[var(--app-dark-2)] hover:border-[var(--app-primary)]/20 hover:bg-[var(--app-dark)]'
                   }`}
                 >
                   <div className="flex items-center gap-3">

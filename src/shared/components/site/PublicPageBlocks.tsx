@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { ArrowRight, Check } from 'lucide-react';
@@ -105,7 +105,7 @@ export function StatStrip({ items }: StatStripProps) {
   return (
     <Section
       padding="md"
-      className="relative overflow-hidden border-y border-white/10 bg-[var(--app-surface-2)]"
+      className="relative overflow-hidden border-y border-white/10 bg-[var(--app-dark-2)]"
     >
       <Container size="xl" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {items.map(item => {
@@ -289,7 +289,7 @@ export function ActionBanner({
   secondaryTargetBlank = false,
 }: ActionBannerProps) {
   return (
-    <Section padding="lg" className="bg-[var(--app-surface-2)]">
+    <Section padding="lg" className="bg-[var(--app-dark-2)]">
       <Container size="xl">
         <div className="rounded-radius-lg border border-white/10 bg-[linear-gradient(135deg,rgba(201,150,26,0.12),rgba(255,255,255,0.03),rgba(0,0,0,0.22))] p-6 sm:p-8 lg:p-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">

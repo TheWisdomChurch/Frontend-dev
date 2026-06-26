@@ -152,7 +152,7 @@ export default function PastoralPage() {
   const SelectedIcon = selectedService.icon;
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Pastoral care should feel accessible, prayerful, and responsibly structured."
         subtitle="If you need guidance, prayer, crisis support, or help navigating a major life moment, this page is your starting point."
@@ -164,7 +164,7 @@ export default function PastoralPage() {
 
       <Section
         padding="lg"
-        className="relative overflow-hidden bg-[var(--app-surface)]"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(201,150,26,0.12),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(215,187,117,0.08),transparent_36%)]" />
@@ -286,7 +286,7 @@ export default function PastoralPage() {
 
       <Section
         padding="lg"
-        className="relative overflow-hidden border-y border-white/10 bg-[var(--app-surface-2)]"
+        className="relative overflow-hidden border-y border-white/10 bg-[var(--app-dark-2)]"
       >
         <Container size="xl" className="space-y-8">
           <div className="max-w-3xl space-y-3">

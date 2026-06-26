@@ -70,7 +70,7 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
       ref={sectionRef}
       padding="none"
       className={cn(
-        'relative w-full overflow-hidden bg-[var(--app-surface-2)] text-white',
+        'relative w-full overflow-hidden bg-[var(--app-dark-2)] text-white',
         'min-h-[420px] md:min-h-[480px]',
         className
       )}

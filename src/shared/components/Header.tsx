@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -79,7 +79,7 @@ const NAV_ITEMS: NavItem[] = [
 
 function DropdownMenu({ items }: { items: NavChild[] }) {
   return (
-    <div className="absolute left-0 top-full z-50 mt-2 min-w-[200px] overflow-hidden rounded-radius-md border border-white/10 bg-[var(--app-surface-2)] shadow-[0_24px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+    <div className="absolute left-0 top-full z-50 mt-2 min-w-[200px] overflow-hidden rounded-radius-md border border-white/10 bg-[var(--app-dark-2)] shadow-[0_24px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl">
       <div className="py-2">
         {items.map(item => (
           <Link

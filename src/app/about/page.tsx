@@ -102,7 +102,7 @@ const stats = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[var(--app-surface)] text-white">
+    <main className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         variant="about"
         eyebrow="About Wisdom Church"
@@ -121,7 +121,7 @@ export default function AboutPage() {
         <StatStrip items={stats} />
       </ScrollFadeIn>
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn>
             <SplitSection
@@ -149,7 +149,7 @@ export default function AboutPage() {
 
       <Section
         padding="lg"
-        className="border-y border-white/10 bg-[var(--app-surface-2)]"
+        className="border-y border-white/10 bg-[var(--app-dark-2)]"
       >
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
@@ -167,7 +167,7 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
             <Eyebrow className="text-[var(--app-primary)]">Leadership</Eyebrow>

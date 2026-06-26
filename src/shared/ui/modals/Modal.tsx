@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   memo,
@@ -28,7 +28,7 @@ export const modalStyles = {
   input:
     'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   select:
-    'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-surface-2)] px-4 py-3 text-sm text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-dark-2)] px-4 py-3 text-sm text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   textarea:
     'min-h-[130px] w-full resize-y rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   errorText: 'mt-2 text-xs leading-5 text-rose-300',
@@ -185,7 +185,7 @@ export const BaseModal = memo(function BaseModal({
   const modalClassName = useMemo(
     () =>
       cn(
-        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/10 bg-[var(--app-surface-2)]/95 text-white shadow-2xl shadow-black/55 backdrop-blur-xl',
+        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/10 bg-[var(--app-dark-2)]/95 text-white shadow-2xl shadow-black/55 backdrop-blur-xl',
         'motion-safe:animate-[modal-enter_220ms_ease-out]',
         isSheet
           ? 'max-h-[90svh] rounded-t-[1.75rem] rounded-b-none'

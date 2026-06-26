@@ -57,7 +57,7 @@ function SimpleConfirmation() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
@@ -68,7 +68,7 @@ function SimpleConfirmation() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[var(--app-surface)]"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.11),transparent_34%),radial-gradient(circle_at_15%_30%,rgba(255,255,255,0.06),transparent_30%)]" />

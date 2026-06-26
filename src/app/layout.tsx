@@ -145,7 +145,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={cn(
           worksans.className,
-          'min-h-screen overflow-x-hidden bg-[var(--app-surface)] font-sans text-white'
+          'min-h-screen overflow-x-hidden bg-[var(--app-surface)] font-sans'
         )}
       >
         <script
