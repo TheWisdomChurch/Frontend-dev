@@ -1,17 +1,13 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { BodySM, Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { useEffect, useRef, useState } from 'react';
 
 type NavChild = {
   label: string;
   href: string;
-  description?: string;
 };
 
 type NavItem = {
@@ -25,21 +21,9 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Watch',
     href: '/resources/sermons',
     children: [
-      {
-        label: 'Sermons',
-        href: '/resources/sermons',
-        description: 'Messages from our pulpit',
-      },
-      {
-        label: 'Blog',
-        href: '/resources/blogs',
-        description: 'Articles & devotionals',
-      },
-      {
-        label: 'Publications',
-        href: '/resources/publications',
-        description: 'Books & resources',
-      },
+      { label: 'Sermons', href: '/resources/sermons' },
+      { label: 'Blog', href: '/resources/blogs' },
+      { label: 'Publications', href: '/resources/publications' },
     ],
   },
   {
@@ -58,8 +42,8 @@ const NAV_ITEMS: NavItem[] = [
     href: '/events',
     children: [
       { label: 'Upcoming', href: '/events/upcoming' },
-      { label: 'Weekly Services', href: '/events/weekly' },
-      { label: 'Special Events', href: '/events/special' },
+      { label: 'Weekly', href: '/events/weekly' },
+      { label: 'Special', href: '/events/special' },
       { label: 'Calendar', href: '/events/calendar' },
     ],
   },
@@ -77,38 +61,16 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Contact', href: '/contact' },
 ];
 
-function DropdownMenu({ items }: { items: NavChild[] }) {
-  return (
-    <div className="absolute left-0 top-full z-50 mt-2 min-w-[200px] overflow-hidden rounded-radius-md border border-white/10 bg-[var(--app-dark-2)] shadow-[0_24px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl">
-      <div className="py-2">
-        {items.map(item => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="group flex flex-col gap-0.5 px-4 py-2.5 transition-colors hover:bg-white/[0.06]"
-          >
-            <span className="text-sm font-medium text-white/85 group-hover:text-white">
-              {item.label}
-            </span>
-            {item.description && (
-              <span className="text-[11px] text-white/45 group-hover:text-white/60">
-                {item.description}
-              </span>
-            )}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
+const SOCIALS = [
+  { label: 'Instagram', href: 'https://www.instagram.com/wisdomchurchhq' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@wisdomchurchhq' },
+  { label: 'Facebook', href: 'https://facebook.com/wisdomchurchhq' },
+];
 
 export default function Header() {
   const pathname = usePathname() || '/';
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const navItems = useMemo(() => NAV_ITEMS, []);
+  const [navOpen, setNavOpen] = useState(false);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -116,241 +78,205 @@ export default function Header() {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  const handleDropdownEnter = (label: string) => {
-    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
-    setOpenDropdown(label);
-  };
+  const close = () => setNavOpen(false);
 
-  const handleDropdownLeave = () => {
-    dropdownTimeoutRef.current = setTimeout(() => setOpenDropdown(null), 120);
-  };
-
+  // Close on route change
   useEffect(() => {
-    setMenuOpen(false);
-    setOpenDropdown(null);
+    close();
   }, [pathname]);
 
+  // Scroll tracking for header background
   useEffect(() => {
-    document.body.classList.toggle('menu-open', menuOpen);
-    document.documentElement.classList.toggle('menu-open', menuOpen);
-    document.body.dataset.menuOpen = menuOpen ? 'true' : 'false';
-
-    return () => {
-      document.body.classList.remove('menu-open');
-      document.documentElement.classList.remove('menu-open');
-      delete document.body.dataset.menuOpen;
+    const onScroll = () => {
+      document.body.dataset.scrolled = window.scrollY > 16 ? 'true' : 'false';
     };
-  }, [menuOpen]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      document.body.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false';
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => window.removeEventListener('scroll', handleScroll);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Scroll lock + focus management
   useEffect(() => {
+    document.body.classList.toggle('nav-open', navOpen);
+    document.documentElement.classList.toggle('nav-open', navOpen);
+    if (navOpen) {
+      setTimeout(() => firstLinkRef.current?.focus(), 380);
+    }
     return () => {
-      if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+      document.body.classList.remove('nav-open');
+      document.documentElement.classList.remove('nav-open');
     };
-  }, []);
+  }, [navOpen]);
+
+  // ESC to close
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && navOpen) close();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [navOpen]);
 
   return (
     <>
-      <header className="site-header">
+      {/* ── Persistent top bar ──────────────────────────────── */}
+      <header className="site-header" role="banner">
         <div className="site-header__inner">
           <Link
             href="/"
             className="site-header__brand"
-            aria-label="The Wisdom Church home"
+            aria-label="The Wisdom Church — home"
           >
-            <span className="site-header__brand-logo">
-              <Image
-                src="/logo.webp"
-                alt="The Wisdom Church logo"
-                width={44}
-                height={44}
-                priority
-                className="site-header__brand-image"
-              />
-            </span>
-
-            <span className="site-header__brand-divider" aria-hidden="true" />
-
-            <span className="site-header__brand-copy">
-              <span className="site-header__brand-line">The Wisdom</span>
-              <span className="site-header__brand-line site-header__brand-line--strong">
-                Church
-              </span>
+            <Image
+              src="/logo.webp"
+              alt=""
+              width={36}
+              height={36}
+              priority
+              className="site-header__logo"
+            />
+            <span className="site-header__wordmark" aria-hidden="true">
+              <span>The Wisdom</span>
+              <strong>Church</strong>
             </span>
           </Link>
 
-          <nav
-            className="site-header__nav site-header__desktop"
-            aria-label="Primary navigation"
-          >
-            {navItems.map(item => (
+          <div className="site-header__actions">
+            <Link href="/#giving" className="site-header__give">
+              Give
+            </Link>
+
+            <button
+              type="button"
+              className={`site-header__toggle${navOpen ? ' is-open' : ''}`}
+              aria-label={navOpen ? 'Close navigation' : 'Open navigation'}
+              aria-expanded={navOpen}
+              aria-controls="nav-overlay"
+              onClick={() => setNavOpen(v => !v)}
+            >
+              <span className="site-header__toggle-label" aria-hidden="true">
+                {navOpen ? 'Close' : 'Menu'}
+              </span>
+              <span className="site-header__toggle-icon" aria-hidden="true">
+                <span />
+                <span />
+              </span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Full-screen nav overlay ──────────────────────────── */}
+      <div
+        id="nav-overlay"
+        className={`nav-overlay${navOpen ? ' is-open' : ''}`}
+        aria-hidden={!navOpen}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site navigation"
+      >
+        {/* Backdrop — click outside to close */}
+        <button
+          type="button"
+          className="nav-overlay__backdrop"
+          onClick={close}
+          aria-label="Close navigation"
+          tabIndex={-1}
+        />
+
+        <div className="nav-overlay__inner">
+          {/* Left — primary navigation links */}
+          <nav className="nav-overlay__links" aria-label="Primary navigation">
+            {NAV_ITEMS.map((item, i) => (
               <div
                 key={item.href}
-                className="relative"
-                onMouseEnter={() =>
-                  item.children && handleDropdownEnter(item.label)
-                }
-                onMouseLeave={() => item.children && handleDropdownLeave()}
+                className="nav-item"
+                // CSS stagger via custom property
+                style={{ '--nav-i': i } as React.CSSProperties}
               >
+                <span className="nav-item__num" aria-hidden="true">
+                  0{i + 1}
+                </span>
+
                 <Link
                   href={item.href}
-                  className={`site-header__nav-link inline-flex items-center gap-1 ${
-                    isActive(item.href) ? 'is-active' : ''
-                  }`}
+                  ref={i === 0 ? firstLinkRef : undefined}
+                  className={`nav-item__link${isActive(item.href) ? ' is-active' : ''}`}
+                  onClick={close}
+                  tabIndex={navOpen ? 0 : -1}
                 >
                   {item.label}
-                  {item.children && (
-                    <ChevronDown
-                      className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                        openDropdown === item.label ? 'rotate-180' : ''
-                      }`}
-                    />
-                  )}
                 </Link>
-                {item.children && openDropdown === item.label && (
-                  <DropdownMenu items={item.children} />
-                )}
+
+                {item.children ? (
+                  <p className="nav-item__sub">
+                    {item.children.map((child, ci) => (
+                      <span key={child.href}>
+                        <Link
+                          href={child.href}
+                          className="nav-item__sub-link"
+                          onClick={close}
+                          tabIndex={navOpen ? 0 : -1}
+                        >
+                          {child.label}
+                        </Link>
+                        {ci < (item.children?.length ?? 0) - 1 && (
+                          <span className="nav-item__dot" aria-hidden="true">
+                            {' '}
+                            ·{' '}
+                          </span>
+                        )}
+                      </span>
+                    ))}
+                  </p>
+                ) : null}
               </div>
             ))}
           </nav>
 
-          <div className="site-header__desktop flex items-center gap-3">
-            <span className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[0.7rem] text-white/60 lg:inline-flex">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
-              Sundays · 9:00 AM
-            </span>
-            <Link href="/forms/membership" className="site-header__cta">
-              Join Us
-            </Link>
-          </div>
-
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="site-header__menu-button"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
-            onClick={() => setMenuOpen(value => !value)}
+          {/* Right — service info + socials (desktop only) */}
+          <aside
+            className="nav-overlay__panel"
+            aria-label="Service information"
           >
-            <span className="site-header__menu-icon" />
-          </Button>
-        </div>
-      </header>
-
-      <div className="site-header__mobile-layer" aria-hidden={!menuOpen}>
-        <Button
-          type="button"
-          variant="ghost"
-          className="site-header__mobile-backdrop"
-          aria-label="Close menu"
-          onClick={() => setMenuOpen(false)}
-        />
-
-        <div className="site-header__mobile-panel" id="mobile-navigation">
-          <div className="site-header__mobile-brand">
-            <Image
-              src="/logo.webp"
-              alt="The Wisdom Church logo"
-              width={46}
-              height={46}
-              className="site-header__mobile-brand-image"
-            />
-            <div>
-              <Caption className="site-header__mobile-brand-kicker">
-                Welcome to
-              </Caption>
-              <BodySM
-                weight="semibold"
-                className="site-header__mobile-brand-name"
+            <div className="nav-panel">
+              <p className="nav-panel__eyebrow">Next Service</p>
+              <p className="nav-panel__title">This Sunday</p>
+              <p className="nav-panel__detail">9:00 AM · WAT</p>
+              <p className="nav-panel__detail">Honor Gardens, Lekki-Epe</p>
+              <Link
+                href="/events/weekly"
+                className="nav-panel__cta"
+                onClick={close}
+                tabIndex={navOpen ? 0 : -1}
               >
-                The Wisdom Church
-              </BodySM>
+                Plan a visit →
+              </Link>
+
+              <div className="nav-panel__divider" aria-hidden="true" />
+
+              <p className="nav-panel__eyebrow">Thursday Midweek</p>
+              <p className="nav-panel__detail">6:00 PM · Honor Gardens</p>
             </div>
-          </div>
 
-          {/* Priority Actions */}
-          <div className="mb-4 grid grid-cols-2 gap-2 px-5">
-            <Link
-              href="/resources/sermons"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-radius-sm border border-white/12 bg-white/[0.06] py-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.10]"
-            >
-              Watch Live
-            </Link>
-            <Link
-              href="/#giving"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-radius-sm bg-[var(--app-primary)] py-3 text-sm font-semibold text-black transition hover:bg-[var(--app-primary-light)]"
-            >
-              Give Online
-            </Link>
-          </div>
-
-          {/* Explore Section */}
-          <div className="mb-1 px-5 pt-2">
-            <Caption className="font-semibold text-white/35">Explore</Caption>
-          </div>
-          <nav
-            className="site-header__mobile-nav"
-            aria-label="Mobile navigation"
-          >
-            {navItems
-              .filter(item => !['Give', 'Contact'].includes(item.label))
-              .map(item => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`site-header__mobile-link ${
-                    isActive(item.href) ? 'is-active' : ''
-                  }`}
-                >
-                  <span>{item.label}</span>
-                  <span aria-hidden="true">→</span>
-                </Link>
-              ))}
-          </nav>
-
-          {/* Connect Section */}
-          <div className="mb-1 px-5 pt-4">
-            <Caption className="font-semibold text-white/35">Connect</Caption>
-          </div>
-          <nav aria-label="Connect navigation">
-            <Link
-              href="/contact"
-              onClick={() => setMenuOpen(false)}
-              className="site-header__mobile-link"
-            >
-              <span>Contact Us</span>
-              <span aria-hidden="true">→</span>
-            </Link>
-            <Link
-              href="/forms/membership"
-              onClick={() => setMenuOpen(false)}
-              className="site-header__mobile-link"
-            >
-              <span>Join the Team</span>
-              <span aria-hidden="true">→</span>
-            </Link>
-          </nav>
-
-          <Link
-            href="/forms/membership"
-            className="site-header__cta site-header__mobile-cta"
-          >
-            Plan a Visit
-          </Link>
+            <div className="nav-socials">
+              <p className="nav-socials__label">Follow us</p>
+              <div className="nav-socials__links">
+                {SOCIALS.map(s => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="nav-socials__link"
+                    tabIndex={navOpen ? 0 : -1}
+                  >
+                    {s.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </>

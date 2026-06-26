@@ -50,7 +50,7 @@ const IconX = ({ className }: { className?: string }) => (
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
-import { BodySM, Caption, Eyebrow } from '@/shared/text';
+import { BodySM, Eyebrow } from '@/shared/text';
 
 const quickLinks = [
   { href: '/about', label: 'About' },

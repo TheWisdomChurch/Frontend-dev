@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { HeartHandshake, Sparkles, Users } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
-import { H2, BodyMD, BodySM, Caption, Eyebrow } from '@/shared/text';
+import { H2, BodyMD, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import {

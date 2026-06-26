@@ -24,7 +24,7 @@ import {
 
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
-import { Caption, H3, BodySM, SmallText, BodyMD } from '@/shared/text';
+import { Caption, H3, BodySM, SmallText } from '@/shared/text';
 import { resourceLinks } from '@/lib/data';
 import type { YouTubeVideo } from '@/lib/types';
 import apiClient from '@/lib/api';

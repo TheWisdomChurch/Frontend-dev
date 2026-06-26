@@ -33,7 +33,7 @@ import {
 
 import PageHero from '@/features/hero/PageHero';
 import { Bishop, PstKenny } from '@/shared/assets';
-import { H2, H3, BodyMD, BodySM, Eyebrow } from '@/shared/text';
+import { H2, H3, BodyMD, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import {

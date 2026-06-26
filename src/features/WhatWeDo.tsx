@@ -9,7 +9,7 @@ import { useWhatWeDo } from '@/shared/utils/hooks/useWhatwedo';
 import { Section, Container } from '@/shared/layout';
 
 export default function WhatWeDo() {
-  const { sectionRef, headingRef, textRef, addToBoxesRef } = useWhatWeDo();
+  const { sectionRef, headingRef, addToBoxesRef } = useWhatWeDo();
 
   const renderBox = (box: ServiceBox, index: number, featured = false) => {
     return (
