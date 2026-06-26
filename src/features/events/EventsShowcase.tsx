@@ -11,7 +11,6 @@ import type { EventPublic } from '@/lib/apiTypes';
 
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import { Button } from '@/shared/utils/buttons';
 import { Play } from 'lucide-react';
 
 /* ─────────────────────────────────────────────────────────
@@ -107,16 +106,17 @@ function EventCard({
     return (
       <div className="group relative flex min-h-[280px] overflow-hidden rounded-[var(--radius-card)] bg-[var(--app-ink)] lg:min-h-[340px]">
         {/* Image */}
-        <div className="relative w-[55%] shrink-0 overflow-hidden">
+        <div className="relative w-[52%] shrink-0 overflow-hidden">
           <img
             src={slide.imageUrl}
             alt={slide.title}
-            className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+            className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
             loading="lazy"
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--app-ink)]/30" />
           {isReel && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl transition duration-200 group-hover:scale-[1.08]">
                 <Play className="h-5 w-5 fill-black text-black" />
               </div>
             </div>
@@ -124,37 +124,38 @@ function EventCard({
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col justify-between p-6 lg:p-8">
+        <div className="flex flex-1 flex-col justify-between p-7 lg:p-9">
           <div>
-            <span className="text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <span className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               {slide.badge} · Featured
             </span>
-            <p className="mt-3 font-headline text-[1.4rem] font-normal leading-snug text-white lg:text-[1.65rem]">
+            <p className="mt-4 font-headline text-[1.5rem] font-normal leading-snug text-white lg:text-[1.75rem]">
               {slide.title}
             </p>
-            <p className="mt-2 line-clamp-2 text-[0.82rem] leading-[1.7] text-white/55">
+            <p className="mt-3 line-clamp-3 font-body text-[0.83rem] leading-[1.75] text-white/52">
               {slide.description}
             </p>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-6">
             {slide.location && (
-              <p className="mb-3 flex items-center gap-1.5 text-[0.75rem] text-white/40">
-                <MapPin className="h-3.5 w-3.5 shrink-0" />
+              <p className="mb-2 flex items-center gap-1.5 font-body text-[0.74rem] text-white/38">
+                <MapPin className="h-3 w-3 shrink-0" />
                 {slide.location}
               </p>
             )}
             {slide.date !== 'Date TBA' && (
-              <p className="mb-4 text-[0.75rem] font-semibold text-white/50">
+              <p className="mb-5 font-ui text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/45">
                 {slide.date}
               </p>
             )}
             {slide.href ? (
               <Link
                 href={slide.href}
-                className="inline-flex items-center gap-1.5 text-[0.78rem] font-semibold text-[var(--app-primary)] transition hover:gap-2.5"
+                className="inline-flex h-10 items-center gap-2 bg-[var(--app-primary)] px-5 font-ui text-[0.75rem] font-bold text-[#0d0a06] transition hover:bg-[var(--app-primary-light)]"
+                style={{ borderRadius: 'var(--radius-button)' }}
               >
-                {slide.cta} →
+                {slide.cta}
               </Link>
             ) : null}
           </div>
@@ -165,38 +166,46 @@ function EventCard({
 
   // Portrait card
   return (
-    <div className="group flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-white">
+    <div
+      className="group flex flex-col overflow-hidden bg-[var(--app-canvas-2)]"
+      style={{ borderRadius: 'var(--radius-card)' }}
+    >
       {/* Image — 3/4 aspect */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-[var(--app-ink)]/10">
+      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--app-ink)]/10">
         <img
           src={slide.imageUrl}
           alt={slide.title}
-          className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+          className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
           loading="lazy"
         />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         {isReel && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-[1.06]">
               <Play className="h-4 w-4 fill-black text-black" />
             </div>
           </div>
         )}
         {/* Date chip */}
-        <div className="absolute left-4 top-4 rounded-[var(--radius-badge)] bg-[var(--app-primary)] px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-[#0d0a06]">
+        <div
+          className="absolute left-4 top-4 bg-[var(--app-primary)] px-2.5 py-1 font-ui text-[0.58rem] font-bold uppercase tracking-[0.18em] text-[#0d0a06]"
+          style={{ borderRadius: 'var(--radius-badge)' }}
+        >
           {slide.date}
         </div>
       </div>
 
       {/* Text */}
-      <div className="flex flex-1 flex-col px-5 py-5 lg:px-6">
-        <span className="text-[0.58rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+      <div className="flex flex-1 flex-col border-t border-[var(--app-ink)]/8 px-5 py-5">
+        <span className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
           {slide.badge}
         </span>
-        <p className="mt-2 font-headline text-[1.1rem] font-normal leading-snug text-[var(--app-ink)]">
+        <p className="mt-2 font-headline text-[1.08rem] font-normal leading-snug text-[var(--app-ink)]">
           {slide.title}
         </p>
         {slide.location && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-[0.75rem] text-[var(--app-ink)]/45">
+          <p className="mt-1.5 flex items-center gap-1.5 font-body text-[0.73rem] text-[var(--app-ink)]/40">
             <MapPin className="h-3 w-3 shrink-0" />
             {slide.location}
           </p>
@@ -204,7 +213,7 @@ function EventCard({
         {slide.href ? (
           <Link
             href={slide.href}
-            className="mt-auto pt-4 text-[0.75rem] font-semibold text-[var(--app-ink)] underline-offset-2 transition hover:text-[var(--app-primary)] hover:underline"
+            className="mt-auto inline-flex items-center gap-1 pt-4 font-ui text-[0.73rem] font-semibold text-[var(--app-ink)]/55 transition hover:text-[var(--app-primary)]"
           >
             {slide.cta} →
           </Link>
@@ -276,31 +285,30 @@ export default function EventsShowcase() {
         {/* ── Section header ───────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
+            <p className="mb-3 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              Events &amp; Programs
+            </p>
             <h2
               className="font-headline font-normal leading-tight text-[var(--app-ink)]"
               style={{ fontSize: 'var(--type-display-sm)' }}
             >
-              What&apos;s
-              <em className="not-italic text-[var(--app-primary)]">
-                {' '}
-                happening
-              </em>
+              What&apos;s happening
             </h2>
           </div>
 
           <div className="flex items-center gap-6">
             {/* Category tabs */}
-            <div className="flex gap-1">
+            <div className="flex gap-0.5 border-b border-[var(--app-ink)]/10">
               {(Object.keys(CATEGORY_LABELS) as ShowcaseCategory[]).map(cat => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setCategory(cat)}
                   className={[
-                    'px-3.5 py-1.5 text-[0.72rem] font-semibold transition',
+                    'px-3.5 py-2 font-ui text-[0.72rem] font-semibold transition',
                     category === cat
                       ? 'border-b-2 border-[var(--app-primary)] text-[var(--app-ink)]'
-                      : 'text-[var(--app-ink)]/45 hover:text-[var(--app-ink)]',
+                      : 'border-b-2 border-transparent text-[var(--app-ink)]/40 hover:text-[var(--app-ink)]/70',
                   ].join(' ')}
                 >
                   {CATEGORY_LABELS[cat]}
@@ -309,7 +317,7 @@ export default function EventsShowcase() {
             </div>
             <Link
               href="/events"
-              className="hidden text-[0.78rem] font-semibold text-[var(--app-primary)] transition hover:gap-2 sm:inline-flex sm:items-center sm:gap-1.5"
+              className="hidden font-ui text-[0.75rem] font-semibold text-[var(--app-primary)] transition sm:inline-flex sm:items-center sm:gap-1.5"
             >
               See all →
             </Link>

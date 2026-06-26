@@ -5,7 +5,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Button } from '@/shared/utils/buttons';
-import { BodySM, Caption } from '@/shared/text';
+
+/* ── Storage ─────────────────────────────────────────────── */
 
 type CookiePreferences = {
   essential: true;
@@ -15,11 +16,11 @@ type CookiePreferences = {
   version: number;
 };
 
-const COOKIE_PREFS_KEY = 'wc_cookie_preferences_v1';
-const COOKIE_PREFS_VALUE_KEY = 'wc_cookie_preferences_data';
-const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 180;
+const PREFS_KEY = 'wc_cookie_preferences_data';
+const CONSENT_KEY = 'wc_cookie_preferences_v1';
+const MAX_AGE = 60 * 60 * 24 * 180;
 
-const basePreferences: CookiePreferences = {
+const basePrefs: CookiePreferences = {
   essential: true,
   analytics: false,
   marketing: false,
@@ -27,254 +28,265 @@ const basePreferences: CookiePreferences = {
   version: 1,
 };
 
-const readSavedPreferences = (): CookiePreferences | null => {
+function readSaved(): CookiePreferences | null {
   if (typeof window === 'undefined') return null;
   const match = document.cookie.match(
     new RegExp(
-      `(?:^|; )${COOKIE_PREFS_VALUE_KEY.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
+      `(?:^|; )${PREFS_KEY.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
     )
   );
   const raw = match ? decodeURIComponent(match[1]) : null;
   if (!raw) return null;
-
   try {
     const parsed = JSON.parse(raw) as Partial<CookiePreferences>;
     return {
-      ...basePreferences,
+      ...basePrefs,
       ...parsed,
       essential: true,
       version: 1,
-      updatedAt: parsed.updatedAt || new Date().toISOString(),
+      updatedAt: parsed.updatedAt || '',
     };
   } catch {
     return null;
   }
-};
+}
 
-const writeCookies = (prefs: CookiePreferences) => {
-  const cookieOptions = `Max-Age=${COOKIE_MAX_AGE_SECONDS}; Path=/; SameSite=Lax`;
-  document.cookie = `wc_cookie_consent=1; ${cookieOptions}`;
-  document.cookie = `wc_cookie_analytics=${prefs.analytics ? '1' : '0'}; ${cookieOptions}`;
-  document.cookie = `wc_cookie_marketing=${prefs.marketing ? '1' : '0'}; ${cookieOptions}`;
-  document.cookie = `${COOKIE_PREFS_VALUE_KEY}=${encodeURIComponent(JSON.stringify(prefs))}; ${cookieOptions}`;
-  document.cookie = `${COOKIE_PREFS_KEY}=1; ${cookieOptions}`;
-};
+function writeCookies(prefs: CookiePreferences) {
+  const opts = `Max-Age=${MAX_AGE}; Path=/; SameSite=Lax`;
+  document.cookie = `wc_cookie_consent=1; ${opts}`;
+  document.cookie = `wc_cookie_analytics=${prefs.analytics ? '1' : '0'}; ${opts}`;
+  document.cookie = `wc_cookie_marketing=${prefs.marketing ? '1' : '0'}; ${opts}`;
+  document.cookie = `${PREFS_KEY}=${encodeURIComponent(JSON.stringify(prefs))}; ${opts}`;
+  document.cookie = `${CONSENT_KEY}=1; ${opts}`;
+}
+
+/* ── Toggle switch ──────────────────────────────────────── */
+
+function Toggle({
+  on,
+  locked,
+  onChange,
+  label,
+}: {
+  on: boolean;
+  locked: boolean;
+  onChange: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      aria-label={label}
+      disabled={locked}
+      onClick={onChange}
+      className={[
+        'relative h-6 w-11 flex-none rounded-full border transition-all duration-200',
+        locked ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+        on
+          ? 'border-[var(--app-primary)] bg-[var(--app-primary)]'
+          : 'border-white/20 bg-white/10',
+      ].join(' ')}
+    >
+      <span
+        className={[
+          'absolute top-[2px] h-5 w-5 rounded-full bg-white shadow transition-all duration-200',
+          on ? 'left-[calc(100%-22px)]' : 'left-[2px]',
+        ].join(' ')}
+      />
+    </button>
+  );
+}
+
+/* ── Component ─────────────────────────────────────────── */
 
 export default function CookieConsentBanner() {
   const [mounted, setMounted] = useState(false);
-  const [bannerVisible, setBannerVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [preferences, setPreferences] =
-    useState<CookiePreferences>(basePreferences);
+  const [prefs, setPrefs] = useState<CookiePreferences>(basePrefs);
 
   useEffect(() => {
     setMounted(true);
-    const saved = readSavedPreferences();
+    const saved = readSaved();
     if (saved) {
-      setPreferences(saved);
-      setBannerVisible(false);
-      return;
+      setPrefs(saved);
+      setVisible(false);
+    } else {
+      // Delay so it doesn't compete with page load animations
+      const t = window.setTimeout(() => setVisible(true), 2000);
+      return () => clearTimeout(t);
     }
-    setBannerVisible(true);
   }, []);
 
-  const persistPreferences = (next: CookiePreferences) => {
-    if (typeof window === 'undefined') return;
-    writeCookies(next);
-    window.dispatchEvent(
-      new CustomEvent('wc:cookie-consent-updated', { detail: next })
-    );
-  };
-
-  const applyPreferences = (
-    next: Omit<CookiePreferences, 'updatedAt' | 'version'>
-  ) => {
+  const apply = (next: Omit<CookiePreferences, 'updatedAt' | 'version'>) => {
     const payload: CookiePreferences = {
       ...next,
       essential: true,
       updatedAt: new Date().toISOString(),
       version: 1,
     };
-    setPreferences(payload);
-    persistPreferences(payload);
-    setBannerVisible(false);
+    setPrefs(payload);
+    writeCookies(payload);
+    window.dispatchEvent(
+      new CustomEvent('wc:cookie-consent-updated', { detail: payload })
+    );
+    setVisible(false);
     setSettingsOpen(false);
   };
 
-  const preferencesSummary = useMemo(() => {
-    if (!preferences.analytics && !preferences.marketing)
-      return 'Essential only';
-    if (preferences.analytics && preferences.marketing) return 'All cookies';
-    if (preferences.analytics) return 'Essential + analytics';
-    return 'Essential + marketing';
-  }, [preferences.analytics, preferences.marketing]);
+  const summary = useMemo(() => {
+    if (prefs.analytics && prefs.marketing) return 'All cookies enabled';
+    if (prefs.analytics) return 'Essential + analytics';
+    if (prefs.marketing) return 'Essential + marketing';
+    return 'Essential only';
+  }, [prefs.analytics, prefs.marketing]);
 
   if (!mounted) return null;
 
+  const COOKIE_ROWS = [
+    {
+      key: 'essential',
+      label: 'Essential',
+      description: 'Navigation, forms, and secure sessions.',
+      on: true,
+      locked: true,
+    },
+    {
+      key: 'analytics',
+      label: 'Analytics',
+      description: 'Help us understand how the site is used.',
+      on: prefs.analytics,
+      locked: false,
+    },
+    {
+      key: 'marketing',
+      label: 'Marketing',
+      description: 'Campaign performance and engagement.',
+      on: prefs.marketing,
+      locked: false,
+    },
+  ];
+
   return (
     <>
-      {bannerVisible && (
-        <div className="fixed inset-x-0 bottom-4 z-[10500] px-4">
-          <div className="mx-auto w-full max-w-3xl rounded-2xl border border-white/15 bg-[#090909]/95 p-4 shadow-2xl backdrop-blur-md sm:p-5">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                  <Caption className="uppercase tracking-[0.12em] text-white/70">
-                    Cookie Settings
-                  </Caption>
-                </div>
-                <BodySM className="max-w-xl leading-relaxed text-white/80">
-                  We use cookies for essential site functionality and optional
-                  analytics. Choose what you want to allow. See our{' '}
+      {/* ── Banner ─────────────────────────────────────────── */}
+      <div
+        role="dialog"
+        aria-modal="false"
+        aria-label="Cookie consent"
+        className={[
+          'fixed inset-x-0 bottom-0 z-[10400] transition-transform duration-500',
+          visible ? 'translate-y-0' : 'translate-y-full',
+        ].join(' ')}
+      >
+        {/* Thin gold accent line at top */}
+        <div className="h-[2px] w-full bg-[var(--app-primary)]/40" />
+
+        <div className="border-t border-white/8 bg-[rgba(7,6,10,0.97)] backdrop-blur-xl">
+          <div className="mx-auto flex max-w-screen-xl flex-col gap-5 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-6 lg:px-8 lg:py-6">
+            {/* Left — icon + text */}
+            <div className="flex min-w-0 items-start gap-3 sm:items-center">
+              <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-[var(--app-primary)]/12 sm:mt-0">
+                <ShieldCheck className="h-4 w-4 text-[var(--app-primary)]" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-ui text-[0.78rem] font-bold text-white">
+                  We use cookies
+                </p>
+                <p className="mt-0.5 font-body text-[0.76rem] leading-[1.6] text-white/55">
+                  Essential cookies keep the site working. Optional analytics
+                  help us improve it.{' '}
                   <Link
                     href="/cookies"
-                    className="underline underline-offset-4"
+                    className="text-[var(--app-primary)] underline-offset-3 hover:underline"
                   >
-                    Cookies & Privacy
-                  </Link>{' '}
-                  page for details.
-                </BodySM>
+                    Learn more
+                  </Link>
+                </p>
               </div>
-              <div className="grid w-full grid-cols-1 gap-2 sm:w-auto">
-                <Button
-                  variant="primary"
-                  size="sm"
-                  curvature="full"
-                  className="h-10 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] px-4 text-xs font-medium text-black sm:text-sm"
-                  onClick={() =>
-                    applyPreferences({
-                      essential: true,
-                      analytics: true,
-                      marketing: true,
-                    })
-                  }
-                >
-                  Accept all
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  curvature="full"
-                  className="h-10 border-[var(--app-primary)]/40 px-4 text-xs font-medium text-white sm:text-sm"
-                  onClick={() =>
-                    applyPreferences({
-                      essential: true,
-                      analytics: false,
-                      marketing: false,
-                    })
-                  }
-                >
-                  Essential only
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  curvature="full"
-                  className="h-10 px-4 text-xs font-medium text-white sm:text-sm"
-                  onClick={() => setSettingsOpen(true)}
-                  leftIcon={<SlidersHorizontal className="h-4 w-4" />}
-                >
-                  Manage settings
-                </Button>
-              </div>
+            </div>
+
+            {/* Right — actions */}
+            <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setSettingsOpen(true)}
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/12 px-3.5 font-ui text-[0.75rem] font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Manage
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  apply({ essential: true, analytics: false, marketing: false })
+                }
+                className="inline-flex h-9 items-center rounded-lg border border-white/12 px-3.5 font-ui text-[0.75rem] font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
+              >
+                Essential only
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  apply({ essential: true, analytics: true, marketing: true })
+                }
+                className="inline-flex h-9 items-center rounded-lg bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold text-[#0d0a06] transition hover:bg-[var(--app-primary-light)]"
+              >
+                Accept all
+              </button>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
+      {/* ── Cookie settings modal ──────────────────────────── */}
       <BaseModal
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
-        title="Cookie Preferences"
-        subtitle={`Current selection: ${preferencesSummary}`}
-        maxWidth="max-w-xl"
+        title="Cookie preferences"
+        subtitle={summary}
+        maxWidth="max-w-lg"
       >
-        <div className="space-y-4">
-          {[
-            {
-              key: 'essential',
-              title: 'Essential cookies',
-              description:
-                'Required for navigation, forms, and secure sessions.',
-              enabled: true,
-              locked: true,
-            },
-            {
-              key: 'analytics',
-              title: 'Analytics cookies',
-              description:
-                'Help us understand usage so we can improve performance.',
-              enabled: preferences.analytics,
-              locked: false,
-            },
-            {
-              key: 'marketing',
-              title: 'Marketing cookies',
-              description:
-                'Used for campaign performance and engagement tracking.',
-              enabled: preferences.marketing,
-              locked: false,
-            },
-          ].map(item => (
+        <div className="space-y-3">
+          {COOKIE_ROWS.map(row => (
             <div
-              key={item.key}
-              className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3"
+              key={row.key}
+              className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.03] px-4 py-3.5"
             >
-              <div className="pr-3">
-                <BodySM className="font-medium text-white">{item.title}</BodySM>
-                <Caption className="text-white/60">{item.description}</Caption>
+              <div className="min-w-0">
+                <p className="font-ui text-[0.82rem] font-semibold text-white">
+                  {row.label}
+                </p>
+                <p className="mt-0.5 font-body text-[0.76rem] leading-[1.5] text-white/50">
+                  {row.description}
+                </p>
               </div>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={item.locked}
-                aria-pressed={item.enabled}
-                onClick={() => {
-                  if (item.key === 'analytics') {
-                    setPreferences(prev => ({
-                      ...prev,
-                      analytics: !prev.analytics,
-                    }));
-                  }
-                  if (item.key === 'marketing') {
-                    setPreferences(prev => ({
-                      ...prev,
-                      marketing: !prev.marketing,
-                    }));
-                  }
+              <Toggle
+                on={row.on}
+                locked={row.locked}
+                label={`Toggle ${row.label} cookies`}
+                onChange={() => {
+                  if (row.key === 'analytics')
+                    setPrefs(p => ({ ...p, analytics: !p.analytics }));
+                  if (row.key === 'marketing')
+                    setPrefs(p => ({ ...p, marketing: !p.marketing }));
                 }}
-                className={`relative h-6 w-11 min-h-0 rounded-full border p-0 transition-all ${
-                  item.locked
-                    ? 'cursor-not-allowed opacity-60'
-                    : 'cursor-pointer'
-                } ${
-                  item.enabled
-                    ? 'border-[var(--app-primary)] bg-[var(--app-primary)]'
-                    : 'border-white/[0.24] bg-white/[0.14]'
-                }`}
-              >
-                <span
-                  className={`absolute top-[2px] h-5 w-5 rounded-full bg-black transition-all ${
-                    item.enabled ? 'left-[calc(100%_-_22px)]' : 'left-[2px]'
-                  }`}
-                />
-              </Button>
+              />
             </div>
           ))}
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="mt-2 grid grid-cols-2 gap-3 pt-1">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              curvature="full"
-              className="h-11 border-[var(--app-primary)]/40 text-sm font-medium text-white"
+              curvature="md"
+              className="h-11 border border-white/12 font-ui text-sm text-white/70"
               onClick={() =>
-                applyPreferences({
-                  essential: true,
-                  analytics: false,
-                  marketing: false,
-                })
+                apply({ essential: true, analytics: false, marketing: false })
               }
             >
               Essential only
@@ -282,13 +294,13 @@ export default function CookieConsentBanner() {
             <Button
               variant="primary"
               size="sm"
-              curvature="full"
-              className="h-11 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] text-sm font-medium text-black"
+              curvature="md"
+              className="h-11 font-ui text-sm font-bold"
               onClick={() =>
-                applyPreferences({
+                apply({
                   essential: true,
-                  analytics: preferences.analytics,
-                  marketing: preferences.marketing,
+                  analytics: prefs.analytics,
+                  marketing: prefs.marketing,
                 })
               }
             >

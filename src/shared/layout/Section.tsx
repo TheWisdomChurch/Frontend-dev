@@ -42,6 +42,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
       <section
         ref={ref}
         id={id}
+        suppressHydrationWarning
         className={cn(
           'relative w-full min-w-0 overflow-hidden',
           paddingClasses[padding],
@@ -52,7 +53,9 @@ const Section = forwardRef<HTMLElement, SectionProps>(
         )}
         style={style}
       >
-        <div className="relative z-10 w-full min-w-0">{children}</div>
+        <div className="relative z-10 w-full min-w-0" suppressHydrationWarning>
+          {children}
+        </div>
       </section>
     );
   }

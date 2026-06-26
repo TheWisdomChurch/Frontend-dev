@@ -7,7 +7,7 @@ interface UseWelcomeModalProps {
   onClose?: () => void;
 }
 
-const STORAGE_KEY = 'wisdom_confession_seen';
+const STORAGE_KEY = 'wisdom_welcomed';
 
 let hasSeenModalInRuntime = false;
 
