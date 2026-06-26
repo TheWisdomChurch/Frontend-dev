@@ -39,28 +39,7 @@ export const bricolageGrotesque = localFont({
   fallback: ['Inter', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
 });
 
-export const worksans = localFont({
-  src: [
-    {
-      path: './WorkSans-Light.ttf',
-      weight: '300',
-      style: 'normal',
-    },
-    {
-      path: './WorkSans-Regular.ttf',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: './WorkSans-Medium.ttf',
-      weight: '500',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-worksans',
-  display: 'swap',
-  fallback: ['Inter', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
-});
+export const worksans = bricolageGrotesque;
 
 export const playfair = localFont({
   src: [

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
-import { Button } from '@/shared/utils/buttons';
 import { apiClient } from '@/lib/api';
 
 const SectionFallback = ({ height = 'min-h-[360px]' }: { height?: string }) => (
@@ -169,14 +168,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const alreadyWelcomed =
-      typeof window !== 'undefined' && localStorage.getItem('wisdom_welcomed');
-    if (alreadyWelcomed) return;
-
     const timer = window.setTimeout(() => {
       setShowConfessionPopup(true);
-    }, 10000);
-
+    }, 8000);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -216,19 +210,35 @@ export default function Home() {
       <div className="relative flex w-full flex-col">
         <HeroMain />
 
-        <section className="home-section" data-gsap="reveal">
+        <section
+          className="home-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <HeroHighlights />
         </section>
 
-        <section className="home-section perf-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <WhatWeDo />
         </section>
 
-        <section className="home-section perf-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <EventsShowcase />
         </section>
 
-        <section className="home-section perf-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <SeniorPastor />
         </section>
 
@@ -236,11 +246,16 @@ export default function Home() {
           id="join"
           className="home-section perf-section scroll-mt-24"
           data-gsap="reveal"
+          suppressHydrationWarning
         >
           <JoinUs />
         </section>
 
-        <section className="home-section perf-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <HomeTestimonials />
         </section>
 
@@ -248,11 +263,16 @@ export default function Home() {
           id="giving"
           className="home-section perf-section scroll-mt-24"
           data-gsap="reveal"
+          suppressHydrationWarning
         >
           <OnlineGiving />
         </section>
 
-        <section className="home-section perf-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <ResourceSection />
         </section>
       </div>
@@ -264,28 +284,9 @@ export default function Home() {
         onRemindLater={handleRemindLater}
       />
 
-      {!showModal && (
-        <Button
-          type="button"
-          variant="ghost"
-          curvature="full"
-          aria-label="Open conference registration ad"
-          onClick={() => setShowModal(true)}
-          className="fixed bottom-4 right-4 z-[9900] gap-2 border border-white/15 bg-black/80 px-3.5 py-2.5 text-[11px] font-semibold text-white shadow-2xl backdrop-blur-lg hover:-translate-y-0.5 hover:bg-black sm:bottom-5 sm:px-4 sm:text-sm"
-        >
-          <span className="text-base">📢</span>
-          <span>WPC 2026</span>
-        </Button>
-      )}
-
-      {!showModal && showConfessionPopup && (
+      {showConfessionPopup && (
         <ConfessionPopup
-          onClose={() => {
-            setShowConfessionPopup(false);
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('wisdom_welcomed', 'true');
-            }
-          }}
+          onClose={() => setShowConfessionPopup(false)}
           delay={0}
           content={confessionContent ?? undefined}
         />

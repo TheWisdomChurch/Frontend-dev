@@ -25,6 +25,15 @@ export default {
           'Arial',
           'sans-serif',
         ],
+        ui: [
+          'var(--font-bricolage)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
         headline: [
           'var(--font-playfair)',
           'Georgia',

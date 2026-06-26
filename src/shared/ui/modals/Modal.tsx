@@ -185,7 +185,7 @@ export const BaseModal = memo(function BaseModal({
   const modalClassName = useMemo(
     () =>
       cn(
-        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/10 bg-[var(--app-dark-2)]/95 text-white shadow-2xl shadow-black/55 backdrop-blur-xl',
+        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/10 bg-[rgba(14,12,10,0.97)] text-white shadow-2xl shadow-black/55 backdrop-blur-xl',
         'motion-safe:animate-[modal-enter_220ms_ease-out]',
         isSheet
           ? 'max-h-[90svh] rounded-t-[1.75rem] rounded-b-none'

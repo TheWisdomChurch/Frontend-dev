@@ -1,19 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image, { type StaticImageData } from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { Section, Container } from '@/shared/layout';
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
@@ -40,10 +33,10 @@ const FALLBACK_UPCOMING = {
 const FALLBACK_SLIDE = {
   id: 'fallback-hero-slide',
   type: 'hero',
-  title: 'Welcome to\nThe Wisdom Church',
+  title: 'The Wave\nof Greatness',
   subtitle: '',
   description:
-    'A Spirit-filled family helping believers grow in faith, purpose, and community.',
+    "A Spirit-filled community — equipped, empowered, and raised to carry God's glory.",
   image: '/images/lader.jpeg',
   upcoming: FALLBACK_UPCOMING,
 } as unknown as HeroSlide;
@@ -86,7 +79,6 @@ export default function HeroSection({
 }: {
   slides?: HeroSlide[];
 }) {
-  const { open } = useServiceUnavailable();
   const { slides: backendSlides } = useHeroContent();
 
   const heroRef = useRef<HTMLElement | null>(null);
@@ -95,7 +87,6 @@ export default function HeroSection({
   const ruleRef = useRef<HTMLSpanElement | null>(null);
   const bodyRef = useRef<HTMLParagraphElement | null>(null);
   const ctaRef = useRef<HTMLDivElement | null>(null);
-  const barRef = useRef<HTMLDivElement | null>(null);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
@@ -107,7 +98,6 @@ export default function HeroSection({
   }, [externalSlides, backendSlides]);
 
   const slide = safeSlides[currentSlide] ?? safeSlides[0];
-  const upcoming = (slide as any)?.upcoming ?? FALLBACK_UPCOMING;
 
   // Clamp active index when slides shrink
   useEffect(() => {
@@ -152,12 +142,6 @@ export default function HeroSection({
           { y: 12, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.5 },
           '-=0.3'
-        )
-        .fromTo(
-          barRef.current,
-          { y: 8, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.45 },
-          '-=0.2'
         );
     }, heroRef);
 
@@ -211,36 +195,7 @@ export default function HeroSection({
     };
   }, []);
 
-  const handleUpcomingCta = useCallback(() => {
-    const target = upcoming?.ctaTarget;
-    if (!target || typeof target !== 'string') {
-      open({
-        title: 'Reservations opening soon',
-        message: 'Check back soon.',
-        actionLabel: 'Okay',
-      });
-      return;
-    }
-    if (target.startsWith('#')) {
-      const el = document.getElementById(target.slice(1));
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-      }
-    }
-    window.location.href = target;
-  }, [open, upcoming]);
-
-  const scrollDown = useCallback(() => {
-    heroRef.current?.nextElementSibling?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-  }, []);
-
-  const titleLines = String(
-    (slide as any)?.title || 'Welcome to\nThe Wisdom Church'
-  )
+  const titleLines = String((slide as any)?.title || 'The Wave\nof Greatness')
     .split('\n')
     .map(l => l.trim())
     .filter(Boolean);
@@ -253,12 +208,32 @@ export default function HeroSection({
       perf="none"
       className="relative min-h-[100svh] w-full overflow-hidden bg-[#030303]"
     >
-      {/* ── Background slides ──────────────────────────────────── */}
+      {/* ── Cinematic video background ─────────────────────────── */}
+      <div className="absolute inset-0 z-[5]">
+        <video
+          src="/videos/videoBg.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: 'center 30%' }}
+          aria-hidden="true"
+        />
+        {/* Gradient overlay for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/55 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/65" />
+      </div>
+
+      {/* ── Slide images (from API — layer over video when active) ── */}
       {safeSlides.map((s, i) => {
+        const isFallback = (s as any)?.id === 'fallback-hero-slide';
         const img = normalizeImage(
           (s as any).image,
           (s as any)?.title || `Slide ${i + 1}`
         );
+        if (isFallback) return null;
         return (
           <div
             key={(s as any)?.id || i}
@@ -279,7 +254,6 @@ export default function HeroSection({
                 // eslint-disable-next-line no-restricted-syntax
                 style={{ objectPosition: img.objectPosition || 'center 28%' }}
               />
-              {/* Single clean gradient — left-heavy for text legibility */}
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
               <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
             </div>
@@ -290,7 +264,7 @@ export default function HeroSection({
       {/* ── Main content ───────────────────────────────────────── */}
       <Container
         size="xl"
-        className="relative z-20 flex min-h-[100svh] flex-col justify-center px-4 pb-32 pt-28 sm:px-6 sm:pb-36 sm:pt-32 lg:px-10 lg:pb-40 lg:pt-36"
+        className="relative z-20 flex min-h-[100svh] flex-col justify-center px-4 pb-20 pt-28 sm:px-6 sm:pb-24 sm:pt-32 lg:px-10 lg:pb-28 lg:pt-36"
       >
         <div className="max-w-[640px]">
           {/* Eyebrow */}
@@ -356,87 +330,6 @@ export default function HeroSection({
           </div>
         </div>
       </Container>
-
-      {/* ── Bottom event bar ───────────────────────────────────── */}
-      <div
-        ref={barRef}
-        className="absolute inset-x-0 bottom-0 z-30 border-t border-white/10 bg-black/60 backdrop-blur-md"
-      >
-        <div className="mx-auto flex h-16 w-full max-w-[min(100%-32px,1220px)] items-center justify-between gap-4">
-          {/* Event teaser */}
-          <button
-            type="button"
-            onClick={handleUpcomingCta}
-            className="group flex min-w-0 items-center gap-3 text-left"
-          >
-            <span
-              className="hidden h-[28px] w-px bg-white/15 sm:block"
-              aria-hidden="true"
-            />
-            <div className="min-w-0">
-              <span className="block text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-                {upcoming.label}
-              </span>
-              <span className="block truncate text-[0.8rem] font-semibold text-white/85">
-                {upcoming.title} · {upcoming.date}
-              </span>
-            </div>
-            <span className="hidden shrink-0 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--app-primary)] transition group-hover:translate-x-1 sm:block">
-              {upcoming.ctaLabel} →
-            </span>
-          </button>
-
-          {/* Slide dots + scroll cue */}
-          <div className="flex shrink-0 items-center gap-3">
-            {safeSlides.length > 1 && (
-              <div className="flex items-center gap-1.5">
-                {safeSlides.map((s, i) => (
-                  <button
-                    key={(s as any)?.id || i}
-                    type="button"
-                    onClick={() => setCurrentSlide(i)}
-                    aria-label={`Go to slide ${i + 1}`}
-                    className={[
-                      'rounded-full transition-all duration-300',
-                      i === currentSlide
-                        ? 'w-5 h-1.5 bg-[var(--app-primary)]'
-                        : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/55',
-                    ].join(' ')}
-                  />
-                ))}
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={scrollDown}
-              aria-label="Scroll to next section"
-              className="hidden items-center gap-1.5 text-[0.58rem] font-bold uppercase tracking-[0.2em] text-white/40 transition hover:text-white/65 sm:flex"
-            >
-              Scroll ↓
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Vertical slide indicators (desktop) ────────────────── */}
-      {safeSlides.length > 1 && (
-        <div className="absolute left-5 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-2 lg:flex">
-          {safeSlides.map((s, i) => (
-            <button
-              key={(s as any)?.id || i}
-              type="button"
-              onClick={() => setCurrentSlide(i)}
-              aria-label={`Slide ${i + 1}`}
-              className="relative h-8 w-0.5 overflow-hidden bg-white/15 transition"
-            >
-              {i === currentSlide && (
-                <span className="absolute inset-0 bg-[var(--app-primary)]" />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
     </Section>
   );
 }

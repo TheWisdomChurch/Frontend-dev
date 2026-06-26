@@ -39,23 +39,23 @@ type ModalKey = 'visit' | 'watch' | 'join' | null;
 const ACTIONS = [
   {
     key: 'visit' as const,
-    num: '01',
     label: 'Plan a Visit',
-    sub: 'Sunday · 9:00 AM',
+    sub: 'Sundays · 9:00 AM',
+    cta: 'Plan now',
     icon: MapPin,
   },
   {
     key: 'watch' as const,
-    num: '02',
     label: 'Stream a Service',
     sub: 'Live & on-demand',
+    cta: 'Watch live',
     icon: PlayCircle,
   },
   {
     key: 'join' as const,
-    num: '03',
     label: 'Serve with Us',
-    sub: 'Find your team',
+    sub: 'Find your place',
+    cta: 'Join a team',
     icon: Users,
   },
 ] as const;
@@ -207,11 +207,12 @@ export default function HeroHighlights() {
                   className="group relative flex flex-col justify-between px-6 py-7 text-left transition duration-200 hover:bg-[var(--app-canvas-2)] sm:px-8 sm:py-8"
                 >
                   <div className="flex items-start justify-between">
-                    <span className="text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                      {action.num}
-                    </span>
                     <Icon
-                      className="h-4 w-4 text-[var(--app-ink)]/25 transition duration-200 group-hover:translate-x-1 group-hover:text-[var(--app-primary)]"
+                      className="h-4 w-4 text-[var(--app-ink)]/25 transition duration-200 group-hover:text-[var(--app-primary)]"
+                      aria-hidden="true"
+                    />
+                    <ArrowRight
+                      className="h-3.5 w-3.5 text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:translate-x-1 group-hover:opacity-100"
                       aria-hidden="true"
                     />
                   </div>
@@ -220,16 +221,16 @@ export default function HeroHighlights() {
                     <p className="font-headline text-[1.35rem] font-normal leading-snug text-[var(--app-ink)]">
                       {action.label}
                     </p>
-                    <p className="mt-1 text-[0.78rem] text-[var(--app-ink)]/50">
+                    <p className="mt-1 font-ui text-[0.78rem] text-[var(--app-ink)]/50">
                       {action.sub}
                     </p>
                   </div>
 
                   <span
-                    className="mt-5 inline-flex items-center gap-1.5 text-[0.72rem] font-semibold text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:opacity-100"
+                    className="mt-5 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:opacity-100"
                     aria-hidden="true"
                   >
-                    Continue <ArrowRight className="h-3.5 w-3.5" />
+                    {action.cta} <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                 </button>
               );

@@ -146,7 +146,12 @@ export default function GlobalScrollEffects() {
     };
 
     const scheduleRun = () => {
-      runTimer = setTimeout(runEffects, 80);
+      // Double rAF ensures we're past React's hydration commit phase
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          runTimer = setTimeout(runEffects, 120);
+        });
+      });
     };
 
     if (document.readyState === 'complete') {

@@ -61,6 +61,15 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Contact', href: '/contact' },
 ];
 
+// Links shown directly in the header bar on desktop
+const DESKTOP_NAV: NavItem[] = [
+  { label: 'Watch', href: '/resources/sermons' },
+  { label: 'Ministries', href: '/ministries' },
+  { label: 'Events', href: '/events' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+
 const SOCIALS = [
   { label: 'Instagram', href: 'https://www.instagram.com/wisdomchurchhq' },
   { label: 'YouTube', href: 'https://www.youtube.com/@wisdomchurchhq' },
@@ -140,6 +149,19 @@ export default function Header() {
               <strong>Church</strong>
             </span>
           </Link>
+
+          {/* Desktop nav links — hidden on mobile, handled by overlay */}
+          <nav className="site-header__nav" aria-label="Primary navigation">
+            {DESKTOP_NAV.map(item => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`site-header__nav-link${isActive(item.href) ? ' is-active' : ''}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
           <div className="site-header__actions">
             <Link href="/#giving" className="site-header__give">

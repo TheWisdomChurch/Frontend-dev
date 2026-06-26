@@ -2,16 +2,53 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Loader2, PlayCircle } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  Heart,
+  Loader2,
+  PlayCircle,
+  ShoppingBag,
+} from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
-import apiClient from '@/lib/api';
+import { apiClient } from '@/lib/api';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
+
+const MORE_RESOURCES = [
+  {
+    title: 'Sermons',
+    label: 'Messages',
+    desc: 'Watch and listen to messages straight from the house.',
+    href: '/resources/sermons',
+    cta: 'Browse sermons',
+    img: '/images/conference-2025.webp',
+    icon: BookOpen,
+  },
+  {
+    title: 'Pastoral Care',
+    label: 'Support',
+    desc: 'Reach out for prayer, counselling, and pastoral guidance.',
+    href: '/pastoral',
+    cta: 'Request care',
+    img: '/images/supernatural-service.webp',
+    icon: Heart,
+  },
+  {
+    title: 'Store',
+    label: 'Resources',
+    desc: 'Books, materials, and resources to deepen your faith.',
+    href: '/resources/store',
+    cta: 'Visit store',
+    img: '/images/christmas-eve.webp',
+    icon: ShoppingBag,
+  },
+];
 
 type Subscriber = { name: string; email: string };
 
@@ -267,6 +304,73 @@ export default function ResourceSection() {
                 </p>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* ── You can do more ──────────────────────────────── */}
+        <div className="mt-16 border-t border-[var(--app-ink)]/8 pt-14">
+          <div className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-2 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Explore
+              </p>
+              <h3
+                className="font-headline font-normal text-[var(--app-ink)]"
+                style={{ fontSize: 'var(--type-display-sm)' }}
+              >
+                You can do more
+              </h3>
+            </div>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-3">
+            {MORE_RESOURCES.map(item => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden bg-[var(--app-ink)]/8"
+                  style={{ borderRadius: 'var(--radius-card)' }}
+                >
+                  {/* Background image */}
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    loading="lazy"
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/35 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-transparent transition-opacity duration-300 group-hover:bg-black/10" />
+
+                  {/* Icon chip — top right */}
+                  <div
+                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center bg-white/10 backdrop-blur-sm transition duration-300 group-hover:bg-[var(--app-primary)]/80"
+                    style={{ borderRadius: 'var(--radius-badge)' }}
+                  >
+                    <Icon className="h-3.5 w-3.5 text-white" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10 p-6">
+                    <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                      {item.label}
+                    </p>
+                    <p className="mt-1.5 font-headline text-[1.25rem] font-normal leading-snug text-white">
+                      {item.title}
+                    </p>
+                    <p className="mt-1.5 font-ui text-[0.78rem] leading-[1.6] text-white/60">
+                      {item.desc}
+                    </p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
+                      {item.cta}{' '}
+                      <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </Container>
