@@ -14,19 +14,16 @@ import {
   HeartHandshake,
   Loader2,
   Music,
-  ShieldCheck,
-  Sparkles,
   Users,
   Users2,
   Video,
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
-import GridBackground from '@/shared/ui/GridBackground';
 import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import { H2, BodySM, SmallText, Caption, BodyMD } from '@/shared/text';
+import { BodySM, Caption } from '@/shared/text';
 import { apiClient } from '@/lib/api';
 
 const { zodResolver } = ZodResolvers;
@@ -36,8 +33,6 @@ const departments = [
     title: 'Ushers & Protocol',
     section: 'Protocol',
     apiDepartment: 'Protocol',
-    from: '#f59e0b',
-    to: '#f97316',
     icon: Users,
     description: 'First touch hospitality and service flow.',
   },
@@ -45,8 +40,6 @@ const departments = [
     title: 'Media & Broadcast',
     section: 'Media',
     apiDepartment: 'Media',
-    from: '#3b82f6',
-    to: '#06b6d4',
     icon: Video,
     description: 'Storytelling through cameras, lights, and sound.',
   },
@@ -54,8 +47,6 @@ const departments = [
     title: 'Wave City Music',
     section: 'Music',
     apiDepartment: 'Music',
-    from: '#f43f5e',
-    to: '#ec4899',
     icon: Music,
     description: 'Lead worship and craft the atmosphere.',
   },
@@ -63,8 +54,6 @@ const departments = [
     title: 'Children Ministry',
     section: 'Children',
     apiDepartment: 'Children',
-    from: '#10b981',
-    to: '#14b8a6',
     icon: Baby,
     description: 'Shepherd the next generation.',
   },
@@ -72,8 +61,6 @@ const departments = [
     title: 'Youth & Campus',
     section: 'Youth',
     apiDepartment: 'Youth',
-    from: '#6366f1',
-    to: '#a855f7',
     icon: Users2,
     description: 'Mentor teens and young adults.',
   },
@@ -81,8 +68,6 @@ const departments = [
     title: 'Technical Team',
     section: 'Technical',
     apiDepartment: 'Technical',
-    from: '#475569',
-    to: '#0f172a',
     icon: Cpu,
     description: 'Keep every service running smoothly.',
   },
@@ -138,7 +123,6 @@ const modalSchema = z
           message: 'Spouse name required',
         });
       }
-
       if (!val.anniversary) {
         ctx.addIssue({
           code: 'custom',
@@ -153,14 +137,24 @@ type QuickValues = z.infer<typeof quickSchema>;
 type ModalValues = z.infer<typeof modalSchema>;
 
 const inputClass =
-  'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'w-full border border-[var(--app-ink)]/15 bg-white px-4 py-3 text-sm text-[var(--app-ink)] outline-none transition rounded-[var(--radius-input)] placeholder:text-[var(--app-ink)]/30 hover:border-[var(--app-ink)]/25 focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10';
 
 const selectClass =
+  'w-full border border-[var(--app-ink)]/15 bg-white px-4 py-3 text-sm text-[var(--app-ink)] outline-none transition rounded-[var(--radius-input)] hover:border-[var(--app-ink)]/25 focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10';
+
+const modalInputClass =
+  'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
+
+const modalSelectClass =
   'w-full rounded-2xl border border-white/12 bg-[#1a1814] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
+  return <Caption className="mt-1 text-red-500">{message}</Caption>;
+}
 
+function ModalFieldError({ message }: { message?: string }) {
+  if (!message) return null;
   return <Caption className="mt-1 text-red-300">{message}</Caption>;
 }
 
@@ -217,7 +211,6 @@ export default function JoinWisdomHouse() {
     const parts = value.trim().split(/\s+/);
     const firstName = parts.shift() || '';
     const lastName = parts.join(' ').trim() || firstName;
-
     return { firstName, lastName };
   };
 
@@ -225,7 +218,6 @@ export default function JoinWisdomHouse() {
     const matched = departments.find(
       d => d.title.toLowerCase() === rawDepartment.trim().toLowerCase()
     );
-
     return {
       department: matched?.apiDepartment || rawDepartment.trim(),
       departmentSection: matched?.section || 'General',
@@ -236,11 +228,9 @@ export default function JoinWisdomHouse() {
   const handleOpenModal = useCallback(
     (dept?: string) => {
       const value = dept || selectedDept || '';
-
       setSelectedDept(value);
       setExisting(false);
       setOpenModal(true);
-
       resetModal({
         fullName: '',
         phoneCode: '+234',
@@ -261,10 +251,8 @@ export default function JoinWisdomHouse() {
   const onQuickSubmit = handleQuickSubmit(async (values: QuickValues) => {
     try {
       setQuickSubmitting(true);
-
       const { firstName, lastName } = splitName(values.name);
       const dept = getDepartmentMeta(values.team);
-
       await apiClient.applyWorkforceNew({
         firstName,
         lastName,
@@ -275,7 +263,6 @@ export default function JoinWisdomHouse() {
         sourceChannel: 'frontend:web:join-us:quick',
         notes: `Quick signup\nOriginal team label: ${dept.originalLabel}`,
       } as any);
-
       setSubmitted(true);
       resetQuick();
       setTimeout(() => setSubmitted(false), 2600);
@@ -293,10 +280,8 @@ export default function JoinWisdomHouse() {
   const onModalSubmit = handleModalSubmit(async (values: ModalValues) => {
     try {
       setModalSubmitting(true);
-
       const { firstName, lastName } = splitName(values.fullName);
       const dept = getDepartmentMeta(values.department);
-
       await apiClient.applyWorkforceNew({
         firstName,
         lastName,
@@ -322,7 +307,6 @@ export default function JoinWisdomHouse() {
           .filter(Boolean)
           .join('\n'),
       } as any);
-
       setOpenModal(false);
       setSubmitted(true);
       resetModal();
@@ -342,88 +326,51 @@ export default function JoinWisdomHouse() {
     <Section
       padding="none"
       fullHeight={false}
-      className="relative overflow-hidden bg-[var(--app-dark)]"
+      className="bg-[var(--app-canvas)]"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="join-us-glow-overlay absolute inset-0" />
-        <GridBackground />
-      </div>
+      <Container size="xl" className="py-section-md">
+        {/* ── Section header ─────────────────────────────── */}
+        <div className="mb-12">
+          <p className="mb-3 text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Join the workforce
+          </p>
+          <h2
+            className="font-headline font-normal text-[var(--app-ink)]"
+            style={{ fontSize: 'var(--type-display-sm)' }}
+          >
+            Serve with excellence.
+          </h2>
+          <p className="mt-4 max-w-[480px] text-[0.95rem] leading-[1.8] text-[var(--app-ink)]/60">
+            Use your gifts to strengthen the house, serve people, and help
+            create a warm Spirit-filled experience for everyone who walks
+            through our doors.
+          </p>
+        </div>
 
-      <Container size="xl" className="relative z-10 py-14 sm:py-18 lg:py-24">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
-          <div className="space-y-7">
-            <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
-                <Sparkles className="h-3.5 w-3.5" />
-                <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                  Join the workforce
-                </Caption>
-              </div>
-
-              <H2
-                className="max-w-2xl text-[2.25rem] font-semibold leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl"
-                useThemeColor={false}
-              >
-                Serve with excellence. Build with purpose.
-              </H2>
-
-              <BodySM
-                className="mt-5 max-w-xl text-[0.95rem] leading-7 text-white/68 sm:text-base"
-                useThemeColor={false}
-              >
-                Use your gifts to strengthen the house, serve people, and help
-                create a warm Spirit-filled experience for everyone who comes
-                through Wisdom House.
-              </BodySM>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              {[
-                ['6+', 'Teams'],
-                ['24h', 'Follow-up'],
-                ['One', 'Family'],
-              ].map(([value, label]) => (
-                <div
-                  key={label}
-                  className="rounded-2xl border border-white/10 bg-white/[0.05] p-4 backdrop-blur-xl"
-                >
-                  <BodyMD
-                    weight="semibold"
-                    className="text-2xl text-[var(--app-primary)]"
-                  >
-                    {value}
-                  </BodyMD>
-                  <Caption className="mt-1 font-medium uppercase tracking-[0.18em] text-white/45">
-                    {label}
-                  </Caption>
-                </div>
-              ))}
-            </div>
-
+        {/* ── Main layout ────────────────────────────────── */}
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:gap-14">
+          {/* Left — quick form ─────────────────────────── */}
+          <div>
             <form
               onSubmit={onQuickSubmit}
-              className="rounded-xl border border-white/12 bg-white/[0.065] p-5 sm:p-6"
+              className="border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] p-6"
+              style={{ borderRadius: 'var(--radius-card)' }}
             >
               <div className="mb-5 flex items-start gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))]">
-                  <HeartHandshake className="h-5 w-5 text-black" />
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center bg-[var(--app-primary)]"
+                  style={{ borderRadius: 'var(--radius-badge)' }}
+                >
+                  <HeartHandshake className="h-4.5 w-4.5 text-[#0d0a06]" />
                 </div>
-
                 <div>
-                  <SmallText
-                    weight="bold"
-                    className="text-white"
-                    useThemeColor={false}
-                  >
+                  <p className="text-[0.8rem] font-bold text-[var(--app-ink)]">
                     Quick team interest
-                  </SmallText>
-                  <Caption
-                    className="mt-1 text-[0.8rem] leading-5 text-white/55"
-                    useThemeColor={false}
-                  >
+                  </p>
+                  <p className="mt-0.5 text-[0.75rem] leading-5 text-[var(--app-ink)]/55">
                     Submit your name, email, and preferred team. The full form
                     is available below.
-                  </Caption>
+                  </p>
                 </div>
               </div>
 
@@ -436,7 +383,6 @@ export default function JoinWisdomHouse() {
                   />
                   <FieldError message={quickErrors.name?.message} />
                 </div>
-
                 <div>
                   <input
                     {...registerQuick('email')}
@@ -446,7 +392,6 @@ export default function JoinWisdomHouse() {
                   />
                   <FieldError message={quickErrors.email?.message} />
                 </div>
-
                 <div>
                   <select {...registerQuick('team')} className={selectClass}>
                     <option value="">Select preferred team</option>
@@ -463,15 +408,15 @@ export default function JoinWisdomHouse() {
                   type="submit"
                   variant="primary"
                   size="md"
-                  curvature="full"
                   disabled={quickSubmitting}
                   className="mt-1 h-12 w-full font-semibold"
+                  style={{ borderRadius: 'var(--radius-button)' }}
                 >
                   <span className="inline-flex items-center justify-center gap-2">
                     {quickSubmitting ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Submitting...
+                        Submitting…
                       </>
                     ) : submitted ? (
                       <>
@@ -480,32 +425,29 @@ export default function JoinWisdomHouse() {
                       </>
                     ) : (
                       <>
-                        Submit interest
-                        <ArrowRight className="h-4 w-4" />
+                        Submit interest <ArrowRight className="h-4 w-4" />
                       </>
                     )}
                   </span>
                 </Button>
 
-                <Button
+                <button
                   type="button"
                   onClick={() => handleOpenModal()}
-                  variant="ghost"
-                  size="sm"
-                  className="text-sm font-semibold text-white/75 underline underline-offset-4 hover:text-white"
+                  className="text-center text-[0.78rem] font-semibold text-[var(--app-ink)]/50 underline underline-offset-4 transition hover:text-[var(--app-primary)]"
                 >
                   Complete full workforce form
-                </Button>
+                </button>
               </div>
             </form>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {departments.map((dept, index) => {
+          {/* Right — department cards ───────────────────── */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+            {departments.map(dept => {
               const Icon = dept.icon;
-
               return (
-                <Button
+                <button
                   key={dept.title}
                   type="button"
                   onClick={() => {
@@ -514,106 +456,35 @@ export default function JoinWisdomHouse() {
                     setValue('department', dept.title);
                     handleOpenModal(dept.title);
                   }}
-                  variant="ghost"
-                  className={`group relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.055] p-5 !justify-start text-left transition duration-300 hover:border-white/22 hover:bg-white/[0.085] ${
-                    index === 0 ? 'sm:col-span-2 lg:col-span-1' : ''
-                  }`}
+                  className="group flex flex-col items-start border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] p-5 text-left transition duration-200 hover:border-[var(--app-ink)]/20 hover:bg-[var(--app-canvas)] hover:shadow-sm"
+                  style={{ borderRadius: 'var(--radius-card)' }}
                 >
+                  {/* Colored icon on neutral background */}
                   <div
-                    className="absolute -right-16 -top-16 h-40 w-40 rounded-full blur-3xl transition-opacity group-hover:opacity-100"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      background: `linear-gradient(135deg, ${dept.from}, ${dept.to})`,
-                      opacity: 0.18,
-                    }}
-                  />
-
-                  <div className="relative z-10">
-                    <div
-                      className="flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{
-                        background: `linear-gradient(135deg, ${dept.from}, ${dept.to})`,
-                      }}
-                    >
-                      <Icon className="h-5 w-5 text-white" />
-                    </div>
-
-                    <SmallText
-                      weight="bold"
-                      className="mt-5 text-white"
-                      useThemeColor={false}
-                    >
-                      {dept.title}
-                    </SmallText>
-
-                    <Caption
-                      className="mt-2 line-clamp-2 text-[0.82rem] leading-6 text-white/58"
-                      useThemeColor={false}
-                    >
-                      {dept.description}
-                    </Caption>
-
-                    <div className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-white/75 transition group-hover:text-white">
-                      Apply for this team
-                      <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
-                    </div>
-                  </div>
-                </Button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="mt-10 rounded-xl border border-white/10 bg-black/30 p-5 sm:p-6">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[
-              {
-                icon: ShieldCheck,
-                title: 'Guided onboarding',
-                text: 'A team lead follows up and helps you understand the next step.',
-              },
-              {
-                icon: Users,
-                title: 'Community first',
-                text: 'You serve with people, not alone. Every team is built around family.',
-              },
-              {
-                icon: Sparkles,
-                title: 'Purpose driven',
-                text: 'Your skill and passion can help create meaningful ministry moments.',
-              },
-            ].map(item => {
-              const Icon = item.icon;
-
-              return (
-                <div key={item.title} className="flex gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
-                    <Icon className="h-5 w-5" />
+                    className="mb-4 flex h-10 w-10 items-center justify-center bg-[var(--app-canvas)]"
+                    style={{ borderRadius: 'var(--radius-badge)' }}
+                  >
+                    <Icon className="h-4.5 w-4.5 text-[var(--app-primary)]" />
                   </div>
 
-                  <div>
-                    <SmallText
-                      weight="semibold"
-                      className="text-white"
-                      useThemeColor={false}
-                    >
-                      {item.title}
-                    </SmallText>
-                    <Caption
-                      className="mt-1 leading-5 text-white/55"
-                      useThemeColor={false}
-                    >
-                      {item.text}
-                    </Caption>
-                  </div>
-                </div>
+                  <p className="text-[0.82rem] font-bold text-[var(--app-ink)]">
+                    {dept.title}
+                  </p>
+                  <p className="mt-1 text-[0.75rem] leading-[1.55] text-[var(--app-ink)]/50">
+                    {dept.description}
+                  </p>
+
+                  <span className="mt-4 inline-flex items-center gap-1 text-[0.72rem] font-semibold text-[var(--app-primary)] transition group-hover:gap-2">
+                    Apply <ArrowRight className="h-3 w-3" />
+                  </span>
+                </button>
               );
             })}
           </div>
         </div>
       </Container>
 
+      {/* ── Full workforce modal ──────────────────────────── */}
       <BaseModal
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
@@ -637,7 +508,6 @@ export default function JoinWisdomHouse() {
             >
               New member
             </Button>
-
             <Button
               type="button"
               onClick={() => setExisting(true)}
@@ -658,43 +528,41 @@ export default function JoinWisdomHouse() {
             <div>
               <input
                 {...register('fullName')}
-                className={inputClass}
+                className={modalInputClass}
                 placeholder="Full name"
               />
-              <FieldError message={errors.fullName?.message} />
+              <ModalFieldError message={errors.fullName?.message} />
             </div>
-
             <div>
               <input
                 {...register('email')}
-                className={inputClass}
+                className={modalInputClass}
                 placeholder="Email address"
                 type="email"
               />
-              <FieldError message={errors.email?.message} />
+              <ModalFieldError message={errors.email?.message} />
             </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-[0.42fr_1fr]">
             <div>
-              <select {...register('phoneCode')} className={selectClass}>
+              <select {...register('phoneCode')} className={modalSelectClass}>
                 {countryCodes.map(item => (
                   <option key={item.code} value={item.code}>
                     {item.code} · {item.label}
                   </option>
                 ))}
               </select>
-              <FieldError message={errors.phoneCode?.message} />
+              <ModalFieldError message={errors.phoneCode?.message} />
             </div>
-
             <div>
               <input
                 {...register('phone')}
-                className={inputClass}
+                className={modalInputClass}
                 placeholder="Phone number"
                 type="tel"
               />
-              <FieldError message={errors.phone?.message} />
+              <ModalFieldError message={errors.phone?.message} />
             </div>
           </div>
 
@@ -702,24 +570,23 @@ export default function JoinWisdomHouse() {
             <div>
               <input
                 {...register('birthday')}
-                className={inputClass}
+                className={modalInputClass}
                 placeholder="Birthday · DD/MM"
               />
-              <FieldError message={errors.birthday?.message} />
+              <ModalFieldError message={errors.birthday?.message} />
             </div>
-
             <div>
               <input
                 {...register('occupation')}
-                className={inputClass}
+                className={modalInputClass}
                 placeholder="Occupation optional"
               />
-              <FieldError message={errors.occupation?.message} />
+              <ModalFieldError message={errors.occupation?.message} />
             </div>
           </div>
 
           <div>
-            <select {...register('department')} className={selectClass}>
+            <select {...register('department')} className={modalSelectClass}>
               <option value="">Select department</option>
               {departmentOptions.map(option => (
                 <option key={option} value={option}>
@@ -727,14 +594,13 @@ export default function JoinWisdomHouse() {
                 </option>
               ))}
             </select>
-            <FieldError message={errors.department?.message} />
+            <ModalFieldError message={errors.department?.message} />
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
             <BodySM weight="semibold" className="mb-3 text-white">
               Marital status
             </BodySM>
-
             <div className="grid grid-cols-2 gap-2">
               <label className="cursor-pointer rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-white/75">
                 <input
@@ -745,7 +611,6 @@ export default function JoinWisdomHouse() {
                 />
                 Not married
               </label>
-
               <label className="cursor-pointer rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-white/75">
                 <input
                   {...register('married')}
@@ -756,25 +621,23 @@ export default function JoinWisdomHouse() {
                 Married
               </label>
             </div>
-
             {marriedValue === 'yes' && (
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div>
                   <input
                     {...register('spouse')}
-                    className={inputClass}
+                    className={modalInputClass}
                     placeholder="Spouse name"
                   />
-                  <FieldError message={errors.spouse?.message} />
+                  <ModalFieldError message={errors.spouse?.message} />
                 </div>
-
                 <div>
                   <input
                     {...register('anniversary')}
-                    className={inputClass}
+                    className={modalInputClass}
                     placeholder="Anniversary date"
                   />
-                  <FieldError message={errors.anniversary?.message} />
+                  <ModalFieldError message={errors.anniversary?.message} />
                 </div>
               </div>
             )}
@@ -783,10 +646,10 @@ export default function JoinWisdomHouse() {
           <div>
             <textarea
               {...register('about')}
-              className={`${inputClass} min-h-[120px] resize-none`}
-              placeholder="Tell us briefly about your passion, skills, or previous service experience..."
+              className={`${modalInputClass} min-h-[120px] resize-none`}
+              placeholder="Tell us briefly about your passion, skills, or previous service experience…"
             />
-            <FieldError message={errors.about?.message} />
+            <ModalFieldError message={errors.about?.message} />
           </div>
 
           <Button
@@ -801,12 +664,11 @@ export default function JoinWisdomHouse() {
               {modalSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Submitting...
+                  Submitting…
                 </>
               ) : (
                 <>
-                  Submit application
-                  <ArrowRight className="h-4 w-4" />
+                  Submit application <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </span>

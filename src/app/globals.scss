@@ -9,6 +9,16 @@
   --app-surface-2: #f5f5f5;
   --app-surface-3: #ebebeb;
 
+  /* Canvas — warm off-white (editorial light sections) */
+  --app-canvas: #faf9f7;
+  --app-canvas-2: #f2f0ec;
+  --app-canvas-3: #e8e5e0;
+  --app-ink: #0d0a06;
+
+  /* Mid-tones (section variety) */
+  --app-neutral: #1c1a17;
+  --app-neutral-2: #252219;
+
   /* Typography */
   --app-text: #0d0b08;
   --app-muted: #5c5849;
@@ -30,7 +40,28 @@
   --app-dark-2: #0e0c0a;
   --app-dark-3: #17140f;
 
-  /* Radius scale */
+  /* Display type scale */
+  --type-display-xl: clamp(4rem, 9vw, 7.5rem);
+  --type-display-lg: clamp(3rem, 6vw, 5.5rem);
+  --type-display-md: clamp(2.25rem, 4vw, 3.75rem);
+  --type-display-sm: clamp(1.75rem, 3vw, 2.75rem);
+  --type-lead: clamp(1.05rem, 1.5vw, 1.25rem);
+
+  /* Section spacing scale */
+  --section-xs: clamp(3rem, 6vw, 5rem);
+  --section-sm: clamp(5rem, 8vw, 7rem);
+  --section-md: clamp(6rem, 10vw, 9rem);
+  --section-lg: clamp(8rem, 14vw, 12rem);
+  --section-xl: clamp(10rem, 18vw, 16rem);
+
+  /* Refined border radii */
+  --radius-card: 0.875rem;
+  --radius-button: 0.5rem;
+  --radius-input: 0.75rem;
+  --radius-badge: 0.25rem;
+  --radius-image: 0.875rem;
+
+  /* Legacy radius scale (keep for compat) */
   --radius-sm: 0.375rem;
   --radius-md: 0.625rem;
   --radius-lg: 0.875rem;

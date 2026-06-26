@@ -1,622 +1,153 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
-import {
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Gift,
-  HeartHandshake,
-  Loader2,
-  Phone,
-  ShieldCheck,
-  Sparkles,
-} from 'lucide-react';
+import Link from 'next/link';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import GivingModal from '@/shared/ui/modals/GivingModal';
-import { useOnlineGiving } from '@/shared/utils/hooks/Onlinegiving';
-import {
-  handleContactCall,
-  useIntersectionObserver,
-} from '@/shared/utils/functionUtils/contactUtils';
-
+import { handleContactCall } from '@/shared/utils/functionUtils/contactUtils';
 import apiClient from '@/lib/api';
 import type { GivingOption } from '@/lib/types';
-
-import { H2, BaseText, BodySM, Caption, H3 } from '@/shared/text';
-import Button from '@/shared/utils/buttons/CustomButton';
 import { Section, Container } from '@/shared/layout';
-import { Card } from '@/shared/ui/cards';
-import GridBackground from '@/shared/ui/GridBackground';
-import { WisdomeHouseLogo } from '@/shared/assets';
-
-type Particle = {
-  id: number;
-  size: number;
-  left: number;
-  top: number;
-  delay: number;
-  duration: number;
-};
-
-const CARD_SHELL =
-  'giving-card group relative overflow-hidden rounded-xl border border-white/12 bg-white/[0.065] p-5 transition-all duration-300 ease-out hover:border-white/25 hover:bg-white/[0.09] sm:p-6';
-
-const CARD_TITLE = 'text-[0.95rem] font-semibold leading-snug text-white';
-const CARD_DESC = 'text-[0.82rem] leading-relaxed text-white/68';
-
-const CARD_BUTTON =
-  'h-10 w-full border border-white/18 bg-white/[0.07] text-[12px] font-semibold text-white shadow-[0_12px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-white/[0.12]';
-
-function GivingCard({
-  option,
-  index,
-  isVisible,
-  onGive,
-  setCardRef,
-  onHover,
-  onLeave,
-}: {
-  option: GivingOption;
-  index: number;
-  isVisible: boolean;
-  onGive: (option: GivingOption) => void;
-  setCardRef?: (el: HTMLDivElement | null, index: number) => void;
-  onHover?: (index: number) => void;
-  onLeave?: (index: number) => void;
-}) {
-  return (
-    <div
-      ref={el => setCardRef?.(el, index)}
-      className={`${CARD_SHELL} ${
-        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-      }`}
-      // eslint-disable-next-line no-restricted-syntax
-      style={{ transitionDelay: `${index * 120}ms` }}
-      onMouseEnter={() => onHover?.(index)}
-      onMouseLeave={() => onLeave?.(index)}
-    >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent opacity-80" />
-
-      <div className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-45 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
-
-      <div className="relative z-10 flex h-full flex-col">
-        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-[var(--app-primary)] shadow-lg">
-          <Gift className="h-5 w-5 text-black" />
-        </div>
-
-        <BaseText
-          weight="semibold"
-          className={CARD_TITLE}
-          useThemeColor={false}
-        >
-          {option.title}
-        </BaseText>
-
-        <Caption
-          className={`${CARD_DESC} mt-3 line-clamp-4 flex-1`}
-          useThemeColor={false}
-        >
-          {option.description}
-        </Caption>
-
-        <div className="mt-6">
-          <Button
-            onClick={() => onGive(option)}
-            variant="ghost"
-            size="sm"
-            curvature="full"
-            className={CARD_BUTTON}
-          >
-            <span className="inline-flex items-center justify-center gap-2">
-              Make contribution
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-            </span>
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function OnlineGiving() {
   const { open } = useServiceUnavailable();
 
   const [givingOptions, setGivingOptions] = useState<GivingOption[]>([]);
+  const [selected, setSelected] = useState<GivingOption | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [particles, setParticles] = useState<Particle[]>([]);
-
-  const {
-    isVisible,
-    setIsVisible,
-    selectedGivingOption,
-    isModalOpen,
-    isHovered,
-    mousePosition,
-    isMobile,
-    sectionRef,
-    scrollContainerRef,
-    cardsRef,
-    handleGiveNow,
-    closeModal,
-    scrollLeft,
-    scrollRight,
-    handleMouseMove,
-    handleMouseLeave,
-    handleCardHover,
-    handleCardLeave,
-    currentIndex,
-    previousCard,
-    nextCard,
-  } = useOnlineGiving(givingOptions.length);
-
-  useIntersectionObserver(setIsVisible, sectionRef);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 14 }, (_, i) => ({
-        id: i,
-        size: Math.random() * 90 + 48,
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        delay: i * 0.45,
-        duration: Math.random() * 9 + 14,
-      }))
-    );
-  }, []);
 
   useEffect(() => {
     let mounted = true;
-
-    const loadOptions = async () => {
-      try {
-        setLoading(true);
-        const options = await apiClient.listGivingOptions();
-
-        if (mounted) {
-          setGivingOptions(Array.isArray(options) ? options : []);
-        }
-      } catch {
+    apiClient
+      .listGivingOptions()
+      .then(opts => {
+        if (mounted) setGivingOptions(Array.isArray(opts) ? opts : []);
+      })
+      .catch(() => {
         if (mounted) setGivingOptions([]);
-      } finally {
+      })
+      .finally(() => {
         if (mounted) setLoading(false);
-      }
-    };
-
-    loadOptions();
-
+      });
     return () => {
       mounted = false;
     };
   }, []);
 
-  const addCardRef = useCallback(
-    (el: HTMLDivElement | null, index: number) => {
-      cardsRef.current[index] = el;
-    },
-    [cardsRef]
-  );
-
-  const handleGiveNowWithTracking = useCallback(
-    async (option: GivingOption) => {
-      handleGiveNow(option);
-
-      try {
-        await apiClient.submitGivingIntent({
-          title: option.title,
-          description: option.description,
-          sourceChannel: 'frontend:web:online-giving',
-          metadata: {
-            page: 'home',
-            component: 'OnlineGiving',
-          },
-        });
-      } catch {
-        // Non-blocking analytics/intention tracking.
-      }
-    },
-    [handleGiveNow]
-  );
+  const handleGive = useCallback(async (option: GivingOption) => {
+    setSelected(option);
+    setModalOpen(true);
+    try {
+      await apiClient.submitGivingIntent({
+        title: option.title,
+        description: option.description,
+        sourceChannel: 'frontend:web:online-giving',
+        metadata: { page: 'home', component: 'OnlineGiving' },
+      });
+    } catch {
+      // non-blocking
+    }
+  }, []);
 
   return (
     <>
-      <style jsx global>{`
-        @keyframes givingFloat {
-          0%,
-          100% {
-            transform: translate3d(0, 0, 0);
-          }
-          50% {
-            transform: translate3d(0, -14px, 0);
-          }
-        }
-
-        .giving-float {
-          animation: givingFloat 16s ease-in-out infinite;
-        }
-
-        .giving-perspective {
-          perspective: 1200px;
-        }
-
-        .giving-preserve-3d {
-          transform-style: preserve-3d;
-        }
-
-        .giving-backface-hidden {
-          backface-visibility: hidden;
-        }
-
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .giving-card,
-          .giving-float {
-            animation: none !important;
-            transform: none !important;
-            transition: none !important;
-          }
-        }
-      `}</style>
-
-      <Section
-        ref={sectionRef}
-        padding="none"
-        fullHeight={false}
-        className="relative overflow-hidden bg-[var(--app-dark-2)]"
-      >
-        <div
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className="giving-glow-overlay absolute inset-0 opacity-90" />
-
-          <GridBackground className="opacity-30" />
-
-          {particles.map(particle => (
-            <div
-              key={particle.id}
-              className="giving-float absolute rounded-full"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                background:
-                  'radial-gradient(circle, rgba(201,150,26,0.19), transparent 70%)',
-                width: `${particle.size}px`,
-                height: `${particle.size}px`,
-                left: `${particle.left}%`,
-                top: `${particle.top}%`,
-                animationDelay: `${particle.delay}s`,
-                animationDuration: `${particle.duration}s`,
-                filter: 'blur(24px)',
-                opacity: 0.12,
-              }}
+      <Section padding="none" className="bg-[var(--app-dark)]">
+        <Container size="xl" className="py-section-lg">
+          <div className="mx-auto max-w-[660px] text-center">
+            {/* Gold rule */}
+            <span
+              className="mx-auto mb-10 block h-[2px] w-10 bg-[var(--app-primary)]"
+              aria-hidden="true"
             />
-          ))}
-        </div>
 
-        {!isMobile && (
-          <div
-            className="pointer-events-none absolute z-[1] rounded-full transition-opacity duration-300"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{
-              left: `${mousePosition.x}px`,
-              top: `${mousePosition.y}px`,
-              width: '440px',
-              height: '440px',
-              background:
-                'radial-gradient(circle, rgba(201,150,26,0.09) 0%, transparent 70%)',
-              transform: 'translate(-50%, -50%)',
-              opacity: isHovered !== null ? 0.45 : 0.12,
-              filter: 'blur(46px)',
-            }}
-          />
-        )}
-
-        <Container size="xl" className="relative z-10 py-14 sm:py-18 lg:py-20">
-          <div className="mx-auto mb-10 max-w-3xl px-4 text-center sm:mb-12">
-            <div className="relative mx-auto mb-5 h-16 w-16">
-              <div className="h-16 w-16 overflow-hidden rounded-full border border-white/15 bg-white/10 p-1 shadow-[0_18px_55px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-                <Image
-                  src={WisdomeHouseLogo}
-                  alt="Wisdom House Church Logo"
-                  width={64}
-                  height={64}
-                  className="h-full w-full rounded-full object-cover"
-                  priority={false}
-                />
-              </div>
-              <div className="absolute -inset-3 rounded-full border border-[var(--app-primary)] opacity-30" />
-            </div>
-
-            <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                Worship through generosity
-              </span>
-            </div>
-
-            <H2
-              className="text-[1.8rem] font-semibold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl"
-              useThemeColor={false}
+            <h2
+              className="font-headline font-normal leading-[0.98] text-white"
+              style={{ fontSize: 'var(--type-display-md)' }}
             >
-              Online Giving
-            </H2>
-
-            <BodySM
-              className="mx-auto mt-4 max-w-xl text-center text-[0.9rem] leading-7 text-white/68 sm:text-base"
-              useThemeColor={false}
-            >
-              As each has purposed in his heart, let him give not grudgingly or
-              under compulsion.
+              Your generosity
               <br />
-              <span className="text-white/85">
-                God loves a cheerful giver. 2 Corinthians 9:7
+              <em className="not-italic text-[var(--app-primary)]">
+                builds
+              </em>{' '}
+              the house.
+            </h2>
+
+            <p className="mx-auto mt-8 max-w-[460px] text-[0.95rem] leading-[1.8] text-white/50 italic">
+              &ldquo;As each has purposed in his heart, so let him give… God
+              loves a cheerful giver.&rdquo;
+              <br />
+              <span className="not-italic text-white/30">
+                2 Corinthians 9:7
               </span>
-            </BodySM>
-          </div>
+            </p>
 
-          {loading ? (
-            <div className="flex min-h-[240px] items-center justify-center">
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm text-white/75">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading giving options…
-              </div>
-            </div>
-          ) : givingOptions.length === 0 ? (
-            <Card
-              variant="glass"
-              padding="lg"
-              className="mx-auto max-w-lg rounded-xl bg-white/[0.06] text-center"
-            >
-              <Gift className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
-              <H3
-                className="mt-4 text-lg font-semibold text-white"
-                useThemeColor={false}
-              >
-                Giving options are being prepared
-              </H3>
-              <Caption
-                className="mt-2 text-sm leading-6 text-white/60"
-                useThemeColor={false}
-              >
-                Our online giving channels will appear here once they are
-                published from the admin portal.
-              </Caption>
-            </Card>
-          ) : (
-            <>
-              <div className="hidden lg:block">
-                <div className="mb-6 flex items-center justify-between px-4">
-                  <Button
+            {/* Primary CTA(s) */}
+            {loading ? null : givingOptions.length > 0 ? (
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+                {givingOptions.slice(0, 3).map(opt => (
+                  <button
+                    key={opt.title}
                     type="button"
-                    onClick={previousCard}
-                    variant="outline"
-                    size="icon"
-                    curvature="full"
-                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
-                    aria-label="Previous giving option"
+                    onClick={() => handleGive(opt)}
+                    className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                    style={{ borderRadius: 'var(--radius-button)' }}
                   >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-
-                  <BodySM
-                    className="text-[0.78rem] font-semibold uppercase tracking-[0.2em] text-white/48"
-                    useThemeColor={false}
-                  >
-                    Slide to explore
-                  </BodySM>
-
-                  <Button
-                    type="button"
-                    onClick={nextCard}
-                    variant="outline"
-                    size="icon"
-                    curvature="full"
-                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
-                    aria-label="Next giving option"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
-                </div>
-
-                <div className="giving-perspective relative h-[420px] w-full overflow-hidden">
-                  <div className="giving-preserve-3d relative flex h-full w-full items-center justify-center">
-                    {givingOptions.map((option, index) => {
-                      const offset = index - currentIndex;
-                      const absOffset = Math.abs(offset);
-
-                      if (absOffset > 3) return null;
-
-                      const translateX = offset * 245;
-                      const rotateY = offset * -34;
-                      const translateZ = -absOffset * 135;
-                      const scale = Math.max(0.72, 1 - absOffset * 0.16);
-
-                      return (
-                        <div
-                          key={`${option.title}-${index}`}
-                          ref={el => addCardRef(el, index)}
-                          className={`giving-preserve-3d giving-backface-hidden absolute transition-all duration-500 ease-out ${
-                            isVisible ? 'opacity-100' : 'opacity-0'
-                          }`}
-                          // eslint-disable-next-line no-restricted-syntax
-                          style={{
-                            width: '292px',
-                            zIndex: 20 - absOffset,
-                            opacity: absOffset > 2 ? 0.42 : 1,
-                            transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
-                            transitionDelay: `${index * 90}ms`,
-                          }}
-                          onMouseEnter={() => handleCardHover(index)}
-                          onMouseLeave={() => handleCardLeave(index)}
-                        >
-                          <div
-                            onClick={() => handleGiveNowWithTracking(option)}
-                          >
-                            <GivingCard
-                              option={option}
-                              index={index}
-                              isVisible
-                              onGive={handleGiveNowWithTracking}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              <div className="hidden md:grid md:grid-cols-2 md:gap-5 lg:hidden">
-                {givingOptions.map((option, index) => (
-                  <GivingCard
-                    key={`${option.title}-${index}`}
-                    option={option}
-                    index={index}
-                    isVisible={isVisible}
-                    onGive={handleGiveNowWithTracking}
-                    setCardRef={addCardRef}
-                    onHover={handleCardHover}
-                    onLeave={handleCardLeave}
-                  />
+                    {opt.title}
+                  </button>
                 ))}
               </div>
-
-              <div className="md:hidden">
-                <div className="mb-5 flex items-center justify-between px-4">
-                  <Button
-                    type="button"
-                    onClick={scrollLeft}
-                    variant="outline"
-                    size="icon"
-                    curvature="full"
-                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
-                    aria-label="Scroll left"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-
-                  <BodySM
-                    className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/48"
-                    useThemeColor={false}
-                  >
-                    Scroll to explore
-                  </BodySM>
-
-                  <Button
-                    type="button"
-                    onClick={scrollRight}
-                    variant="outline"
-                    size="icon"
-                    curvature="full"
-                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
-                    aria-label="Scroll right"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
-                </div>
-
-                <div
-                  ref={scrollContainerRef}
-                  className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6"
-                >
-                  {givingOptions.map((option, index) => (
-                    <div
-                      key={`${option.title}-${index}`}
-                      className="w-[82vw] max-w-[320px] shrink-0 snap-center"
-                    >
-                      <GivingCard
-                        option={option}
-                        index={index}
-                        isVisible={isVisible}
-                        onGive={handleGiveNowWithTracking}
-                      />
-                    </div>
-                  ))}
-                  <div className="w-2 shrink-0" />
-                </div>
-              </div>
-            </>
-          )}
-
-          <div
-            className={`mt-10 px-4 transition-all duration-700 sm:mt-12 ${
-              isVisible
-                ? 'translate-y-0 opacity-100'
-                : 'translate-y-8 opacity-0'
-            }`}
-          >
-            <div className="mx-auto max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-white/[0.06] p-6 text-center sm:p-7">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.10] text-[var(--app-primary)]">
-                <HeartHandshake className="h-6 w-6" />
-              </div>
-
-              <H3
-                className="mt-4 text-center text-[1.15rem] font-semibold text-white"
-                useThemeColor={false}
-              >
-                Other Ways to Give
-              </H3>
-
-              <Caption
-                className="mx-auto mt-3 max-w-lg text-[0.85rem] leading-6 text-white/65 sm:text-sm"
-                useThemeColor={false}
-              >
-                Give by mail, in person during services, or set up recurring
-                donations. Contact our Admin for more options.
-              </Caption>
-
-              <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-                <Button
-                  onClick={handleContactCall}
-                  variant="primary"
-                  size="sm"
-                  curvature="full"
-                  leftIcon={<Phone className="h-4 w-4" />}
-                  className="h-11 w-full bg-[var(--app-primary)] px-4 text-[0.82rem] font-semibold text-black transition hover:scale-[1.01] sm:text-sm"
-                >
-                  Contact Us
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  curvature="full"
-                  leftIcon={<ShieldCheck className="h-4 w-4" />}
-                  className="h-11 w-full border border-[var(--app-primary)]/50 px-4 text-[0.82rem] font-semibold text-white transition hover:bg-white/10 sm:text-sm"
+            ) : (
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+                <button
+                  type="button"
                   onClick={() =>
                     open({
-                      title: 'More ways to give',
+                      title: 'Coming soon',
                       message:
-                        'Our expanded giving options are rolling out shortly. We appreciate your generosity.',
-                      actionLabel: 'Sounds good',
+                        'Our online giving portal is being set up. Please check back.',
+                      actionLabel: 'Got it',
                     })
                   }
+                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  style={{ borderRadius: 'var(--radius-button)' }}
                 >
-                  Learn More
-                </Button>
+                  Give Online
+                </button>
               </div>
+            )}
+
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={handleContactCall}
+                className="inline-flex h-10 items-center gap-2 border border-[var(--app-primary)]/40 px-6 text-[0.75rem] font-semibold text-[var(--app-primary)] transition hover:border-[var(--app-primary)] active:scale-[0.98]"
+                style={{ borderRadius: 'var(--radius-button)' }}
+              >
+                Other ways to give
+              </button>
+              <Link
+                href="/contact"
+                className="inline-flex h-10 items-center px-5 text-[0.75rem] text-white/35 transition hover:text-white/65"
+              >
+                Contact us
+              </Link>
             </div>
+
+            {/* Trust line */}
+            <p className="mt-10 text-[0.68rem] uppercase tracking-[0.18em] text-white/20">
+              100% Secured · Instant Receipt · Tax Deductible
+            </p>
           </div>
         </Container>
       </Section>
 
-      {selectedGivingOption && (
+      {selected && (
         <GivingModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          givingOption={selectedGivingOption}
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          givingOption={selected}
         />
       )}
     </>

@@ -3,14 +3,10 @@
 import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
 import { Button } from '@/shared/utils/buttons';
-import HeroHighlights from '@/features/hero/HeroHighlights';
-import EventsShowcase from '@/features/events/EventsShowcase';
-import JoinUs from '@/features/events/JoinUs';
-import ResourceSection from '@/features/resources/Resource';
 import { apiClient } from '@/lib/api';
 
 const SectionFallback = ({ height = 'min-h-[360px]' }: { height?: string }) => (
-  <div className={`w-full ${height} animate-pulse bg-[var(--app-surface-2)]`} />
+  <div className={`w-full ${height} bg-[var(--app-surface-2)]`} />
 );
 
 const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
@@ -18,49 +14,54 @@ const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
   loading: () => <SectionFallback height="min-h-[72svh]" />,
 });
 
+const HeroHighlights = nextDynamic(
+  () => import('@/features/hero/HeroHighlights'),
+  { ssr: false, loading: () => <SectionFallback height="min-h-[220px]" /> }
+);
+
 const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
-  ssr: true,
+  ssr: false,
   loading: () => <SectionFallback />,
 });
 
-const SeniorPastor = nextDynamic(
-  () => import('@/features/leadership/SeniorPastor'),
-  {
-    ssr: true,
-    loading: () => <SectionFallback />,
-  }
+const EventsShowcase = nextDynamic(
+  () => import('@/features/events/EventsShowcase'),
+  { ssr: false, loading: () => <SectionFallback /> }
 );
 
-const Testimonials = nextDynamic(
-  () => import('@/features/testimonials/Testimonials'),
-  {
-    ssr: true,
-    loading: () => <SectionFallback />,
-  }
+const SeniorPastor = nextDynamic(
+  () => import('@/features/leadership/SeniorPastor'),
+  { ssr: false, loading: () => <SectionFallback /> }
+);
+
+const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
+  ssr: false,
+  loading: () => <SectionFallback />,
+});
+
+const HomeTestimonials = nextDynamic(
+  () => import('@/features/testimonials/HomeTestimonials'),
+  { ssr: false, loading: () => <SectionFallback /> }
 );
 
 const OnlineGiving = nextDynamic(
   () => import('@/features/events/OnlineGiving'),
-  {
-    ssr: true,
-    loading: () => <SectionFallback />,
-  }
+  { ssr: false, loading: () => <SectionFallback /> }
+);
+
+const ResourceSection = nextDynamic(
+  () => import('@/features/resources/Resource'),
+  { ssr: false, loading: () => <SectionFallback /> }
 );
 
 const EventAdModal = nextDynamic(
   () => import('@/shared/ui/modals/EventAdModal'),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
 const ConfessionPopup = nextDynamic(
   () => import('@/shared/ui/modals/ConfessionPopup'),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
 type HomeEventAd = {
@@ -148,10 +149,10 @@ export default function Home() {
       }
     }
 
-    loadHomepageContent();
-
+    const t = window.setTimeout(loadHomepageContent, 800);
     return () => {
       mounted = false;
+      window.clearTimeout(t);
     };
   }, []);
 
@@ -240,7 +241,7 @@ export default function Home() {
         </section>
 
         <section className="home-section perf-section" data-gsap="reveal">
-          <Testimonials />
+          <HomeTestimonials />
         </section>
 
         <section

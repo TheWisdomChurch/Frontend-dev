@@ -90,6 +90,13 @@ export default {
           ring: 'hsl(var(--sidebar-ring))',
         },
       },
+      spacing: {
+        'section-xs': 'var(--section-xs)',
+        'section-sm': 'var(--section-sm)',
+        'section-md': 'var(--section-md)',
+        'section-lg': 'var(--section-lg)',
+        'section-xl': 'var(--section-xl)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -101,6 +108,11 @@ export default {
         'radius-sm': 'var(--radius-sm)',
         'radius-md': 'var(--radius-md)',
         'radius-lg': 'var(--radius-lg)',
+        card: 'var(--radius-card)',
+        button: 'var(--radius-button)',
+        input: 'var(--radius-input)',
+        badge: 'var(--radius-badge)',
+        image: 'var(--radius-image)',
       },
       keyframes: {
         'accordion-down': {

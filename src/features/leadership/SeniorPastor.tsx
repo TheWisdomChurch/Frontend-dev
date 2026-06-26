@@ -1,238 +1,143 @@
 'use client';
 
-import { useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { ArrowRight, Camera, MessageCircle, Users } from 'lucide-react';
-import { Bishop } from '@/shared/assets';
-import { H1, BodyMD } from '@/shared/text';
-import Button from '@/shared/utils/buttons/CustomButton';
-import { useSeniorPastor } from '@/shared/utils/hooks/useSeniorPastor';
-import { Container, Section, FlexboxLayout } from '@/shared/layout';
-import { Card } from '@/shared/ui/cards';
-import { cn } from '@/lib/cn';
+import Link from 'next/link';
+import { useEffect, useRef, useMemo } from 'react';
 import { gsap } from 'gsap';
+
+import { Bishop } from '@/shared/assets';
 import { seniorPastorData } from '@/lib/data';
+import { useSeniorPastor } from '@/shared/utils/hooks/useSeniorPastor';
+import { Section, Container } from '@/shared/layout';
+import { cn } from '@/lib/cn';
 
 interface SeniorPastorProps {
   className?: string;
 }
 
 export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
-  const router = useRouter();
-
   const { sectionRef, isVisible } = useSeniorPastor();
-  const textRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  const summary = useMemo(() => {
-    return (
+  const bio = useMemo(
+    () =>
       seniorPastorData?.description?.[0]?.replace(/\s+/g, ' ').trim() ||
-      'Bishop Gabriel Ayilara leads The Wisdom House Church with practical teaching, prayer, and a heart for raising strong believers and families.'
-    );
-  }, []);
+      'Bishop Gabriel Ayilara leads The Wisdom House Church with practical teaching, prayer, and a heart for raising strong believers and families.',
+    []
+  );
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || !contentRef.current) return;
 
     const ctx = gsap.context(() => {
-      if (textRef.current) {
-        gsap.fromTo(
-          textRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
-        );
-      }
-
-      if (imageRef.current) {
-        gsap.fromTo(
-          imageRef.current,
-          { y: 40, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.9,
-            ease: 'power3.out',
-            delay: 0.1,
-          }
-        );
-      }
+      gsap.fromTo(
+        contentRef.current,
+        { y: 28, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
+      );
     });
 
     return () => ctx.revert();
   }, [isVisible]);
-
-  const goToLeadership = () => router.push('/leadership');
 
   return (
     <Section
       ref={sectionRef}
       padding="none"
       className={cn(
-        'relative w-full overflow-hidden bg-[var(--app-dark-2)] text-white',
-        'min-h-[420px] md:min-h-[480px]',
+        'relative w-full overflow-hidden bg-[var(--app-dark)]',
         className
       )}
     >
-      {/* eslint-disable-next-line no-restricted-syntax */}
-      <div
-        className="absolute inset-0 z-0"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.72), rgba(0,0,0,0.80)), url(${Bishop.src})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black/85" />
+      <div className="grid min-h-[560px] grid-cols-1 lg:grid-cols-2 lg:min-h-[640px]">
+        {/* ── Left — full-height portrait ───────────────────── */}
+        <div className="relative order-1 min-h-[420px] overflow-hidden lg:order-none lg:min-h-0">
+          <Image
+            src={Bishop}
+            alt="Bishop Gabriel Ayilara — Senior Pastor, The Wisdom Church"
+            fill
+            priority={false}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            quality={90}
+            className="object-cover [object-position:center_18%]"
+          />
+          {/* Subtle right fade on desktop — blends into content panel */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-[var(--app-dark)]/60" />
+        </div>
 
-      <Container size="xl" className="relative z-10 py-6 md:py-8">
-        <FlexboxLayout
-          direction="column"
-          justify="center"
-          align="center"
-          className="w-full h-full"
+        {/* ── Right — content ───────────────────────────────── */}
+        <div
+          ref={contentRef}
+          className="order-2 flex flex-col justify-center px-6 py-section-md sm:px-10 lg:order-none lg:px-14 xl:px-20"
         >
-          <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-8 md:gap-10 items-center w-full">
-            {/* Text column */}
-            <div
-              ref={textRef}
-              className="space-y-2.5 md:space-y-4 order-2 md:order-1"
+          <p className="mb-5 text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Senior Pastor
+          </p>
+
+          <h2
+            className="font-headline font-normal text-white"
+            style={{ fontSize: 'var(--type-display-sm)' }}
+          >
+            Bishop Gabriel Ayilara
+          </h2>
+
+          {/* Pull quote */}
+          <blockquote className="relative mt-8">
+            <span
+              className="pointer-events-none absolute -left-2 -top-6 font-headline text-[5rem] leading-none text-[var(--app-primary)] opacity-20"
+              aria-hidden="true"
             >
-              <BodyMD className="text-[11px] md:text-xs uppercase tracking-[0.18em] text-white/70">
-                Meet our Senior Pastor
-              </BodyMD>
+              &ldquo;
+            </span>
+            <p className="font-headline text-[1.2rem] font-normal italic leading-[1.55] text-white/80 sm:text-[1.35rem]">
+              You are not just a member, you are a carrier of God&rsquo;s glory.
+            </p>
+          </blockquote>
 
-              <div className="space-y-2">
-                <H1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-tight">
-                  Bishop Gabriel Ayilara
-                </H1>
-                <BodyMD className="text-sm md:text-base text-white/80">
-                  Senior Pastor, The Wisdom House Church
-                </BodyMD>
-              </div>
+          {/* Gold rule */}
+          <span
+            className="mt-7 block h-[2px] w-12 bg-[var(--app-primary)]"
+            aria-hidden="true"
+          />
 
-              <div className="h-1 w-20 rounded-full bg-[var(--app-primary)]" />
+          <p className="mt-6 max-w-[400px] text-[0.95rem] leading-[1.8] text-white/55">
+            {bio}
+          </p>
 
-              <div className="space-y-3">
-                <BodyMD className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed">
-                  {summary}
-                </BodyMD>
-
-                <div className="flex flex-nowrap gap-2.5 pt-1 overflow-x-auto sm:flex-wrap sm:overflow-visible">
-                  <Button
-                    onClick={() =>
-                      window.open(
-                        'https://www.instagram.com/gabrielayilara',
-                        '_blank',
-                        'noopener,noreferrer'
-                      )
-                    }
-                    variant="ghost"
-                    size="xs"
-                    curvature="full"
-                    leftIcon={<Camera className="w-4 h-4" />}
-                    className="bg-[linear-gradient(135deg,#E4405F,#C13584)] px-4 py-2 text-[11px] font-semibold text-white shadow-lg hover:opacity-90 min-w-max sm:text-[13px]"
-                  >
-                    Instagram
-                  </Button>
-
-                  <Button
-                    onClick={() =>
-                      window.open(
-                        'https://facebook.com',
-                        '_blank',
-                        'noopener,noreferrer'
-                      )
-                    }
-                    variant="ghost"
-                    size="xs"
-                    curvature="full"
-                    leftIcon={<Users className="w-4 h-4" />}
-                    className="border border-white/30 bg-white/[0.08] px-4 py-2 text-[11px] font-semibold text-white min-w-max sm:text-[13px]"
-                  >
-                    Facebook
-                  </Button>
-
-                  <Button
-                    onClick={() =>
-                      window.open(
-                        'https://twitter.com',
-                        '_blank',
-                        'noopener,noreferrer'
-                      )
-                    }
-                    variant="ghost"
-                    size="xs"
-                    curvature="full"
-                    leftIcon={<MessageCircle className="w-4 h-4" />}
-                    className="border border-white/30 bg-white/[0.08] px-4 py-2 text-[11px] font-semibold text-white min-w-max sm:text-[13px]"
-                  >
-                    X (Twitter)
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Portrait column */}
-            <div
-              ref={imageRef}
-              className="flex justify-center md:justify-end order-1 md:order-2"
+          {/* Links */}
+          <div className="mt-8 flex flex-wrap items-center gap-5">
+            <Link
+              href="/leadership"
+              className="group inline-flex items-center gap-2 text-[0.78rem] font-semibold text-[var(--app-primary)] transition"
             >
-              <div className="relative w-full max-w-[200px] sm:max-w-[230px] md:max-w-[300px] aspect-[3/4] rounded-full md:rounded-3xl overflow-hidden border border-white/12 shadow-2xl">
-                <Image
-                  src={Bishop}
-                  alt="Bishop Gabriel Ayilara"
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 480px"
-                  className="object-cover [object-position:center_20%]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+              Meet the team
+              <span className="transition duration-200 group-hover:translate-x-1">
+                →
+              </span>
+            </Link>
 
-                <div className="hidden md:flex absolute bottom-4 left-4 right-4 items-center justify-between text-sm font-semibold text-white">
-                  <span className="text-white/90">Bishop Gabriel Ayilara</span>
-                  <span className="rounded-full border border-white/20 bg-[var(--app-primary)]/20 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-md">
-                    Senior Pastor
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 md:mt-10 w-full">
-            <Card
-              variant="glass"
-              padding="md"
-              className="rounded-2xl bg-white/5 md:p-6"
-            >
-              <BodyMD className="text-[11px] md:text-xs uppercase tracking-[0.2em] text-white/60">
-                Leadership
-              </BodyMD>
-              <H1 className="text-lg sm:text-xl md:text-2xl font-semibold text-white leading-tight mt-2">
-                Guided with vision, prayer, and care.
-              </H1>
-              <BodyMD className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed mt-3">
-                Our leaders are devoted to building a Spirit‑filled community
-                rooted in the Word, integrity, and compassionate service.
-              </BodyMD>
-              <div className="pt-4">
-                <Button
-                  onClick={goToLeadership}
-                  variant="primary"
-                  size="xs"
-                  curvature="full"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
-                  className="w-full sm:w-auto px-5 py-2 text-[13px] font-semibold shadow-lg"
+            <div className="flex items-center gap-4">
+              {[
+                {
+                  label: 'Instagram',
+                  href: 'https://www.instagram.com/gabrielayilara',
+                },
+                { label: 'Facebook', href: 'https://facebook.com' },
+              ].map(s => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[0.75rem] text-white/35 transition hover:text-white/70"
                 >
-                  View leadership
-                </Button>
-              </div>
-            </Card>
+                  {s.label}
+                </a>
+              ))}
+            </div>
           </div>
-        </FlexboxLayout>
-      </Container>
+        </div>
+      </div>
     </Section>
   );
 }
