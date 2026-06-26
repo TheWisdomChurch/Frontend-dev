@@ -46,6 +46,10 @@ export interface BaseTextProps {
   align?: 'left' | 'center' | 'right';
   className?: string;
   style?: React.CSSProperties;
+  id?: string;
+  role?: string;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
   onMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;

@@ -5,7 +5,15 @@ import { ArrowRight, Check } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 import { Container, Section } from '@/shared/layout';
-import { BodyMD, Caption, H2, H3 } from '@/shared/text';
+import {
+  BodyLG,
+  BodyMD,
+  BodySM,
+  Caption,
+  Eyebrow,
+  H2,
+  H3,
+} from '@/shared/text';
 
 export type StatItem = {
   label: string;
@@ -110,12 +118,10 @@ export function StatStrip({ items }: StatStripProps) {
             >
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[0.68rem] uppercase tracking-[0.18em] text-white/52">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-white sm:text-xl">
+                  <Eyebrow className="text-white/52">{item.label}</Eyebrow>
+                  <BodyLG weight="semibold" className="mt-2 text-white">
                     {item.value}
-                  </p>
+                  </BodyLG>
                 </div>
                 {Icon ? (
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.08]">
@@ -124,9 +130,7 @@ export function StatStrip({ items }: StatStripProps) {
                 ) : null}
               </div>
               {item.detail ? (
-                <p className="text-sm leading-relaxed text-white/62">
-                  {item.detail}
-                </p>
+                <BodySM className="text-white/62">{item.detail}</BodySM>
               ) : null}
             </div>
           );
@@ -241,7 +245,7 @@ export function SplitSection({
                 <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/[0.10]">
                   <Check className="h-4 w-4 text-[var(--app-primary)]" />
                 </div>
-                <p className="text-sm leading-relaxed text-white/70">{point}</p>
+                <BodySM className="text-white/70">{point}</BodySM>
               </div>
             ))}
           </div>
@@ -250,14 +254,10 @@ export function SplitSection({
 
       <div className="rounded-radius-lg border border-white/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] sm:p-7">
         {panelTitle ? (
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-            {panelTitle}
-          </p>
+          <Eyebrow className="text-[var(--app-primary)]">{panelTitle}</Eyebrow>
         ) : null}
         {panelBody ? (
-          <p className="mt-4 text-base leading-relaxed text-white/72">
-            {panelBody}
-          </p>
+          <BodyMD className="mt-4 text-white/72">{panelBody}</BodyMD>
         ) : null}
         {panelItems.length ? (
           <div className="mt-6 grid gap-3">

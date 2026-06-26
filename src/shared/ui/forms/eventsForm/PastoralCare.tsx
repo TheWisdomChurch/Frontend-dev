@@ -11,8 +11,9 @@ import {
   ChevronDown,
   CheckCircle2,
 } from 'lucide-react';
-import { H2, H3, BodyMD, BodyLG, Caption } from '@/shared/text';
+import { H2, H3, BodyMD, BodyLG, BodySM, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
+import { Button } from '@/shared/utils/buttons';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import { apiClient } from '@/lib/api';
@@ -324,9 +325,9 @@ const PastoralCareUnit = () => {
                         } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
                       />
                       {errors.lastName && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.lastName}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
@@ -356,9 +357,9 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.contactNumber && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.contactNumber}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
@@ -388,9 +389,9 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.email}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
@@ -420,9 +421,9 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.contactAddress && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.contactAddress}
-                        </p>
+                        </Caption>
                       )}
                     </div>
                   </div>
@@ -467,9 +468,9 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.eventDate && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.eventDate}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
@@ -510,9 +511,9 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.eventType && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.eventType}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
@@ -553,9 +554,9 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.churchRole && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.churchRole}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
@@ -580,9 +581,9 @@ const PastoralCareUnit = () => {
                           } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
                         />
                         {errors.customRole && (
-                          <p className="text-red-500 text-sm mt-1">
+                          <Caption className="mt-1 text-red-400">
                             {errors.customRole}
-                          </p>
+                          </Caption>
                         )}
                       </div>
                     )}
@@ -631,10 +632,11 @@ const PastoralCareUnit = () => {
                     </div>
                   ) : null}
 
-                  <button
+                  <Button
                     type="submit"
+                    variant="primary"
                     disabled={isSubmitting}
-                    className="w-full rounded-xl bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] px-6 py-4 font-black text-lg text-black shadow-[0_8px_25px_rgba(245,158,11,0.3)] transition-all duration-300 hover:scale-105 disabled:cursor-not-allowed disabled:transform-none disabled:opacity-50"
+                    className="w-full rounded-xl py-4 font-black text-lg"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center justify-center gap-2">
@@ -644,7 +646,7 @@ const PastoralCareUnit = () => {
                     ) : (
                       'Submit Registration'
                     )}
-                  </button>
+                  </Button>
 
                   <BodyMD className="mt-4 text-center text-white/60">
                     We&apos;ll contact you within 24-48 hours to discuss your
@@ -668,10 +670,10 @@ const PastoralCareUnit = () => {
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--app-primary)]/10">
               <CheckCircle2 className="w-5 h-5 text-[var(--app-primary)]" />
             </div>
-            <p className="text-white/80 text-sm leading-relaxed">
+            <BodySM className="text-white/80">
               Thank you. Our team will review and reach out soon. A confirmation
               email has been sent to the address you provided.
-            </p>
+            </BodySM>
           </div>
         </BaseModal>
       </Container>

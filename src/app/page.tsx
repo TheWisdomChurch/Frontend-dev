@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
+import { Button } from '@/shared/utils/buttons';
 import HeroHighlights from '@/features/hero/HeroHighlights';
 import EventsShowcase from '@/features/events/EventsShowcase';
 import JoinUs from '@/features/events/JoinUs';
@@ -268,15 +269,17 @@ export default function Home() {
       />
 
       {!showModal && (
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          curvature="full"
           aria-label="Open conference registration ad"
           onClick={() => setShowModal(true)}
-          className="fixed bottom-4 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/80 px-3.5 py-2.5 text-[11px] font-semibold text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] sm:bottom-5 sm:px-4 sm:text-sm"
+          className="fixed bottom-4 right-4 z-[9900] gap-2 border border-white/15 bg-black/80 px-3.5 py-2.5 text-[11px] font-semibold text-white shadow-2xl backdrop-blur-lg hover:-translate-y-0.5 hover:bg-black sm:bottom-5 sm:px-4 sm:text-sm"
         >
           <span className="text-base">📢</span>
           <span>WPC 2026</span>
-        </button>
+        </Button>
       )}
 
       {!showModal && showConfessionPopup && (

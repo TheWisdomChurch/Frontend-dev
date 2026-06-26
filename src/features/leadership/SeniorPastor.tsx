@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Camera, MessageCircle, Users } from 'lucide-react';
 import { Bishop } from '@/shared/assets';
-import { H1, P } from '@/shared/text';
+import { H1, BodyMD } from '@/shared/text';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { useSeniorPastor } from '@/shared/utils/hooks/useSeniorPastor';
 import { Container, Section, FlexboxLayout } from '@/shared/layout';
@@ -101,25 +101,25 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
               ref={textRef}
               className="space-y-2.5 md:space-y-4 order-2 md:order-1"
             >
-              <P className="text-[11px] md:text-xs uppercase tracking-[0.18em] text-white/70">
+              <BodyMD className="text-[11px] md:text-xs uppercase tracking-[0.18em] text-white/70">
                 Meet our Senior Pastor
-              </P>
+              </BodyMD>
 
               <div className="space-y-2">
                 <H1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-tight">
                   Bishop Gabriel Ayilara
                 </H1>
-                <P className="text-sm md:text-base text-white/80">
+                <BodyMD className="text-sm md:text-base text-white/80">
                   Senior Pastor, The Wisdom House Church
-                </P>
+                </BodyMD>
               </div>
 
               <div className="h-1 w-20 rounded-full bg-[var(--app-primary)]" />
 
               <div className="space-y-3">
-                <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed">
+                <BodyMD className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed">
                   {summary}
-                </P>
+                </BodyMD>
 
                 <div className="flex flex-nowrap gap-2.5 pt-1 overflow-x-auto sm:flex-wrap sm:overflow-visible">
                   <Button
@@ -207,16 +207,16 @@ export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
               padding="md"
               className="rounded-2xl bg-white/5 md:p-6"
             >
-              <P className="text-[11px] md:text-xs uppercase tracking-[0.2em] text-white/60">
+              <BodyMD className="text-[11px] md:text-xs uppercase tracking-[0.2em] text-white/60">
                 Leadership
-              </P>
+              </BodyMD>
               <H1 className="text-lg sm:text-xl md:text-2xl font-semibold text-white leading-tight mt-2">
                 Guided with vision, prayer, and care.
               </H1>
-              <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed mt-3">
+              <BodyMD className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed mt-3">
                 Our leaders are devoted to building a Spirit‑filled community
                 rooted in the Word, integrity, and compassionate service.
-              </P>
+              </BodyMD>
               <div className="pt-4">
                 <Button
                   onClick={goToLeadership}

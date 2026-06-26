@@ -1,5 +1,6 @@
 ﻿import HeroSection from '@/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { hero_bg_3 } from '@/shared/assets';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { PageSection } from '@/shared/layout';
@@ -104,9 +105,12 @@ const PublicationPage = () => {
                       <span className="ml-2">{pub.format}</span>
                     </div>
 
-                    <button className="w-full page-card-muted py-2.5 text-[12px] font-medium">
+                    <Button
+                      variant="ghost"
+                      className="w-full py-2.5 min-h-0 h-auto text-[12px] font-medium page-card-muted"
+                    >
                       {pub.action}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </ScrollFadeIn>
@@ -149,9 +153,12 @@ const PublicationPage = () => {
                     'Family Devotional Kit',
                   ].map((item, index) => (
                     <ScrollFadeIn key={index} delay={index * 0.03}>
-                      <button className="w-full text-left page-card p-3 text-sm">
+                      <Button
+                        variant="ghost"
+                        className="w-full !justify-start min-h-0 h-auto page-card p-3 text-sm"
+                      >
                         {item}
-                      </button>
+                      </Button>
                     </ScrollFadeIn>
                   ))}
                 </div>

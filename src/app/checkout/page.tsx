@@ -8,6 +8,7 @@ import { ShoppingBag } from 'lucide-react';
 import { useAppSelector } from '@/shared/utils/hooks/redux';
 import CheckoutForm from '@/features/store/Store/checkoutForm';
 import PageHero from '@/features/hero/PageHero';
+import { H1, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
 
@@ -40,13 +41,13 @@ export default function CheckoutPage() {
                 <ShoppingBag className="h-8 w-8 text-[var(--app-primary)]" />
               </div>
 
-              <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              <H1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                 Your cart is empty
-              </h1>
+              </H1>
 
-              <p className="mt-3 max-w-md text-sm leading-7 text-white/65 sm:text-base">
+              <BodySM className="mt-3 max-w-md text-white/65 sm:text-base">
                 Add some resources from the store before proceeding to checkout.
-              </p>
+              </BodySM>
 
               <CustomButton
                 variant="primary"
@@ -75,15 +76,15 @@ export default function CheckoutPage() {
       <Section padding="xl" className="bg-[var(--app-surface)]">
         <Container size="xl">
           <div className="checkout-section mx-auto mb-8 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               Secure checkout
-            </p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            </Eyebrow>
+            <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
               Complete your order with confidence
-            </h1>
-            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+            </H1>
+            <BodySM className="mt-3 text-white/65 sm:text-base">
               Confirm your details and complete your purchase securely.
-            </p>
+            </BodySM>
           </div>
 
           <div className="checkout-section rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:p-8">

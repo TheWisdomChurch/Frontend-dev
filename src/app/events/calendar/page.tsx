@@ -7,6 +7,7 @@ import { ArrowLeft, CalendarClock, Loader2, MapPin } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import PageHero from '@/features/hero/PageHero';
+import { H1, H2, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 
 function toDateKey(event: EventPublic): string | null {
@@ -140,18 +141,18 @@ export default function EventsCalendarPage() {
         <Container size="lg" className="space-y-8">
           <div className="flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <Eyebrow className="text-[var(--app-primary)]">
                 Events calendar
-              </p>
-              <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+              </Eyebrow>
+              <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
                 {monthStart.toLocaleDateString(undefined, {
                   month: 'long',
                   year: 'numeric',
                 })}
-              </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60">
-                View this month’s published events and upcoming timeline.
-              </p>
+              </H1>
+              <BodySM className="mt-3 max-w-2xl text-white/60">
+                View this month&apos;s published events and upcoming timeline.
+              </BodySM>
             </div>
 
             <Link
@@ -189,18 +190,18 @@ export default function EventsCalendarPage() {
                       >
                         {slot.day ? (
                           <>
-                            <p className="text-sm font-semibold text-white">
+                            <Caption className="font-semibold text-white">
                               {slot.day}
-                            </p>
+                            </Caption>
 
                             {slot.count > 0 ? (
-                              <p className="mt-3 inline-flex rounded-full bg-[var(--app-primary)] px-2.5 py-1 text-xs font-extrabold text-black">
+                              <span className="mt-3 inline-flex rounded-full bg-[var(--app-primary)] px-2.5 py-1 text-xs font-extrabold text-black">
                                 {slot.count} event{slot.count > 1 ? 's' : ''}
-                              </p>
+                              </span>
                             ) : (
-                              <p className="mt-3 text-xs text-white/35">
+                              <Caption className="mt-3 text-white/35">
                                 No event
-                              </p>
+                              </Caption>
                             )}
                           </>
                         ) : null}
@@ -213,15 +214,15 @@ export default function EventsCalendarPage() {
               <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
                 <div className="flex items-center gap-3">
                   <CalendarClock className="h-5 w-5 text-[var(--app-primary)]" />
-                  <h2 className="text-xl font-semibold text-white">
+                  <H2 className="text-xl font-semibold text-white">
                     Upcoming timeline
-                  </h2>
+                  </H2>
                 </div>
 
                 {grouped.length === 0 ? (
-                  <p className="mt-4 text-sm leading-7 text-white/55">
+                  <BodySM className="mt-4 text-white/55">
                     No published events available.
-                  </p>
+                  </BodySM>
                 ) : (
                   <div className="mt-5 space-y-4">
                     {grouped.map(([dateKey, list]) => (
@@ -229,9 +230,9 @@ export default function EventsCalendarPage() {
                         key={dateKey}
                         className="rounded-2xl border border-white/10 bg-black/25 p-4"
                       >
-                        <p className="text-sm font-bold text-[var(--app-primary)]">
+                        <Caption className="font-bold text-[var(--app-primary)]">
                           {formatDateKeyLabel(dateKey)}
-                        </p>
+                        </Caption>
 
                         <ul className="mt-3 space-y-3">
                           {list.map(event => (
@@ -239,14 +240,16 @@ export default function EventsCalendarPage() {
                               key={event.id}
                               className="rounded-xl border border-white/10 bg-white/[0.03] p-3"
                             >
-                              <p className="font-semibold text-white">
+                              <BodySM weight="semibold" className="text-white">
                                 {event.title}
-                              </p>
+                              </BodySM>
 
-                              <p className="mt-1 flex items-center gap-2 text-sm text-white/50">
+                              <div className="mt-1 flex items-center gap-2 text-sm text-white/50">
                                 <MapPin className="h-4 w-4" />
-                                {event.location || 'Venue TBA'}
-                              </p>
+                                <Caption className="text-white/50">
+                                  {event.location || 'Venue TBA'}
+                                </Caption>
+                              </div>
                             </li>
                           ))}
                         </ul>

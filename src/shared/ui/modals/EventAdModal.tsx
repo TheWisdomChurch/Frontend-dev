@@ -4,7 +4,8 @@ import { useMemo } from 'react';
 import Image, { type StaticImageData } from 'next/image';
 import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { H3, BodySM, Caption } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 
 type EventAdConfig = {
   id: string;
@@ -142,9 +143,9 @@ export default function EventAdModal({
 
           {/* Description & Details Card */}
           <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-            <p className="text-sm italic leading-7 text-white/78">
+            <BodySM className="italic text-white/78">
               {safeEvent.description}
-            </p>
+            </BodySM>
 
             {/* Meta information */}
             <div className="flex flex-wrap gap-4">
@@ -187,39 +188,35 @@ export default function EventAdModal({
         {/* Right Column (Registration) */}
         <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
           <div className="space-y-2">
-            <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/45">
-              Secure Your Spot
-            </p>
-            <h3 className="text-xl font-semibold tracking-tight text-white">
-              {safeEvent.headline}
-            </h3>
-            <p className="text-sm leading-7 text-white/78">
+            <Caption className="text-white/45">Secure Your Spot</Caption>
+            <H3 className="text-white">{safeEvent.headline}</H3>
+            <BodySM className="text-white/78">
               If you have not registered for WPC 2026, secure your seat now.
-            </p>
+            </BodySM>
           </div>
 
           {/* CTA Button */}
-          <CustomButton
+          <Button
             variant="primary"
             onClick={handleRegister}
             disabled={!registerUrl}
             className="w-full py-3.5 text-lg font-bold"
           >
             {safeEvent.ctaLabel}
-          </CustomButton>
+          </Button>
 
           {/* Note & Remind Later */}
           <div className="flex items-center justify-between text-xs text-white/40">
             <span>{safeEvent.note}</span>
             {onRemindLater && (
-              <CustomButton
+              <Button
                 variant="ghost"
                 size="xs"
                 onClick={onRemindLater}
                 className="text-xs text-white/40 underline-offset-4 hover:text-white hover:underline"
               >
                 Remind me later
-              </CustomButton>
+              </Button>
             )}
           </div>
         </div>

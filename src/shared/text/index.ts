@@ -15,12 +15,16 @@ export {
   H4,
   H5,
   H6,
+  HeroText,
+  BodyXL,
   BodyLG,
   BodyMD,
   BodySM,
   P,
   SmallText,
+  ExtraSmallText,
   Caption,
+  Eyebrow,
 } from './Semantictext';
 
 export {

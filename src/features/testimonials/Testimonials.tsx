@@ -18,7 +18,16 @@ import {
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
 import { Card } from '@/shared/ui/cards';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
+import {
+  H2,
+  H3,
+  BodyLG,
+  BodyMD,
+  BodySM,
+  SmallText,
+  Caption,
+} from '@/shared/text';
 import GridBackground from '@/shared/ui/GridBackground';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { ActionBanner } from '@/shared/components/site/PublicPageBlocks';
@@ -80,18 +89,17 @@ function TestimonyPreview({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
       onClick={onClick}
-      className={`group w-full rounded-2xl border p-4 text-left transition duration-300 ${
+      className={`group w-full rounded-2xl border p-4 !justify-start text-left transition duration-300 ${
         active
           ? 'border-[var(--app-primary)]/45 bg-[var(--app-primary)]/12'
           : 'border-white/10 bg-white/[0.045] hover:border-white/18 hover:bg-white/[0.07]'
       }`}
     >
-      <p className="line-clamp-2 text-sm leading-6 text-white/72">
-        {testimony.quote}
-      </p>
+      <BodySM className="line-clamp-2 text-white/72">{testimony.quote}</BodySM>
       <div className="mt-3 flex items-center justify-between gap-3">
         <span className="truncate text-sm font-semibold text-white">
           {testimony.name}
@@ -104,7 +112,7 @@ function TestimonyPreview({
           }`}
         />
       </div>
-    </button>
+    </Button>
   );
 }
 
@@ -238,17 +246,17 @@ export default function TestimoniesPage() {
                     <Icon className="h-5 w-5" />
                   </div>
 
-                  <p className="mt-5 text-[0.65rem] font-bold uppercase tracking-[0.22em] text-white/45">
+                  <Caption className="mt-5 font-bold uppercase tracking-[0.22em] text-white/45">
                     {item.label}
-                  </p>
+                  </Caption>
 
-                  <h3 className="mt-2 text-lg font-semibold text-white">
+                  <H3 className="mt-2 text-lg font-semibold text-white">
                     {item.value}
-                  </h3>
+                  </H3>
 
-                  <p className="mt-2 text-sm leading-6 text-white/58">
+                  <SmallText className="mt-2 leading-6 text-white/58">
                     {item.detail}
-                  </p>
+                  </SmallText>
                 </Card>
               );
             })}
@@ -272,15 +280,15 @@ export default function TestimoniesPage() {
                   </span>
                 </div>
 
-                <h2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-                  Be encouraged by what God is doing in people’s lives.
-                </h2>
+                <H2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                  Be encouraged by what God is doing in people&apos;s lives.
+                </H2>
 
-                <p className="mt-4 max-w-lg text-[0.95rem] leading-7 text-white/62">
+                <BodyMD className="mt-4 max-w-lg leading-7 text-white/62">
                   Browse recent stories from the Wisdom House family. Each story
                   is shared to strengthen faith, build gratitude, and remind
                   someone that God is still working.
-                </p>
+                </BodyMD>
 
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
                   <a
@@ -314,10 +322,10 @@ export default function TestimoniesPage() {
                   <div className="flex min-h-[420px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/20 px-6 text-center">
                     <div className="max-w-sm">
                       <CheckCircle2 className="mx-auto h-9 w-9 text-[var(--app-primary)]" />
-                      <p className="mt-4 text-sm leading-6 text-white/62">
+                      <SmallText className="mt-4 leading-6 text-white/62">
                         Stories will appear here soon. You can be the first to
                         share what God has done in your life.
-                      </p>
+                      </SmallText>
 
                       <a
                         href={shareUrl}
@@ -338,23 +346,23 @@ export default function TestimoniesPage() {
                       <div className="relative z-10">
                         <Quote className="h-10 w-10 text-[var(--app-primary)]" />
 
-                        <p className="mt-7 text-xl leading-9 text-white/82 sm:text-2xl sm:leading-10">
-                          “{activeTestimony.quote}”
-                        </p>
+                        <BodyLG className="mt-7 text-white/82">
+                          "{activeTestimony.quote}"
+                        </BodyLG>
                       </div>
 
                       <div className="relative z-10 mt-8 flex flex-col gap-5 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                          <p className="text-lg font-semibold text-white">
+                          <BodyMD className="text-lg font-semibold text-white">
                             {activeTestimony.name}
-                          </p>
-                          <p className="mt-1 text-sm text-white/48">
+                          </BodyMD>
+                          <SmallText className="mt-1 text-white/48">
                             {activeTestimony.title}
-                          </p>
+                          </SmallText>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <CustomButton
+                          <Button
                             variant="ghost"
                             size="icon"
                             onClick={goPrev}
@@ -362,9 +370,9 @@ export default function TestimoniesPage() {
                             className="h-11 w-11 rounded-full border border-white/12 bg-white/[0.06] hover:bg-white/[0.1]"
                           >
                             <ChevronLeft className="h-5 w-5" />
-                          </CustomButton>
+                          </Button>
 
-                          <CustomButton
+                          <Button
                             variant="ghost"
                             size="icon"
                             onClick={goNext}
@@ -372,7 +380,7 @@ export default function TestimoniesPage() {
                             className="h-11 w-11 rounded-full border border-white/12 bg-white/[0.06] hover:bg-white/[0.1]"
                           >
                             <ChevronRight className="h-5 w-5" />
-                          </CustomButton>
+                          </Button>
                         </div>
                       </div>
                     </article>

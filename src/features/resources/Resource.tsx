@@ -24,8 +24,9 @@ import {
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
+import { Button } from '@/shared/utils/buttons';
 import GridBackground from '@/shared/ui/GridBackground';
-import { Caption, H3, BodySM, SmallText } from '@/shared/text';
+import { Caption, H3, BodySM, SmallText, BodyMD } from '@/shared/text';
 import { resourceLinks } from '@/lib/data';
 import type { YouTubeVideo } from '@/lib/types';
 import apiClient from '@/lib/api';
@@ -269,8 +270,10 @@ export default function ResourceSection() {
                       key={title}
                       className="rounded-2xl border border-white/10 bg-white/[0.045] p-3"
                     >
-                      <p className="font-semibold text-white">{title}</p>
-                      <p className="mt-1 text-xs text-white/55">{value}</p>
+                      <BodySM weight="semibold" className="text-white">
+                        {title}
+                      </BodySM>
+                      <Caption className="mt-1 text-white/55">{value}</Caption>
                     </div>
                   ))}
                 </div>
@@ -336,9 +339,9 @@ export default function ResourceSection() {
                   <div className="flex min-h-[320px] items-center justify-center p-6 text-center">
                     <div className="max-w-sm">
                       <PlayCircle className="mx-auto h-9 w-9 text-[var(--app-primary)]" />
-                      <p className="mt-4 text-sm leading-6 text-white/62">
+                      <BodySM className="mt-4 text-white/62">
                         Latest message coming soon.
-                      </p>
+                      </BodySM>
                     </div>
                   </div>
                 )}
@@ -448,10 +451,13 @@ export default function ResourceSection() {
                   />
                 </div>
 
-                <button
+                <Button
                   type="submit"
+                  variant="primary"
+                  size="md"
+                  curvature="lg"
                   disabled={submitting}
-                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-primary)] text-sm font-bold text-black transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
+                  className="h-12 w-full disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {submitting ? (
                     <>
@@ -469,7 +475,7 @@ export default function ResourceSection() {
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}
-                </button>
+                </Button>
               </div>
             </form>
           </aside>

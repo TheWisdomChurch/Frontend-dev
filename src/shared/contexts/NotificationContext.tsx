@@ -9,6 +9,7 @@ import React, {
   useEffect,
 } from 'react';
 import gsap from 'gsap';
+import { Button } from '@/shared/utils/buttons';
 
 export interface Notification {
   id: string;
@@ -222,13 +223,16 @@ function NotificationItem({
         {notification.message}
       </div>
 
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
         onClick={() => onRemove(notification.id)}
-        className="min-w-6 cursor-pointer border-0 bg-transparent p-0 text-[18px] text-[#999] transition-colors duration-200 hover:text-[#C9A84C]"
+        aria-label="Dismiss notification"
+        className="min-w-6 min-h-0 h-auto p-0 text-[18px] text-[#999] hover:text-[#C9A84C]"
       >
         ✕
-      </button>
+      </Button>
     </div>
   );
 }

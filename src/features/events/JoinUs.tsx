@@ -23,10 +23,10 @@ import {
 
 import { Container, Section } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import { H2, BodySM, SmallText, Caption } from '@/shared/text';
+import { H2, BodySM, SmallText, Caption, BodyMD } from '@/shared/text';
 import { apiClient } from '@/lib/api';
 
 const { zodResolver } = ZodResolvers;
@@ -161,7 +161,7 @@ const selectClass =
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
 
-  return <p className="mt-1 text-xs text-red-300">{message}</p>;
+  return <Caption className="mt-1 text-red-300">{message}</Caption>;
 }
 
 export default function JoinWisdomHouse() {
@@ -387,12 +387,15 @@ export default function JoinWisdomHouse() {
                   key={label}
                   className="rounded-2xl border border-white/10 bg-white/[0.05] p-4 backdrop-blur-xl"
                 >
-                  <p className="text-2xl font-semibold text-[var(--app-primary)]">
+                  <BodyMD
+                    weight="semibold"
+                    className="text-2xl text-[var(--app-primary)]"
+                  >
                     {value}
-                  </p>
-                  <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-white/45">
+                  </BodyMD>
+                  <Caption className="mt-1 font-medium uppercase tracking-[0.18em] text-white/45">
                     {label}
-                  </p>
+                  </Caption>
                 </div>
               ))}
             </div>
@@ -456,7 +459,7 @@ export default function JoinWisdomHouse() {
                   <FieldError message={quickErrors.team?.message} />
                 </div>
 
-                <CustomButton
+                <Button
                   type="submit"
                   variant="primary"
                   size="md"
@@ -482,15 +485,17 @@ export default function JoinWisdomHouse() {
                       </>
                     )}
                   </span>
-                </CustomButton>
+                </Button>
 
-                <button
+                <Button
                   type="button"
                   onClick={() => handleOpenModal()}
-                  className="text-center text-sm font-semibold text-white/75 underline underline-offset-4 transition hover:text-white"
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm font-semibold text-white/75 underline underline-offset-4 hover:text-white"
                 >
                   Complete full workforce form
-                </button>
+                </Button>
               </div>
             </form>
           </div>
@@ -500,7 +505,7 @@ export default function JoinWisdomHouse() {
               const Icon = dept.icon;
 
               return (
-                <button
+                <Button
                   key={dept.title}
                   type="button"
                   onClick={() => {
@@ -509,7 +514,8 @@ export default function JoinWisdomHouse() {
                     setValue('department', dept.title);
                     handleOpenModal(dept.title);
                   }}
-                  className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 text-left shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085] ${
+                  variant="ghost"
+                  className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 !justify-start text-left shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085] ${
                     index === 0 ? 'sm:col-span-2 lg:col-span-1' : ''
                   }`}
                 >
@@ -553,7 +559,7 @@ export default function JoinWisdomHouse() {
                       <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
                     </div>
                   </div>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -587,12 +593,19 @@ export default function JoinWisdomHouse() {
                   </div>
 
                   <div>
-                    <p className="text-sm font-semibold text-white">
+                    <SmallText
+                      weight="semibold"
+                      className="text-white"
+                      useThemeColor={false}
+                    >
                       {item.title}
-                    </p>
-                    <p className="mt-1 text-xs leading-5 text-white/55">
+                    </SmallText>
+                    <Caption
+                      className="mt-1 leading-5 text-white/55"
+                      useThemeColor={false}
+                    >
                       {item.text}
-                    </p>
+                    </Caption>
                   </div>
                 </div>
               );
@@ -610,29 +623,35 @@ export default function JoinWisdomHouse() {
       >
         <form onSubmit={onModalSubmit} className="space-y-5">
           <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-white/[0.045] p-1.5">
-            <button
+            <Button
               type="button"
               onClick={() => setExisting(false)}
-              className={`rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+              variant={!existing ? 'primary' : 'ghost'}
+              size="sm"
+              curvature="md"
+              className={
                 !existing
-                  ? 'bg-[var(--app-primary)] text-black'
+                  ? ''
                   : 'text-white/65 hover:bg-white/[0.06] hover:text-white'
-              }`}
+              }
             >
               New member
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="button"
               onClick={() => setExisting(true)}
-              className={`rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+              variant={existing ? 'primary' : 'ghost'}
+              size="sm"
+              curvature="md"
+              className={
                 existing
-                  ? 'bg-[var(--app-primary)] text-black'
+                  ? ''
                   : 'text-white/65 hover:bg-white/[0.06] hover:text-white'
-              }`}
+              }
             >
               Existing member
-            </button>
+            </Button>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
@@ -712,9 +731,9 @@ export default function JoinWisdomHouse() {
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
-            <p className="mb-3 text-sm font-semibold text-white">
+            <BodySM weight="semibold" className="mb-3 text-white">
               Marital status
-            </p>
+            </BodySM>
 
             <div className="grid grid-cols-2 gap-2">
               <label className="cursor-pointer rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-white/75">
@@ -770,7 +789,7 @@ export default function JoinWisdomHouse() {
             <FieldError message={errors.about?.message} />
           </div>
 
-          <CustomButton
+          <Button
             type="submit"
             variant="primary"
             size="md"
@@ -791,7 +810,7 @@ export default function JoinWisdomHouse() {
                 </>
               )}
             </span>
-          </CustomButton>
+          </Button>
         </form>
       </BaseModal>
     </Section>

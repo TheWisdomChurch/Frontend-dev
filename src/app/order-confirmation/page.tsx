@@ -17,7 +17,7 @@ import {
 
 import { Container, Section } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
-import { H2, BaseText, LightText } from '@/shared/text';
+import { H2, BodySM, BaseText, LightText } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import OrderConfirmation from '@/features/store/Store/orderDetails';
 import PageHero from '@/features/hero/PageHero';
@@ -158,12 +158,12 @@ function SimpleConfirmation() {
                           </div>
 
                           <div>
-                            <p className="font-semibold text-white">
+                            <BodySM weight="semibold" className="text-white">
                               {item.title}
-                            </p>
-                            <p className="mt-1 text-sm leading-6 text-white/55">
+                            </BodySM>
+                            <BodySM className="mt-1 text-white/55">
                               {item.description}
-                            </p>
+                            </BodySM>
                           </div>
                         </div>
                       </div>
@@ -172,10 +172,10 @@ function SimpleConfirmation() {
                 </div>
 
                 <div className="confirmation-animate mt-6 rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-sm leading-6 text-white/60">
+                  <BodySM className="text-white/60">
                     Need help with your order? Contact the church/store team
                     from the contact page and include your order information.
-                  </p>
+                  </BodySM>
 
                   <Link
                     href="/contact"

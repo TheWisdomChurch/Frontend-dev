@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import ServiceUnavailableSheet from '@/shared/ui/modals/ServiceUnavailableSheet';
+import { ServiceUnavailableSheet } from '@/shared/ui/modals/ServiceUnavailableSheet';
 
 type ServiceUnavailableOptions = {
   title?: string;

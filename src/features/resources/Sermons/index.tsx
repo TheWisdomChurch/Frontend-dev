@@ -12,7 +12,7 @@ import {
   UngroupedSeriesData,
 } from '@/lib/types';
 import { seriesGroups } from '@/lib/data';
-import Button from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
 import {
   Section,
   Container,
@@ -221,13 +221,16 @@ const SermonCardComponent = ({ video }: SermonCardProps) => {
                 {video.title}
               </BaseText>
 
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowPlayer(false)}
-                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+                className="h-8 w-8 flex-shrink-0 rounded-full bg-white/10 text-white hover:bg-white/20"
+                aria-label="Close player"
               >
                 <span className="text-2xl leading-none">×</span>
-              </button>
+              </Button>
             </FlexboxLayout>
 
             <div className="flex-1 overflow-hidden p-0">
@@ -423,28 +426,34 @@ const QuickFilters = ({
         const isActive = selectedSeries === value;
 
         return (
-          <button
+          <Button
             key={group.name}
             type="button"
+            variant={isActive ? 'primary' : 'ghost'}
+            size="sm"
+            curvature="full"
             onClick={() => onSelectGroup(group.searchTerms, group.name)}
-            className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition sm:text-sm ${
+            className={
               isActive
-                ? 'border-[var(--app-primary)] bg-[var(--app-primary)] text-black'
-                : 'border-[var(--app-primary)]/50 bg-white/10 text-[var(--app-primary)]'
-            }`}
+                ? ''
+                : 'border border-[var(--app-primary)]/50 text-[var(--app-primary)]'
+            }
           >
             {group.name}
-          </button>
+          </Button>
         );
       })}
 
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="sm"
+        curvature="full"
         onClick={onReset}
-        className="rounded-full border border-[var(--app-primary)]/50 bg-transparent px-3 py-1.5 text-xs font-semibold text-[var(--app-primary)] transition sm:text-sm hover:bg-white/10"
+        className="border border-[var(--app-primary)]/50 text-[var(--app-primary)]"
       >
         Reset
-      </button>
+      </Button>
     </div>
   );
 };
@@ -521,13 +530,15 @@ const ResultsToolbar = ({
           </div>
 
           {activeFilters.length > 0 && (
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={onClear}
-              className="text-xs font-semibold text-[var(--app-primary)] sm:text-sm hover:underline"
+              className="text-[var(--app-primary)] hover:underline"
             >
               Clear all
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -723,15 +734,17 @@ const CuratedSections = ({ videos, onSelectGroup }: CuratedSectionsProps) => {
                 </LightText>
               </div>
 
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() =>
                   onSelectGroup(section.searchTerms, section.groupName)
                 }
-                className="text-sm font-semibold text-[var(--app-primary)] transition-colors hover:underline"
+                className="text-[var(--app-primary)] hover:underline"
               >
                 View all
-              </button>
+              </Button>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -1005,10 +1018,12 @@ const FeaturedSection = ({
 
                   {videos.length > 5 && (
                     <div className="mt-4 text-center">
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="sm"
                         onClick={handleViewMore}
-                        className="mx-auto flex items-center justify-center gap-1 text-sm font-semibold text-[var(--app-primary)] transition-colors hover:underline md:text-base md:font-bold"
+                        className="mx-auto text-[var(--app-primary)] hover:underline"
                       >
                         View More Series
                         <svg
@@ -1024,7 +1039,7 @@ const FeaturedSection = ({
                             d="M19 9l-7 7-7-7"
                           />
                         </svg>
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </div>

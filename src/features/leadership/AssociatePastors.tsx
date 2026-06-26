@@ -101,13 +101,13 @@ function LeaderCard({
           </div>
 
           {displayDescription ? (
-            <p className="mt-4 line-clamp-3 text-sm leading-6 text-white/62">
+            <BodySM className="mt-4 line-clamp-3 text-white/62">
               {displayDescription}
-            </p>
+            </BodySM>
           ) : (
-            <p className="mt-4 text-sm leading-6 text-white/45">
+            <BodySM className="mt-4 text-white/45">
               Serving the house with care, excellence, and spiritual oversight.
-            </p>
+            </BodySM>
           )}
         </div>
 

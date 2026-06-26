@@ -49,7 +49,8 @@ const IconX = ({ className }: { className?: string }) => (
 );
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/layout';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
+import { BodySM, Caption, Eyebrow } from '@/shared/text';
 
 const quickLinks = [
   { href: '/about', label: 'About' },
@@ -118,11 +119,11 @@ export default function Footer() {
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed max-w-md">
+              <BodySM className="max-w-md text-white/70">
                 Equipping and empowering believers with the Word and Spirit.
                 Join us every Sunday and Thursday for worship, teaching, and
                 community.
-              </p>
+              </BodySM>
               <div className="grid gap-3 text-[11px] text-white/70 sm:grid-cols-2">
                 <div className="rounded-radius-sm border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/[0.05] px-4 py-3">
                   Sunday • 9:00 AM
@@ -134,9 +135,7 @@ export default function Footer() {
             </div>
 
             <div className="space-y-5">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Quick Links
-              </p>
+              <Eyebrow className="text-primary">Quick Links</Eyebrow>
               <ul className="space-y-3 text-sm text-white/70">
                 {quickLinks.map(link => (
                   <li key={link.href}>
@@ -153,9 +152,7 @@ export default function Footer() {
             </div>
 
             <div className="space-y-5">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Ministries
-              </p>
+              <Eyebrow className="text-primary">Ministries</Eyebrow>
               <ul className="space-y-3 text-sm text-white/70">
                 {ministries.map(link => (
                   <li key={link.href}>
@@ -172,21 +169,19 @@ export default function Footer() {
             </div>
 
             <div className="space-y-6">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Visit Us
-              </p>
+              <Eyebrow className="text-primary">Visit Us</Eyebrow>
               <div className="space-y-3 text-sm text-white/70">
                 <div className="flex items-start gap-3">
                   <MapPin className="mt-0.5 h-4 w-4 text-primary" />
-                  <p>Honor Gardens, Lekki-Epe Expressway, Lagos</p>
+                  <span>Honor Gardens, Lekki-Epe Expressway, Lagos</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="h-4 w-4 text-primary" />
-                  <p>0706 999 5333</p>
+                  <span>0706 999 5333</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="h-4 w-4 text-primary" />
-                  <p>wisdomhousehq@gmail.com</p>
+                  <span>wisdomhousehq@gmail.com</span>
                 </div>
               </div>
             </div>
@@ -194,30 +189,28 @@ export default function Footer() {
 
           <div className="mt-16 grid gap-6 border-t border-white/10 pt-8 md:grid-cols-[1.2fr_0.8fr] md:items-center">
             <div className="space-y-3">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Newsletter
-              </p>
+              <Eyebrow className="text-primary">Newsletter</Eyebrow>
               <form className="flex flex-col gap-2 sm:flex-row">
                 <input
                   type="email"
                   placeholder="Email address"
                   className="h-11 w-full rounded-full border border-white/15 bg-black/40 px-4 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-primary"
                 />
-                <CustomButton
+                <Button
                   type="submit"
                   variant="ghost"
                   curvature="full"
                   className="h-11 border border-primary/50 bg-primary/15 px-5 text-[11px] font-medium uppercase tracking-[0.18em] text-primary hover:bg-primary/25"
                 >
                   Subscribe
-                </CustomButton>
+                </Button>
               </form>
             </div>
 
             <div className="space-y-3 md:justify-self-end">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary md:text-right">
+              <Eyebrow className="text-primary md:text-right">
                 Follow Us
-              </p>
+              </Eyebrow>
               <div className="flex items-center gap-2 md:justify-end">
                 {socials.map(item => (
                   <a

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { BodySM, Caption } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 
 type NavChild = {
   label: string;
@@ -23,9 +25,21 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Watch',
     href: '/resources/sermons',
     children: [
-      { label: 'Sermons', href: '/resources/sermons', description: 'Messages from our pulpit' },
-      { label: 'Blog', href: '/resources/blogs', description: 'Articles & devotionals' },
-      { label: 'Publications', href: '/resources/publications', description: 'Books & resources' },
+      {
+        label: 'Sermons',
+        href: '/resources/sermons',
+        description: 'Messages from our pulpit',
+      },
+      {
+        label: 'Blog',
+        href: '/resources/blogs',
+        description: 'Articles & devotionals',
+      },
+      {
+        label: 'Publications',
+        href: '/resources/publications',
+        description: 'Books & resources',
+      },
     ],
   },
   {
@@ -183,7 +197,9 @@ export default function Header() {
               <div
                 key={item.href}
                 className="relative"
-                onMouseEnter={() => item.children && handleDropdownEnter(item.label)}
+                onMouseEnter={() =>
+                  item.children && handleDropdownEnter(item.label)
+                }
                 onMouseLeave={() => item.children && handleDropdownLeave()}
               >
                 <Link
@@ -218,8 +234,10 @@ export default function Header() {
             </Link>
           </div>
 
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             className="site-header__menu-button"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
@@ -227,13 +245,14 @@ export default function Header() {
             onClick={() => setMenuOpen(value => !value)}
           >
             <span className="site-header__menu-icon" />
-          </button>
+          </Button>
         </div>
       </header>
 
       <div className="site-header__mobile-layer" aria-hidden={!menuOpen}>
-        <button
+        <Button
           type="button"
+          variant="ghost"
           className="site-header__mobile-backdrop"
           aria-label="Close menu"
           onClick={() => setMenuOpen(false)}
@@ -249,10 +268,15 @@ export default function Header() {
               className="site-header__mobile-brand-image"
             />
             <div>
-              <p className="site-header__mobile-brand-kicker">Welcome to</p>
-              <p className="site-header__mobile-brand-name">
+              <Caption className="site-header__mobile-brand-kicker">
+                Welcome to
+              </Caption>
+              <BodySM
+                weight="semibold"
+                className="site-header__mobile-brand-name"
+              >
                 The Wisdom Church
-              </p>
+              </BodySM>
             </div>
           </div>
 
@@ -276,9 +300,7 @@ export default function Header() {
 
           {/* Explore Section */}
           <div className="mb-1 px-5 pt-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-              Explore
-            </p>
+            <Caption className="font-semibold text-white/35">Explore</Caption>
           </div>
           <nav
             className="site-header__mobile-nav"
@@ -302,9 +324,7 @@ export default function Header() {
 
           {/* Connect Section */}
           <div className="mb-1 px-5 pt-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-              Connect
-            </p>
+            <Caption className="font-semibold text-white/35">Connect</Caption>
           </div>
           <nav aria-label="Connect navigation">
             <Link

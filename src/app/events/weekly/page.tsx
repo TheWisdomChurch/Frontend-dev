@@ -2,6 +2,7 @@
 
 import HeroSection from '@/features/hero/PageHero';
 import { hero_bg_3 } from '@/shared/assets';
+import { H1, H2, H3, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { CalendarClock, MapPin, CheckCircle2 } from 'lucide-react';
 
@@ -122,19 +123,22 @@ export default function WeeklyPage() {
         showScrollIndicator
       />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface)]">
+      <Section
+        padding="lg"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
+      >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
         <Container size="xl" className="relative z-10">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               Weekly rhythm
-            </p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+            </Eyebrow>
+            <H1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
               Our Weekly Schedule
-            </h1>
-            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+            </H1>
+            <BodySM className="mt-3 text-white/65 sm:text-base">
               Multiple service times and gatherings to fit your schedule.
-            </p>
+            </BodySM>
           </div>
 
           <div className="space-y-5">
@@ -144,9 +148,9 @@ export default function WeeklyPage() {
                 className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/25 sm:rounded-[2rem]"
               >
                 <div className="border-b border-white/10 px-5 py-4 sm:px-6">
-                  <h2 className="text-xl font-semibold text-white">
+                  <H2 className="text-xl font-semibold text-white">
                     {daySchedule.day}
-                  </h2>
+                  </H2>
                 </div>
 
                 <div className="grid gap-4 p-5 sm:p-6 md:grid-cols-2 lg:grid-cols-3">
@@ -164,18 +168,18 @@ export default function WeeklyPage() {
                         </span>
                       </div>
 
-                      <h3 className="text-lg font-semibold text-white">
+                      <H3 className="text-lg font-semibold text-white">
                         {service.name}
-                      </h3>
+                      </H3>
 
                       <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[var(--app-primary)]">
                         <CalendarClock className="h-4 w-4" />
                         {service.time}
                       </div>
 
-                      <p className="mt-3 text-sm leading-6 text-white/62">
+                      <BodySM className="mt-3 text-white/62">
                         {service.description}
-                      </p>
+                      </BodySM>
 
                       <div className="mt-4 flex items-center gap-2 border-t border-white/10 pt-4 text-xs text-white/50">
                         <MapPin className="h-4 w-4" />
@@ -190,18 +194,19 @@ export default function WeeklyPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="relative overflow-hidden bg-[var(--app-surface-2)]">
+      <Section
+        padding="lg"
+        className="relative overflow-hidden bg-[var(--app-surface-2)]"
+      >
         <Container size="xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              First visit
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+            <Eyebrow className="text-[var(--app-primary)]">First visit</Eyebrow>
+            <H2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
               What to Expect
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+            </H2>
+            <BodySM className="mt-3 text-white/65 sm:text-base">
               Your first visit to Wisdom House.
-            </p>
+            </BodySM>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -211,12 +216,12 @@ export default function WeeklyPage() {
                 className="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/20 transition duration-300 hover:border-[var(--app-primary)]/35"
               >
                 <CheckCircle2 className="mb-4 h-5 w-5 text-[var(--app-primary)]" />
-                <h3 className="text-base font-semibold text-white">
+                <H3 className="text-base font-semibold text-white">
                   {item.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-white/62">
+                </H3>
+                <BodySM className="mt-2 text-white/62">
                   {item.description}
-                </p>
+                </BodySM>
               </article>
             ))}
           </div>

@@ -1,2 +1,7 @@
-// Re-export from ModalBase for backward compatibility
-export { BaseModal, modalStyles } from './ModalBase';
+// Re-export from the unified Modal component — all consumers keep working unchanged
+export { BaseModal, modalStyles } from './Modal';
+export type {
+  BaseModalProps,
+  SuccessModalProps,
+  ServiceUnavailableSheetProps,
+} from './Modal';

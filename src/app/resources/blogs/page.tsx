@@ -1,5 +1,6 @@
 ﻿import HeroSection from '@/features/hero/PageHero';
 import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { hero_bg_2 } from '@/shared/assets';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { PageSection } from '@/shared/layout';
@@ -111,9 +112,12 @@ const BlogPage = () => {
 
                     <div className="flex items-center justify-between">
                       <BodySM className="text-subtle">By {post.author}</BodySM>
-                      <button className="text-accent font-medium">
+                      <Button
+                        variant="ghost"
+                        className="min-h-0 h-auto p-0 text-accent font-medium"
+                      >
                         Read More →
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </article>
@@ -142,9 +146,12 @@ const BlogPage = () => {
               'Bible Study',
             ].map((category, index) => (
               <ScrollFadeIn key={index} delay={index * 0.03}>
-                <button className="page-card p-4 w-full">
+                <Button
+                  variant="ghost"
+                  className="page-card p-4 w-full min-h-0 h-auto"
+                >
                   <BodySM className="font-medium text-muted">{category}</BodySM>
-                </button>
+                </Button>
               </ScrollFadeIn>
             ))}
           </div>

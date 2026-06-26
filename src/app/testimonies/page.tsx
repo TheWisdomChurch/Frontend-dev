@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { HeartHandshake, Sparkles, Users } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H2, BodyMD, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import {
@@ -134,7 +135,7 @@ export default function TestimoniesPage() {
       <PageHero
         title="Stories of growth, healing, salvation, and real transformation."
         subtitle="Testimonies help the church remember that God is still working through worship, discipleship, care, and faithful obedience."
-        note="These stories are not here to decorate the website. They are here to strengthen faith, encourage perseverance, and make God’s faithfulness visible."
+        note="These stories are not here to decorate the website. They are here to strengthen faith, encourage perseverance, and make God's faithfulness visible."
         chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
       />
 
@@ -144,12 +145,12 @@ export default function TestimoniesPage() {
         <Container size="xl" className="space-y-6 sm:space-y-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-3">
-              <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <Eyebrow className="text-[var(--app-primary)]">
                 Testimony stories
-              </p>
-              <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+              </Eyebrow>
+              <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
                 Approved testimonies from the community.
-              </h2>
+              </H2>
             </div>
             <a
               href={shareUrl}
@@ -176,17 +177,19 @@ export default function TestimoniesPage() {
                   key={testimony.id}
                   className="rounded-[1.6rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(0,0,0,0.22))] p-5 sm:p-6"
                 >
-                  <p className="text-4xl leading-none text-[var(--app-primary)]">“</p>
-                  <p className="mt-4 text-base leading-relaxed text-white/72">
+                  <span className="text-4xl leading-none text-[var(--app-primary)]">
+                    &ldquo;
+                  </span>
+                  <BodyMD className="mt-4 text-white/72">
                     {testimony.quote}
-                  </p>
+                  </BodyMD>
                   <div className="mt-6 border-t border-white/10 pt-4">
-                    <p className="text-base font-semibold text-white">
+                    <BodyMD weight="semibold" className="text-white">
                       {testimony.name}
-                    </p>
-                    <p className="mt-1 text-sm text-white/58">
+                    </BodyMD>
+                    <Caption className="mt-1 text-white/58">
                       {testimony.title}
-                    </p>
+                    </Caption>
                   </div>
                 </article>
               ))}

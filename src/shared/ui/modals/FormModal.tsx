@@ -20,7 +20,8 @@ import {
 } from 'lucide-react';
 
 import { BaseModal, modalStyles } from './Base';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { BodySM, Caption } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { SuccessModal } from './SuccessModal';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { eventRegistrationSchema } from '@/lib/validation';
@@ -292,7 +293,7 @@ export function EventRegistrationModal({
               ) : null}
 
               {lead ? (
-                <p className="mt-2 text-sm leading-7 text-white/70">{lead}</p>
+                <BodySM className="mt-2 text-white/70">{lead}</BodySM>
               ) : null}
 
               {highlight ? (
@@ -325,14 +326,14 @@ export function EventRegistrationModal({
                       >
                         {getStepNumber(item)}
                       </div>
-                      <p
+                      <Caption
                         className={[
-                          'truncate text-center text-[0.68rem] font-bold uppercase tracking-[0.12em]',
+                          'truncate text-center',
                           active ? 'text-white' : 'text-white/42',
                         ].join(' ')}
                       >
                         {item}
-                      </p>
+                      </Caption>
                     </div>
                   </div>
                 );
@@ -348,9 +349,9 @@ export function EventRegistrationModal({
               <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
                 <div className="mb-5">
                   <p className={modalStyles.sectionTitle}>Personal details</p>
-                  <p className="mt-1 text-sm leading-6 text-white/55">
+                  <BodySM className="mt-1 text-white/55">
                     Tell us who is registering for this event.
-                  </p>
+                  </BodySM>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -482,23 +483,24 @@ export function EventRegistrationModal({
                         const selected = attendanceType === option;
 
                         return (
-                          <button
+                          <Button
                             key={option}
                             type="button"
+                            variant="ghost"
                             onClick={() =>
                               setValue('attendance_type', option, {
                                 shouldValidate: true,
                               })
                             }
                             className={[
-                              'min-h-12 rounded-2xl border px-4 py-3 text-sm font-bold capitalize transition',
+                              'min-h-12 rounded-2xl border px-4 py-3 text-sm font-bold capitalize',
                               selected
                                 ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                                 : 'border-white/10 bg-black/25 text-white/65 hover:border-white/20 hover:bg-white/[0.04]',
                             ].join(' ')}
                           >
                             {option}
-                          </button>
+                          </Button>
                         );
                       }
                     )}
@@ -511,9 +513,9 @@ export function EventRegistrationModal({
               <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
                 <div className="mb-5">
                   <p className={modalStyles.sectionTitle}>Volunteer interest</p>
-                  <p className="mt-1 text-sm leading-6 text-white/55">
+                  <BodySM className="mt-1 text-white/55">
                     Select the area where you would like to serve.
-                  </p>
+                  </BodySM>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -522,16 +524,17 @@ export function EventRegistrationModal({
                     const selected = volunteerRole === role.id;
 
                     return (
-                      <button
+                      <Button
                         key={role.id}
                         type="button"
+                        variant="ghost"
                         onClick={() =>
                           setValue('volunteer_role', role.id, {
                             shouldValidate: true,
                           })
                         }
                         className={[
-                          'flex min-h-12 items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition',
+                          'flex min-h-12 items-center gap-3 rounded-2xl border px-4 py-3 !justify-start text-left text-sm font-semibold',
                           selected
                             ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                             : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
@@ -539,7 +542,7 @@ export function EventRegistrationModal({
                       >
                         <Icon className="h-4 w-4 flex-none" />
                         <span>{role.label}</span>
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>
@@ -576,9 +579,9 @@ export function EventRegistrationModal({
               <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
                 <div className="mb-5">
                   <p className={modalStyles.sectionTitle}>Additional details</p>
-                  <p className="mt-1 text-sm leading-6 text-white/55">
+                  <BodySM className="mt-1 text-white/55">
                     Add any extra information that will help us prepare.
-                  </p>
+                  </BodySM>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -646,23 +649,21 @@ export function EventRegistrationModal({
             ) : null}
 
             {ctaNote ? (
-              <p className="text-center text-xs leading-5 text-white/50">
-                {ctaNote}
-              </p>
+              <Caption className="text-center text-white/50">{ctaNote}</Caption>
             ) : null}
 
             <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[var(--app-surface-2)]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
               <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <CustomButton
+                <Button
                   variant="ghost"
                   onClick={handlePrevStep}
                   disabled={!canGoBack || isSubmitting}
                   className="w-full sm:w-auto"
                 >
                   Back
-                </CustomButton>
+                </Button>
 
-                <CustomButton
+                <Button
                   variant="primary"
                   onClick={handleNextStep}
                   disabled={isSubmitting}
@@ -678,7 +679,7 @@ export function EventRegistrationModal({
                   ) : (
                     'Continue'
                   )}
-                </CustomButton>
+                </Button>
               </div>
             </div>
           </form>

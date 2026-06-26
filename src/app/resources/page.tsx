@@ -16,7 +16,7 @@ import {
   X,
 } from 'lucide-react';
 
-import Button from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
@@ -242,27 +242,19 @@ export default function ResourcesPage() {
                     const active = activeCategory === cat.key;
 
                     return (
-                      <button
+                      <Button
                         key={cat.key}
                         type="button"
+                        variant={active ? 'primary' : 'ghost'}
                         onClick={() => setActiveCategory(cat.key)}
-                        className={`rounded-2xl border px-3 py-2.5 text-xs font-bold transition ${
+                        className={`rounded-2xl px-3 py-2.5 min-h-0 h-auto text-xs font-bold ${
                           active
-                            ? 'border-transparent text-black'
-                            : 'border-white/10 bg-white/[0.04] text-white/64 hover:bg-white/[0.08] hover:text-white'
+                            ? ''
+                            : 'border border-white/10 bg-white/[0.04] text-white/64 hover:bg-white/[0.08] hover:text-white'
                         }`}
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={
-                          active
-                            ? {
-                                backgroundColor: 'var(--app-primary)',
-                                color: '#000',
-                              }
-                            : undefined
-                        }
                       >
                         {cat.label}
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>
@@ -364,14 +356,17 @@ export default function ResourcesPage() {
               <span className="h-1.5 w-12 rounded-full bg-white/18" />
             </div>
 
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
+              curvature="full"
               onClick={() => setShowLiveModal(false)}
-              className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/18"
               aria-label="Close"
               type="button"
+              className="absolute right-4 top-4 z-10 bg-white/10 text-white hover:bg-white/[0.18]"
             >
               <X className="h-5 w-5" />
-            </button>
+            </Button>
 
             <div className="space-y-5 p-6 sm:p-7">
               <div className="text-center">
@@ -388,8 +383,9 @@ export default function ResourcesPage() {
                 </BodyMD>
               </div>
 
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={() =>
                   window.open(
                     'https://www.youtube.com/@wisdomhousehq',
@@ -397,11 +393,11 @@ export default function ResourcesPage() {
                     'noopener,noreferrer'
                   )
                 }
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-radius-sm bg-[#CC0000] text-sm font-bold text-white transition hover:scale-[1.01] hover:bg-[#AA0000]"
+                className="h-12 w-full gap-2 rounded-radius-sm bg-[#CC0000] text-sm font-bold text-white hover:scale-[1.01] hover:bg-[#AA0000]"
               >
                 <Video className="h-4 w-4" />
                 Subscribe on YouTube
-              </button>
+              </Button>
 
               <form onSubmit={handleEmailSubmit} className="space-y-3">
                 <label className="block text-sm font-semibold text-white/80">
@@ -426,9 +422,9 @@ export default function ResourcesPage() {
                 </Button>
               </form>
 
-              <p className="text-center text-xs leading-6 text-white/45">
+              <Caption className="block text-center text-white/45">
                 We’ll email you before each live service starts.
-              </p>
+              </Caption>
             </div>
           </div>
         </div>
