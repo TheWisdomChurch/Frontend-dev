@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+﻿import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 
 interface PageWrapperProps {
@@ -14,10 +14,7 @@ export default function PageWrapper({
 }: PageWrapperProps) {
   return (
     <main
-      className={cn(
-        'min-h-screen bg-[var(--app-surface)] text-white',
-        className
-      )}
+      className={cn('min-h-screen bg-[var(--app-dark)] text-white', className)}
     >
       {hero}
       {children}

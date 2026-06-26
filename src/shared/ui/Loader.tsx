@@ -18,7 +18,7 @@ export default function Loader({
     <div
       className={[
         fullscreen ? 'fixed inset-0 z-[1100]' : 'relative min-h-[420px] w-full',
-        'flex items-center justify-center overflow-hidden bg-[var(--app-surface)] text-white',
+        'flex items-center justify-center overflow-hidden bg-[var(--app-dark)] text-white',
       ].join(' ')}
       role="status"
       aria-live="polite"

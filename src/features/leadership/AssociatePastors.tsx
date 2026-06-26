@@ -135,7 +135,7 @@ export default function AssociatePastors() {
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative overflow-hidden bg-[var(--app-surface-2)] py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[var(--app-dark-2)] py-16 sm:py-20 lg:py-24"
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-10%] top-16 h-72 w-72 rounded-full blur-3xl bg-[var(--app-primary)]/[0.08]" />

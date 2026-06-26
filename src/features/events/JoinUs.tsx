@@ -156,7 +156,7 @@ const inputClass =
   'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const selectClass =
-  'w-full rounded-2xl border border-white/12 bg-[var(--app-surface-3)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'w-full rounded-2xl border border-white/12 bg-[#1a1814] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -342,7 +342,7 @@ export default function JoinWisdomHouse() {
     <Section
       padding="none"
       fullHeight={false}
-      className="relative overflow-hidden bg-[var(--app-surface)]"
+      className="relative overflow-hidden bg-[var(--app-dark)]"
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="join-us-glow-overlay absolute inset-0" />

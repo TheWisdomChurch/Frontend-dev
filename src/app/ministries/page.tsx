@@ -125,7 +125,7 @@ const stats = [
 
 export default function MinistriesPage() {
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Ministries that help every generation belong, mature, and serve well."
         subtitle="Wisdom Church ministries are designed to make discipleship practical, relational, and responsive to real life."
@@ -137,7 +137,7 @@ export default function MinistriesPage() {
         <StatStrip items={stats} />
       </ScrollFadeIn>
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
             <Eyebrow className="text-[var(--app-primary)]">
@@ -156,7 +156,7 @@ export default function MinistriesPage() {
 
       <Section
         padding="lg"
-        className="border-y border-white/10 bg-[var(--app-surface-2)]"
+        className="border-y border-white/10 bg-[var(--app-dark-2)]"
       >
         <Container size="xl">
           <ScrollFadeIn data-parallax-global="0.08">
@@ -183,7 +183,7 @@ export default function MinistriesPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
             <Eyebrow className="text-[var(--app-primary)]">

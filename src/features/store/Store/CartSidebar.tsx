@@ -70,7 +70,7 @@ const CartSidebar: React.FC = () => {
 
       <div
         ref={sidebarRef}
-        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col border-l border-white/[0.12] bg-[var(--app-surface)] shadow-2xl"
+        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col border-l border-white/[0.12] bg-[var(--app-dark)] shadow-2xl"
       >
         {/* Header */}
         <div className="border-b border-white/[0.12] p-6">

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/cn';
@@ -15,7 +15,7 @@ const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
         <select
           ref={ref}
           className={cn(
-            'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-surface-2)] px-4 py-3 text-sm text-white outline-none transition',
+            'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-dark-2)] px-4 py-3 text-sm text-white outline-none transition',
             'hover:border-white/20',
             'focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10',
             'disabled:cursor-not-allowed disabled:opacity-50',

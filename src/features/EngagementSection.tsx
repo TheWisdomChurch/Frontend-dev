@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Heart,
-  Users2,
-  Volume2,
-  Zap,
-} from 'lucide-react';
+import { Heart, Users2, Volume2, Zap } from 'lucide-react';
 import { Container, Section } from '@/shared/layout';
 import { H2, H3, BodyMD, BodySM, Caption } from '@/shared/text';
 
@@ -20,7 +15,8 @@ const features = [
   {
     icon: Users2,
     title: 'Community',
-    description: 'Join our vibrant family of believers across online and in-person',
+    description:
+      'Join our vibrant family of believers across online and in-person',
     cta: 'Join Us',
     href: '#join',
   },
@@ -34,7 +30,8 @@ const features = [
   {
     icon: Zap,
     title: 'Spiritual Growth',
-    description: 'Resources, events, and mentorship to deepen your faith journey',
+    description:
+      'Resources, events, and mentorship to deepen your faith journey',
     cta: 'Explore Resources',
     href: '/resources',
   },
@@ -44,7 +41,7 @@ export default function EngagementSection() {
   return (
     <Section
       padding="lg"
-      className="bg-[var(--app-surface-2)] py-12 sm:py-16 md:py-20"
+      className="bg-[var(--app-dark-2)] py-12 sm:py-16 md:py-20"
     >
       <Container size="xl" className="space-y-12">
         <div className="mx-auto max-w-3xl space-y-4 text-center">

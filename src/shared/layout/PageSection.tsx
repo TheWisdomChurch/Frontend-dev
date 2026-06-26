@@ -21,10 +21,10 @@ interface PageSectionProps {
 }
 
 const toneClassMap: Record<Tone, string> = {
-  page: 'bg-[var(--app-surface)] text-white',
-  muted: 'bg-[var(--app-surface-2)] text-white',
+  page: 'bg-[var(--app-dark)] text-white',
+  muted: 'bg-[var(--app-dark-2)] text-white',
   surface: 'bg-[#0b0b0b] text-white',
-  'surface-strong': 'bg-[var(--app-surface-3)] text-white',
+  'surface-strong': 'bg-[var(--app-dark-3)] text-white',
   none: '',
 };
 

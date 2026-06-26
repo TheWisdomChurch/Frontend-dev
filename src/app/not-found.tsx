@@ -7,7 +7,7 @@ import { Container, Section } from '@/shared/layout';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="That page could not be found."
         subtitle="The route may have changed, the page may have moved, or the link may no longer exist."
@@ -16,7 +16,7 @@ export default function NotFound() {
         compact
       />
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="lg">
           <div className="grid gap-4 md:grid-cols-2">
             <Link

@@ -33,7 +33,7 @@ export function Providers({ children }: { children: ReactNode }) {
                   <ScrollHandler />
                   <GlobalScrollEffects />
 
-                  <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-[var(--app-surface)] text-white">
+                  <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-[var(--app-surface)] text-[var(--app-text)]">
                     <ClientHeader />
 
                     <main className="page-shell page-gsap relative min-h-[calc(100svh-1px)] w-full flex-1 overflow-x-hidden">

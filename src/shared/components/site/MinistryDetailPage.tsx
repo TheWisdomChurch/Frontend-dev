@@ -58,7 +58,7 @@ export default function MinistryDetailPage({
   config,
 }: MinistryDetailPageProps) {
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title={config.hero.title}
         subtitle={config.hero.subtitle}
@@ -71,7 +71,7 @@ export default function MinistryDetailPage({
         <StatStrip items={config.stats} />
       </ScrollFadeIn>
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn data-parallax-global="0.08">
             <SplitSection
@@ -89,7 +89,7 @@ export default function MinistryDetailPage({
 
       <Section
         padding="lg"
-        className="bg-[var(--app-surface-2)] border-y border-white/10"
+        className="bg-[var(--app-dark-2)] border-y border-white/10"
       >
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
@@ -106,7 +106,7 @@ export default function MinistryDetailPage({
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
             <Eyebrow className="text-[var(--app-primary)]">Next steps</Eyebrow>

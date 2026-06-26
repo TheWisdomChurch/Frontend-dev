@@ -394,7 +394,7 @@ export default function HeroSection({
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative min-h-[86svh] w-full overflow-hidden bg-[#030303] sm:min-h-[92svh] lg:min-h-screen"
+      className="relative min-h-screen w-full overflow-hidden bg-[#030303]"
     >
       {safeSlides.map((slide, index) => {
         const slideImage = normalizeImage(
@@ -430,21 +430,23 @@ export default function HeroSection({
               />
 
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(201,150,26,0.14),transparent_30%),radial-gradient(circle_at_85%_18%,rgba(255,255,255,0.07),transparent_32%)]" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/28 to-black/82" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/72 via-black/32 to-black/18 lg:from-black/72 lg:via-black/24 lg:to-black/10" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/18 to-black/70" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/28 to-black/10 lg:from-black/70 lg:via-black/20 lg:to-transparent" />
+              <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[rgba(201,150,26,0.08)] to-transparent" />
             </div>
           </div>
         );
       })}
 
       <div className="pointer-events-none absolute inset-0 z-10">
-        <div className="absolute left-[-12%] top-[18%] h-72 w-72 rounded-full bg-[var(--app-primary)]/[0.15] blur-3xl sm:h-96 sm:w-96" />
-        <div className="absolute bottom-[-14%] right-[-8%] h-96 w-96 rounded-full bg-white/[0.05] blur-3xl" />
+        <div className="absolute left-[-8%] top-[22%] h-80 w-80 rounded-full bg-[var(--app-primary)]/[0.18] blur-[80px] sm:h-[28rem] sm:w-[28rem]" />
+        <div className="absolute bottom-[-8%] right-[-4%] h-96 w-96 rounded-full bg-white/[0.04] blur-3xl" />
+        <div className="absolute bottom-[12%] left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-[var(--app-primary)]/[0.06] blur-[60px]" />
       </div>
 
       <Container
         size="xl"
-        className="relative z-20 flex min-h-[86svh] items-center px-4 pb-20 pt-16 sm:min-h-[92svh] sm:px-6 sm:pb-28 sm:pt-20 lg:min-h-screen lg:px-10"
+        className="relative z-20 flex min-h-screen items-center px-4 pb-24 pt-20 sm:px-6 sm:pb-32 sm:pt-24 lg:px-10 lg:pb-36 lg:pt-28"
       >
         <div className="grid w-full items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 xl:gap-16">
           <div className="flex w-full flex-col items-center text-center sm:items-start sm:text-left">
@@ -469,7 +471,7 @@ export default function HeroSection({
                 className="hero-title-shadow font-semibold leading-[0.98] tracking-[-0.052em]"
                 useThemeColor={false}
               >
-                <span className="block text-[1.95rem] sm:text-[2.8rem] md:text-5xl lg:text-[4rem] xl:text-[4.8rem]">
+                <span className="block text-[2.1rem] sm:text-[3.2rem] md:text-[3.8rem] lg:text-[4.8rem] xl:text-[5.6rem]">
                   {renderTitle((currentSlideData as any)?.title)}
                 </span>
               </H1>

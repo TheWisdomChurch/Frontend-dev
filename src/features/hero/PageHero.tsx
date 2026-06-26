@@ -45,7 +45,7 @@ export default function PageHero({
   return (
     <Section
       padding="none"
-      className="relative isolate overflow-hidden bg-[var(--app-surface)] text-white"
+      className="relative isolate overflow-hidden bg-[var(--app-dark)] text-white"
     >
       {backgroundImage ? (
         <div className="absolute inset-0 -z-30">

@@ -127,7 +127,7 @@ export default function EventsCalendarPage() {
   }, [currentYear, currentMonthIndex, daysInMonth, firstWeekday, grouped]);
 
   return (
-    <main className="min-h-screen bg-[var(--app-surface)] text-white">
+    <main className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Events Calendar"
         subtitle="All upcoming services and programs in one view."
@@ -135,7 +135,7 @@ export default function EventsCalendarPage() {
         compact
       />
 
-      <Section padding="lg" className="bg-[var(--app-surface)]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
 
         <Container size="lg" className="space-y-8">

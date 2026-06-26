@@ -58,7 +58,7 @@ const PublicationPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--app-surface)] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <HeroSection
         title="Publications"
         subtitle="Resources for spiritual growth"
