@@ -10,9 +10,9 @@ import {
 } from 'lucide-react';
 
 import { BaseModal } from '@/shared/ui/modals/Base';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
 import { PlayfairText } from '@/shared/text/FontText';
-import { BodyMD, Caption } from '@/shared/text';
+import { H3, BodyMD, Caption } from '@/shared/text';
 import { confessionContent } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { useWelcomeModal } from '@/shared/utils/hooks/Useconfession';
@@ -84,9 +84,9 @@ export default function ConfessionPopup({
                 <Caption className="uppercase tracking-[0.18em] text-[var(--app-primary)]">
                   The Wisdom Church
                 </Caption>
-                <h3 className="mt-1 text-lg font-semibold text-white">
+                <H3 className="mt-1 text-white">
                   We are Equipped and Empowered
-                </h3>
+                </H3>
               </div>
             </div>
 
@@ -112,22 +112,14 @@ export default function ConfessionPopup({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <CustomButton
-              variant="ghost"
-              onClick={showConfession}
-              className="w-full"
-            >
+            <Button variant="ghost" onClick={showConfession} className="w-full">
               <BookOpen className="mr-2 h-4 w-4" />
               Read Confession
-            </CustomButton>
+            </Button>
 
-            <CustomButton
-              variant="primary"
-              onClick={handleClose}
-              className="w-full"
-            >
+            <Button variant="primary" onClick={handleClose} className="w-full">
               Continue
-            </CustomButton>
+            </Button>
           </div>
         </div>
       ) : (
@@ -158,27 +150,19 @@ export default function ConfessionPopup({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <CustomButton
-              variant="ghost"
-              onClick={showWelcome}
-              className="w-full"
-            >
+            <Button variant="ghost" onClick={showWelcome} className="w-full">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
-            </CustomButton>
+            </Button>
 
-            <CustomButton
-              variant="primary"
-              onClick={handleClose}
-              className="w-full"
-            >
+            <Button variant="primary" onClick={handleClose} className="w-full">
               I Believe It
-            </CustomButton>
+            </Button>
           </div>
 
-          <p className="text-center text-xs leading-5 text-white/45">
+          <Caption className="text-center text-white/45">
             This confession appears periodically and can always be revisited.
-          </p>
+          </Caption>
         </div>
       )}
     </BaseModal>

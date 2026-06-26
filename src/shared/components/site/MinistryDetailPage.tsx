@@ -2,6 +2,7 @@
 import { CalendarDays, HeartHandshake, MapPin, Users } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H2, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import {
@@ -86,15 +87,18 @@ export default function MinistryDetailPage({
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[var(--app-surface-2)] border-y border-white/10">
+      <Section
+        padding="lg"
+        className="bg-[var(--app-surface-2)] border-y border-white/10"
+      >
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               What this ministry does
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            </Eyebrow>
+            <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
               Programs designed for consistent growth and real belonging.
-            </h2>
+            </H2>
           </ScrollFadeIn>
           <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
             <FeatureGrid items={config.programs} columns={3} />
@@ -105,12 +109,10 @@ export default function MinistryDetailPage({
       <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Next steps
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            <Eyebrow className="text-[var(--app-primary)]">Next steps</Eyebrow>
+            <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
               A clear pathway from first visit to active service.
-            </h2>
+            </H2>
           </ScrollFadeIn>
           <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
             <FeatureGrid

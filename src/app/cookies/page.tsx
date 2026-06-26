@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H1, H2, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 
 const privacyCards = [
@@ -51,7 +52,10 @@ export default function CookiesPage() {
         compact
       />
 
-      <Section padding="xl" className="relative overflow-hidden bg-[var(--app-surface)]">
+      <Section
+        padding="xl"
+        className="relative overflow-hidden bg-[var(--app-surface)]"
+      >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_85%_25%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.28] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(circle_at_50%_30%,black_22%,transparent_78%)]" />
 
@@ -67,27 +71,27 @@ export default function CookiesPage() {
                       <Lock className="h-7 w-7" />
                     </div>
 
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                    <Eyebrow className="text-[var(--app-primary)]">
                       Privacy notice
-                    </p>
+                    </Eyebrow>
 
-                    <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+                    <H1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                       Essential cookies only. Clear data practices.
-                    </h1>
+                    </H1>
 
-                    <p className="mt-4 text-sm leading-7 text-white/65 sm:text-base">
+                    <BodySM className="mt-4 text-white/65 sm:text-base">
                       We use only essential cookies to keep the site running,
                       protect form actions, remember basic preferences, and
                       improve reliability. No advertising trackers are used.
-                    </p>
+                    </BodySM>
 
                     <div className="mt-7 rounded-2xl border border-white/10 bg-black/25 p-4">
                       <div className="flex gap-3">
                         <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[var(--app-primary)]" />
-                        <p className="text-sm leading-6 text-white/68">
+                        <BodySM className="text-white/68">
                           Your submitted form data is used for church
                           communication and request handling only.
-                        </p>
+                        </BodySM>
                       </div>
                     </div>
                   </div>
@@ -109,9 +113,9 @@ export default function CookiesPage() {
                             </div>
 
                             <div className="min-w-0 flex-1">
-                              <h2 className="text-lg font-semibold text-white">
+                              <H2 className="text-lg font-semibold text-white">
                                 {card.title}
-                              </h2>
+                              </H2>
 
                               <ul className="mt-4 space-y-3">
                                 {card.items.map(item => (
@@ -136,15 +140,15 @@ export default function CookiesPage() {
                       <div>
                         <div className="flex items-center gap-3">
                           <Mail className="h-5 w-5 text-[var(--app-primary)]" />
-                          <h2 className="text-lg font-semibold text-white">
+                          <H2 className="text-lg font-semibold text-white">
                             Questions about privacy?
-                          </h2>
+                          </H2>
                         </div>
 
-                        <p className="mt-2 text-sm leading-6 text-white/65">
+                        <BodySM className="mt-2 text-white/65">
                           Reach us through the Contact page or at the church
                           office.
-                        </p>
+                        </BodySM>
                       </div>
 
                       <Link

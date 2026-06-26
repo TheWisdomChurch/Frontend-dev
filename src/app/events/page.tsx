@@ -12,6 +12,7 @@ import {
 
 import { EventBannerDesktop } from '@/shared/assets';
 import PageHero from '@/features/hero/PageHero';
+import { H1, H2, H3, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
@@ -118,16 +119,16 @@ export default function EventsPage() {
         <Container size="lg">
           <div className="mb-8 flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <Eyebrow className="text-[var(--app-primary)]">
                 Wisdom Church Calendar
-              </p>
-              <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
-                Events & Programs
-              </h1>
-              <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+              </Eyebrow>
+              <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                Events &amp; Programs
+              </H1>
+              <BodySM className="mt-3 text-white/65">
                 Published events from the admin portal appear here
                 automatically. Check dates, venues, and registration links.
-              </p>
+              </BodySM>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -152,13 +153,13 @@ export default function EventsPage() {
           ) : events.length === 0 ? (
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 text-center shadow-2xl shadow-black/25 sm:p-10">
               <CalendarPlus className="mx-auto h-12 w-12 text-[var(--app-primary)]" />
-              <h2 className="mt-5 text-xl font-semibold text-white">
+              <H2 className="mt-5 text-xl font-semibold text-white">
                 No published events yet.
-              </h2>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-white/60">
+              </H2>
+              <BodySM className="mx-auto mt-3 max-w-md text-white/60">
                 Create and publish an event in the admin portal to display it on
                 this page.
-              </p>
+              </BodySM>
             </div>
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -183,26 +184,28 @@ export default function EventsPage() {
                     </div>
 
                     <div className="space-y-4 p-5">
-                      <h2 className="line-clamp-2 text-lg font-semibold leading-tight text-white">
+                      <H3 className="line-clamp-2 text-lg text-white">
                         {event.title}
-                      </h2>
+                      </H3>
 
-                      <p className="line-clamp-3 text-sm leading-6 text-white/62">
+                      <BodySM className="line-clamp-3 text-white/62">
                         {event.description || 'Join us for this gathering.'}
-                      </p>
+                      </BodySM>
 
                       <div className="space-y-2 border-t border-white/10 pt-4">
-                        <p className="flex items-start gap-2 text-sm leading-6 text-white/72">
+                        <div className="flex items-start gap-2">
                           <CalendarClock className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
-                          <span>{formatWhen(event)}</span>
-                        </p>
+                          <Caption className="text-white/72">
+                            {formatWhen(event)}
+                          </Caption>
+                        </div>
 
-                        <p className="flex items-start gap-2 text-sm leading-6 text-white/55">
+                        <div className="flex items-start gap-2">
                           <MapPin className="mt-0.5 h-4 w-4 flex-none text-white/35" />
-                          <span className="line-clamp-1">
+                          <Caption className="line-clamp-1 text-white/55">
                             {event.location || 'Venue to be announced'}
-                          </span>
-                        </p>
+                          </Caption>
+                        </div>
                       </div>
 
                       {registerHref ? (

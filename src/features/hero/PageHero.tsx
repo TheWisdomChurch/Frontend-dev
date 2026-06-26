@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowDown, ArrowRight } from 'lucide-react';
 
 import { WisdomeHouseLogo } from '@/shared/assets';
+import { H1, BodyLG, BodyMD, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 
 export type PageHeroProps = {
@@ -101,27 +102,25 @@ export default function PageHero({
             ) : null}
 
             <div className="space-y-4">
-              <h1
+              <H1
                 className={[
-                  'text-balance font-semibold tracking-[-0.045em] text-white',
+                  'text-white',
                   compact
-                    ? 'text-3xl leading-[1.08] sm:text-4xl lg:text-5xl'
-                    : 'text-[2.15rem] leading-[1.04] sm:text-5xl lg:text-6xl',
+                    ? 'text-3xl sm:text-4xl lg:text-5xl'
+                    : 'text-[2.15rem] sm:text-5xl lg:text-6xl',
                 ].join(' ')}
               >
                 {title}
-              </h1>
+              </H1>
 
               {subtitle ? (
-                <p className="max-w-3xl text-pretty text-base leading-8 text-white/76 sm:text-lg">
-                  {subtitle}
-                </p>
+                <BodyLG className="max-w-3xl text-white/76">{subtitle}</BodyLG>
               ) : null}
 
               {supportingCopy ? (
-                <p className="max-w-2xl text-pretty text-sm leading-7 text-white/58 sm:text-base">
+                <BodyMD className="max-w-2xl text-white/58">
                   {supportingCopy}
-                </p>
+                </BodyMD>
               ) : null}
             </div>
 
@@ -184,12 +183,12 @@ export default function PageHero({
                   </div>
 
                   <div className="text-center">
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                    <Eyebrow className="text-[var(--app-primary)]">
                       Our foundation
-                    </p>
-                    <p className="mt-3 text-lg font-semibold leading-7 text-white">
+                    </Eyebrow>
+                    <BodyMD weight="semibold" className="mt-3 text-white">
                       Word, worship, discipleship, and intentional community.
-                    </p>
+                    </BodyMD>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">

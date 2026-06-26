@@ -3,6 +3,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, PictureInPicture, X } from 'lucide-react';
+import { Caption } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -129,7 +131,7 @@ const YouTubePlayer = ({
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-black z-10">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
-            <p className="text-gray-300 text-sm">Loading video...</p>
+            <Caption className="text-gray-300">Loading video...</Caption>
           </div>
         </div>
       )}
@@ -159,11 +161,12 @@ const YouTubePlayer = ({
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
 
         {/* Play/Pause button overlay */}
-        <button
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
           onClick={handlePlayPause}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                     bg-black/50 hover:bg-black/70 rounded-full p-3 transition-all duration-200 
-                     pointer-events-auto opacity-0 group-hover:opacity-100"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 opacity-0 pointer-events-auto transition-all duration-200 hover:bg-black/70 group-hover:opacity-100"
           aria-label={isPlaying ? 'Pause video' : 'Play video'}
         >
           {isPlaying ? (
@@ -171,7 +174,7 @@ const YouTubePlayer = ({
           ) : (
             <Play className="w-6 h-6 text-white" />
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Mobile Optimization Indicators */}
@@ -232,13 +235,16 @@ export const YouTubePlayerWithBackground = ({
         />
 
         {/* Detach/Attach Button */}
-        <button
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
           onClick={toggleDetachedMode}
-          className={`
-            absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white rounded-full p-2 
-            transition-all duration-200 z-10 backdrop-blur-sm border border-white/20
-            ${isDetached ? 'bg-yellow-500 hover:bg-yellow-600 text-black' : ''}
-          `}
+          className={`absolute top-2 right-2 z-10 rounded-full border border-white/20 p-2 backdrop-blur-sm transition-all duration-200 ${
+            isDetached
+              ? 'bg-yellow-500 text-black hover:bg-yellow-600'
+              : 'bg-black/70 text-white hover:bg-black/90'
+          }`}
           aria-label={
             isDetached ? 'Attach video player' : 'Detach video player'
           }
@@ -248,7 +254,7 @@ export const YouTubePlayerWithBackground = ({
           ) : (
             <PictureInPicture className="w-4 h-4" />
           )}
-        </button>
+        </Button>
 
         {/* Video Title in Detached Mode */}
         {isDetached && (

@@ -35,6 +35,8 @@ import {
 } from 'lucide-react';
 
 import { BaseModal, modalStyles } from './Base';
+import { H3, BodySM, Caption } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import type {
   DepartmentType,
@@ -492,12 +494,10 @@ export function JoinUsModal({
             </div>
             <div className="min-w-0">
               <p className={modalStyles.sectionTitle}>Ministry application</p>
-              <h3 className="mt-1 text-lg font-semibold text-white">
-                {departmentConfig.title}
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-white/58">
+              <H3 className="mt-1 text-white">{departmentConfig.title}</H3>
+              <BodySM className="mt-1 text-white/58">
                 {departmentConfig.description}
-              </p>
+              </BodySM>
             </div>
           </div>
         </div>
@@ -522,14 +522,14 @@ export function JoinUsModal({
                   >
                     {completed ? <Check className="h-4 w-4" /> : index + 1}
                   </div>
-                  <p
+                  <Caption
                     className={[
-                      'mt-2 truncate text-[0.68rem] font-bold uppercase tracking-[0.12em]',
+                      'mt-2 truncate',
                       active ? 'text-white' : 'text-white/42',
                     ].join(' ')}
                   >
                     {item}
-                  </p>
+                  </Caption>
                 </div>
               );
             })}
@@ -553,9 +553,9 @@ export function JoinUsModal({
             <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
               <div className="mb-5">
                 <p className={modalStyles.sectionTitle}>Personal information</p>
-                <p className="mt-1 text-sm leading-6 text-white/55">
+                <BodySM className="mt-1 text-white/55">
                   Tell us about yourself. All fields are required.
-                </p>
+                </BodySM>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -647,9 +647,9 @@ export function JoinUsModal({
             <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
               <div className="mb-5">
                 <p className={modalStyles.sectionTitle}>Department & role</p>
-                <p className="mt-1 text-sm leading-6 text-white/55">
+                <BodySM className="mt-1 text-white/55">
                   Select the role and experience level that best describes you.
-                </p>
+                </BodySM>
               </div>
 
               <div className="grid gap-3 md:grid-cols-2">
@@ -658,9 +658,10 @@ export function JoinUsModal({
                   const selected = role === item.id;
 
                   return (
-                    <button
+                    <Button
                       key={item.id}
                       type="button"
+                      variant="ghost"
                       onClick={() =>
                         setValue('role', item.id, {
                           shouldValidate: true,
@@ -668,7 +669,7 @@ export function JoinUsModal({
                         })
                       }
                       className={[
-                        'rounded-2xl border p-4 text-left transition hover:-translate-y-0.5',
+                        'rounded-2xl border p-4 !justify-start text-left hover:-translate-y-0.5',
                         selected
                           ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                           : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
@@ -679,16 +680,16 @@ export function JoinUsModal({
                           <Icon className="h-4 w-4" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold">{item.label}</p>
-                          <p className="mt-1 text-xs leading-5 text-white/52">
+                          <BodySM weight="semibold">{item.label}</BodySM>
+                          <Caption className="mt-1 text-white/52">
                             {item.description}
-                          </p>
+                          </Caption>
                         </div>
                         {selected ? (
                           <Check className="h-4 w-4 flex-none" />
                         ) : null}
                       </div>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -704,9 +705,10 @@ export function JoinUsModal({
                     const selected = experience === item.id;
 
                     return (
-                      <button
+                      <Button
                         key={item.id}
                         type="button"
+                        variant="ghost"
                         onClick={() =>
                           setValue('experience', item.id, {
                             shouldValidate: true,
@@ -714,17 +716,17 @@ export function JoinUsModal({
                           })
                         }
                         className={[
-                          'rounded-2xl border p-4 text-center transition',
+                          'flex-col rounded-2xl border p-4 h-auto',
                           selected
                             ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                             : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
                         ].join(' ')}
                       >
-                        <p className="text-sm font-semibold">{item.label}</p>
-                        <p className="mt-1 text-xs leading-5 text-white/52">
+                        <BodySM weight="semibold">{item.label}</BodySM>
+                        <Caption className="mt-1 text-white/52">
                           {item.description}
-                        </p>
-                      </button>
+                        </Caption>
+                      </Button>
                     );
                   })}
                 </div>
@@ -740,9 +742,9 @@ export function JoinUsModal({
                 <div className="flex items-start gap-3">
                   <Target className="mt-0.5 h-5 w-5 flex-none text-[var(--app-primary)]" />
                   <div>
-                    <p className="text-sm font-semibold text-white">
+                    <BodySM weight="semibold" className="text-white">
                       Department requirements
-                    </p>
+                    </BodySM>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {departmentConfig.skills.map(skill => (
                         <span
@@ -753,10 +755,10 @@ export function JoinUsModal({
                         </span>
                       ))}
                     </div>
-                    <p className="mt-3 flex items-center gap-2 text-sm text-white/62">
+                    <BodySM className="mt-3 flex items-center gap-2 text-white/62">
                       <Clock className="h-4 w-4" />
                       Time Commitment: {departmentConfig.commitment}
-                    </p>
+                    </BodySM>
                   </div>
                 </div>
               </div>
@@ -769,9 +771,9 @@ export function JoinUsModal({
                 <p className={modalStyles.sectionTitle}>
                   Availability & details
                 </p>
-                <p className="mt-1 text-sm leading-6 text-white/55">
+                <BodySM className="mt-1 text-white/55">
                   Tell us when you can serve and share more about yourself.
-                </p>
+                </BodySM>
               </div>
 
               <div>
@@ -785,12 +787,13 @@ export function JoinUsModal({
                     const selected = selectedAvailability.includes(item.id);
 
                     return (
-                      <button
+                      <Button
                         key={item.id}
                         type="button"
+                        variant="ghost"
                         onClick={() => toggleAvailability(item.id)}
                         className={[
-                          'rounded-2xl border p-4 text-center transition',
+                          'flex-col rounded-2xl border p-4 h-auto',
                           selected
                             ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
                             : 'border-white/10 bg-black/25 text-white/70 hover:border-white/20 hover:bg-white/[0.04]',
@@ -799,8 +802,8 @@ export function JoinUsModal({
                         <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-xl bg-[var(--app-primary)]/10">
                           <Icon className="h-4 w-4" />
                         </div>
-                        <p className="text-sm font-semibold">{item.label}</p>
-                      </button>
+                        <BodySM weight="semibold">{item.label}</BodySM>
+                      </Button>
                     );
                   })}
                 </div>
@@ -861,13 +864,13 @@ export function JoinUsModal({
                         {errors.whyJoin.message}
                       </p>
                     ) : (
-                      <p className="text-xs text-white/42">
+                      <Caption className="text-white/42">
                         Minimum 20 characters
-                      </p>
+                      </Caption>
                     )}
-                    <p className="text-xs text-white/42">
+                    <Caption className="text-white/42">
                       {whyJoin.length}/500
-                    </p>
+                    </Caption>
                   </div>
                 </div>
 
@@ -938,9 +941,9 @@ export function JoinUsModal({
                 <div className="flex items-start gap-3">
                   <MessageSquare className="mt-0.5 h-5 w-5 flex-none text-[var(--app-primary)]" />
                   <div>
-                    <p className="text-sm font-semibold text-white">
+                    <BodySM weight="semibold" className="text-white">
                       What happens after you apply?
-                    </p>
+                    </BodySM>
                     <ul className="mt-3 space-y-2 text-sm text-white/62">
                       {[
                         'Application review within 3–5 business days',
@@ -961,21 +964,23 @@ export function JoinUsModal({
 
           <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[var(--app-surface-2)]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={handlePrevStep}
                 disabled={step === 'personal' || isSubmitting}
-                className={modalStyles.ghostButton}
+                className="w-full sm:w-auto"
               >
                 <ChevronRight className="mr-2 h-4 w-4 rotate-180" />
                 Back
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="button"
+                variant="primary"
                 onClick={handleNextStep}
                 disabled={isSubmitting}
-                className={modalStyles.primaryButton}
+                className="w-full sm:w-auto"
               >
                 {isSubmitting ? (
                   <span className="inline-flex items-center justify-center">
@@ -993,7 +998,7 @@ export function JoinUsModal({
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </span>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

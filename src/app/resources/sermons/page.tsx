@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { ArrowRight, PlayCircle, Radio, Video } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H2, H3, BodySM, Caption, Eyebrow } from '@/shared/text';
 import SermonUtil from '@/shared/ui/Sermons';
 import Button from '@/shared/utils/buttons/CustomButton';
 import { Container, Section } from '@/shared/layout';
@@ -64,15 +65,15 @@ export default function SermonPage() {
                   </span>
                 </div>
 
-                <h2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <H2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                   Stay connected to every message from Wisdom House.
-                </h2>
+                </H2>
 
-                <p className="mt-4 max-w-lg text-sm leading-7 text-white/62 sm:text-base">
+                <BodySM className="mt-4 max-w-lg text-white/62 sm:text-base">
                   Watch full video messages, revisit powerful teachings, and
                   subscribe for weekly uploads from Sundays, conferences, and
                   midweek gatherings.
-                </p>
+                </BodySM>
 
                 <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                   {[
@@ -84,10 +85,10 @@ export default function SermonPage() {
                       key={title}
                       className="rounded-2xl border border-white/10 bg-black/25 p-4"
                     >
-                      <p className="text-sm font-semibold text-white">
+                      <BodySM weight="semibold" className="text-white">
                         {title}
-                      </p>
-                      <p className="mt-1 text-xs text-white/50">{value}</p>
+                      </BodySM>
+                      <Caption className="mt-1 text-white/50">{value}</Caption>
                     </div>
                   ))}
                 </div>
@@ -103,25 +104,23 @@ export default function SermonPage() {
                     </div>
 
                     <div className="min-w-0">
-                      <p className="text-[0.66rem] font-bold uppercase tracking-[0.24em] text-white/45">
-                        Platform
-                      </p>
-                      <h3 className="mt-2 text-2xl font-semibold text-white">
+                      <Eyebrow className="text-white/45">Platform</Eyebrow>
+                      <H3 className="mt-2 text-2xl font-semibold text-white">
                         YouTube
-                      </h3>
-                      <p className="mt-2 text-sm leading-6 text-white/60">
+                      </H3>
+                      <BodySM className="mt-2 text-white/60">
                         Full video messages with interactive features.
-                      </p>
+                      </BodySM>
                     </div>
                   </div>
 
                   <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
                     <div className="flex items-start gap-3">
                       <PlayCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#CC0000]" />
-                      <p className="text-sm leading-6 text-white/65">
+                      <BodySM className="text-white/65">
                         Subscribe to the Wisdom House channel to receive new
                         uploads, live service alerts, and replay access.
-                      </p>
+                      </BodySM>
                     </div>
                   </div>
 

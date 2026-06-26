@@ -11,7 +11,7 @@ import {
   clearCart,
 } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
-import Button from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
 import { BaseText, LightText } from '@/shared/text';
 import { FlexboxLayout } from '@/shared/layout';
 
@@ -82,13 +82,16 @@ const CartSidebar: React.FC = () => {
             >
               Your Cart ({itemCount})
             </BaseText>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => dispatch(toggleCart())}
-              className="rounded-full p-2 text-white transition-colors hover:bg-white/10"
+              className="rounded-full text-white hover:bg-white/10"
+              aria-label="Close cart"
             >
               <X className="h-5 w-5" />
-            </button>
+            </Button>
           </FlexboxLayout>
         </div>
 
@@ -136,41 +139,50 @@ const CartSidebar: React.FC = () => {
                       </BaseText>
                     </div>
 
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleRemoveItem(item.id)}
-                      className="rounded-full p-1 text-red-500 transition-colors hover:bg-red-500/10"
+                      className="rounded-full text-red-500 hover:bg-red-500/10"
+                      aria-label="Remove item"
                     >
                       <Trash2 className="h-4 w-4" />
-                    </button>
+                    </Button>
                   </FlexboxLayout>
 
                   <FlexboxLayout justify="between" align="center">
                     <FlexboxLayout align="center" gap="sm">
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="icon"
                         onClick={() =>
                           handleUpdateQuantity(item.id, item.quantity - 1)
                         }
-                        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.12] text-white transition-colors hover:border-[var(--app-primary)] hover:bg-white/10"
+                        className="h-8 w-8 rounded-full border border-white/[0.12] text-white hover:border-[var(--app-primary)] hover:bg-white/10"
+                        aria-label="Decrease quantity"
                       >
                         <Minus className="h-3 w-3" />
-                      </button>
+                      </Button>
                       <BaseText
                         weight="bold"
                         className="w-8 text-center text-white"
                       >
                         {item.quantity}
                       </BaseText>
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="icon"
                         onClick={() =>
                           handleUpdateQuantity(item.id, item.quantity + 1)
                         }
-                        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.12] text-white transition-colors hover:border-[var(--app-primary)] hover:bg-white/10"
+                        className="h-8 w-8 rounded-full border border-white/[0.12] text-white hover:border-[var(--app-primary)] hover:bg-white/10"
+                        aria-label="Increase quantity"
                       >
                         <Plus className="h-3 w-3" />
-                      </button>
+                      </Button>
                     </FlexboxLayout>
 
                     <BaseText weight="bold" className="text-lg text-white">

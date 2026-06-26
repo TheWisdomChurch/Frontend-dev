@@ -13,7 +13,9 @@ import {
 } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H2, H3, BodyMD, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
+import { Button } from '@/shared/utils/buttons';
 import GridBackground from '@/shared/ui/GridBackground';
 import {
   ActionBanner,
@@ -174,19 +176,17 @@ export default function PastoralPage() {
             <div className="max-w-3xl">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                  Care pathways
-                </p>
+                <Eyebrow>Care pathways</Eyebrow>
               </div>
 
-              <h2 className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <H2 className="text-white">
                 Choose the type of support that matches your current need.
-              </h2>
+              </H2>
 
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+              <BodyMD className="mt-4 max-w-2xl text-white/62">
                 Every care request is different. Select a pathway below so the
                 right ministry response becomes clearer and easier to begin.
-              </p>
+              </BodyMD>
             </div>
 
             <a
@@ -206,11 +206,12 @@ export default function PastoralPage() {
                   const active = activeTab === service.id;
 
                   return (
-                    <button
+                    <Button
                       key={service.id}
                       type="button"
+                      variant="ghost"
                       onClick={() => setActiveTab(service.id)}
-                      className={`group rounded-[1.35rem] border p-4 text-left transition duration-300 ${
+                      className={`group rounded-[1.35rem] border p-4 !justify-start h-auto text-left duration-300 ${
                         active
                           ? 'border-[var(--app-primary)]/45 bg-[var(--app-primary)]/12 shadow-[0_16px_45px_rgba(0,0,0,0.24)]'
                           : 'border-white/8 bg-black/20 hover:border-white/16 hover:bg-white/[0.055]'
@@ -228,15 +229,15 @@ export default function PastoralPage() {
                         </div>
 
                         <div className="min-w-0">
-                          <p className="font-semibold text-white">
+                          <BodySM weight="semibold" className="text-white">
                             {service.shortTitle}
-                          </p>
-                          <p className="mt-1 line-clamp-2 text-xs leading-5 text-white/52">
+                          </BodySM>
+                          <Caption className="mt-1 line-clamp-2 text-white/52">
                             {service.description}
-                          </p>
+                          </Caption>
                         </div>
                       </div>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -251,17 +252,15 @@ export default function PastoralPage() {
                     <SelectedIcon className="h-7 w-7" />
                   </div>
 
-                  <p className="mt-6 text-[0.66rem] font-bold uppercase tracking-[0.24em] text-[var(--app-primary)]">
+                  <Eyebrow className="mt-6 text-[var(--app-primary)]">
                     Care focus
-                  </p>
+                  </Eyebrow>
 
-                  <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                    {selectedService.title}
-                  </h3>
+                  <H3 className="mt-3 text-white">{selectedService.title}</H3>
 
-                  <p className="mt-4 text-sm leading-7 text-white/68 sm:text-base">
+                  <BodyMD className="mt-4 text-white/68">
                     {selectedService.description}
-                  </p>
+                  </BodyMD>
                 </div>
 
                 <div className="grid gap-3">
@@ -291,17 +290,15 @@ export default function PastoralPage() {
       >
         <Container size="xl" className="space-y-8">
           <div className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] font-bold uppercase tracking-[0.24em] text-[var(--app-primary)]">
-              Care values
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+            <Eyebrow className="text-[var(--app-primary)]">Care values</Eyebrow>
+            <H2 className="text-white">
               Clear, compassionate, and appropriately bounded pastoral support.
-            </h2>
-            <p className="max-w-2xl text-sm leading-7 text-white/60 sm:text-base">
+            </H2>
+            <BodyMD className="max-w-2xl text-white/60">
               Pastoral care works best when people understand the process,
               confidentiality is respected, and each request has a responsible
               next step.
-            </p>
+            </BodyMD>
           </div>
 
           <FeatureGrid items={careValues} columns={4} />

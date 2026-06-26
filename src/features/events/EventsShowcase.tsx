@@ -16,7 +16,8 @@ import { BaseModal } from '@/shared/ui/modals/Base';
 import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/shared/assets';
 import { Container, Section } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
-import { BodySM, Caption, H3, SmallText } from '@/shared/text';
+import { BodyMD, BodySM, Caption, Eyebrow, H3, SmallText } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 
@@ -336,18 +337,17 @@ export default function EventsShowcase() {
               const isActive = category === cat;
 
               return (
-                <button
+                <Button
                   key={cat}
                   type="button"
                   onClick={() => setCategory(cat)}
-                  className={`rounded-full border px-4 py-2 text-[0.78rem] font-semibold transition sm:text-sm ${
-                    isActive
-                      ? 'border-transparent bg-[var(--app-primary)] text-black shadow-[0_14px_35px_rgba(201,150,26,0.20)]'
-                      : 'border-white/15 bg-white/[0.04] text-white/70 hover:border-white/25 hover:bg-white/[0.08] hover:text-white'
-                  }`}
+                  variant={isActive ? 'primary' : 'ghost'}
+                  size="sm"
+                  curvature="full"
+                  className={`text-[0.78rem] sm:text-sm ${isActive ? 'shadow-[0_14px_35px_rgba(201,150,26,0.20)]' : 'border-white/15 bg-white/[0.04] text-white/70 hover:border-white/25 hover:bg-white/[0.08] hover:text-white'}`}
                 >
                   {CATEGORY_LABELS[cat]}
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -383,16 +383,21 @@ export default function EventsShowcase() {
                   <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px] opacity-25" />
 
                   {current.category === 'reel' && (
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setReelModal(current)}
-                      className="absolute left-1/2 top-1/2 z-20 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-3 rounded-full border border-white/20 bg-white/95 px-5 py-3 text-sm font-bold text-black shadow-2xl transition hover:scale-[1.03]"
+                      variant="dark"
+                      curvature="full"
+                      size="md"
+                      className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 border-white/20 bg-white/95 text-black shadow-2xl hover:scale-[1.03]"
+                      leftIcon={
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white">
+                          <Play className="h-4 w-4 fill-white" />
+                        </span>
+                      }
                     >
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white">
-                        <Play className="h-4 w-4 fill-white" />
-                      </span>
                       Play reel
-                    </button>
+                    </Button>
                   )}
 
                   <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-7 lg:p-9">
@@ -437,13 +442,16 @@ export default function EventsShowcase() {
 
                       <div className="mt-6 flex flex-wrap gap-3">
                         {current.category === 'reel' ? (
-                          <button
+                          <Button
                             type="button"
                             onClick={() => setReelModal(current)}
-                            className="inline-flex items-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
+                            variant="primary"
+                            size="md"
+                            curvature="full"
+                            rightIcon={<Play className="h-4 w-4" />}
                           >
-                            {current.cta} <Play className="h-4 w-4" />
-                          </button>
+                            {current.cta}
+                          </Button>
                         ) : (
                           current.href && (
                             <a
@@ -456,7 +464,7 @@ export default function EventsShowcase() {
                           )
                         )}
 
-                        <button
+                        <Button
                           type="button"
                           onClick={() =>
                             setActive(
@@ -464,11 +472,14 @@ export default function EventsShowcase() {
                                 (prev + 1) % Math.max(activeSlides.length, 1)
                             )
                           }
-                          className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 text-sm font-bold text-white backdrop-blur-xl transition hover:bg-white/[0.12]"
+                          variant="outline"
+                          size="md"
+                          curvature="full"
+                          className="border-white/20 bg-white/[0.06] text-white backdrop-blur-xl hover:bg-white/[0.12]"
+                          rightIcon={<ArrowRight className="h-4 w-4" />}
                         >
                           Next
-                          <ArrowRight className="h-4 w-4" />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -478,9 +489,9 @@ export default function EventsShowcase() {
               <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
                 <div className="max-w-sm">
                   <ActiveIcon className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
-                  <p className="mt-4 text-sm leading-6 text-white/62">
+                  <BodySM className="mt-4 text-white/62">
                     {activeMeta.empty}
-                  </p>
+                  </BodySM>
                 </div>
               </div>
             )}
@@ -491,11 +502,12 @@ export default function EventsShowcase() {
               const selected = idx === active;
 
               return (
-                <button
+                <Button
                   key={`${slide.id}-${idx}`}
                   type="button"
                   onClick={() => setActive(idx)}
-                  className={`group relative min-w-[290px] overflow-hidden rounded-[1.5rem] border p-3 text-left transition lg:min-w-0 ${
+                  variant="ghost"
+                  className={`group relative min-w-[290px] overflow-hidden rounded-[1.5rem] border p-3 !justify-start text-left transition lg:min-w-0 ${
                     selected
                       ? 'border-white/22 bg-white/[0.09] shadow-[0_18px_55px_rgba(0,0,0,0.32)]'
                       : 'border-white/10 bg-white/[0.035] hover:border-white/18 hover:bg-white/[0.065]'
@@ -558,7 +570,7 @@ export default function EventsShowcase() {
                       }`}
                     />
                   </div>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -576,9 +588,7 @@ export default function EventsShowcase() {
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
               <Play className="h-3.5 w-3.5" />
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em]">
-                Reel
-              </p>
+              <Eyebrow>Reel</Eyebrow>
             </div>
 
             {reelModal.videoUrl ? (
@@ -594,9 +604,9 @@ export default function EventsShowcase() {
               <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/70">
                 <Play className="h-10 w-10 text-white/70" />
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
-                <p className="absolute bottom-4 left-4 text-sm text-white/70">
+                <BodySM className="absolute bottom-4 left-4 text-white/70">
                   Upload reels media to enable playback.
-                </p>
+                </BodySM>
               </div>
             )}
           </div>

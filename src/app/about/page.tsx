@@ -9,14 +9,16 @@ export const metadata: Metadata = {
     'Learn about The Wisdom Church vision, leadership, mission, and culture. Discover how we disciple believers and serve our city.',
   openGraph: {
     title: 'About Us | The Wisdom Church',
-    description: 'Learn about The Wisdom Church vision, leadership, mission, and culture.',
+    description:
+      'Learn about The Wisdom Church vision, leadership, mission, and culture.',
     url: 'https://wisdomchurchhq.org/about',
     images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'About Us | The Wisdom Church',
-    description: 'Learn about The Wisdom Church vision, leadership, mission, and culture.',
+    description:
+      'Learn about The Wisdom Church vision, leadership, mission, and culture.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
   alternates: { canonical: '/about' },
@@ -31,6 +33,7 @@ import {
 
 import PageHero from '@/features/hero/PageHero';
 import { Bishop, PstKenny } from '@/shared/assets';
+import { H2, H3, BodyMD, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import {
@@ -144,15 +147,18 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="border-y border-white/10 bg-[var(--app-surface-2)]">
+      <Section
+        padding="lg"
+        className="border-y border-white/10 bg-[var(--app-surface-2)]"
+      >
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               House culture
-            </p>
-            <h2 className="text-balance text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
+            </Eyebrow>
+            <H2 className="text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
               Four commitments shape how we lead, gather, and serve.
-            </h2>
+            </H2>
           </ScrollFadeIn>
 
           <ScrollFadeIn delay={0.1}>
@@ -164,12 +170,10 @@ export default function AboutPage() {
       <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="mx-auto max-w-3xl space-y-3 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Leadership
-            </p>
-            <h2 className="text-balance text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
+            <Eyebrow className="text-[var(--app-primary)]">Leadership</Eyebrow>
+            <H2 className="text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
               Leadership that keeps doctrine, care, and service aligned.
-            </h2>
+            </H2>
           </ScrollFadeIn>
 
           <div className="grid gap-5 lg:grid-cols-2">
@@ -204,17 +208,17 @@ export default function AboutPage() {
                     </div>
 
                     <div className="flex flex-col justify-center space-y-4 p-5 sm:p-6 lg:p-7">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                      <Eyebrow className="text-[var(--app-primary)]">
                         {person.role}
-                      </p>
+                      </Eyebrow>
 
-                      <h3 className="text-xl font-semibold text-white sm:text-2xl">
+                      <H3 className="text-xl text-white sm:text-2xl">
                         {person.name}
-                      </h3>
+                      </H3>
 
-                      <p className="text-sm leading-7 text-white/70 sm:text-base">
+                      <BodyMD className="text-white/70">
                         {person.description}
-                      </p>
+                      </BodyMD>
 
                       <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-white/65">
                         Wisdom Church leadership is built around discipleship,

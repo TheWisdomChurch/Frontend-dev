@@ -5,6 +5,7 @@ import { Laptop2, Moon, Sun } from 'lucide-react';
 import { useTheme, ThemeMode } from '@/shared/contexts/ThemeContext';
 import { cn } from '@/lib/cn';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
+import { Button } from '@/shared/utils/buttons';
 
 type ThemeToggleProps = {
   size?: 'sm' | 'md';
@@ -115,13 +116,14 @@ export default function ThemeToggle({
           const isActive = opt.id === theme;
 
           return (
-            <button
+            <Button
               key={opt.id}
               type="button"
+              variant="ghost"
               onClick={() => setTheme(opt.id)}
               aria-pressed={isActive}
               className={cn(
-                'relative z-10 flex items-center justify-center gap-1.5 px-2 py-1 transition-all duration-200',
+                'relative z-10 gap-1.5 px-2 py-1',
                 compact ? 'h-8' : 'h-9',
                 isActive
                   ? 'text-black'
@@ -138,7 +140,7 @@ export default function ThemeToggle({
                   {opt.label}
                 </span>
               )}
-            </button>
+            </Button>
           );
         })}
       </div>

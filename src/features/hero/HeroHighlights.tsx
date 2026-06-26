@@ -17,7 +17,8 @@ import {
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Container } from '@/shared/layout';
 import { Card } from '@/shared/ui/cards';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
+import { H3, H4, SmallText, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 
 /* =============================================================================
@@ -92,9 +93,7 @@ function ModalShell({
       <div className="space-y-5">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
           <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/65">
-            Quick form
-          </p>
+          <Eyebrow className="text-white/65">Quick form</Eyebrow>
         </div>
 
         {children}
@@ -238,14 +237,14 @@ export default function HeroHighlights() {
                   </span>
                 </div>
 
-                <h3 className="mt-4 text-xl font-semibold leading-tight text-white sm:text-2xl">
+                <H3 className="mt-4 text-white">
                   Take your next step with Wisdom House
-                </h3>
+                </H3>
 
-                <p className="mt-3 max-w-md text-sm leading-6 text-white/62">
+                <BodySM className="mt-3 max-w-md text-white/62">
                   Plan a visit, watch live, or join a serve team. We made the
                   first step simple, fast, and welcoming.
-                </p>
+                </BodySM>
 
                 <div className="mt-5 flex flex-wrap gap-2 text-xs text-white/65">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
@@ -264,11 +263,12 @@ export default function HeroHighlights() {
                   const Icon = action.icon;
 
                   return (
-                    <button
+                    <Button
                       key={action.key}
                       type="button"
                       onClick={() => openModal(action.key)}
-                      className="group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.075] p-4 text-left shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.11] sm:p-5"
+                      variant="ghost"
+                      className="group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.075] p-4 !justify-start text-left shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.11] sm:p-5"
                     >
                       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/70 to-transparent opacity-0 transition group-hover:opacity-100" />
 
@@ -276,19 +276,19 @@ export default function HeroHighlights() {
                         <Icon className="h-5 w-5" />
                       </div>
 
-                      <h4 className="mt-4 text-sm font-semibold text-white sm:text-base">
+                      <H4 className="mt-4 text-sm font-semibold text-white sm:text-base">
                         {action.label}
-                      </h4>
+                      </H4>
 
-                      <p className="mt-2 min-h-[38px] text-xs leading-5 text-white/55">
+                      <SmallText className="mt-2 min-h-[38px] leading-5 text-white/55">
                         {action.description}
-                      </p>
+                      </SmallText>
 
                       <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[var(--app-primary)]">
                         Continue
                         <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
                       </div>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -409,17 +409,17 @@ export default function HeroHighlights() {
             onChange={e => setVisit(p => ({ ...p, notes: e.target.value }))}
           />
 
-          <CustomButton
+          <Button
             type="submit"
             variant="primary"
             className="w-full shadow-[0_18px_45px_rgba(201,150,26,0.25)] hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Confirm appointment <ArrowRight className="h-4 w-4" />
-          </CustomButton>
+          </Button>
 
-          <p className="text-xs leading-5 text-white/50">
+          <Caption className="text-white/50">
             We confirm by email and send a reminder. No spam, ever.
-          </p>
+          </Caption>
         </form>
       </ModalShell>
 
@@ -436,13 +436,13 @@ export default function HeroHighlights() {
                 <Headphones className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">
+                <BodySM weight="semibold" className="text-white">
                   Service reminder
-                </p>
-                <p className="mt-1 text-xs leading-5 text-white/55">
+                </BodySM>
+                <Caption className="mt-1 text-white/55">
                   We&apos;ll notify you before live service and direct you to
                   the active stream.
-                </p>
+                </Caption>
               </div>
             </div>
           </Card>
@@ -465,17 +465,17 @@ export default function HeroHighlights() {
             required
           />
 
-          <CustomButton
+          <Button
             type="submit"
             variant="primary"
             className="w-full shadow-[0_18px_45px_rgba(201,150,26,0.25)] hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Notify me <ArrowRight className="h-4 w-4" />
-          </CustomButton>
+          </Button>
 
-          <p className="text-xs leading-5 text-white/50">
+          <Caption className="text-white/50">
             Service reminders only. No spam.
-          </p>
+          </Caption>
         </form>
       </ModalShell>
 
@@ -541,13 +541,13 @@ export default function HeroHighlights() {
                 <HeartHandshake className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">
+                <BodySM weight="semibold" className="text-white">
                   Serve with excellence
-                </p>
-                <p className="mt-1 text-xs leading-5 text-white/55">
+                </BodySM>
+                <Caption className="mt-1 text-white/55">
                   Choose the department you feel called to, and our team will
                   help you take the next step.
-                </p>
+                </Caption>
               </div>
             </div>
           </Card>
@@ -559,17 +559,17 @@ export default function HeroHighlights() {
             onChange={e => setJoin(p => ({ ...p, experience: e.target.value }))}
           />
 
-          <CustomButton
+          <Button
             type="submit"
             variant="primary"
             className="w-full shadow-[0_18px_45px_rgba(201,150,26,0.25)] hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
           >
             Send interest <ArrowRight className="h-4 w-4" />
-          </CustomButton>
+          </Button>
 
-          <p className="text-xs leading-5 text-white/50">
+          <Caption className="text-white/50">
             We’ll reach out by email or phone if provided. No spam.
-          </p>
+          </Caption>
         </form>
       </ModalShell>
     </section>

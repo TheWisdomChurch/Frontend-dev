@@ -21,8 +21,8 @@ import {
 import Image, { type StaticImageData } from 'next/image';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
-import { H1, H2 } from '@/shared/text';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { H1, H2, BodyMD, BodySM, Caption, Eyebrow } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { Section, Container } from '@/shared/layout';
 
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
@@ -489,21 +489,21 @@ export default function HeroSection({
                 </H2>
               ) : null}
 
-              <p
+              <BodyMD
                 ref={descriptionRef}
-                className="mx-auto mt-6 max-w-3xl text-sm leading-relaxed text-white/75 sm:mx-0 sm:text-[0.95rem] md:text-base"
+                className="mx-auto mt-6 max-w-3xl text-white/75 sm:mx-0"
               >
                 {isCompactMobile
                   ? 'A Spirit-filled family helping believers grow in faith and purpose.'
                   : (currentSlideData as any)?.description ||
                     'A Spirit-filled family helping believers grow in faith, purpose, and community — equipped and empowered for greatness.'}
-              </p>
+              </BodyMD>
 
               <div
                 ref={buttonsRef}
                 className="mt-8 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row sm:justify-start"
               >
-                <CustomButton
+                <Button
                   variant="primary"
                   size="md"
                   curvature="full"
@@ -515,9 +515,9 @@ export default function HeroSection({
                     {primaryButtonText}
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
                   </span>
-                </CustomButton>
+                </Button>
 
-                <CustomButton
+                <Button
                   variant="outline"
                   size="md"
                   curvature="full"
@@ -528,7 +528,7 @@ export default function HeroSection({
                     <PlayCircle className="h-4 w-4" />
                     {secondaryButtonText}
                   </span>
-                </CustomButton>
+                </Button>
               </div>
             </div>
           </div>
@@ -546,12 +546,10 @@ export default function HeroSection({
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-white/60">
-                    {upcoming.label}
-                  </p>
-                  <p className="mt-1 text-base font-semibold leading-snug text-white">
+                  <Eyebrow className="text-white/60">{upcoming.label}</Eyebrow>
+                  <BodyMD weight="semibold" className="mt-1 text-white">
                     {upcoming.title}
-                  </p>
+                  </BodyMD>
                 </div>
               </div>
 
@@ -569,7 +567,7 @@ export default function HeroSection({
                 </div>
               </div>
 
-              <CustomButton
+              <Button
                 size="sm"
                 curvature="full"
                 elevated
@@ -580,7 +578,7 @@ export default function HeroSection({
                   {upcoming.ctaLabel ?? 'Reserve a seat'}
                   <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
-              </CustomButton>
+              </Button>
             </div>
 
             <div className="group relative overflow-hidden rounded-[1.8rem] border border-white/14 bg-black/50 p-5 shadow-[0 32px 100px rgba(0,0,0,0.40)] backdrop-blur-2xl transition duration-300 hover:-translate-y-1.5 hover:bg-black/60 hover:border-white/22 hover:shadow-[0 40px 120px rgba(0,0,0,0.46)] sm:p-6">
@@ -590,12 +588,12 @@ export default function HeroSection({
                 </div>
 
                 <div>
-                  <p className="text-base font-semibold text-white">
+                  <BodyMD weight="semibold" className="text-white">
                     Watch live stream
-                  </p>
-                  <p className="mt-1 text-xs text-white/55">
+                  </BodyMD>
+                  <Caption className="mt-1 text-white/55">
                     Latest message from YouTube
-                  </p>
+                  </Caption>
                 </div>
               </div>
 
@@ -615,9 +613,12 @@ export default function HeroSection({
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-white">
+                    <BodySM
+                      weight="semibold"
+                      className="line-clamp-2 text-white"
+                    >
                       {latestVideo.title}
-                    </p>
+                    </BodySM>
 
                     {getVideoId(latestVideo) ? (
                       <a
@@ -634,7 +635,7 @@ export default function HeroSection({
                   </div>
                 </div>
               ) : (
-                <CustomButton
+                <Button
                   variant="outline"
                   size="sm"
                   curvature="full"
@@ -642,7 +643,7 @@ export default function HeroSection({
                   className="mt-5 border border-white/30 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white hover:bg-white/[0.12]"
                 >
                   {videoLoading ? 'Loading…' : 'Watch'}
-                </CustomButton>
+                </Button>
               )}
             </div>
           </div>
@@ -652,11 +653,12 @@ export default function HeroSection({
       {safeSlides.length > 1 ? (
         <div className="absolute bottom-10 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/20 bg-black/45 px-3 py-2 backdrop-blur-2xl sm:bottom-14">
           {safeSlides.map((slide, index) => (
-            <button
+            <Button
               key={(slide as any)?.id || index}
               type="button"
               onClick={() => setCurrentSlide(index)}
-              className={`rounded-full transition-all duration-300 ease-out ${
+              variant="ghost"
+              className={`rounded-full p-0 transition-all duration-300 ease-out ${
                 currentSlide === index
                   ? 'bg-[var(--app-primary)] shadow-[0_0_18px_rgba(201,150,26,0.40)]'
                   : 'bg-white/30'
@@ -665,6 +667,7 @@ export default function HeroSection({
               style={{
                 width: currentSlide === index ? '26px' : '7px',
                 height: '7px',
+                minHeight: '7px',
               }}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={currentSlide === index}
@@ -718,14 +721,16 @@ function ScrollIndicators({
         </div>
       </div>
 
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
         className="absolute bottom-1 left-1/2 z-30 -translate-x-1/2 cursor-pointer pb-1 sm:hidden"
         onClick={scrollToNextSection}
         aria-label="Scroll to next section"
       >
         <ChevronDown className="h-4 w-4 animate-bounce text-[var(--app-primary)] drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
-      </button>
+      </Button>
     </>
   );
 }

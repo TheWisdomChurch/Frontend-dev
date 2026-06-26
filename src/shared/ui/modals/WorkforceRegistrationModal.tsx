@@ -7,7 +7,8 @@ import { Loader2, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { BaseModal, modalStyles } from './Base';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { BodySM } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { SuccessModal } from './SuccessModal';
 import apiClient, { mapValidationErrors } from '@/lib/api';
 import {
@@ -156,9 +157,9 @@ export function WorkforceRegistrationModal({
 
               <div>
                 <p className={modalStyles.sectionTitle}>Personal details</p>
-                <p className="mt-1 text-sm text-white/55">
+                <BodySM className="mt-1 text-white/55">
                   Basic contact information for your profile.
-                </p>
+                </BodySM>
               </div>
             </div>
 
@@ -244,9 +245,9 @@ export function WorkforceRegistrationModal({
           <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5">
               <p className={modalStyles.sectionTitle}>Leadership information</p>
-              <p className="mt-1 text-sm text-white/55">
+              <BodySM className="mt-1 text-white/55">
                 Help us keep your ministry assignment accurate.
-              </p>
+              </BodySM>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -337,9 +338,9 @@ export function WorkforceRegistrationModal({
           <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5">
               <p className={modalStyles.sectionTitle}>Additional details</p>
-              <p className="mt-1 text-sm text-white/55">
+              <BodySM className="mt-1 text-white/55">
                 Optional details for better church administration.
-              </p>
+              </BodySM>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -410,7 +411,7 @@ export function WorkforceRegistrationModal({
           </section>
 
           <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[var(--app-surface-2)]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
-            <CustomButton
+            <Button
               type="submit"
               variant="primary"
               disabled={!isValid || isSubmitting}
@@ -424,7 +425,7 @@ export function WorkforceRegistrationModal({
               ) : (
                 'Submit Workforce Details'
               )}
-            </CustomButton>
+            </Button>
           </div>
         </form>
       </BaseModal>

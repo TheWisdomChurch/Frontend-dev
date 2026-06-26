@@ -12,6 +12,7 @@ import { Camera, PlayCircle } from 'lucide-react';
 
 import { communityLinks } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/shared/assets';
+import { H3, H4, BodySM, Caption } from '@/shared/text';
 import { BaseModal } from './Base';
 import type { JoinCommunityModalProps } from '@/lib/types';
 
@@ -68,10 +69,10 @@ export default function JoinCommunityModal({
             </div>
           </div>
 
-          <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-white/65">
+          <BodySM className="mx-auto mt-4 max-w-md text-white/65">
             Choose your preferred platform and stay connected to updates,
             fellowship, prayers, and ministry moments.
-          </p>
+          </BodySM>
         </div>
 
         <div className="grid gap-3">
@@ -100,12 +101,10 @@ export default function JoinCommunityModal({
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-base font-semibold text-white">
-                      {link.title}
-                    </h3>
-                    <p className="mt-1 line-clamp-2 text-sm leading-6 text-white/58">
+                    <H3 className="truncate text-white">{link.title}</H3>
+                    <BodySM className="mt-1 line-clamp-2 text-white/58">
                       {link.description}
-                    </p>
+                    </BodySM>
                   </div>
 
                   <div className="grid h-10 w-10 flex-none place-items-center rounded-full border border-white/10 bg-black/25 text-white/55 transition group-hover:border-[var(--app-primary)]/40 group-hover:text-[var(--app-primary)]">
@@ -130,12 +129,10 @@ export default function JoinCommunityModal({
                   <Icon className="h-4 w-4" />
                 </div>
 
-                <p className="mt-3 text-sm font-semibold text-white">
+                <BodySM weight="semibold" className="mt-3 text-white">
                   {item.title}
-                </p>
-                <p className="mt-1 text-xs leading-5 text-white/48">
-                  {item.detail}
-                </p>
+                </BodySM>
+                <Caption className="mt-1 text-white/48">{item.detail}</Caption>
               </div>
             );
           })}
@@ -148,11 +145,11 @@ export default function JoinCommunityModal({
             </div>
 
             <div>
-              <h4 className="text-sm font-semibold text-white">Quick tip</h4>
-              <p className="mt-1 text-sm leading-6 text-white/62">
+              <H4 className="text-white">Quick tip</H4>
+              <BodySM className="mt-1 text-white/62">
                 Turn on notifications so you never miss updates from the
                 ministry.
-              </p>
+              </BodySM>
             </div>
           </div>
         </div>

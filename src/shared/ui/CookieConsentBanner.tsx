@@ -225,8 +225,9 @@ export default function CookieConsentBanner() {
                 <BodySM className="font-medium text-white">{item.title}</BodySM>
                 <Caption className="text-white/60">{item.description}</Caption>
               </div>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 disabled={item.locked}
                 aria-pressed={item.enabled}
                 onClick={() => {
@@ -243,7 +244,7 @@ export default function CookieConsentBanner() {
                     }));
                   }
                 }}
-                className={`relative h-6 w-11 rounded-full border transition-all ${
+                className={`relative h-6 w-11 min-h-0 rounded-full border p-0 transition-all ${
                   item.locked
                     ? 'cursor-not-allowed opacity-60'
                     : 'cursor-pointer'
@@ -258,7 +259,7 @@ export default function CookieConsentBanner() {
                     item.enabled ? 'left-[calc(100%_-_22px)]' : 'left-[2px]'
                   }`}
                 />
-              </button>
+              </Button>
             </div>
           ))}
 

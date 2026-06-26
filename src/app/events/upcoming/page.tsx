@@ -13,7 +13,9 @@ import {
 
 import HeroSection from '@/features/hero/PageHero';
 import { hero_bg_2, NL } from '@/shared/assets';
+import { H2, H3, H4, BodySM, BodyLG, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
+import { Button } from '@/shared/utils/buttons';
 import { useUpcomingEvents } from '@/shared/utils/hooks/UpcomingHooks';
 
 export default function Upcoming() {
@@ -65,16 +67,16 @@ export default function Upcoming() {
 
         <Container size="lg">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               Featured program
-            </p>
-            <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            </Eyebrow>
+            <H2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
               Upcoming Events
-            </h1>
-            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+            </H2>
+            <BodySM className="mt-3 text-white/65">
               Discover transformative experiences and spiritual gatherings
               designed to uplift and inspire your journey.
-            </p>
+            </BodySM>
           </div>
 
           <div className="grid gap-8 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:p-8">
@@ -92,45 +94,47 @@ export default function Upcoming() {
             </div>
 
             <div className="space-y-5">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Transformative nights of worship & prayer
-              </p>
+              <Eyebrow className="text-[var(--app-primary)]">
+                Transformative nights of worship &amp; prayer
+              </Eyebrow>
 
-              <h2 className="text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+              <H2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
                 7 Nights of{' '}
                 <span className="text-[var(--app-primary)]">Lifting</span>
-              </h2>
+              </H2>
 
-              <div className="space-y-3 text-sm leading-7 text-white/65 sm:text-base">
-                <p>
+              <div className="space-y-3">
+                <BodySM className="text-white/65">
                   Join us for seven powerful nights of worship, prayer, and
                   spiritual elevation. Each night features special guests,
                   anointed worship, and life-changing messages that will lift
                   your spirit and strengthen your faith.
-                </p>
-                <p>
+                </BodySM>
+                <BodySM className="text-white/65">
                   Don&apos;t miss this transformative experience where we come
                   together as a community to seek God&apos;s presence and power
                   in our lives.
-                </p>
+                </BodySM>
               </div>
 
               <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-                <button
+                <Button
                   type="button"
+                  variant="primary"
+                  curvature="full"
                   onClick={openLiftingModal}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
                 >
                   Register to Attend
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  curvature="full"
                   onClick={() => openReminderModal('lifting')}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/80 transition hover:bg-white/[0.08]"
                 >
                   Remind Me Later
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -146,79 +150,100 @@ export default function Upcoming() {
           <div className="mb-8 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <Eyebrow className="text-[var(--app-primary)]">
                   Event calendar
-                </p>
-                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                </Eyebrow>
+                <H2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
                   {view === 'month'
                     ? `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`
                     : currentDate.getFullYear()}
-                </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60">
+                </H2>
+                <BodySM className="mt-3 max-w-2xl text-white/60">
                   Browse through our interactive calendar to stay updated with
                   all upcoming events and gatherings.
-                </p>
+                </BodySM>
               </div>
 
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                curvature="full"
                 onClick={() => setView(view === 'month' ? 'year' : 'month')}
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--app-primary)] px-5 text-sm font-extrabold text-black"
               >
                 {view === 'month' ? 'Year View' : 'Month View'}
-              </button>
+              </Button>
             </div>
 
             <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex justify-center gap-2">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
+                  curvature="full"
                   onClick={() => navigateYear('prev')}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                  aria-label="Previous year"
+                  className="h-10 w-10 border border-white/10 bg-black/25 text-white/75"
                 >
                   ‹‹
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
+                  curvature="full"
                   onClick={() => navigateMonth('prev')}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                  aria-label="Previous month"
+                  className="h-10 w-10 border border-white/10 bg-black/25 text-white/75"
                 >
                   <ChevronLeft className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
 
               <div className="flex flex-wrap justify-center gap-2">
                 {years.map(year => (
-                  <button
+                  <Button
                     key={year}
                     type="button"
+                    variant={
+                      currentDate.getFullYear() === year ? 'primary' : 'ghost'
+                    }
+                    curvature="full"
                     onClick={() => selectYear(year)}
-                    className={`rounded-full px-4 py-2 text-xs font-bold transition ${
-                      currentDate.getFullYear() === year
-                        ? 'bg-[var(--app-primary)] text-black'
-                        : 'border border-white/10 bg-black/25 text-white/65 hover:bg-white/[0.06]'
+                    className={`px-4 py-2 min-h-0 h-auto text-xs font-bold ${
+                      currentDate.getFullYear() !== year
+                        ? 'border border-white/10 bg-black/25 text-white/65 hover:bg-white/[0.06]'
+                        : ''
                     }`}
                   >
                     {year}
-                  </button>
+                  </Button>
                 ))}
               </div>
 
               <div className="flex justify-center gap-2">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
+                  curvature="full"
                   onClick={() => navigateMonth('next')}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                  aria-label="Next month"
+                  className="h-10 w-10 border border-white/10 bg-black/25 text-white/75"
                 >
                   <ChevronRight className="h-4 w-4" />
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
+                  curvature="full"
                   onClick={() => navigateYear('next')}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/25 text-white/75 hover:bg-white/[0.06]"
+                  aria-label="Next year"
+                  className="h-10 w-10 border border-white/10 bg-black/25 text-white/75"
                 >
                   ››
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -226,21 +251,26 @@ export default function Upcoming() {
           {view === 'year' ? (
             <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {months.map((month, index) => (
-                <button
+                <Button
                   key={month}
                   type="button"
+                  variant="ghost"
                   onClick={() => selectMonth(index)}
-                  className={`rounded-[1.25rem] border p-5 text-left transition hover:-translate-y-1 ${
+                  className={`rounded-[1.25rem] border p-5 !justify-start text-left h-auto hover:-translate-y-1 ${
                     currentDate.getMonth() === index
                       ? 'border-[var(--app-primary)]/60 bg-[var(--app-primary)]/10'
                       : 'border-white/10 bg-white/[0.04] hover:border-[var(--app-primary)]/35'
                   }`}
                 >
-                  <p className="text-lg font-semibold text-white">{month}</p>
-                  <p className="mt-2 text-sm text-white/50">
-                    Click to view month
-                  </p>
-                </button>
+                  <div>
+                    <BodyLG weight="semibold" className="text-white">
+                      {month}
+                    </BodyLG>
+                    <Caption className="mt-2 text-white/50">
+                      Click to view month
+                    </Caption>
+                  </div>
+                </Button>
               ))}
             </div>
           ) : (
@@ -258,11 +288,12 @@ export default function Upcoming() {
 
                 <div className="grid grid-cols-7 gap-2">
                   {calendarGrid.map((day, index) => (
-                    <button
+                    <Button
                       key={index}
                       type="button"
+                      variant="ghost"
                       onClick={() => handleDateClick(day.date, day.events)}
-                      className={`min-h-[104px] rounded-2xl border p-3 text-left transition ${
+                      className={`min-h-[104px] rounded-2xl border p-3 !justify-start h-auto flex-col items-start ${
                         day.isToday
                           ? 'border-[var(--app-primary)]/70 bg-[var(--app-primary)]/10'
                           : day.isCurrentMonth
@@ -270,17 +301,18 @@ export default function Upcoming() {
                             : 'border-white/5 bg-black/10 text-white/30'
                       } ${day.events.length > 0 ? 'cursor-pointer' : ''}`}
                     >
-                      <p
-                        className={`text-sm font-semibold ${
+                      <Caption
+                        weight="semibold"
+                        className={
                           day.isToday
                             ? 'text-[var(--app-primary)]'
                             : 'text-white'
-                        }`}
+                        }
                       >
                         {day.date.getDate()}
-                      </p>
+                      </Caption>
 
-                      <div className="mt-2 space-y-1">
+                      <div className="mt-2 w-full space-y-1">
                         {day.events.slice(0, 2).map(event => (
                           <div
                             key={event.id}
@@ -292,12 +324,12 @@ export default function Upcoming() {
                         ))}
 
                         {day.events.length > 2 ? (
-                          <p className="text-xs text-white/45">
+                          <Caption className="text-white/45">
                             +{day.events.length - 2} more
-                          </p>
+                          </Caption>
                         ) : null}
                       </div>
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -309,69 +341,76 @@ export default function Upcoming() {
             className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6"
           >
             <div className="mb-6 text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <Eyebrow className="text-[var(--app-primary)]">
                 This month
-              </p>
-              <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
+              </Eyebrow>
+              <H3 className="mt-2 text-xl text-white sm:text-2xl">
                 Events for {months[currentDate.getMonth()]}{' '}
                 {currentDate.getFullYear()}
-              </h3>
+              </H3>
             </div>
 
             {currentMonthEvents.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2">
                 {currentMonthEvents.map(event => (
-                  <button
+                  <Button
                     key={event.id}
                     type="button"
+                    variant="ghost"
                     onClick={() => handleEventClick(event)}
-                    className="group rounded-[1.25rem] border border-white/10 bg-black/25 p-5 text-left transition hover:-translate-y-1 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.035]"
+                    className="group rounded-[1.25rem] border border-white/10 bg-black/25 p-5 !justify-start h-auto flex-col items-start hover:-translate-y-1 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.035]"
                   >
                     <span className="inline-flex rounded-full bg-[var(--app-primary)]/10 px-3 py-1 text-xs font-bold text-[var(--app-primary)]">
                       {event.type}
                     </span>
 
-                    <h4 className="mt-4 text-lg font-semibold leading-tight text-white group-hover:text-[var(--app-primary)]">
+                    <H4 className="mt-4 text-lg text-white group-hover:text-[var(--app-primary)]">
                       {event.title}
-                    </h4>
+                    </H4>
 
                     {event.description ? (
-                      <p className="mt-3 line-clamp-2 text-sm leading-6 text-white/60">
+                      <BodySM className="mt-3 line-clamp-2 text-white/60">
                         {event.description}
-                      </p>
+                      </BodySM>
                     ) : null}
 
-                    <div className="mt-4 space-y-2 border-t border-white/10 pt-4 text-sm text-white/55">
-                      <p className="flex items-center gap-2">
+                    <div className="mt-4 w-full space-y-2 border-t border-white/10 pt-4">
+                      <div className="flex items-center gap-2">
                         <CalendarClock className="h-4 w-4 text-[var(--app-primary)]" />
-                        {new Date(event.date).toLocaleDateString('en-US', {
-                          weekday: 'short',
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </p>
-                      <p className="flex items-center gap-2">
+                        <Caption className="text-white/55">
+                          {new Date(event.date).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </Caption>
+                      </div>
+                      <div className="flex items-center gap-2">
                         <Clock className="h-4 w-4 text-white/35" />
-                        {event.time}
-                      </p>
-                      <p className="flex items-center gap-2">
+                        <Caption className="text-white/55">
+                          {event.time}
+                        </Caption>
+                      </div>
+                      <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-white/35" />
-                        {event.location}
-                      </p>
+                        <Caption className="text-white/55">
+                          {event.location}
+                        </Caption>
+                      </div>
                     </div>
-                  </button>
+                  </Button>
                 ))}
               </div>
             ) : (
               <div className="py-10 text-center">
-                <p className="text-lg font-semibold text-white/70">
+                <BodyLG weight="semibold" className="text-white/70">
                   No events scheduled for {months[currentDate.getMonth()]}{' '}
                   {currentDate.getFullYear()}
-                </p>
-                <p className="mt-2 text-sm text-white/45">
+                </BodyLG>
+                <Caption className="mt-2 text-white/45">
                   Check back later for updates or browse other months.
-                </p>
+                </Caption>
               </div>
             )}
           </div>
@@ -398,34 +437,36 @@ export default function Upcoming() {
           size="md"
           className="relative rounded-[1.6rem] border border-white/10 bg-black/45 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-md sm:rounded-[2rem] sm:p-8 lg:p-10"
         >
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <Eyebrow className="text-[var(--app-primary)]">
             Major gathering
-          </p>
-          <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
+          </Eyebrow>
+          <H2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
             Wisdom Power{' '}
             <span className="text-[var(--app-primary)]">Conference</span> 2026
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
+          </H2>
+          <BodySM className="mx-auto mt-4 max-w-2xl text-white/70">
             The most anticipated spiritual gathering of the year is coming.
             Experience powerful teachings, anointed worship, and life-changing
             encounters.
-          </p>
+          </BodySM>
 
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <button
+            <Button
               type="button"
+              variant="primary"
+              curvature="full"
               onClick={openConferenceModal}
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
             >
               Register for Event
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="ghost"
+              curvature="full"
               onClick={() => openReminderModal('conference')}
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/80 transition hover:bg-white/[0.08]"
             >
               Remind Me Later
-            </button>
+            </Button>
           </div>
         </Container>
       </Section>
@@ -436,16 +477,14 @@ export default function Upcoming() {
         className="bg-[var(--app-surface)]"
       >
         <Container size="sm" className="text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Newsletter
-          </p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+          <Eyebrow className="text-[var(--app-primary)]">Newsletter</Eyebrow>
+          <H2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
             Stay Updated
-          </h2>
-          <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+          </H2>
+          <BodySM className="mt-3 text-white/65">
             Get the latest news and updates about our upcoming programs and
             events delivered to your inbox.
-          </p>
+          </BodySM>
 
           <form className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/25 sm:flex sm:gap-3 sm:p-5">
             <input
@@ -454,18 +493,20 @@ export default function Upcoming() {
               className="min-h-12 w-full rounded-full border border-white/10 bg-black/30 px-5 text-sm text-white outline-none placeholder:text-white/35 focus:border-[var(--app-primary)]/60 focus:ring-4 focus:ring-[var(--app-primary)]/10"
               required
             />
-            <button
+            <Button
               type="submit"
-              className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black sm:mt-0 sm:w-auto"
+              variant="primary"
+              curvature="full"
+              className="mt-3 w-full sm:mt-0 sm:w-auto"
             >
               Subscribe
-            </button>
+            </Button>
           </form>
 
-          <p className="mt-4 text-xs leading-5 text-white/45">
+          <Caption className="mt-4 block text-white/45">
             By subscribing, you agree to receive updates about our events and
             programs. You can unsubscribe at any time.
-          </p>
+          </Caption>
         </Container>
       </Section>
     </main>

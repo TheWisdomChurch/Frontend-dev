@@ -398,14 +398,17 @@ export default function OnlineGiving() {
             <>
               <div className="hidden lg:block">
                 <div className="mb-6 flex items-center justify-between px-4">
-                  <button
+                  <Button
                     type="button"
                     onClick={previousCard}
-                    className="rounded-full border border-white/15 bg-white/[0.08] p-3 text-white backdrop-blur-xl transition hover:bg-white/[0.14]"
+                    variant="outline"
+                    size="icon"
+                    curvature="full"
+                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
                     aria-label="Previous giving option"
                   >
                     <ChevronLeft className="h-5 w-5" />
-                  </button>
+                  </Button>
 
                   <BodySM
                     className="text-[0.78rem] font-semibold uppercase tracking-[0.2em] text-white/48"
@@ -414,14 +417,17 @@ export default function OnlineGiving() {
                     Slide to explore
                   </BodySM>
 
-                  <button
+                  <Button
                     type="button"
                     onClick={nextCard}
-                    className="rounded-full border border-white/15 bg-white/[0.08] p-3 text-white backdrop-blur-xl transition hover:bg-white/[0.14]"
+                    variant="outline"
+                    size="icon"
+                    curvature="full"
+                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
                     aria-label="Next giving option"
                   >
                     <ChevronRight className="h-5 w-5" />
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="giving-perspective relative h-[420px] w-full overflow-hidden">
@@ -489,14 +495,17 @@ export default function OnlineGiving() {
 
               <div className="md:hidden">
                 <div className="mb-5 flex items-center justify-between px-4">
-                  <button
+                  <Button
                     type="button"
                     onClick={scrollLeft}
-                    className="rounded-full border border-white/15 bg-white/[0.08] p-3 text-white backdrop-blur-xl transition hover:bg-white/[0.14]"
+                    variant="outline"
+                    size="icon"
+                    curvature="full"
+                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
                     aria-label="Scroll left"
                   >
                     <ChevronLeft className="h-5 w-5" />
-                  </button>
+                  </Button>
 
                   <BodySM
                     className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/48"
@@ -505,14 +514,17 @@ export default function OnlineGiving() {
                     Scroll to explore
                   </BodySM>
 
-                  <button
+                  <Button
                     type="button"
                     onClick={scrollRight}
-                    className="rounded-full border border-white/15 bg-white/[0.08] p-3 text-white backdrop-blur-xl transition hover:bg-white/[0.14]"
+                    variant="outline"
+                    size="icon"
+                    curvature="full"
+                    className="border-white/15 bg-white/[0.08] text-white backdrop-blur-xl hover:bg-white/[0.14]"
                     aria-label="Scroll right"
                   >
                     <ChevronRight className="h-5 w-5" />
-                  </button>
+                  </Button>
                 </div>
 
                 <div

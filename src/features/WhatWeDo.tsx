@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import { whatWeDoData, missionStatement } from '@/lib/data';
 import type { ServiceBox } from '@/lib/types';
-import { H2, BodySM } from '@/shared/text';
+import { H2, H3, BodySM } from '@/shared/text';
 import { useWhatWeDo } from '@/shared/utils/hooks/useWhatwedo';
 import { Section, Container } from '@/shared/layout';
 import { Card } from '@/shared/ui/cards';
@@ -66,16 +66,14 @@ export default function WhatWeDo() {
               </span>
             </div>
 
-            <h3
+            <H3
               className={[
-                'font-semibold tracking-[-0.02em] text-white',
-                featured
-                  ? 'text-xl leading-tight sm:text-2xl'
-                  : 'text-lg leading-snug sm:text-xl',
+                'text-white',
+                featured ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl',
               ].join(' ')}
             >
               {box.title}
-            </h3>
+            </H3>
 
             <BodySM className="mt-3 max-w-2xl text-sm leading-7 text-white/68 sm:text-[0.95rem]">
               {box.description}

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H2, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import {
@@ -25,14 +26,16 @@ export const metadata: Metadata = {
     'Discover ministries for men, women, youth, children, and outreach at The Wisdom Church. Find your place to serve and grow.',
   openGraph: {
     title: 'Ministries — Get Connected | The Wisdom Church',
-    description: 'Discover ministries for men, women, youth, children, and outreach.',
+    description:
+      'Discover ministries for men, women, youth, children, and outreach.',
     url: 'https://wisdomchurchhq.org/ministries',
     images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Ministries | The Wisdom Church',
-    description: 'Discover ministries for men, women, youth, children, and outreach.',
+    description:
+      'Discover ministries for men, women, youth, children, and outreach.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
   alternates: { canonical: '/ministries' },
@@ -137,13 +140,13 @@ export default function MinistriesPage() {
       <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               Ministry areas
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            </Eyebrow>
+            <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
               Each ministry has a clear purpose, a defined audience, and a real
               discipleship pathway.
-            </h2>
+            </H2>
           </ScrollFadeIn>
           <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
             <FeatureGrid items={ministries} columns={3} />
@@ -151,7 +154,10 @@ export default function MinistriesPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="border-y border-white/10 bg-[var(--app-surface-2)]">
+      <Section
+        padding="lg"
+        className="border-y border-white/10 bg-[var(--app-surface-2)]"
+      >
         <Container size="xl">
           <ScrollFadeIn data-parallax-global="0.08">
             <SplitSection
@@ -180,13 +186,13 @@ export default function MinistriesPage() {
       <Section padding="lg" className="bg-[var(--app-surface)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               Ministry values
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            </Eyebrow>
+            <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
               Our teams are built around consistency, care, doctrine, and
               service excellence.
-            </h2>
+            </H2>
           </ScrollFadeIn>
           <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
             <FeatureGrid

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H1, H2, H3, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import Button from '@/shared/utils/buttons/CustomButton';
 import apiClient, { mapValidationErrors } from '@/lib/api';
@@ -182,31 +183,31 @@ export default function ContactPage() {
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <Eyebrow className="text-[var(--app-primary)]">
               Visit • Call • Email
-            </p>
-            <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            </Eyebrow>
+            <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
               Plan your visit or send us a message.
-            </h1>
-            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
+            </H1>
+            <BodySM className="mt-3 text-white/65">
               Our team is available to help with service information, prayer
               requests, pastoral care, and general enquiries.
-            </p>
+            </BodySM>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] xl:gap-8">
             <aside className="space-y-5 lg:sticky lg:top-24 lg:h-fit">
               <section className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/30 backdrop-blur-xl sm:rounded-[2rem]">
                 <div className="border-b border-white/10 px-5 py-5 sm:px-6">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                  <Eyebrow className="text-[var(--app-primary)]">
                     Reach us
-                  </p>
-                  <h2 className="mt-2 text-xl font-semibold text-white">
-                    Visit & contact details
-                  </h2>
-                  <p className="mt-2 text-sm leading-6 text-white/60">
+                  </Eyebrow>
+                  <H2 className="mt-2 text-xl font-semibold text-white">
+                    Visit &amp; contact details
+                  </H2>
+                  <BodySM className="mt-2 text-white/60">
                     Multiple ways to connect with leadership and teams.
-                  </p>
+                  </BodySM>
                 </div>
 
                 <div className="divide-y divide-white/10">
@@ -222,12 +223,12 @@ export default function ContactPage() {
                         <div className="min-w-0 flex-1">
                           <div className="flex items-start justify-between gap-3">
                             <div>
-                              <h3 className="text-base font-semibold text-white">
+                              <H3 className="text-base text-white">
                                 {method.title}
-                              </h3>
-                              <p className="mt-1 text-sm leading-6 text-white/55">
+                              </H3>
+                              <BodySM className="mt-1 text-white/55">
                                 {method.description}
-                              </p>
+                              </BodySM>
                             </div>
 
                             {method.href ? (
@@ -237,12 +238,9 @@ export default function ContactPage() {
 
                           <div className="mt-3 space-y-1">
                             {method.details.map(detail => (
-                              <p
-                                key={detail}
-                                className="text-sm leading-6 text-white/72"
-                              >
+                              <BodySM key={detail} className="text-white/72">
                                 {detail}
-                              </p>
+                              </BodySM>
                             ))}
                           </div>
 
@@ -281,12 +279,12 @@ export default function ContactPage() {
               <section className="rounded-[1.6rem] border border-white/10 bg-white/[0.035] p-5 shadow-2xl shadow-black/20 sm:rounded-[2rem] sm:p-6">
                 <div className="flex items-end justify-between gap-4">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                    <Eyebrow className="text-[var(--app-primary)]">
                       Social
-                    </p>
-                    <h2 className="mt-2 text-lg font-semibold text-white">
+                    </Eyebrow>
+                    <H2 className="mt-2 text-lg font-semibold text-white">
                       Follow us
-                    </h2>
+                    </H2>
                   </div>
                 </div>
 
@@ -325,15 +323,15 @@ export default function ContactPage() {
               <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
 
               <div className="relative border-b border-white/10 px-5 py-5 sm:px-6 lg:px-8">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                <Eyebrow className="text-[var(--app-primary)]">
                   Message us
-                </p>
-                <h2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
+                </Eyebrow>
+                <H2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
                   Send us a message
-                </h2>
-                <p className="mt-2 text-sm leading-6 text-white/60">
+                </H2>
+                <BodySM className="mt-2 text-white/60">
                   We respond within 24 hours on weekdays.
-                </p>
+                </BodySM>
               </div>
 
               <form
@@ -432,10 +430,10 @@ export default function ContactPage() {
                 </label>
 
                 <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-                  <p className="text-sm leading-6 text-white/62">
+                  <BodySM className="text-white/62">
                     We’ll respond by email and phone if provided. Please avoid
                     sending sensitive personal information through this form.
-                  </p>
+                  </BodySM>
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -450,9 +448,9 @@ export default function ContactPage() {
                     {submitting ? 'Sending...' : 'Send Message'}
                   </Button>
 
-                  <p className="text-xs leading-5 text-white/45">
+                  <Caption className="text-white/45">
                     Required fields are marked by the form validation.
-                  </p>
+                  </Caption>
                 </div>
 
                 {submitted ? (

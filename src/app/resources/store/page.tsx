@@ -27,9 +27,17 @@ import {
 } from '@/lib/store/slices/productSlice';
 
 import ProductModal from '@/features/store/modals/ProductModal';
-import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
+import {
+  H3,
+  H4,
+  BodyLG,
+  BodySM,
+  SmallText,
+  Caption,
+  Eyebrow,
+} from '@/shared/text';
 import { hero_bg_1 } from '@/shared/assets';
-import Button from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
 import { Section, Container } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
 import CartSidebar from '@/features/store/Store/CartSidebar';
@@ -220,10 +228,13 @@ export default function StorePage() {
         showScrollIndicator
       />
 
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
+        curvature="full"
         onClick={() => dispatch(toggleCart())}
-        className="fixed bottom-6 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] text-black shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition duration-300 hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
+        className="fixed bottom-6 right-5 z-50 relative h-14 w-14 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] text-black shadow-[0_20px_60px_rgba(0,0,0,0.45)] hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
         aria-label="Open cart"
       >
         <ShoppingBag className="h-6 w-6" />
@@ -233,7 +244,7 @@ export default function StorePage() {
             {itemCount}
           </span>
         )}
-      </button>
+      </Button>
 
       <Section
         padding="lg"
@@ -281,12 +292,10 @@ export default function StorePage() {
                   key={label}
                   className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 text-center backdrop-blur-xl"
                 >
-                  <p className="text-xl font-bold text-[var(--app-primary)]">
+                  <BodyLG weight="bold" className="text-[var(--app-primary)]">
                     {value}
-                  </p>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/42">
-                    {label}
-                  </p>
+                  </BodyLG>
+                  <Eyebrow className="mt-1 text-white/42">{label}</Eyebrow>
                 </div>
               ))}
             </div>
@@ -305,14 +314,16 @@ export default function StorePage() {
                 />
 
                 {filters.searchTerm && (
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onClick={() => handleSearch('')}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/45 transition hover:text-white"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 min-h-0 h-auto w-auto p-0 text-white/45 hover:text-white"
                     aria-label="Clear search"
                   >
                     <X className="h-4 w-4" />
-                  </button>
+                  </Button>
                 )}
               </label>
 
@@ -334,13 +345,14 @@ export default function StorePage() {
                 <SlidersHorizontal className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
               </label>
 
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={resetFilters}
-                className="h-12 rounded-2xl border border-white/12 bg-white/[0.04] px-5 text-sm font-bold text-white/72 transition hover:bg-white/[0.08] hover:text-white"
+                className="h-12 rounded-2xl border border-white/12 bg-white/[0.04] px-5 text-sm font-bold text-white/72 hover:bg-white/[0.08] hover:text-white"
               >
                 Reset
-              </button>
+              </Button>
             </div>
 
             {showSearchAlert && (
@@ -357,14 +369,16 @@ export default function StorePage() {
                     Try different keywords or browse categories.
                   </SmallText>
                 </div>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowSearchAlert(false)}
                   aria-label="Dismiss alert"
-                  className="text-yellow-100/70 transition hover:text-yellow-100"
+                  className="min-h-0 h-auto w-auto p-0 text-yellow-100/70 hover:text-yellow-100"
                 >
                   <X className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -374,28 +388,21 @@ export default function StorePage() {
               const active = filters.selectedCategory === category.value;
 
               return (
-                <button
+                <Button
                   key={category.value}
                   type="button"
+                  variant={active ? 'primary' : 'ghost'}
+                  curvature="full"
                   onClick={() => handleCategoryClick(category.value)}
-                  className={`shrink-0 rounded-full border px-4 py-2.5 text-sm font-bold transition ${
+                  className={`shrink-0 px-4 py-2.5 min-h-0 h-auto text-sm font-bold ${
                     active
-                      ? 'border-transparent text-black shadow-[0_14px_35px_rgba(201,150,26,0.13)]'
-                      : 'border-white/12 bg-white/[0.045] text-white/64 hover:bg-white/[0.08] hover:text-white'
+                      ? 'shadow-[0_14px_35px_rgba(201,150,26,0.13)]'
+                      : 'border border-white/12 bg-white/[0.045] text-white/64 hover:bg-white/[0.08] hover:text-white'
                   }`}
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={
-                    active
-                      ? {
-                          backgroundColor: 'var(--app-primary)',
-                          color: '#000000',
-                        }
-                      : undefined
-                  }
                 >
                   {category.name}
                   <span className="ml-2 opacity-70">({category.count})</span>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -484,10 +491,11 @@ export default function StorePage() {
                       key={product.id}
                       className="product-card group overflow-hidden rounded-[1.75rem] border border-white/[0.12] bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                     >
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
                         onClick={() => handleQuickView(product)}
-                        className="relative block aspect-square w-full overflow-hidden bg-[#0d0d0d]"
+                        className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[#0d0d0d] rounded-none"
                       >
                         {product.image ? (
                           <Image
@@ -524,7 +532,7 @@ export default function StorePage() {
                             {soldOut ? 'View Product' : 'Quick View'}
                           </span>
                         </div>
-                      </button>
+                      </Button>
 
                       <div className="p-5">
                         <div className="mb-3 flex items-start justify-between gap-3">
@@ -536,13 +544,16 @@ export default function StorePage() {
                             {product.name}
                           </SmallText>
 
-                          <button
+                          <Button
                             type="button"
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.045] text-white/62 transition hover:bg-white/[0.09] hover:text-white"
+                            variant="ghost"
+                            size="icon"
+                            curvature="full"
+                            className="h-9 w-9 shrink-0 border border-white/10 bg-white/[0.045] text-white/62 hover:bg-white/[0.09] hover:text-white"
                             aria-label="Add to wishlist"
                           >
                             <Heart className="h-4 w-4" />
-                          </button>
+                          </Button>
                         </div>
 
                         <Caption
@@ -553,13 +564,13 @@ export default function StorePage() {
                         </Caption>
 
                         <div className="mt-4 flex items-end gap-2">
-                          <BaseText
+                          <BodyLG
                             weight="bold"
                             className="text-2xl text-[var(--app-primary)]"
                             useThemeColor={false}
                           >
                             {product.price}
-                          </BaseText>
+                          </BodyLG>
 
                           {product.originalPrice && (
                             <Caption
@@ -581,12 +592,12 @@ export default function StorePage() {
                               key={label}
                               className="rounded-2xl border border-white/8 bg-black/25 px-2 py-2 text-center"
                             >
-                              <p className="text-sm font-bold text-white">
+                              <BodySM weight="bold" className="text-white">
                                 {value}
-                              </p>
-                              <p className="mt-0.5 text-[10px] uppercase tracking-[0.14em] text-white/38">
+                              </BodySM>
+                              <Eyebrow className="mt-0.5 text-white/38">
                                 {label}
-                              </p>
+                              </Eyebrow>
                             </div>
                           ))}
                         </div>

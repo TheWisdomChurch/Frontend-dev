@@ -121,13 +121,16 @@ const OnlinePaymentModal = ({
 
         <div className="flex flex-col h-full">
           <div className="relative h-12 flex items-center justify-center border-b border-[var(--app-primary)] px-4">
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={handleClose}
-              className="absolute top-2.5 right-2.5 p-1 bg-[var(--app-primary)]/10"
+              aria-label="Close modal"
+              className="absolute top-2.5 right-2.5 min-h-0 h-7 w-7 p-1 bg-[var(--app-primary)]/10"
             >
               <X className="w-3 h-3 text-[var(--app-primary)]" />
-            </button>
+            </Button>
 
             <H4
               fontFamily="bricolage"

@@ -398,9 +398,10 @@ const CheckoutForm = () => {
               const isSelected = formData.paymentMethod === method.id;
 
               return (
-                <button
+                <Button
                   key={method.id}
                   type="button"
+                  variant="ghost"
                   onClick={() => {
                     if (method.id === 'online') {
                       setShowOnlinePaymentModal(true);
@@ -411,7 +412,7 @@ const CheckoutForm = () => {
                       }));
                     }
                   }}
-                  className={`p-4 rounded-2xl transition-all duration-300 text-left text-white bg-white/[0.04] ${
+                  className={`p-4 rounded-2xl !justify-start text-left text-white bg-white/[0.04] ${
                     isSelected
                       ? 'border-2 ring-2 ring-offset-2'
                       : 'border border-white/[0.14] hover:scale-[1.02]'
@@ -455,7 +456,7 @@ const CheckoutForm = () => {
                       + NGN {method.fee.toLocaleString()} fee
                     </Caption>
                   )}
-                </button>
+                </Button>
               );
             })}
           </div>
