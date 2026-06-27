@@ -1,33 +1,45 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight,
   BookOpen,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
   Heart,
   Loader2,
   PlayCircle,
   ShoppingBag,
+  Users,
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { apiClient } from '@/lib/api';
+import {
+  lader_2,
+  Deacon_2,
+  NL,
+  WhatsappCommunity_2,
+  Workforce_bg,
+} from '@/shared/assets';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
 
-const MORE_RESOURCES = [
+const ALL_RESOURCES = [
   {
     title: 'Sermons',
     label: 'Messages',
     desc: 'Watch and listen to messages straight from the house.',
     href: '/resources/sermons',
     cta: 'Browse sermons',
-    img: '/images/conference-2025.webp',
+    img: lader_2,
     icon: BookOpen,
   },
   {
@@ -36,7 +48,7 @@ const MORE_RESOURCES = [
     desc: 'Reach out for prayer, counselling, and pastoral guidance.',
     href: '/pastoral',
     cta: 'Request care',
-    img: '/images/supernatural-service.webp',
+    img: Deacon_2,
     icon: Heart,
   },
   {
@@ -45,10 +57,171 @@ const MORE_RESOURCES = [
     desc: 'Books, materials, and resources to deepen your faith.',
     href: '/resources/store',
     cta: 'Visit store',
-    img: '/images/christmas-eve.webp',
+    img: Workforce_bg,
     icon: ShoppingBag,
   },
+  {
+    title: 'Events',
+    label: 'Programs',
+    desc: 'Upcoming services, conferences, and special gatherings.',
+    href: '/events',
+    cta: 'View events',
+    img: NL,
+    icon: Calendar,
+  },
+  {
+    title: 'Ministries',
+    label: 'Departments',
+    desc: 'Find your place in one of our active church ministries.',
+    href: '/ministries',
+    cta: 'Explore ministries',
+    img: WhatsappCommunity_2,
+    icon: Users,
+  },
 ];
+
+/* ── Resource Carousel component ────────────────────── */
+
+function ResourceCarousel() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [translateX, setTranslateX] = useState(0);
+  const [maxTranslate, setMaxTranslate] = useState(0);
+
+  const updateMax = () => {
+    if (!trackRef.current?.parentElement) return;
+    const max =
+      trackRef.current.scrollWidth - trackRef.current.parentElement.clientWidth;
+    setMaxTranslate(Math.max(0, max));
+  };
+
+  useEffect(() => {
+    updateMax();
+    window.addEventListener('resize', updateMax);
+    return () => window.removeEventListener('resize', updateMax);
+  }, []);
+
+  const stepSize = () => {
+    const card = trackRef.current?.children[0] as HTMLElement | undefined;
+    if (!card) return 300;
+    // gap-5 = 20px
+    return card.offsetWidth + 20;
+  };
+
+  const prev = () => setTranslateX(p => Math.max(0, p - stepSize()));
+  const next = () => setTranslateX(p => Math.min(maxTranslate, p + stepSize()));
+
+  const canPrev = translateX > 0;
+  const canNext = translateX < maxTranslate;
+
+  return (
+    <div className="mt-16 border-t border-[var(--app-ink)]/8 pt-14">
+      {/* Header */}
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div>
+          <p className="mb-2 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Explore
+          </p>
+          <h3
+            className="font-headline font-normal text-[var(--app-ink)]"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ fontSize: 'var(--type-display-sm)' }}
+          >
+            You can do more
+          </h3>
+        </div>
+
+        {/* Navigation arrows */}
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={prev}
+            disabled={!canPrev}
+            aria-label="Previous"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ borderRadius: 'var(--radius-button)' }}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={next}
+            disabled={!canNext}
+            aria-label="Next"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ borderRadius: 'var(--radius-button)' }}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Carousel track */}
+      <div className="overflow-hidden">
+        <div
+          ref={trackRef}
+          className="flex gap-5 transition-transform duration-500 ease-in-out"
+          // eslint-disable-next-line no-restricted-syntax
+          style={{ transform: `translateX(-${translateX}px)` }}
+        >
+          {ALL_RESOURCES.map(item => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="group relative flex h-[380px] w-full shrink-0 flex-col justify-end overflow-hidden sm:h-[360px] sm:w-[calc(50%-0.625rem)] lg:h-[400px] lg:w-[calc(33.333%-0.833rem)]"
+                // eslint-disable-next-line no-restricted-syntax
+                style={{ borderRadius: 'var(--radius-card)' }}
+              >
+                {/* Background image — shrinks to fill card exactly */}
+                <Image
+                  src={item.img}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  quality={85}
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.06]"
+                />
+                {/* Strong dark gradient — bottom-up so text is always readable */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/10" />
+                {/* Subtle top vignette */}
+                <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent" />
+
+                {/* Icon chip — top right */}
+                <div
+                  className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[var(--app-primary)]/80"
+                  // eslint-disable-next-line no-restricted-syntax
+                  style={{ borderRadius: 'var(--radius-badge)' }}
+                >
+                  <Icon className="h-3.5 w-3.5 text-white" />
+                </div>
+
+                {/* Content */}
+                <div className="relative z-10 p-6">
+                  <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                    {item.label}
+                  </p>
+                  <p className="mt-1.5 font-headline text-[1.2rem] font-normal leading-snug text-white">
+                    {item.title}
+                  </p>
+                  <p className="mt-1.5 font-ui text-[0.76rem] leading-[1.6] text-white/60">
+                    {item.desc}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
+                    {item.cta}
+                    <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type Subscriber = { name: string; email: string };
 
@@ -139,9 +312,9 @@ export default function ResourceSection() {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const thumb =
     recentVideo?.thumbnail ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (recentVideo as any)?.thumbnails?.medium?.url ||
     '/images/placeholder.webp';
   const videoUrl = recentVideo?.id
@@ -164,6 +337,7 @@ export default function ResourceSection() {
             </p>
             <h2
               className="font-headline font-normal text-[var(--app-ink)]"
+              // eslint-disable-next-line no-restricted-syntax
               style={{ fontSize: 'var(--type-display-sm)' }}
             >
               Fresh from the house
@@ -197,6 +371,7 @@ export default function ResourceSection() {
               <>
                 <h3
                   className="font-headline font-normal leading-snug text-[var(--app-ink)]"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)' }}
                 >
                   {recentVideo.title}
@@ -218,6 +393,7 @@ export default function ResourceSection() {
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ borderRadius: 'var(--radius-button)' }}
                 >
                   <PlayCircle className="h-4 w-4" />
@@ -227,6 +403,7 @@ export default function ResourceSection() {
               <Link
                 href="/resources/sermons"
                 className="inline-flex h-12 items-center gap-2 border border-[var(--app-ink)]/20 px-7 text-[0.8rem] font-semibold text-[var(--app-ink)] transition hover:border-[var(--app-ink)]/40 active:scale-[0.98]"
+                // eslint-disable-next-line no-restricted-syntax
                 style={{ borderRadius: 'var(--radius-button)' }}
               >
                 All sermons <ArrowRight className="h-4 w-4" />
@@ -248,6 +425,7 @@ export default function ResourceSection() {
                   }
                   placeholder="Email address"
                   className="h-11 flex-1 border border-[var(--app-ink)]/15 bg-white px-4 text-sm text-[var(--app-ink)] outline-none placeholder:text-[var(--app-ink)]/30 focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ borderRadius: 'var(--radius-input)' }}
                 />
                 <Button
@@ -256,6 +434,7 @@ export default function ResourceSection() {
                   size="sm"
                   disabled={submitting}
                   className="h-11 px-5 text-[0.78rem]"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ borderRadius: 'var(--radius-button)' }}
                 >
                   {submitting ? 'Sending…' : submitted ? '✓ Done' : 'Subscribe'}
@@ -267,6 +446,7 @@ export default function ResourceSection() {
           {/* Right — video thumbnail */}
           <div
             className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl"
+            // eslint-disable-next-line no-restricted-syntax
             style={{ borderRadius: 'var(--radius-card)' }}
           >
             {loading ? (
@@ -308,71 +488,7 @@ export default function ResourceSection() {
         </div>
 
         {/* ── You can do more ──────────────────────────────── */}
-        <div className="mt-16 border-t border-[var(--app-ink)]/8 pt-14">
-          <div className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="mb-2 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Explore
-              </p>
-              <h3
-                className="font-headline font-normal text-[var(--app-ink)]"
-                style={{ fontSize: 'var(--type-display-sm)' }}
-              >
-                You can do more
-              </h3>
-            </div>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-3">
-            {MORE_RESOURCES.map(item => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden bg-[var(--app-ink)]/8"
-                  style={{ borderRadius: 'var(--radius-card)' }}
-                >
-                  {/* Background image */}
-                  <img
-                    src={item.img}
-                    alt={item.title}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                    loading="lazy"
-                  />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/35 to-black/10" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-transparent transition-opacity duration-300 group-hover:bg-black/10" />
-
-                  {/* Icon chip — top right */}
-                  <div
-                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center bg-white/10 backdrop-blur-sm transition duration-300 group-hover:bg-[var(--app-primary)]/80"
-                    style={{ borderRadius: 'var(--radius-badge)' }}
-                  >
-                    <Icon className="h-3.5 w-3.5 text-white" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="relative z-10 p-6">
-                    <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                      {item.label}
-                    </p>
-                    <p className="mt-1.5 font-headline text-[1.25rem] font-normal leading-snug text-white">
-                      {item.title}
-                    </p>
-                    <p className="mt-1.5 font-ui text-[0.78rem] leading-[1.6] text-white/60">
-                      {item.desc}
-                    </p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
-                      {item.cta}{' '}
-                      <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
+        <ResourceCarousel />
       </Container>
     </Section>
   );
