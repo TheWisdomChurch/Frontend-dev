@@ -11,27 +11,6 @@ import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
 type Quote = { id: string | number; text: string; name: string; role: string };
 
-const FALLBACK_QUOTES: Quote[] = [
-  {
-    id: 'f1',
-    text: 'This church gave me a family and a purpose. I came lost and found my assignment here.',
-    name: 'Sarah O.',
-    role: 'Member since 2021',
-  },
-  {
-    id: 'f2',
-    text: 'The Word taught here changed the way I see myself. I walked in broken and left whole.',
-    name: 'Emmanuel A.',
-    role: 'Wisdom House family',
-  },
-  {
-    id: 'f3',
-    text: "My marriage was restored here. God's Word became practical and powerful in my home.",
-    name: 'Mr & Mrs Bello',
-    role: 'Wisdom House family',
-  },
-];
-
 function mapToQuote(t: ApiTestimonial): Quote {
   const name =
     t.fullName ||
@@ -48,7 +27,8 @@ function mapToQuote(t: ApiTestimonial): Quote {
 const AUTO_ADVANCE_MS = 6000;
 
 export default function HomeTestimonials() {
-  const [quotes, setQuotes] = useState<Quote[]>(FALLBACK_QUOTES);
+  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -59,11 +39,12 @@ export default function HomeTestimonials() {
       try {
         const data = await apiClient.listApprovedTestimonials?.();
         const arr: ApiTestimonial[] = Array.isArray(data) ? data : [];
-        if (mounted && arr.length > 0) {
+        if (mounted) {
           setQuotes(arr.slice(0, 8).map(mapToQuote));
+          setLoading(false);
         }
       } catch {
-        // keep fallback
+        if (mounted) setLoading(false);
       }
     }, 1200);
     return () => {
@@ -108,16 +89,44 @@ export default function HomeTestimonials() {
 
           {/* Quote area */}
           <div className="relative min-h-[220px]">
+            {/* Loading state */}
+            {loading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                <span className="block h-2 w-2 animate-ping rounded-full bg-[var(--app-primary)]" />
+                <p className="font-ui text-[0.72rem] uppercase tracking-[0.18em] text-[var(--app-ink)]/30">
+                  Loading testimonies…
+                </p>
+              </div>
+            )}
+
+            {/* Empty state — API returned nothing */}
+            {!loading && quotes.length === 0 && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
+                <p
+                  className="font-headline font-normal italic text-[var(--app-ink)]/35"
+                  // eslint-disable-next-line no-restricted-syntax
+                  style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}
+                >
+                  Testimonies coming soon.
+                </p>
+                <p className="font-ui text-[0.72rem] text-[var(--app-ink)]/25">
+                  Be the first to share your story.
+                </p>
+              </div>
+            )}
+
             {/* Decorative " */}
-            <span
-              className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 select-none font-headline text-[10rem] leading-none text-[var(--app-primary)] opacity-[0.07]"
-              aria-hidden="true"
-            >
-              &ldquo;
-            </span>
+            {!loading && quotes.length > 0 && (
+              <span
+                className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 select-none font-headline text-[10rem] leading-none text-[var(--app-primary)] opacity-[0.07]"
+                aria-hidden="true"
+              >
+                &ldquo;
+              </span>
+            )}
 
             <AnimatePresence mode="wait">
-              {q ? (
+              {!loading && q ? (
                 <motion.div
                   key={q.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -128,6 +137,7 @@ export default function HomeTestimonials() {
                 >
                   <blockquote
                     className="font-headline font-normal italic leading-[1.55] text-[var(--app-ink)]"
+                    // eslint-disable-next-line no-restricted-syntax
                     style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.75rem)' }}
                   >
                     &ldquo;{q.text}&rdquo;
@@ -151,7 +161,9 @@ export default function HomeTestimonials() {
           </div>
 
           {/* Controls */}
-          <div className="mt-10 flex items-center justify-center gap-6">
+          <div
+            className={`mt-10 flex items-center justify-center gap-6 transition-opacity duration-300 ${loading || quotes.length === 0 ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
+          >
             <button
               type="button"
               onClick={prev}
@@ -170,6 +182,7 @@ export default function HomeTestimonials() {
                   onClick={() => goTo(i)}
                   aria-label={`Go to testimonial ${i + 1}`}
                   className="h-1.5 rounded-full transition-all duration-300"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{
                     width: i === current ? '20px' : '6px',
                     backgroundColor:

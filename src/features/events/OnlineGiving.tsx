@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ArrowRight, Heart, Phone } from 'lucide-react';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import GivingModal from '@/shared/ui/modals/GivingModal';
@@ -55,15 +56,17 @@ export default function OnlineGiving() {
     <>
       <Section padding="none" className="bg-[var(--app-dark)]">
         <Container size="xl" className="py-section-lg">
-          <div className="mx-auto max-w-[660px] text-center">
+          <div className="mx-auto max-w-[720px]">
             {/* Gold rule */}
             <span
               className="mx-auto mb-10 block h-[2px] w-10 bg-[var(--app-primary)]"
               aria-hidden="true"
             />
 
+            {/* Headline */}
             <h2
-              className="font-headline font-normal leading-[0.98] text-white"
+              className="text-center font-headline font-normal leading-[0.98] text-white"
+              // eslint-disable-next-line no-restricted-syntax
               style={{ fontSize: 'var(--type-display-md)' }}
             >
               Your generosity
@@ -74,32 +77,76 @@ export default function OnlineGiving() {
               the house.
             </h2>
 
-            <p className="mx-auto mt-8 max-w-[460px] text-[0.95rem] leading-[1.8] text-white/50 italic">
+            {/* Scripture */}
+            <p className="mx-auto mt-7 max-w-[460px] text-center text-[0.95rem] italic leading-[1.8] text-white/45">
               &ldquo;As each has purposed in his heart, so let him give… God
               loves a cheerful giver.&rdquo;
               <br />
-              <span className="not-italic text-white/30">
+              <span className="not-italic text-white/25">
                 2 Corinthians 9:7
               </span>
             </p>
 
-            {/* Primary CTA(s) */}
-            {loading ? null : givingOptions.length > 0 ? (
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            {/* Giving options */}
+            {!loading && givingOptions.length > 0 ? (
+              <div
+                className={`mt-12 grid gap-4 ${
+                  givingOptions.length === 1
+                    ? 'max-w-sm mx-auto'
+                    : givingOptions.length === 2
+                      ? 'sm:grid-cols-2'
+                      : 'sm:grid-cols-2 lg:grid-cols-3'
+                }`}
+              >
                 {givingOptions.slice(0, 3).map(opt => (
                   <button
                     key={opt.title}
                     type="button"
                     onClick={() => handleGive(opt)}
-                    className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-                    style={{ borderRadius: 'var(--radius-button)' }}
+                    className="group relative flex flex-col p-6 text-left border border-white/10 bg-white/[0.04] transition-all duration-300 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.07] hover:shadow-[inset_0_1px_0_rgba(201,150,26,0.15)]"
+                    // eslint-disable-next-line no-restricted-syntax
+                    style={{ borderRadius: 'var(--radius-card)' }}
                   >
-                    {opt.title}
+                    {/* Gold top accent */}
+                    <span
+                      className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-[var(--app-primary)] transition-transform duration-300 group-hover:scale-x-100"
+                      aria-hidden="true"
+                      // eslint-disable-next-line no-restricted-syntax
+                      style={{
+                        borderRadius:
+                          'var(--radius-card) var(--radius-card) 0 0',
+                      }}
+                    />
+
+                    {/* Icon */}
+                    <div
+                      className="mb-4 flex h-10 w-10 items-center justify-center bg-[var(--app-primary)]/10 transition duration-300 group-hover:bg-[var(--app-primary)]/18"
+                      // eslint-disable-next-line no-restricted-syntax
+                      style={{ borderRadius: 'var(--radius-badge)' }}
+                    >
+                      <Heart className="h-4 w-4 text-[var(--app-primary)]" />
+                    </div>
+
+                    <p className="font-ui text-[0.82rem] font-bold text-white">
+                      {opt.title}
+                    </p>
+                    {opt.description ? (
+                      <p className="mt-1.5 font-ui text-[0.76rem] leading-[1.65] text-white/45">
+                        {opt.description}
+                      </p>
+                    ) : null}
+
+                    <span className="mt-auto flex items-center justify-between pt-5">
+                      <span className="font-ui text-[0.72rem] font-semibold text-[var(--app-primary)]/70 transition group-hover:text-[var(--app-primary)]">
+                        Give now
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5 text-white/25 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
+                    </span>
                   </button>
                 ))}
               </div>
-            ) : (
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            ) : !loading ? (
+              <div className="mt-12 text-center">
                 <button
                   type="button"
                   onClick={() =>
@@ -110,33 +157,37 @@ export default function OnlineGiving() {
                       actionLabel: 'Got it',
                     })
                   }
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ borderRadius: 'var(--radius-button)' }}
                 >
                   Give Online
                 </button>
               </div>
-            )}
+            ) : null}
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
+            {/* Secondary actions */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <button
                 type="button"
                 onClick={handleContactCall}
-                className="inline-flex h-10 items-center gap-2 border border-[var(--app-primary)]/40 px-6 text-[0.75rem] font-semibold text-[var(--app-primary)] transition hover:border-[var(--app-primary)] active:scale-[0.98]"
+                className="inline-flex h-10 items-center gap-2 border border-white/12 px-5 font-ui text-[0.75rem] font-semibold text-white/50 transition hover:border-white/22 hover:text-white/80 active:scale-[0.98]"
+                // eslint-disable-next-line no-restricted-syntax
                 style={{ borderRadius: 'var(--radius-button)' }}
               >
+                <Phone className="h-3.5 w-3.5" />
                 Other ways to give
               </button>
               <Link
                 href="/contact"
-                className="inline-flex h-10 items-center px-5 text-[0.75rem] text-white/35 transition hover:text-white/65"
+                className="inline-flex h-10 items-center px-5 font-ui text-[0.75rem] text-white/30 transition hover:text-white/65"
               >
                 Contact us
               </Link>
             </div>
 
             {/* Trust line */}
-            <p className="mt-10 text-[0.68rem] uppercase tracking-[0.18em] text-white/20">
+            <p className="mt-10 text-center font-ui text-[0.65rem] uppercase tracking-[0.18em] text-white/18">
               100% Secured · Instant Receipt · Tax Deductible
             </p>
           </div>

@@ -43,6 +43,11 @@ const HomeTestimonials = nextDynamic(
   { ssr: false, loading: () => <SectionFallback /> }
 );
 
+const ConnectPortal = nextDynamic(
+  () => import('@/features/connect/ConnectPortal'),
+  { ssr: false, loading: () => <SectionFallback height="min-h-[520px]" /> }
+);
+
 const OnlineGiving = nextDynamic(
   () => import('@/features/events/OnlineGiving'),
   { ssr: false, loading: () => <SectionFallback /> }
@@ -249,6 +254,14 @@ export default function Home() {
           suppressHydrationWarning
         >
           <JoinUs />
+        </section>
+
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
+          <ConnectPortal />
         </section>
 
         <section

@@ -362,13 +362,16 @@ export default function JoinWisdomHouse() {
         </div>
 
         {/* ── General CTA ─────────────────────────────────── */}
-        <div className="mt-8 text-center">
+        <div className="mt-8 flex justify-center">
           <button
             type="button"
             onClick={() => openFor('')}
-            className="font-ui text-[0.8rem] font-semibold text-[var(--app-ink)]/45 underline underline-offset-4 transition hover:text-[var(--app-primary)]"
+            className="group inline-flex h-11 items-center gap-2 border border-[var(--app-ink)]/20 bg-transparent px-6 font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ borderRadius: 'var(--radius-button)' }}
           >
-            Not sure which team? Apply anyway →
+            Not sure which team? Apply anyway
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
         </div>
       </Container>

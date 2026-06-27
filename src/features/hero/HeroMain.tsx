@@ -9,6 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, CalendarDays, PlayCircle } from 'lucide-react';
 
 import { Section, Container } from '@/shared/layout';
+import { lader as laderImg } from '@/shared/assets';
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import type { YouTubeVideo } from '@/lib/types';
@@ -256,20 +257,19 @@ export default function HeroSection({
       perf="none"
       className="relative min-h-[100svh] w-full overflow-hidden bg-[#030303]"
     >
-      {/* ── Video background (default, no bgImage) ────────────── */}
+      {/* ── Default background image (lader.jpeg) ─────────────── */}
       {!content?.bgImage && (
         <div className="absolute inset-0 z-[5]">
-          <video
-            src="/videos/videoBg.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="h-full w-full object-cover"
+          <Image
+            src={laderImg}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={90}
+            className="object-cover"
             // eslint-disable-next-line no-restricted-syntax
             style={{ objectPosition: 'center 30%' }}
-            aria-hidden="true"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/55 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/65" />
