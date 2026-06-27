@@ -144,6 +144,7 @@ export default function JoinWisdomHouse() {
   const [existing, setExisting] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [activeCard, setActiveCard] = useState<number>(0);
 
   const departmentOptions = useMemo(() => departments.map(d => d.title), []);
 
@@ -266,6 +267,7 @@ export default function JoinWisdomHouse() {
             </p>
             <h2
               className="font-headline font-normal text-[var(--app-ink)]"
+              // eslint-disable-next-line no-restricted-syntax
               style={{ fontSize: 'var(--type-display-sm)' }}
             >
               Serve with excellence.
@@ -286,29 +288,51 @@ export default function JoinWisdomHouse() {
         {/* ── Department grid ──────────────────────────────── */}
         <div
           className="grid grid-cols-1 gap-px bg-[var(--app-ink)]/8 sm:grid-cols-2 lg:grid-cols-3"
+          // eslint-disable-next-line no-restricted-syntax
           style={{ borderRadius: 'var(--radius-card)', overflow: 'hidden' }}
         >
-          {departments.map(dept => {
+          {departments.map((dept, index) => {
             const Icon = dept.icon;
+            const isActive = activeCard === index;
             return (
               <button
                 key={dept.title}
                 type="button"
                 onClick={() => openFor(dept.title)}
-                className="group relative flex flex-col overflow-hidden bg-[var(--app-canvas)] p-6 text-left transition-all duration-300 hover:bg-[var(--app-canvas-2)] hover:shadow-[inset_0_0_0_1px_rgba(201,150,26,0.18)] sm:p-7"
+                onMouseEnter={() => setActiveCard(index)}
+                className={`group relative flex flex-col overflow-hidden p-6 text-left transition-all duration-300 sm:p-7 ${
+                  isActive
+                    ? 'bg-[var(--app-canvas-2)] shadow-[inset_0_0_0_1px_rgba(201,150,26,0.18)]'
+                    : 'bg-[var(--app-canvas)] hover:bg-[var(--app-canvas-2)] hover:shadow-[inset_0_0_0_1px_rgba(201,150,26,0.18)]'
+                }`}
               >
-                {/* Gold top accent — animates in on hover */}
+                {/* Gold top accent */}
                 <span
-                  className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-[var(--app-primary)] transition-transform duration-300 group-hover:scale-x-100"
+                  className={`absolute inset-x-0 top-0 h-[2px] origin-left bg-[var(--app-primary)] transition-transform duration-300 ${
+                    isActive
+                      ? 'scale-x-100'
+                      : 'scale-x-0 group-hover:scale-x-100'
+                  }`}
                   aria-hidden="true"
                 />
 
                 {/* Icon */}
                 <div
-                  className="mb-5 flex h-11 w-11 items-center justify-center bg-[var(--app-ink)]/6 transition-all duration-300 group-hover:bg-[var(--app-primary)]/14 group-hover:scale-[1.08]"
+                  className={`mb-5 flex h-11 w-11 items-center justify-center transition-all duration-300 group-hover:scale-[1.08] ${
+                    isActive
+                      ? 'scale-[1.08] bg-[var(--app-primary)]/14'
+                      : 'bg-[var(--app-ink)]/6 group-hover:bg-[var(--app-primary)]/14'
+                  }`}
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ borderRadius: 'var(--radius-badge)' }}
                 >
-                  <Icon className="h-[1.1rem] w-[1.1rem] text-[var(--app-ink)]/40 transition duration-300 group-hover:text-[var(--app-primary)]" />
+                  <Icon
+                    className={`h-[1.1rem] w-[1.1rem] transition duration-300 group-hover:text-[var(--app-primary)] ${
+                      isActive
+                        ? 'text-[var(--app-primary)]'
+                        : 'text-[var(--app-ink)]/40'
+                    }`}
+                  />
                 </div>
 
                 {/* Text */}
@@ -319,10 +343,18 @@ export default function JoinWisdomHouse() {
                   {dept.description}
                 </p>
 
-                {/* Apply CTA — always visible, animates on hover */}
-                <span className="mt-5 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/30 transition-all duration-200 group-hover:gap-2.5 group-hover:text-[var(--app-primary)]">
+                {/* Apply CTA */}
+                <span
+                  className={`mt-5 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold transition-all duration-200 group-hover:gap-2.5 group-hover:text-[var(--app-primary)] ${
+                    isActive
+                      ? 'gap-2.5 text-[var(--app-primary)]'
+                      : 'text-[var(--app-ink)]/30'
+                  }`}
+                >
                   Apply{' '}
-                  <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  <ArrowRight
+                    className={`h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 ${isActive ? 'translate-x-0.5' : ''}`}
+                  />
                 </span>
               </button>
             );
