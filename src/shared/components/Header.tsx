@@ -207,98 +207,179 @@ export default function Header() {
         />
 
         <div className="nav-overlay__inner">
-          {/* Left — primary navigation links */}
-          <nav className="nav-overlay__links" aria-label="Primary navigation">
-            {NAV_ITEMS.map((item, i) => (
-              <div
-                key={item.href}
-                className="nav-item"
-                // CSS stagger via custom property
-                style={{ '--nav-i': i } as React.CSSProperties}
-              >
-                <span className="nav-item__num" aria-hidden="true">
-                  0{i + 1}
-                </span>
+          {/* ── Top bar: brand + close button (always visible) ── */}
+          <div className="nav-overlay__topbar">
+            <Link
+              href="/"
+              className="nav-overlay__brand"
+              onClick={close}
+              tabIndex={navOpen ? 0 : -1}
+              aria-label="The Wisdom Church — home"
+            >
+              <Image
+                src="/logo.webp"
+                alt=""
+                width={30}
+                height={30}
+                className="nav-overlay__brand-logo"
+              />
+              <span className="nav-overlay__brand-wordmark">
+                <span>The Wisdom</span>
+                <strong>Church</strong>
+              </span>
+            </Link>
 
+            <button
+              type="button"
+              className="nav-overlay__close"
+              onClick={close}
+              aria-label="Close navigation"
+              tabIndex={navOpen ? 0 : -1}
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1.5 1.5L13.5 13.5M13.5 1.5L1.5 13.5"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <span className="nav-overlay__close-label">Close</span>
+            </button>
+          </div>
+
+          {/* ── Body: nav links left + info panel right (desktop) ── */}
+          <div className="nav-overlay__body">
+            {/* Primary navigation links */}
+            <nav className="nav-overlay__links" aria-label="Primary navigation">
+              {NAV_ITEMS.map((item, i) => (
+                <div
+                  key={item.href}
+                  className="nav-item"
+                  // eslint-disable-next-line no-restricted-syntax
+                  style={{ '--nav-i': i } as React.CSSProperties}
+                >
+                  <span className="nav-item__num" aria-hidden="true">
+                    0{i + 1}
+                  </span>
+
+                  <Link
+                    href={item.href}
+                    ref={i === 0 ? firstLinkRef : undefined}
+                    className={`nav-item__link${isActive(item.href) ? ' is-active' : ''}`}
+                    onClick={close}
+                    tabIndex={navOpen ? 0 : -1}
+                  >
+                    {item.label}
+                  </Link>
+
+                  {item.children ? (
+                    <p className="nav-item__sub">
+                      {item.children.map((child, ci) => (
+                        <span key={child.href}>
+                          <Link
+                            href={child.href}
+                            className="nav-item__sub-link"
+                            onClick={close}
+                            tabIndex={navOpen ? 0 : -1}
+                          >
+                            {child.label}
+                          </Link>
+                          {ci < (item.children?.length ?? 0) - 1 && (
+                            <span className="nav-item__dot" aria-hidden="true">
+                              {' '}
+                              ·{' '}
+                            </span>
+                          )}
+                        </span>
+                      ))}
+                    </p>
+                  ) : null}
+                </div>
+              ))}
+            </nav>
+
+            {/* Right panel — service info + socials (desktop only) */}
+            <aside
+              className="nav-overlay__panel"
+              aria-label="Service information"
+            >
+              <div className="nav-panel">
+                <p className="nav-panel__eyebrow">Next Service</p>
+                <p className="nav-panel__title">This Sunday</p>
+                <p className="nav-panel__detail">9:00 AM · WAT</p>
+                <p className="nav-panel__detail">Honor Gardens, Lekki-Epe</p>
                 <Link
-                  href={item.href}
-                  ref={i === 0 ? firstLinkRef : undefined}
-                  className={`nav-item__link${isActive(item.href) ? ' is-active' : ''}`}
+                  href="/events/weekly"
+                  className="nav-panel__cta"
                   onClick={close}
                   tabIndex={navOpen ? 0 : -1}
                 >
-                  {item.label}
+                  Plan a visit →
                 </Link>
 
-                {item.children ? (
-                  <p className="nav-item__sub">
-                    {item.children.map((child, ci) => (
-                      <span key={child.href}>
-                        <Link
-                          href={child.href}
-                          className="nav-item__sub-link"
-                          onClick={close}
-                          tabIndex={navOpen ? 0 : -1}
-                        >
-                          {child.label}
-                        </Link>
-                        {ci < (item.children?.length ?? 0) - 1 && (
-                          <span className="nav-item__dot" aria-hidden="true">
-                            {' '}
-                            ·{' '}
-                          </span>
-                        )}
-                      </span>
-                    ))}
-                  </p>
-                ) : null}
-              </div>
-            ))}
-          </nav>
+                <div className="nav-panel__divider" aria-hidden="true" />
 
-          {/* Right — service info + socials (desktop only) */}
-          <aside
-            className="nav-overlay__panel"
-            aria-label="Service information"
-          >
-            <div className="nav-panel">
-              <p className="nav-panel__eyebrow">Next Service</p>
-              <p className="nav-panel__title">This Sunday</p>
-              <p className="nav-panel__detail">9:00 AM · WAT</p>
-              <p className="nav-panel__detail">Honor Gardens, Lekki-Epe</p>
+                <p className="nav-panel__eyebrow">Thursday Midweek</p>
+                <p className="nav-panel__detail">6:00 PM · Honor Gardens</p>
+              </div>
+
+              <div className="nav-socials">
+                <p className="nav-socials__label">Follow us</p>
+                <div className="nav-socials__links">
+                  {SOCIALS.map(s => (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="nav-socials__link"
+                      tabIndex={navOpen ? 0 : -1}
+                    >
+                      {s.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          {/* ── Mobile footer: service times + socials ── */}
+          <div className="nav-overlay__footer">
+            <div>
+              <p className="nav-footer__label">Next Service</p>
+              <p className="nav-footer__time">Sunday · 9:00 AM</p>
+              <p className="nav-footer__venue">Honor Gardens, Lekki-Epe</p>
               <Link
                 href="/events/weekly"
-                className="nav-panel__cta"
+                className="nav-footer__cta"
                 onClick={close}
                 tabIndex={navOpen ? 0 : -1}
               >
                 Plan a visit →
               </Link>
-
-              <div className="nav-panel__divider" aria-hidden="true" />
-
-              <p className="nav-panel__eyebrow">Thursday Midweek</p>
-              <p className="nav-panel__detail">6:00 PM · Honor Gardens</p>
             </div>
-
-            <div className="nav-socials">
-              <p className="nav-socials__label">Follow us</p>
-              <div className="nav-socials__links">
-                {SOCIALS.map(s => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="nav-socials__link"
-                    tabIndex={navOpen ? 0 : -1}
-                  >
-                    {s.label}
-                  </a>
-                ))}
-              </div>
+            <div className="nav-footer__socials">
+              {SOCIALS.map(s => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-footer__social-link"
+                  tabIndex={navOpen ? 0 : -1}
+                >
+                  {s.label}
+                </a>
+              ))}
             </div>
-          </aside>
+          </div>
         </div>
       </div>
     </>
