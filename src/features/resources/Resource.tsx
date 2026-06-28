@@ -20,11 +20,10 @@ import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { apiClient } from '@/lib/api';
 import {
-  lader_2,
-  Deacon_2,
-  NL,
+  WhatWeDo_3,
+  Deacon_1,
+  wisdomShirt_1,
   WhatsappCommunity_2,
-  Workforce_bg,
 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
@@ -39,7 +38,7 @@ const ALL_RESOURCES = [
     desc: 'Watch and listen to messages straight from the house.',
     href: '/resources/sermons',
     cta: 'Browse sermons',
-    img: lader_2,
+    img: WhatWeDo_3,
     icon: BookOpen,
   },
   {
@@ -48,7 +47,7 @@ const ALL_RESOURCES = [
     desc: 'Reach out for prayer, counselling, and pastoral guidance.',
     href: '/pastoral',
     cta: 'Request care',
-    img: Deacon_2,
+    img: Deacon_1,
     icon: Heart,
   },
   {
@@ -57,7 +56,7 @@ const ALL_RESOURCES = [
     desc: 'Books, materials, and resources to deepen your faith.',
     href: '/resources/store',
     cta: 'Visit store',
-    img: Workforce_bg,
+    img: wisdomShirt_1,
     icon: ShoppingBag,
   },
   {
@@ -66,7 +65,7 @@ const ALL_RESOURCES = [
     desc: 'Upcoming services, conferences, and special gatherings.',
     href: '/events',
     cta: 'View events',
-    img: NL,
+    img: WhatsappCommunity_2,
     icon: Calendar,
   },
   {
@@ -75,7 +74,7 @@ const ALL_RESOURCES = [
     desc: 'Find your place in one of our active church ministries.',
     href: '/ministries',
     cta: 'Explore ministries',
-    img: WhatsappCommunity_2,
+    img: WhatWeDo_3,
     icon: Users,
   },
 ];
@@ -175,19 +174,19 @@ function ResourceCarousel() {
                 // eslint-disable-next-line no-restricted-syntax
                 style={{ borderRadius: 'var(--radius-card)' }}
               >
-                {/* Background image — shrinks to fill card exactly */}
+                {/* Background image — covers card fully, no gaps */}
                 <Image
                   src={item.img}
                   alt={item.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   quality={85}
-                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.06]"
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
                 />
-                {/* Strong dark gradient — bottom-up so text is always readable */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/10" />
-                {/* Subtle top vignette */}
-                <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent" />
+                {/* Bottom-up gradient so text is readable, top stays bright */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/5" />
+                {/* Top vignette */}
+                <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
 
                 {/* Icon chip — top right */}
                 <div
