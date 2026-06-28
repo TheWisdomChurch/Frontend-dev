@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import { Check, Copy, Gift, ShieldCheck } from 'lucide-react';
+import { Check, Copy, ShieldCheck } from 'lucide-react';
 
 import { BaseModal, modalStyles } from './Base';
 import { H3, H4, BodySM, Caption } from '@/shared/text';

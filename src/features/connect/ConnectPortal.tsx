@@ -5,7 +5,7 @@ import { Play } from 'lucide-react';
 
 import { WhatsappCommunity } from '@/shared/assets';
 
-/* ── Inline social icons ─────────────────────────────── */
+/* ── Social icons ───────────────────────────────────── */
 
 const YtIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0">
@@ -42,28 +42,31 @@ const XIcon = () => (
   </svg>
 );
 
+/* WhatsApp icon */
+const WaIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+  </svg>
+);
+
 const SOCIALS = [
   {
     label: 'YouTube',
-    sub: 'Watch & stream',
     href: 'https://www.youtube.com/@wisdomchurchhq',
     Icon: YtIcon,
   },
   {
     label: 'Facebook',
-    sub: 'Join the community',
     href: 'https://www.facebook.com/wisdomchurchhq',
     Icon: FbIcon,
   },
   {
     label: 'Instagram',
-    sub: 'Follow along',
     href: 'https://www.instagram.com/wisdomchurchhq',
     Icon: IgIcon,
   },
   {
-    label: 'X (Twitter)',
-    sub: 'Latest updates',
+    label: 'X',
     href: 'https://x.com/wisdomchurchhq',
     Icon: XIcon,
   },
@@ -72,24 +75,48 @@ const SOCIALS = [
 export default function ConnectPortal() {
   return (
     <section className="relative w-full overflow-hidden bg-[var(--app-dark)]">
-      <div className="grid min-h-[520px] grid-cols-1 lg:grid-cols-2">
-        {/* ── Left — community image ──────────────────────────── */}
-        <div className="relative order-2 min-h-[300px] overflow-hidden lg:order-1 lg:min-h-0">
-          <Image
-            src={WhatsappCommunity}
-            alt="Wisdom Church community gathering"
-            fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            quality={88}
-            className="object-cover object-center"
-          />
-          {/* Blend into dark bg on right (desktop) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)]/80 via-transparent to-transparent lg:hidden" />
-          <div className="absolute inset-y-0 right-0 hidden w-32 bg-gradient-to-r from-transparent to-[var(--app-dark)] lg:block" />
-          <div className="absolute inset-y-0 left-0 hidden w-8 bg-gradient-to-l from-transparent to-[var(--app-dark)]/40 lg:block" />
+      <div className="lg:grid lg:grid-cols-2 lg:items-stretch">
+        {/* ── Left — community image (full image visible, not cropped) ── */}
+        <div className="relative order-2 bg-[var(--app-dark)] lg:order-1">
+          {/* Mobile: natural aspect ratio so full image shows */}
+          <div
+            className="relative w-full overflow-hidden lg:hidden"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{
+              aspectRatio: `${WhatsappCommunity.width} / ${WhatsappCommunity.height}`,
+            }}
+          >
+            <Image
+              src={WhatsappCommunity}
+              alt="Wisdom Church community gathering"
+              fill
+              sizes="100vw"
+              quality={88}
+              className="object-cover object-top"
+            />
+            {/* Bottom fade into section bg */}
+            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--app-dark)] to-transparent" />
+          </div>
+
+          {/* Desktop: full column height, object-contain shows full image */}
+          <div className="absolute inset-0 hidden lg:block">
+            <Image
+              src={WhatsappCommunity}
+              alt="Wisdom Church community gathering"
+              fill
+              sizes="50vw"
+              quality={88}
+              className="object-contain object-center"
+            />
+            {/* Right-edge blend into content column */}
+            <div className="absolute inset-y-0 right-0 w-36 bg-gradient-to-r from-transparent to-[var(--app-dark)]" />
+            {/* Subtle top/bottom vignettes */}
+            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[var(--app-dark)]/60 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[var(--app-dark)]/60 to-transparent" />
+          </div>
         </div>
 
-        {/* ── Right — social content ──────────────────────────── */}
+        {/* ── Right — social content ───────────────────────────────── */}
         <div className="order-1 flex flex-col justify-center px-8 py-14 sm:px-12 lg:order-2 lg:px-14 xl:px-20">
           {/* Eyebrow */}
           <p className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -113,24 +140,40 @@ export default function ConnectPortal() {
             Wisdom House family wherever you are in the world.
           </p>
 
-          {/* Stream live CTA */}
-          <a
-            href="https://www.youtube.com/@wisdomchurchhq"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-flex items-center gap-2.5 self-start bg-[var(--app-primary)] px-7 py-3 font-ui text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderRadius: 'var(--radius-button)' }}
-          >
-            <Play className="h-4 w-4 fill-[#0d0a06]" />
-            Stream services live
-          </a>
+          {/* Primary CTAs */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            {/* Stream live */}
+            <a
+              href="https://www.youtube.com/@wisdomchurchhq"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
+            >
+              <Play className="h-3.5 w-3.5 fill-[#0d0a06]" />
+              Stream services live
+            </a>
+
+            {/* WhatsApp community */}
+            <a
+              href="https://wa.me/2347069995333"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center gap-2.5 border border-[#25D366]/30 bg-[#25D366]/10 px-6 font-ui text-[0.78rem] font-bold text-[#25D366] transition hover:border-[#25D366]/50 hover:bg-[#25D366]/18 active:scale-[0.98]"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
+            >
+              <WaIcon />
+              Join WhatsApp community
+            </a>
+          </div>
 
           {/* Divider */}
           <span className="mt-10 block h-px w-12 bg-white/10" />
 
           {/* Follow us */}
-          <p className="mt-8 mb-4 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-white/28">
+          <p className="mb-4 mt-8 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-white/28">
             Follow us
           </p>
           <div className="flex flex-wrap gap-3">
@@ -139,8 +182,8 @@ export default function ConnectPortal() {
                 key={s.label}
                 href={s.href}
                 target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-2.5 border border-white/10 bg-white/[0.04] px-4 py-2.5 font-ui text-[0.78rem] font-semibold text-white/60 transition hover:border-white/22 hover:bg-white/[0.09] hover:text-white"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-4 py-2 font-ui text-[0.75rem] font-semibold text-white/55 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white"
                 // eslint-disable-next-line no-restricted-syntax
                 style={{ borderRadius: 'var(--radius-button)' }}
               >
