@@ -1304,7 +1304,7 @@ body.nav-open {
   }
 }
 
-/* Fill parent — use on a Next.js <Image fill> wrapper */
+/* Fill parent with cover — use on a Next.js <Image fill> wrapper */
 .img-fill {
   position: relative;
   overflow: hidden;
@@ -1317,6 +1317,36 @@ body.nav-open {
     height: 100% !important;
     object-fit: cover;
     object-position: center;
+  }
+}
+
+/* Fill parent with contain — shows full image, no cropping, bg fills gaps */
+.img-fill-contain {
+  position: relative;
+  overflow: hidden;
+
+  > img,
+  > span > img {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
+/* Natural ratio — image at its own aspect ratio, width 100%, height auto */
+.img-natural {
+  display: block;
+  width: 100%;
+
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
   }
 }
 
