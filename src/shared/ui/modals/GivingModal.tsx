@@ -47,25 +47,25 @@ export default function GivingModal({
       forceBottomSheet
     >
       <div className="space-y-5">
-        <section className="relative overflow-hidden rounded-[1.35rem] border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 p-5 sm:p-6">
-          <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/20 blur-3xl" />
-
-          <div className="relative flex gap-4">
-            <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
-              <Gift className="h-5 w-5" />
-            </div>
-
-            <div>
-              <BodySM className="italic text-white/78">
-                "Each of you should give what you have decided in your heart to
-                give, not reluctantly or under compulsion, for God loves a
-                cheerful giver."
-              </BodySM>
-              <BodySM weight="bold" className="mt-3 text-[var(--app-primary)]">
-                2 Corinthians 9:7
-              </BodySM>
-            </div>
-          </div>
+        <section
+          className="border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/8 p-5"
+          // eslint-disable-next-line no-restricted-syntax
+          style={{ borderRadius: 'var(--radius-card)' }}
+        >
+          <blockquote
+            className="pl-4"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ borderLeft: '2px solid var(--app-primary)' }}
+          >
+            <p className="font-ui text-[0.84rem] italic leading-[1.85] text-white/65">
+              &ldquo;Each of you should give what you have decided in your heart
+              to give, not reluctantly or under compulsion, for God loves a
+              cheerful giver.&rdquo;
+            </p>
+            <p className="mt-3 font-ui text-[0.72rem] font-bold text-[var(--app-primary)]">
+              2 Corinthians 9:7
+            </p>
+          </blockquote>
         </section>
 
         <section>
@@ -75,8 +75,12 @@ export default function GivingModal({
               <H3 className="mt-2 text-white">Account Details</H3>
             </div>
 
-            <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-white/55 sm:flex">
-              <ShieldCheck className="h-4 w-4 text-[var(--app-primary)]" />
+            <div
+              className="hidden items-center gap-1.5 border border-white/10 bg-white/[0.04] px-3 py-1.5 font-ui text-[0.68rem] font-semibold text-white/50 sm:flex"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
+            >
+              <ShieldCheck className="h-3.5 w-3.5 text-[var(--app-primary)]" />
               Secure giving
             </div>
           </div>
@@ -88,10 +92,16 @@ export default function GivingModal({
               return (
                 <article
                   key={`${account.bank}-${account.accountNumber}-${index}`}
-                  className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/20"
+                  className="overflow-hidden border border-white/[0.07] bg-white/[0.04]"
+                  // eslint-disable-next-line no-restricted-syntax
+                  style={{ borderRadius: 'var(--radius-card)' }}
                 >
                   <div className="flex items-center gap-4 border-b border-white/10 p-4 sm:p-5">
-                    <div className="grid h-12 w-12 flex-none place-items-center overflow-hidden rounded-2xl border border-white/10 bg-black/30">
+                    <div
+                      className="grid h-10 w-10 flex-none place-items-center overflow-hidden border border-white/10 bg-black/30"
+                      // eslint-disable-next-line no-restricted-syntax
+                      style={{ borderRadius: 'var(--radius-badge)' }}
+                    >
                       {account.image ? (
                         <Image
                           src={account.image}
@@ -119,7 +129,11 @@ export default function GivingModal({
                         Account Number
                       </Caption>
 
-                      <div className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                      <div
+                        className="mt-3 flex items-center gap-3 border border-white/10 bg-black/30 px-4 py-3"
+                        // eslint-disable-next-line no-restricted-syntax
+                        style={{ borderRadius: 'var(--radius-card)' }}
+                      >
                         <code className="min-w-0 flex-1 break-all font-mono text-lg font-bold tracking-[0.08em] text-white sm:text-xl">
                           {account.accountNumber}
                         </code>
@@ -177,12 +191,10 @@ export default function GivingModal({
           </div>
         </section>
 
-        <div className="rounded-[1.2rem] border border-white/10 bg-black/25 px-4 py-3">
-          <BodySM className="text-white/58">
-            After transfer, keep your receipt for reference. Thank you for
-            giving cheerfully and supporting the work of ministry.
-          </BodySM>
-        </div>
+        <p className="font-ui text-[0.76rem] leading-[1.75] text-white/35">
+          After transfer, keep your receipt for reference. Thank you for giving
+          cheerfully and supporting the work of ministry.
+        </p>
       </div>
     </BaseModal>
   );

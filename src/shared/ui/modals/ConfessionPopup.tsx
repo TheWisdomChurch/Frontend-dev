@@ -1,18 +1,9 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
-import {
-  ArrowLeft,
-  BookOpen,
-  Church,
-  HeartHandshake,
-  Sparkles,
-} from 'lucide-react';
+import { ArrowLeft, BookOpen } from 'lucide-react';
 
 import { BaseModal } from '@/shared/ui/modals/Base';
-import { Button } from '@/shared/utils/buttons';
-import { PlayfairText } from '@/shared/text/FontText';
-import { H3, BodyMD, Caption } from '@/shared/text';
 import { confessionContent } from '@/lib/data';
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { useWelcomeModal } from '@/shared/utils/hooks/Useconfession';
@@ -53,116 +44,157 @@ export default function ConfessionPopup({
     'We begin to prosper, we continue to prosper, until we become very prosperous.';
   const fullConfessionText = content?.confessionText || confessionContent;
 
+  const confessionParagraphs = fullConfessionText
+    .split('\n\n')
+    .map(p => p.trim())
+    .filter(Boolean);
+
   return (
     <BaseModal
       isOpen={isVisible}
       onClose={handleClose}
-      title={currentStep === 'welcome' ? welcomeTitle : 'Our Confession'}
-      subtitle={
-        currentStep === 'welcome'
-          ? 'A short stop before you continue exploring.'
-          : 'Speak this over your week with bold faith.'
-      }
-      maxWidth="max-w-2xl"
+      maxWidth="max-w-lg"
+      showCloseButton={false}
       forceBottomSheet
     >
       {currentStep === 'welcome' ? (
-        <div className="space-y-5">
-          <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-black/35">
-                <Image
-                  src={WisdomeHouseLogo}
-                  alt="The Wisdom Church"
-                  width={42}
-                  height={42}
-                  className="object-contain"
-                />
-              </div>
-
-              <div className="min-w-0">
-                <Caption className="uppercase tracking-[0.18em] text-[var(--app-primary)]">
-                  The Wisdom Church
-                </Caption>
-                <H3 className="mt-1 text-white">
-                  We are Equipped and Empowered
-                </H3>
-              </div>
+        <div className="space-y-6 pb-1">
+          {/* Brand row */}
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/40"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-badge)' }}
+            >
+              <Image
+                src={WisdomeHouseLogo}
+                alt="The Wisdom Church"
+                width={28}
+                height={28}
+                className="object-contain"
+              />
+            </div>
+            <div>
+              <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                The Wisdom Church
+              </p>
+              <p className="font-ui text-[0.68rem] text-white/35">
+                Lagos · Nigeria
+              </p>
             </div>
 
-            <BodyMD className="text-white/72">{welcomeMessage}</BodyMD>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            {[
-              { icon: Church, label: 'Worship' },
-              { icon: HeartHandshake, label: 'Community' },
-              { icon: Sparkles, label: 'Growth' },
-            ].map(item => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 text-center"
+            {/* Close */}
+            <button
+              type="button"
+              onClick={handleClose}
+              aria-label="Close"
+              className="ml-auto grid h-8 w-8 place-items-center border border-white/10 bg-white/[0.04] text-white/40 transition hover:text-white/80"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
+            >
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                className="h-3.5 w-3.5"
               >
-                <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-full bg-[var(--app-primary)]/10">
-                  <item.icon className="h-4 w-4 text-[var(--app-primary)]" />
-                </div>
-                <Caption className="text-white/75">{item.label}</Caption>
-              </div>
-            ))}
+                <path d="M3 3l10 10M13 3L3 13" />
+              </svg>
+            </button>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="ghost" onClick={showConfession} className="w-full">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Read Confession
-            </Button>
+          {/* Divider */}
+          <span className="block h-px w-full bg-white/[0.07]" />
 
-            <Button variant="primary" onClick={handleClose} className="w-full">
+          {/* Headline */}
+          <div>
+            <h3 className="font-headline text-[1.5rem] font-normal leading-[1.2] text-white">
+              {welcomeTitle}
+            </h3>
+            <p className="mt-4 font-ui text-[0.86rem] leading-[1.9] text-white/50">
+              {welcomeMessage}
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={showConfession}
+              className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-[0.78rem] font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
+            >
+              <BookOpen className="h-3.5 w-3.5 shrink-0" />
+              Read Confession
+            </button>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
+            >
               Continue
-            </Button>
+            </button>
           </div>
         </div>
       ) : (
-        <div className="space-y-5">
-          <div className="rounded-[1.35rem] border border-white/10 bg-[var(--app-primary)]/10 p-5">
-            <PlayfairText
-              as="p"
-              className="text-center text-base italic leading-8 text-white"
-              weight="regular"
+        <div className="space-y-5 pb-1">
+          {/* Motto */}
+          <blockquote
+            className="pl-4"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ borderLeft: '2px solid var(--app-primary)' }}
+          >
+            <p className="font-headline text-[1rem] font-normal italic leading-[1.75] text-white/70">
+              &ldquo;{motto}&rdquo;
+            </p>
+          </blockquote>
+
+          {/* Confession text */}
+          <div
+            className="max-h-[44svh] space-y-4 overflow-y-auto border border-white/[0.07] bg-black/25 p-5"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ borderRadius: 'var(--radius-card)' }}
+          >
+            {confessionParagraphs.map((paragraph, index) => (
+              <p
+                key={`${paragraph.slice(0, 24)}-${index}`}
+                className="font-ui text-[0.84rem] leading-[1.9] text-white/60"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {/* Actions */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={showWelcome}
+              className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-[0.78rem] font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
             >
-              {motto}
-            </PlayfairText>
-          </div>
-
-          <div className="max-h-[46svh] space-y-4 overflow-y-auto rounded-[1.35rem] border border-white/10 bg-black/25 p-5">
-            {fullConfessionText
-              .split('\n\n')
-              .map(paragraph => paragraph.trim())
-              .filter(Boolean)
-              .map((paragraph, index) => (
-                <BodyMD
-                  key={`${paragraph.slice(0, 24)}-${index}`}
-                  className="text-white/75"
-                >
-                  {paragraph}
-                </BodyMD>
-              ))}
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="ghost" onClick={showWelcome} className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
               Back
-            </Button>
-
-            <Button variant="primary" onClick={handleClose} className="w-full">
+            </button>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{ borderRadius: 'var(--radius-button)' }}
+            >
               I Believe It
-            </Button>
+            </button>
           </div>
 
-          <Caption className="text-center text-white/45">
-            This confession appears periodically and can always be revisited.
-          </Caption>
+          <p className="text-center font-ui text-[0.62rem] uppercase tracking-[0.16em] text-white/22">
+            This confession appears periodically — revisit any time.
+          </p>
         </div>
       )}
     </BaseModal>

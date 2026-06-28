@@ -185,11 +185,11 @@ export const BaseModal = memo(function BaseModal({
   const modalClassName = useMemo(
     () =>
       cn(
-        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/10 bg-[rgba(14,12,10,0.97)] text-white shadow-2xl shadow-black/55 backdrop-blur-xl',
+        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/[0.07] bg-[#0d0b09] text-white shadow-2xl shadow-black/65 backdrop-blur-2xl',
         'motion-safe:animate-[modal-enter_220ms_ease-out]',
         isSheet
-          ? 'max-h-[90svh] rounded-t-[1.75rem] rounded-b-none'
-          : 'max-h-[88svh] rounded-[1.75rem] sm:max-h-[90vh]',
+          ? 'max-h-[90svh] rounded-t-[1.25rem] rounded-b-none'
+          : 'max-h-[88svh] rounded-[0.875rem] sm:max-h-[90vh]',
         maxWidth
       ),
     [isSheet, maxWidth]
@@ -235,18 +235,24 @@ export const BaseModal = memo(function BaseModal({
         ) : null}
 
         {title || subtitle || showCloseButton ? (
-          <header className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-6">
+          <header className="flex items-start justify-between gap-4 border-b border-white/[0.07] px-5 py-4 sm:px-6 sm:py-5">
             <div className="min-w-0">
               {title ? (
-                <H2 id={titleId} className="text-white">
+                <h2
+                  id={titleId}
+                  className="font-headline text-[1.25rem] font-normal leading-snug text-white sm:text-[1.4rem]"
+                >
                   {title}
-                </H2>
+                </h2>
               ) : null}
 
               {subtitle ? (
-                <BodySM id={subtitleId} className="mt-2 text-white/58">
+                <p
+                  id={subtitleId}
+                  className="mt-1.5 font-ui text-[0.78rem] leading-[1.7] text-white/45"
+                >
                   {subtitle}
-                </BodySM>
+                </p>
               ) : null}
             </div>
 
@@ -256,9 +262,11 @@ export const BaseModal = memo(function BaseModal({
                 onClick={close}
                 disabled={!canClose}
                 aria-label="Close modal"
-                className="grid h-10 w-10 flex-none place-items-center rounded-full border border-white/10 bg-white/[0.05] text-white/70 transition hover:bg-white/[0.1] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="grid h-9 w-9 flex-none place-items-center border border-white/10 bg-white/[0.04] text-white/50 transition hover:bg-white/[0.09] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                // eslint-disable-next-line no-restricted-syntax
+                style={{ borderRadius: 'var(--radius-button)' }}
               >
-                <X className="h-4 w-4" />
+                <X className="h-3.5 w-3.5" />
               </button>
             ) : null}
           </header>
