@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -205,8 +205,6 @@ export default function SeniorPastor() {
                   rel="noreferrer"
                   aria-label={label}
                   className="flex h-8 w-8 items-center justify-center border border-white/10 bg-white/[0.04] text-white/40 transition hover:border-white/22 hover:text-white/75"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderRadius: 'var(--radius-badge)' }}
                 >
                   <Icon />
                 </a>

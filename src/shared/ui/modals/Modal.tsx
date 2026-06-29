@@ -263,8 +263,6 @@ export const BaseModal = memo(function BaseModal({
                 disabled={!canClose}
                 aria-label="Close modal"
                 className="grid h-9 w-9 flex-none place-items-center border border-white/10 bg-white/[0.04] text-white/50 transition hover:bg-white/[0.09] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-button)' }}
               >
                 <X className="h-3.5 w-3.5" />
               </button>

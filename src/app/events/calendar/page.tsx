@@ -1,267 +1,338 @@
-﻿'use client';
+'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, CalendarClock, Loader2, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
+import PageHero from '@/features/hero/PageHero';
+import { Container } from '@/shared/layout';
+import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
-import PageHero from '@/features/hero/PageHero';
-import { H1, H2, BodySM, Caption, Eyebrow } from '@/shared/text';
-import { Container, Section } from '@/shared/layout';
 
-function toDateKey(event: EventPublic): string | null {
+function getTimestamp(event: EventPublic): number {
   if (event.startAt) {
-    const date = new Date(event.startAt);
-
-    if (!Number.isNaN(date.getTime())) {
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-        date.getDate()
-      ).padStart(2, '0')}`;
-    }
+    const t = new Date(event.startAt).getTime();
+    if (!Number.isNaN(t)) return t;
   }
-
-  const raw = event.date?.trim();
-  if (!raw) return null;
-
-  const date = new Date(`${raw}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return null;
-
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-    date.getDate()
-  ).padStart(2, '0')}`;
+  if (event.date) {
+    const t = new Date(`${event.date}T${event.time ?? '00:00'}`).getTime();
+    if (!Number.isNaN(t)) return t;
+  }
+  return Number.MAX_SAFE_INTEGER;
 }
 
-function formatDateKeyLabel(key: string): string {
-  const date = new Date(`${key}T00:00:00`);
-
-  if (Number.isNaN(date.getTime())) return key;
-
-  return date.toLocaleDateString(undefined, {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-  });
+function Arrow() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1 6h10M6 1l5 5-5 5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
-export default function EventsCalendarPage() {
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+export default function CalendarPage() {
+  const today = new Date();
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [events, setEvents] = useState<EventPublic[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-
-    const loadEvents = async () => {
-      try {
-        const items = await apiClient.listEvents();
-        if (mounted) setEvents(items);
-      } catch (error) {
-        console.error('Failed to load events calendar', error);
-        if (mounted) setEvents([]);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    loadEvents();
-
+    let live = true;
+    apiClient
+      .listEvents()
+      .then(items => {
+        if (live) setEvents(items);
+      })
+      .catch(() => {
+        if (live) setEvents([]);
+      })
+      .finally(() => {
+        if (live) setLoading(false);
+      });
     return () => {
-      mounted = false;
+      live = false;
     };
   }, []);
 
-  const grouped = useMemo(() => {
-    const map = new Map<string, EventPublic[]>();
+  /* Build calendar grid */
+  const { cells, eventsByDay } = useMemo(() => {
+    const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const cellArr: (number | null)[] = [
+      ...Array(firstDay).fill(null),
+      ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+    ];
+    // pad to complete last row
+    while (cellArr.length % 7 !== 0) cellArr.push(null);
 
-    for (const event of events) {
-      const key = toDateKey(event);
-      if (!key) continue;
-
-      const bucket = map.get(key) ?? [];
-      bucket.push(event);
-      map.set(key, bucket);
+    const byDay: Record<number, EventPublic[]> = {};
+    for (const ev of events) {
+      const t = getTimestamp(ev);
+      if (t === Number.MAX_SAFE_INTEGER) continue;
+      const d = new Date(t);
+      if (d.getFullYear() === viewYear && d.getMonth() === viewMonth) {
+        const day = d.getDate();
+        byDay[day] = [...(byDay[day] ?? []), ev];
+      }
     }
+    return { cells: cellArr, eventsByDay: byDay };
+  }, [viewYear, viewMonth, events]);
 
-    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
-  }, [events]);
+  const prevMonth = () => {
+    if (viewMonth === 0) {
+      setViewYear(y => y - 1);
+      setViewMonth(11);
+    } else setViewMonth(m => m - 1);
+  };
+  const nextMonth = () => {
+    if (viewMonth === 11) {
+      setViewYear(y => y + 1);
+      setViewMonth(0);
+    } else setViewMonth(m => m + 1);
+  };
 
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonthIndex = now.getMonth();
-  const monthStart = new Date(currentYear, currentMonthIndex, 1);
-  const monthEnd = new Date(currentYear, currentMonthIndex + 1, 0);
-  const daysInMonth = monthEnd.getDate();
-  const firstWeekday = monthStart.getDay();
+  const isToday = (day: number) =>
+    day === today.getDate() &&
+    viewMonth === today.getMonth() &&
+    viewYear === today.getFullYear();
 
-  const calendarSlots = useMemo(() => {
-    const slots: Array<{
-      dateKey: string | null;
-      day: number | null;
-      count: number;
-    }> = [];
-
-    for (let i = 0; i < firstWeekday; i += 1) {
-      slots.push({ dateKey: null, day: null, count: 0 });
-    }
-
-    const countMap = new Map<string, number>();
-
-    for (const [key, list] of grouped) {
-      countMap.set(key, list.length);
-    }
-
-    for (let day = 1; day <= daysInMonth; day += 1) {
-      const dateKey = `${currentYear}-${String(currentMonthIndex + 1).padStart(2, '0')}-${String(
-        day
-      ).padStart(2, '0')}`;
-
-      slots.push({
-        dateKey,
-        day,
-        count: countMap.get(dateKey) ?? 0,
-      });
-    }
-
-    return slots;
-  }, [currentYear, currentMonthIndex, daysInMonth, firstWeekday, grouped]);
+  /* Events in this month for list view */
+  const monthEvents = useMemo(
+    () =>
+      events
+        .filter(ev => {
+          const t = getTimestamp(ev);
+          if (t === Number.MAX_SAFE_INTEGER) return false;
+          const d = new Date(t);
+          return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
+        })
+        .sort((a, b) => getTimestamp(a) - getTimestamp(b)),
+    [events, viewYear, viewMonth]
+  );
 
   return (
-    <main className="min-h-screen bg-[var(--app-dark)] text-white">
+    <main className="min-h-screen">
       <PageHero
-        title="Events Calendar"
-        subtitle="All upcoming services and programs in one view."
-        description="Plan ahead and reserve your spot."
+        eyebrow="Church Calendar"
+        title="Every event, every month."
+        subtitle="Browse the full calendar of services, programs, and special gatherings."
         compact
       />
 
-      <Section padding="lg" className="bg-[var(--app-dark)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(201,150,26,0.10),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
-
-        <Container size="lg" className="space-y-8">
-          <div className="flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <Eyebrow className="text-[var(--app-primary)]">
-                Events calendar
-              </Eyebrow>
-              <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
-                {monthStart.toLocaleDateString(undefined, {
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </H1>
-              <BodySM className="mt-3 max-w-2xl text-white/60">
-                View this month&apos;s published events and upcoming timeline.
-              </BodySM>
-            </div>
-
-            <Link
-              href="/events"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/10 bg-black/30 px-5 text-sm font-bold text-white/80 transition hover:bg-white/[0.06]"
+      <section className="bg-[var(--app-canvas)] py-14 lg:py-18">
+        <Container size="xl">
+          {/* Month navigation */}
+          <ScrollFadeIn className="mb-10 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={prevMonth}
+              className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/14 text-[var(--app-ink)]/45 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              aria-label="Previous month"
             >
-              <ArrowLeft className="h-4 w-4" />
-              Back to events
-            </Link>
-          </div>
-
-          {loading ? (
-            <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.035]">
-              <Loader2 className="h-9 w-9 animate-spin text-[var(--app-primary)]" />
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M8 1L3 6l5 5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <div className="text-center">
+              <p className="font-headline text-[1.6rem] font-normal text-[var(--app-ink)]">
+                {MONTHS[viewMonth]}
+              </p>
+              <p className="font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/40">
+                {viewYear}
+              </p>
             </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/25">
-                <div className="min-w-[760px]">
-                  <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold uppercase tracking-[0.18em] text-white/40">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
-                      day => (
-                        <div key={day} className="py-2">
-                          {day}
-                        </div>
-                      )
-                    )}
+            <button
+              type="button"
+              onClick={nextMonth}
+              className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/14 text-[var(--app-ink)]/45 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              aria-label="Next month"
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M4 1l5 5-5 5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </ScrollFadeIn>
+
+          {/* Calendar grid */}
+          <ScrollFadeIn>
+            <div className="border border-[var(--app-ink)]/10">
+              {/* Day headers */}
+              <div className="grid grid-cols-7 border-b border-[var(--app-ink)]/10">
+                {DAYS.map(d => (
+                  <div
+                    key={d}
+                    className="py-2.5 text-center font-ui text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/35"
+                  >
+                    {d}
                   </div>
+                ))}
+              </div>
 
-                  <div className="grid grid-cols-7 gap-2">
-                    {calendarSlots.map((slot, index) => (
+              {/* Weeks */}
+              {Array.from({ length: cells.length / 7 }, (_, w) => (
+                <div
+                  key={w}
+                  className="grid grid-cols-7 border-b border-[var(--app-ink)]/8 last:border-b-0"
+                >
+                  {cells.slice(w * 7, w * 7 + 7).map((day, j) => {
+                    const hasEvents =
+                      day !== null && eventsByDay[day]?.length > 0;
+                    return (
                       <div
-                        key={`${slot.dateKey || 'empty'}-${index}`}
-                        className="min-h-[96px] rounded-2xl border border-white/10 bg-black/25 p-3"
+                        key={j}
+                        className={[
+                          'relative min-h-[56px] border-r border-[var(--app-ink)]/8 last:border-r-0 p-2 lg:min-h-[72px] lg:p-3',
+                          day === null
+                            ? 'bg-[var(--app-canvas-2)]'
+                            : 'bg-[var(--app-canvas)]',
+                          isToday(day!) ? 'bg-[var(--app-primary)]/[0.06]' : '',
+                        ].join(' ')}
                       >
-                        {slot.day ? (
+                        {day !== null && (
                           <>
-                            <Caption className="font-semibold text-white">
-                              {slot.day}
-                            </Caption>
-
-                            {slot.count > 0 ? (
-                              <span className="mt-3 inline-flex rounded-full bg-[var(--app-primary)] px-2.5 py-1 text-xs font-extrabold text-black">
-                                {slot.count} event{slot.count > 1 ? 's' : ''}
-                              </span>
-                            ) : (
-                              <Caption className="mt-3 text-white/35">
-                                No event
-                              </Caption>
+                            <span
+                              className={[
+                                'font-ui text-[0.72rem] font-semibold',
+                                isToday(day)
+                                  ? 'text-[var(--app-primary)]'
+                                  : 'text-[var(--app-ink)]/50',
+                              ].join(' ')}
+                            >
+                              {day}
+                            </span>
+                            {hasEvents && (
+                              <div className="mt-1 flex flex-col gap-0.5">
+                                {eventsByDay[day].slice(0, 2).map(ev => (
+                                  <span
+                                    key={ev.id}
+                                    className="block truncate rounded-[2px] bg-[var(--app-primary)]/15 px-1 py-0.5 font-ui text-[0.58rem] text-[var(--app-primary)] leading-tight"
+                                  >
+                                    {ev.title}
+                                  </span>
+                                ))}
+                                {eventsByDay[day].length > 2 && (
+                                  <span className="font-ui text-[0.55rem] text-[var(--app-ink)]/35">
+                                    +{eventsByDay[day].length - 2} more
+                                  </span>
+                                )}
+                              </div>
                             )}
                           </>
-                        ) : null}
+                        )}
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
+              ))}
+            </div>
+          </ScrollFadeIn>
+
+          {/* This month event list */}
+          {!loading && monthEvents.length > 0 && (
+            <ScrollFadeIn className="mt-12">
+              <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Events this month
+              </p>
+              <div className="divide-y divide-[var(--app-ink)]/8 border-y border-[var(--app-ink)]/8">
+                {monthEvents.map(ev => {
+                  const t = getTimestamp(ev);
+                  const d = new Date(t);
+                  const href =
+                    ev.registerLink ??
+                    (ev.formSlug ? `/forms/${ev.formSlug}` : null);
+                  return (
+                    <div key={ev.id} className="flex items-center gap-6 py-5">
+                      <div className="w-14 shrink-0 text-right">
+                        <p className="font-headline text-[1.6rem] font-normal leading-none text-[var(--app-ink)]">
+                          {d.getDate()}
+                        </p>
+                        <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.14em] text-[var(--app-primary)]">
+                          {d
+                            .toLocaleString('en', { month: 'short' })
+                            .toUpperCase()}
+                        </p>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-headline text-[1rem] font-normal text-[var(--app-ink)] truncate">
+                          {ev.title}
+                        </p>
+                        {ev.location && (
+                          <p className="font-ui text-[0.74rem] text-[var(--app-ink)]/40 truncate">
+                            {ev.location}
+                          </p>
+                        )}
+                      </div>
+                      {href && (
+                        <a
+                          href={href}
+                          className="shrink-0 inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-4 py-2 font-ui text-[0.68rem] font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                        >
+                          Register <Arrow />
+                        </a>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
+            </ScrollFadeIn>
+          )}
 
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/25 sm:rounded-[2rem] sm:p-6">
-                <div className="flex items-center gap-3">
-                  <CalendarClock className="h-5 w-5 text-[var(--app-primary)]" />
-                  <H2 className="text-xl font-semibold text-white">
-                    Upcoming timeline
-                  </H2>
-                </div>
-
-                {grouped.length === 0 ? (
-                  <BodySM className="mt-4 text-white/55">
-                    No published events available.
-                  </BodySM>
-                ) : (
-                  <div className="mt-5 space-y-4">
-                    {grouped.map(([dateKey, list]) => (
-                      <article
-                        key={dateKey}
-                        className="rounded-2xl border border-white/10 bg-black/25 p-4"
-                      >
-                        <Caption className="font-bold text-[var(--app-primary)]">
-                          {formatDateKeyLabel(dateKey)}
-                        </Caption>
-
-                        <ul className="mt-3 space-y-3">
-                          {list.map(event => (
-                            <li
-                              key={event.id}
-                              className="rounded-xl border border-white/10 bg-white/[0.03] p-3"
-                            >
-                              <BodySM weight="semibold" className="text-white">
-                                {event.title}
-                              </BodySM>
-
-                              <div className="mt-1 flex items-center gap-2 text-sm text-white/50">
-                                <MapPin className="h-4 w-4" />
-                                <Caption className="text-white/50">
-                                  {event.location || 'Venue TBA'}
-                                </Caption>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </article>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
+          {!loading && monthEvents.length === 0 && (
+            <ScrollFadeIn className="mt-10">
+              <p className="font-ui text-[0.82rem] text-[var(--app-ink)]/38 text-center py-6">
+                No events scheduled for {MONTHS[viewMonth]}. Navigate to another
+                month or{' '}
+                <Link
+                  href="/events"
+                  className="text-[var(--app-primary)] underline underline-offset-2"
+                >
+                  view all events.
+                </Link>
+              </p>
+            </ScrollFadeIn>
           )}
         </Container>
-      </Section>
+      </section>
     </main>
   );
 }

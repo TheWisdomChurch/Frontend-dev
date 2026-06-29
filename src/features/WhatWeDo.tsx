@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -127,8 +127,6 @@ export default function WhatWeDo() {
               <Link
                 href="/about"
                 className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-[0.8rem] font-bold text-[#0d0a06] transition hover:bg-[var(--app-primary-light)]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-button)' }}
               >
                 Our Story
                 <ArrowRight className="h-3.5 w-3.5 transition duration-200 group-hover:translate-x-1" />

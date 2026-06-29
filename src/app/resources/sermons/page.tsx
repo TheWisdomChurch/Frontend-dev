@@ -1,15 +1,9 @@
-﻿'use client';
+'use client';
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { ArrowRight, PlayCircle, Radio, Video } from 'lucide-react';
 
-import PageHero from '@/features/hero/PageHero';
-import { H2, H3, BodySM, Caption, Eyebrow } from '@/shared/text';
-import SermonUtil from '@/shared/ui/Sermons';
-import Button from '@/shared/utils/buttons/CustomButton';
-import { Container, Section } from '@/shared/layout';
-import GridBackground from '@/shared/ui/GridBackground';
+import SermonUtil from '@/features/resources/Sermons';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
 
@@ -20,130 +14,5 @@ export default function SermonPage() {
     dispatch(fetchSermons());
   }, [dispatch]);
 
-  const handleYouTubeRedirect = () => {
-    window.open(
-      'https://www.youtube.com/@wisdomhousehq',
-      '_blank',
-      'noopener,noreferrer'
-    );
-  };
-
-  return (
-    <div className="min-h-screen bg-[var(--app-dark)] text-white">
-      <PageHero
-        title="Sermons & Teachings"
-        subtitle="Catch up on every message"
-        note="Transformative messages from Sundays, conferences, and midweek gatherings. Practical biblical teaching for daily life."
-        chips={[
-          'Platform: YouTube',
-          'Format: Video + Audio',
-          'New: Weekly uploads',
-          'Live: Sun & Thu',
-        ]}
-      />
-
-      <SermonUtil />
-
-      <Section
-        padding="lg"
-        fullHeight={false}
-        className="relative overflow-hidden bg-[var(--app-dark)]"
-      >
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.05),transparent_34%)]" />
-          <GridBackground />
-        </div>
-
-        <Container size="xl" className="relative z-10">
-          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
-            <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]">
-                  <Radio className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                    Watch & Listen Anywhere
-                  </span>
-                </div>
-
-                <H2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-                  Stay connected to every message from Wisdom House.
-                </H2>
-
-                <BodySM className="mt-4 max-w-lg text-white/62 sm:text-base">
-                  Watch full video messages, revisit powerful teachings, and
-                  subscribe for weekly uploads from Sundays, conferences, and
-                  midweek gatherings.
-                </BodySM>
-
-                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                  {[
-                    ['Full messages', 'Video teachings'],
-                    ['Weekly uploads', 'Fresh sermons'],
-                    ['Live services', 'Sun & Thu'],
-                  ].map(([title, value]) => (
-                    <div
-                      key={title}
-                      className="rounded-2xl border border-white/10 bg-black/25 p-4"
-                    >
-                      <BodySM weight="semibold" className="text-white">
-                        {title}
-                      </BodySM>
-                      <Caption className="mt-1 text-white/50">{value}</Caption>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="relative p-6 sm:p-8 lg:p-10">
-                <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-red-500/10 blur-3xl" />
-
-                <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/40 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.32)] sm:p-7">
-                  <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-radius-sm bg-[#CC0000] shadow-[0_18px_50px_rgba(204,0,0,0.22)]">
-                      <Video className="h-9 w-9 text-white" />
-                    </div>
-
-                    <div className="min-w-0">
-                      <Eyebrow className="text-white/45">Platform</Eyebrow>
-                      <H3 className="mt-2 text-2xl font-semibold text-white">
-                        YouTube
-                      </H3>
-                      <BodySM className="mt-2 text-white/60">
-                        Full video messages with interactive features.
-                      </BodySM>
-                    </div>
-                  </div>
-
-                  <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
-                    <div className="flex items-start gap-3">
-                      <PlayCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#CC0000]" />
-                      <BodySM className="text-white/65">
-                        Subscribe to the Wisdom House channel to receive new
-                        uploads, live service alerts, and replay access.
-                      </BodySM>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={handleYouTubeRedirect}
-                    variant="primary"
-                    size="lg"
-                    curvature="full"
-                    elevated
-                    leftIcon={<Video className="h-5 w-5 text-white" />}
-                    className="mt-6 h-12 w-full bg-[#CC0000] font-bold text-white transition hover:scale-[1.01] hover:bg-[#AA0000] active:scale-[0.98]"
-                  >
-                    <span className="inline-flex items-center justify-center gap-2 text-white">
-                      Subscribe to Channel
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section>
-    </div>
-  );
+  return <SermonUtil />;
 }

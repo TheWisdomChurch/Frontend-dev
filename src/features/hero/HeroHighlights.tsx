@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useCallback, useState } from 'react';
 import {
@@ -340,12 +340,7 @@ export default function HeroHighlights() {
             value={visit.notes}
             onChange={e => setVisit(p => ({ ...p, notes: e.target.value }))}
           />
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-            style={{ borderRadius: 'var(--radius-button)' }}
-          >
+          <Button type="submit" variant="primary" className="w-full">
             Confirm appointment <ArrowRight className="h-4 w-4" />
           </Button>
           <Caption className="text-white/50">
@@ -394,12 +389,7 @@ export default function HeroHighlights() {
             onChange={e => setWatch(p => ({ ...p, email: e.target.value }))}
             required
           />
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-            style={{ borderRadius: 'var(--radius-button)' }}
-          >
+          <Button type="submit" variant="primary" className="w-full">
             Notify me <ArrowRight className="h-4 w-4" />
           </Button>
           <Caption className="text-white/50">
@@ -483,12 +473,7 @@ export default function HeroHighlights() {
             value={join.experience}
             onChange={e => setJoin(p => ({ ...p, experience: e.target.value }))}
           />
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-            style={{ borderRadius: 'var(--radius-button)' }}
-          >
+          <Button type="submit" variant="primary" className="w-full">
             Send interest <ArrowRight className="h-4 w-4" />
           </Button>
           <Caption className="text-white/50">

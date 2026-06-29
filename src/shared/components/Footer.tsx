@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -90,7 +90,7 @@ function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
         <li key={l.href}>
           <Link
             href={l.href}
-            className="group inline-flex items-center gap-1.5 font-ui text-[0.88rem] text-white/48 transition hover:text-white/90"
+            className="group inline-flex items-center gap-1.5 font-ui text-[0.88rem] text-white/60 transition hover:text-white"
           >
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
               {l.label}
@@ -166,21 +166,21 @@ export default function Footer() {
               </div>
             </Link>
 
-            <p className="font-ui text-[0.88rem] leading-[1.85] text-white/48">
+            <p className="font-ui text-[0.88rem] leading-[1.85] text-white/60">
               A Spirit-filled community raised to carry God's glory — equipping
               every believer with the Word, prayer, and purpose.
             </p>
 
             <div className="mt-6 space-y-2">
-              <p className="font-ui text-[0.75rem] font-semibold text-white/65">
+              <p className="font-ui text-[0.75rem] font-semibold text-white/75">
                 Sundays · 9:00 AM
               </p>
-              <p className="font-ui text-[0.75rem] font-semibold text-white/65">
+              <p className="font-ui text-[0.75rem] font-semibold text-white/75">
                 Thursdays · 6:00 PM
               </p>
             </div>
 
-            <div className="mt-5 space-y-2 font-body text-[0.8rem] text-white/38">
+            <div className="mt-5 space-y-2 font-body text-[0.8rem] text-white/52">
               <p className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
                 Honor Gardens, Lekki-Epe Expressway, Lagos
@@ -224,13 +224,11 @@ export default function Footer() {
                   onChange={e => setEmail(e.target.value)}
                   placeholder="Your email"
                   className="h-10 w-full border border-white/10 bg-white/[0.05] px-3.5 font-body text-[0.82rem] text-white outline-none placeholder:text-white/25 transition focus:border-[var(--app-primary)]/50 focus:bg-white/[0.08]"
-                  style={{ borderRadius: 'var(--radius-input)' }}
                 />
                 <button
                   type="submit"
                   disabled={subState === 'loading'}
                   className="h-10 bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold uppercase tracking-[0.12em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60"
-                  style={{ borderRadius: 'var(--radius-button)' }}
                 >
                   {subState === 'loading'
                     ? 'Sending…'
@@ -256,7 +254,6 @@ export default function Footer() {
                     rel="noreferrer"
                     aria-label={s.label}
                     className="flex h-9 w-9 items-center justify-center border border-white/10 bg-white/[0.04] text-white/45 transition hover:border-white/20 hover:text-white/80"
-                    style={{ borderRadius: 'var(--radius-badge)' }}
                   >
                     <s.Icon />
                   </a>
@@ -268,24 +265,24 @@ export default function Footer() {
 
         {/* ── Bottom bar ────────────────────────────────────── */}
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/[0.07] pt-7 sm:flex-row sm:items-center">
-          <p className="font-body text-[0.75rem] text-white/28">
+          <p className="font-body text-[0.75rem] text-white/45">
             © {new Date().getFullYear()} The Wisdom Church · Lagos, Nigeria
           </p>
 
           <div className="flex items-center gap-5">
-            <span className="font-ui text-[0.68rem] uppercase tracking-[0.2em] text-white/22">
+            <span className="font-ui text-[0.68rem] uppercase tracking-[0.2em] text-white/38">
               Worship · Word · Community
             </span>
             <div className="flex gap-4">
               <Link
                 href="/privacy"
-                className="font-body text-[0.73rem] text-white/28 transition hover:text-white/60"
+                className="font-body text-[0.73rem] text-white/45 transition hover:text-white/75"
               >
                 Privacy
               </Link>
               <Link
                 href="/cookies"
-                className="font-body text-[0.73rem] text-white/28 transition hover:text-white/60"
+                className="font-body text-[0.73rem] text-white/45 transition hover:text-white/75"
               >
                 Cookies
               </Link>

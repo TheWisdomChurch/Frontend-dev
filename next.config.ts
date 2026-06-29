@@ -101,6 +101,31 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/events/weekly',
+        destination: '/events',
+        permanent: true,
+      },
+      {
+        source: '/events/upcoming',
+        destination: '/events',
+        permanent: true,
+      },
+      {
+        source: '/events/special',
+        destination: '/events',
+        permanent: true,
+      },
+      {
+        source: '/events/calendar',
+        destination: '/events',
+        permanent: true,
+      },
+    ];
+  },
+
   async rewrites() {
     const target = normalizeApiProxyTarget(
       process.env.API_PROXY_TARGET ||

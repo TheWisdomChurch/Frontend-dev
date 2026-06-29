@@ -40,12 +40,6 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: 'Events',
     href: '/events',
-    children: [
-      { label: 'Upcoming', href: '/events/upcoming' },
-      { label: 'Weekly', href: '/events/weekly' },
-      { label: 'Special', href: '/events/special' },
-      { label: 'Calendar', href: '/events/calendar' },
-    ],
   },
   {
     label: 'About',
@@ -316,7 +310,7 @@ export default function Header() {
                 <p className="nav-panel__detail">9:00 AM · WAT</p>
                 <p className="nav-panel__detail">Honor Gardens, Lekki-Epe</p>
                 <Link
-                  href="/events/weekly"
+                  href="/events"
                   className="nav-panel__cta"
                   onClick={close}
                   tabIndex={navOpen ? 0 : -1}
@@ -357,7 +351,7 @@ export default function Header() {
               <p className="nav-footer__time">Sunday · 9:00 AM</p>
               <p className="nav-footer__venue">Honor Gardens, Lekki-Epe</p>
               <Link
-                href="/events/weekly"
+                href="/events"
                 className="nav-footer__cta"
                 onClick={close}
                 tabIndex={navOpen ? 0 : -1}

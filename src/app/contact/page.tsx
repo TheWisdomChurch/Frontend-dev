@@ -1,7 +1,6 @@
-﻿'use client';
+'use client';
 
 import { useMemo, useState } from 'react';
-import type { LucideIcon } from 'lucide-react';
 import {
   ArrowUpRight,
   Camera,
@@ -11,28 +10,14 @@ import {
   PlayCircle,
   Users,
 } from 'lucide-react';
+import Link from 'next/link';
+import type { LucideIcon } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
-import { H1, H2, H3, BodySM, Caption, Eyebrow } from '@/shared/text';
+import { H2, BodySM, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
-import Button from '@/shared/utils/buttons/CustomButton';
+import { ScrollFadeIn } from '@/shared/ui/motion';
 import apiClient, { mapValidationErrors } from '@/lib/api';
-
-type ContactMethod = {
-  title: string;
-  description: string;
-  details: string[];
-  icon: LucideIcon;
-  href?: string;
-  actionLabel?: string;
-};
-
-type SocialLink = {
-  platform: string;
-  handle: string;
-  href: string;
-  icon: LucideIcon;
-};
 
 type ContactFormData = {
   firstName: string;
@@ -41,6 +26,13 @@ type ContactFormData = {
   phone: string;
   topic: string;
   message: string;
+};
+
+type SocialLink = {
+  platform: string;
+  handle: string;
+  href: string;
+  icon: LucideIcon;
 };
 
 const initialFormData: ContactFormData = {
@@ -52,11 +44,11 @@ const initialFormData: ContactFormData = {
   message: '',
 };
 
-const inputClassName =
-  'w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none transition duration-200 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+const inputCls =
+  'w-full rounded-[3px] border border-[var(--app-ink)]/12 bg-white px-3.5 py-3 font-ui text-[0.875rem] text-[var(--app-ink)] placeholder:text-[var(--app-ink)]/28 outline-none transition-all duration-150 focus:border-l-[3px] focus:border-l-[var(--app-primary)] focus:border-[var(--app-primary)]/40';
 
-const labelClassName =
-  'block text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/55';
+const labelCls =
+  'block font-ui text-[0.6rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/45';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState<ContactFormData>(initialFormData);
@@ -64,57 +56,24 @@ export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const contactMethods = useMemo<ContactMethod[]>(
-    () => [
-      {
-        title: 'Visit Us',
-        description: 'Come worship with us in person',
-        details: [
-          'Honors gardens, opposite Dominion Church Headquarters',
-          'Alasia bus stop, Lekki Epe expressway',
-          'Lagos, Nigeria',
-          'Sunday Services: 9:00 AM',
-        ],
-        icon: MapPin,
-      },
-      {
-        title: 'Call Us',
-        description: 'Speak with our church office',
-        details: ['Phone: +234 706 999 5333'],
-        icon: Phone,
-        href: 'https://wa.me/2347069995333',
-        actionLabel: 'Open WhatsApp',
-      },
-      {
-        title: 'Email Us',
-        description: 'Send us a message anytime',
-        details: ['wisdomhousehq@gmail.com'],
-        icon: Mail,
-        href: 'mailto:wisdomhousehq@gmail.com',
-        actionLabel: 'Send email',
-      },
-    ],
-    []
-  );
-
   const socialLinks = useMemo<SocialLink[]>(
     () => [
       {
         platform: 'Instagram',
-        handle: '@wisdomhousehq',
-        href: 'https://instagram.com/wisdomhousehq',
+        handle: '@wisdomchurchhq',
+        href: 'https://instagram.com/wisdomchurchhq',
         icon: Camera,
       },
       {
         platform: 'Facebook',
-        handle: '@wisdomhousehq',
-        href: 'https://facebook.com/wisdomhousehq',
+        handle: '@wisdomchurchhq',
+        href: 'https://facebook.com/wisdomchurchhq',
         icon: Users,
       },
       {
         platform: 'YouTube',
-        handle: 'Wisdom House',
-        href: 'https://youtube.com/@wisdomhousehq',
+        handle: 'Wisdom Church',
+        href: 'https://youtube.com/@wisdomchurchhq',
         icon: PlayCircle,
       },
     ],
@@ -124,358 +83,361 @@ export default function ContactPage() {
   const updateField =
     (field: keyof ContactFormData) =>
     (
-      event:
-        | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
-        | React.ChangeEvent<HTMLSelectElement>
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
     ) => {
-      setFormData(current => ({
-        ...current,
-        [field]: event.target.value,
-      }));
+      setFormData(cur => ({ ...cur, [field]: e.target.value }));
     };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setSubmitting(true);
     setSubmitted(false);
     setError(null);
-
     try {
       await apiClient.submitContactMessage({
         ...formData,
         sourceChannel: 'frontend:web:contact-page',
       });
-
       setSubmitted(true);
       setFormData(initialFormData);
     } catch (err) {
       const fields = mapValidationErrors(err);
-
-      if (fields) {
-        const firstError = Object.values(fields)[0];
-        setError(firstError || 'Please check your details and try again.');
-      } else {
-        setError('Unable to send your message right now. Please try again.');
-      }
+      setError(
+        fields
+          ? (Object.values(fields)[0] ??
+              'Please check your details and try again.')
+          : 'Unable to send your message right now. Please try again.'
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <main className="min-h-screen bg-[var(--app-dark)] text-white">
+    <main className="min-h-screen">
+      {/* ── Hero ─────────────────────────────────────────────── */}
       <PageHero
-        title="Contact Us"
-        subtitle="We'd love to hear from you"
-        note="Whether you’re new or part of the family, reach out and we’ll get back quickly."
-        chips={['Visit', 'Call', 'Email', 'Connect']}
+        eyebrow="Get in touch"
+        title="We'd love to hear from you."
+        subtitle="Plan a visit, request prayer, or send us a message — we'll get back to you quickly."
         compact
       />
 
-      <Section
-        padding="xl"
-        className="relative overflow-hidden bg-[var(--app-dark)]"
-      >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_20%,rgba(255,255,255,0.06),transparent_26%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
-        <div className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:42px_42px] [mask-image:radial-gradient(circle_at_50%_35%,black_25%,transparent_78%)]" />
-
-        <Container size="xl" className="relative z-10">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <Eyebrow className="text-[var(--app-primary)]">
-              Visit • Call • Email
-            </Eyebrow>
-            <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
-              Plan your visit or send us a message.
-            </H1>
-            <BodySM className="mt-3 text-white/65">
-              Our team is available to help with service information, prayer
-              requests, pastoral care, and general enquiries.
-            </BodySM>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] xl:gap-8">
-            <aside className="space-y-5 lg:sticky lg:top-24 lg:h-fit">
-              <section className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/30 backdrop-blur-xl sm:rounded-[2rem]">
-                <div className="border-b border-white/10 px-5 py-5 sm:px-6">
-                  <Eyebrow className="text-[var(--app-primary)]">
-                    Reach us
-                  </Eyebrow>
-                  <H2 className="mt-2 text-xl font-semibold text-white">
-                    Visit &amp; contact details
-                  </H2>
-                  <BodySM className="mt-2 text-white/60">
-                    Multiple ways to connect with leadership and teams.
-                  </BodySM>
-                </div>
-
-                <div className="divide-y divide-white/10">
-                  {contactMethods.map(method => {
-                    const Icon = method.icon;
-
-                    const card = (
-                      <div className="group flex gap-4 p-5 transition duration-200 hover:bg-white/[0.035] sm:p-6">
-                        <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-white/10 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
-                          <Icon className="h-5 w-5" />
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
-                              <H3 className="text-base text-white">
-                                {method.title}
-                              </H3>
-                              <BodySM className="mt-1 text-white/55">
-                                {method.description}
-                              </BodySM>
-                            </div>
-
-                            {method.href ? (
-                              <ArrowUpRight className="mt-1 h-4 w-4 flex-none text-white/35 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
-                            ) : null}
-                          </div>
-
-                          <div className="mt-3 space-y-1">
-                            {method.details.map(detail => (
-                              <BodySM key={detail} className="text-white/72">
-                                {detail}
-                              </BodySM>
-                            ))}
-                          </div>
-
-                          {method.href ? (
-                            <span className="mt-3 inline-flex text-sm font-bold text-[var(--app-primary)]">
-                              {method.actionLabel || 'Reach out'}
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-                    );
-
-                    return method.href ? (
-                      <a
-                        key={method.title}
-                        href={method.href}
-                        target={
-                          method.href.startsWith('http') ? '_blank' : undefined
-                        }
-                        rel={
-                          method.href.startsWith('http')
-                            ? 'noopener noreferrer'
-                            : undefined
-                        }
-                        className="block"
-                      >
-                        {card}
-                      </a>
-                    ) : (
-                      <div key={method.title}>{card}</div>
-                    );
-                  })}
-                </div>
-              </section>
-
-              <section className="rounded-[1.6rem] border border-white/10 bg-white/[0.035] p-5 shadow-2xl shadow-black/20 sm:rounded-[2rem] sm:p-6">
-                <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <Eyebrow className="text-[var(--app-primary)]">
-                      Social
-                    </Eyebrow>
-                    <H2 className="mt-2 text-lg font-semibold text-white">
-                      Follow us
-                    </H2>
+      {/* ── Main content ─────────────────────────────────────── */}
+      <Section padding="xl" className="bg-[var(--app-canvas)]">
+        <Container size="xl">
+          <div className="grid gap-14 lg:grid-cols-[1fr_1.6fr] lg:gap-20 xl:gap-24">
+            {/* ── Left: contact info ───────────────────────── */}
+            <ScrollFadeIn>
+              <aside className="space-y-10 lg:sticky lg:top-28 lg:h-fit">
+                {/* Location */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2.5">
+                    <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />
+                    <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                      Visit us
+                    </p>
+                  </div>
+                  <p className="font-headline text-[1.45rem] font-normal leading-snug text-[var(--app-ink)]">
+                    Honor Gardens
+                  </p>
+                  <div className="space-y-1 font-ui text-[0.82rem] leading-[1.7] text-[var(--app-ink)]/55">
+                    <p>Opposite Dominion Church HQ</p>
+                    <p>Alasia bus stop, Lekki-Epe Expressway</p>
+                    <p>Lagos, Nigeria</p>
+                  </div>
+                  <div className="pt-1 space-y-0.5">
+                    <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/70">
+                      Sundays · 9:00 AM
+                    </p>
+                    <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/70">
+                      Thursdays · 6:00 PM
+                    </p>
                   </div>
                 </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                  {socialLinks.map(social => (
-                    <a
-                      key={social.platform}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center justify-between rounded-2xl border border-white/10 bg-black/25 px-4 py-3 transition duration-200 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.045]"
-                    >
-                      <span className="flex min-w-0 items-center gap-3">
-                        <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
-                          <social.icon className="h-4 w-4" />
-                        </span>
+                {/* Divider */}
+                <div className="h-px bg-[var(--app-ink)]/8" />
 
-                        <span className="min-w-0">
-                          <span className="block truncate text-sm font-semibold text-white">
-                            {social.platform}
+                {/* Phone */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <Phone className="h-3.5 w-3.5 text-[var(--app-primary)]" />
+                    <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                      Call us
+                    </p>
+                  </div>
+                  <a
+                    href="https://wa.me/2347069995333"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 font-headline text-[1.15rem] font-normal text-[var(--app-ink)] transition hover:text-[var(--app-primary)]"
+                  >
+                    +234 706 999 5333
+                    <ArrowUpRight className="h-3.5 w-3.5 opacity-40 transition group-hover:opacity-100" />
+                  </a>
+                  <p className="font-ui text-[0.76rem] text-[var(--app-ink)]/45">
+                    Open on WhatsApp
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div className="h-px bg-[var(--app-ink)]/8" />
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="h-3.5 w-3.5 text-[var(--app-primary)]" />
+                    <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+                      Email us
+                    </p>
+                  </div>
+                  <a
+                    href="mailto:wisdomhousehq@gmail.com"
+                    className="group inline-flex items-center gap-2 font-ui text-[0.9rem] font-medium text-[var(--app-ink)] transition hover:text-[var(--app-primary)]"
+                  >
+                    wisdomhousehq@gmail.com
+                    <ArrowUpRight className="h-3.5 w-3.5 opacity-40 transition group-hover:opacity-100" />
+                  </a>
+                </div>
+
+                {/* Divider */}
+                <div className="h-px bg-[var(--app-ink)]/8" />
+
+                {/* Social */}
+                <div className="space-y-4">
+                  <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[var(--app-ink)]/40">
+                    Follow us
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    {socialLinks.map(s => (
+                      <a
+                        key={s.platform}
+                        href={s.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-3 transition"
+                      >
+                        <span className="flex h-8 w-8 items-center justify-center rounded-card border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] text-[var(--app-ink)]/50 transition group-hover:border-[var(--app-primary)]/30 group-hover:text-[var(--app-primary)]">
+                          <s.icon className="h-3.5 w-3.5" />
+                        </span>
+                        <span className="flex flex-col">
+                          <span className="font-ui text-[0.82rem] font-semibold text-[var(--app-ink)]">
+                            {s.platform}
                           </span>
-                          <span className="block truncate text-xs text-white/50">
-                            {social.handle}
+                          <span className="font-ui text-[0.72rem] text-[var(--app-ink)]/40">
+                            {s.handle}
                           </span>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </aside>
+            </ScrollFadeIn>
+
+            {/* ── Right: form ──────────────────────────────── */}
+            <ScrollFadeIn delay={0.08}>
+              <div className="border border-[var(--app-ink)]/10 bg-white">
+                {/* Dark header band */}
+                <div className="bg-[var(--app-dark)] px-7 py-6 sm:px-8 sm:py-7">
+                  <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                    Message us
+                  </p>
+                  <H2 className="mt-2 font-headline text-[1.45rem] font-normal leading-snug text-white sm:text-[1.6rem]">
+                    Send us a message.
+                  </H2>
+                  <p className="mt-1.5 font-ui text-[0.78rem] text-white/45">
+                    We respond within 24 hours on weekdays.
+                  </p>
+                </div>
+
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-0 divide-y divide-[var(--app-ink)]/6"
+                >
+                  {/* Name row */}
+                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/6">
+                    <label className="block px-7 py-5 sm:px-8">
+                      <span className={labelCls}>First name</span>
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={updateField('firstName')}
+                        required
+                        autoComplete="given-name"
+                        className={`${inputCls} mt-2`}
+                        placeholder="John"
+                      />
+                    </label>
+                    <label className="block px-7 py-5 sm:px-8">
+                      <span className={labelCls}>Last name</span>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={updateField('lastName')}
+                        required
+                        autoComplete="family-name"
+                        className={`${inputCls} mt-2`}
+                        placeholder="Doe"
+                      />
+                    </label>
+                  </div>
+
+                  {/* Contact row */}
+                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/6">
+                    <label className="block px-7 py-5 sm:px-8">
+                      <span className={labelCls}>Email address</span>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={updateField('email')}
+                        required
+                        autoComplete="email"
+                        className={`${inputCls} mt-2`}
+                        placeholder="you@example.com"
+                      />
+                    </label>
+                    <label className="block px-7 py-5 sm:px-8">
+                      <span className={labelCls}>
+                        Phone{' '}
+                        <span className="normal-case font-normal tracking-normal text-[var(--app-ink)]/30">
+                          (optional)
                         </span>
                       </span>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={updateField('phone')}
+                        autoComplete="tel"
+                        className={`${inputCls} mt-2`}
+                        placeholder="+234 706 999 5333"
+                      />
+                    </label>
+                  </div>
 
-                      <ArrowUpRight className="h-4 w-4 flex-none text-white/35 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
-                    </a>
-                  ))}
-                </div>
-              </section>
-            </aside>
+                  {/* Topic */}
+                  <div className="px-7 py-5 sm:px-8">
+                    <label className="block">
+                      <span className={labelCls}>What is this about?</span>
+                      <select
+                        name="topic"
+                        value={formData.topic}
+                        onChange={updateField('topic')}
+                        className={`${inputCls} mt-2 cursor-pointer`}
+                      >
+                        <option value="">Select a topic</option>
+                        <option value="visit">Planning a visit</option>
+                        <option value="connect">
+                          Connect &amp; get involved
+                        </option>
+                        <option value="events">Events &amp; programmes</option>
+                        <option value="media">Media &amp; resources</option>
+                        <option value="other">General enquiry</option>
+                      </select>
+                    </label>
+                  </div>
 
-            <section className="relative overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/35 backdrop-blur-xl sm:rounded-[2rem]">
-              <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
+                  {/* Message */}
+                  <div className="px-7 py-5 sm:px-8">
+                    <label className="block">
+                      <span className={labelCls}>Your message</span>
+                      <textarea
+                        rows={5}
+                        name="message"
+                        value={formData.message}
+                        onChange={updateField('message')}
+                        required
+                        className={`${inputCls} mt-2 min-h-[120px] resize-none`}
+                        placeholder="Write your message here..."
+                      />
+                    </label>
+                  </div>
 
-              <div className="relative border-b border-white/10 px-5 py-5 sm:px-6 lg:px-8">
-                <Eyebrow className="text-[var(--app-primary)]">
-                  Message us
-                </Eyebrow>
-                <H2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
-                  Send us a message
-                </H2>
-                <BodySM className="mt-2 text-white/60">
-                  We respond within 24 hours on weekdays.
-                </BodySM>
+                  {/* Footer row */}
+                  <div className="flex flex-col gap-4 bg-[var(--app-canvas)] px-7 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="inline-flex items-center justify-center gap-2.5 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)] disabled:opacity-50"
+                    >
+                      {submitting ? 'Sending...' : 'Send message'}
+                      {!submitting && (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M1 6h10M6 1l5 5-5 5"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                    <Caption className="text-[var(--app-ink)]/38">
+                      For pastoral care, visit our{' '}
+                      <Link
+                        href="/pastoral"
+                        className="text-[var(--app-primary)] underline underline-offset-2"
+                      >
+                        Pastoral Care
+                      </Link>{' '}
+                      page.
+                    </Caption>
+                  </div>
+
+                  {submitted && (
+                    <div
+                      className="border-t border-emerald-100 bg-emerald-50 px-7 py-4 font-ui text-[0.82rem] text-emerald-700 sm:px-8"
+                      aria-live="polite"
+                    >
+                      Message sent. Our team will be in touch within 24 hours.
+                    </div>
+                  )}
+
+                  {error && (
+                    <div
+                      className="border-t border-rose-100 bg-rose-50 px-7 py-4 font-ui text-[0.82rem] text-rose-700 sm:px-8"
+                      aria-live="polite"
+                    >
+                      {error}
+                    </div>
+                  )}
+                </form>
               </div>
-
-              <form
-                onSubmit={handleSubmit}
-                className="relative space-y-5 px-5 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8"
-              >
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label className="space-y-2">
-                    <span className={labelClassName}>First name</span>
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={updateField('firstName')}
-                      required
-                      autoComplete="given-name"
-                      className={inputClassName}
-                      placeholder="John"
-                    />
-                  </label>
-
-                  <label className="space-y-2">
-                    <span className={labelClassName}>Last name</span>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={updateField('lastName')}
-                      required
-                      autoComplete="family-name"
-                      className={inputClassName}
-                      placeholder="Doe"
-                    />
-                  </label>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label className="space-y-2">
-                    <span className={labelClassName}>Email</span>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={updateField('email')}
-                      required
-                      autoComplete="email"
-                      className={inputClassName}
-                      placeholder="you@example.com"
-                    />
-                  </label>
-
-                  <label className="space-y-2">
-                    <span className={labelClassName}>Phone</span>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={updateField('phone')}
-                      autoComplete="tel"
-                      className={inputClassName}
-                      placeholder="+234 706 999 5333"
-                    />
-                  </label>
-                </div>
-
-                <label className="space-y-2">
-                  <span className={labelClassName}>Topic</span>
-                  <select
-                    name="topic"
-                    value={formData.topic}
-                    onChange={updateField('topic')}
-                    className={inputClassName}
-                  >
-                    <option value="">Select a topic</option>
-                    <option value="visit">Plan a visit</option>
-                    <option value="pastoral">Pastoral care</option>
-                    <option value="prayer">Prayer request</option>
-                    <option value="serve">Serving / volunteering</option>
-                    <option value="events">Events / bookings</option>
-                    <option value="media">Media / resources</option>
-                    <option value="other">Other</option>
-                  </select>
-                </label>
-
-                <label className="space-y-2">
-                  <span className={labelClassName}>Message</span>
-                  <textarea
-                    rows={6}
-                    name="message"
-                    value={formData.message}
-                    onChange={updateField('message')}
-                    required
-                    className={`${inputClassName} min-h-[150px] resize-y`}
-                    placeholder="Tell us how we can help..."
-                  />
-                </label>
-
-                <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-                  <BodySM className="text-white/62">
-                    We’ll respond by email and phone if provided. Please avoid
-                    sending sensitive personal information through this form.
-                  </BodySM>
-                </div>
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="md"
-                    curvature="xl"
-                    disabled={submitting}
-                    className="min-h-12 w-full px-7 text-sm font-extrabold text-black sm:w-auto"
-                  >
-                    {submitting ? 'Sending...' : 'Send Message'}
-                  </Button>
-
-                  <Caption className="text-white/45">
-                    Required fields are marked by the form validation.
-                  </Caption>
-                </div>
-
-                {submitted ? (
-                  <div
-                    className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200"
-                    aria-live="polite"
-                  >
-                    Message queued successfully. Our team will respond within 24
-                    hours.
-                  </div>
-                ) : null}
-
-                {error ? (
-                  <div
-                    className="rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-200"
-                    aria-live="polite"
-                  >
-                    {error}
-                  </div>
-                ) : null}
-              </form>
-            </section>
+            </ScrollFadeIn>
           </div>
         </Container>
       </Section>
+
+      {/* ── Find us strip ────────────────────────────────────── */}
+      <section className="border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]">
+        <Container size="xl">
+          <div className="flex flex-col gap-1.5 py-7 sm:flex-row sm:items-center sm:justify-between sm:py-6">
+            <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/60">
+              Honor Gardens, Alasia bus stop, Lekki-Epe Expressway, Lagos
+            </p>
+            <Link
+              href="/events"
+              className="font-ui text-[0.76rem] font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-ink)]"
+            >
+              See service times →
+            </Link>
+          </div>
+        </Container>
+      </section>
     </main>
   );
 }

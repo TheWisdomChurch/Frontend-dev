@@ -2,22 +2,18 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Loader2, MapPin } from 'lucide-react';
-
-import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/shared/assets';
-import { Container, Section } from '@/shared/layout';
-import { apiClient } from '@/lib/api';
-import type { EventPublic } from '@/lib/apiTypes';
-
-import { AnimatePresence, motion } from '@/lib/safe-motion';
-import { BaseModal } from '@/shared/ui/modals/Base';
 import { Play } from 'lucide-react';
 
-/* ─────────────────────────────────────────────────────────
-   Types
-───────────────────────────────────────────────────────── */
+import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/shared/assets';
+import { Container } from '@/shared/layout';
+import { apiClient } from '@/lib/api';
+import type { EventPublic } from '@/lib/apiTypes';
+import { AnimatePresence, motion } from '@/lib/safe-motion';
+import { BaseModal } from '@/shared/ui/modals/Base';
 
-type ShowcaseCategory = 'program' | 'media' | 'reel';
+/* ── Types ──────────────────────────────────────────────── */
+
+type Category = 'program' | 'media' | 'reel';
 
 type Slide = {
   id: string;
@@ -29,10 +25,16 @@ type Slide = {
   cta: string;
   href?: string;
   badge: string;
-  category: ShowcaseCategory;
+  category: Category;
   start?: string;
   end?: string;
   videoUrl?: string;
+};
+
+const CATEGORY_LABELS: Record<Category, string> = {
+  program: 'Programs',
+  media: 'Media',
+  reel: 'Reels',
 };
 
 const STATIC_SLIDES: Slide[] = [
@@ -40,11 +42,11 @@ const STATIC_SLIDES: Slide[] = [
     id: 'media-stories',
     title: 'Media Stories',
     description:
-      'Short testimonies, sermon clips, and behind-the-scenes moments.',
+      'Short testimonies, sermon clips, and behind-the-scenes moments from the Wisdom Church community.',
     date: 'Updated weekly',
     location: 'Content Hub',
     imageUrl: hero_bg_1.src,
-    cta: 'View media',
+    cta: 'Explore media',
     href: '/resources',
     badge: 'Media',
     category: 'media',
@@ -52,7 +54,8 @@ const STATIC_SLIDES: Slide[] = [
   {
     id: 'highlights-reels',
     title: 'Highlights & Reels',
-    description: 'Watch quick reels from recent services and events.',
+    description:
+      'Quick reels from recent services, worship moments, and church events.',
     date: 'Updated weekly',
     location: 'Media Team',
     imageUrl: hero_bg_3.src,
@@ -63,18 +66,14 @@ const STATIC_SLIDES: Slide[] = [
   },
 ];
 
-const CATEGORY_LABELS: Record<ShowcaseCategory, string> = {
-  program: 'Programs',
-  media: 'Media',
-  reel: 'Reels',
-};
+/* ── Helpers ────────────────────────────────────────────── */
 
 function formatDate(startAt?: string): string {
   if (!startAt) return 'Date TBA';
   const d = new Date(startAt);
   if (Number.isNaN(d.getTime())) return 'Date TBA';
   return d
-    .toLocaleDateString(undefined, { month: 'short', day: '2-digit' })
+    .toLocaleDateString('en', { month: 'short', day: '2-digit' })
     .toUpperCase();
 }
 
@@ -83,171 +82,298 @@ function statusBadge(startAt?: string, endAt?: string): string {
   const start = new Date(startAt).getTime();
   const end = endAt ? new Date(endAt).getTime() : start;
   const now = Date.now();
-  if (now >= start && now <= end) return 'Happening now';
+  if (now >= start && now <= end) return 'Live now';
   if (now < start) return 'Upcoming';
   return 'Recent';
 }
 
-/* ─────────────────────────────────────────────────────────
-   Event card
-───────────────────────────────────────────────────────── */
+function Arrow() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1 6h10M6 1l5 5-5 5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
-function EventCard({
+/* ── Featured card — always full-width on mobile, horizontal split on lg ── */
+
+function FeaturedCard({
   slide,
-  featured = false,
+  fullWidth,
+  onClick,
 }: {
   slide: Slide;
-  featured?: boolean;
+  fullWidth?: boolean;
+  onClick?: () => void;
 }) {
   const isReel = slide.category === 'reel';
 
-  if (featured) {
-    // Horizontal layout for first card
-    return (
-      <div className="group relative flex min-h-[280px] overflow-hidden rounded-[var(--radius-card)] bg-[var(--app-ink)] lg:min-h-[340px]">
-        {/* Image */}
-        <div className="relative w-[52%] shrink-0 overflow-hidden">
-          <img
-            src={slide.imageUrl}
-            alt={slide.title}
-            className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--app-ink)]/30" />
-          {isReel && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl transition duration-200 group-hover:scale-[1.08]">
-                <Play className="h-5 w-5 fill-black text-black" />
-              </div>
-            </div>
-          )}
-        </div>
+  const interactiveProps = onClick
+    ? {
+        role: 'button' as const,
+        tabIndex: 0,
+        onClick,
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') onClick();
+        },
+      }
+    : {};
 
-        {/* Content */}
-        <div className="flex flex-1 flex-col justify-between p-7 lg:p-9">
-          <div>
-            <span className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              {slide.badge} · Featured
-            </span>
-            <p className="mt-4 font-headline text-[1.5rem] font-normal leading-snug text-white lg:text-[1.75rem]">
-              {slide.title}
-            </p>
-            <p className="mt-3 line-clamp-3 font-body text-[0.83rem] leading-[1.75] text-white/52">
-              {slide.description}
-            </p>
-          </div>
-
-          <div className="mt-6">
-            {slide.location && (
-              <p className="mb-2 flex items-center gap-1.5 font-body text-[0.74rem] text-white/38">
-                <MapPin className="h-3 w-3 shrink-0" />
-                {slide.location}
-              </p>
-            )}
-            {slide.date !== 'Date TBA' && (
-              <p className="mb-5 font-ui text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/45">
-                {slide.date}
-              </p>
-            )}
-            {slide.href ? (
-              <Link
-                href={slide.href}
-                className="inline-flex h-10 items-center gap-2 bg-[var(--app-primary)] px-5 font-ui text-[0.75rem] font-bold text-[#0d0a06] transition hover:bg-[var(--app-primary-light)]"
-                style={{ borderRadius: 'var(--radius-button)' }}
-              >
-                {slide.cta}
-              </Link>
-            ) : null}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Portrait card
   return (
     <div
-      className="group flex flex-col overflow-hidden bg-[var(--app-canvas-2)]"
-      style={{ borderRadius: 'var(--radius-card)' }}
+      {...interactiveProps}
+      className={[
+        'group relative flex overflow-hidden bg-[var(--app-ink)]',
+        fullWidth
+          ? 'min-h-[320px] lg:min-h-[400px]'
+          : 'min-h-[280px] lg:min-h-[360px]',
+        onClick ? 'cursor-pointer' : '',
+      ].join(' ')}
     >
-      {/* Image — 3/4 aspect */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--app-ink)]/10">
+      {/* Image — left half */}
+      <div
+        className={`relative shrink-0 overflow-hidden ${fullWidth ? 'w-1/2 lg:w-[55%]' : 'w-[52%]'}`}
+      >
+        <img
+          src={slide.imageUrl}
+          alt={slide.title}
+          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--app-ink)]/35" />
+        {isReel && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl transition duration-300 group-hover:scale-[1.1]">
+              <Play className="h-5 w-5 fill-black text-black" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Content — right half */}
+      <div
+        className={`flex flex-1 flex-col justify-between ${fullWidth ? 'p-8 lg:p-12' : 'p-6 lg:p-8'}`}
+      >
+        <div>
+          <span className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            {slide.badge} · Featured
+          </span>
+          <p
+            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-[1.7rem] lg:text-[2.1rem]' : 'text-[1.4rem] lg:text-[1.65rem]'}`}
+          >
+            {slide.title}
+          </p>
+          <p className="mt-3 line-clamp-3 font-ui text-[0.82rem] leading-[1.8] text-white/50">
+            {slide.description}
+          </p>
+        </div>
+
+        <div className="mt-6 space-y-2">
+          {slide.date !== 'Date TBA' && (
+            <p className="font-ui text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/40">
+              {slide.date}
+            </p>
+          )}
+          {slide.location && (
+            <p className="font-ui text-[0.72rem] text-white/35">
+              {slide.location}
+            </p>
+          )}
+          {/* CTA — Link for navigable cards, plain styled span for reel (whole card is clickable) */}
+          {slide.href && !isReel && (
+            <Link
+              href={slide.href}
+              className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            >
+              {slide.cta} <Arrow />
+            </Link>
+          )}
+          {isReel && (
+            <span className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-white/60">
+              {slide.cta} <Arrow />
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Portrait card ──────────────────────────────────────── */
+
+function PortraitCard({
+  slide,
+  onClick,
+}: {
+  slide: Slide;
+  onClick?: () => void;
+}) {
+  const isReel = slide.category === 'reel';
+
+  const interactiveProps = onClick
+    ? {
+        role: 'button' as const,
+        tabIndex: 0,
+        onClick,
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') onClick();
+        },
+      }
+    : {};
+
+  return (
+    <div
+      {...interactiveProps}
+      className={[
+        'group flex h-full flex-col overflow-hidden border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
+        onClick ? 'cursor-pointer' : '',
+      ].join(' ')}
+    >
+      {/* Image */}
+      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--app-ink)]/8">
         <img
           src={slide.imageUrl}
           alt={slide.title}
           className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
           loading="lazy"
         />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
         {isReel && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-[1.06]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-[1.07]">
               <Play className="h-4 w-4 fill-black text-black" />
             </div>
           </div>
         )}
-        {/* Date chip */}
-        <div
-          className="absolute left-4 top-4 bg-[var(--app-primary)] px-2.5 py-1 font-ui text-[0.58rem] font-bold uppercase tracking-[0.18em] text-[#0d0a06]"
-          style={{ borderRadius: 'var(--radius-badge)' }}
-        >
+        {/* Date pill */}
+        <div className="absolute left-4 top-4 bg-[var(--app-primary)] px-2.5 py-1 font-ui text-[0.58rem] font-bold uppercase tracking-[0.16em] text-[var(--app-ink)]">
           {slide.date}
         </div>
       </div>
 
       {/* Text */}
-      <div className="flex flex-1 flex-col border-t border-[var(--app-ink)]/8 px-5 py-5">
-        <span className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+      <div className="flex flex-1 flex-col gap-2 px-5 py-4">
+        <span className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
           {slide.badge}
         </span>
-        <p className="mt-2 font-headline text-[1.08rem] font-normal leading-snug text-[var(--app-ink)]">
+        <p className="font-headline text-[1.05rem] font-normal leading-snug text-[var(--app-ink)] line-clamp-2">
           {slide.title}
         </p>
         {slide.location && (
-          <p className="mt-1.5 flex items-center gap-1.5 font-body text-[0.73rem] text-[var(--app-ink)]/40">
-            <MapPin className="h-3 w-3 shrink-0" />
+          <p className="font-ui text-[0.73rem] text-[var(--app-ink)]/40">
             {slide.location}
           </p>
         )}
-        {slide.href ? (
+        {/* Link for nav cards; plain span for reels (whole card is clickable) */}
+        {slide.href && !isReel && (
           <Link
             href={slide.href}
-            className="mt-auto inline-flex items-center gap-1 pt-4 font-ui text-[0.73rem] font-semibold text-[var(--app-ink)]/55 transition hover:text-[var(--app-primary)]"
+            className="mt-auto pt-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             {slide.cta} →
           </Link>
-        ) : null}
+        )}
+        {isReel && (
+          <span className="mt-auto pt-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/45">
+            {slide.cta} →
+          </span>
+        )}
       </div>
     </div>
   );
 }
 
-/* ─────────────────────────────────────────────────────────
-   Main component
-───────────────────────────────────────────────────────── */
+/* ── Empty state ────────────────────────────────────────── */
+
+function EmptyState({ category }: { category: Category }) {
+  return (
+    <div className="flex min-h-[300px] flex-col items-center justify-center gap-6 border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] px-8 py-16 text-center lg:min-h-[360px]">
+      <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
+      <p className="font-headline text-[1.5rem] font-normal text-[var(--app-ink)]">
+        {category === 'program'
+          ? 'No programs scheduled right now.'
+          : category === 'media'
+            ? 'Media content coming soon.'
+            : 'Reels coming soon.'}
+      </p>
+      <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/48">
+        {category === 'program'
+          ? 'Join us every Sunday at 9:00 AM and Thursday at 6:00 PM at Honor Gardens, Lekki-Epe Expressway.'
+          : 'Check back soon — new content is added regularly.'}
+      </p>
+      <Link
+        href={category === 'program' ? '/events' : '/resources'}
+        className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+      >
+        {category === 'program' ? 'View all events' : 'Go to resources'}{' '}
+        <Arrow />
+      </Link>
+    </div>
+  );
+}
+
+/* ── Skeleton ───────────────────────────────────────────── */
+
+function Skeleton() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="min-h-[320px] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] lg:min-h-[360px]" />
+      {[0, 1, 2].map(i => (
+        <div
+          key={i}
+          className="aspect-[4/5] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Grid layout — adapts to number of slides ───────────── */
+
+function gridCols(restCount: number) {
+  if (restCount === 0) return '';
+  if (restCount === 1) return 'lg:grid-cols-[1.5fr_1fr]';
+  if (restCount === 2) return 'lg:grid-cols-[1.4fr_repeat(2,1fr)]';
+  return 'lg:grid-cols-[1.4fr_repeat(3,1fr)]';
+}
+
+/* ── Main component ─────────────────────────────────────── */
 
 export default function EventsShowcase() {
-  const [category, setCategory] = useState<ShowcaseCategory>('program');
+  const [category, setCategory] = useState<Category>('program');
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<EventPublic[]>([]);
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   useEffect(() => {
-    let mounted = true;
+    let live = true;
     apiClient
       .listEvents()
       .then(data => {
-        if (mounted) setEvents(Array.isArray(data) ? data : []);
+        if (live) setEvents(Array.isArray(data) ? data : []);
       })
       .catch(() => {
-        if (mounted) setEvents([]);
+        if (live) setEvents([]);
       })
       .finally(() => {
-        if (mounted) setLoading(false);
+        if (live) setLoading(false);
       });
     return () => {
-      mounted = false;
+      live = false;
     };
   }, []);
 
@@ -258,12 +384,12 @@ export default function EventsShowcase() {
         title: e.title,
         description: e.description || 'Join us for this gathering.',
         date: formatDate(e.startAt),
-        location: e.location || 'Venue TBA',
+        location: e.location || 'Honor Gardens, Lagos',
         imageUrl: e.bannerUrl || e.imageUrl || EventBannerDesktop.src,
         cta: 'Save a seat',
         href: e.formSlug ? `/forms/${e.formSlug}` : '/events',
         badge: statusBadge(e.startAt, e.endAt),
-        category: 'program',
+        category: 'program' as const,
         start: e.startAt,
         end: e.endAt,
       })),
@@ -276,74 +402,58 @@ export default function EventsShowcase() {
   }, [category, programSlides]);
 
   const isLoading = loading && category === 'program';
-  const featured = activeSlides[0];
-  const rest = activeSlides.slice(1, 4); // max 3 portrait cards
+  const featured = activeSlides[0] ?? null;
+  const rest = activeSlides.slice(1, 4);
+  const onlyFeatured = !!featured && rest.length === 0;
 
   return (
-    <Section padding="none" className="bg-[var(--app-canvas)]">
-      <Container size="xl" className="py-section-md">
-        {/* ── Section header ───────────────────────────────── */}
+    <section className="bg-[var(--app-canvas)] py-16 lg:py-20">
+      <Container size="xl">
+        {/* ── Section header ──────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-3 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="mb-2 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Events &amp; Programs
             </p>
-            <h2
-              className="font-headline font-normal leading-tight text-[var(--app-ink)]"
-              style={{ fontSize: 'var(--type-display-sm)' }}
-            >
+            <h2 className="font-headline text-[2rem] font-normal leading-tight text-[var(--app-ink)] sm:text-[2.5rem] lg:text-[2.8rem]">
               What&apos;s happening
             </h2>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-5">
             {/* Category tabs */}
-            <div className="flex gap-0.5 border-b border-[var(--app-ink)]/10">
-              {(Object.keys(CATEGORY_LABELS) as ShowcaseCategory[]).map(cat => (
+            <div className="flex gap-0 border border-[var(--app-ink)]/10">
+              {(Object.keys(CATEGORY_LABELS) as Category[]).map(cat => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setCategory(cat)}
                   className={[
-                    'px-3.5 py-2 font-ui text-[0.72rem] font-semibold transition',
+                    'px-4 py-2.5 font-ui text-[0.72rem] font-semibold transition duration-150',
                     category === cat
-                      ? 'border-b-2 border-[var(--app-primary)] text-[var(--app-ink)]'
-                      : 'border-b-2 border-transparent text-[var(--app-ink)]/40 hover:text-[var(--app-ink)]/70',
+                      ? 'bg-[var(--app-ink)] text-white'
+                      : 'text-[var(--app-ink)]/45 hover:bg-[var(--app-canvas-2)] hover:text-[var(--app-ink)]/70',
                   ].join(' ')}
                 >
                   {CATEGORY_LABELS[cat]}
                 </button>
               ))}
             </div>
+
             <Link
               href="/events"
-              className="hidden font-ui text-[0.75rem] font-semibold text-[var(--app-primary)] transition sm:inline-flex sm:items-center sm:gap-1.5"
+              className="hidden items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
             >
-              See all →
+              See all <Arrow />
             </Link>
           </div>
         </div>
 
-        {/* ── Content ──────────────────────────────────────── */}
+        {/* ── Content ─────────────────────────────────────── */}
         {isLoading ? (
-          <div className="flex min-h-[320px] items-center justify-center">
-            <div className="flex items-center gap-3 text-sm text-[var(--app-ink)]/50">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Loading events…
-            </div>
-          </div>
+          <Skeleton />
         ) : activeSlides.length === 0 ? (
-          <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center">
-            <p className="font-headline text-[1.5rem] text-[var(--app-ink)]/30">
-              Nothing scheduled right now.
-            </p>
-            <Link
-              href="/events"
-              className="text-sm font-semibold text-[var(--app-primary)]"
-            >
-              Browse all events →
-            </Link>
-          </div>
+          <EmptyState category={category} />
         ) : (
           <AnimatePresence mode="wait">
             <motion.div
@@ -351,43 +461,48 @@ export default function EventsShowcase() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.28 }}
+              transition={{ duration: 0.25 }}
             >
-              <div className="grid gap-5 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-                {/* Featured (horizontal) */}
+              <div className={`grid gap-5 ${gridCols(rest.length)}`}>
+                {/* Featured */}
                 {featured && (
-                  <div className="lg:row-span-1">
-                    <EventCard slide={featured} featured />
+                  <div>
+                    <FeaturedCard
+                      slide={featured}
+                      fullWidth={onlyFeatured}
+                      onClick={
+                        featured.category === 'reel'
+                          ? () => setReelModal(featured)
+                          : undefined
+                      }
+                    />
                   </div>
                 )}
 
                 {/* Portrait cards */}
                 {rest.map(slide => (
-                  <button
+                  <PortraitCard
                     key={slide.id}
-                    type="button"
+                    slide={slide}
                     onClick={
                       slide.category === 'reel'
                         ? () => setReelModal(slide)
                         : undefined
                     }
-                    className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]"
-                  >
-                    <EventCard slide={slide} />
-                  </button>
+                  />
                 ))}
               </div>
             </motion.div>
           </AnimatePresence>
         )}
 
-        {/* Mobile see all */}
+        {/* Mobile see-all */}
         <div className="mt-8 sm:hidden">
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--app-primary)]"
+            className="inline-flex items-center gap-2 border border-[var(--app-ink)]/14 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
           >
-            See all events →
+            See all events <Arrow />
           </Link>
         </div>
       </Container>
@@ -404,18 +519,18 @@ export default function EventsShowcase() {
           {reelModal.videoUrl ? (
             <video
               controls
-              className="w-full rounded-[var(--radius-card)] bg-black"
+              className="w-full bg-black"
               poster={reelModal.imageUrl}
             >
               <source src={reelModal.videoUrl} type="video/mp4" />
             </video>
           ) : (
-            <div className="flex aspect-video w-full items-center justify-center rounded-[var(--radius-card)] bg-black/70">
+            <div className="flex aspect-video w-full items-center justify-center bg-black/70">
               <Play className="h-10 w-10 text-white/50" />
             </div>
           )}
         </BaseModal>
       )}
-    </Section>
+    </section>
   );
 }

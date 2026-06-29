@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { Play } from 'lucide-react';
@@ -148,8 +148,6 @@ export default function ConnectPortal() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
             >
               <Play className="h-3.5 w-3.5 fill-[#0d0a06]" />
               Stream services live
@@ -161,8 +159,6 @@ export default function ConnectPortal() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-11 items-center gap-2.5 border border-[#25D366]/30 bg-[#25D366]/10 px-6 font-ui text-[0.78rem] font-bold text-[#25D366] transition hover:border-[#25D366]/50 hover:bg-[#25D366]/18 active:scale-[0.98]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
             >
               <WaIcon />
               Join WhatsApp community
@@ -184,8 +180,6 @@ export default function ConnectPortal() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-4 py-2 font-ui text-[0.75rem] font-semibold text-white/55 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-button)' }}
               >
                 <s.Icon />
                 {s.label}

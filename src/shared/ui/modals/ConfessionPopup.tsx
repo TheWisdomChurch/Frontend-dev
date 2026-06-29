@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { ArrowLeft, BookOpen } from 'lucide-react';
@@ -61,11 +61,7 @@ export default function ConfessionPopup({
         <div className="space-y-6 pb-1">
           {/* Brand row */}
           <div className="flex items-center gap-3">
-            <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/40"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-badge)' }}
-            >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/40">
               <Image
                 src={WisdomeHouseLogo}
                 alt="The Wisdom Church"
@@ -89,8 +85,6 @@ export default function ConfessionPopup({
               onClick={handleClose}
               aria-label="Close"
               className="ml-auto grid h-8 w-8 place-items-center border border-white/10 bg-white/[0.04] text-white/40 transition hover:text-white/80"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
             >
               <svg
                 viewBox="0 0 16 16"
@@ -123,8 +117,6 @@ export default function ConfessionPopup({
               type="button"
               onClick={showConfession}
               className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-[0.78rem] font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
             >
               <BookOpen className="h-3.5 w-3.5 shrink-0" />
               Read Confession
@@ -133,8 +125,6 @@ export default function ConfessionPopup({
               type="button"
               onClick={handleClose}
               className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
             >
               Continue
             </button>
@@ -154,11 +144,7 @@ export default function ConfessionPopup({
           </blockquote>
 
           {/* Confession text */}
-          <div
-            className="max-h-[44svh] space-y-4 overflow-y-auto border border-white/[0.07] bg-black/25 p-5"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderRadius: 'var(--radius-card)' }}
-          >
+          <div className="max-h-[44svh] space-y-4 overflow-y-auto border border-white/[0.07] bg-black/25 p-5">
             {confessionParagraphs.map((paragraph, index) => (
               <p
                 key={`${paragraph.slice(0, 24)}-${index}`}
@@ -175,8 +161,6 @@ export default function ConfessionPopup({
               type="button"
               onClick={showWelcome}
               className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-[0.78rem] font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
             >
               <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
               Back
@@ -185,8 +169,6 @@ export default function ConfessionPopup({
               type="button"
               onClick={handleClose}
               className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
             >
               I Believe It
             </button>
