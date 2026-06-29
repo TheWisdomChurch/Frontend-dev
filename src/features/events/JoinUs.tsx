@@ -1,4 +1,4 @@
-// components/ui/Homepage/JoinUs.tsx
+﻿// components/ui/Homepage/JoinUs.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -286,11 +286,7 @@ export default function JoinWisdomHouse() {
         </div>
 
         {/* ── Department grid ──────────────────────────────── */}
-        <div
-          className="grid grid-cols-1 gap-px bg-[var(--app-ink)]/8 sm:grid-cols-2 lg:grid-cols-3"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ borderRadius: 'var(--radius-card)', overflow: 'hidden' }}
-        >
+        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-card bg-[var(--app-ink)]/8 sm:grid-cols-2 lg:grid-cols-3">
           {departments.map((dept, index) => {
             const Icon = dept.icon;
             const isActive = activeCard === index;
@@ -324,7 +320,6 @@ export default function JoinWisdomHouse() {
                       : 'bg-[var(--app-ink)]/6 group-hover:bg-[var(--app-primary)]/14'
                   }`}
                   // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderRadius: 'var(--radius-badge)' }}
                 >
                   <Icon
                     className={`h-[1.1rem] w-[1.1rem] transition duration-300 group-hover:text-[var(--app-primary)] ${
@@ -368,7 +363,6 @@ export default function JoinWisdomHouse() {
             onClick={() => openFor('')}
             className="group inline-flex h-11 items-center gap-2 border border-[var(--app-ink)]/20 bg-transparent px-6 font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
             // eslint-disable-next-line no-restricted-syntax
-            style={{ borderRadius: 'var(--radius-button)' }}
           >
             Not sure which team? Apply anyway
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />

@@ -1,229 +1,397 @@
-﻿'use client';
+'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import {
-  ArrowRight,
-  CalendarClock,
-  CalendarPlus,
-  Loader2,
-  MapPin,
-} from 'lucide-react';
 
-import { EventBannerDesktop } from '@/shared/assets';
 import PageHero from '@/features/hero/PageHero';
-import { H1, H2, H3, BodySM, Caption, Eyebrow } from '@/shared/text';
-import { Container, Section } from '@/shared/layout';
+import { Container } from '@/shared/layout';
+import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 
-function getEventTimestamp(event: EventPublic): number {
+/* ── Utilities ──────────────────────────────────────────── */
+
+function getTimestamp(event: EventPublic): number {
   if (event.startAt) {
-    const timestamp = new Date(event.startAt).getTime();
-    if (!Number.isNaN(timestamp)) return timestamp;
+    const t = new Date(event.startAt).getTime();
+    if (!Number.isNaN(t)) return t;
   }
-
   if (event.date) {
-    const timestamp = new Date(
-      `${event.date}T${event.time || '00:00'}`
-    ).getTime();
-    if (!Number.isNaN(timestamp)) return timestamp;
+    const t = new Date(`${event.date}T${event.time ?? '00:00'}`).getTime();
+    if (!Number.isNaN(t)) return t;
   }
-
   return Number.MAX_SAFE_INTEGER;
 }
 
-function sortEvents(items: EventPublic[]): EventPublic[] {
-  return [...items].sort((a, b) => getEventTimestamp(a) - getEventTimestamp(b));
+function formatDate(event: EventPublic): {
+  month: string;
+  day: string;
+  full: string;
+} {
+  const t = getTimestamp(event);
+  if (t === Number.MAX_SAFE_INTEGER || (!event.startAt && !event.date)) {
+    return { month: '—', day: '—', full: 'Date to be announced' };
+  }
+  const d = new Date(t);
+  return {
+    month: d.toLocaleString('en', { month: 'short' }).toUpperCase(),
+    day: String(d.getDate()),
+    full: d.toLocaleString('en', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }),
+  };
 }
 
-function formatWhen(event: EventPublic): string {
+function formatTime(event: EventPublic): string {
   if (event.startAt) {
-    const date = new Date(event.startAt);
-
-    if (!Number.isNaN(date.getTime())) {
-      return date.toLocaleString(undefined, {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+    const d = new Date(event.startAt);
+    if (!Number.isNaN(d.getTime())) {
+      return d.toLocaleString('en', { hour: '2-digit', minute: '2-digit' });
     }
   }
-
-  const date = event.date?.trim();
-  const time = event.time?.trim();
-
-  if (date && time) return `${date} • ${time}`;
-  if (date) return date;
-  if (time) return time;
-
-  return 'Date to be announced';
+  return event.time ?? '';
 }
 
-function getRegisterHref(event: EventPublic): string | null {
+function registerHref(event: EventPublic): string | null {
   if (event.registerLink) return event.registerLink;
   if (event.formSlug) return `/forms/${event.formSlug}`;
   return null;
 }
+
+/* ── Static weekly data ─────────────────────────────────── */
+
+const WEEKLY = [
+  {
+    day: 'Sunday',
+    time: '9:00 AM',
+    name: 'Sunday Worship Service',
+    description:
+      'Spirit-filled corporate worship, prayer, and the preached Word.',
+  },
+  {
+    day: 'Thursday',
+    time: '6:00 PM',
+    name: 'Midweek Power Service',
+    description: 'Midweek gathering for prayer, teaching, and community.',
+  },
+] as const;
+
+/* ── Arrow ──────────────────────────────────────────────── */
+
+function Arrow() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1 6h10M6 1l5 5-5 5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/* ── Event card ─────────────────────────────────────────── */
+
+function EventCard({ event }: { event: EventPublic }) {
+  const date = formatDate(event);
+  const time = formatTime(event);
+  const href = registerHref(event);
+  const imgSrc = event.bannerUrl ?? event.imageUrl ?? null;
+
+  return (
+    <article className="group flex flex-col overflow-hidden border border-white/10 bg-white/[0.03] transition duration-300 hover:border-[var(--app-primary)]/35">
+      {/* Image / date block */}
+      <div className="relative h-[180px] overflow-hidden bg-[var(--app-dark-2)]">
+        {imgSrc ? (
+          <img
+            src={imgSrc}
+            alt={event.title}
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+            loading="lazy"
+          />
+        ) : (
+          /* No-image: bold date display */
+          <div className="flex h-full flex-col items-center justify-center gap-1">
+            <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              {date.month}
+            </span>
+            <span className="font-headline text-[3.5rem] font-normal leading-none text-white/90">
+              {date.day}
+            </span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)]/70 via-transparent to-transparent" />
+
+        {/* Date badge — only when there's an image */}
+        {imgSrc && (
+          <div className="absolute bottom-3 left-4 flex items-baseline gap-2">
+            <span className="font-headline text-[1.8rem] font-normal leading-none text-white">
+              {date.day}
+            </span>
+            <span className="font-ui text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+              {date.month}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col gap-3 p-5 pt-4">
+        <h3 className="font-headline text-[1.1rem] font-normal leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
+          {event.title}
+        </h3>
+
+        {event.description && (
+          <p className="font-ui text-[0.8rem] leading-[1.8] text-white/45 line-clamp-2">
+            {event.description}
+          </p>
+        )}
+
+        <div className="mt-auto space-y-1.5 border-t border-white/8 pt-4">
+          {time && (
+            <p className="font-ui text-[0.75rem] font-semibold text-white/55">
+              {date.full} · {time}
+            </p>
+          )}
+          {event.location && (
+            <p className="font-ui text-[0.75rem] text-white/38 line-clamp-1">
+              {event.location}
+            </p>
+          )}
+        </div>
+
+        {href ? (
+          <a
+            href={href}
+            className="mt-2 inline-flex items-center gap-2 self-start border border-[var(--app-primary)]/40 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-primary)] transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+          >
+            Register <Arrow />
+          </a>
+        ) : (
+          <span className="mt-2 inline-flex items-center gap-2 self-start border border-white/12 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-white/35">
+            Free entry
+          </span>
+        )}
+      </div>
+    </article>
+  );
+}
+
+/* ── Loading skeleton ───────────────────────────────────── */
+
+function LoadingSkeleton() {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {[0, 1, 2].map(i => (
+        <div
+          key={i}
+          className="h-[340px] animate-pulse border border-white/8 bg-white/[0.03]"
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Empty state ────────────────────────────────────────── */
+
+function EmptyState() {
+  return (
+    <ScrollFadeIn>
+      <div className="flex flex-col items-center gap-6 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
+        <div className="h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
+        <h3 className="font-headline text-[1.5rem] font-normal text-white">
+          Events are on their way.
+        </h3>
+        <p className="max-w-sm font-ui text-[0.83rem] leading-[1.85] text-white/45">
+          Nothing is scheduled right now. In the meantime, join us for our
+          weekly services every Sunday and Thursday.
+        </p>
+        <Link
+          href="/contact"
+          className="inline-flex items-center gap-2 border border-white/18 px-6 py-2.5 font-ui text-[0.72rem] font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+        >
+          Plan a visit <Arrow />
+        </Link>
+      </div>
+    </ScrollFadeIn>
+  );
+}
+
+/* ── Page ───────────────────────────────────────────────── */
 
 export default function EventsPage() {
   const [events, setEvents] = useState<EventPublic[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-
-    const loadEvents = async () => {
-      try {
-        const items = await apiClient.listEvents();
-        if (mounted) setEvents(sortEvents(items));
-      } catch (error) {
-        console.error('Failed to load events', error);
-        if (mounted) setEvents([]);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    loadEvents();
-
+    let live = true;
+    apiClient
+      .listEvents()
+      .then(items => {
+        if (!live) return;
+        const sorted = [...items].sort(
+          (a, b) => getTimestamp(a) - getTimestamp(b)
+        );
+        setEvents(sorted);
+      })
+      .catch(() => {
+        if (live) setEvents([]);
+      })
+      .finally(() => {
+        if (live) setLoading(false);
+      });
     return () => {
-      mounted = false;
+      live = false;
     };
   }, []);
 
-  const upcomingCount = useMemo(() => {
-    const now = Date.now();
-
-    return events.filter(event => {
-      const timestamp = getEventTimestamp(event);
-      return timestamp === Number.MAX_SAFE_INTEGER || timestamp >= now;
-    }).length;
-  }, [events]);
-
   return (
-    <main className="min-h-screen bg-[var(--app-dark)] text-white">
+    <main className="min-h-screen">
+      {/* ── 1. Hero ──────────────────────────────────────────── */}
       <PageHero
-        title="Events & Programs"
-        subtitle="Explore upcoming church events, weekly programs, and special gatherings."
-        description="Stay connected with the latest published events from The Wisdom Church calendar."
+        eyebrow="Events & Programs"
+        title="What's happening at Wisdom Church."
+        subtitle="Weekly services, special gatherings, and everything in between."
         compact
       />
 
-      <Section padding="lg" className="bg-[var(--app-dark)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(201,150,26,0.10),transparent_28%),radial-gradient(circle_at_90%_18%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
+      {/* ── 2. Weekly rhythm — canvas, always present ────────── */}
+      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+        <Container size="xl">
+          <ScrollFadeIn className="py-12 lg:py-16">
+            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              Weekly rhythm
+            </p>
+            <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
+              We gather every week.
+              <em className="italic text-[var(--app-primary)]/75">
+                {' '}
+                Come as you are.
+              </em>
+            </h2>
+          </ScrollFadeIn>
 
-        <Container size="lg">
-          <div className="mb-8 flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <Eyebrow className="text-[var(--app-primary)]">
-                Wisdom Church Calendar
-              </Eyebrow>
-              <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
-                Events &amp; Programs
-              </H1>
-              <BodySM className="mt-3 text-white/65">
-                Published events from the admin portal appear here
-                automatically. Check dates, venues, and registration links.
-              </BodySM>
-            </div>
+          {/* Two service panels */}
+          <div className="grid border-t border-[var(--app-ink)]/8 sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/8">
+            {WEEKLY.map((svc, i) => (
+              <ScrollFadeIn key={svc.day} delay={i * 0.09}>
+                <div
+                  className={`flex flex-col gap-5 p-8 lg:p-10 ${i === 0 ? '' : 'border-t border-[var(--app-ink)]/8 sm:border-t-0'}`}
+                >
+                  {/* Day + time */}
+                  <div className="flex items-baseline gap-4">
+                    <p className="font-headline text-[2.2rem] font-normal leading-none text-[var(--app-ink)] lg:text-[2.6rem]">
+                      {svc.day}
+                    </p>
+                    <p className="font-ui text-[0.88rem] font-bold text-[var(--app-primary)]">
+                      {svc.time}
+                    </p>
+                  </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <span className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-black/30 px-5 text-sm font-semibold text-white/75">
-                {upcomingCount} upcoming
-              </span>
+                  {/* Gold rule */}
+                  <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
 
-              <Link
-                href="/events/calendar"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
-              >
-                Open calendar
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
+                  {/* Service info */}
+                  <div className="space-y-1.5">
+                    <p className="font-headline text-[1.1rem] font-normal text-[var(--app-ink)]">
+                      {svc.name}
+                    </p>
+                    <p className="font-ui text-[0.8rem] leading-[1.8] text-[var(--app-ink)]/50">
+                      {svc.description}
+                    </p>
+                    <p className="font-ui text-[0.75rem] text-[var(--app-ink)]/38">
+                      Honor Gardens, Lekki-Epe Expressway, Lagos
+                    </p>
+                  </div>
+
+                  {/* CTA */}
+                  <Link
+                    href="/contact"
+                    className="mt-1 inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  >
+                    Plan a visit <Arrow />
+                  </Link>
+                </div>
+              </ScrollFadeIn>
+            ))}
           </div>
 
+          {/* Bottom padding spacer */}
+          <div className="pb-12 lg:pb-16" />
+        </Container>
+      </section>
+
+      {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
+      <section className="bg-[var(--app-dark)] py-16 lg:py-20">
+        <Container size="xl">
+          {/* Header */}
+          <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Upcoming events
+              </p>
+              <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-white sm:text-[2.1rem]">
+                Special gatherings &amp; programs.
+              </h2>
+            </div>
+            {!loading && events.length > 0 && (
+              <span className="inline-flex self-start items-center border border-white/12 px-4 py-2 font-ui text-[0.72rem] font-semibold text-white/45 sm:self-auto">
+                {events.length} event{events.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </ScrollFadeIn>
+
+          {/* Content */}
           {loading ? (
-            <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.035]">
-              <Loader2 className="h-9 w-9 animate-spin text-[var(--app-primary)]" />
-            </div>
+            <LoadingSkeleton />
           ) : events.length === 0 ? (
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 text-center shadow-2xl shadow-black/25 sm:p-10">
-              <CalendarPlus className="mx-auto h-12 w-12 text-[var(--app-primary)]" />
-              <H2 className="mt-5 text-xl font-semibold text-white">
-                No published events yet.
-              </H2>
-              <BodySM className="mx-auto mt-3 max-w-md text-white/60">
-                Create and publish an event in the admin portal to display it on
-                this page.
-              </BodySM>
-            </div>
+            <EmptyState />
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {events.map(event => {
-                const registerHref = getRegisterHref(event);
-                const imageSrc =
-                  event.bannerUrl || event.imageUrl || EventBannerDesktop.src;
-
-                return (
-                  <article
-                    key={event.id}
-                    className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/25 transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/35 sm:rounded-[1.75rem]"
-                  >
-                    <div className="relative h-52 w-full overflow-hidden bg-black">
-                      <img
-                        src={imageSrc}
-                        alt={event.title}
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                    </div>
-
-                    <div className="space-y-4 p-5">
-                      <H3 className="line-clamp-2 text-lg text-white">
-                        {event.title}
-                      </H3>
-
-                      <BodySM className="line-clamp-3 text-white/62">
-                        {event.description || 'Join us for this gathering.'}
-                      </BodySM>
-
-                      <div className="space-y-2 border-t border-white/10 pt-4">
-                        <div className="flex items-start gap-2">
-                          <CalendarClock className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
-                          <Caption className="text-white/72">
-                            {formatWhen(event)}
-                          </Caption>
-                        </div>
-
-                        <div className="flex items-start gap-2">
-                          <MapPin className="mt-0.5 h-4 w-4 flex-none text-white/35" />
-                          <Caption className="line-clamp-1 text-white/55">
-                            {event.location || 'Venue to be announced'}
-                          </Caption>
-                        </div>
-                      </div>
-
-                      {registerHref ? (
-                        <a
-                          href={registerHref}
-                          className="inline-flex min-h-10 items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black transition hover:bg-[var(--app-primary)]"
-                        >
-                          Register
-                        </a>
-                      ) : null}
-                    </div>
-                  </article>
-                );
-              })}
+              {events.map((event, i) => (
+                <ScrollFadeIn key={event.id} delay={i * 0.05}>
+                  <EventCard event={event} />
+                </ScrollFadeIn>
+              ))}
             </div>
           )}
         </Container>
-      </Section>
+      </section>
+
+      {/* ── 4. CTA strip ─────────────────────────────────────── */}
+      <ScrollFadeIn>
+        <section className="border-t border-white/8 bg-[var(--app-dark-2)] py-10">
+          <Container size="xl">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-headline text-[1.2rem] font-normal text-white">
+                  Have a question about an event?
+                </p>
+                <p className="mt-1 font-ui text-[0.8rem] text-white/45">
+                  Our team is happy to help — reach out any time.
+                </p>
+              </div>
+              <Link
+                href="/contact"
+                className="inline-flex shrink-0 items-center gap-2 border border-white/20 px-6 py-3 font-ui text-[0.72rem] font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              >
+                Contact us <Arrow />
+              </Link>
+            </div>
+          </Container>
+        </section>
+      </ScrollFadeIn>
     </main>
   );
 }

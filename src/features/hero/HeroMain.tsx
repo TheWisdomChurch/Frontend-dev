@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -117,7 +117,7 @@ export default function HeroSection({
     setCurrentSlide(prev => Math.min(prev, safeSlides.length - 1));
   }, [safeSlides.length]);
 
-  // GSAP entry animation + continuous eyebrow float
+  // GSAP entry animation — per-line clip reveal + stagger
   useEffect(() => {
     if (!heroRef.current) return;
     const prefersReduced = window.matchMedia(
@@ -126,47 +126,64 @@ export default function HeroSection({
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      const titleLines = gsap.utils.toArray(
+        '[data-hero-line]',
+        heroRef.current!
+      ) as HTMLElement[];
+
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+      // Eyebrow: fade + slide down
       tl.fromTo(
         eyebrowRef.current,
-        { y: -28, opacity: 0, scale: 0.88 },
+        { y: -20, opacity: 0, letterSpacing: '0.5em' },
         {
           y: 0,
           opacity: 1,
-          scale: 1,
-          duration: 1,
-          ease: 'elastic.out(1.2, 0.5)',
+          letterSpacing: '0.22em',
+          duration: 0.9,
+          ease: 'expo.out',
         }
       )
+        // Title lines: clip reveal from bottom, staggered
         .fromTo(
-          titleRef.current,
-          { y: 36, opacity: 0, filter: 'blur(6px)' },
-          { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8 },
-          '-=0.5'
+          titleLines,
+          { yPercent: 105, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.9,
+            stagger: 0.13,
+            ease: 'power4.out',
+          },
+          '-=0.55'
         )
+        // Gold rule: draw from left
         .fromTo(
           ruleRef.current,
           { scaleX: 0 },
-          { scaleX: 1, duration: 0.6, ease: 'expo.out' },
-          '-=0.3'
+          { scaleX: 1, duration: 0.7, ease: 'expo.out' },
+          '-=0.35'
         )
+        // Body: fade up
         .fromTo(
           bodyRef.current,
-          { y: 16, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.55 },
-          '-=0.28'
+          { y: 18, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6 },
+          '-=0.4'
         )
+        // CTAs: fade up
         .fromTo(
           ctaRef.current,
-          { y: 12, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5 },
-          '-=0.3'
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.55 },
+          '-=0.4'
         )
         .call(() => {
-          // Gentle continuous float after entry
+          // Gentle continuous float on eyebrow after entry
           gsap.to(eyebrowRef.current, {
             y: -4,
-            duration: 2,
+            duration: 2.2,
             yoyo: true,
             repeat: -1,
             ease: 'sine.inOut',
@@ -259,7 +276,7 @@ export default function HeroSection({
     >
       {/* ── Default background image (lader.jpeg) ─────────────── */}
       {!content?.bgImage && (
-        <div className="absolute inset-0 z-[5]">
+        <div className="absolute inset-0 z-[5] overflow-hidden">
           <Image
             src={laderImg}
             alt=""
@@ -267,12 +284,12 @@ export default function HeroSection({
             priority
             sizes="100vw"
             quality={90}
-            className="object-cover"
+            className="object-cover animate-[kenburns_18s_ease-in-out_infinite_alternate]"
             // eslint-disable-next-line no-restricted-syntax
             style={{ objectPosition: 'center 30%' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/55 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/65" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/58 to-black/22" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/38 via-transparent to-black/68" />
         </div>
       )}
 
@@ -345,16 +362,18 @@ export default function HeroSection({
             {eyebrow}
           </p>
 
-          {/* Headline */}
+          {/* Headline — bold italic, per-line clip reveal */}
           <h1
             ref={titleRef}
-            className="font-headline font-normal leading-[0.96] tracking-[-0.02em] text-white"
+            className="font-headline font-bold italic leading-[0.95] tracking-[-0.025em] text-white"
             // eslint-disable-next-line no-restricted-syntax
             style={{ fontSize: 'var(--type-display-lg)' }}
           >
             {titleLines.map((line, i) => (
-              <span key={i} className="block">
-                {line}
+              <span key={i} className="block overflow-hidden pb-[0.06em]">
+                <span data-hero-line className="block">
+                  {line}
+                </span>
               </span>
             ))}
           </h1>
@@ -386,8 +405,6 @@ export default function HeroSection({
               <Link
                 href={primaryCtaHref}
                 className="group relative inline-flex h-12 items-center gap-2.5 bg-[var(--app-primary)] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-button)' }}
               >
                 <CalendarDays className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 {primaryCtaLabel}
@@ -402,8 +419,6 @@ export default function HeroSection({
                 target="_blank"
                 rel="noreferrer"
                 className="group inline-flex h-12 items-center gap-2.5 border border-white/25 bg-white/[0.08] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm transition hover:bg-white/[0.14] active:scale-[0.98]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-button)' }}
               >
                 <span className="relative flex h-2.5 w-2.5 flex-none items-center justify-center">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-70" />
@@ -416,8 +431,6 @@ export default function HeroSection({
               <Link
                 href={secondaryCtaHref}
                 className="group inline-flex h-12 items-center gap-2.5 border border-white/25 bg-white/[0.08] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm transition hover:bg-white/[0.14] active:scale-[0.98]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-button)' }}
               >
                 <ArrowRight className="h-4 w-4" />
                 {secondaryCtaLabel}

@@ -47,11 +47,7 @@ export default function GivingModal({
       forceBottomSheet
     >
       <div className="space-y-5">
-        <section
-          className="border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/8 p-5"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ borderRadius: 'var(--radius-card)' }}
-        >
+        <section className="border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/8 p-5">
           <blockquote
             className="pl-4"
             // eslint-disable-next-line no-restricted-syntax
@@ -75,11 +71,7 @@ export default function GivingModal({
               <H3 className="mt-2 text-white">Account Details</H3>
             </div>
 
-            <div
-              className="hidden items-center gap-1.5 border border-white/10 bg-white/[0.04] px-3 py-1.5 font-ui text-[0.68rem] font-semibold text-white/50 sm:flex"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ borderRadius: 'var(--radius-button)' }}
-            >
+            <div className="hidden items-center gap-1.5 border border-white/10 bg-white/[0.04] px-3 py-1.5 font-ui text-[0.68rem] font-semibold text-white/50 sm:flex">
               <ShieldCheck className="h-3.5 w-3.5 text-[var(--app-primary)]" />
               Secure giving
             </div>
@@ -93,15 +85,9 @@ export default function GivingModal({
                 <article
                   key={`${account.bank}-${account.accountNumber}-${index}`}
                   className="overflow-hidden border border-white/[0.07] bg-white/[0.04]"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderRadius: 'var(--radius-card)' }}
                 >
                   <div className="flex items-center gap-4 border-b border-white/10 p-4 sm:p-5">
-                    <div
-                      className="grid h-10 w-10 flex-none place-items-center overflow-hidden border border-white/10 bg-black/30"
-                      // eslint-disable-next-line no-restricted-syntax
-                      style={{ borderRadius: 'var(--radius-badge)' }}
-                    >
+                    <div className="grid h-10 w-10 flex-none place-items-center overflow-hidden border border-white/10 bg-black/30">
                       {account.image ? (
                         <Image
                           src={account.image}
@@ -129,11 +115,7 @@ export default function GivingModal({
                         Account Number
                       </Caption>
 
-                      <div
-                        className="mt-3 flex items-center gap-3 border border-white/10 bg-black/30 px-4 py-3"
-                        // eslint-disable-next-line no-restricted-syntax
-                        style={{ borderRadius: 'var(--radius-card)' }}
-                      >
+                      <div className="mt-3 flex items-center gap-3 border border-white/10 bg-black/30 px-4 py-3">
                         <code className="min-w-0 flex-1 break-all font-mono text-lg font-bold tracking-[0.08em] text-white sm:text-xl">
                           {account.accountNumber}
                         </code>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { ArrowUpRight, Camera, MessageCircle, PlayCircle } from 'lucide-react';
@@ -30,11 +30,7 @@ export default function JoinCommunityModal({
       <div className="space-y-5">
         {/* Brand row */}
         <div className="flex items-center gap-3 pb-1">
-          <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/40"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderRadius: 'var(--radius-badge)' }}
-          >
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/40">
             <Image
               src={WisdomeHouseLogo}
               alt="The Wisdom Church"
@@ -69,15 +65,11 @@ export default function JoinCommunityModal({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center gap-4 border border-white/[0.07] bg-white/[0.03] p-4 transition duration-200 hover:border-white/15 hover:bg-white/[0.06]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-card)' }}
               >
                 <div
-                  className="grid h-10 w-10 shrink-0 place-items-center text-white"
-                  // eslint-disable-next-line no-restricted-syntax
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-badge text-white"
                   style={{
                     background: `linear-gradient(135deg, ${link.bgColor}, ${link.hoverColor})`,
-                    borderRadius: 'var(--radius-badge)',
                   }}
                 >
                   {Icon ? <Icon className="h-4.5 w-4.5" /> : null}

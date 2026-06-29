@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -137,8 +137,6 @@ function ResourceCarousel() {
             disabled={!canPrev}
             aria-label="Previous"
             className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderRadius: 'var(--radius-button)' }}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -148,8 +146,6 @@ function ResourceCarousel() {
             disabled={!canNext}
             aria-label="Next"
             className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderRadius: 'var(--radius-button)' }}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -171,8 +167,6 @@ function ResourceCarousel() {
                 key={item.title}
                 href={item.href}
                 className="group relative flex h-[380px] w-full shrink-0 flex-col justify-end overflow-hidden sm:h-[360px] sm:w-[calc(50%-0.625rem)] lg:h-[400px] lg:w-[calc(33.333%-0.833rem)]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-card)' }}
               >
                 {/* Background image — covers card fully, no gaps */}
                 <Image
@@ -189,11 +183,7 @@ function ResourceCarousel() {
                 <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
 
                 {/* Icon chip — top right */}
-                <div
-                  className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[var(--app-primary)]/80"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderRadius: 'var(--radius-badge)' }}
-                >
+                <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[var(--app-primary)]/80">
                   <Icon className="h-3.5 w-3.5 text-white" />
                 </div>
 
@@ -392,8 +382,6 @@ export default function ResourceSection() {
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderRadius: 'var(--radius-button)' }}
                 >
                   <PlayCircle className="h-4 w-4" />
                   Watch now
@@ -402,8 +390,6 @@ export default function ResourceSection() {
               <Link
                 href="/resources/sermons"
                 className="inline-flex h-12 items-center gap-2 border border-[var(--app-ink)]/20 px-7 text-[0.8rem] font-semibold text-[var(--app-ink)] transition hover:border-[var(--app-ink)]/40 active:scale-[0.98]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ borderRadius: 'var(--radius-button)' }}
               >
                 All sermons <ArrowRight className="h-4 w-4" />
               </Link>
@@ -424,8 +410,6 @@ export default function ResourceSection() {
                   }
                   placeholder="Email address"
                   className="h-11 flex-1 border border-[var(--app-ink)]/15 bg-white px-4 text-sm text-[var(--app-ink)] outline-none placeholder:text-[var(--app-ink)]/30 focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderRadius: 'var(--radius-input)' }}
                 />
                 <Button
                   type="submit"
@@ -433,8 +417,6 @@ export default function ResourceSection() {
                   size="sm"
                   disabled={submitting}
                   className="h-11 px-5 text-[0.78rem]"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ borderRadius: 'var(--radius-button)' }}
                 >
                   {submitting ? 'Sending…' : submitted ? '✓ Done' : 'Subscribe'}
                 </Button>
@@ -443,11 +425,7 @@ export default function ResourceSection() {
           </div>
 
           {/* Right — video thumbnail */}
-          <div
-            className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ borderRadius: 'var(--radius-card)' }}
-          >
+          <div className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl">
             {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-[var(--app-ink)]/20" />
