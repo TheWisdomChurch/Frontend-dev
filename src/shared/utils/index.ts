@@ -3,9 +3,6 @@
  * Helper components and utility functions
  */
 
-// Debug utilities
-export { default as MobileDebug } from './mobileDebug';
-
 // Hero utilities
 export { renderTitle, renderSubtitle } from './heroTextUtil';
 

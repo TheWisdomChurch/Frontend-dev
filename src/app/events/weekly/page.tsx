@@ -91,7 +91,7 @@ export default function WeeklyPage() {
                     <p className="mt-5 font-headline text-[1.3rem] font-normal text-[var(--app-ink)]">
                       {svc.name}
                     </p>
-                    <p className="mt-3 font-ui text-[0.85rem] leading-[1.9] text-[var(--app-ink)]/55 max-w-sm">
+                    <p className="mt-3 font-ui text-[0.85rem] leading-[1.9] text-[var(--app-ink)]/70 max-w-sm">
                       {svc.description}
                     </p>
                   </div>
@@ -102,13 +102,13 @@ export default function WeeklyPage() {
                       {svc.details.map(d => (
                         <li key={d} className="flex items-start gap-3">
                           <div className="mt-[0.55rem] h-[1.5px] w-4 shrink-0 bg-[var(--app-primary)]/55" />
-                          <span className="font-ui text-[0.83rem] leading-[1.8] text-[var(--app-ink)]/60">
+                          <span className="font-ui text-[0.83rem] leading-[1.8] text-[var(--app-ink)]/72">
                             {d}
                           </span>
                         </li>
                       ))}
                     </ul>
-                    <p className="font-ui text-[0.78rem] text-[var(--app-ink)]/40">
+                    <p className="font-ui text-[0.78rem] text-[var(--app-ink)]/55">
                       Honor Gardens, opposite Dominion Church HQ,
                       <br />
                       Alasia bus stop, Lekki-Epe Expressway, Lagos
@@ -139,7 +139,7 @@ export default function WeeklyPage() {
                 Walk in. You belong here.
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/48">
+              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/70">
                 No pressure, no expectations — just come and experience the
                 community. Our welcome team will be right there when you arrive.
               </p>

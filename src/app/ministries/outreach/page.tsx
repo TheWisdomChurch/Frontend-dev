@@ -80,7 +80,7 @@ export default function OutreachPage() {
         eyebrow="Outreach & Missions"
         title="Taking the church beyond the walls."
         subtitle="Practical expressions of compassion, service, and gospel witness in the communities around us."
-        backgroundImage="/images/placeholder.webp"
+        backgroundImage="/images/supernatural-service.webp"
       />
 
       {/* ── 2. Mission — dark ────────────────────────────────── */}

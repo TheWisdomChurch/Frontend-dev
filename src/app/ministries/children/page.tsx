@@ -99,7 +99,7 @@ export default function ChildrenMinistryPage() {
               </em>
             </h2>
             <div className="mt-8 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-            <p className="mt-6 max-w-xl font-ui text-[0.87rem] leading-[2] text-white/48">
+            <p className="mt-6 max-w-xl font-ui text-[0.87rem] leading-[2] text-white/70">
               The children&apos;s ministry exists to help young people know God
               early, feel genuinely cared for at church, and build spiritual
               foundations that support growth well into their teenage years and
@@ -133,7 +133,7 @@ export default function ChildrenMinistryPage() {
                   <h3 className="font-headline text-[1.25rem] font-normal text-[var(--app-ink)]">
                     {item.title}
                   </h3>
-                  <p className="mt-3 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/52">
+                  <p className="mt-3 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/68">
                     {item.description}
                   </p>
                 </div>
@@ -190,7 +190,7 @@ export default function ChildrenMinistryPage() {
                   <h3 className="font-headline text-[1.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[2.2rem]">
                     {p.title}
                   </h3>
-                  <p className="mt-4 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/50">
+                  <p className="mt-4 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/68">
                     {p.body}
                   </p>
                 </div>
@@ -216,7 +216,7 @@ export default function ChildrenMinistryPage() {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/45">
+              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
                 Reach out and we will help your family understand what to
                 expect, meet the team, and settle comfortably into the ministry.
               </p>

@@ -15,35 +15,15 @@ const nextConfig: NextConfig = {
 
   output: 'standalone',
 
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
   images: {
-    unoptimized: true,
     remotePatterns: [
+      { protocol: 'https', hostname: 'placehold.co', pathname: '/**' },
+      { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'picsum.photos', pathname: '/**' },
+      { protocol: 'https', hostname: 'wisdomchurchhq.org', pathname: '/**' },
       {
         protocol: 'https',
-        hostname: 'placehold.co',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'wisdomchurchhq.org',
+        hostname: 'api.wisdomchurchhq.org',
         pathname: '/**',
       },
       {
@@ -51,6 +31,7 @@ const nextConfig: NextConfig = {
         hostname: 'www.thewisdomhousechurch.org',
         pathname: '/**',
       },
+      // Cloud storage — add your CDN/S3 hostname here if images are served from one
     ],
     qualities: [60, 70, 80, 85],
     formats: ['image/webp', 'image/avif'],
@@ -102,28 +83,7 @@ const nextConfig: NextConfig = {
   },
 
   async redirects() {
-    return [
-      {
-        source: '/events/weekly',
-        destination: '/events',
-        permanent: true,
-      },
-      {
-        source: '/events/upcoming',
-        destination: '/events',
-        permanent: true,
-      },
-      {
-        source: '/events/special',
-        destination: '/events',
-        permanent: true,
-      },
-      {
-        source: '/events/calendar',
-        destination: '/events',
-        permanent: true,
-      },
-    ];
+    return [];
   },
 
   async rewrites() {

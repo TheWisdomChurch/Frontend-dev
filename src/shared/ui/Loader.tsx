@@ -24,21 +24,8 @@ export default function Loader({
       aria-live="polite"
       aria-label={subLabel}
     >
-      <video
-        className="absolute inset-0 h-full w-full object-cover opacity-35"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/images/event-placeholder.webp"
-      >
-        <source src="/videos/videoBg.mp4" type="video/mp4" />
-      </video>
-
-      <div className="absolute inset-0 bg-black/70" />
-
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(201,150,26,0.16),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_28%),linear-gradient(180deg,rgba(5,5,5,0.45)_0%,rgba(5,5,5,0.82)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(201,150,26,0.14),transparent_32%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.06),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(201,150,26,0.08),transparent_40%)]" />
+      <div className="absolute inset-0 motion-safe:animate-[loader-bg-shift_12s_ease-in-out_infinite] bg-[radial-gradient(circle_at_30%_60%,rgba(201,150,26,0.10),transparent_35%)]" />
 
       <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:46px_46px] [mask-image:radial-gradient(circle_at_50%_45%,black_22%,transparent_75%)] motion-safe:animate-[loader-grid_14s_linear_infinite]" />
 
@@ -128,6 +115,18 @@ export default function Loader({
           50% {
             transform: translateY(-5px);
             opacity: 1;
+          }
+        }
+
+        @keyframes loader-bg-shift {
+          0%,
+          100% {
+            opacity: 0.4;
+            transform: scale(1) translateX(0);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.4) translateX(6%);
           }
         }
 

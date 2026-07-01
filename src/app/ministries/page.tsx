@@ -80,7 +80,7 @@ const ministries = [
       "Practical expressions of God's love through service, evangelism, relief, and community development.",
     badge: 'Impact',
     href: '/ministries/outreach',
-    image: '/images/placeholder.webp',
+    image: '/images/supernatural-service.webp',
     overlay:
       'linear-gradient(to top, rgba(4,20,10,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
@@ -234,7 +234,7 @@ export default function MinistriesPage() {
                       </h3>
 
                       {/* Description */}
-                      <p className="mt-3 font-ui text-[0.82rem] leading-[1.9] text-white/55">
+                      <p className="mt-3 font-ui text-[0.82rem] leading-[1.9] text-white/72">
                         {ministry.description}
                       </p>
 
@@ -281,7 +281,7 @@ export default function MinistriesPage() {
                 <p className="font-headline text-[2.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[3.4rem]">
                   {col.verb}
                 </p>
-                <p className="mt-5 font-ui text-[0.84rem] leading-[1.9] text-[var(--app-ink)]/50">
+                <p className="mt-5 font-ui text-[0.84rem] leading-[1.9] text-[var(--app-ink)]/68">
                   {col.body}
                 </p>
                 <Link
@@ -313,7 +313,7 @@ export default function MinistriesPage() {
                 </em>
               </h2>
               <div className="h-px w-12 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.88rem] leading-[1.9] text-white/50">
+              <p className="max-w-md font-ui text-[0.88rem] leading-[1.9] text-white/70">
                 Tell us where you are in your faith journey and we will help you
                 find the right ministry community or service opportunity.
               </p>

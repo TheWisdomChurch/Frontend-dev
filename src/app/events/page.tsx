@@ -1,6 +1,4 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import PageHero from '@/features/hero/PageHero';
@@ -114,11 +112,12 @@ function EventCard({ event }: { event: EventPublic }) {
       {/* Image / date block */}
       <div className="relative h-[180px] overflow-hidden bg-[var(--app-dark-2)]">
         {imgSrc ? (
-          <img
+          <Image
             src={imgSrc}
             alt={event.title}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-            loading="lazy"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           /* No-image: bold date display */
@@ -153,7 +152,7 @@ function EventCard({ event }: { event: EventPublic }) {
         </h3>
 
         {event.description && (
-          <p className="font-ui text-[0.8rem] leading-[1.8] text-white/45 line-clamp-2">
+          <p className="font-ui text-[0.8rem] leading-[1.8] text-white/65 line-clamp-2">
             {event.description}
           </p>
         )}
@@ -188,21 +187,6 @@ function EventCard({ event }: { event: EventPublic }) {
   );
 }
 
-/* ── Loading skeleton ───────────────────────────────────── */
-
-function LoadingSkeleton() {
-  return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {[0, 1, 2].map(i => (
-        <div
-          key={i}
-          className="h-[340px] animate-pulse border border-white/8 bg-white/[0.03]"
-        />
-      ))}
-    </div>
-  );
-}
-
 /* ── Empty state ────────────────────────────────────────── */
 
 function EmptyState() {
@@ -213,7 +197,7 @@ function EmptyState() {
         <h3 className="font-headline text-[1.5rem] font-normal text-white">
           Events are on their way.
         </h3>
-        <p className="max-w-sm font-ui text-[0.83rem] leading-[1.85] text-white/45">
+        <p className="max-w-sm font-ui text-[0.83rem] leading-[1.85] text-white/65">
           Nothing is scheduled right now. In the meantime, join us for our
           weekly services every Sunday and Thursday.
         </p>
@@ -230,31 +214,13 @@ function EmptyState() {
 
 /* ── Page ───────────────────────────────────────────────── */
 
-export default function EventsPage() {
-  const [events, setEvents] = useState<EventPublic[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let live = true;
-    apiClient
-      .listEvents()
-      .then(items => {
-        if (!live) return;
-        const sorted = [...items].sort(
-          (a, b) => getTimestamp(a) - getTimestamp(b)
-        );
-        setEvents(sorted);
-      })
-      .catch(() => {
-        if (live) setEvents([]);
-      })
-      .finally(() => {
-        if (live) setLoading(false);
-      });
-    return () => {
-      live = false;
-    };
-  }, []);
+export default async function EventsPage() {
+  const rawEvents = await apiClient
+    .listEvents()
+    .catch(() => [] as EventPublic[]);
+  const events = [...rawEvents].sort(
+    (a, b) => getTimestamp(a) - getTimestamp(b)
+  );
 
   return (
     <main className="min-h-screen">
@@ -307,10 +273,10 @@ export default function EventsPage() {
                     <p className="font-headline text-[1.1rem] font-normal text-[var(--app-ink)]">
                       {svc.name}
                     </p>
-                    <p className="font-ui text-[0.8rem] leading-[1.8] text-[var(--app-ink)]/50">
+                    <p className="font-ui text-[0.8rem] leading-[1.8] text-[var(--app-ink)]/65">
                       {svc.description}
                     </p>
-                    <p className="font-ui text-[0.75rem] text-[var(--app-ink)]/38">
+                    <p className="font-ui text-[0.75rem] text-[var(--app-ink)]/50">
                       Honor Gardens, Lekki-Epe Expressway, Lagos
                     </p>
                   </div>
@@ -345,17 +311,15 @@ export default function EventsPage() {
                 Special gatherings &amp; programs.
               </h2>
             </div>
-            {!loading && events.length > 0 && (
-              <span className="inline-flex self-start items-center border border-white/12 px-4 py-2 font-ui text-[0.72rem] font-semibold text-white/45 sm:self-auto">
+            {events.length > 0 && (
+              <span className="inline-flex items-center self-start border border-white/12 px-4 py-2 font-ui text-[0.72rem] font-semibold text-white/45 sm:self-auto">
                 {events.length} event{events.length !== 1 ? 's' : ''}
               </span>
             )}
           </ScrollFadeIn>
 
           {/* Content */}
-          {loading ? (
-            <LoadingSkeleton />
-          ) : events.length === 0 ? (
+          {events.length === 0 ? (
             <EmptyState />
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -378,7 +342,7 @@ export default function EventsPage() {
                 <p className="font-headline text-[1.2rem] font-normal text-white">
                   Have a question about an event?
                 </p>
-                <p className="mt-1 font-ui text-[0.8rem] text-white/45">
+                <p className="mt-1 font-ui text-[0.8rem] text-white/55">
                   Our team is happy to help — reach out any time.
                 </p>
               </div>
