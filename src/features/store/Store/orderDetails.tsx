@@ -177,7 +177,7 @@ const OrderConfirmation = () => {
       if (navigator.share) {
         await navigator.share({
           title: `Order Confirmation - ${orderDetails?.orderId}`,
-          text: `I just placed an order at Wisdom House! Order ID: ${orderDetails?.orderId}`,
+          text: `I just placed an order at Wisdom Church! Order ID: ${orderDetails?.orderId}`,
           url: window.location.href,
         });
       } else {
@@ -195,7 +195,7 @@ const OrderConfirmation = () => {
     setIsDownloading(true);
     setTimeout(() => {
       const receiptContent = `
-        WISDOM HOUSE STORE
+        WISDOM CHURCH STORE
         Order Receipt
         =====================
         Order ID: ${orderDetails?.orderId}

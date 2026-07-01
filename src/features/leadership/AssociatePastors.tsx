@@ -106,7 +106,7 @@ function LeaderCard({
             </BodySM>
           ) : (
             <BodySM className="mt-4 text-white/45">
-              Serving the house with care, excellence, and spiritual oversight.
+              Serving the church with care, excellence, and spiritual oversight.
             </BodySM>
           )}
         </div>
@@ -164,7 +164,7 @@ export default function AssociatePastors() {
           <Card padding="sm" className="rounded-xl bg-white/[0.035] sm:p-5">
             <BodySM className="max-w-3xl text-sm leading-7 text-white/68 sm:text-base">
               Trusted voices helping steward the vision. Each carries a unique
-              grace for the house.
+              grace for the church.
             </BodySM>
           </Card>
         </div>

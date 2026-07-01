@@ -104,7 +104,7 @@ const CheckoutForm = () => {
 
   const bankDetails = {
     bankName: 'Keystone Bank',
-    accountName: 'Wisdom House Store',
+    accountName: 'Wisdom Church Store',
     accountNumber: '1012879868',
   };
 

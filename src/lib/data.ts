@@ -504,7 +504,7 @@ export const confessionContent = `
 
     YOU UPHOLD MY STEPS IN YOUR PATHS, THAT MY FOOTSTEPS MAY NOT SLIP. (PSALM 17 VS 5)
 
-    THE DEVIL HOLDS NO POWER OVER ME BECAUSE I BELONG TO GOD AND I AM A MEMBER OF THE WISDOM CHURCH (HOUSE)
+    THE DEVIL HOLDS NO POWER OVER ME BECAUSE I BELONG TO GOD AND I AM A MEMBER OF THE WISDOM CHURCH
 
     I HAVE SPOKEN YOUR WORDS OVER MY LIFE THIS WEEK LET IT BE ESTABLISHED AS A LAW.
   `;
@@ -697,7 +697,7 @@ export const seniorPastorData = {
     
 
 
-Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wisdom House Church. Over the years, he has faithfully discipled and mentored countless 
+Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wisdom Church. Over the years, he has faithfully discipled and mentored countless 
     individuals,  demonstrating the practical workings of God's Word in everyday life. He is lawfully wedded to Pastor Kenny Ayilara, 
     and together they are blessed with godly children. Through their exemplary marriage and ministry, they continue to inspire, equip, and impact lives for the Kingdom of God.",
     "His vision for The Wisdom Church is to create a place where everyone can encounter God's transformative love and discover their unique purpose. Through powerful preaching, 
@@ -799,7 +799,7 @@ export const resourceLinks = [
     actionText: 'Join Events →',
   },
   {
-    title: 'Wisdom House Store',
+    title: 'Wisdom Church Store',
     subtitle: 'Wear your faith',
     description: 'Merchandise that carries a message of hope and identity',
     path: '/resources/store',
@@ -832,12 +832,12 @@ export const resourceLinks = [
 export const merchandise: Product[] = [
   {
     id: 1,
-    name: 'Wisdom House Polo Shirt',
+    name: 'Wisdom Church Polo Shirt',
     category: 'clothing',
     price: '₦6,000',
     originalPrice: '₦7,500',
     image: wisdomShirt_1.src,
-    description: 'Premium quality polo shirt with Wisdom House logo',
+    description: 'Premium quality polo shirt with Wisdom Church logo',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     colors: ['Navy', 'Black', 'White', 'Gray'],
     tags: ['polo', 'shirt', 'clothing', 'premium'],
@@ -845,12 +845,12 @@ export const merchandise: Product[] = [
   },
   {
     id: 2,
-    name: 'Wisdom House Classic Tee',
+    name: 'Wisdom Church Classic Tee',
     category: 'clothing',
     price: '₦4,500',
     originalPrice: '₦5,500',
     image: WisdomShirt_2.src,
-    description: 'Comfortable classic t-shirt with Wisdom House design',
+    description: 'Comfortable classic t-shirt with Wisdom Church design',
     sizes: ['S', 'M', 'L', 'XL'],
     colors: ['White', 'Black', 'Gray'],
     tags: ['t-shirt', 'tee', 'casual'],
@@ -858,12 +858,12 @@ export const merchandise: Product[] = [
   },
   {
     id: 3,
-    name: 'Wisdom House Cap',
+    name: 'Wisdom Church Cap',
     category: 'accessories',
     price: '₦3,500',
     originalPrice: '₦4,500',
     image: Cap_1.src,
-    description: 'Stylish cap with Wisdom House logo embroidery',
+    description: 'Stylish cap with Wisdom Church logo embroidery',
     sizes: ['One Size'],
     colors: ['Black', 'Navy', 'Red'],
     tags: ['cap', 'hat', 'accessory'],
@@ -871,7 +871,7 @@ export const merchandise: Product[] = [
   },
   {
     id: 4,
-    name: 'Wisdom House Inspirational Mug',
+    name: 'Wisdom Church Inspirational Mug',
     category: 'utilities',
     price: '₦2,500',
     originalPrice: '₦3,000',
@@ -884,7 +884,7 @@ export const merchandise: Product[] = [
   },
   {
     id: 5,
-    name: 'Wisdom House Tote Bag',
+    name: 'Wisdom Church Tote Bag',
     category: 'accessories',
     price: '₦4,000',
     originalPrice: '₦5,000',

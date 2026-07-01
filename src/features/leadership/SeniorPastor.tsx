@@ -74,7 +74,7 @@ export default function SeniorPastor() {
         .slice(0, 1)
         .map(s => s.replace(/\s+/g, ' ').trim())
         .join(' ') ||
-      "Bishop Gabriel Ayilara is the Senior Pastor of The Wisdom House Church. Over the years, he has faithfully discipled and mentored countless individuals, demonstrating the practical workings of God's Word in everyday life. He is lawfully wedded to Pastor Kenny Ayilara, and together they are blessed with godly children. Through their exemplary marriage and ministry, they continue to inspire, equip, and impact lives for the Kingdom of God. His vision for The Wisdom Church is to create a place where everyone can encounter God's transformative love and discover their unique purpose.",
+      "Bishop Gabriel Ayilara is the Senior Pastor of The Wisdom Church. Over the years, he has faithfully discipled and mentored countless individuals, demonstrating the practical workings of God's Word in everyday life. He is lawfully wedded to Pastor Kenny Ayilara, and together they are blessed with godly children. Through their exemplary marriage and ministry, they continue to inspire, equip, and impact lives for the Kingdom of God. His vision for The Wisdom Church is to create a place where everyone can encounter God's transformative love and discover their unique purpose.",
     []
   );
 
