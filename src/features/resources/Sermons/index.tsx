@@ -325,7 +325,7 @@ const SermonUtil = () => {
       {/* ── 1. Hero ───────────────────────────────────────────── */}
       <PageHero
         eyebrow="Sermons & Teachings"
-        title="Messages from the house."
+        title="Messages from the church."
         subtitle="Watch, listen, and grow — every sermon from Sunday services, conferences, and midweek gatherings."
         compact
       />
@@ -748,7 +748,7 @@ const SermonUtil = () => {
                 Never miss a message
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
-                  from the house.
+                  from the church.
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />

@@ -218,7 +218,7 @@ export default function StorePage() {
   return (
     <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
-        title="Wisdom House Store"
+        title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
         description="Discover our exclusive collection of merchandise designed to inspire and uplift. Each item carries a message of faith, hope, and wisdom for your daily journey."
         backgroundImage={hero_bg_1.src}
@@ -262,7 +262,7 @@ export default function StorePage() {
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                  Wisdom House Store
+                  Wisdom Church Store
                 </Caption>
               </div>
 

@@ -35,7 +35,7 @@ const ALL_RESOURCES = [
   {
     title: 'Sermons',
     label: 'Messages',
-    desc: 'Watch and listen to messages straight from the house.',
+    desc: 'Watch and listen to messages straight from the church.',
     href: '/resources/sermons',
     cta: 'Browse sermons',
     img: WhatWeDo_3,
@@ -329,7 +329,7 @@ export default function ResourceSection() {
               // eslint-disable-next-line no-restricted-syntax
               style={{ fontSize: 'var(--type-display-sm)' }}
             >
-              Fresh from the house
+              Fresh from the church
             </h2>
           </div>
           <Link

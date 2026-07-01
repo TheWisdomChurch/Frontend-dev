@@ -14,7 +14,7 @@ function extractMetadata(
 ): { series: string; preacher: string } {
   // Default values
   let series = 'General';
-  let preacher = 'Wisdom House Ministry';
+  let preacher = 'Wisdom Church Ministry';
 
   // Example: "GAINING WISDOM SERVICE | THE WISDOM CHURCH | 9TH OF NOVEMBER 2025"
   const primaryPattern = /^(.+?)\s*\|\s*(.+?)\s*\|\s*(.+)$/i;
@@ -168,7 +168,7 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
 
     return {
       id: channelId,
-      title: channel.snippet?.title || 'Wisdom House HQ',
+      title: channel.snippet?.title || 'Wisdom Church HQ',
       description: channel.snippet?.description || '',
       thumbnail: channel.snippet?.thumbnails?.high?.url || '',
       subscriberCount: safeString(channel.statistics?.subscriberCount),

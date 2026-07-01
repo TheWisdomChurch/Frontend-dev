@@ -23,7 +23,7 @@ export default function JoinCommunityModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Stay Connected"
-      subtitle="Choose a platform and join the Wisdom House family online."
+      subtitle="Choose a platform and join the Wisdom Church community online."
       maxWidth="max-w-lg"
       forceBottomSheet
     >

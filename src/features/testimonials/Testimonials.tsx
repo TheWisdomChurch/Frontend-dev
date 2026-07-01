@@ -39,7 +39,7 @@ const mapTestimony = (item: ApiTestimonial): UiTestimony => {
   return {
     id: item.id,
     name: fullName,
-    title: item.isAnonymous ? 'Shared anonymously' : 'Wisdom House family',
+    title: item.isAnonymous ? 'Shared anonymously' : 'Wisdom Church community',
     quote: item.testimony,
   };
 };
@@ -182,7 +182,7 @@ export default function TestimoniesPage() {
       <PageHero
         title="Stories of growth, healing, salvation, and real transformation."
         subtitle="Testimonies help the church remember that God is still working through worship, discipleship, care, and faithful obedience."
-        note="Read stories from the Wisdom House family, then share what God has done in your own life."
+        note="Read stories from the Wisdom Church community, then share what God has done in your own life."
         chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
       />
 

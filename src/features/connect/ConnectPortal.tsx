@@ -137,7 +137,7 @@ export default function ConnectPortal() {
           {/* Sub-copy */}
           <p className="mt-5 max-w-[400px] font-ui text-[0.92rem] leading-[1.85] text-white/55">
             Watch live services, receive weekly messages, and connect with the
-            Wisdom House family wherever you are in the world.
+            Wisdom Church community wherever you are in the world.
           </p>
 
           {/* Primary CTAs */}

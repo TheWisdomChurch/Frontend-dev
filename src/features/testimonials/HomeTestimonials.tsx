@@ -20,7 +20,7 @@ function mapToQuote(t: ApiTestimonial): Quote {
     id: t.id,
     text: t.testimony,
     name: t.isAnonymous ? 'Anonymous' : name,
-    role: t.isAnonymous ? 'Shared anonymously' : 'Wisdom House family',
+    role: t.isAnonymous ? 'Shared anonymously' : 'Wisdom Church community',
   };
 }
 

@@ -74,7 +74,7 @@ export default function OnlineGiving() {
               <em className="not-italic text-[var(--app-primary)]">
                 builds
               </em>{' '}
-              the house.
+              the church.
             </h2>
 
             {/* Scripture */}

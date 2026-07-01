@@ -13,12 +13,12 @@ export const renderTitle = (title: string | undefined | null): ReactNode => {
     </BaseText>
   );
 
-  if (safeTitle.includes('Wisdom House Church')) {
-    const parts = safeTitle.split('Wisdom House Church');
+  if (safeTitle.includes('Wisdom Church')) {
+    const parts = safeTitle.split('Wisdom Church');
     return (
       <>
         {parts[0]}
-        {highlight('Wisdom House')} Church{parts[1]}
+        {highlight('Wisdom')} Church{parts[1]}
       </>
     );
   }

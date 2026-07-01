@@ -19,7 +19,7 @@ export default function BlogPage() {
     <main className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         eyebrow="Blog & Devotionals"
-        title="Insights, reflections, and devotionals from the house."
+        title="Insights, reflections, and devotionals from the church."
         subtitle="Written content to encourage, teach, and equip you between Sundays."
       />
 

@@ -273,7 +273,7 @@ export default function JoinWisdomHouse() {
               Serve with excellence.
             </h2>
             <p className="mt-3 max-w-[460px] font-ui text-[0.95rem] leading-[1.8] text-[var(--app-ink)]/60">
-              Use your gifts to build the house. Every team here has a role and
+              Use your gifts to build the church. Every team here has a role and
               a seat — find yours.
             </p>
           </div>
