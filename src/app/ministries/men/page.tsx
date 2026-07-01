@@ -80,7 +80,6 @@ export default function MenMinistryPage() {
         eyebrow="Men's Ministry"
         title="Men of integrity. Men of purpose."
         subtitle="A community where men grow in faith, accountability, and the kind of strength that leads — at home, in church, and beyond."
-        backgroundImage="/images/conference-2025.webp"
       />
 
       {/* ── 2. Men's Conference — dark ───────────────────────── */}
@@ -99,7 +98,7 @@ export default function MenMinistryPage() {
                     iron.
                   </em>
                 </h2>
-                <p className="mt-4 max-w-lg font-ui text-[0.86rem] leading-[2] text-white/45">
+                <p className="mt-4 max-w-lg font-ui text-[0.86rem] leading-[2] text-white/70">
                   A gathering of men coming together in the Word, worship, and
                   honest brotherhood. Watch the full conference session below.
                 </p>
@@ -147,7 +146,7 @@ export default function MenMinistryPage() {
               work together.
             </h2>
             <div className="mt-8 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-            <p className="mt-6 max-w-xl font-ui text-[0.87rem] leading-[2] text-[var(--app-ink)]/55">
+            <p className="mt-6 max-w-xl font-ui text-[0.87rem] leading-[2] text-[var(--app-ink)]/70">
               This ministry exists to help men develop biblical strength,
               spiritual discipline, and the kind of maturity that produces
               faithful leadership in every area of life. We want men who are
@@ -182,7 +181,7 @@ export default function MenMinistryPage() {
                   <h3 className="font-headline text-[1.25rem] font-normal text-white">
                     {item.title}
                   </h3>
-                  <p className="mt-3 font-ui text-[0.84rem] leading-[1.95] text-white/48">
+                  <p className="mt-3 font-ui text-[0.84rem] leading-[1.95] text-white/70">
                     {item.description}
                   </p>
                 </div>
@@ -218,7 +217,7 @@ export default function MenMinistryPage() {
                   <h3 className="font-headline text-[1.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[2.2rem]">
                     {v.title}
                   </h3>
-                  <p className="mt-4 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/50">
+                  <p className="mt-4 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/68">
                     {v.body}
                   </p>
                 </div>
@@ -244,7 +243,7 @@ export default function MenMinistryPage() {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/45">
+              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
                 Reach out and we will connect you to the right entry point —
                 brotherhood, formation, or service.
               </p>
