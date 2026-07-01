@@ -1,6 +1,4 @@
-'use client';
-
-import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
@@ -40,10 +38,12 @@ function CanvasCard({ leader }: { leader: LeadershipMember }) {
       {/* Image */}
       <div className="relative h-[420px] overflow-hidden bg-[var(--app-canvas-2)] lg:h-[480px]">
         {leader.imageUrl ? (
-          <img
+          <Image
             src={leader.imageUrl}
             alt={name}
-            className="h-full w-full object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
+            fill
+            sizes="(max-width: 640px) 100vw, 50vw"
+            className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -64,7 +64,7 @@ function CanvasCard({ leader }: { leader: LeadershipMember }) {
         </h3>
         <div className="mt-3 h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
         {leader.bio && (
-          <p className="mt-4 font-ui text-[0.83rem] leading-[1.9] text-[var(--app-ink)]/58">
+          <p className="mt-4 font-ui text-[0.83rem] leading-[1.9] text-[var(--app-ink)]/70">
             {leader.bio}
           </p>
         )}
@@ -80,10 +80,12 @@ function DarkCard({ leader }: { leader: LeadershipMember }) {
   return (
     <article className="group relative min-h-[520px] overflow-hidden bg-[var(--app-dark)] lg:min-h-[580px]">
       {leader.imageUrl ? (
-        <img
+        <Image
           src={leader.imageUrl}
           alt={name}
-          className="absolute inset-0 h-full w-full object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
+          fill
+          sizes="(max-width: 640px) 100vw, 50vw"
+          className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -111,21 +113,6 @@ function DarkCard({ leader }: { leader: LeadershipMember }) {
   );
 }
 
-/* ── Loading skeleton ───────────────────────────────────── */
-
-function Skeleton() {
-  return (
-    <div className="grid sm:grid-cols-2">
-      {[0, 1].map(i => (
-        <div
-          key={i}
-          className="h-[520px] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
-        />
-      ))}
-    </div>
-  );
-}
-
 /* ── Empty state ────────────────────────────────────────── */
 
 function EmptyState({ dark }: { dark?: boolean }) {
@@ -140,7 +127,7 @@ function EmptyState({ dark }: { dark?: boolean }) {
         Leadership listings coming soon.
       </p>
       <p
-        className={`max-w-sm font-ui text-[0.82rem] leading-[1.85] ${dark ? 'text-white/45' : 'text-[var(--app-ink)]/50'}`}
+        className={`max-w-sm font-ui text-[0.82rem] leading-[1.85] ${dark ? 'text-white/65' : 'text-[var(--app-ink)]/65'}`}
       >
         Our leadership directory will be published here shortly.
       </p>
@@ -150,36 +137,13 @@ function EmptyState({ dark }: { dark?: boolean }) {
 
 /* ── Page ───────────────────────────────────────────────── */
 
-export default function LeadershipPage() {
-  const [leaders, setLeaders] = useState<LeadershipMember[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function LeadershipPage() {
+  const leaders = await apiClient
+    .listLeadership()
+    .catch(() => [] as LeadershipMember[]);
 
-  useEffect(() => {
-    let live = true;
-    apiClient
-      .listLeadership()
-      .then(items => {
-        if (live) setLeaders(Array.isArray(items) ? items : []);
-      })
-      .catch(() => {
-        if (live) setLeaders([]);
-      })
-      .finally(() => {
-        if (live) setLoading(false);
-      });
-    return () => {
-      live = false;
-    };
-  }, []);
-
-  const seniorTeam = useMemo(
-    () => leaders.filter(l => SENIOR_ROLES.includes(l.role)),
-    [leaders]
-  );
-  const board = useMemo(
-    () => leaders.filter(l => BOARD_ROLES.includes(l.role)),
-    [leaders]
-  );
+  const seniorTeam = leaders.filter(l => SENIOR_ROLES.includes(l.role));
+  const board = leaders.filter(l => BOARD_ROLES.includes(l.role));
 
   return (
     <main className="min-h-screen">
@@ -212,9 +176,7 @@ export default function LeadershipPage() {
       </section>
 
       {/* ── 3. Senior portrait panels ────────────────────────── */}
-      {loading ? (
-        <Skeleton />
-      ) : seniorTeam.length === 0 ? (
+      {seniorTeam.length === 0 ? (
         <div className="bg-[var(--app-dark)] px-6 py-10 lg:px-10">
           <Container size="xl">
             <EmptyState dark />
@@ -235,7 +197,7 @@ export default function LeadershipPage() {
       )}
 
       {/* ── 4. Board header — canvas ─────────────────────────── */}
-      {!loading && board.length > 0 && (
+      {board.length > 0 && (
         <section className="border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
           <Container size="xl">
             <ScrollFadeIn className="py-12 lg:py-14">
@@ -267,7 +229,7 @@ export default function LeadershipPage() {
                             {leader.firstName} {leader.lastName}
                           </p>
                           {leader.bio && (
-                            <p className="mt-0.5 font-ui text-[0.75rem] text-[var(--app-ink)]/45 line-clamp-1">
+                            <p className="mt-0.5 font-ui text-[0.75rem] text-[var(--app-ink)]/55 line-clamp-1">
                               {leader.bio}
                             </p>
                           )}
@@ -303,7 +265,7 @@ export default function LeadershipPage() {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/48">
+              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/70">
                 If you feel called to serve the church in a meaningful way, we
                 would love to have a conversation with you.
               </p>

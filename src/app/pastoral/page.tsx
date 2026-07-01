@@ -94,7 +94,7 @@ export default function PastoralPage() {
                   where to start.
                 </em>
               </h2>
-              <p className="mt-5 max-w-md font-ui text-[0.85rem] leading-[2] text-white/48">
+              <p className="mt-5 max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
                 Choose a care pathway below and we will make sure your request
                 reaches the right person on our team.
               </p>
@@ -136,7 +136,7 @@ export default function PastoralPage() {
                   </h2>
                   <p
                     className={`mt-5 max-w-md font-ui text-[0.88rem] leading-[2] ${
-                      svc.dark ? 'text-white/50' : 'text-[var(--app-ink)]/55'
+                      svc.dark ? 'text-white/70' : 'text-[var(--app-ink)]/70'
                     }`}
                   >
                     {svc.description}
@@ -171,8 +171,8 @@ export default function PastoralPage() {
                         <span
                           className={`font-ui text-[0.88rem] leading-[1.85] ${
                             svc.dark
-                              ? 'text-white/60'
-                              : 'text-[var(--app-ink)]/62'
+                              ? 'text-white/72'
+                              : 'text-[var(--app-ink)]/72'
                           }`}
                         >
                           {detail}
@@ -202,7 +202,7 @@ export default function PastoralPage() {
               </div>
               <div className="flex-1">
                 <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/45" />
-                <p className="mt-5 font-ui text-[0.87rem] leading-[2] text-[var(--app-ink)]/55">
+                <p className="mt-5 font-ui text-[0.87rem] leading-[2] text-[var(--app-ink)]/70">
                   Pastoral care works best when people can speak openly.
                   Sensitive matters are handled by our pastoral team with
                   maturity, confidentiality, and respect for the person
@@ -227,7 +227,7 @@ export default function PastoralPage() {
                 <em className="italic text-[var(--app-primary)]/80"> alone.</em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/45">
+              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
                 Reach out through the contact page and tell us what you need. We
                 will make sure it gets to the right person on our team.
               </p>

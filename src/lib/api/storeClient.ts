@@ -55,6 +55,14 @@ const inMemoryFallback: { lastOrder: StoreOrder | null } = {
   lastOrder: null,
 };
 
+export class StoreApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_V1_BASE_URL}${path}`, {
     ...options,
@@ -69,7 +77,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const json = (await res.json().catch(() => null)) as any;
   if (!res.ok) {
     const message = json?.message || json?.error || 'Request failed';
-    throw new Error(message);
+    throw new StoreApiError(message, res.status);
   }
 
   const payload = json?.data ?? json;
@@ -114,8 +122,9 @@ export const storeClient = {
       );
       inMemoryFallback.lastOrder = order;
       return order;
-    } catch {
-      return null;
+    } catch (error) {
+      if (error instanceof StoreApiError && error.status === 404) return null;
+      throw error;
     }
   },
 

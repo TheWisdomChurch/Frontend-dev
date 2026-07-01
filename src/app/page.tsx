@@ -153,10 +153,9 @@ export default function Home() {
       }
     }
 
-    const t = window.setTimeout(loadHomepageContent, 800);
+    loadHomepageContent();
     return () => {
       mounted = false;
-      window.clearTimeout(t);
     };
   }, []);
 
