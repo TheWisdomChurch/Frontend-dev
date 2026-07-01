@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import PageHero from '@/features/hero/PageHero';
@@ -26,55 +27,73 @@ export const metadata: Metadata = {
   alternates: { canonical: '/ministries' },
 };
 
-/* ── Ministry panels — checkerboard dark / canvas ─────── */
+/* ── Ministries ───────────────────────────────────────── */
 const ministries = [
   {
     title: 'Youth Ministry',
+    tagline: 'A generation on fire.',
     description:
       'A vibrant discipleship space for teenagers and young adults to grow in faith, leadership, and community.',
     badge: 'Ages 13 – 25',
     href: '/ministries/youth',
-    dark: true,
+    image: '/images/conference-2025.webp',
+    overlay:
+      'linear-gradient(to top, rgba(28,10,2,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: "Women's Ministry",
+    tagline: 'Women who lead with purpose.',
     description:
       'A strengthening community for women to grow in scripture, prayer, fellowship, and purposeful service.',
     badge: 'Community',
     href: '/ministries/women',
-    dark: false,
+    image: '/images/christmas-eve.webp',
+    overlay:
+      'linear-gradient(to top, rgba(28,6,14,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: "Men's Ministry",
+    tagline: 'Men of integrity and strength.',
     description:
       'A clear discipleship path for men who want to grow in integrity, leadership, and service at home and in church.',
     badge: 'Brotherhood',
     href: '/ministries/men',
-    dark: false,
+    image: '/images/supernatural-service.webp',
+    overlay:
+      'linear-gradient(to top, rgba(4,10,28,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: "Children's Ministry",
+    tagline: 'Where little ones meet Jesus.',
     description:
       'A safe and joyful environment where children encounter Jesus through age-appropriate teaching and care.',
     badge: 'Nursery – Pre-teens',
     href: '/ministries/children',
-    dark: true,
+    image: '/images/easter-service.webp',
+    overlay:
+      'linear-gradient(to top, rgba(30,14,2,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: 'Outreach & Missions',
+    tagline: 'Taking the church beyond the walls.',
     description:
       "Practical expressions of God's love through service, evangelism, relief, and community development.",
     badge: 'Impact',
     href: '/ministries/outreach',
-    dark: true,
+    image: '/images/placeholder.webp',
+    overlay:
+      'linear-gradient(to top, rgba(4,20,10,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: 'Pastoral Care',
+    tagline: 'Support when you need it most.',
     description:
       'Support structures for prayer, counseling, life transitions, family care, and spiritual guidance.',
     badge: 'Care',
     href: '/pastoral',
-    dark: false,
+    image: '/images/conference-2025.webp',
+    overlay:
+      'linear-gradient(to top, rgba(18,6,30,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
 ] as const;
 
@@ -100,7 +119,7 @@ const connection = [
   },
 ] as const;
 
-/* ── Arrow icon ────────────────────────────────────────── */
+/* ── Arrow ────────────────────────────────────────────── */
 function Arrow({ className }: { className?: string }) {
   return (
     <svg
@@ -136,12 +155,12 @@ export default function MinistriesPage() {
       {/* ── 2. Intro — canvas ────────────────────────────────── */}
       <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
-          <ScrollFadeIn className="flex flex-col gap-6 py-12 sm:flex-row sm:items-end sm:justify-between sm:py-16">
-            <div className="max-w-xl">
+          <ScrollFadeIn className="flex flex-col gap-6 py-12 lg:flex-row lg:items-end lg:justify-between lg:py-16">
+            <div className="max-w-2xl">
               <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Ministry at Wisdom Church
               </p>
-              <h2 className="mt-3 font-headline text-[1.6rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[1.9rem]">
+              <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
                 We exist to help every person find
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -154,141 +173,96 @@ export default function MinistriesPage() {
                 </em>
               </h2>
             </div>
-            <div className="shrink-0 text-right">
-              <p className="font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/45">
-                Active ministries
-              </p>
-              <p className="mt-0.5 font-headline text-[2.6rem] font-normal leading-none text-[var(--app-ink)]">
-                6
-              </p>
-            </div>
+            <Link
+              href="/contact"
+              className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-6 py-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
+            >
+              Get connected <Arrow />
+            </Link>
           </ScrollFadeIn>
         </Container>
       </section>
 
-      {/* ── 3. Ministry panels — 2-col visual grid ───────────── */}
-      <section>
-        {/* Section label */}
-        <div className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)] px-6 py-6 lg:px-10">
-          <Container size="xl">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Ministry areas
-            </p>
-          </Container>
-        </div>
-
-        {/* Grid */}
-        <div className="grid grid-cols-1 border-b border-[var(--app-ink)]/10 sm:grid-cols-2">
-          {ministries.map((ministry, i) => {
-            const isDark = ministry.dark;
-            return (
-              <ScrollFadeIn key={ministry.title} delay={i * 0.05}>
+      {/* ── 3. Ministry image cards ───────────────────────────── */}
+      <section className="bg-[var(--app-dark)] py-14 lg:py-18">
+        <Container size="xl">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ministries.map((ministry, i) => (
+              <ScrollFadeIn key={ministry.title} delay={i * 0.07}>
                 <Link
                   href={ministry.href}
-                  className={[
-                    'group relative flex min-h-[420px] flex-col overflow-hidden p-8 lg:min-h-[460px] lg:p-11',
-                    'border-b border-r border-[var(--app-ink)]/10',
-                    isDark
-                      ? 'bg-[var(--app-dark)]'
-                      : 'bg-[var(--app-canvas-2)]',
-                    'transition-colors duration-300',
-                    isDark
-                      ? 'hover:bg-[#100e13]'
-                      : 'hover:bg-[var(--app-canvas)]',
-                  ].join(' ')}
+                  className="group relative flex min-h-[480px] flex-col overflow-hidden lg:min-h-[520px]"
                 >
-                  {/* Ghost watermark — large first letter */}
-                  <span
-                    aria-hidden="true"
-                    className={[
-                      'pointer-events-none absolute -right-3 top-3 select-none font-headline text-[10rem] font-normal leading-none lg:text-[12rem]',
-                      isDark
-                        ? 'text-white/[0.04]'
-                        : 'text-[var(--app-ink)]/[0.05]',
-                    ].join(' ')}
-                  >
-                    {ministry.title[0]}
-                  </span>
+                  {/* Background image */}
+                  <Image
+                    src={ministry.image}
+                    alt={ministry.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  />
 
-                  {/* Badge — top */}
-                  <span
-                    className={[
-                      'relative z-10 self-start px-3.5 py-1.5 font-ui text-[0.6rem] uppercase tracking-[0.15em] transition duration-200',
-                      isDark
-                        ? 'border border-white/18 text-white/50 group-hover:border-[var(--app-primary)]/50 group-hover:text-[var(--app-primary)]'
-                        : 'border border-[var(--app-ink)]/14 text-[var(--app-ink)]/42 group-hover:border-[var(--app-primary)]/45 group-hover:text-[var(--app-primary)]',
-                    ].join(' ')}
-                  >
-                    {ministry.badge}
-                  </span>
+                  {/* Atmospheric colour overlay */}
+                  <div
+                    className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
+                    style={{ background: ministry.overlay }}
+                  />
 
-                  {/* Spacer */}
-                  <div className="relative z-10 flex-1" />
+                  {/* Card content */}
+                  <div className="relative z-10 flex h-full flex-col p-7 lg:p-8">
+                    {/* Badge — top */}
+                    <span className="self-start border border-white/20 px-3.5 py-1.5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm transition-colors duration-200 group-hover:border-[var(--app-primary)]/60 group-hover:text-[var(--app-primary)]">
+                      {ministry.badge}
+                    </span>
 
-                  {/* Content — anchored to bottom */}
-                  <div className="relative z-10 mt-10">
-                    {/* Gold rule */}
-                    <div className="mb-5 h-[1.5px] w-8 bg-[var(--app-primary)]/50 transition-all duration-300 group-hover:w-14 group-hover:bg-[var(--app-primary)]/80" />
+                    {/* Spacer */}
+                    <div className="flex-1" />
 
-                    {/* Title */}
-                    <h3
-                      className={[
-                        'font-headline text-[1.7rem] font-normal leading-snug transition duration-300 lg:text-[2rem]',
-                        isDark
-                          ? 'text-white group-hover:text-[var(--app-primary)]/90'
-                          : 'text-[var(--app-ink)] group-hover:text-[var(--app-primary)]',
-                      ].join(' ')}
-                    >
-                      {ministry.title}
-                    </h3>
+                    {/* Content — anchored to bottom */}
+                    <div>
+                      {/* Gold rule */}
+                      <div className="mb-4 h-[1.5px] w-8 bg-[var(--app-primary)]/60 transition-all duration-300 group-hover:w-14 group-hover:bg-[var(--app-primary)]" />
 
-                    {/* Description */}
-                    <p
-                      className={[
-                        'mt-3.5 max-w-[22rem] font-ui text-[0.83rem] leading-[1.9]',
-                        isDark ? 'text-white/48' : 'text-[var(--app-ink)]/50',
-                      ].join(' ')}
-                    >
-                      {ministry.description}
-                    </p>
+                      {/* Tagline */}
+                      <p className="mb-2 font-ui text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[var(--app-primary)]">
+                        {ministry.tagline}
+                      </p>
 
-                    {/* Explore button */}
-                    <div className="mt-8">
-                      <span
-                        className={[
-                          'inline-flex items-center gap-2.5 px-5 py-2.5 font-ui text-[0.7rem] font-semibold uppercase tracking-[0.12em] transition duration-200',
-                          isDark
-                            ? 'border border-white/20 text-white/60 group-hover:border-[var(--app-primary)] group-hover:text-[var(--app-primary)]'
-                            : 'border border-[var(--app-ink)]/18 text-[var(--app-ink)]/55 group-hover:border-[var(--app-primary)] group-hover:text-[var(--app-primary)]',
-                        ].join(' ')}
-                      >
-                        Explore ministry
-                        <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
-                      </span>
+                      {/* Title */}
+                      <h3 className="font-headline text-[1.75rem] font-normal leading-snug text-white lg:text-[2rem]">
+                        {ministry.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="mt-3 font-ui text-[0.82rem] leading-[1.9] text-white/55">
+                        {ministry.description}
+                      </p>
+
+                      {/* CTA — always visible, prominent */}
+                      <div className="mt-6 flex items-center justify-between">
+                        <span className="inline-flex items-center gap-2.5 bg-[var(--app-primary)] px-5 py-2.5 font-ui text-[0.7rem] font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition-all duration-200 group-hover:brightness-110">
+                          Explore ministry
+                          <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                        </span>
+                      </div>
                     </div>
                   </div>
-
-                  {/* Corner glow — dark panels */}
-                  {isDark && (
-                    <div className="pointer-events-none absolute -bottom-8 -right-8 h-40 w-40 rounded-full bg-[var(--app-primary)]/[0.07] opacity-0 blur-3xl transition duration-500 group-hover:opacity-100" />
-                  )}
                 </Link>
               </ScrollFadeIn>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        </Container>
       </section>
 
-      {/* ── 4. How to connect — dark, 3-col visual ───────────── */}
-      <section className="border-y border-white/8 bg-[var(--app-dark)]">
-        {/* Section headline */}
+      {/* ── 4. How to connect — canvas ───────────────────────── */}
+      <section className="border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn>
-            <div className="border-b border-white/8 py-12 lg:py-16">
+            <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-16">
               <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Getting connected
               </p>
-              <h2 className="mt-3 max-w-lg font-headline text-[1.8rem] font-normal leading-snug text-white sm:text-[2.3rem]">
+              <h2 className="mt-3 max-w-lg font-headline text-[1.8rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
                 Finding your place is
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -299,28 +273,20 @@ export default function MinistriesPage() {
           </ScrollFadeIn>
         </Container>
 
-        {/* 3 visual columns */}
-        <div className="grid grid-cols-1 divide-y divide-white/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <div className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {connection.map((col, i) => (
             <ScrollFadeIn key={col.verb} delay={i * 0.09}>
               <div className="flex flex-col px-8 py-12 lg:px-10 lg:py-16">
-                {/* Gold accent */}
                 <div className="mb-7 h-[1.5px] w-8 bg-[var(--app-primary)]/55" />
-
-                {/* Large Playfair verb */}
-                <p className="font-headline text-[3rem] font-normal leading-none text-white lg:text-[3.5rem]">
+                <p className="font-headline text-[2.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[3.4rem]">
                   {col.verb}
                 </p>
-
-                {/* Body */}
-                <p className="mt-5 font-ui text-[0.84rem] leading-[1.9] text-white/48">
+                <p className="mt-5 font-ui text-[0.84rem] leading-[1.9] text-[var(--app-ink)]/50">
                   {col.body}
                 </p>
-
-                {/* Button */}
                 <Link
                   href={col.href}
-                  className="mt-8 inline-flex items-center gap-2.5 self-start border border-white/20 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-white/55 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="mt-8 inline-flex items-center gap-2.5 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   {col.cta}
                   <Arrow />
@@ -331,16 +297,14 @@ export default function MinistriesPage() {
         </div>
       </section>
 
-      {/* ── 6. CTA — dark ────────────────────────────────────── */}
+      {/* ── 5. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="relative overflow-hidden bg-[var(--app-dark)] py-20 lg:py-28">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_55%_at_50%_0%,rgba(201,150,26,0.08),transparent)]" />
-          <Container size="lg" className="relative">
-            <div className="flex flex-col items-center gap-8 text-center">
+        <section className="bg-[var(--app-dark)] py-20 lg:py-28">
+          <Container size="lg">
+            <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Take a next step
               </p>
-
               <h2 className="font-headline text-[2rem] font-normal leading-[1.2] text-white sm:text-[2.6rem] lg:text-[3rem]">
                 Ready to find your
                 <br className="hidden sm:block" />{' '}
@@ -348,21 +312,17 @@ export default function MinistriesPage() {
                   place to belong?
                 </em>
               </h2>
-
               <div className="h-px w-12 bg-[var(--app-primary)]/40" />
-
               <p className="max-w-md font-ui text-[0.88rem] leading-[1.9] text-white/50">
                 Tell us where you are in your faith journey and we will help you
                 find the right ministry community or service opportunity.
               </p>
-
               <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
                 <Link
                   href="/contact"
                   className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition duration-150 hover:brightness-105"
                 >
-                  Get connected
-                  <Arrow />
+                  Get connected <Arrow />
                 </Link>
                 <Link
                   href="/events"
