@@ -123,6 +123,7 @@ const OrderConfirmation = () => {
         setOrderDetails(mappedOrder);
       } catch (error) {
         console.error('Error fetching order details:', error);
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -241,6 +242,24 @@ const OrderConfirmation = () => {
         <FlexboxLayout direction="column" align="center" gap="lg">
           <Loader2 className="w-12 h-12 animate-spin text-[var(--app-primary)]" />
           <H3 className="text-white">Loading Order Details...</H3>
+        </FlexboxLayout>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <FlexboxLayout direction="column" align="center" gap="lg">
+          <AlertCircle className="w-16 h-16 text-red-500" />
+          <H3 className="text-white">Couldn&apos;t load your order</H3>
+          <Caption className="text-white/55">
+            Something went wrong while fetching your order details. Please try
+            again.
+          </Caption>
+          <Button variant="primary" onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
         </FlexboxLayout>
       </div>
     );

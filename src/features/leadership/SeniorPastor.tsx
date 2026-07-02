@@ -162,7 +162,7 @@ export default function SeniorPastor() {
               }}
               suppressHydrationWarning
             >
-              <p className="font-ui text-[0.92rem] leading-[1.9] text-white/55">
+              <p className="font-ui text-[0.92rem] leading-[1.9] text-white/70">
                 {bio}
               </p>
             </div>

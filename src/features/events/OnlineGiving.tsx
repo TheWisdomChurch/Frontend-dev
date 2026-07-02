@@ -78,7 +78,7 @@ export default function OnlineGiving() {
             </h2>
 
             {/* Scripture */}
-            <p className="mx-auto mt-7 max-w-[460px] text-center text-[0.95rem] italic leading-[1.8] text-white/45">
+            <p className="mx-auto mt-7 max-w-[460px] text-center text-[0.95rem] italic leading-[1.8] text-white/68">
               &ldquo;As each has purposed in his heart, so let him give… God
               loves a cheerful giver.&rdquo;
               <br />

@@ -143,7 +143,7 @@ export default function ContactPage() {
                   <p className="font-headline text-[1.45rem] font-normal leading-snug text-[var(--app-ink)]">
                     Honor Gardens
                   </p>
-                  <div className="space-y-1 font-ui text-[0.82rem] leading-[1.7] text-[var(--app-ink)]/55">
+                  <div className="space-y-1 font-ui text-[0.82rem] leading-[1.7] text-[var(--app-ink)]/70">
                     <p>Opposite Dominion Church HQ</p>
                     <p>Alasia bus stop, Lekki-Epe Expressway</p>
                     <p>Lagos, Nigeria</p>

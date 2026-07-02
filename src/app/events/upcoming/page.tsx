@@ -171,7 +171,7 @@ export default function UpcomingPage() {
                           {event.title}
                         </h3>
                         {event.description && (
-                          <p className="font-ui text-[0.82rem] leading-[1.8] text-[var(--app-ink)]/52 line-clamp-2">
+                          <p className="font-ui text-[0.82rem] leading-[1.8] text-[var(--app-ink)]/68 line-clamp-2">
                             {event.description}
                           </p>
                         )}

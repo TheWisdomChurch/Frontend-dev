@@ -184,7 +184,7 @@ export default function SpecialEventsPage() {
                           {event.title}
                         </h3>
                         {event.description && (
-                          <p className="font-ui text-[0.8rem] leading-[1.8] text-white/42 line-clamp-2">
+                          <p className="font-ui text-[0.8rem] leading-[1.8] text-white/65 line-clamp-2">
                             {event.description}
                           </p>
                         )}
