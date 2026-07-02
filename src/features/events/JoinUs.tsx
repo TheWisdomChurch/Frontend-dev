@@ -339,7 +339,6 @@ export default function JoinWisdomHouse() {
             ? 'existing'
             : 'new';
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await apiClient.applyWorkforceNew({
         firstName,
         lastName,
@@ -353,7 +352,8 @@ export default function JoinWisdomHouse() {
         registrationType,
         married: values.married,
         spouse: values.married === 'yes' ? values.spouse || '' : '',
-        anniversary: values.married === 'yes' ? values.anniversary || '' : '',
+        anniversaryDate:
+          values.married === 'yes' ? values.anniversary || '' : '',
         about: values.about || '',
         sourceChannel: 'frontend:web:join-us',
         notes: [
@@ -365,7 +365,7 @@ export default function JoinWisdomHouse() {
         ]
           .filter(Boolean)
           .join('\n'),
-      } as never);
+      });
 
       setOpenModal(false);
       setSubmitted(true);
