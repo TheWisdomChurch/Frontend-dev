@@ -106,7 +106,7 @@ export default function ConfessionPopup({
             <h3 className="font-headline text-[1.5rem] font-normal leading-[1.2] text-white">
               {welcomeTitle}
             </h3>
-            <p className="mt-4 font-ui text-[0.86rem] leading-[1.9] text-white/50">
+            <p className="mt-4 font-ui text-[0.86rem] leading-[1.9] text-white/68">
               {welcomeMessage}
             </p>
           </div>
@@ -148,7 +148,7 @@ export default function ConfessionPopup({
             {confessionParagraphs.map((paragraph, index) => (
               <p
                 key={`${paragraph.slice(0, 24)}-${index}`}
-                className="font-ui text-[0.84rem] leading-[1.9] text-white/60"
+                className="font-ui text-[0.84rem] leading-[1.9] text-white/75"
               >
                 {paragraph}
               </p>

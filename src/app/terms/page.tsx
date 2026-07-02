@@ -1,56 +1,66 @@
-// app/terms/page.tsx
-
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import type { JSX } from 'react';
-import { BodyMD, BodySM, Caption, H3 } from '@/shared/text';
-import PageHero from '@/features/hero/PageHero';
-import { Section, PageSection } from '@/shared/layout';
 
-type Section = {
-  title: string;
-  body?: string;
-  list?: string[];
-  link?: { href: string; label: string };
-  links?: { href: string; label: string }[];
+export const metadata: Metadata = {
+  title: 'Terms of Use — Wisdom Church',
+  description:
+    "Terms governing your access to Wisdom Church's website, livestreams, and digital services.",
 };
 
-const sections: Section[] = [
+const sections = [
   {
-    title: '1. Acceptance of Terms',
+    id: 'acceptance',
+    number: '01',
+    title: 'Acceptance of Terms',
     body: 'By accessing or using any part of the Services, you confirm that you have read, understood, and agree to be bound by these Terms. If you disagree, please do not use the Services.',
   },
   {
-    title: '2. Eligibility & Account Responsibility',
+    id: 'eligibility',
+    number: '02',
+    title: 'Eligibility & Account Responsibility',
     body: 'You must be legally able to enter into these Terms. If you create an account, you are responsible for all activity under that account and for safeguarding your credentials.',
   },
   {
-    title: '3. Use of Content',
-    body: 'All content (text, graphics, audio, video, downloads) is owned by The Wisdom Church or our licensors. You may use it only for personal, non-commercial purposes. Do not copy, modify, distribute, or create derivative works without written permission.',
+    id: 'content',
+    number: '03',
+    title: 'Use of Content',
+    body: 'All content — text, graphics, audio, video, and downloads — is owned by The Wisdom Church or our licensors. You may use it only for personal, non-commercial purposes. Do not copy, modify, distribute, or create derivative works without written permission.',
   },
   {
-    title: '4. Community Conduct',
+    id: 'conduct',
+    number: '04',
+    title: 'Community Conduct',
     list: [
       'Do not post unlawful, abusive, hateful, or misleading content.',
-      'Do not impersonate others or misrepresent your affiliation.',
-      'Do not interfere with or disrupt the Services, servers, or networks.',
-      'Do not attempt to access non-public areas or data without authorization.',
+      'Do not impersonate others or misrepresent your affiliation with the church.',
+      'Do not interfere with or disrupt the Services, servers, or connected networks.',
+      'Do not attempt to access non-public areas or data without authorisation.',
     ],
   },
   {
-    title: '5. Forms, Registrations & Submissions',
-    body: 'Provide accurate and complete information when submitting forms or event registrations. We use this information to manage registrations, send confirmations, and provide updates.',
+    id: 'forms',
+    number: '05',
+    title: 'Forms, Registrations & Submissions',
+    body: 'Provide accurate and complete information when submitting forms or event registrations. We use this information to manage registrations, send confirmations, and provide relevant updates.',
   },
   {
-    title: '6. Donations, Payments & Refunds',
-    body: 'Payments are final unless required otherwise by law. Refunds, if issued, are processed to the original payment method. For questions, contact us via the Contact page.',
+    id: 'payments',
+    number: '06',
+    title: 'Donations, Payments & Refunds',
+    body: 'Payments are final unless required otherwise by law. Refunds, if issued, are processed to the original payment method. For questions about a specific payment, reach us via the Contact page.',
     link: { href: '/contact', label: 'Contact page' },
   },
   {
-    title: '7. Third-Party Links',
+    id: 'third-party',
+    number: '07',
+    title: 'Third-Party Links',
     body: 'We may link to third-party sites for convenience. We do not control and are not responsible for their content or practices. Use third-party sites at your own risk.',
   },
   {
-    title: '8. Privacy & Cookies',
+    id: 'privacy',
+    number: '08',
+    title: 'Privacy & Cookies',
     body: 'Our data practices are described in our Privacy Policy and Cookies Policy. By using the Services, you consent to our collection and use of information as described there.',
     links: [
       { href: '/privacy', label: 'Privacy Policy' },
@@ -58,44 +68,64 @@ const sections: Section[] = [
     ],
   },
   {
-    title: '9. Communications',
-    body: 'By providing your email or phone, you agree to receive communications related to your requests, registrations, or the Services. You may opt out of promotional emails at any time.',
+    id: 'communications',
+    number: '09',
+    title: 'Communications',
+    body: 'By providing your email or phone number, you agree to receive communications related to your requests, registrations, or the Services. You may opt out of promotional emails at any time.',
   },
   {
-    title: '10. Disclaimers',
-    body: 'The Services are provided “as is” and “as available.” We do not guarantee uninterrupted, error-free, or secure operation. To the fullest extent permitted by law, we disclaim all warranties, express or implied.',
+    id: 'disclaimers',
+    number: '10',
+    title: 'Disclaimers',
+    body: 'The Services are provided "as is" and "as available." We do not guarantee uninterrupted, error-free, or secure operation. To the fullest extent permitted by law, we disclaim all warranties, express or implied.',
   },
   {
-    title: '11. Limitation of Liability',
+    id: 'liability',
+    number: '11',
+    title: 'Limitation of Liability',
     body: 'To the fullest extent permitted by law, The Wisdom Church will not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Services.',
   },
   {
-    title: '12. Termination',
-    body: 'We may suspend or terminate access to the Services at any time for conduct that violates these Terms or is otherwise harmful to the Services or community.',
+    id: 'termination',
+    number: '12',
+    title: 'Termination',
+    body: 'We may suspend or terminate access to the Services at any time for conduct that violates these Terms or is otherwise harmful to the Services or our community.',
   },
   {
-    title: '13. User-Generated Content',
-    body: 'If you submit content (including testimonies, comments, or media), you grant us a non-exclusive, worldwide, royalty-free license to use, display, and distribute that content within the Services. You confirm you have rights to submit it and that it does not violate laws or third-party rights.',
+    id: 'ugc',
+    number: '13',
+    title: 'User-Generated Content',
+    body: 'If you submit content — including testimonies, comments, or media — you grant us a non-exclusive, worldwide, royalty-free licence to use, display, and distribute that content within the Services. You confirm you have the rights to submit it and that it does not violate laws or third-party rights.',
   },
   {
-    title: '14. Accessibility',
+    id: 'accessibility',
+    number: '14',
+    title: 'Accessibility',
     body: 'We are committed to providing an accessible experience. If you encounter difficulty using the Services, please contact us so we can provide a reasonable alternative.',
   },
   {
-    title: '15. Copyright & DMCA',
+    id: 'copyright',
+    number: '15',
+    title: 'Copyright & DMCA',
     body: 'We respect intellectual property rights. If you believe content on the Services infringes your copyright, notify us via the Contact page with sufficient detail to investigate and respond.',
     link: { href: '/contact', label: 'Contact page' },
   },
   {
-    title: '16. Governing Law',
-    body: 'These Terms are governed by the laws applicable to The Wisdom Church’s primary place of operation, without regard to conflict-of-law principles. Disputes will be resolved in the courts of that jurisdiction unless otherwise required by law.',
+    id: 'law',
+    number: '16',
+    title: 'Governing Law',
+    body: "These Terms are governed by the laws applicable to The Wisdom Church's primary place of operation, without regard to conflict-of-law principles. Disputes will be resolved in the courts of that jurisdiction unless otherwise required by law.",
   },
   {
-    title: '17. Changes to These Terms',
+    id: 'changes',
+    number: '17',
+    title: 'Changes to These Terms',
     body: 'We may update these Terms from time to time. Continued use of the Services after changes are posted constitutes acceptance of the revised Terms.',
   },
   {
-    title: '18. Contact',
+    id: 'contact',
+    number: '18',
+    title: 'Contact',
     body: 'For questions about these Terms, contact us through the Contact page.',
     link: { href: '/contact', label: 'Contact page' },
   },
@@ -103,70 +133,174 @@ const sections: Section[] = [
 
 export default function TermsPage(): JSX.Element {
   return (
-    <PageSection tone="surface" padding="xl">
-      <PageHero
-        title="Terms of Use"
-        subtitle="Clear guidelines for using our digital services."
-        description="These terms govern your access to our website, livestreams, and events."
-        compact
-      />
-      <div className="max-w-5xl mx-auto space-y-8">
-        <header className="space-y-3">
-          <Caption className="uppercase tracking-[0.32em] text-subtle">
-            Legal
-          </Caption>
-          <BodyMD className="text-muted max-w-3xl">
-            Welcome to The Wisdom Church online experience. These Terms govern
-            your access to and use of our website, livestreams, event
-            registrations, forms, content, and related services (the
-            “Services”). By using the Services, you agree to these Terms.
-          </BodyMD>
-          <BodySM className="text-subtle">
-            Last updated: February 6, 2026
-          </BodySM>
-        </header>
-
-        <div className="space-y-6">
-          {sections.map(section => (
-            <section key={section.title} className="space-y-2">
-              <H3>{section.title}</H3>
-              {section.body && (
-                <BodyMD className="text-muted">{section.body}</BodyMD>
-              )}
-              {section.list && (
-                <ul className="list-disc pl-6 space-y-2 text-sm text-muted">
-                  {section.list.map(item => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              )}
-              {section.links && (
-                <div className="space-x-4 text-sm">
-                  {section.links.map(l => (
-                    <Link
-                      key={l.href}
-                      href={l.href}
-                      className="underline underline-offset-4 text-muted"
-                    >
-                      {l.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-              {section.link && !section.links && (
-                <div className="text-sm">
-                  <Link
-                    href={section.link.href}
-                    className="underline underline-offset-4 text-muted"
-                  >
-                    {section.link.label}
-                  </Link>
-                </div>
-              )}
-            </section>
-          ))}
+    <main className="min-h-screen bg-[var(--app-canvas)]">
+      {/* ── Dark hero ─────────────────────────────────────────── */}
+      <div className="bg-[var(--app-dark)] px-6 pb-20 pt-32">
+        <div className="mx-auto max-w-5xl">
+          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Legal · Terms
+          </p>
+          <h1
+            className="font-headline font-normal text-white"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', lineHeight: 1.1 }}
+          >
+            Terms of Use
+          </h1>
+          <p className="mt-5 max-w-xl font-ui text-[0.95rem] leading-[1.9] text-white/62">
+            These terms govern your access to our website, livestreams, event
+            registrations, forms, and related digital services. By using the
+            site you agree to them.
+          </p>
+          <p className="mt-5 font-ui text-[0.7rem] text-white/28">
+            Last updated: February 2026
+          </p>
         </div>
       </div>
-    </PageSection>
+
+      {/* ── Two-column document body ───────────────────────────── */}
+      <div className="mx-auto max-w-5xl px-6 py-16 lg:grid lg:grid-cols-[15rem_1fr] lg:gap-14 lg:py-24">
+        {/* ── Sticky TOC ── */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-24">
+            <p className="mb-4 font-ui text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/38">
+              Sections
+            </p>
+            <nav aria-label="Terms of Use table of contents">
+              <ul className="space-y-1">
+                {sections.map(s => (
+                  <li key={s.id}>
+                    <a
+                      href={`#${s.id}`}
+                      className="group flex items-center gap-2.5 py-1 font-ui text-[0.78rem] text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
+                    >
+                      <span className="text-[0.62rem] font-bold text-[var(--app-primary)]/50 group-hover:text-[var(--app-primary)]">
+                        {s.number}
+                      </span>
+                      {s.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8 border-t border-[var(--app-ink)]/8 pt-6 space-y-1.5">
+                <Link
+                  href="/privacy"
+                  className="block font-ui text-[0.76rem] text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                >
+                  → Privacy Policy
+                </Link>
+                <Link
+                  href="/cookies"
+                  className="block font-ui text-[0.76rem] text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                >
+                  → Cookies & Privacy
+                </Link>
+                <Link
+                  href="/contact"
+                  className="block font-ui text-[0.76rem] text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                >
+                  → Contact us
+                </Link>
+              </div>
+            </nav>
+          </div>
+        </aside>
+
+        {/* ── Sections ── */}
+        <article className="space-y-0">
+          {sections.map((section, index) => (
+            <section
+              id={section.id}
+              key={section.id}
+              className={`py-10 ${index < sections.length - 1 ? 'border-b border-[var(--app-ink)]/8' : ''}`}
+            >
+              <div className="flex items-start gap-5">
+                <span className="mt-1 w-8 flex-none font-ui text-[0.65rem] font-bold text-[var(--app-primary)]/60">
+                  {section.number}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-headline text-[1.15rem] font-normal text-[var(--app-ink)]">
+                    {section.title}
+                  </h2>
+
+                  {section.body && (
+                    <p className="mt-3 font-ui text-[0.9rem] leading-[2] text-[var(--app-ink)]/65">
+                      {section.body}
+                    </p>
+                  )}
+
+                  {section.list && (
+                    <ul className="mt-3 space-y-2.5">
+                      {section.list.map(item => (
+                        <li
+                          key={item}
+                          className="flex items-start gap-3 font-ui text-[0.9rem] leading-[1.85] text-[var(--app-ink)]/65"
+                        >
+                          <span
+                            className="mt-2.5 h-[2px] w-3.5 flex-none bg-[var(--app-primary)]/60"
+                            aria-hidden="true"
+                          />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {section.links && (
+                    <div className="mt-3 flex gap-5">
+                      {section.links.map(l => (
+                        <Link
+                          key={l.href}
+                          href={l.href}
+                          className="font-ui text-[0.85rem] font-semibold text-[var(--app-primary)] underline underline-offset-4 transition hover:text-[var(--app-primary-light)]"
+                        >
+                          {l.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+
+                  {section.link && !section.links && (
+                    <div className="mt-3">
+                      <Link
+                        href={section.link.href}
+                        className="font-ui text-[0.85rem] font-semibold text-[var(--app-primary)] underline underline-offset-4 transition hover:text-[var(--app-primary-light)]"
+                      >
+                        {section.link.label}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          ))}
+        </article>
+      </div>
+
+      {/* ── Footer nav ─────────────────────────────────────────── */}
+      <div className="border-t border-[var(--app-ink)]/8 px-6 py-10">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-8 gap-y-3">
+          <Link
+            href="/contact"
+            className="inline-flex h-10 items-center bg-[var(--app-primary)] px-6 font-ui text-[0.76rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
+          >
+            Contact us
+          </Link>
+          <Link
+            href="/privacy"
+            className="font-ui text-[0.82rem] text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            href="/cookies"
+            className="font-ui text-[0.82rem] text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+          >
+            Cookies & Privacy
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }

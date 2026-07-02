@@ -1080,6 +1080,28 @@ export const apiClient = {
     return unwrapData<unknown>(res);
   },
 
+  async lookupWorkforceMember(
+    email: string
+  ): Promise<Record<string, unknown> | null> {
+    try {
+      const res = await request<unknown>(
+        `/workforce/member/lookup?email=${encodeURIComponent(email)}`
+      );
+      const data = unwrapData<unknown>(res);
+      return data && typeof data === 'object'
+        ? (data as Record<string, unknown>)
+        : null;
+    } catch (err) {
+      if (
+        isApiError(err) &&
+        (err.statusCode === 404 || err.statusCode === 400)
+      ) {
+        return null;
+      }
+      return null;
+    }
+  },
+
   /* -----------------------------
      LEADERSHIP (public apply + public list)
      Go:
