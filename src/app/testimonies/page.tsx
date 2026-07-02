@@ -268,7 +268,7 @@ export default function TestimoniesPage() {
                   </em>
                 </h2>
                 <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-                <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/48">
+                <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/70">
                   Testimonies encourage the people who are still praying, still
                   waiting, and still learning to trust. Your story matters.
                 </p>

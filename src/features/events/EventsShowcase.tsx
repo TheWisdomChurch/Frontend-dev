@@ -175,7 +175,7 @@ function FeaturedCard({
           >
             {slide.title}
           </p>
-          <p className="mt-3 line-clamp-3 font-ui text-[0.82rem] leading-[1.8] text-white/50">
+          <p className="mt-3 line-clamp-3 font-ui text-[0.82rem] leading-[1.8] text-white/68">
             {slide.description}
           </p>
         </div>

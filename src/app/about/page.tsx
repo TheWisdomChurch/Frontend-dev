@@ -206,7 +206,7 @@ export default function AboutPage() {
                     </div>
 
                     {/* Body */}
-                    <p className="pl-11 font-ui text-[0.86rem] leading-[1.9] text-[var(--app-ink)]/55 lg:max-w-lg lg:pl-0">
+                    <p className="pl-11 font-ui text-[0.86rem] leading-[1.9] text-[var(--app-ink)]/70 lg:max-w-lg lg:pl-0">
                       {pillar.body}
                     </p>
                   </div>
@@ -282,7 +282,7 @@ export default function AboutPage() {
                   {leaders[0].name}
                 </h3>
                 <div className="mt-3 h-px w-8 bg-[var(--app-primary)]/45" />
-                <BodySM className="mt-3 max-w-sm leading-[1.9] text-[var(--app-ink)]/60">
+                <BodySM className="mt-3 max-w-sm leading-[1.9] text-[var(--app-ink)]/70">
                   {leaders[0].bio}
                 </BodySM>
               </div>

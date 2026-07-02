@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { Play, ArrowRight } from 'lucide-react';
 
+import { BlogSubscribeForm } from './BlogSubscribeForm';
+
 import PageHero from '@/features/hero/PageHero';
 import { H2, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
@@ -41,7 +43,7 @@ export default function BlogPage() {
               <br className="hidden sm:block" /> and articles for you.
             </H2>
 
-            <BodySM className="mx-auto mt-5 max-w-lg text-white/58 leading-[1.9]">
+            <BodySM className="mx-auto mt-5 max-w-lg text-white/70 leading-[1.9]">
               Our team is working on written content — devotionals, sermon
               notes, and reflections — that will live here. Check back soon.
             </BodySM>
@@ -67,15 +69,31 @@ export default function BlogPage() {
             </div>
           </ScrollFadeIn>
 
-          {/* WhatsApp update strip */}
+          {/* Notify me form */}
           <ScrollFadeIn delay={0.1}>
-            <div className="mx-auto mt-16 max-w-xl border border-white/8 bg-white/[0.025] p-6 text-center">
+            <div className="mx-auto mt-16 max-w-xl border border-white/8 bg-white/[0.025] p-8 text-center">
               <p className="font-ui text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-                Stay updated
+                Get notified
               </p>
-              <p className="mt-2 font-ui text-[0.88rem] text-white/55">
-                Join our WhatsApp community to receive devotionals, sermon
-                notes, and church updates as soon as they are published.
+              <p className="mt-2 font-ui text-[0.88rem] text-white/70">
+                Be the first to know when devotionals and articles go live. Drop
+                your email below.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <BlogSubscribeForm />
+              </div>
+            </div>
+          </ScrollFadeIn>
+
+          {/* WhatsApp update strip */}
+          <ScrollFadeIn delay={0.15}>
+            <div className="mx-auto mt-5 max-w-xl border border-white/8 bg-white/[0.025] p-6 text-center">
+              <p className="font-ui text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                Or join our community
+              </p>
+              <p className="mt-2 font-ui text-[0.88rem] text-white/65">
+                Get devotionals, sermon notes, and church updates directly via
+                WhatsApp.
               </p>
               <a
                 href="https://wa.me/2347069995333"

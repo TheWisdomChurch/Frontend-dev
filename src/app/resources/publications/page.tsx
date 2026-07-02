@@ -65,7 +65,7 @@ export default function PublicationPage() {
               <br className="hidden sm:block" /> is on the way.
             </H2>
 
-            <BodySM className="mx-auto mt-5 max-w-lg text-white/58 leading-[1.9]">
+            <BodySM className="mx-auto mt-5 max-w-lg text-white/70 leading-[1.9]">
               We are building a proper resource section where you will be able
               to download sermon notes, study guides, and devotional materials.
               Until then, reach out directly and we will get you what you need.
@@ -95,7 +95,7 @@ export default function PublicationPage() {
           {/* Available now cards */}
           <ScrollFadeIn delay={0.1}>
             <div className="mx-auto mt-16 max-w-3xl">
-              <p className="mb-5 font-ui text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/30">
+              <p className="mb-5 font-ui text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/45">
                 Available now — request directly
               </p>
               <div className="grid gap-4 sm:grid-cols-3">
@@ -117,7 +117,7 @@ export default function PublicationPage() {
                       <p className="font-ui text-[0.85rem] font-semibold text-white">
                         {item.label}
                       </p>
-                      <p className="mt-1 font-ui text-[0.75rem] leading-[1.7] text-white/45">
+                      <p className="mt-1 font-ui text-[0.75rem] leading-[1.7] text-white/62">
                         {item.detail}
                       </p>
                     </div>
