@@ -360,6 +360,7 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     lastName,
     email,
     phone,
+    phoneCode,
     title,
     department,
     departmentSection,
@@ -369,8 +370,14 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     isExistingMember,
     currentAssignment,
     birthday,
+    registrationType,
     sourceChannel,
     notes,
+    occupation,
+    married,
+    spouse,
+    anniversaryDate,
+    about,
   } = payload;
 
   return {
@@ -378,6 +385,7 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     lastName,
     email,
     phone,
+    phoneCode,
     title,
     department,
     departmentSection,
@@ -387,8 +395,14 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     isExistingMember,
     currentAssignment,
     birthday,
+    registrationType,
     sourceChannel,
     notes,
+    occupation,
+    married,
+    spouse,
+    anniversary: anniversaryDate,
+    about,
   };
 }
 

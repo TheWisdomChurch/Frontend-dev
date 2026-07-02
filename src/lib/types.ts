@@ -210,6 +210,7 @@ export interface WorkforceRegistrationData {
   lastName: string;
   email?: string;
   phone?: string;
+  phoneCode?: string;
   title?: string;
   department: string;
   departmentSection?: string;
@@ -219,9 +220,14 @@ export interface WorkforceRegistrationData {
   isExistingMember?: boolean;
   currentAssignment?: string;
   birthday?: string; // DD/MM
-  registrationType?: 'new' | 'serving';
+  registrationType?: 'new' | 'serving' | 'existing' | 'update';
   sourceChannel?: string;
   notes?: string;
+  occupation?: string;
+  married?: 'yes' | 'no';
+  spouse?: string;
+  anniversaryDate?: string; // DD/MM
+  about?: string;
 }
 
 export interface PastoralCareRequestData {
