@@ -14,7 +14,7 @@ import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
-import { H2, BodySM, Caption } from '@/shared/text';
+import { H2, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import apiClient, { mapValidationErrors } from '@/lib/api';

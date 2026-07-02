@@ -131,6 +131,7 @@ export default function Footer() {
       {/* ── Gold top accent line ─────────────────────────── */}
       <div
         className="h-[2px] w-full"
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           background:
             'linear-gradient(90deg, transparent, var(--app-primary) 40%, transparent)',

@@ -68,6 +68,7 @@ export default function JoinCommunityModal({
               >
                 <div
                   className="grid h-10 w-10 shrink-0 place-items-center rounded-badge text-white"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{
                     background: `linear-gradient(135deg, ${link.bgColor}, ${link.hoverColor})`,
                   }}

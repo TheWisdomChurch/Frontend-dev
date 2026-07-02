@@ -205,6 +205,7 @@ export default function MinistriesPage() {
                   {/* Atmospheric colour overlay */}
                   <div
                     className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
+                    // eslint-disable-next-line no-restricted-syntax
                     style={{ background: ministry.overlay }}
                   />
 
