@@ -41,6 +41,7 @@ export interface StoreOrderPayload {
     customerAccountName?: string;
     customerBankName?: string;
   };
+  paymentSlipUrl?: string;
 }
 
 export interface StoreOrder extends StoreOrderPayload {
@@ -85,6 +86,34 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const storeClient = {
+  async uploadPaymentSlip(file: File): Promise<string> {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('kind', 'document');
+    form.append('module', 'store-orders');
+
+    const res = await fetch(`${API_V1_BASE_URL}/uploads/files`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      body: form,
+    });
+
+    const json = (await res.json().catch(() => null)) as any;
+    if (!res.ok) {
+      throw new StoreApiError(
+        json?.message || json?.error || 'Upload failed',
+        res.status
+      );
+    }
+
+    const url = json?.data?.url || json?.data?.publicUrl;
+    if (typeof url !== 'string' || !url) {
+      throw new StoreApiError('Upload succeeded but returned no file URL', 502);
+    }
+    return url;
+  },
+
   async listProducts(): Promise<Product[]> {
     const data = await request<any[]>('/store/products', { method: 'GET' });
 

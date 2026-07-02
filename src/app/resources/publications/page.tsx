@@ -110,6 +110,7 @@ export default function PublicationPage() {
                         : undefined
                     }
                     className="group flex flex-col gap-3 rounded-card border border-white/8 bg-white/[0.025] p-5 transition hover:border-[var(--app-primary)]/25 hover:bg-white/[0.04]"
+                    // eslint-disable-next-line no-restricted-syntax
                     style={{ transitionDelay: `${i * 40}ms` }}
                   >
                     <Download className="h-4 w-4 text-[var(--app-primary)]" />

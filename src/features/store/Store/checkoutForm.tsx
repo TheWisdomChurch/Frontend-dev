@@ -253,6 +253,22 @@ const CheckoutForm = () => {
     setIsSubmitting(true);
 
     try {
+      let paymentSlipUrl: string | undefined;
+      if (formData.paymentMethod === 'transfer' && formData.paymentSlip) {
+        try {
+          paymentSlipUrl = await storeClient.uploadPaymentSlip(
+            formData.paymentSlip
+          );
+        } catch {
+          setFormErrors(prev => ({
+            ...prev,
+            paymentSlip: 'Failed to upload payment slip. Please try again.',
+          }));
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const orderPayload = {
         orderId,
         items,
@@ -277,6 +293,7 @@ const CheckoutForm = () => {
                 customerBankName: formData.customerBankName,
               }
             : undefined,
+        paymentSlipUrl,
       };
 
       await storeClient.createOrder(orderPayload);

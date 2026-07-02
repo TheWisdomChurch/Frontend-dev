@@ -78,10 +78,6 @@ export default function SeniorPastor() {
     []
   );
 
-  const bioTruncated =
-    bio.length > BIO_PREVIEW_LENGTH
-      ? bio.substring(0, BIO_PREVIEW_LENGTH).trimEnd() + '…'
-      : bio;
   const canExpand = bio.length > BIO_PREVIEW_LENGTH;
 
   return (
