@@ -1,7 +1,8 @@
-import type { LucideIcon } from 'lucide-react';
+﻿import type { LucideIcon } from 'lucide-react';
 import { CalendarDays, HeartHandshake, MapPin, Users } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
+import { H2, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import {
@@ -57,7 +58,7 @@ export default function MinistryDetailPage({
   config,
 }: MinistryDetailPageProps) {
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title={config.hero.title}
         subtitle={config.hero.subtitle}
@@ -70,7 +71,7 @@ export default function MinistryDetailPage({
         <StatStrip items={config.stats} />
       </ScrollFadeIn>
 
-      <Section padding="lg" className="bg-[#050505]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn data-parallax-global="0.08">
             <SplitSection
@@ -86,15 +87,18 @@ export default function MinistryDetailPage({
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[#080808] border-y border-white/10">
+      <Section
+        padding="lg"
+        className="bg-[var(--app-dark-2)] border-y border-white/10"
+      >
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+            <Eyebrow className="text-[var(--app-primary)]">
               What this ministry does
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            </Eyebrow>
+            <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
               Programs designed for consistent growth and real belonging.
-            </h2>
+            </H2>
           </ScrollFadeIn>
           <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
             <FeatureGrid items={config.programs} columns={3} />
@@ -102,15 +106,13 @@ export default function MinistryDetailPage({
         </Container>
       </Section>
 
-      <Section padding="lg" className="bg-[#050505]">
+      <Section padding="lg" className="bg-[var(--app-dark)]">
         <Container size="xl" className="space-y-8">
           <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
-              Next steps
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            <Eyebrow className="text-[var(--app-primary)]">Next steps</Eyebrow>
+            <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
               A clear pathway from first visit to active service.
-            </h2>
+            </H2>
           </ScrollFadeIn>
           <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
             <FeatureGrid

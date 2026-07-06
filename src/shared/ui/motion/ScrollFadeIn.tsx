@@ -25,6 +25,7 @@ export function ScrollFadeIn({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, amount: 0.22 }}
       transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+      suppressHydrationWarning
       {...props}
     >
       {children}

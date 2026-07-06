@@ -1,163 +1,112 @@
-import HeroSection from '@/features/hero/PageHero';
-import { BodyMD, BodySM, H2, H3 } from '@/shared/text';
-import { hero_bg_2 } from '@/shared/assets';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+﻿import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Play, ArrowRight } from 'lucide-react';
+
+import { BlogSubscribeForm } from './BlogSubscribeForm';
+
+import PageHero from '@/features/hero/PageHero';
+import { H2, BodySM, Eyebrow } from '@/shared/text';
+import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 
-const BlogPage = () => {
-  const blogPosts = [
-    {
-      title: 'Finding Peace in Uncertain Times',
-      excerpt:
-        'Discover biblical principles for maintaining peace and trust in God when life feels uncertain and overwhelming.',
-      author: 'Pastor John Doe',
-      date: 'November 15, 2024',
-      category: 'Spiritual Growth',
-      readTime: '5 min read',
-    },
-    {
-      title: 'The Power of Daily Prayer',
-      excerpt:
-        'How establishing a consistent prayer life can transform your relationship with God and impact your daily walk.',
-      author: 'Jane Smith',
-      date: 'November 10, 2024',
-      category: 'Prayer',
-      readTime: '4 min read',
-    },
-    {
-      title: 'Building Healthy Relationships',
-      excerpt:
-        'Biblical wisdom for cultivating strong, God-honoring relationships in family, friendship, and community.',
-      author: 'Michael Brown',
-      date: 'November 5, 2024',
-      category: 'Relationships',
-      readTime: '6 min read',
-    },
-    {
-      title: "Understanding God's Will",
-      excerpt:
-        "Practical steps for discerning and following God's will in major life decisions and everyday choices.",
-      author: 'Pastor John Doe',
-      date: 'October 28, 2024',
-      category: 'Faith',
-      readTime: '7 min read',
-    },
-    {
-      title: 'The Joy of Serving Others',
-      excerpt:
-        'How serving in ministry not only blesses others but also brings fulfillment and spiritual growth to the servant.',
-      author: 'Emily White',
-      date: 'October 22, 2024',
-      category: 'Service',
-      readTime: '4 min read',
-    },
-    {
-      title: 'Overcoming Fear with Faith',
-      excerpt:
-        "Biblical strategies for replacing fear with faith and trusting God's promises in challenging circumstances.",
-      author: 'Pastor John Doe',
-      date: 'October 15, 2024',
-      category: 'Faith',
-      readTime: '5 min read',
-    },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <HeroSection
-        title="Blog"
-        subtitle="Insights for your spiritual journey"
-        description="Practical wisdom, biblical insights, and encouraging stories to help you grow in your faith and navigate life's challenges."
-        backgroundImage={hero_bg_2.src}
-        showButtons={true}
-        primaryButtonText="Latest Posts"
-        secondaryButtonText="Subscribe to Updates"
-        showScrollIndicator={true}
-      />
-
-      {/* Blog Posts Grid */}
-      <PageSection tone="surface" padding="xl">
-        <ScrollFadeIn className="text-center mb-8 fade-up">
-          <H2>Recent Articles</H2>
-          <BodyMD className="text-muted mt-3">
-            Fresh content to encourage and equip you
-          </BodyMD>
-        </ScrollFadeIn>
-
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.map((post, index) => (
-              <ScrollFadeIn key={index} delay={index * 0.04}>
-                <article
-                  className="page-card overflow-hidden"
-                  data-parallax-global={index % 2 === 0 ? '0.08' : '0.12'}
-                >
-                  <div className="h-40 bg-gradient-to-br from-yellow-400/70 to-yellow-600/70 flex items-end p-4">
-                    <span className="px-3 py-1 rounded-full text-[11px] font-medium border border-muted text-muted bg-white/70">
-                      {post.category}
-                    </span>
-                  </div>
-
-                  <div className="p-5">
-                    <div className="flex items-center text-[11px] text-subtle mb-3">
-                      <span>{post.date}</span>
-                      <span className="mx-2">•</span>
-                      <span>{post.readTime}</span>
-                    </div>
-
-                    <H3 className="mb-2">{post.title}</H3>
-
-                    <BodySM className="text-muted mb-4">{post.excerpt}</BodySM>
-
-                    <div className="flex items-center justify-between">
-                      <BodySM className="text-subtle">By {post.author}</BodySM>
-                      <button className="text-accent font-medium">
-                        Read More →
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </div>
-      </PageSection>
-
-      {/* Categories Section */}
-      <PageSection tone="muted" padding="xl">
-        <div className="max-w-4xl mx-auto text-center">
-          <ScrollFadeIn>
-            <H2 className="mb-6">Browse by Category</H2>
-          </ScrollFadeIn>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              'Spiritual Growth',
-              'Prayer',
-              'Relationships',
-              'Family',
-              'Leadership',
-              'Service',
-              'Faith',
-              'Bible Study',
-            ].map((category, index) => (
-              <ScrollFadeIn key={index} delay={index * 0.03}>
-                <button className="page-card p-4 w-full">
-                  <BodySM className="font-medium text-muted">{category}</BodySM>
-                </button>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </div>
-      </PageSection>
-    </div>
-  );
+export const metadata: Metadata = {
+  title: 'Blog & Devotionals',
+  description:
+    'Insights, devotionals, and articles from The Wisdom Church. Coming soon — watch our messages on YouTube in the meantime.',
+  alternates: { canonical: '/resources/blogs' },
 };
 
-export default BlogPage;
+export default function BlogPage() {
+  return (
+    <main className="min-h-screen bg-[var(--app-dark)] text-white">
+      <PageHero
+        eyebrow="Blog & Devotionals"
+        title="Insights, reflections, and devotionals from the church."
+        subtitle="Written content to encourage, teach, and equip you between Sundays."
+      />
+
+      <Section
+        padding="lg"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(201,150,26,0.07),transparent_40%)]" />
+
+        <Container size="xl" className="relative z-10">
+          <ScrollFadeIn className="mx-auto max-w-2xl text-center">
+            {/* Gold rule */}
+            <div className="mx-auto mb-8 h-px w-14 bg-[var(--app-primary)]" />
+
+            <Eyebrow className="text-[var(--app-primary)]">Coming soon</Eyebrow>
+
+            <H2 className="mt-4 text-[var(--type-display-sm)] font-headline font-normal text-white">
+              We are preparing devotionals
+              <br className="hidden sm:block" /> and articles for you.
+            </H2>
+
+            <BodySM className="mx-auto mt-5 max-w-lg text-white/70 leading-[1.9]">
+              Our team is working on written content — devotionals, sermon
+              notes, and reflections — that will live here. Check back soon.
+            </BodySM>
+
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <a
+                href="https://www.youtube.com/@wisdomchurchhq"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:brightness-105 active:scale-[0.98]"
+              >
+                <Play className="h-3.5 w-3.5 fill-[#0d0a06]" />
+                Watch our messages
+              </a>
+
+              <Link
+                href="/resources/sermons"
+                className="inline-flex h-11 items-center gap-2 border border-white/15 bg-transparent px-7 font-ui text-[0.78rem] font-semibold text-white/65 transition hover:border-white/30 hover:text-white"
+              >
+                Browse sermons
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </ScrollFadeIn>
+
+          {/* Notify me form */}
+          <ScrollFadeIn delay={0.1}>
+            <div className="mx-auto mt-16 max-w-xl border border-white/8 bg-white/[0.025] p-8 text-center">
+              <p className="font-ui text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                Get notified
+              </p>
+              <p className="mt-2 font-ui text-[0.88rem] text-white/70">
+                Be the first to know when devotionals and articles go live. Drop
+                your email below.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <BlogSubscribeForm />
+              </div>
+            </div>
+          </ScrollFadeIn>
+
+          {/* WhatsApp update strip */}
+          <ScrollFadeIn delay={0.15}>
+            <div className="mx-auto mt-5 max-w-xl border border-white/8 bg-white/[0.025] p-6 text-center">
+              <p className="font-ui text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                Or join our community
+              </p>
+              <p className="mt-2 font-ui text-[0.88rem] text-white/65">
+                Get devotionals, sermon notes, and church updates directly via
+                WhatsApp.
+              </p>
+              <a
+                href="https://wa.me/2347069995333"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex h-10 items-center gap-2 border border-[#25D366]/25 bg-[#25D366]/10 px-5 font-ui text-[0.75rem] font-bold text-[#25D366] transition hover:bg-[#25D366]/18"
+              >
+                Join WhatsApp community
+              </a>
+            </div>
+          </ScrollFadeIn>
+        </Container>
+      </Section>
+    </main>
+  );
+}

@@ -51,6 +51,7 @@ export interface FbqAdvancedMatchingData {
   client_user_agent?: string;
   fbc?: string;
   fbp?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -60,19 +61,23 @@ export interface FbqEventParams {
   content_name?: string;
   content_type?: string;
   content_ids?: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   contents?: any[];
   num_items?: number;
   order_id?: string;
   predicted_ltv?: number;
   search_string?: string;
   status?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
 export interface FbqInterface {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (command: 'init', pixelId: string, config?: any): void;
   (command: 'track', eventName: FbqEventName, params?: FbqEventParams): void;
   (command: 'trackCustom', eventName: string, params?: FbqEventParams): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (command: 'set', key: string, value: any): void;
   (command: 'consent', consentState: 'grant' | 'revoke', purpose: string): void;
   (
@@ -87,6 +92,7 @@ export interface FbqInterface {
 declare global {
   interface Window {
     fbq?: FbqInterface;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     _fbq?: any;
   }
 }
@@ -110,7 +116,7 @@ interface LoadState {
 // ----------------------------------------------------------------------
 // Meta Pixel Loader with state management and consent support
 // ----------------------------------------------------------------------
-let loadState: LoadState = { loaded: false, loading: false };
+const loadState: LoadState = { loaded: false, loading: false };
 let pendingLoads: Array<(value: void) => void> = [];
 
 export async function loadMetaPixel(config: MetaPixelConfig): Promise<void> {
@@ -167,6 +173,7 @@ export async function loadMetaPixel(config: MetaPixelConfig): Promise<void> {
 function initializeMetaPixel(config: MetaPixelConfig): void {
   if (!window.fbq) return;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const initConfig: any = {
     autoConfig: config.autoConfig !== false,
     debug: config.debug || false,
@@ -196,18 +203,17 @@ function initializeMetaPixel(config: MetaPixelConfig): void {
     // But you may want to set LDU=1 initially until consent is given
     // We'll handle that via updateConsent method.
   }
-
-  if (config.debug) {
-    console.log('[MetaPixel] Initialized', config.pixelId, initConfig);
-  }
 }
 
 // ----------------------------------------------------------------------
 // Meta Pixel Provider Interface for AnalyticsCore
 // ----------------------------------------------------------------------
 export interface MetaPixelProviderInstance {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pageView: (params: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trackEvent: (eventName: string, params: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   identify: (user: any) => void;
   updateConsent: (consent: { marketing: boolean }) => void;
   setAdvancedMatchingData: (data: FbqAdvancedMatchingData) => void;
@@ -247,6 +253,7 @@ export function createMetaPixelProvider(
   };
 
   return {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pageView: (params: any) => {
       ensureInitialized()
         .then(() => {
@@ -263,6 +270,7 @@ export function createMetaPixelProvider(
         .catch(console.warn);
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     trackEvent: (eventName: string, params: any) => {
       ensureInitialized()
         .then(() => {
@@ -303,6 +311,7 @@ export function createMetaPixelProvider(
         .catch(console.warn);
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     identify: (user: any) => {
       ensureInitialized()
         .then(() => {
@@ -368,11 +377,13 @@ export function getMetaPixelProvider(
 
 // For backward compatibility with existing AnalyticsProvider code
 export const metaPixelProvider = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pageView: (params: any) => {
     if (window.fbq) {
       window.fbq('track', 'PageView', params);
     }
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trackEvent: (eventName: string, params: any) => {
     if (window.fbq) {
       // Auto-detect standard vs custom
@@ -403,6 +414,7 @@ export const metaPixelProvider = {
       }
     }
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   identify: (user: any) => {
     if (window.fbq && user.user_id) {
       window.fbq('set', 'external_id', user.user_id);

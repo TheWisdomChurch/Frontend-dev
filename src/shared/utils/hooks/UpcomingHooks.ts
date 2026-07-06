@@ -352,7 +352,6 @@ export const useUpcomingEvents = () => {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Registration data:', { ...formData, eventType });
 
       toast.update(toastId, {
         render: `🎉 Thank you for registering for the ${eventType === 'conference' ? 'Wisdom Power Conference 2026' : '7 Nights of Lifting'}! We will contact you with more details.`,
@@ -403,7 +402,6 @@ export const useUpcomingEvents = () => {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Reminder data:', reminderFormData);
 
       toast.update(toastId, {
         render: `🔔 Reminder set! You will receive ${reminderFormData.frequency} notifications about the ${reminderFormData.eventType === 'conference' ? 'Wisdom Power Conference 2026' : '7 Nights of Lifting'}.`,

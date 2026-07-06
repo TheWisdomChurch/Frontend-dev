@@ -54,6 +54,7 @@ export interface AnalyticsEvent {
     platform: string;
     language: string;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   eventData?: Record<string, any>;
   engagement?: {
     timeOnPage?: number;
@@ -72,6 +73,7 @@ export interface UserProfile {
   totalEngagementTime: number;
   preferences: ConsentPreferences;
   segments?: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customProperties?: Record<string, any>;
 }
 
@@ -111,6 +113,7 @@ export interface AnalyticsConfig {
   enableAutoTracking: boolean;
   enableErrorTracking: boolean;
   enablePerformanceTracking: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customProperties?: Record<string, any>;
 }
 

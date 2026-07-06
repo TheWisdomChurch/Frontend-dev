@@ -6,31 +6,38 @@
 // ----------------------------------------------------------------------
 // Google Analytics 4 official command types (partial)
 export interface GtagInterface {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (command: 'config', targetId: string, config?: Record<string, any>): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (command: 'set', config: Record<string, any>): void;
   (
     command: 'event',
     eventName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     eventParams?: Record<string, any>
   ): void;
   (command: 'js', date: Date): void;
   (
     command: 'consent',
     consentMode: 'default' | 'update',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     consentParams: Record<string, any>
   ): void;
   (
     command: 'get',
     targetId: string,
     fieldName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     callback: (field: any) => void
   ): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (command: string, ...args: any[]): void;
 }
 
 declare global {
   interface Window {
     gtag?: GtagInterface;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dataLayer?: any[];
   }
 }
@@ -55,7 +62,7 @@ interface LoadState {
 // ----------------------------------------------------------------------
 // GA4 Loader with retry and state management
 // ----------------------------------------------------------------------
-let loadState: LoadState = { loaded: false, loading: false };
+const loadState: LoadState = { loaded: false, loading: false };
 let pendingLoads: Array<(value: void) => void> = [];
 
 export async function loadGA4(config: GA4Config): Promise<void> {
@@ -106,6 +113,7 @@ function initializeGA4(config: GA4Config): void {
   if (!window.gtag) {
     // Initialize dataLayer and gtag function
     window.dataLayer = window.dataLayer || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     window.gtag = function (...args: any[]) {
       window.dataLayer!.push(args);
     };
@@ -125,6 +133,7 @@ function initializeGA4(config: GA4Config): void {
   window.gtag('js', new Date());
 
   // Configure GA4 with advanced options
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const gtagConfig: Record<string, any> = {
     send_page_view: false, // we manually send page views
     debug_mode: config.debugMode || false,
@@ -151,8 +160,11 @@ function initializeGA4(config: GA4Config): void {
 // GA4 Provider Interface for AnalyticsCore
 // ----------------------------------------------------------------------
 export interface GA4ProviderInstance {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pageView: (params: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trackEvent: (eventName: string, params: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   identify: (user: any) => void;
   updateConsent: (consent: { analytics: boolean; marketing: boolean }) => void;
 }
@@ -171,6 +183,7 @@ export function createGA4Provider(
   };
 
   return {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pageView: (params: any) => {
       ensureInitialized()
         .then(() => {
@@ -187,6 +200,7 @@ export function createGA4Provider(
         .catch(console.warn);
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     trackEvent: (eventName: string, params: any) => {
       ensureInitialized()
         .then(() => {
@@ -197,6 +211,7 @@ export function createGA4Provider(
         .catch(console.warn);
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     identify: (user: any) => {
       ensureInitialized()
         .then(() => {
@@ -241,6 +256,7 @@ export function getGA4Provider(
 
 // For backward compatibility with existing AnalyticsProvider code
 export const ga4Provider = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pageView: (params: any) => {
     if (window.gtag) {
       window.gtag('event', 'page_view', {
@@ -250,11 +266,13 @@ export const ga4Provider = {
       });
     }
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trackEvent: (eventName: string, params: any) => {
     if (window.gtag) {
       window.gtag('event', eventName, params);
     }
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   identify: (user: any) => {
     if (window.gtag && user.user_id) {
       window.gtag('set', { user_id: user.user_id });

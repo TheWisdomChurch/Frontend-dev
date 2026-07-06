@@ -40,6 +40,7 @@ export type EventAction =
 
 export interface EventProperties {
   // Common properties
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 
   // Page context
@@ -159,6 +160,7 @@ export class EventFactory {
    */
   static createFormSubmitEvent(
     formName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fields?: Record<string, any>,
     properties?: Partial<EventProperties>
   ): Omit<AnalyticsEvent, 'id' | 'timestamp' | 'context'> {

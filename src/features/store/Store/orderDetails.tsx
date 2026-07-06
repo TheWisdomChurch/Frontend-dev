@@ -1,18 +1,11 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAppSelector } from '@/shared/utils/hooks/redux';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+import { FlexboxLayout } from '@/shared/layout';
 import { H2, H3, H4, BaseText, Caption } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { storeClient } from '@/lib/api/storeClient';
 import {
   CheckCircle,
@@ -32,7 +25,6 @@ import {
   Loader2,
 } from 'lucide-react';
 
-// Order status types
 type OrderStatus =
   | 'pending'
   | 'processing'
@@ -79,12 +71,12 @@ interface OrderDetails {
 const OrderConfirmation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { colorScheme, isDark } = useTheme();
   const cartItems = useAppSelector(state => state.cart.items);
   const cartTotal = useAppSelector(state => state.cart.total);
 
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -92,20 +84,6 @@ const OrderConfirmation = () => {
   const orderId = searchParams.get('orderId');
   const amount = searchParams.get('amount');
 
-  const isDarkMode = isDark;
-
-  // Theme-based styles
-  const cardBackground = isDarkMode ? colorScheme.card : colorScheme.surface;
-  const textColor = isDarkMode ? colorScheme.text : colorScheme.heading;
-  const labelColor = isDarkMode
-    ? colorScheme.textSecondary
-    : colorScheme.textTertiary;
-  const borderColor = isDarkMode ? colorScheme.border : colorScheme.border;
-  const successColor = colorScheme.success;
-  const warningColor = colorScheme.warning;
-  const infoColor = colorScheme.info;
-
-  // Mock order status timeline
   const statusSteps = [
     { id: 'pending', label: 'Order Placed', icon: Clock, active: true },
     { id: 'processing', label: 'Processing', icon: Package, active: false },
@@ -113,7 +91,6 @@ const OrderConfirmation = () => {
     { id: 'delivered', label: 'Delivered', icon: CheckCircle, active: false },
   ];
 
-  // Fetch order details (backend-ready)
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
@@ -146,6 +123,7 @@ const OrderConfirmation = () => {
         setOrderDetails(mappedOrder);
       } catch (error) {
         console.error('Error fetching order details:', error);
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -154,29 +132,27 @@ const OrderConfirmation = () => {
     fetchOrderDetails();
   }, [orderId, amount, cartItems, cartTotal]);
 
-  // Payment method display config
   const paymentMethodConfig = {
     transfer: {
       icon: Building,
       label: 'Bank Transfer',
-      color: infoColor,
+      color: '#3b82f6',
       description: 'Transfer to our bank account',
     },
     online: {
       icon: CreditCard,
       label: 'Online Payment',
-      color: successColor,
+      color: '#22c55e',
       description: 'Paid with card/digital wallet',
     },
     delivery: {
       icon: Truck,
       label: 'Pay on Delivery',
-      color: warningColor,
+      color: '#eab308',
       description: 'Pay when order arrives',
     },
   };
 
-  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -189,7 +165,6 @@ const OrderConfirmation = () => {
     });
   };
 
-  // Handle print
   const handlePrint = () => {
     setIsPrinting(true);
     setTimeout(() => {
@@ -198,18 +173,16 @@ const OrderConfirmation = () => {
     }, 500);
   };
 
-  // Handle share
   const handleShare = async () => {
     setIsSharing(true);
     try {
       if (navigator.share) {
         await navigator.share({
           title: `Order Confirmation - ${orderDetails?.orderId}`,
-          text: `I just placed an order at Wisdom House! Order ID: ${orderDetails?.orderId}`,
+          text: `I just placed an order at Wisdom Church! Order ID: ${orderDetails?.orderId}`,
           url: window.location.href,
         });
       } else {
-        // Fallback: Copy to clipboard
         await navigator.clipboard.writeText(window.location.href);
         alert('Order link copied to clipboard!');
       }
@@ -220,34 +193,32 @@ const OrderConfirmation = () => {
     }
   };
 
-  // Handle download receipt
   const handleDownloadReceipt = () => {
     setIsDownloading(true);
-    // Simulate download
     setTimeout(() => {
       const receiptContent = `
-        WISDOM HOUSE STORE
+        WISDOM CHURCH STORE
         Order Receipt
         =====================
         Order ID: ${orderDetails?.orderId}
         Date: ${orderDetails ? formatDate(orderDetails.orderDate) : ''}
-        
+
         Customer Information:
         ${orderDetails?.customer.firstName} ${orderDetails?.customer.lastName}
         ${orderDetails?.customer.email}
         ${orderDetails?.customer.phone}
         ${orderDetails?.customer.address ? `${orderDetails.customer.address}, ${orderDetails.customer.city}, ${orderDetails.customer.state} ${orderDetails.customer.zipCode}` : ''}
-        
+
         Payment Method: ${orderDetails?.paymentMethod.toUpperCase()}
         Payment Status: ${orderDetails?.paymentStatus.toUpperCase()}
-        
+
         Items:
         ${orderDetails?.items.map(item => `${item.name} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - NGN ${(parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity).toLocaleString()}`).join('\n')}
-        
+
         Subtotal: NGN ${orderDetails?.subtotal.toLocaleString()}
         ${orderDetails?.deliveryFee ? `Delivery Fee: NGN ${orderDetails.deliveryFee.toLocaleString()}` : ''}
         Total: NGN ${orderDetails?.total.toLocaleString()}
-        
+
         Thank you for your order!
         =====================
       `;
@@ -269,11 +240,26 @@ const OrderConfirmation = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <FlexboxLayout direction="column" align="center" gap="lg">
-          <Loader2
-            className="w-12 h-12 animate-spin"
-            style={{ color: colorScheme.primary }}
-          />
-          <H3 style={{ color: textColor }}>Loading Order Details...</H3>
+          <Loader2 className="w-12 h-12 animate-spin text-[var(--app-primary)]" />
+          <H3 className="text-white">Loading Order Details...</H3>
+        </FlexboxLayout>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <FlexboxLayout direction="column" align="center" gap="lg">
+          <AlertCircle className="w-16 h-16 text-red-500" />
+          <H3 className="text-white">Couldn&apos;t load your order</H3>
+          <Caption className="text-white/55">
+            Something went wrong while fetching your order details. Please try
+            again.
+          </Caption>
+          <Button variant="primary" onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
         </FlexboxLayout>
       </div>
     );
@@ -283,22 +269,13 @@ const OrderConfirmation = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <FlexboxLayout direction="column" align="center" gap="lg">
-          <AlertCircle
-            className="w-16 h-16"
-            style={{ color: colorScheme.error }}
-          />
-          <H3 style={{ color: textColor }}>Order Not Found</H3>
-          <Caption style={{ color: labelColor }}>
-            The order you're looking for doesn't exist or has been removed.
+          <AlertCircle className="w-16 h-16 text-red-500" />
+          <H3 className="text-white">Order Not Found</H3>
+          <Caption className="text-white/55">
+            The order you&apos;re looking for doesn&apos;t exist or has been
+            removed.
           </Caption>
-          <Button
-            variant="primary"
-            onClick={() => router.push('/')}
-            style={{
-              backgroundColor: colorScheme.primary,
-              color: colorScheme.black,
-            }}
-          >
+          <Button variant="primary" onClick={() => router.push('/')}>
             Return to Home
           </Button>
         </FlexboxLayout>
@@ -330,25 +307,18 @@ const OrderConfirmation = () => {
       <div className="text-center mb-8 print-section">
         <FlexboxLayout direction="column" align="center" gap="sm">
           <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-            <CheckCircle
-              className="w-10 h-10"
-              style={{ color: successColor }}
-            />
+            <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <H2
-            fontFamily="bricolage"
-            style={{ color: successColor }}
-            weight="bold"
-          >
+          <H2 fontFamily="bricolage" className="text-green-500" weight="bold">
             Order Confirmed!
           </H2>
-          <Caption className="text-lg" style={{ color: labelColor }}>
+          <Caption className="text-lg text-white/55">
             Thank you for your purchase
           </Caption>
-          <BaseText weight="semibold" style={{ color: textColor }}>
+          <BaseText weight="semibold" className="text-white">
             Order ID: {orderDetails.orderId}
           </BaseText>
-          <Caption style={{ color: labelColor }}>
+          <Caption className="text-white/55">
             {formatDate(orderDetails.orderDate)}
           </Caption>
         </FlexboxLayout>
@@ -361,10 +331,7 @@ const OrderConfirmation = () => {
           size="sm"
           onClick={handlePrint}
           disabled={isPrinting}
-          style={{
-            borderColor: borderColor,
-            color: textColor,
-          }}
+          className="border-white/[0.12] text-white"
         >
           <FlexboxLayout align="center" gap="xs">
             {isPrinting ? (
@@ -381,10 +348,7 @@ const OrderConfirmation = () => {
           size="sm"
           onClick={handleShare}
           disabled={isSharing}
-          style={{
-            borderColor: borderColor,
-            color: textColor,
-          }}
+          className="border-white/[0.12] text-white"
         >
           <FlexboxLayout align="center" gap="xs">
             {isSharing ? (
@@ -401,10 +365,7 @@ const OrderConfirmation = () => {
           size="sm"
           onClick={handleDownloadReceipt}
           disabled={isDownloading}
-          style={{
-            borderColor: borderColor,
-            color: textColor,
-          }}
+          className="border-white/[0.12] text-white"
         >
           <FlexboxLayout align="center" gap="xs">
             {isDownloading ? (
@@ -418,23 +379,11 @@ const OrderConfirmation = () => {
       </div>
 
       {/* Status Timeline */}
-      <div
-        className="rounded-2xl p-6 mb-6 shadow-lg border print-section"
-        style={{
-          backgroundColor: cardBackground,
-          borderColor: borderColor,
-        }}
-      >
-        <H3 className="text-lg font-bold mb-6" style={{ color: textColor }}>
-          Order Status
-        </H3>
+      <div className="rounded-2xl p-6 mb-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+        <H3 className="text-lg font-bold mb-6 text-white">Order Status</H3>
 
         <div className="relative">
-          {/* Timeline line */}
-          <div
-            className="absolute left-8 top-10 bottom-10 w-0.5"
-            style={{ backgroundColor: borderColor }}
-          />
+          <div className="absolute left-8 top-10 bottom-10 w-0.5 bg-white/[0.12]" />
 
           <div className="space-y-8">
             {statusSteps.map((step, index) => {
@@ -443,42 +392,27 @@ const OrderConfirmation = () => {
               const isCompleted =
                 index <
                 statusSteps.findIndex(s => s.id === orderDetails.status);
+              const isActive = isCompleted || isCurrentStep;
 
               return (
                 <FlexboxLayout key={step.id} align="center" gap="md">
                   <div className="relative z-10">
                     <div
-                      className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                      className={`w-16 h-16 rounded-full flex items-center justify-center border-2 ${
                         isCurrentStep ? 'animate-pulse' : ''
+                      } ${
+                        isActive
+                          ? 'bg-green-500/20 border-green-500'
+                          : 'bg-white/[0.11] border-white/[0.12]'
                       }`}
-                      style={{
-                        backgroundColor:
-                          isCompleted || isCurrentStep
-                            ? `${successColor}20`
-                            : `${labelColor}20`,
-                        border: `2px solid ${
-                          isCompleted || isCurrentStep
-                            ? successColor
-                            : borderColor
-                        }`,
-                      }}
                     >
                       <Icon
-                        className="w-6 h-6"
-                        style={{
-                          color:
-                            isCompleted || isCurrentStep
-                              ? successColor
-                              : labelColor,
-                        }}
+                        className={`w-6 h-6 ${isActive ? 'text-green-500' : 'text-white/55'}`}
                       />
                     </div>
                     {isCompleted && (
                       <div className="absolute -top-1 -right-1">
-                        <CheckCircle
-                          className="w-6 h-6"
-                          style={{ color: successColor }}
-                        />
+                        <CheckCircle className="w-6 h-6 text-green-500" />
                       </div>
                     )}
                   </div>
@@ -486,15 +420,11 @@ const OrderConfirmation = () => {
                   <div className="flex-1">
                     <BaseText
                       weight="bold"
-                      className="text-base mb-1"
-                      style={{
-                        color:
-                          isCompleted || isCurrentStep ? textColor : labelColor,
-                      }}
+                      className={`text-base mb-1 ${isActive ? 'text-white' : 'text-white/55'}`}
                     >
                       {step.label}
                     </BaseText>
-                    <Caption style={{ color: labelColor }}>
+                    <Caption className="text-white/55">
                       {isCurrentStep
                         ? 'Your order is currently at this stage'
                         : isCompleted
@@ -513,64 +443,33 @@ const OrderConfirmation = () => {
         {/* Left Column */}
         <div className="space-y-6">
           {/* Order Summary */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-lg font-bold mb-6 flex items-center gap-2"
-              style={{ color: textColor }}
-            >
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
               <Package className="w-5 h-5" />
               Order Summary
             </H3>
 
             <div className="space-y-4">
               {orderDetails.items.map((item, index) => (
-                <div
-                  key={index}
-                  className="pb-4 border-b"
-                  style={{ borderColor: `${borderColor}40` }}
-                >
+                <div key={index} className="pb-4 border-b border-white/[0.07]">
                   <FlexboxLayout justify="between" align="start">
                     <div className="flex-1">
-                      <BaseText weight="semibold" style={{ color: textColor }}>
+                      <BaseText weight="semibold" className="text-white">
                         {item.name}
                       </BaseText>
                       <div className="flex flex-wrap gap-2 mt-2">
-                        <Caption
-                          className="px-2 py-1 rounded-full text-xs"
-                          style={{
-                            backgroundColor: `${infoColor}15`,
-                            color: infoColor,
-                          }}
-                        >
+                        <Caption className="px-2 py-1 rounded-full text-xs bg-blue-500/15 text-blue-500">
                           {item.selectedSize}
                         </Caption>
-                        <Caption
-                          className="px-2 py-1 rounded-full text-xs"
-                          style={{
-                            backgroundColor: `${warningColor}15`,
-                            color: warningColor,
-                          }}
-                        >
+                        <Caption className="px-2 py-1 rounded-full text-xs bg-yellow-500/15 text-yellow-500">
                           {item.selectedColor}
                         </Caption>
-                        <Caption
-                          className="px-2 py-1 rounded-full text-xs"
-                          style={{
-                            backgroundColor: `${borderColor}30`,
-                            color: labelColor,
-                          }}
-                        >
+                        <Caption className="px-2 py-1 rounded-full text-xs bg-white/[0.08] text-white/55">
                           Qty: {item.quantity}
                         </Caption>
                       </div>
                     </div>
-                    <BaseText weight="bold" style={{ color: textColor }}>
+                    <BaseText weight="bold" className="text-white">
                       NGN{' '}
                       {(
                         parseFloat(item.price.replace(/[^\d.]/g, '')) *
@@ -583,7 +482,7 @@ const OrderConfirmation = () => {
 
               <div className="space-y-3 pt-4">
                 <FlexboxLayout justify="between">
-                  <Caption style={{ color: labelColor }}>Subtotal</Caption>
+                  <Caption className="text-white/55">Subtotal</Caption>
                   <BaseText weight="semibold">
                     NGN {orderDetails.subtotal.toLocaleString()}
                   </BaseText>
@@ -591,19 +490,14 @@ const OrderConfirmation = () => {
 
                 {orderDetails.deliveryFee > 0 && (
                   <FlexboxLayout justify="between">
-                    <Caption style={{ color: labelColor }}>
-                      Delivery Fee
-                    </Caption>
+                    <Caption className="text-white/55">Delivery Fee</Caption>
                     <BaseText weight="semibold">
                       NGN {orderDetails.deliveryFee.toLocaleString()}
                     </BaseText>
                   </FlexboxLayout>
                 )}
 
-                <div
-                  className="pt-4 border-t"
-                  style={{ borderColor: borderColor }}
-                >
+                <div className="pt-4 border-t border-white/[0.12]">
                   <FlexboxLayout justify="between">
                     <BaseText weight="bold" className="text-lg">
                       Total Amount
@@ -611,16 +505,12 @@ const OrderConfirmation = () => {
                     <div className="text-right">
                       <BaseText
                         weight="bold"
-                        className="text-2xl"
-                        style={{ color: colorScheme.primary }}
+                        className="text-2xl text-[var(--app-primary)]"
                       >
                         NGN {orderDetails.total.toLocaleString()}
                       </BaseText>
                       {orderDetails.deliveryFee > 0 && (
-                        <Caption
-                          className="text-sm mt-1"
-                          style={{ color: labelColor }}
-                        >
+                        <Caption className="text-sm mt-1 text-white/55">
                           Includes NGN{' '}
                           {orderDetails.deliveryFee.toLocaleString()} delivery
                           fee
@@ -634,17 +524,8 @@ const OrderConfirmation = () => {
           </div>
 
           {/* Payment Information */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-lg font-bold mb-6 flex items-center gap-2"
-              style={{ color: textColor }}
-            >
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
               <CreditCard className="w-5 h-5" />
               Payment Information
             </H3>
@@ -652,22 +533,25 @@ const OrderConfirmation = () => {
             <div className="space-y-4">
               <div
                 className="flex items-center gap-3 p-3 rounded-xl"
+                // eslint-disable-next-line no-restricted-syntax
                 style={{ backgroundColor: `${paymentConfig.color}10` }}
               >
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center"
+                  // eslint-disable-next-line no-restricted-syntax
                   style={{ backgroundColor: `${paymentConfig.color}20` }}
                 >
                   <paymentConfig.icon
                     className="w-5 h-5"
+                    // eslint-disable-next-line no-restricted-syntax
                     style={{ color: paymentConfig.color }}
                   />
                 </div>
                 <div>
-                  <BaseText weight="bold" style={{ color: textColor }}>
+                  <BaseText weight="bold" className="text-white">
                     {paymentConfig.label}
                   </BaseText>
-                  <Caption style={{ color: labelColor }}>
+                  <Caption className="text-white/55">
                     {paymentConfig.description}
                   </Caption>
                 </div>
@@ -675,10 +559,7 @@ const OrderConfirmation = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Caption
-                    className="text-sm mb-1"
-                    style={{ color: labelColor }}
-                  >
+                  <Caption className="text-sm mb-1 text-white/55">
                     Payment Status
                   </Caption>
                   <div className="flex items-center gap-2">
@@ -693,15 +574,13 @@ const OrderConfirmation = () => {
                     />
                     <BaseText
                       weight="semibold"
-                      className="capitalize"
-                      style={{
-                        color:
-                          orderDetails.paymentStatus === 'completed'
-                            ? successColor
-                            : orderDetails.paymentStatus === 'processing'
-                              ? warningColor
-                              : labelColor,
-                      }}
+                      className={`capitalize ${
+                        orderDetails.paymentStatus === 'completed'
+                          ? 'text-green-500'
+                          : orderDetails.paymentStatus === 'processing'
+                            ? 'text-yellow-500'
+                            : 'text-white/55'
+                      }`}
                     >
                       {orderDetails.paymentStatus}
                     </BaseText>
@@ -709,10 +588,7 @@ const OrderConfirmation = () => {
                 </div>
 
                 <div>
-                  <Caption
-                    className="text-sm mb-1"
-                    style={{ color: labelColor }}
-                  >
+                  <Caption className="text-sm mb-1 text-white/55">
                     Order Status
                   </Caption>
                   <div className="flex items-center gap-2">
@@ -727,15 +603,13 @@ const OrderConfirmation = () => {
                     />
                     <BaseText
                       weight="semibold"
-                      className="capitalize"
-                      style={{
-                        color:
-                          orderDetails.status === 'delivered'
-                            ? successColor
-                            : orderDetails.status === 'shipped'
-                              ? infoColor
-                              : warningColor,
-                      }}
+                      className={`capitalize ${
+                        orderDetails.status === 'delivered'
+                          ? 'text-green-500'
+                          : orderDetails.status === 'shipped'
+                            ? 'text-blue-500'
+                            : 'text-yellow-500'
+                      }`}
                     >
                       {orderDetails.status}
                     </BaseText>
@@ -746,25 +620,14 @@ const OrderConfirmation = () => {
               {/* Bank Transfer Details */}
               {orderDetails.paymentMethod === 'transfer' &&
                 orderDetails.bankDetails && (
-                  <div
-                    className="p-4 rounded-xl mt-4"
-                    style={{
-                      backgroundColor: isDarkMode
-                        ? colorScheme.opacity.info10
-                        : colorScheme.opacity.info20,
-                      border: `1px solid ${infoColor}40`,
-                    }}
-                  >
-                    <H4
-                      className="text-sm font-bold mb-3 flex items-center gap-2"
-                      style={{ color: infoColor }}
-                    >
+                  <div className="p-4 rounded-xl mt-4 bg-blue-500/[0.06] border border-blue-500/25">
+                    <H4 className="text-sm font-bold mb-3 flex items-center gap-2 text-blue-500">
                       <Building className="w-4 h-4" />
                       Your Bank Transfer Details
                     </H4>
                     <div className="space-y-2">
                       <FlexboxLayout justify="between">
-                        <Caption style={{ color: labelColor }}>
+                        <Caption className="text-white/55">
                           Account Name:
                         </Caption>
                         <BaseText weight="semibold">
@@ -772,9 +635,7 @@ const OrderConfirmation = () => {
                         </BaseText>
                       </FlexboxLayout>
                       <FlexboxLayout justify="between">
-                        <Caption style={{ color: labelColor }}>
-                          Bank Name:
-                        </Caption>
+                        <Caption className="text-white/55">Bank Name:</Caption>
                         <BaseText weight="semibold">
                           {orderDetails.bankDetails.customerBankName}
                         </BaseText>
@@ -789,82 +650,57 @@ const OrderConfirmation = () => {
         {/* Right Column */}
         <div className="space-y-6">
           {/* Customer Information */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3
-              className="text-lg font-bold mb-6 flex items-center gap-2"
-              style={{ color: textColor }}
-            >
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
               <User className="w-5 h-5" />
               Customer Information
             </H3>
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: `${colorScheme.primary}15` }}
-                >
-                  <User
-                    className="w-5 h-5"
-                    style={{ color: colorScheme.primary }}
-                  />
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--app-primary)]/[0.15]">
+                  <User className="w-5 h-5 text-[var(--app-primary)]" />
                 </div>
                 <div>
-                  <BaseText weight="bold" style={{ color: textColor }}>
+                  <BaseText weight="bold" className="text-white">
                     {orderDetails.customer.firstName}{' '}
                     {orderDetails.customer.lastName}
                   </BaseText>
-                  <Caption style={{ color: labelColor }}>
-                    Primary Contact
-                  </Caption>
+                  <Caption className="text-white/55">Primary Contact</Caption>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <FlexboxLayout align="center" gap="sm">
-                  <Mail className="w-4 h-4" style={{ color: labelColor }} />
-                  <Caption style={{ color: textColor }}>
+                  <Mail className="w-4 h-4 text-white/55" />
+                  <Caption className="text-white">
                     {orderDetails.customer.email}
                   </Caption>
                 </FlexboxLayout>
 
                 <FlexboxLayout align="center" gap="sm">
-                  <Phone className="w-4 h-4" style={{ color: labelColor }} />
-                  <Caption style={{ color: textColor }}>
+                  <Phone className="w-4 h-4 text-white/55" />
+                  <Caption className="text-white">
                     {orderDetails.customer.phone}
                   </Caption>
                 </FlexboxLayout>
 
-                {/* Shipping Address */}
                 {orderDetails.customer.address && (
-                  <div
-                    className="pt-3 border-t"
-                    style={{ borderColor: `${borderColor}40` }}
-                  >
+                  <div className="pt-3 border-t border-white/[0.07]">
                     <FlexboxLayout align="start" gap="sm" className="mb-2">
-                      <MapPin
-                        className="w-4 h-4 mt-0.5"
-                        style={{ color: labelColor }}
-                      />
+                      <MapPin className="w-4 h-4 mt-0.5 text-white/55" />
                       <div>
                         <Caption
                           weight="semibold"
-                          className="text-sm mb-1"
-                          style={{ color: textColor }}
+                          className="text-sm mb-1 text-white"
                         >
                           Shipping Address
                         </Caption>
                         <div className="space-y-1">
-                          <Caption style={{ color: labelColor }}>
+                          <Caption className="text-white/55">
                             {orderDetails.customer.address}
                           </Caption>
-                          <Caption style={{ color: labelColor }}>
+                          <Caption className="text-white/55">
                             {orderDetails.customer.city},{' '}
                             {orderDetails.customer.state}{' '}
                             {orderDetails.customer.zipCode}
@@ -879,15 +715,9 @@ const OrderConfirmation = () => {
           </div>
 
           {/* Next Steps */}
-          <div
-            className="rounded-2xl p-6 shadow-lg border print-section"
-            style={{
-              backgroundColor: cardBackground,
-              borderColor: borderColor,
-            }}
-          >
-            <H3 className="text-lg font-bold mb-6" style={{ color: textColor }}>
-              What's Next?
+          <div className="rounded-2xl p-6 shadow-lg border bg-white/[0.05] border-white/[0.12] print-section">
+            <H3 className="text-lg font-bold mb-6 text-white">
+              What&apos;s Next?
             </H3>
 
             <div className="space-y-4">
@@ -899,14 +729,13 @@ const OrderConfirmation = () => {
                   <div>
                     <BaseText
                       weight="semibold"
-                      className="text-sm mb-1"
-                      style={{ color: textColor }}
+                      className="text-sm mb-1 text-white"
                     >
                       Payment Verification
                     </BaseText>
-                    <Caption className="text-xs" style={{ color: labelColor }}>
+                    <Caption className="text-xs text-white/55">
                       Our team will verify your bank transfer within 24 hours.
-                      You'll receive a confirmation email.
+                      You&apos;ll receive a confirmation email.
                     </Caption>
                   </div>
                 </div>
@@ -919,13 +748,12 @@ const OrderConfirmation = () => {
                 <div>
                   <BaseText
                     weight="semibold"
-                    className="text-sm mb-1"
-                    style={{ color: textColor }}
+                    className="text-sm mb-1 text-white"
                   >
                     Order Confirmation Email
                   </BaseText>
-                  <Caption className="text-xs" style={{ color: labelColor }}>
-                    We've sent a confirmation email to{' '}
+                  <Caption className="text-xs text-white/55">
+                    We&apos;ve sent a confirmation email to{' '}
                     {orderDetails.customer.email} with your order details.
                   </Caption>
                 </div>
@@ -938,13 +766,12 @@ const OrderConfirmation = () => {
                 <div>
                   <BaseText
                     weight="semibold"
-                    className="text-sm mb-1"
-                    style={{ color: textColor }}
+                    className="text-sm mb-1 text-white"
                   >
                     Processing Time
                   </BaseText>
-                  <Caption className="text-xs" style={{ color: labelColor }}>
-                    Orders are processed within 24-48 hours. You'll receive
+                  <Caption className="text-xs text-white/55">
+                    Orders are processed within 24-48 hours. You&apos;ll receive
                     updates via email and SMS.
                   </Caption>
                 </div>
@@ -957,12 +784,11 @@ const OrderConfirmation = () => {
                 <div>
                   <BaseText
                     weight="semibold"
-                    className="text-sm mb-1"
-                    style={{ color: textColor }}
+                    className="text-sm mb-1 text-white"
                   >
                     Need Help?
                   </BaseText>
-                  <Caption className="text-xs" style={{ color: labelColor }}>
+                  <Caption className="text-xs text-white/55">
                     Contact our support team at +234-XXX-XXXX or email
                     support@wisdomhouse.com
                   </Caption>
@@ -978,10 +804,6 @@ const OrderConfirmation = () => {
               size="lg"
               curvature="full"
               onClick={() => router.push('/')}
-              style={{
-                backgroundColor: colorScheme.primary,
-                color: colorScheme.black,
-              }}
               className="w-full"
             >
               Continue Shopping
@@ -992,11 +814,7 @@ const OrderConfirmation = () => {
               size="lg"
               curvature="full"
               onClick={() => router.push('/orders')}
-              style={{
-                borderColor: borderColor,
-                color: textColor,
-              }}
-              className="w-full"
+              className="w-full border-white/[0.12] text-white"
             >
               View All Orders
             </Button>
@@ -1006,7 +824,7 @@ const OrderConfirmation = () => {
 
       {/* Print Notice */}
       <div className="mt-8 text-center no-print">
-        <Caption style={{ color: labelColor }}>
+        <Caption className="text-white/55">
           Keep this confirmation for your records. You can print this page or
           save it as PDF.
         </Caption>

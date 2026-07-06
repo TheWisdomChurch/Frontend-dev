@@ -8,6 +8,7 @@ type FallbackMotionComponent = React.ForwardRefExoticComponent<
   AnyProps & React.RefAttributes<HTMLElement>
 >;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MotionRecord = Record<string, React.ComponentType<any>>;
 
 type AnimatePresenceProps = {

@@ -15,35 +15,15 @@ const nextConfig: NextConfig = {
 
   output: 'standalone',
 
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
   images: {
-    unoptimized: true,
     remotePatterns: [
+      { protocol: 'https', hostname: 'placehold.co', pathname: '/**' },
+      { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'picsum.photos', pathname: '/**' },
+      { protocol: 'https', hostname: 'wisdomchurchhq.org', pathname: '/**' },
       {
         protocol: 'https',
-        hostname: 'placehold.co',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'wisdomchurchhq.org',
+        hostname: 'api.wisdomchurchhq.org',
         pathname: '/**',
       },
       {
@@ -51,6 +31,7 @@ const nextConfig: NextConfig = {
         hostname: 'www.thewisdomhousechurch.org',
         pathname: '/**',
       },
+      // Cloud storage — add your CDN/S3 hostname here if images are served from one
     ],
     qualities: [60, 70, 80, 85],
     formats: ['image/webp', 'image/avif'],
@@ -101,6 +82,10 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  async redirects() {
+    return [];
+  },
+
   async rewrites() {
     const target = normalizeApiProxyTarget(
       process.env.API_PROXY_TARGET ||
@@ -128,4 +113,5 @@ const withPwaConfig = withPWA({
   disable: !enablePwa,
 });
 
+// @ts-expect-error @types/next-pwa lags behind next's I18NConfig type
 export default withPwaConfig(nextConfig);

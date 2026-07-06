@@ -101,6 +101,7 @@ export const PlayfairItalic = React.forwardRef<HTMLElement, BaseTextProps>(
       {...props}
       weight="regular"
       fontFamily="playfair"
+      // eslint-disable-next-line no-restricted-syntax
       style={{ fontStyle: 'italic', ...style }}
     />
   )

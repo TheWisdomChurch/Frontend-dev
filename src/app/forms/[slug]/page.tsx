@@ -1,11 +1,13 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { H1, H2, H3, H4, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
+import { Button } from '@/shared/utils/buttons';
 import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient from '@/lib/api';
 import type { EventPublic, PublicFormField, PublicFormPayload } from '@/lib';
@@ -43,10 +45,10 @@ const fieldShellClass =
   'rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5';
 
 const fieldBaseClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-[0.95rem] text-white outline-none transition placeholder:text-white/35 focus:border-[#f7de12]/70 focus:bg-black/45 focus:ring-4 focus:ring-[#f7de12]/10';
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-[0.95rem] text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const fieldSelectClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-[#080808] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[#f7de12]/70 focus:ring-4 focus:ring-[#f7de12]/10';
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-dark-2)] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const labelClass =
   'block text-[0.73rem] font-bold uppercase tracking-[0.16em] text-white/60';
@@ -394,6 +396,7 @@ export default function PublicFormPage() {
 
         setAnswers(current => ({ ...defaults, ...current }));
         setFieldErrors({});
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (!mounted) return;
 
@@ -645,6 +648,7 @@ export default function PublicFormPage() {
 
       await apiClient.submitPublicForm(formSlug, { values: payloadValues });
       setSubmitted(true);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err?.message || 'Submission failed. Please try again.');
     } finally {
@@ -667,13 +671,15 @@ export default function PublicFormPage() {
     const Label = () => (
       <span className={labelClass}>
         {field.label}
-        {field.required ? <span className="text-[#f7de12]"> *</span> : null}
+        {field.required ? (
+          <span className="text-[var(--app-primary)]"> *</span>
+        ) : null}
       </span>
     );
 
     const Error = () =>
       errorMessage ? (
-        <p className="text-sm leading-5 text-rose-300">{errorMessage}</p>
+        <BodySM className="text-rose-300">{errorMessage}</BodySM>
       ) : null;
 
     if (field.type === 'textarea') {
@@ -700,9 +706,9 @@ export default function PublicFormPage() {
             />
             <div className="flex flex-wrap items-center justify-between gap-2">
               {typeof maxWords === 'number' ? (
-                <p className="text-xs text-white/45">
+                <Caption className="text-white/45">
                   {wordCount}/{maxWords} words
-                </p>
+                </Caption>
               ) : (
                 <span />
               )}
@@ -719,9 +725,12 @@ export default function PublicFormPage() {
           <label className="space-y-2">
             <Label />
             <select
+              aria-label={field.label}
               className={fieldSelectClass}
               value={typeof value === 'string' ? value : ''}
-              onChange={event => handleChange(field.key, event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                handleChange(field.key, event.target.value)
+              }
             >
               <option value="" disabled>
                 {field.placeholder || 'Select an option'}
@@ -730,7 +739,7 @@ export default function PublicFormPage() {
                 <option
                   key={option.value}
                   value={option.value}
-                  className="bg-[#080808] text-white"
+                  className="bg-[var(--app-dark-2)] text-white"
                 >
                   {option.label}
                 </option>
@@ -749,7 +758,7 @@ export default function PublicFormPage() {
             <legend className={labelClass}>
               {field.label}
               {field.required ? (
-                <span className="text-[#f7de12]"> *</span>
+                <span className="text-[var(--app-primary)]"> *</span>
               ) : null}
             </legend>
 
@@ -768,7 +777,7 @@ export default function PublicFormPage() {
                     onChange={event =>
                       handleChange(field.key, event.target.value)
                     }
-                    className="accent-[#f7de12]"
+                    className="accent-[var(--app-primary)]"
                   />
                   {option.label}
                 </label>
@@ -790,7 +799,7 @@ export default function PublicFormPage() {
             <legend className={labelClass}>
               {field.label}
               {field.required ? (
-                <span className="text-[#f7de12]"> *</span>
+                <span className="text-[var(--app-primary)]"> *</span>
               ) : null}
             </legend>
 
@@ -810,7 +819,7 @@ export default function PublicFormPage() {
                         event.target.checked
                       )
                     }
-                    className="accent-[#f7de12]"
+                    className="accent-[var(--app-primary)]"
                   />
                   {option.label}
                 </label>
@@ -831,12 +840,12 @@ export default function PublicFormPage() {
               type="checkbox"
               checked={Boolean(value)}
               onChange={event => handleChange(field.key, event.target.checked)}
-              className="mt-1 accent-[#f7de12]"
+              className="mt-1 accent-[var(--app-primary)]"
             />
             <span>
               {field.label}
               {field.required ? (
-                <span className="text-[#f7de12]"> *</span>
+                <span className="text-[var(--app-primary)]"> *</span>
               ) : null}
             </span>
           </label>
@@ -864,13 +873,13 @@ export default function PublicFormPage() {
                 handleChange(field.key, event.target.files?.[0] || null)
               }
             />
-            <p className="text-xs leading-5 text-white/45">
+            <Caption className="text-white/45">
               JPEG, PNG, or WebP. Maximum file size is 5MB.
-            </p>
+            </Caption>
             {selectedFile ? (
-              <p className="text-xs leading-5 text-white/65">
+              <Caption className="text-white/65">
                 Selected: {selectedFile.name}
-              </p>
+              </Caption>
             ) : null}
             <Error />
           </label>
@@ -904,7 +913,7 @@ export default function PublicFormPage() {
                   <option
                     key={country.iso}
                     value={country.dial}
-                    className="bg-[#080808] text-white"
+                    className="bg-[var(--app-dark-2)] text-white"
                   >
                     {country.iso} {country.dial}
                   </option>
@@ -925,9 +934,9 @@ export default function PublicFormPage() {
               />
             </div>
 
-            <p className="text-xs leading-5 text-white/45">
+            <Caption className="text-white/45">
               Use your country code and active phone number.
-            </p>
+            </Caption>
             <Error />
           </label>
         </div>
@@ -962,7 +971,11 @@ export default function PublicFormPage() {
               >
                 <option value="">Day</option>
                 {availableDays.map(day => (
-                  <option key={day} value={day} className="bg-[#080808]">
+                  <option
+                    key={day}
+                    value={day}
+                    className="bg-[var(--app-dark-2)]"
+                  >
                     {day}
                   </option>
                 ))}
@@ -983,7 +996,7 @@ export default function PublicFormPage() {
                   <option
                     key={month.value}
                     value={month.value}
-                    className="bg-[#080808]"
+                    className="bg-[var(--app-dark-2)]"
                   >
                     {month.label}
                   </option>
@@ -991,9 +1004,7 @@ export default function PublicFormPage() {
               </select>
             </div>
 
-            <p className="text-xs leading-5 text-white/45">
-              Stored as DD-MM format.
-            </p>
+            <Caption className="text-white/45">Stored as DD-MM format.</Caption>
             <Error />
           </label>
         </div>
@@ -1018,7 +1029,7 @@ export default function PublicFormPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--app-dark)] text-white">
       <Section padding="none" className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-20">
           <Image
@@ -1040,7 +1051,7 @@ export default function PublicFormPage() {
         </div>
 
         <div className="absolute inset-0 -z-10 bg-black/72" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(247,222,18,0.16),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.2),#050505_92%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(201,150,26,0.13),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.2),#050505_92%)]" />
 
         <Container
           size="xl"
@@ -1052,15 +1063,15 @@ export default function PublicFormPage() {
         >
           {showHeroCopy ? (
             <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+              <Eyebrow className="text-[var(--app-primary)]">
                 Public form
-              </p>
-              <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
+              </Eyebrow>
+              <H1 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
                 {presentation.title}
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/72 sm:text-base">
+              </H1>
+              <BodySM className="mt-4 max-w-2xl text-white/72">
                 {presentation.subtitle}
-              </p>
+              </BodySM>
             </div>
           ) : (
             <div className="h-8" aria-hidden />
@@ -1068,8 +1079,11 @@ export default function PublicFormPage() {
         </Container>
       </Section>
 
-      <Section padding="none" className="relative overflow-hidden bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(247,222,18,0.1),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
+      <Section
+        padding="none"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(201,150,26,0.09),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="py-8 sm:py-10 lg:py-14">
@@ -1090,29 +1104,29 @@ export default function PublicFormPage() {
                 <aside className="h-fit rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/25 backdrop-blur-xl xl:sticky xl:top-24">
                   {!showHeroCopy ? (
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                      <Eyebrow className="text-[var(--app-primary)]">
                         Public form
-                      </p>
-                      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-white">
+                      </Eyebrow>
+                      <H2 className="mt-3 text-2xl font-semibold tracking-tight text-white">
                         {form.title}
-                      </h1>
+                      </H2>
                       {form.description ? (
-                        <p className="mt-3 text-sm leading-7 text-white/62">
+                        <BodySM className="mt-3 text-white/62">
                           {form.description}
-                        </p>
+                        </BodySM>
                       ) : null}
                     </div>
                   ) : (
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
+                      <Eyebrow className="text-[var(--app-primary)]">
                         Form details
-                      </p>
-                      <h2 className="mt-3 text-xl font-semibold text-white">
+                      </Eyebrow>
+                      <H3 className="mt-3 text-xl text-white">
                         Complete your response
-                      </h2>
-                      <p className="mt-2 text-sm leading-6 text-white/58">
+                      </H3>
+                      <BodySM className="mt-2 text-white/58">
                         Please provide accurate details before submitting.
-                      </p>
+                      </BodySM>
                     </div>
                   )}
 
@@ -1122,14 +1136,14 @@ export default function PublicFormPage() {
                     </div>
                   ) : null}
 
-                  <div className="mt-5 rounded-2xl border border-[#f7de12]/25 bg-[#f7de12]/10 px-4 py-3">
-                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#f7de12]">
+                  <div className="mt-5 rounded-2xl border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-4 py-3">
+                    <Eyebrow className="text-[var(--app-primary)]">
                       Form overview
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-white/78">
+                    </Eyebrow>
+                    <BodySM className="mt-2 text-white/78">
                       {visibleFields.length} visible field
                       {visibleFields.length === 1 ? '' : 's'} to complete.
-                    </p>
+                    </BodySM>
                   </div>
                 </aside>
 
@@ -1148,13 +1162,16 @@ export default function PublicFormPage() {
                                 key={`${item}-${index}`}
                                 className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
                               >
-                                <p className="text-sm font-semibold text-white">
+                                <BodySM
+                                  weight="semibold"
+                                  className="text-white"
+                                >
                                   {item}
-                                </p>
+                                </BodySM>
                                 {presentation.detailSubtexts[index] ? (
-                                  <p className="mt-2 text-sm leading-6 text-white/58">
+                                  <BodySM className="mt-2 text-white/58">
                                     {presentation.detailSubtexts[index]}
-                                  </p>
+                                  </BodySM>
                                 ) : null}
                               </div>
                             )
@@ -1162,44 +1179,49 @@ export default function PublicFormPage() {
                         </div>
                       ) : null}
 
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       {presentation.sections.map((section: any) => (
                         <section key={section.id || section.title}>
-                          <h3 className="text-base font-semibold text-white">
+                          <H4 className="text-base text-white">
                             {section.title}
-                          </h3>
+                          </H4>
                           {section.subtitle ? (
-                            <p className="mt-1 text-sm leading-6 text-white/60">
+                            <BodySM className="mt-1 text-white/60">
                               {section.subtitle}
-                            </p>
+                            </BodySM>
                           ) : null}
 
                           {Array.isArray(section.items) &&
                           section.items.length > 0 ? (
                             <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                               {section.items.map((item: any, index: number) => (
                                 <div
                                   key={`${section.title}-${item.title}-${index}`}
                                   className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
                                 >
                                   {item.eyebrow ? (
-                                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-[#f7de12]">
+                                    <Eyebrow className="text-[var(--app-primary)]">
                                       {item.eyebrow}
-                                    </p>
+                                    </Eyebrow>
                                   ) : null}
-                                  <p className="mt-1 text-sm font-semibold text-white">
+                                  <BodySM
+                                    weight="semibold"
+                                    className="mt-1 text-white"
+                                  >
                                     {item.title}
-                                  </p>
+                                  </BodySM>
                                   {item.body ? (
-                                    <p className="mt-2 text-sm leading-6 text-white/58">
+                                    <BodySM className="mt-2 text-white/58">
                                       {item.body}
-                                    </p>
+                                    </BodySM>
                                   ) : null}
                                   {item.linkText && item.linkUrl ? (
                                     <a
                                       href={item.linkUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="mt-3 inline-flex text-sm font-bold text-[#f7de12] hover:underline"
+                                      className="mt-3 inline-flex text-sm font-bold text-[var(--app-primary)] hover:underline"
                                     >
                                       {item.linkText}
                                     </a>
@@ -1224,17 +1246,19 @@ export default function PublicFormPage() {
                   ) : null}
 
                   <div className="mt-7 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-                    <button
+                    <Button
                       type="submit"
+                      variant="primary"
+                      curvature="full"
                       disabled={submitting}
-                      className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#f7de12] px-7 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                      className="w-full sm:w-auto"
                     >
                       {submitting ? 'Submitting...' : 'Submit form'}
-                    </button>
+                    </Button>
 
-                    <p className="text-sm leading-6 text-white/50">
+                    <BodySM className="text-white/50">
                       We will follow up using the details you provide.
-                    </p>
+                    </BodySM>
                   </div>
                 </form>
               </div>
@@ -1244,32 +1268,34 @@ export default function PublicFormPage() {
               <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-6 backdrop-blur-sm">
                 <div className="w-full max-w-lg overflow-hidden rounded-[1.5rem] border border-emerald-400/25 bg-[#07140d] shadow-2xl shadow-black/50">
                   <div className="border-b border-emerald-400/15 px-6 py-5">
-                    <p className="text-xl font-semibold text-emerald-100">
+                    <H3 className="text-xl text-emerald-100">
                       {presentation.successTitle}
-                    </p>
+                    </H3>
                     {presentation.successSubtitle ? (
-                      <p className="mt-1 text-sm leading-6 text-emerald-100/70">
+                      <BodySM className="mt-1 text-emerald-100/70">
                         {presentation.successSubtitle}
-                      </p>
+                      </BodySM>
                     ) : null}
                   </div>
 
                   <div className="px-6 py-5">
-                    <p className="text-sm leading-7 text-emerald-100/82">
+                    <BodySM className="text-emerald-100/82">
                       {presentation.successMessage}
-                    </p>
-                    <p className="mt-4 text-sm leading-6 text-emerald-100/65">
+                    </BodySM>
+                    <BodySM className="mt-4 text-emerald-100/65">
                       You can now return to the previous page.
-                    </p>
+                    </BodySM>
 
                     <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                      <button
+                      <Button
                         type="button"
+                        variant="primary"
+                        curvature="full"
                         onClick={() => router.push(returnPath)}
-                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black transition hover:bg-[#ffe93d] sm:w-auto"
+                        className="w-full sm:w-auto"
                       >
                         {returnLabel}
-                      </button>
+                      </Button>
 
                       <Link
                         href={returnPath}

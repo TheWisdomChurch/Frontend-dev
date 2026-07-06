@@ -11,5 +11,5 @@ export { default as FlexboxLayout } from './Flexbox';
 export { default as Flexbox } from './Flexbox';
 export { default as GridboxLayout } from './Gridbox';
 export { default as Gridbox } from './Gridbox';
-
-// Shared components live outside this folder; import them directly when needed.
+export { default as Stack } from './Stack';
+export { default as PageWrapper } from './PageWrapper';

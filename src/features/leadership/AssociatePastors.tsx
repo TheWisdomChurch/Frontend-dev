@@ -8,16 +8,17 @@ import { ArrowRight, Sparkles, Users } from 'lucide-react';
 import { Container, Section } from '@/shared/layout';
 import { BodySM, Caption, H3, SmallText } from '@/shared/text';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { useLeadership } from '@/hooks/useLeadership';
 import { pastorsData } from '@/lib/data';
+import { Card } from '@/shared/ui/cards';
+import GridBackground from '@/shared/ui/GridBackground';
 
 type Leader = (typeof pastorsData)[number] & {
   id?: string | number;
   name?: string;
   firstName?: string;
   lastName?: string;
-  image?: any;
+  image?: string | { src: string };
   imageUrl?: string;
   role?: string;
   description?: string;
@@ -35,11 +36,10 @@ function getLeaderName(leader: Leader) {
 function LeaderCard({
   leader,
   index,
-  accent,
 }: {
   leader: Leader;
   index: number;
-  accent: string;
+  accent?: string;
 }) {
   const displayName = getLeaderName(leader);
   const displayImage = leader.image || leader.imageUrl;
@@ -47,15 +47,14 @@ function LeaderCard({
   const displayDescription = leader.description || leader.bio;
 
   return (
-    <article className="group relative h-full overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.045] shadow-[0_18px_55px_rgba(0,0,0,0.35)] backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.065] hover:shadow-[0_28px_75px_rgba(0,0,0,0.45)]">
+    <article className="group relative h-full overflow-hidden rounded-xl border border-white/10 bg-white/[0.045] transition duration-300 hover:border-white/20 hover:bg-white/[0.065]">
       <div className="relative h-64 overflow-hidden bg-black sm:h-72 lg:h-76">
         {displayImage ? (
           <Image
             src={displayImage}
             alt={displayName}
             fill
-            className="object-cover transition duration-700 ease-out group-hover:scale-105"
-            style={{ objectPosition: 'center 18%' }}
+            className="object-cover object-[center_18%] transition duration-700 ease-out group-hover:scale-105"
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 25vw"
             quality={88}
           />
@@ -68,19 +67,13 @@ function LeaderCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
 
         <div className="absolute left-4 top-4 rounded-full border border-black/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-black shadow-lg">
-          <span
-            className="absolute inset-0 rounded-full"
-            style={{ background: accent }}
-          />
+          <span className="absolute inset-0 rounded-full bg-[var(--app-primary)]" />
           <span className="relative z-10">{displayRole}</span>
         </div>
 
         <div className="absolute bottom-4 left-4 right-4">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/70 backdrop-blur-md">
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ background: accent }}
-            />
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
             {String(index + 1).padStart(2, '0')}
           </span>
         </div>
@@ -102,22 +95,19 @@ function LeaderCard({
               </Caption>
             </div>
 
-            <div
-              className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-white/10 bg-white/[0.06]"
-              style={{ color: accent }}
-            >
+            <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-white/10 bg-white/[0.06] text-[var(--app-primary)]">
               <Sparkles className="h-4 w-4" />
             </div>
           </div>
 
           {displayDescription ? (
-            <p className="mt-4 line-clamp-3 text-sm leading-6 text-white/62">
+            <BodySM className="mt-4 line-clamp-3 text-white/62">
               {displayDescription}
-            </p>
+            </BodySM>
           ) : (
-            <p className="mt-4 text-sm leading-6 text-white/45">
-              Serving the house with care, excellence, and spiritual oversight.
-            </p>
+            <BodySM className="mt-4 text-white/45">
+              Serving the church with care, excellence, and spiritual oversight.
+            </BodySM>
           )}
         </div>
 
@@ -128,11 +118,10 @@ function LeaderCard({
 }
 
 export default function AssociatePastors() {
-  const { colorScheme } = useTheme();
   const router = useRouter();
   const { leaders } = useLeadership();
 
-  const primary = colorScheme.primary;
+  const primary = 'var(--app-primary)';
 
   const highlights = useMemo<Leader[]>(() => {
     const source =
@@ -146,29 +135,20 @@ export default function AssociatePastors() {
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative overflow-hidden bg-[#070707] py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[var(--app-dark-2)] py-16 sm:py-20 lg:py-24"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute left-[-10%] top-16 h-72 w-72 rounded-full blur-3xl"
-          style={{ background: `${primary}14` }}
-        />
+        <div className="absolute left-[-10%] top-16 h-72 w-72 rounded-full blur-3xl bg-[var(--app-primary)]/[0.08]" />
         <div className="absolute right-[-8%] top-1/3 h-96 w-96 rounded-full bg-white/[0.045] blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-20" />
+        <GridBackground className="opacity-20" />
       </div>
 
       <Container size="xl" className="relative z-10 px-4 sm:px-6 lg:px-10">
         <div className="mb-8 grid gap-5 lg:mb-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div className="min-w-0">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5">
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ background: primary }}
-              />
-              <Caption
-                className="text-[0.68rem] font-bold uppercase tracking-[0.18em]"
-                style={{ color: primary }}
-              >
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
+              <Caption className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                 Leadership
               </Caption>
             </div>
@@ -181,12 +161,12 @@ export default function AssociatePastors() {
             </H3>
           </div>
 
-          <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+          <Card padding="sm" className="rounded-xl bg-white/[0.035] sm:p-5">
             <BodySM className="max-w-3xl text-sm leading-7 text-white/68 sm:text-base">
               Trusted voices helping steward the vision. Each carries a unique
-              grace for the house.
+              grace for the church.
             </BodySM>
-          </div>
+          </Card>
         </div>
 
         <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
@@ -205,12 +185,8 @@ export default function AssociatePastors() {
             variant="primary"
             size="sm"
             curvature="full"
-            className="px-6 py-3 text-sm font-bold text-black transition duration-300 hover:-translate-y-0.5"
+            className="px-6 py-3 text-sm font-bold text-black transition duration-300 hover:-translate-y-0.5 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] shadow-[0_16px_38px_rgba(201,150,26,0.20)]"
             rightIcon={<ArrowRight className="h-4 w-4" />}
-            style={{
-              background: `linear-gradient(135deg, ${primary}, ${colorScheme.primaryDark})`,
-              boxShadow: `0 16px 38px ${colorScheme.opacity.primary20}`,
-            }}
             onClick={() => router.push('/leadership')}
           >
             View more

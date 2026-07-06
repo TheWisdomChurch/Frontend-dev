@@ -14,7 +14,7 @@ function extractMetadata(
 ): { series: string; preacher: string } {
   // Default values
   let series = 'General';
-  let preacher = 'Wisdom House Ministry';
+  let preacher = 'Wisdom Church Ministry';
 
   // Example: "GAINING WISDOM SERVICE | THE WISDOM CHURCH | 9TH OF NOVEMBER 2025"
   const primaryPattern = /^(.+?)\s*\|\s*(.+?)\s*\|\s*(.+)$/i;
@@ -168,7 +168,7 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
 
     return {
       id: channelId,
-      title: channel.snippet?.title || 'Wisdom House HQ',
+      title: channel.snippet?.title || 'Wisdom Church HQ',
       description: channel.snippet?.description || '',
       thumbnail: channel.snippet?.thumbnails?.high?.url || '',
       subscriberCount: safeString(channel.statistics?.subscriberCount),
@@ -213,14 +213,11 @@ export async function getAllChannelVideos(
     }
 
     // Get ALL videos from uploads playlist (no limit)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const allVideos: any[] = [];
     let nextPageToken: string | undefined;
-    let pageCount = 0;
-
-    console.log('📺 Fetching ALL videos from YouTube channel...');
 
     do {
-      pageCount++;
       const playlistResponse = await youtube.playlistItems.list({
         part: ['snippet'],
         playlistId: uploadsPlaylistId,
@@ -230,9 +227,6 @@ export async function getAllChannelVideos(
 
       if (playlistResponse.data.items) {
         allVideos.push(...playlistResponse.data.items);
-        console.log(
-          `📄 Page ${pageCount}: Fetched ${playlistResponse.data.items.length} videos (Total: ${allVideos.length})`
-        );
       }
 
       nextPageToken = playlistResponse.data.nextPageToken || undefined;
@@ -243,10 +237,6 @@ export async function getAllChannelVideos(
       }
     } while (nextPageToken && allVideos.length < maxResults);
 
-    console.log(
-      `✅ Successfully fetched ${allVideos.length} total videos from ${pageCount} pages`
-    );
-
     if (allVideos.length === 0) {
       return [];
     }
@@ -256,15 +246,11 @@ export async function getAllChannelVideos(
       .map(item => item.snippet?.resourceId?.videoId)
       .filter((videoId): videoId is string => !!videoId);
 
-    console.log(
-      `🔍 Fetching detailed information for ${videoIds.length} videos...`
-    );
-
     // Get detailed video information in batches
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const videoBatches: any[] = [];
     for (let i = 0; i < videoIds.length; i += 50) {
       const batch = videoIds.slice(i, i + 50);
-      const batchNumber = Math.floor(i / 50) + 1;
 
       const videosResponse = await youtube.videos.list({
         part: ['snippet', 'contentDetails', 'statistics'],
@@ -273,9 +259,6 @@ export async function getAllChannelVideos(
 
       if (videosResponse.data.items) {
         videoBatches.push(...videosResponse.data.items);
-        console.log(
-          `📊 Batch ${batchNumber}: Processed ${videosResponse.data.items.length} videos`
-        );
       }
 
       // Small delay between batches
@@ -332,22 +315,6 @@ export async function getAllChannelVideos(
     const sortedVideos = videos.sort(
       (a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
-
-    console.log(
-      `🎉 Successfully processed ${sortedVideos.length} videos with metadata`
-    );
-
-    // Log some statistics about the videos
-    const uniqueSeries = new Set(sortedVideos.map(v => v.series));
-    const uniquePreachers = new Set(sortedVideos.map(v => v.preacher));
-
-    console.log(`📊 Video Statistics:`);
-    console.log(`   - Total videos: ${sortedVideos.length}`);
-    console.log(`   - Unique series: ${uniqueSeries.size}`);
-    console.log(`   - Unique preachers: ${uniquePreachers.size}`);
-    console.log(
-      `   - Date range: ${sortedVideos[sortedVideos.length - 1]?.publishedAt} to ${sortedVideos[0]?.publishedAt}`
     );
 
     return sortedVideos;

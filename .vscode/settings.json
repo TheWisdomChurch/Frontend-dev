@@ -1,0 +1,26 @@
+{
+  // Disable VS Code's built-in CSS/SCSS/Less validators — this project uses
+  // PostCSS + Sass which understand @tailwind, @use, @mixin, SCSS nesting, etc.
+  // The built-in validator flags all of these as "unknown at rule" errors.
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+
+  // Tell Tailwind CSS IntelliSense to activate on all files that use classes
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+
+  // Treat @tailwind, @apply, @layer etc. as known CSS at-rules
+  "css.customData": [],
+
+  // TypeScript: use the workspace version installed in node_modules
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // ESLint: lint the full workspace, not just src/
+  "eslint.workingDirectories": ["."],
+
+  // Show ESLint status in the status bar
+  "eslint.enable": true
+}

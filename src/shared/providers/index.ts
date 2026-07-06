@@ -4,7 +4,4 @@
  */
 
 // Analytics Provider
-export { default as AnalyticsProvider } from './AnalyticsProvider';
-
-// Other providers
-export * from './index';
+export { AnalyticsProvider, useAnalytics } from './AnalyticsProvider';

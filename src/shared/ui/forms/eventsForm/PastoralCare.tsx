@@ -11,14 +11,9 @@ import {
   ChevronDown,
   CheckCircle2,
 } from 'lucide-react';
-import { H2, H3, BodyMD, BodyLG, Caption } from '@/shared/text';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
+import { H2, H3, BodyMD, BodyLG, BodySM, Caption } from '@/shared/text';
+import { Container, Section } from '@/shared/layout';
+import { Button } from '@/shared/utils/buttons';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import { apiClient } from '@/lib/api';
@@ -38,7 +33,7 @@ interface PastoralCareFormData {
 }
 
 const PastoralCareUnit = () => {
-  const { colorScheme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const isDarkMode = isDark;
 
   const [formData, setFormData] = useState<PastoralCareFormData>({
@@ -169,6 +164,7 @@ const PastoralCareUnit = () => {
         setShowCustomRole(false);
 
         setShowSuccess(true);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setSubmitError(
           error?.message ||
@@ -195,48 +191,26 @@ const PastoralCareUnit = () => {
   return (
     <Section
       padding="xl"
-      className="relative overflow-hidden"
-      style={{
-        backgroundColor: isDarkMode
-          ? '#000000'
-          : colorScheme.backgroundSecondary,
-      }}
+      className={`relative overflow-hidden ${isDarkMode ? 'bg-[#000000]' : 'bg-[rgba(255,255,255,0.06)]'}`}
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-5 blur-3xl"
-          style={{ backgroundColor: colorScheme.primary }}
-        />
-        <div
-          className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full opacity-5 blur-3xl"
-          style={{ backgroundColor: colorScheme.secondary }}
-        />
+        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-5 blur-3xl bg-[var(--app-primary)]" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full opacity-5 blur-3xl bg-[var(--app-primary-dark)]" />
       </div>
 
       <Container size="xl">
         {/* Header */}
         <div className="text-center mb-16">
-          <Caption
-            className="text-sm font-semibold uppercase tracking-wider mb-4"
-            style={{ color: colorScheme.primary }}
-          >
+          <Caption className="text-sm font-semibold uppercase tracking-wider mb-4 text-[var(--app-primary)]">
             Pastoral Care Services
           </Caption>
           <H2
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6"
-            style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+            className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
           >
             Pastoral Care Events
           </H2>
-          <BodyLG
-            className="text-base sm:text-lg max-w-2xl mx-auto opacity-80"
-            style={{
-              color: isDarkMode
-                ? colorScheme.textSecondary
-                : colorScheme.textTertiary,
-            }}
-          >
+          <BodyLG className="text-base sm:text-lg max-w-2xl mx-auto opacity-80 text-[rgba(255,255,255,0.65)]">
             Let us be part of your special moments. Register for pastoral care
             services and let our ministry team support you in your celebrations
             and milestones.
@@ -246,21 +220,10 @@ const PastoralCareUnit = () => {
         {/* Registration Form */}
         <div className="max-w-4xl mx-auto">
           <div
-            className="rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl border"
-            style={{
-              background: isDarkMode ? colorScheme.surface : colorScheme.white,
-              borderColor: isDarkMode
-                ? colorScheme.border
-                : colorScheme.borderLight,
-            }}
+            className={`rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl border border-[rgba(255,255,255,0.12)] ${isDarkMode ? 'bg-[rgba(255,255,255,0.05)]' : 'bg-white'}`}
           >
             {/* Form Header */}
-            <div
-              className="p-5 md:p-7 text-center text-white"
-              style={{
-                background: colorScheme.primaryGradient,
-              }}
-            >
+            <div className="p-5 md:p-7 text-center text-white bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))]">
               <H3 className="text-xl md:text-2xl font-semibold mb-1">
                 Pastoral Care Request
               </H3>
@@ -276,14 +239,8 @@ const PastoralCareUnit = () => {
                 {/* Personal Information Section */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <User
-                      className="w-5 h-5"
-                      style={{ color: colorScheme.primary }}
-                    />
-                    <H3
-                      className="text-xl font-bold"
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <User className="w-5 h-5 text-[var(--app-primary)]" />
+                    <H3 className="text-xl font-bold text-white">
                       Personal Information
                     </H3>
                   </div>
@@ -292,13 +249,14 @@ const PastoralCareUnit = () => {
                     {/* Title */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        htmlFor="title"
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Title *
                       </label>
                       <div className="relative">
                         <select
+                          id="title"
                           name="title"
                           value={formData.title}
                           onChange={handleInputChange}
@@ -320,9 +278,8 @@ const PastoralCareUnit = () => {
                           ))}
                         </select>
                         <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
                           size={20}
-                          style={{ color: colorScheme.primary }}
                         />
                       </div>
                     </div>
@@ -330,8 +287,7 @@ const PastoralCareUnit = () => {
                     {/* First Name */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         First Name *
                       </label>
@@ -352,8 +308,7 @@ const PastoralCareUnit = () => {
                     {/* Last Name */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Last Name *
                       </label>
@@ -370,17 +325,16 @@ const PastoralCareUnit = () => {
                         } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
                       />
                       {errors.lastName && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.lastName}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
                     {/* Contact Number */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Contact Number *
                       </label>
@@ -403,17 +357,16 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.contactNumber && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.contactNumber}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
                     {/* Email Address */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Email Address *
                       </label>
@@ -436,17 +389,16 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.email}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
                     {/* Contact Address */}
                     <div className="md:col-span-2">
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Contact Address *
                       </label>
@@ -469,30 +421,19 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.contactAddress && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.contactAddress}
-                        </p>
+                        </Caption>
                       )}
                     </div>
                   </div>
                 </div>
 
                 {/* Event Details Section */}
-                <div
-                  className="space-y-6 pt-6 border-t"
-                  style={{
-                    borderColor: isDarkMode ? colorScheme.border : '#E5E7EB',
-                  }}
-                >
+                <div className="space-y-6 border-t border-white/[0.12] pt-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <Calendar
-                      className="w-5 h-5"
-                      style={{ color: colorScheme.primary }}
-                    />
-                    <H3
-                      className="text-xl font-bold"
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <Calendar className="w-5 h-5 text-[var(--app-primary)]" />
+                    <H3 className="text-xl font-bold text-white">
                       Event Details
                     </H3>
                   </div>
@@ -501,8 +442,8 @@ const PastoralCareUnit = () => {
                     {/* Event Date */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        htmlFor="eventDate"
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Event Date *
                       </label>
@@ -512,6 +453,7 @@ const PastoralCareUnit = () => {
                           size={20}
                         />
                         <input
+                          id="eventDate"
                           type="date"
                           name="eventDate"
                           value={formData.eventDate}
@@ -526,22 +468,23 @@ const PastoralCareUnit = () => {
                         />
                       </div>
                       {errors.eventDate && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.eventDate}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
                     {/* Event Type */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        htmlFor="eventType"
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Event Type *
                       </label>
                       <div className="relative">
                         <select
+                          id="eventType"
                           name="eventType"
                           value={formData.eventType}
                           onChange={handleInputChange}
@@ -563,28 +506,28 @@ const PastoralCareUnit = () => {
                           ))}
                         </select>
                         <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
                           size={20}
-                          style={{ color: colorScheme.primary }}
                         />
                       </div>
                       {errors.eventType && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.eventType}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
                     {/* Church Role */}
                     <div>
                       <label
-                        className="block text-sm font-semibold mb-2"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                        htmlFor="churchRole"
+                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                       >
                         Church Role Requested *
                       </label>
                       <div className="relative">
                         <select
+                          id="churchRole"
                           name="churchRole"
                           value={formData.churchRole}
                           onChange={handleInputChange}
@@ -606,15 +549,14 @@ const PastoralCareUnit = () => {
                           ))}
                         </select>
                         <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
                           size={20}
-                          style={{ color: colorScheme.primary }}
                         />
                       </div>
                       {errors.churchRole && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <Caption className="mt-1 text-red-400">
                           {errors.churchRole}
-                        </p>
+                        </Caption>
                       )}
                     </div>
 
@@ -622,8 +564,7 @@ const PastoralCareUnit = () => {
                     {showCustomRole && (
                       <div>
                         <label
-                          className="block text-sm font-semibold mb-2"
-                          style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
+                          className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
                         >
                           Specify Custom Role *
                         </label>
@@ -640,9 +581,9 @@ const PastoralCareUnit = () => {
                           } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
                         />
                         {errors.customRole && (
-                          <p className="text-red-500 text-sm mt-1">
+                          <Caption className="mt-1 text-red-400">
                             {errors.customRole}
-                          </p>
+                          </Caption>
                         )}
                       </div>
                     )}
@@ -650,30 +591,16 @@ const PastoralCareUnit = () => {
                 </div>
 
                 {/* Additional Comments */}
-                <div
-                  className="pt-6 border-t"
-                  style={{
-                    borderColor: isDarkMode ? colorScheme.border : '#E5E7EB',
-                  }}
-                >
+                <div className="border-t border-white/[0.12] pt-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <MessageCircle
-                      className="w-5 h-5"
-                      style={{ color: colorScheme.primary }}
-                    />
-                    <H3
-                      className="text-xl font-bold"
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <MessageCircle className="w-5 h-5 text-[var(--app-primary)]" />
+                    <H3 className="text-xl font-bold text-white">
                       Additional Information
                     </H3>
                   </div>
 
                   <div>
-                    <label
-                      className="block text-sm font-semibold mb-2"
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}
-                    >
+                    <label className="mb-2 block text-sm font-semibold text-white">
                       Additional Comments or Special Requests
                     </label>
                     <div className="relative">
@@ -705,15 +632,11 @@ const PastoralCareUnit = () => {
                     </div>
                   ) : null}
 
-                  <button
+                  <Button
                     type="submit"
+                    variant="primary"
                     disabled={isSubmitting}
-                    className="w-full py-4 px-6 rounded-xl font-black text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    style={{
-                      background: colorScheme.primaryGradient,
-                      color: '#000000',
-                      boxShadow: '0 8px 25px rgba(245, 158, 11, 0.3)',
-                    }}
+                    className="w-full rounded-xl py-4 font-black text-lg"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center justify-center gap-2">
@@ -723,16 +646,9 @@ const PastoralCareUnit = () => {
                     ) : (
                       'Submit Registration'
                     )}
-                  </button>
+                  </Button>
 
-                  <BodyMD
-                    className="text-center mt-4 opacity-70"
-                    style={{
-                      color: isDarkMode
-                        ? colorScheme.textSecondary
-                        : colorScheme.textTertiary,
-                    }}
-                  >
+                  <BodyMD className="mt-4 text-center text-white/60">
                     We&apos;ll contact you within 24-48 hours to discuss your
                     event details and confirm arrangements.
                   </BodyMD>
@@ -751,19 +667,13 @@ const PastoralCareUnit = () => {
           forceBottomSheet
         >
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-            <div
-              className="h-10 w-10 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: colorScheme.opacity.primary10 }}
-            >
-              <CheckCircle2
-                className="w-5 h-5"
-                style={{ color: colorScheme.primary }}
-              />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--app-primary)]/10">
+              <CheckCircle2 className="w-5 h-5 text-[var(--app-primary)]" />
             </div>
-            <p className="text-white/80 text-sm leading-relaxed">
+            <BodySM className="text-white/80">
               Thank you. Our team will review and reach out soon. A confirmation
               email has been sent to the address you provided.
-            </p>
+            </BodySM>
           </div>
         </BaseModal>
       </Container>

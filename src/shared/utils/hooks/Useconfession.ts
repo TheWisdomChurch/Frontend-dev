@@ -7,16 +7,30 @@ interface UseWelcomeModalProps {
   onClose?: () => void;
 }
 
+const STORAGE_KEY = 'wisdom_welcomed';
+
 let hasSeenModalInRuntime = false;
 
-const hasSeenThisSession = () => hasSeenModalInRuntime;
+const hasSeenBefore = () => {
+  if (hasSeenModalInRuntime) return true;
+  try {
+    return !!localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return false;
+  }
+};
 
-const markSeenThisSession = () => {
+const markSeen = () => {
   hasSeenModalInRuntime = true;
+  try {
+    localStorage.setItem(STORAGE_KEY, '1');
+  } catch {
+    // storage unavailable — runtime flag still prevents re-show within session
+  }
 };
 
 export function useWelcomeModal({
-  delay = 2200,
+  delay = 10000,
   onClose,
 }: UseWelcomeModalProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,7 +40,7 @@ export function useWelcomeModal({
   useEffect(() => {
     setMounted(true);
 
-    if (hasSeenThisSession()) return;
+    if (hasSeenBefore()) return;
 
     const showTimer = window.setTimeout(
       () => {
@@ -40,7 +54,7 @@ export function useWelcomeModal({
   }, [delay]);
 
   const closeAndPersist = () => {
-    markSeenThisSession();
+    markSeen();
     setIsVisible(false);
     onClose?.();
   };

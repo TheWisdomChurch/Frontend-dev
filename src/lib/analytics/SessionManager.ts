@@ -5,7 +5,10 @@
  */
 
 import { CookieManager } from './CookieManager';
-import { v4 as uuidv4 } from 'uuid';
+const uuidv4 = () =>
+  typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID()
+    : Math.random().toString(36).slice(2) + Date.now().toString(36);
 
 export interface SessionData {
   sessionId: string;
@@ -16,6 +19,7 @@ export interface SessionData {
   deviceId: string;
   source?: string;
   referrer?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata?: Record<string, any>;
 }
 
@@ -113,6 +117,7 @@ export class SessionManager {
    */
   static setUserInSession(
     userId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata?: Record<string, any>
   ): void {
     const session = this.getOrCreateSession();
@@ -126,12 +131,12 @@ export class SessionManager {
    */
   private static getOrCreateDeviceId(): string {
     const DEVICE_ID_COOKIE = 'wcm-device-id';
-    let deviceId = CookieManager.getCookie(DEVICE_ID_COOKIE);
+    let deviceId: string = CookieManager.getCookie(DEVICE_ID_COOKIE) ?? '';
 
     if (!deviceId) {
       deviceId = uuidv4();
       CookieManager.setCookie(DEVICE_ID_COOKIE, deviceId, {
-        maxAge: 365 * 24 * 60 * 60, // 1 year
+        maxAge: 365 * 24 * 60 * 60,
       });
     }
 

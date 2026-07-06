@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// hooks/useWaveTextAnimation.ts
 import { useEffect } from 'react';
 import gsap from 'gsap';
 
 export const useWaveTextAnimation = (
-  waveTextRef: React.RefObject<HTMLDivElement>, // ✅ Non-nullable
-  showWaveText: boolean,
-  colorScheme: any
+  waveTextRef: React.RefObject<HTMLDivElement>,
+  showWaveText: boolean
 ) => {
   useEffect(() => {
     if (!showWaveText) return;
@@ -16,29 +13,18 @@ export const useWaveTextAnimation = (
     const chars = text.querySelectorAll('.wave-char');
     if (!chars.length) return;
 
-    // Reset all characters
-    gsap.set(chars, {
-      y: 0,
-      opacity: 0,
-      scale: 1,
-    });
+    gsap.set(chars, { y: 0, opacity: 0, scale: 1 });
 
-    // Create a clean wave animation
     const waveAnimation = gsap.timeline({
       repeat: -1,
       repeatDelay: 6,
       paused: false,
     });
 
-    // Simple wave effect with better visibility
     chars.forEach((char, i) => {
       waveAnimation.fromTo(
         char,
-        {
-          y: 15,
-          opacity: 0,
-          scale: 0.7,
-        },
+        { y: 15, opacity: 0, scale: 0.7 },
         {
           y: 0,
           opacity: 1,
@@ -51,7 +37,6 @@ export const useWaveTextAnimation = (
       );
     });
 
-    // Subtle continuous effect
     waveAnimation.to(
       chars,
       {
@@ -62,7 +47,6 @@ export const useWaveTextAnimation = (
       '-=0.2'
     );
 
-    // Fade out
     waveAnimation.to(chars, {
       y: -10,
       opacity: 0,
@@ -76,5 +60,5 @@ export const useWaveTextAnimation = (
     return () => {
       waveAnimation.kill();
     };
-  }, [showWaveText, waveTextRef, colorScheme]);
+  }, [showWaveText, waveTextRef]);
 };

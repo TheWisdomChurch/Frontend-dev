@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -7,6 +7,8 @@ import { Loader2, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { BaseModal, modalStyles } from './Base';
+import { BodySM } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import { SuccessModal } from './SuccessModal';
 import apiClient, { mapValidationErrors } from '@/lib/api';
 import {
@@ -149,15 +151,15 @@ export function WorkforceRegistrationModal({
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
           <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5 flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#f7de12]/10 text-[#f7de12]">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                 <Users className="h-5 w-5" />
               </div>
 
               <div>
                 <p className={modalStyles.sectionTitle}>Personal details</p>
-                <p className="mt-1 text-sm text-white/55">
+                <BodySM className="mt-1 text-white/55">
                   Basic contact information for your profile.
-                </p>
+                </BodySM>
               </div>
             </div>
 
@@ -243,9 +245,9 @@ export function WorkforceRegistrationModal({
           <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5">
               <p className={modalStyles.sectionTitle}>Leadership information</p>
-              <p className="mt-1 text-sm text-white/55">
+              <BodySM className="mt-1 text-white/55">
                 Help us keep your ministry assignment accurate.
-              </p>
+              </BodySM>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -320,7 +322,7 @@ export function WorkforceRegistrationModal({
                 <input
                   id="existingMember"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-white/30 accent-[#f7de12]"
+                  className="h-4 w-4 rounded border-white/30 accent-[var(--app-primary)]"
                   {...register('isExistingMember')}
                 />
                 <label
@@ -336,9 +338,9 @@ export function WorkforceRegistrationModal({
           <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5">
               <p className={modalStyles.sectionTitle}>Additional details</p>
-              <p className="mt-1 text-sm text-white/55">
+              <BodySM className="mt-1 text-white/55">
                 Optional details for better church administration.
-              </p>
+              </BodySM>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -408,11 +410,12 @@ export function WorkforceRegistrationModal({
             </div>
           </section>
 
-          <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[#070707]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
-            <button
+          <div className="sticky bottom-0 -mx-5 border-t border-white/10 bg-[var(--app-dark-2)]/95 px-5 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6">
+            <Button
               type="submit"
+              variant="primary"
               disabled={!isValid || isSubmitting}
-              className={modalStyles.primaryButton}
+              className="w-full"
             >
               {isSubmitting ? (
                 <span className="inline-flex items-center justify-center">
@@ -422,7 +425,7 @@ export function WorkforceRegistrationModal({
               ) : (
                 'Submit Workforce Details'
               )}
-            </button>
+            </Button>
           </div>
         </form>
       </BaseModal>

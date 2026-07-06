@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
 import { BaseModal, modalStyles } from './Base';
+import { Button } from '@/shared/utils/buttons';
 import { SuccessModal } from './SuccessModal';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { reminderSchema, type ReminderFormSchema } from '@/lib/validation';
@@ -104,23 +105,23 @@ export function ReminderModal({
             <p className={modalStyles.sectionTitle}>Event details</p>
 
             <div className="mt-4 space-y-3 text-sm leading-6 text-white/72">
-              <p className="flex items-start gap-3">
-                <Calendar className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <div className="flex items-start gap-3">
+                <Calendar className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
                 <span>{eventDate}</span>
-              </p>
+              </div>
 
               {event.location ? (
-                <p className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+                <div className="flex items-start gap-3">
+                  <MapPin className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
                   <span>{event.location}</span>
-                </p>
+                </div>
               ) : null}
 
               {timeUntil ? (
-                <p className="flex items-start gap-3">
-                  <Clock className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+                <div className="flex items-start gap-3">
+                  <Clock className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
                   <span>Starts {timeUntil}</span>
-                </p>
+                </div>
               ) : null}
             </div>
           </div>
@@ -165,10 +166,11 @@ export function ReminderModal({
               ) : null}
             </div>
 
-            <button
+            <Button
               type="submit"
+              variant="primary"
               disabled={!isValid || isProcessing}
-              className={modalStyles.primaryButton}
+              className="w-full"
             >
               {isProcessing ? (
                 <span className="inline-flex items-center justify-center">
@@ -178,7 +180,7 @@ export function ReminderModal({
               ) : (
                 'Set Reminder'
               )}
-            </button>
+            </Button>
           </form>
         </div>
       </BaseModal>

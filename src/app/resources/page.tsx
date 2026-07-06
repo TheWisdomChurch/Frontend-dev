@@ -5,7 +5,6 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
-  Bell,
   BookOpen,
   CalendarDays,
   Headphones,
@@ -17,11 +16,12 @@ import {
   X,
 } from 'lucide-react';
 
+import { Button } from '@/shared/utils/buttons';
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
+import GridBackground from '@/shared/ui/GridBackground';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { resourceLinks } from '@/lib/data';
 
 type Category =
@@ -92,8 +92,6 @@ const fallbackIcons = [
 ];
 
 export default function ResourcesPage() {
-  const { colorScheme } = useTheme();
-
   const [activeCategory, setActiveCategory] = useState<Category>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showLiveModal, setShowLiveModal] = useState(false);
@@ -139,7 +137,7 @@ export default function ResourcesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Resource Center"
         subtitle="Everything you need in one place."
@@ -148,23 +146,19 @@ export default function ResourcesPage() {
         compact
       />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
+      <Section
+        padding="lg"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
+      >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_16%,rgba(247,222,18,0.13),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(247,222,18,0.08),transparent_34%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_16%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10 space-y-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div
-                className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-                style={{
-                  borderColor: `${colorScheme.primary}33`,
-                  background: `${colorScheme.primary}12`,
-                  color: colorScheme.primary,
-                }}
-              >
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
                   Resources & Growth
@@ -196,19 +190,10 @@ export default function ResourcesPage() {
                     href={item.href}
                     className="group relative block h-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                   >
-                    <div
-                      className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
-                      style={{ background: `${colorScheme.primary}22` }}
-                    />
+                    <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                     <div className="relative z-10 flex items-start gap-4">
-                      <div
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-                        style={{
-                          background: `${colorScheme.primary}18`,
-                          color: colorScheme.primary,
-                        }}
-                      >
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
                         <Icon className="h-5 w-5" />
                       </div>
 
@@ -236,7 +221,10 @@ export default function ResourcesPage() {
         </Container>
       </Section>
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#070707]">
+      <Section
+        padding="lg"
+        className="relative overflow-hidden bg-[var(--app-dark-2)]"
+      >
         <Container size="xl">
           <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
             <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
@@ -254,26 +242,19 @@ export default function ResourcesPage() {
                     const active = activeCategory === cat.key;
 
                     return (
-                      <button
+                      <Button
                         key={cat.key}
                         type="button"
+                        variant={active ? 'primary' : 'ghost'}
                         onClick={() => setActiveCategory(cat.key)}
-                        className={`rounded-2xl border px-3 py-2.5 text-xs font-bold transition ${
+                        className={`rounded-2xl px-3 py-2.5 min-h-0 h-auto text-xs font-bold ${
                           active
-                            ? 'border-transparent text-black'
-                            : 'border-white/10 bg-white/[0.04] text-white/64 hover:bg-white/[0.08] hover:text-white'
+                            ? ''
+                            : 'border border-white/10 bg-white/[0.04] text-white/64 hover:bg-white/[0.08] hover:text-white'
                         }`}
-                        style={
-                          active
-                            ? {
-                                backgroundColor: colorScheme.primary,
-                                color: '#000',
-                              }
-                            : undefined
-                        }
                       >
                         {cat.label}
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>
@@ -287,7 +268,7 @@ export default function ResourcesPage() {
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     placeholder="Search resources..."
-                    className="h-12 w-full rounded-2xl border border-white/12 bg-black/35 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                    className="h-12 w-full rounded-2xl border border-white/12 bg-black/35 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                   />
                 </label>
 
@@ -314,21 +295,12 @@ export default function ResourcesPage() {
                       ) => handleLiveServiceClick(e, resource.isLiveService)}
                       className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                     >
-                      <div
-                        className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full opacity-0 blur-3xl transition group-hover:opacity-100"
-                        style={{ background: `${colorScheme.primary}20` }}
-                      />
+                      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[var(--app-primary)]/[0.12] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                       <div className="relative z-10 flex h-full flex-col">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex min-w-0 items-start gap-3">
-                            <div
-                              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-                              style={{
-                                background: `${colorScheme.primary}18`,
-                                color: colorScheme.primary,
-                              }}
-                            >
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
                               <Icon className="h-5 w-5" />
                             </div>
 
@@ -351,10 +323,7 @@ export default function ResourcesPage() {
                         </BodyMD>
 
                         <div className="mt-auto pt-5">
-                          <Caption
-                            className="text-[11px] font-bold uppercase tracking-[0.16em]"
-                            style={{ color: colorScheme.primary }}
-                          >
+                          <Caption className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]">
                             {resource.actionText || 'Read More'}
                           </Caption>
                         </div>
@@ -366,10 +335,7 @@ export default function ResourcesPage() {
 
               {filteredResources.length === 0 && (
                 <div className="sm:col-span-2 rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-8 text-center">
-                  <Search
-                    className="mx-auto h-8 w-8"
-                    style={{ color: colorScheme.primary }}
-                  />
+                  <Search className="mx-auto h-8 w-8 text-[var(--app-primary)]" />
                   <H3 className="mt-4 text-lg font-semibold text-white">
                     No resources found
                   </H3>
@@ -390,25 +356,22 @@ export default function ResourcesPage() {
               <span className="h-1.5 w-12 rounded-full bg-white/18" />
             </div>
 
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
+              curvature="full"
               onClick={() => setShowLiveModal(false)}
-              className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/18"
               aria-label="Close"
               type="button"
+              className="absolute right-4 top-4 z-10 bg-white/10 text-white hover:bg-white/[0.18]"
             >
               <X className="h-5 w-5" />
-            </button>
+            </Button>
 
             <div className="space-y-5 p-6 sm:p-7">
               <div className="text-center">
-                <div
-                  className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{ backgroundColor: `${colorScheme.primary}18` }}
-                >
-                  <Radio
-                    className="h-7 w-7"
-                    style={{ color: colorScheme.primary }}
-                  />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
+                  <Radio className="h-7 w-7 text-[var(--app-primary)]" />
                 </div>
 
                 <H2 className="mt-4 text-xl font-semibold leading-tight text-white">
@@ -420,8 +383,9 @@ export default function ResourcesPage() {
                 </BodyMD>
               </div>
 
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={() =>
                   window.open(
                     'https://www.youtube.com/@wisdomhousehq',
@@ -429,11 +393,11 @@ export default function ResourcesPage() {
                     'noopener,noreferrer'
                   )
                 }
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#FF0000] text-sm font-bold text-white transition hover:scale-[1.01]"
+                className="h-12 w-full gap-2 rounded-radius-sm bg-[#CC0000] text-sm font-bold text-white hover:scale-[1.01] hover:bg-[#AA0000]"
               >
                 <Video className="h-4 w-4" />
                 Subscribe on YouTube
-              </button>
+              </Button>
 
               <form onSubmit={handleEmailSubmit} className="space-y-3">
                 <label className="block text-sm font-semibold text-white/80">
@@ -446,24 +410,21 @@ export default function ResourcesPage() {
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                 />
 
-                <button
+                <Button
                   type="submit"
-                  className="h-12 w-full rounded-2xl text-sm font-bold transition hover:scale-[1.01]"
-                  style={{
-                    backgroundColor: colorScheme.primary,
-                    color: '#000',
-                  }}
+                  variant="primary"
+                  className="h-12 w-full rounded-2xl text-sm font-bold hover:scale-[1.01]"
                 >
                   Notify me
-                </button>
+                </Button>
               </form>
 
-              <p className="text-center text-xs leading-6 text-white/45">
+              <Caption className="block text-center text-white/45">
                 We’ll email you before each live service starts.
-              </p>
+              </Caption>
             </div>
           </div>
         </div>

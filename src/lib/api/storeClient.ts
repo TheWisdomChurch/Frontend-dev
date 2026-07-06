@@ -41,6 +41,7 @@ export interface StoreOrderPayload {
     customerAccountName?: string;
     customerBankName?: string;
   };
+  paymentSlipUrl?: string;
 }
 
 export interface StoreOrder extends StoreOrderPayload {
@@ -54,6 +55,14 @@ const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
 const inMemoryFallback: { lastOrder: StoreOrder | null } = {
   lastOrder: null,
 };
+
+export class StoreApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_V1_BASE_URL}${path}`, {
@@ -69,7 +78,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const json = (await res.json().catch(() => null)) as any;
   if (!res.ok) {
     const message = json?.message || json?.error || 'Request failed';
-    throw new Error(message);
+    throw new StoreApiError(message, res.status);
   }
 
   const payload = json?.data ?? json;
@@ -77,6 +86,34 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const storeClient = {
+  async uploadPaymentSlip(file: File): Promise<string> {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('kind', 'document');
+    form.append('module', 'store-orders');
+
+    const res = await fetch(`${API_V1_BASE_URL}/uploads/files`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      body: form,
+    });
+
+    const json = (await res.json().catch(() => null)) as any;
+    if (!res.ok) {
+      throw new StoreApiError(
+        json?.message || json?.error || 'Upload failed',
+        res.status
+      );
+    }
+
+    const url = json?.data?.url || json?.data?.publicUrl;
+    if (typeof url !== 'string' || !url) {
+      throw new StoreApiError('Upload succeeded but returned no file URL', 502);
+    }
+    return url;
+  },
+
   async listProducts(): Promise<Product[]> {
     const data = await request<any[]>('/store/products', { method: 'GET' });
 
@@ -114,8 +151,9 @@ export const storeClient = {
       );
       inMemoryFallback.lastOrder = order;
       return order;
-    } catch {
-      return null;
+    } catch (error) {
+      if (error instanceof StoreApiError && error.status === 404) return null;
+      throw error;
     }
   },
 

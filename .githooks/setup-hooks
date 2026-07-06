@@ -2,15 +2,28 @@
 set -euo pipefail
 
 if [[ ! -d .git ]]; then
-  echo "[hooks:setup] Not a git repository root."
+  echo "[hooks:setup] ✖  Not a git repository root."
   exit 1
 fi
 
+echo "[hooks:setup] Making hooks executable …"
 chmod +x .githooks/pre-commit
 chmod +x .githooks/pre-push
-chmod +x .githooks/setup-hook 2>/dev/null || true
+chmod +x .githooks/commit-msg
+chmod +x .githooks/setup-hook  2>/dev/null || true
+chmod +x .githooks/setup-hooks 2>/dev/null || true
 
+echo "[hooks:setup] Wiring git to use .githooks/ …"
 git config core.hooksPath .githooks
 
-echo "[hooks:setup] core.hooksPath set to .githooks"
-echo "[hooks:setup] Enabled hooks: pre-commit, pre-push"
+echo ""
+echo "✅  Git hooks installed."
+echo "    Enabled: pre-commit · commit-msg · pre-push"
+echo ""
+echo "    pre-commit  → conflict check, Prettier, ESLint (auto-fix staged), TypeScript"
+echo "    commit-msg  → commitlint (conventional commit format)"
+echo "    pre-push    → TypeScript, ESLint full scan, Next.js build"
+echo ""
+echo "    Escape hatches (use sparingly):"
+echo "      SKIP_GIT_HOOKS=1 git commit -m '…'   # skip all checks"
+echo "      SKIP_PREPUSH_BUILD=1 git push         # skip build-only step"

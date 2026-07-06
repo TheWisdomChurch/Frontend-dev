@@ -1,166 +1,261 @@
 import Link from 'next/link';
-import {
-  CheckCircle2,
-  Cookie,
-  Lock,
-  Mail,
-  ShieldCheck,
-  Settings,
-} from 'lucide-react';
+import type { Metadata } from 'next';
 
-import PageHero from '@/features/hero/PageHero';
-import { Container, Section } from '@/shared/layout';
+export const metadata: Metadata = {
+  title: 'Cookies & Privacy — Wisdom Church',
+  description:
+    'How Wisdom Church uses cookies and handles your data on this website.',
+};
 
-const privacyCards = [
+const cookieGroups = [
   {
-    title: 'What we store',
-    icon: Cookie,
-    items: [
-      'Session info for forms and cart actions.',
-      'Light/dark mode preference when selected.',
-      'Basic analytics that are aggregated and non-identifying.',
+    category: 'Essential',
+    badge: 'Always active',
+    description:
+      'Required for the site to work. These cannot be disabled — without them, forms, security, and core features would not function.',
+    cookies: [
+      {
+        name: 'Session token',
+        purpose: 'Keeps your session active and secures form submissions',
+        duration: 'Session',
+      },
+      {
+        name: 'CSRF token',
+        purpose: 'Prevents unauthorised cross-site form submissions',
+        duration: 'Session',
+      },
     ],
   },
   {
-    title: 'Data handling',
-    icon: ShieldCheck,
-    items: [
-      'Submitted forms are used only to respond to your request.',
-      'Event, testimony, and contact submissions are not sold.',
-      'We do not share submitted form data with advertisers.',
+    category: 'Preferences',
+    badge: 'Optional',
+    description:
+      'Remember choices you make so you don’t have to re-select them on every visit.',
+    cookies: [
+      {
+        name: 'cookie_consent',
+        purpose: 'Records that you have seen and accepted this cookie notice',
+        duration: '1 year',
+      },
+      {
+        name: 'theme',
+        purpose: 'Stores your light or dark mode preference',
+        duration: '1 year',
+      },
     ],
   },
   {
-    title: 'Your choices',
-    icon: Settings,
-    items: [
-      'You can clear cookies in your browser at any time.',
-      'You may request deletion of your submitted data through the Contact page.',
-      'You can choose not to submit optional form fields.',
+    category: 'Analytics',
+    badge: 'Optional',
+    description:
+      'Help us understand how the site is used. All data is aggregated and contains no personal identifiers.',
+    cookies: [
+      {
+        name: 'Analytics session',
+        purpose:
+          'Counts page views and navigation paths — no names, emails, or device fingerprints',
+        duration: '30 days',
+      },
     ],
   },
 ];
 
+const choices = [
+  'Clear all cookies at any time through your browser settings or history.',
+  'Enable "Do Not Track" in your browser to opt out of analytics.',
+  'Request deletion of personal data you submitted through forms — use the Contact page.',
+  'Skip any optional form fields — they are never required for basic site use.',
+];
+
+const notUsed = [
+  'We do not use advertising cookies or remarketing trackers.',
+  'We do not share cookie data with third-party ad networks.',
+  'We do not use social media tracking pixels (Facebook, TikTok, Google Ads, etc.).',
+  'We do not fingerprint your browser or device to identify you across visits.',
+];
+
 export default function CookiesPage() {
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
-      <PageHero
-        title="Cookies & Privacy"
-        subtitle="How we use essential data to keep the site secure."
-        description="We only store what is needed to run the site and respect your privacy."
-        compact
-      />
+    <main className="min-h-screen bg-[var(--app-canvas)]">
+      {/* ── Dark hero ─────────────────────────────────────────── */}
+      <div className="bg-[var(--app-dark)] px-6 pb-20 pt-32">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Legal · Cookies
+          </p>
+          <h1
+            className="font-headline font-normal text-white"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', lineHeight: 1.1 }}
+          >
+            Cookies &amp; Privacy
+          </h1>
+          <p className="mt-5 max-w-xl font-ui text-[0.95rem] leading-[1.9] text-white/62">
+            We use only the cookies this site needs to function — no advertising
+            trackers, no marketing pixels, no profiling. Here is exactly what we
+            store and why.
+          </p>
+          <p className="mt-5 font-ui text-[0.7rem] text-white/28">
+            Last updated: July 2026
+          </p>
+        </div>
+      </div>
 
-      <Section padding="xl" className="relative overflow-hidden bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(247,222,18,0.13),transparent_28%),radial-gradient(circle_at_85%_25%,rgba(255,255,255,0.06),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_50%,#050505_100%)]" />
-        <div className="pointer-events-none absolute inset-0 opacity-[0.28] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(circle_at_50%_30%,black_22%,transparent_78%)]" />
+      {/* ── Document body ─────────────────────────────────────── */}
+      <div className="mx-auto max-w-4xl px-6 py-16 lg:py-24">
+        {/* Overview */}
+        <section className="border-b border-[var(--app-ink)]/10 pb-14">
+          <p className="mb-4 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Overview
+          </p>
+          <p className="max-w-2xl font-ui text-[0.96rem] leading-[2] text-[var(--app-ink)]/70">
+            Cookies are small text files placed in your browser when you visit a
+            website. We use a minimal set — only what is necessary to keep the
+            site running and to remember your basic preferences. We do not use
+            cookies for advertising, cross-site tracking, or data brokering.
+          </p>
+        </section>
 
-        <Container size="xl" className="relative z-10">
-          <div className="mx-auto max-w-5xl">
-            <div className="overflow-hidden rounded-[1.7rem] border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/35 backdrop-blur-xl sm:rounded-[2rem]">
-              <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
-                <aside className="relative border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                  <div className="absolute right-0 top-0 h-56 w-56 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#f7de12]/10 blur-3xl" />
+        {/* Cookie tables */}
+        <section className="space-y-14 border-b border-[var(--app-ink)]/10 py-14">
+          <p className="mb-2 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Cookies we use
+          </p>
 
-                  <div className="relative">
-                    <div className="mb-6 grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-[#f7de12]/10 text-[#f7de12]">
-                      <Lock className="h-7 w-7" />
-                    </div>
+          {cookieGroups.map(group => (
+            <div key={group.category}>
+              <div className="mb-3 flex flex-wrap items-center gap-3">
+                <h2 className="font-headline text-[1.35rem] font-normal text-[var(--app-ink)]">
+                  {group.category}
+                </h2>
+                <span
+                  className={`px-2.5 py-0.5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.12em] ${
+                    group.category === 'Essential'
+                      ? 'bg-[var(--app-ink)]/8 text-[var(--app-ink)]/50'
+                      : 'bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
+                  }`}
+                >
+                  {group.badge}
+                </span>
+              </div>
 
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
-                      Privacy notice
-                    </p>
+              <p className="mb-5 max-w-xl font-ui text-[0.88rem] leading-[1.85] text-[var(--app-ink)]/55">
+                {group.description}
+              </p>
 
-                    <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                      Essential cookies only. Clear data practices.
-                    </h1>
+              {/* Table */}
+              <div className="overflow-hidden border border-[var(--app-ink)]/10">
+                <div className="hidden grid-cols-[1.4fr_2.4fr_0.7fr] border-b border-[var(--app-ink)]/8 bg-[var(--app-ink)]/[0.035] px-5 py-2.5 sm:grid">
+                  <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                    Cookie
+                  </span>
+                  <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                    Purpose
+                  </span>
+                  <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                    Duration
+                  </span>
+                </div>
 
-                    <p className="mt-4 text-sm leading-7 text-white/65 sm:text-base">
-                      We use only essential cookies to keep the site running,
-                      protect form actions, remember basic preferences, and
-                      improve reliability. No advertising trackers are used.
-                    </p>
-
-                    <div className="mt-7 rounded-2xl border border-white/10 bg-black/25 p-4">
-                      <div className="flex gap-3">
-                        <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#f7de12]" />
-                        <p className="text-sm leading-6 text-white/68">
-                          Your submitted form data is used for church
-                          communication and request handling only.
-                        </p>
-                      </div>
-                    </div>
+                {group.cookies.map((cookie, i) => (
+                  <div
+                    key={cookie.name}
+                    className={`grid grid-cols-1 px-5 py-4 sm:grid-cols-[1.4fr_2.4fr_0.7fr] ${
+                      i < group.cookies.length - 1
+                        ? 'border-b border-[var(--app-ink)]/8'
+                        : ''
+                    } bg-white/50`}
+                  >
+                    <span className="mb-1 font-ui text-[0.85rem] font-semibold text-[var(--app-ink)] sm:mb-0">
+                      {cookie.name}
+                    </span>
+                    <span className="font-ui text-[0.85rem] leading-[1.7] text-[var(--app-ink)]/65">
+                      {cookie.purpose}
+                    </span>
+                    <span className="mt-1 font-ui text-[0.8rem] text-[var(--app-ink)]/42 sm:mt-0">
+                      {cookie.duration}
+                    </span>
                   </div>
-                </aside>
-
-                <section className="p-5 sm:p-6 lg:p-8">
-                  <div className="grid gap-4">
-                    {privacyCards.map(card => {
-                      const Icon = card.icon;
-
-                      return (
-                        <article
-                          key={card.title}
-                          className="rounded-[1.25rem] border border-white/10 bg-black/25 p-5 transition duration-200 hover:border-[#f7de12]/35 hover:bg-white/[0.035] sm:p-6"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl border border-white/10 bg-[#f7de12]/10 text-[#f7de12]">
-                              <Icon className="h-5 w-5" />
-                            </div>
-
-                            <div className="min-w-0 flex-1">
-                              <h2 className="text-lg font-semibold text-white">
-                                {card.title}
-                              </h2>
-
-                              <ul className="mt-4 space-y-3">
-                                {card.items.map(item => (
-                                  <li
-                                    key={item}
-                                    className="flex gap-3 text-sm leading-6 text-white/65"
-                                  >
-                                    <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[#f7de12]" />
-                                    <span>{item}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </article>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-[#f7de12]/10 p-5 sm:p-6">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <div className="flex items-center gap-3">
-                          <Mail className="h-5 w-5 text-[#f7de12]" />
-                          <h2 className="text-lg font-semibold text-white">
-                            Questions about privacy?
-                          </h2>
-                        </div>
-
-                        <p className="mt-2 text-sm leading-6 text-white/65">
-                          Reach us through the Contact page or at the church
-                          office.
-                        </p>
-                      </div>
-
-                      <Link
-                        href="/contact"
-                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#f7de12] px-5 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
-                      >
-                        Contact us
-                      </Link>
-                    </div>
-                  </div>
-                </section>
+                ))}
               </div>
             </div>
+          ))}
+        </section>
+
+        {/* What we do not do */}
+        <section className="border-b border-[var(--app-ink)]/10 py-14">
+          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            What we don't do
+          </p>
+          <ul className="space-y-3.5">
+            {notUsed.map(item => (
+              <li
+                key={item}
+                className="flex items-start gap-3.5 font-ui text-[0.9rem] leading-[1.85] text-[var(--app-ink)]/70"
+              >
+                <span
+                  className="mt-2.5 h-[2px] w-4 flex-none bg-[var(--app-primary)]"
+                  aria-hidden="true"
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Your choices */}
+        <section className="border-b border-[var(--app-ink)]/10 py-14">
+          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Your choices
+          </p>
+          <ul className="space-y-3.5">
+            {choices.map(item => (
+              <li
+                key={item}
+                className="flex items-start gap-3.5 font-ui text-[0.9rem] leading-[1.85] text-[var(--app-ink)]/70"
+              >
+                <span
+                  className="mt-2.5 h-[2px] w-4 flex-none bg-[var(--app-primary)]"
+                  aria-hidden="true"
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Contact */}
+        <section className="py-14">
+          <p className="mb-4 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Questions?
+          </p>
+          <p className="mb-7 max-w-lg font-ui text-[0.92rem] leading-[1.9] text-[var(--app-ink)]/65">
+            If you have questions about our cookie use or wish to request
+            deletion of data you submitted, contact us through the Contact page
+            or visit the church office.
+          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="/contact"
+              className="inline-flex h-11 items-center bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+            >
+              Contact us
+            </Link>
+            <Link
+              href="/privacy"
+              className="inline-flex h-11 items-center gap-1 font-ui text-[0.82rem] font-semibold text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+            >
+              Privacy Policy →
+            </Link>
+            <Link
+              href="/terms"
+              className="inline-flex h-11 items-center gap-1 font-ui text-[0.82rem] font-semibold text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+            >
+              Terms of Use →
+            </Link>
           </div>
-        </Container>
-      </Section>
+        </section>
+      </div>
     </main>
   );
 }

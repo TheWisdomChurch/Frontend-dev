@@ -1,47 +1,24 @@
-// utils/heroTextUtils.ts
 import { BaseText } from '../text';
 import type { ReactNode } from 'react';
 
-// Import the actual ColorScheme type from your project
-import { ColorScheme } from '../colors/colorScheme';
-// import type { ColorScheme } from '../components/colors/colorScheme';
-
-// Or if that doesn't work, define a more flexible type
-interface CustomColorScheme {
-  primary: string;
-  opacity: {
-    primary40?: string; // Make optional since it might not exist
-    [key: string]: string | undefined; // Allow other opacity properties
-  };
-}
-
-export const renderTitle = (
-  title: string | undefined | null,
-  colorScheme: ColorScheme | CustomColorScheme
-): ReactNode => {
+export const renderTitle = (title: string | undefined | null): ReactNode => {
   const safeTitle = title ?? '';
-  // Use optional chaining and fallback values
-  const primaryColor = colorScheme.primary || '#000000';
-  const shadowColor = colorScheme.opacity?.primary40 || 'rgba(0,0,0,0.4)';
 
-  if (safeTitle.includes('Wisdom House Church')) {
-    const parts = safeTitle.split('Wisdom House Church');
+  const highlight = (text: string) => (
+    <BaseText
+      fontFamily="playfair"
+      className="hero-text-highlight inline-block italic"
+    >
+      {text}
+    </BaseText>
+  );
+
+  if (safeTitle.includes('Wisdom Church')) {
+    const parts = safeTitle.split('Wisdom Church');
     return (
       <>
         {parts[0]}
-        <BaseText
-          fontFamily="playfair"
-          className="italic inline-block"
-          style={{
-            color: primaryColor,
-            fontSize: 'inherit',
-            lineHeight: 'inherit',
-            textShadow: `0 0 20px ${shadowColor}`,
-          }}
-        >
-          Wisdom House
-        </BaseText>{' '}
-        Church{parts[1]}
+        {highlight('Wisdom')} Church{parts[1]}
       </>
     );
   }
@@ -51,18 +28,7 @@ export const renderTitle = (
     return (
       <>
         {parts[0]}
-        <BaseText
-          fontFamily="playfair"
-          className="italic inline-block"
-          style={{
-            color: primaryColor,
-            fontSize: 'inherit',
-            lineHeight: 'inherit',
-            textShadow: `0 0 20px ${shadowColor}`,
-          }}
-        >
-          Vibrant Community
-        </BaseText>
+        {highlight('Vibrant Community')}
         {parts[1]}
       </>
     );
@@ -73,18 +39,7 @@ export const renderTitle = (
     return (
       <>
         {parts[0]}
-        <BaseText
-          fontFamily="playfair"
-          className="italic inline-block"
-          style={{
-            color: primaryColor,
-            fontSize: 'inherit',
-            lineHeight: 'inherit',
-            textShadow: `0 0 20px ${shadowColor}`,
-          }}
-        >
-          Lasting Relationships
-        </BaseText>
+        {highlight('Lasting Relationships')}
         {parts[1]}
       </>
     );
@@ -97,23 +52,22 @@ export const renderSubtitle = (
   subtitle: string | undefined | null
 ): ReactNode => {
   const safeSubtitle = subtitle ?? '';
+
+  const whitePlayfair = (text: string) => (
+    <BaseText
+      fontFamily="playfair"
+      className="hero-text-white-inherit inline-block italic"
+    >
+      {text}
+    </BaseText>
+  );
+
   if (safeSubtitle.includes("God's Transforming Power")) {
     const parts = safeSubtitle.split("God's Transforming Power");
     return (
       <>
         {parts[0]}
-        <BaseText
-          fontFamily="playfair"
-          className="italic inline-block"
-          style={{
-            color: '#FFFFFF',
-            fontSize: 'inherit',
-            lineHeight: 'inherit',
-          }}
-        >
-          God's
-        </BaseText>{' '}
-        Transforming Power{parts[1]}
+        {whitePlayfair("God's")} Transforming Power{parts[1]}
       </>
     );
   }
@@ -123,36 +77,14 @@ export const renderSubtitle = (
     return (
       <>
         {parts[0]}
-        <BaseText
-          fontFamily="playfair"
-          className="italic inline-block"
-          style={{
-            color: '#FFFFFF',
-            fontSize: 'inherit',
-            lineHeight: 'inherit',
-          }}
-        >
-          Spiritual Journey
-        </BaseText>
+        {whitePlayfair('Spiritual Journey')}
         {parts[1]}
       </>
     );
   }
 
   if (safeSubtitle.includes('Connect With Believers')) {
-    return (
-      <BaseText
-        fontFamily="playfair"
-        className="italic inline-block"
-        style={{
-          color: '#FFFFFF',
-          fontSize: 'inherit',
-          lineHeight: 'inherit',
-        }}
-      >
-        Connect With Believers
-      </BaseText>
-    );
+    return whitePlayfair('Connect With Believers');
   }
 
   return safeSubtitle;

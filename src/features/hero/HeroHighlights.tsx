@@ -1,28 +1,27 @@
-'use client';
+﻿'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ArrowRight,
   CalendarClock,
-  CheckCircle2,
   Clock,
   Headphones,
   HeartHandshake,
   MapPin,
   PlayCircle,
-  Sparkles,
   Users,
 } from 'lucide-react';
-import * as THREE from 'three';
 
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Container } from '@/shared/layout';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
+import { Card } from '@/shared/ui/cards';
+import { Button } from '@/shared/utils/buttons';
+import { Caption } from '@/shared/text';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 
-/* =============================================================================
-   Data
-============================================================================= */
+/* ─────────────────────────────────────────────────────────
+   Types & Data
+───────────────────────────────────────────────────────── */
 
 const departments = [
   'Media',
@@ -37,36 +36,43 @@ const departments = [
 type Department = (typeof departments)[number];
 type ModalKey = 'visit' | 'watch' | 'join' | null;
 
-const actions = [
+const ACTIONS = [
   {
     key: 'visit' as const,
-    label: 'Plan Your Visit',
-    description: 'Prepare your Sunday experience',
+    label: 'Plan a Visit',
+    sub: 'Sundays · 9:00 AM',
+    cta: 'Plan now',
     icon: MapPin,
   },
   {
     key: 'watch' as const,
-    label: 'Stream Our Service',
-    description: 'Get live service reminders',
+    label: 'Stream a Service',
+    sub: 'Live & on-demand',
+    cta: 'Watch live',
     icon: PlayCircle,
   },
   {
     key: 'join' as const,
-    label: 'Join Us',
-    description: 'Serve with a ministry team',
+    label: 'Serve with Us',
+    sub: 'Find your place',
+    cta: 'Join a team',
     icon: Users,
   },
 ] as const;
 
-/* =============================================================================
-   Form UI
-============================================================================= */
+/* ─────────────────────────────────────────────────────────
+   Form input styling
+───────────────────────────────────────────────────────── */
 
-const inputClassName =
-  'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[#F7DE12]/10';
+const inputClass =
+  'w-full rounded-input border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
-const selectClassName =
-  'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10';
+const selectClass =
+  'w-full rounded-input border border-white/12 bg-[#1a1814] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+
+/* ─────────────────────────────────────────────────────────
+   Modal shell
+───────────────────────────────────────────────────────── */
 
 function ModalShell({
   open,
@@ -89,23 +95,14 @@ function ModalShell({
       subtitle={subtitle}
       maxWidth="max-w-2xl"
     >
-      <div className="space-y-5">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-[#F7DE12]" />
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/65">
-            Quick form
-          </p>
-        </div>
-
-        {children}
-      </div>
+      <div className="space-y-5">{children}</div>
     </BaseModal>
   );
 }
 
-/* =============================================================================
-   State
-============================================================================= */
+/* ─────────────────────────────────────────────────────────
+   State types
+───────────────────────────────────────────────────────── */
 
 type VisitState = {
   name: string;
@@ -116,12 +113,7 @@ type VisitState = {
   attendance: string;
   notes: string;
 };
-
-type WatchState = {
-  name: string;
-  email: string;
-};
-
+type WatchState = { name: string; email: string };
 type JoinState = {
   name: string;
   email: string;
@@ -130,9 +122,12 @@ type JoinState = {
   experience: string;
 };
 
+/* ─────────────────────────────────────────────────────────
+   Component
+───────────────────────────────────────────────────────── */
+
 export default function HeroHighlights() {
-  const serviceUnavailable = useServiceUnavailable();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { open: showUnavailable } = useServiceUnavailable();
 
   const [modal, setModal] = useState<ModalKey>(null);
 
@@ -145,12 +140,7 @@ export default function HeroHighlights() {
     attendance: '1',
     notes: '',
   });
-
-  const [watch, setWatch] = useState<WatchState>({
-    name: '',
-    email: '',
-  });
-
+  const [watch, setWatch] = useState<WatchState>({ name: '', email: '' });
   const [join, setJoin] = useState<JoinState>({
     name: '',
     email: '',
@@ -162,268 +152,129 @@ export default function HeroHighlights() {
   const openModal = useCallback((key: ModalKey) => setModal(key), []);
   const closeModal = useCallback(() => setModal(null), []);
 
-  const showUnavailable = useCallback(() => {
-    serviceUnavailable.open({
-      title: 'Service not available yet',
-      message:
-        'We are polishing this experience for production. Please check back soon.',
-      actionLabel: 'Okay, thanks',
+  const onUnavailable = useCallback(() => {
+    closeModal();
+    showUnavailable({
+      title: 'Coming soon',
+      message: 'We are polishing this for production.',
+      actionLabel: 'Got it',
     });
-  }, [serviceUnavailable]);
+  }, [closeModal, showUnavailable]);
 
-  const onSubmitVisit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      closeModal();
-      showUnavailable();
-
-      setVisit({
-        name: '',
-        email: '',
-        phone: '',
-        date: '',
-        time: '',
-        attendance: '1',
-        notes: '',
-      });
-    },
-    [closeModal, showUnavailable]
-  );
-
-  const onSubmitWatch = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      closeModal();
-      showUnavailable();
-      setWatch({ name: '', email: '' });
-    },
-    [closeModal, showUnavailable]
-  );
-
-  const onSubmitJoin = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      closeModal();
-      showUnavailable();
-
-      setJoin({
-        name: '',
-        email: '',
-        phone: '',
-        department: departments[0],
-        experience: '',
-      });
-    },
-    [closeModal, showUnavailable]
-  );
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.z = 6;
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: 'high-performance',
+  const onSubmitVisit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onUnavailable();
+    setVisit({
+      name: '',
+      email: '',
+      phone: '',
+      date: '',
+      time: '',
+      attendance: '1',
+      notes: '',
     });
-
-    renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-
-    const geometry = new THREE.PlaneGeometry(7, 3.5, 72, 36);
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(0x09090d),
-      emissive: new THREE.Color(0x2b2105),
-      metalness: 0.38,
-      roughness: 0.82,
-      wireframe: false,
+  };
+  const onSubmitWatch = (e: React.FormEvent) => {
+    e.preventDefault();
+    onUnavailable();
+    setWatch({ name: '', email: '' });
+  };
+  const onSubmitJoin = (e: React.FormEvent) => {
+    e.preventDefault();
+    onUnavailable();
+    setJoin({
+      name: '',
+      email: '',
+      phone: '',
+      department: departments[0],
+      experience: '',
     });
-
-    const plane = new THREE.Mesh(geometry, material);
-    plane.rotation.x = -0.58;
-    plane.rotation.z = -0.08;
-    scene.add(plane);
-
-    const keyLight = new THREE.DirectionalLight(0xf7de12, 0.75);
-    keyLight.position.set(2.6, 3.2, 4);
-
-    const fillLight = new THREE.PointLight(0xffffff, 0.4, 10);
-    fillLight.position.set(-3, -1, 3);
-
-    scene.add(keyLight);
-    scene.add(fillLight);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const width = Math.max(rect.width, 1);
-      const height = Math.max(rect.height, 1);
-
-      renderer.setSize(width, height, false);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    };
-
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    let frame = 0;
-    let rafId = 0;
-    let active = true;
-
-    const tick = () => {
-      if (!active) return;
-
-      frame += prefersReducedMotion ? 0.0005 : 0.0025;
-      plane.rotation.z = -0.08 + frame * 0.45;
-      plane.position.y = Math.sin(frame * 1.25) * 0.08;
-
-      renderer.render(scene, camera);
-      rafId = requestAnimationFrame(tick);
-    };
-
-    tick();
-
-    return () => {
-      active = false;
-      if (rafId) cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', resize);
-
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
-    };
-  }, []);
+  };
 
   return (
-    <section className="relative z-30 -mt-8 sm:-mt-10 lg:-mt-12">
-      <Container size="xl" className="relative pb-6 sm:pb-8">
-        <div className="mx-auto w-full max-w-6xl px-2 sm:px-0">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#07070a]/90 shadow-[0_34px_100px_rgba(0,0,0,0.48)] backdrop-blur-2xl">
-            <canvas
-              ref={canvasRef}
-              className="absolute inset-0 h-full w-full opacity-75"
-              aria-hidden="true"
-            />
+    <>
+      {/* ── Editorial belief strip ────────────────────────────── */}
+      <section className="border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+        <Container size="xl">
+          <div className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            {ACTIONS.map(action => {
+              const Icon = action.icon;
+              return (
+                <button
+                  key={action.key}
+                  type="button"
+                  onClick={() => openModal(action.key)}
+                  className="group relative flex flex-col justify-between px-6 py-7 text-left transition duration-200 hover:bg-[var(--app-canvas-2)] sm:px-8 sm:py-8"
+                >
+                  <div className="flex items-start justify-between">
+                    <Icon
+                      className="h-4 w-4 text-[var(--app-ink)]/25 transition duration-200 group-hover:text-[var(--app-primary)]"
+                      aria-hidden="true"
+                    />
+                    <ArrowRight
+                      className="h-3.5 w-3.5 text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+                      aria-hidden="true"
+                    />
+                  </div>
 
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(247,222,18,0.2),transparent_30%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_38%,rgba(0,0,0,0.45))]" />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:42px_42px] opacity-20" />
+                  <div className="mt-6">
+                    <p className="font-headline text-[1.35rem] font-normal leading-snug text-[var(--app-ink)]">
+                      {action.label}
+                    </p>
+                    <p className="mt-1 font-ui text-[0.78rem] text-[var(--app-ink)]/50">
+                      {action.sub}
+                    </p>
+                  </div>
 
-            <div className="relative z-10 grid gap-4 p-4 sm:p-5 lg:grid-cols-[0.78fr_1.22fr] lg:items-stretch lg:p-6">
-              <div className="rounded-[1.5rem] border border-white/10 bg-black/35 p-5 backdrop-blur-2xl sm:p-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#F7DE12]/20 bg-[#F7DE12]/10 px-3 py-1.5 text-[#F7DE12]">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.22em]">
-                    Next Steps
+                  <span
+                    className="mt-5 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:opacity-100"
+                    aria-hidden="true"
+                  >
+                    {action.cta} <ArrowRight className="h-3.5 w-3.5" />
                   </span>
-                </div>
-
-                <h3 className="mt-4 text-xl font-semibold leading-tight text-white sm:text-2xl">
-                  Take your next step with Wisdom House
-                </h3>
-
-                <p className="mt-3 max-w-md text-sm leading-6 text-white/62">
-                  Plan a visit, watch live, or join a serve team. We made the
-                  first step simple, fast, and welcoming.
-                </p>
-
-                <div className="mt-5 flex flex-wrap gap-2 text-xs text-white/65">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-[#F7DE12]" />
-                    No spam
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
-                    <Clock className="h-3.5 w-3.5 text-[#F7DE12]" />
-                    Quick response
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                {actions.map(action => {
-                  const Icon = action.icon;
-
-                  return (
-                    <button
-                      key={action.key}
-                      type="button"
-                      onClick={() => openModal(action.key)}
-                      className="group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.075] p-4 text-left shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[#F7DE12]/40 hover:bg-white/[0.11] sm:p-5"
-                    >
-                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#F7DE12]/70 to-transparent opacity-0 transition group-hover:opacity-100" />
-
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-black/35 text-[#F7DE12] shadow-lg transition group-hover:scale-105 group-hover:bg-[#F7DE12] group-hover:text-black">
-                        <Icon className="h-5 w-5" />
-                      </div>
-
-                      <h4 className="mt-4 text-sm font-semibold text-white sm:text-base">
-                        {action.label}
-                      </h4>
-
-                      <p className="mt-2 min-h-[38px] text-xs leading-5 text-white/55">
-                        {action.description}
-                      </p>
-
-                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#F7DE12]">
-                        Continue
-                        <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                </button>
+              );
+            })}
           </div>
-        </div>
-      </Container>
+        </Container>
+      </section>
 
+      {/* ── Plan a Visit modal ────────────────────────────────── */}
       <ModalShell
         open={modal === 'visit'}
         onClose={closeModal}
         title="Plan your visit"
-        subtitle="Book a visit appointment—so we can prepare seats, parking, and a warm welcome."
+        subtitle="Book a visit appointment — so we can prepare seats, parking, and a warm welcome."
       >
         <form className="space-y-4" onSubmit={onSubmitVisit}>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <input
               type="text"
               placeholder="Full name"
-              className={inputClassName}
+              className={inputClass}
               value={visit.name}
               onChange={e => setVisit(p => ({ ...p, name: e.target.value }))}
               required
             />
-
             <input
               type="email"
               placeholder="Email address"
-              className={inputClassName}
+              className={inputClass}
               value={visit.email}
               onChange={e => setVisit(p => ({ ...p, email: e.target.value }))}
               required
             />
           </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <input
               type="tel"
               placeholder="Phone (optional)"
-              className={inputClassName}
+              className={inputClass}
               value={visit.phone}
               onChange={e => setVisit(p => ({ ...p, phone: e.target.value }))}
             />
-
             <select
-              className={selectClassName}
+              className={selectClass}
               value={visit.attendance}
               onChange={e =>
                 setVisit(p => ({ ...p, attendance: e.target.value }))
@@ -437,21 +288,19 @@ export default function HeroHighlights() {
               <option value="5+">5+ people</option>
             </select>
           </div>
-
-          <div className="space-y-3 rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
+          <Card padding="sm" className="space-y-3 rounded-xl bg-white/[0.045]">
             <div className="flex items-center gap-2 text-sm font-semibold text-white/85">
-              <CalendarClock className="h-4 w-4 text-[#F7DE12]" />
+              <CalendarClock className="h-4 w-4 text-[var(--app-primary)]" />
               Appointment details
             </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               <label className="space-y-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/55">
                   Date
                 </span>
                 <input
                   type="date"
-                  className={inputClassName}
+                  className={inputClass}
                   value={visit.date}
                   onChange={e =>
                     setVisit(p => ({ ...p, date: e.target.value }))
@@ -459,14 +308,13 @@ export default function HeroHighlights() {
                   required
                 />
               </label>
-
               <label className="space-y-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/55">
                   Time
                 </span>
                 <input
                   type="time"
-                  className={inputClassName}
+                  className={inputClass}
                   value={visit.time}
                   onChange={e =>
                     setVisit(p => ({ ...p, time: e.target.value }))
@@ -475,132 +323,117 @@ export default function HeroHighlights() {
                 />
               </label>
             </div>
-
             <div className="flex flex-wrap gap-2 text-xs text-white/70">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-                <Clock className="h-3.5 w-3.5 text-[#F7DE12]" />
+                <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />{' '}
                 Sundays 9:00 AM (WAT)
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-                <MapPin className="h-3.5 w-3.5 text-[#F7DE12]" />
-                We&apos;ll email directions
+                <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />{' '}
+                We'll email directions
               </span>
             </div>
-          </div>
-
+          </Card>
           <textarea
             placeholder="Notes (optional) — kids, first time, prayer request, accessibility needs…"
-            className={`${inputClassName} min-h-[110px] resize-none`}
+            className={`${inputClass} min-h-[110px] resize-none`}
             value={visit.notes}
             onChange={e => setVisit(p => ({ ...p, notes: e.target.value }))}
           />
-
-          <button
-            type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F7DE12] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(247,222,18,0.2)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
-          >
+          <Button type="submit" variant="primary" className="w-full">
             Confirm appointment <ArrowRight className="h-4 w-4" />
-          </button>
-
-          <p className="text-xs leading-5 text-white/50">
+          </Button>
+          <Caption className="text-white/50">
             We confirm by email and send a reminder. No spam, ever.
-          </p>
+          </Caption>
         </form>
       </ModalShell>
 
+      {/* ── Watch a service modal ─────────────────────────────── */}
       <ModalShell
         open={modal === 'watch'}
         onClose={closeModal}
         title="Watch live or on-demand"
-        subtitle="Drop your email and we’ll remind you 30 minutes before we go live."
+        subtitle="Drop your email and we'll remind you 30 minutes before we go live."
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
-          <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
+          <Card padding="sm" className="rounded-xl bg-white/[0.045]">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F7DE12] text-black">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <Headphones className="h-5 w-5" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">
                   Service reminder
                 </p>
-                <p className="mt-1 text-xs leading-5 text-white/55">
-                  We&apos;ll notify you before live service and direct you to
-                  the active stream.
+                <p className="mt-1 text-xs text-white/55">
+                  We'll notify you before live service and direct you to the
+                  active stream.
                 </p>
               </div>
             </div>
-          </div>
-
+          </Card>
           <input
             type="text"
             placeholder="Full name"
-            className={inputClassName}
+            className={inputClass}
             value={watch.name}
             onChange={e => setWatch(p => ({ ...p, name: e.target.value }))}
             required
           />
-
           <input
             type="email"
             placeholder="Email address"
-            className={inputClassName}
+            className={inputClass}
             value={watch.email}
             onChange={e => setWatch(p => ({ ...p, email: e.target.value }))}
             required
           />
-
-          <button
-            type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F7DE12] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(247,222,18,0.2)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
-          >
+          <Button type="submit" variant="primary" className="w-full">
             Notify me <ArrowRight className="h-4 w-4" />
-          </button>
-
-          <p className="text-xs leading-5 text-white/50">
+          </Button>
+          <Caption className="text-white/50">
             Service reminders only. No spam.
-          </p>
+          </Caption>
         </form>
       </ModalShell>
 
+      {/* ── Join a team modal ─────────────────────────────────── */}
       <ModalShell
         open={modal === 'join'}
         onClose={closeModal}
         title="Join a serve team"
-        subtitle="Pick a department and we’ll connect you with the team lead within 24 hours."
+        subtitle="Pick a department and we'll connect you with the team lead within 24 hours."
       >
         <form className="space-y-4" onSubmit={onSubmitJoin}>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <input
               type="text"
               placeholder="Full name"
-              className={inputClassName}
+              className={inputClass}
               value={join.name}
               onChange={e => setJoin(p => ({ ...p, name: e.target.value }))}
               required
             />
-
             <input
               type="email"
               placeholder="Email address"
-              className={inputClassName}
+              className={inputClass}
               value={join.email}
               onChange={e => setJoin(p => ({ ...p, email: e.target.value }))}
               required
             />
           </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <input
               type="tel"
               placeholder="Phone (optional)"
-              className={inputClassName}
+              className={inputClass}
               value={join.phone}
               onChange={e => setJoin(p => ({ ...p, phone: e.target.value }))}
             />
-
             <select
-              className={selectClassName}
+              className={selectClass}
               value={join.department}
               onChange={e =>
                 setJoin(p => ({
@@ -618,43 +451,36 @@ export default function HeroHighlights() {
               ))}
             </select>
           </div>
-
-          <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
+          <Card padding="sm" className="rounded-xl bg-white/[0.045]">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F7DE12] text-black">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
                 <HeartHandshake className="h-5 w-5" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">
                   Serve with excellence
                 </p>
-                <p className="mt-1 text-xs leading-5 text-white/55">
+                <p className="mt-1 text-xs text-white/55">
                   Choose the department you feel called to, and our team will
                   help you take the next step.
                 </p>
               </div>
             </div>
-          </div>
-
+          </Card>
           <textarea
-            placeholder="Any experience? (optional) — music instrument, camera, design, admin, teaching…"
-            className={`${inputClassName} min-h-[110px] resize-none`}
+            placeholder="Any experience? (optional)"
+            className={`${inputClass} min-h-[110px] resize-none`}
             value={join.experience}
             onChange={e => setJoin(p => ({ ...p, experience: e.target.value }))}
           />
-
-          <button
-            type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F7DE12] px-5 py-3.5 text-sm font-bold text-black shadow-[0_18px_45px_rgba(247,222,18,0.2)] transition hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.98]"
-          >
+          <Button type="submit" variant="primary" className="w-full">
             Send interest <ArrowRight className="h-4 w-4" />
-          </button>
-
-          <p className="text-xs leading-5 text-white/50">
-            We’ll reach out by email or phone if provided. No spam.
-          </p>
+          </Button>
+          <Caption className="text-white/50">
+            We'll reach out by email or phone if provided. No spam.
+          </Caption>
         </form>
       </ModalShell>
-    </section>
+    </>
   );
 }
