@@ -102,8 +102,10 @@ export type PublicFormPayload = {
 };
 
 export type PublicFormSubmissionRequest = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values?: Record<string, any>;
   // Backward-compat payload accepted by older callers.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   answers?: Record<string, any>;
 };
 

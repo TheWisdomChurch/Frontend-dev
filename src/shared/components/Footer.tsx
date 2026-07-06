@@ -1,213 +1,296 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faInstagram,
-  faYoutube,
-  faFacebook,
-  faXTwitter,
-} from '@fortawesome/free-brands-svg-icons';
-import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
+import { MapPin, Mail, Phone } from 'lucide-react';
+
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/layout';
+import { apiClient } from '@/lib/api';
 
-const quickLinks = [
-  { href: '/about', label: 'About' },
+/* ── Social icons ──────────────────────────────────────── */
+
+const Ig = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.75}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-4 w-4"
+  >
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <circle cx="12" cy="12" r="4.5" />
+    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+  </svg>
+);
+const Yt = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#040404" />
+  </svg>
+);
+const Fb = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+/* ── Data ─────────────────────────────────────────────── */
+
+const EXPLORE = [
+  { href: '/about', label: 'About Us' },
+  { href: '/leadership', label: 'Leadership' },
   { href: '/events', label: 'Events' },
+  { href: '/ministries', label: 'Ministries' },
   { href: '/resources/sermons', label: 'Sermons' },
   { href: '/resources', label: 'Resources' },
+];
+
+const CONNECT = [
   { href: '/contact', label: 'Contact' },
+  { href: '/pastoral', label: 'Pastoral Care' },
+  { href: '/testimonies', label: 'Testimonies' },
+  { href: '/#giving', label: 'Give Online' },
+  { href: '/forms/join', label: 'New Here?' },
 ];
 
-const ministries = [
-  { href: '/ministries/men', label: "Men's Ministry" },
-  { href: '/ministries/women', label: "Women's Ministry" },
-  { href: '/ministries/youth', label: 'Youth Ministry' },
-  { href: '/ministries/children', label: "Children's Ministry" },
-];
-
-const socials = [
+const SOCIALS = [
   {
-    href: 'https://www.instagram.com/wisdomhousehq',
+    href: 'https://www.instagram.com/wisdomchurchhq',
     label: 'Instagram',
-    icon: faInstagram,
+    Icon: Ig,
   },
   {
-    href: 'https://www.youtube.com/@wisdomhousehq',
+    href: 'https://www.youtube.com/@wisdomchurchhq',
     label: 'YouTube',
-    icon: faYoutube,
+    Icon: Yt,
   },
-  {
-    href: 'https://www.facebook.com/wisdomhousehq',
-    label: 'Facebook',
-    icon: faFacebook,
-  },
-  {
-    href: 'https://x.com/wisdomhousehq',
-    label: 'X',
-    icon: faXTwitter,
-  },
+  { href: 'https://facebook.com/wisdomchurchhq', label: 'Facebook', Icon: Fb },
 ];
+
+/* ── Column header ─────────────────────────────────────── */
+
+function ColHead({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+      {children}
+    </p>
+  );
+}
+
+/* ── Link list ─────────────────────────────────────────── */
+
+function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
+  return (
+    <ul className="space-y-3.5">
+      {links.map(l => (
+        <li key={l.href}>
+          <Link
+            href={l.href}
+            className="group inline-flex items-center gap-1.5 font-ui text-[0.88rem] text-white/60 transition hover:text-white"
+          >
+            <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+              {l.label}
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/* ── Component ─────────────────────────────────────────── */
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [subState, setSubState] = useState<'idle' | 'loading' | 'done' | 'err'>(
+    'idle'
+  );
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const val = email.trim();
+    if (!val) return;
+    setSubState('loading');
+    try {
+      await apiClient.subscribe({ email: val });
+      setEmail('');
+      setSubState('done');
+      setTimeout(() => setSubState('idle'), 3000);
+    } catch {
+      setSubState('err');
+      setTimeout(() => setSubState('idle'), 3000);
+    }
+  };
+
   return (
-    <footer className="relative overflow-hidden bg-[#040404] text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_10%,rgba(255,255,255,0.08),transparent_45%),radial-gradient(circle_at_90%_30%,rgba(255,255,255,0.06),transparent_40%)] opacity-70" />
-      <div className="relative">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
-        <Container size="xl" className="relative py-20">
-          <div className="grid gap-12 md:grid-cols-2 md:gap-12 lg:grid-cols-3 lg:gap-14 xl:grid-cols-[1.2fr_1fr_1fr_1.1fr] xl:gap-16">
-            <div className="space-y-7">
-              <div className="flex items-center gap-3">
-                <span className="relative h-12 w-12 overflow-hidden rounded-full border border-white/20 bg-white/5">
-                  <Image
-                    src={WisdomeHouseLogo}
-                    alt="Wisdom House Church"
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
+    <footer className="border-t border-white/[0.07] bg-[var(--app-dark)]">
+      {/* ── Gold top accent line ─────────────────────────── */}
+      <div
+        className="h-[2px] w-full"
+        // eslint-disable-next-line no-restricted-syntax
+        style={{
+          background:
+            'linear-gradient(90deg, transparent, var(--app-primary) 40%, transparent)',
+        }}
+      />
+
+      <Container size="xl" className="py-20 sm:py-24 lg:py-28">
+        {/* ── 4-column grid ────────────────────────────────── */}
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-14 xl:gap-20">
+          {/* Col 1 — Brand ───────────────────────────────── */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <Link
+              href="/"
+              className="mb-6 flex items-center gap-3"
+              aria-label="The Wisdom Church — home"
+            >
+              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.05]">
+                <Image
+                  src={WisdomeHouseLogo}
+                  alt=""
+                  fill
+                  sizes="40px"
+                  className="object-contain p-1"
+                />
+              </span>
+              <div className="flex flex-col leading-none">
+                <span className="font-ui text-[0.58rem] uppercase tracking-[0.25em] text-white/45">
+                  The
                 </span>
-                <div className="flex flex-col leading-none">
-                  <span className="text-[9px] uppercase tracking-[0.26em] text-white/60">
-                    The
-                  </span>
-                  <span className="text-[14px] font-medium uppercase tracking-[0.2em]">
-                    Wisdom
-                  </span>
-                  <span className="text-[12px] uppercase tracking-[0.2em] text-white/80">
-                    Church
-                  </span>
-                </div>
+                <span className="font-ui text-[0.8rem] font-bold uppercase tracking-[0.18em] text-white">
+                  Wisdom Church
+                </span>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed max-w-md">
-                Equipping and empowering believers with the Word and Spirit.
-                Join us every Sunday and Thursday for worship, teaching, and
-                community.
+            </Link>
+
+            <p className="font-ui text-[0.88rem] leading-[1.85] text-white/60">
+              A Spirit-filled community raised to carry God's glory — equipping
+              every believer with the Word, prayer, and purpose.
+            </p>
+
+            <div className="mt-6 space-y-2">
+              <p className="font-ui text-[0.75rem] font-semibold text-white/75">
+                Sundays · 9:00 AM
               </p>
-              <div className="grid gap-3 text-[11px] text-white/70 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                  Sunday • 9:00 AM
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                  Thursday • 6:00 PM
-                </div>
-              </div>
+              <p className="font-ui text-[0.75rem] font-semibold text-white/75">
+                Thursdays · 6:00 PM
+              </p>
             </div>
 
-            <div className="space-y-5">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Quick Links
+            <div className="mt-5 space-y-2 font-body text-[0.8rem] text-white/52">
+              <p className="flex items-start gap-2">
+                <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
+                Honor Gardens, Lekki-Epe Expressway, Lagos
               </p>
-              <ul className="space-y-3 text-sm text-white/70">
-                {quickLinks.map(link => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="inline-flex items-center gap-2 transition-colors hover:text-white"
-                    >
-                      {link.label}
-                      <ArrowUpRight className="h-3 w-3 text-white/50" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="space-y-5">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Ministries
+              <p className="flex items-center gap-2">
+                <Phone className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
+                0706 999 5333
               </p>
-              <ul className="space-y-3 text-sm text-white/70">
-                {ministries.map(link => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="inline-flex items-center gap-2 transition-colors hover:text-white"
-                    >
-                      {link.label}
-                      <ArrowUpRight className="h-3 w-3 text-white/50" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="space-y-6">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Visit Us
+              <p className="flex items-center gap-2">
+                <Mail className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
+                wisdomhousehq@gmail.com
               </p>
-              <div className="space-y-3 text-sm text-white/70">
-                <div className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 h-4 w-4 text-primary" />
-                  <p>Honor Gardens, Lekki-Epe Expressway, Lagos</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="h-4 w-4 text-primary" />
-                  <p>0706 999 5333</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="h-4 w-4 text-primary" />
-                  <p>wisdomhousehq@gmail.com</p>
-                </div>
-              </div>
             </div>
           </div>
 
-          <div className="mt-16 grid gap-6 border-t border-white/10 pt-8 md:grid-cols-[1.2fr_0.8fr] md:items-center">
-            <div className="space-y-3">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary">
-                Newsletter
+          {/* Col 2 — Explore ─────────────────────────────── */}
+          <div>
+            <ColHead>Explore</ColHead>
+            <FooterLinks links={EXPLORE} />
+          </div>
+
+          {/* Col 3 — Connect ─────────────────────────────── */}
+          <div>
+            <ColHead>Connect</ColHead>
+            <FooterLinks links={CONNECT} />
+          </div>
+
+          {/* Col 4 — Newsletter + Socials ────────────────── */}
+          <div>
+            <ColHead>Stay Connected</ColHead>
+
+            <form onSubmit={handleSubscribe} className="mb-8">
+              <p className="mb-3 font-body text-[0.78rem] text-white/40">
+                Get weekly reminders and updates.
               </p>
-              <form className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex flex-col gap-2">
                 <input
                   type="email"
-                  placeholder="Email address"
-                  className="h-11 w-full rounded-full border border-white/15 bg-black/40 px-4 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-primary"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  className="h-10 w-full border border-white/10 bg-white/[0.05] px-3.5 font-body text-[0.82rem] text-white outline-none placeholder:text-white/25 transition focus:border-[var(--app-primary)]/50 focus:bg-white/[0.08]"
                 />
                 <button
                   type="submit"
-                  className="h-11 rounded-full border border-primary/50 bg-primary/15 px-5 text-[11px] font-medium uppercase tracking-[0.18em] text-primary transition hover:bg-primary/25"
+                  disabled={subState === 'loading'}
+                  className="h-10 bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold uppercase tracking-[0.12em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60"
                 >
-                  Subscribe
+                  {subState === 'loading'
+                    ? 'Sending…'
+                    : subState === 'done'
+                      ? '✓ Subscribed'
+                      : subState === 'err'
+                        ? 'Try again'
+                        : 'Subscribe'}
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
 
-            <div className="space-y-3 md:justify-self-end">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-primary md:text-right">
-                Follow Us
+            <div>
+              <p className="mb-3 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-white/25">
+                Follow
               </p>
-              <div className="flex items-center gap-2 md:justify-end">
-                {socials.map(item => (
+              <div className="flex items-center gap-2">
+                {SOCIALS.map(s => (
                   <a
-                    key={item.href}
-                    href={item.href}
+                    key={s.label}
+                    href={s.href}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={item.label}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:text-white"
+                    aria-label={s.label}
+                    className="flex h-9 w-9 items-center justify-center border border-white/10 bg-white/[0.04] text-white/45 transition hover:border-white/20 hover:text-white/80"
                   >
-                    <FontAwesomeIcon icon={item.icon} className="h-4 w-4" />
+                    <s.Icon />
                   </a>
                 ))}
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-7 text-xs text-white/50 md:flex-row">
-            <span>
-              © {new Date().getFullYear()} The Wisdom Church. All rights
-              reserved.
+        {/* ── Bottom bar ────────────────────────────────────── */}
+        <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/[0.07] pt-7 sm:flex-row sm:items-center">
+          <p className="font-body text-[0.75rem] text-white/45">
+            © {new Date().getFullYear()} The Wisdom Church · Lagos, Nigeria
+          </p>
+
+          <div className="flex items-center gap-5">
+            <span className="font-ui text-[0.68rem] uppercase tracking-[0.2em] text-white/38">
+              Worship · Word · Community
             </span>
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-white/60">
-              Worship • Word • Community
+            <div className="flex gap-4">
+              <Link
+                href="/privacy"
+                className="font-body text-[0.73rem] text-white/45 transition hover:text-white/75"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="/cookies"
+                className="font-body text-[0.73rem] text-white/45 transition hover:text-white/75"
+              >
+                Cookies
+              </Link>
             </div>
           </div>
-        </Container>
-      </div>
+        </div>
+      </Container>
     </footer>
   );
 }

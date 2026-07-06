@@ -1,227 +1,166 @@
-'use client';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
-import HeroSection from '@/features/hero/PageHero';
-import { hero_bg_3 } from '@/shared/assets';
-import { Container, Section } from '@/shared/layout';
-import { CalendarClock, MapPin, CheckCircle2 } from 'lucide-react';
+import PageHero from '@/features/hero/PageHero';
+import { Container } from '@/shared/layout';
+import { ScrollFadeIn } from '@/shared/ui/motion';
 
-const weeklyServices = [
+export const metadata: Metadata = {
+  title: 'Weekly Services — Wisdom Church',
+  description:
+    'Join us every Sunday at 9:00 AM and Thursday at 6:00 PM at Honor Gardens, Lekki-Epe Expressway, Lagos.',
+};
+
+const services = [
   {
     day: 'Sunday',
-    services: [
-      {
-        name: 'Morning Worship',
-        time: '9:00 AM',
-        description:
-          'Our main worship service with contemporary music, relevant teaching, and fellowship',
-        type: 'All Ages',
-        location: 'Main Sanctuary',
-      },
-      {
-        name: 'Sunday School',
-        time: '10:30 AM',
-        description:
-          'Age-appropriate Bible classes for children, youth, and adults',
-        type: 'All Ages',
-        location: 'Various Classrooms',
-      },
-      {
-        name: 'Evening Worship',
-        time: '6:00 PM',
-        description:
-          'A more intimate service with traditional hymns and deeper Bible study',
-        type: 'All Ages',
-        location: 'Main Sanctuary',
-      },
+    time: '9:00 AM',
+    name: 'Sunday Worship Service',
+    description:
+      'Our flagship gathering — Spirit-filled worship, corporate prayer, and the preached Word. All are welcome.',
+    details: [
+      "Children's Church runs simultaneously for ages 3–12",
+      'Doors open from 8:30 AM',
+      'Dress code: Smart casual or formal',
     ],
   },
   {
-    day: 'Wednesday',
-    services: [
-      {
-        name: 'Midweek Bible Study',
-        time: '7:00 PM',
-        description: 'In-depth Bible study and prayer meeting for adults',
-        type: 'Adults',
-        location: 'Fellowship Hall',
-      },
-      {
-        name: 'Youth Group',
-        time: '7:00 PM',
-        description:
-          'Dynamic worship and teaching for middle and high school students',
-        type: 'Youth',
-        location: 'Youth Center',
-      },
-      {
-        name: 'Kids Club',
-        time: '7:00 PM',
-        description: 'Fun, faith-building activities for children ages 4-12',
-        type: 'Children',
-        location: "Children's Wing",
-      },
+    day: 'Thursday',
+    time: '6:00 PM',
+    name: 'Midweek Power Service',
+    description:
+      'A mid-week reset — deep prayer, focused teaching, and meaningful fellowship with the community.',
+    details: [
+      'Runs approximately 90 minutes',
+      'Open to all ages',
+      'Great entry point for first-timers',
     ],
   },
-  {
-    day: 'Friday',
-    services: [
-      {
-        name: 'Young Adults',
-        time: '7:30 PM',
-        description:
-          'Fellowship and Bible study for college students and young professionals',
-        type: 'Young Adults',
-        location: 'Coffee House',
-      },
-    ],
-  },
-];
+] as const;
 
-const expectations = [
-  {
-    title: 'Welcoming Atmosphere',
-    description:
-      'Friendly greeters will welcome you and help you find your way around the campus.',
-  },
-  {
-    title: 'Come As You Are',
-    description:
-      'Most people dress casually, so wear what makes you comfortable.',
-  },
-  {
-    title: 'Engaging Worship',
-    description:
-      'A worship experience that is uplifting, sincere, and Christ-centered.',
-  },
-  {
-    title: 'Practical Teaching',
-    description: 'Messages that connect biblical truth to everyday life.',
-  },
-  {
-    title: "Secure Children's Ministry",
-    description:
-      'Safe check-in and age-appropriate care for infants through 5th grade.',
-  },
-  {
-    title: 'No Pressure',
-    description: 'No spotlight, no pressure—just a space to encounter God.',
-  },
-];
+function Arrow() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1 6h10M6 1l5 5-5 5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export default function WeeklyPage() {
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
-      <HeroSection
-        title="Weekly Services"
-        subtitle="Regular gatherings for worship, teaching, and community."
-        description="Join us throughout the week for services, studies, and fellowship designed to help you grow in faith and build lasting relationships."
-        backgroundImage={hero_bg_3.src}
-        showButtons
-        primaryButtonText="Plan Your Visit"
-        secondaryButtonText="Watch Online"
-        showScrollIndicator
+    <main className="min-h-screen">
+      <PageHero
+        eyebrow="Weekly Services"
+        title="We gather. Every week."
+        subtitle="Two services a week — Sunday morning and Thursday evening — both open to everyone."
+        compact
       />
 
-      <Section padding="lg" className="relative overflow-hidden bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(247,222,18,0.12),transparent_28%),linear-gradient(180deg,#050505_0%,#080808_55%,#050505_100%)]" />
-        <Container size="xl" className="relative z-10">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
-              Weekly rhythm
-            </p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-              Our Weekly Schedule
-            </h1>
-            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
-              Multiple service times and gatherings to fit your schedule.
-            </p>
-          </div>
-
-          <div className="space-y-5">
-            {weeklyServices.map(daySchedule => (
-              <section
-                key={daySchedule.day}
-                className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/25 sm:rounded-[2rem]"
-              >
-                <div className="border-b border-white/10 px-5 py-4 sm:px-6">
-                  <h2 className="text-xl font-semibold text-white">
-                    {daySchedule.day}
-                  </h2>
-                </div>
-
-                <div className="grid gap-4 p-5 sm:p-6 md:grid-cols-2 lg:grid-cols-3">
-                  {daySchedule.services.map(service => (
-                    <article
-                      key={`${daySchedule.day}-${service.name}`}
-                      className="rounded-[1.25rem] border border-white/10 bg-black/30 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#f7de12]/35 hover:bg-white/[0.035]"
-                    >
-                      <div className="mb-4 flex items-center justify-between gap-3">
-                        <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-white/70">
-                          {service.type}
-                        </span>
-                        <span className="text-xs font-medium text-white/45">
-                          {service.location}
-                        </span>
-                      </div>
-
-                      <h3 className="text-lg font-semibold text-white">
-                        {service.name}
-                      </h3>
-
-                      <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#f7de12]">
-                        <CalendarClock className="h-4 w-4" />
-                        {service.time}
-                      </div>
-
-                      <p className="mt-3 text-sm leading-6 text-white/62">
-                        {service.description}
-                      </p>
-
-                      <div className="mt-4 flex items-center gap-2 border-t border-white/10 pt-4 text-xs text-white/50">
-                        <MapPin className="h-4 w-4" />
-                        {service.location}
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </Container>
-      </Section>
-
-      <Section padding="lg" className="relative overflow-hidden bg-[#080808]">
+      {/* Service panels */}
+      <section className="bg-[var(--app-canvas)]">
         <Container size="xl">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
-              First visit
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-              What to Expect
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
-              Your first visit to Wisdom House.
-            </p>
-          </div>
+          <div className="divide-y divide-[var(--app-ink)]/8 border-b border-[var(--app-ink)]/8 py-14 lg:py-18">
+            {services.map((svc, i) => (
+              <ScrollFadeIn key={svc.day} delay={i * 0.08}>
+                <div
+                  className={`grid gap-10 py-12 lg:grid-cols-2 lg:gap-20 lg:py-14 ${i === 0 ? 'pt-0' : ''}`}
+                >
+                  {/* Left — day + time */}
+                  <div>
+                    <div className="flex items-baseline gap-5">
+                      <p className="font-headline text-[3.5rem] font-normal leading-none text-[var(--app-ink)] lg:text-[4.5rem]">
+                        {svc.day}
+                      </p>
+                      <p className="font-ui text-[1rem] font-bold text-[var(--app-primary)]">
+                        {svc.time}
+                      </p>
+                    </div>
+                    <div className="mt-6 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
+                    <p className="mt-5 font-headline text-[1.3rem] font-normal text-[var(--app-ink)]">
+                      {svc.name}
+                    </p>
+                    <p className="mt-3 font-ui text-[0.85rem] leading-[1.9] text-[var(--app-ink)]/70 max-w-sm">
+                      {svc.description}
+                    </p>
+                  </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {expectations.map(item => (
-              <article
-                key={item.title}
-                className="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/20 transition duration-300 hover:border-[#f7de12]/35"
-              >
-                <CheckCircle2 className="mb-4 h-5 w-5 text-[#f7de12]" />
-                <h3 className="text-base font-semibold text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-white/62">
-                  {item.description}
-                </p>
-              </article>
+                  {/* Right — detail bullets + cta */}
+                  <div className="flex flex-col gap-6 lg:pt-4">
+                    <ul className="space-y-3">
+                      {svc.details.map(d => (
+                        <li key={d} className="flex items-start gap-3">
+                          <div className="mt-[0.55rem] h-[1.5px] w-4 shrink-0 bg-[var(--app-primary)]/55" />
+                          <span className="font-ui text-[0.83rem] leading-[1.8] text-[var(--app-ink)]/72">
+                            {d}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="font-ui text-[0.78rem] text-[var(--app-ink)]/55">
+                      Honor Gardens, opposite Dominion Church HQ,
+                      <br />
+                      Alasia bus stop, Lekki-Epe Expressway, Lagos
+                    </p>
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                    >
+                      Plan your visit <Arrow />
+                    </Link>
+                  </div>
+                </div>
+              </ScrollFadeIn>
             ))}
           </div>
         </Container>
-      </Section>
+      </section>
+
+      {/* CTA dark */}
+      <ScrollFadeIn>
+        <section className="bg-[var(--app-dark)] py-16 lg:py-20">
+          <Container size="lg">
+            <div className="flex flex-col items-center gap-7 text-center">
+              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                First time?
+              </p>
+              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.4rem]">
+                Walk in. You belong here.
+              </h2>
+              <div className="h-px w-10 bg-[var(--app-primary)]/40" />
+              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/70">
+                No pressure, no expectations — just come and experience the
+                community. Our welcome team will be right there when you arrive.
+              </p>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                >
+                  Let us know you're coming <Arrow />
+                </Link>
+                <Link
+                  href="/events"
+                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white/55 transition hover:border-white/35 hover:text-white"
+                >
+                  See all events
+                </Link>
+              </div>
+            </div>
+          </Container>
+        </section>
+      </ScrollFadeIn>
     </main>
   );
 }

@@ -25,7 +25,7 @@ export default {
           'Arial',
           'sans-serif',
         ],
-        headline: [
+        ui: [
           'var(--font-bricolage)',
           'Inter',
           'SF Pro Text',
@@ -33,6 +33,12 @@ export default {
           'Helvetica Neue',
           'Arial',
           'sans-serif',
+        ],
+        headline: [
+          'var(--font-playfair)',
+          'Georgia',
+          'Times New Roman',
+          'serif',
         ],
         code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
@@ -93,6 +99,13 @@ export default {
           ring: 'hsl(var(--sidebar-ring))',
         },
       },
+      spacing: {
+        'section-xs': 'var(--section-xs)',
+        'section-sm': 'var(--section-sm)',
+        'section-md': 'var(--section-md)',
+        'section-lg': 'var(--section-lg)',
+        'section-xl': 'var(--section-xl)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -101,6 +114,14 @@ export default {
         '2xl': '16px',
         '3xl': '20px',
         '4xl': '24px',
+        'radius-sm': 'var(--radius-sm)',
+        'radius-md': 'var(--radius-md)',
+        'radius-lg': 'var(--radius-lg)',
+        card: 'var(--radius-card)',
+        button: 'var(--radius-button)',
+        input: 'var(--radius-input)',
+        badge: 'var(--radius-badge)',
+        image: 'var(--radius-image)',
       },
       keyframes: {
         'accordion-down': {

@@ -1,223 +1,144 @@
 'use client';
 
 import Image from 'next/image';
+import type { StaticImageData } from 'next/image';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { ArrowDown, ArrowRight } from 'lucide-react';
 
-import { WisdomeHouseLogo } from '@/shared/assets';
+import { lader } from '@/shared/assets';
+import { H1, BodyLG, BodyMD } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 
 export type PageHeroProps = {
   title: string;
   subtitle?: string;
-  description?: string;
   eyebrow?: string;
-  note?: string;
-  chips?: string[];
+  /** compact — short left-aligned editorial header */
   compact?: boolean;
-  variant?: 'default' | 'about';
-  backgroundImage?: string;
+  backgroundImage?: string | StaticImageData;
   showButtons?: boolean;
   primaryButtonText?: string;
   secondaryButtonText?: string;
+  /** @deprecated no longer rendered */
+  description?: string;
+  /** @deprecated no longer rendered */
+  note?: string;
+  /** @deprecated no longer rendered */
+  chips?: string[];
+  /** @deprecated no longer used */
+  variant?: string;
+  /** @deprecated no longer used */
   showScrollIndicator?: boolean;
 };
 
 export default function PageHero({
   title,
   subtitle,
-  description,
-  eyebrow = 'The Wisdom Church',
-  note,
-  chips,
+  eyebrow,
   compact = false,
-  variant = 'default',
   backgroundImage,
   showButtons = false,
   primaryButtonText = 'Plan your visit',
   secondaryButtonText = 'Learn more',
-  showScrollIndicator = false,
 }: PageHeroProps) {
-  const supportingCopy = note ?? description;
-  const isAboutVariant = variant === 'about';
+  const bgSrc = backgroundImage ?? lader;
 
   return (
     <Section
       padding="none"
-      className="relative isolate overflow-hidden bg-[#050505] text-white"
+      className="relative isolate overflow-hidden text-white"
     >
-      {backgroundImage ? (
-        <div className="absolute inset-0 -z-30">
-          <Image
-            src={backgroundImage}
-            alt=""
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-black/70" />
-        </div>
-      ) : null}
+      {/* Background image */}
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src={bgSrc}
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+        />
 
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_15%,rgba(247,222,18,0.16),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_48%,#050505_100%)]" />
+        {compact ? (
+          /* Compact: directional gradient — dark left for text, shows photo right */
+          <>
+            <div className="absolute inset-0 bg-gradient-to-r from-[var(--app-dark)]/92 via-[var(--app-dark)]/70 to-[var(--app-dark)]/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)]/60 via-transparent to-[var(--app-dark)]/30" />
+          </>
+        ) : (
+          /* Full hero: even dark overlay with warm accent */
+          <>
+            <div className="absolute inset-0 bg-[var(--app-dark)]/70" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_25%_65%,rgba(201,150,26,0.14),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,transparent_50%,rgba(0,0,0,0.45)_100%)]" />
+          </>
+        )}
+      </div>
 
-      <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-[#f7de12]/50 to-transparent" />
-
-      <div className="absolute left-1/2 top-8 -z-10 hidden h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[#f7de12]/[0.04] blur-3xl sm:block" />
+      {/* Gold top accent line */}
+      <div className="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/55 to-transparent" />
 
       <Container size="xl">
-        <div
-          className={[
-            'grid min-h-[420px] items-center gap-8 py-16 sm:min-h-[460px] sm:py-20 lg:py-24',
-            isAboutVariant ? 'lg:grid-cols-[1.05fr_0.75fr]' : '',
-          ].join(' ')}
-        >
-          <div
-            className={[
-              'mx-auto max-w-4xl space-y-6',
-              isAboutVariant ? 'text-left lg:mx-0' : 'text-center',
-            ].join(' ')}
-          >
+        {compact ? (
+          /* ── Compact: left-aligned, clears fixed 72px header ── */
+          <div className="flex min-h-[360px] max-w-2xl flex-col justify-center gap-5 pb-14 pt-[calc(var(--app-header-height)+2.5rem)] sm:min-h-[400px] sm:pb-16">
             {eyebrow ? (
-              <div
-                className={[
-                  'inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-3 py-2 shadow-xl shadow-black/20 backdrop-blur-md',
-                  isAboutVariant ? '' : 'mx-auto',
-                ].join(' ')}
-              >
-                <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[#f7de12]">
-                  <Image
-                    src={WisdomeHouseLogo}
-                    alt=""
-                    fill
-                    className="object-contain p-1.5"
-                  />
-                </span>
-                <span className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-white/75">
-                  {eyebrow}
-                </span>
-              </div>
+              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                {eyebrow}
+              </p>
+            ) : null}
+            <H1 className="font-headline text-[2rem] font-semibold leading-[1.16] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.6)] sm:text-[2.5rem] lg:text-[2.9rem]">
+              {title}
+            </H1>
+            {subtitle ? (
+              <BodyMD className="max-w-lg leading-[1.85] text-white/65">
+                {subtitle}
+              </BodyMD>
+            ) : null}
+          </div>
+        ) : (
+          /* ── Full hero: centered, tall ── */
+          <div className="mx-auto flex min-h-[480px] max-w-3xl flex-col items-center justify-center gap-5 pb-24 pt-[calc(var(--app-header-height)+4rem)] text-center sm:min-h-[540px] sm:pb-28 sm:pt-[calc(var(--app-header-height)+5rem)]">
+            {eyebrow ? (
+              <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                {eyebrow}
+              </p>
             ) : null}
 
-            <div className="space-y-4">
-              <h1
-                className={[
-                  'text-balance font-semibold tracking-[-0.045em] text-white',
-                  compact
-                    ? 'text-3xl leading-[1.08] sm:text-4xl lg:text-5xl'
-                    : 'text-[2.15rem] leading-[1.04] sm:text-5xl lg:text-6xl',
-                ].join(' ')}
-              >
-                {title}
-              </h1>
+            <div className="h-px w-12 bg-[var(--app-primary)]/55" />
 
-              {subtitle ? (
-                <p className="max-w-3xl text-pretty text-base leading-8 text-white/76 sm:text-lg">
-                  {subtitle}
-                </p>
-              ) : null}
-
-              {supportingCopy ? (
-                <p className="max-w-2xl text-pretty text-sm leading-7 text-white/58 sm:text-base">
-                  {supportingCopy}
-                </p>
-              ) : null}
-            </div>
-
-            {chips?.length ? (
-              <div
-                className={[
-                  'flex flex-wrap gap-2.5',
-                  isAboutVariant ? 'justify-start' : 'justify-center',
-                ].join(' ')}
-              >
-                {chips.map(chip => (
-                  <span
-                    key={chip}
-                    className="rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-2 text-xs font-semibold text-white/80 shadow-lg shadow-black/20"
-                  >
-                    {chip}
-                  </span>
-                ))}
-              </div>
+            <H1 className="font-headline text-[2rem] font-semibold leading-[1.18] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)] sm:text-[2.6rem] lg:text-[3.1rem]">
+              {title}
+            </H1>
+            {subtitle ? (
+              <BodyLG className="max-w-2xl leading-[1.85] text-white/70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+                {subtitle}
+              </BodyLG>
             ) : null}
 
             {showButtons ? (
-              <div
-                className={[
-                  'flex flex-col gap-3 pt-2 sm:flex-row',
-                  isAboutVariant ? 'sm:justify-start' : 'sm:justify-center',
-                ].join(' ')}
-              >
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-center">
                 <Link
                   href="/contact"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f7de12] px-6 text-sm font-extrabold text-black shadow-lg shadow-[#f7de12]/20 transition hover:-translate-y-0.5 hover:bg-[#ffe93d]"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:brightness-105 active:scale-[0.98]"
                 >
                   {primaryButtonText}
-                  <ArrowRight size={16} />
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-
                 <Link
                   href="/about"
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/85 transition hover:bg-white/[0.08]"
+                  className="inline-flex h-11 items-center justify-center rounded-button border border-white/20 bg-white/[0.06] px-7 font-ui text-[0.78rem] font-semibold text-white/75 backdrop-blur-sm transition hover:border-white/35 hover:text-white"
                 >
                   {secondaryButtonText}
                 </Link>
               </div>
             ) : null}
           </div>
-
-          {isAboutVariant ? (
-            <aside className="hidden lg:block">
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40">
-                <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[#f7de12]/10 blur-3xl" />
-
-                <div className="relative space-y-5">
-                  <div className="relative mx-auto h-28 w-28 overflow-hidden rounded-3xl border border-white/10 bg-black/40 p-4">
-                    <Image
-                      src={WisdomeHouseLogo}
-                      alt="The Wisdom Church"
-                      fill
-                      className="object-contain p-4"
-                    />
-                  </div>
-
-                  <div className="text-center">
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f7de12]">
-                      Our foundation
-                    </p>
-                    <p className="mt-3 text-lg font-semibold leading-7 text-white">
-                      Word, worship, discipleship, and intentional community.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    {(chips ?? ['Wisdom', 'Power', 'Growth', 'Care']).map(
-                      item => (
-                        <div
-                          key={item}
-                          className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-center text-sm font-semibold text-white/75"
-                        >
-                          {item}
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
-              </div>
-            </aside>
-          ) : null}
-        </div>
-
-        {showScrollIndicator ? (
-          <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 sm:block">
-            <div className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/70">
-              <ArrowDown size={16} />
-            </div>
-          </div>
-        ) : null}
+        )}
       </Container>
+
+      {/* Bottom fade */}
+      <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/20 to-transparent" />
     </Section>
   );
 }

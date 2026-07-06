@@ -93,7 +93,6 @@ export class AnalyticsService {
   static initialize(config?: Partial<AnalyticsConfig>): void {
     if (typeof window === 'undefined') return;
     this.getInstance(config);
-    console.log('[Analytics] Service initialized');
   }
 
   /**
@@ -102,6 +101,7 @@ export class AnalyticsService {
   trackEvent(
     eventName: string,
     eventType: EventType = 'custom',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: Record<string, any>
   ): void {
     if (!this.shouldTrack()) return;
@@ -149,6 +149,7 @@ export class AnalyticsService {
   /**
    * Track form interaction
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trackFormInteraction(formName: string, fieldName: string, value?: any): void {
     if (!this.shouldTrack()) return;
 
@@ -172,6 +173,7 @@ export class AnalyticsService {
    */
   trackFormSubmission(
     formName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dataFields?: Record<string, any>
   ): void {
     if (!this.shouldTrack()) return;
@@ -257,6 +259,7 @@ export class AnalyticsService {
   /**
    * Track error
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trackError(error: Error | string, context?: Record<string, any>): void {
     if (!this.config.enableErrorTracking) return;
 
@@ -290,6 +293,7 @@ export class AnalyticsService {
   /**
    * Set custom user property
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setUserProperty(key: string, value: any): void {
     if (!this.userProfile) return;
     if (!this.userProfile.customProperties) {
@@ -313,6 +317,7 @@ export class AnalyticsService {
   private createEvent(
     eventName: string,
     eventType: EventType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: Record<string, any>
   ): AnalyticsEvent {
     return {

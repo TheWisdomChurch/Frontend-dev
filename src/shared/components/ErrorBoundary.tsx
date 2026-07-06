@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { H2, BodySM } from '@/shared/text';
 
 type ErrorBoundaryState = {
   hasError: boolean;
@@ -28,12 +29,12 @@ class ErrorBoundary extends React.Component<
       return (
         <div className="flex min-h-[50vh] items-center justify-center px-6 text-center">
           <div className="max-w-md">
-            <h2 className="text-xl font-semibold text-white">
+            <H2 className="text-xl font-semibold text-white">
               Something went wrong
-            </h2>
-            <p className="mt-2 text-sm text-slate-400">
+            </H2>
+            <BodySM className="mt-2 text-slate-400">
               Please refresh the page or try again later.
-            </p>
+            </BodySM>
             {/* Show component stack in development only */}
             {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
               <details className="mt-4 text-left text-xs text-red-400">

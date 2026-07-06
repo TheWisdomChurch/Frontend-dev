@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ── Gate ────────────────────────────────────────────────────────────────────
 if [[ "${SKIP_GIT_HOOKS:-0}" == "1" ]]; then
-  echo "[pre-commit] SKIP_GIT_HOOKS=1, skipping checks."
+  echo "[pre-commit] SKIP_GIT_HOOKS=1 — skipping."
   exit 0
 fi
 
 echo ""
-echo "[pre-commit] Running staged-file quality gates..."
+echo "┌─────────────────────────────────────────────────────────────┐"
+echo "│  pre-commit: running quality gates on staged files …        │"
+echo "└─────────────────────────────────────────────────────────────┘"
 
 STAGED_FILES="$(git diff --cached --name-only --diff-filter=ACMR || true)"
 if [[ -z "${STAGED_FILES}" ]]; then
@@ -15,49 +18,61 @@ if [[ -z "${STAGED_FILES}" ]]; then
   exit 0
 fi
 
-echo "[pre-commit] Checking for merge conflict markers..."
-FOUND_CONFLICT_MARKER=0
+# ── 1. Merge-conflict markers ────────────────────────────────────────────────
+echo "[pre-commit] 1/4  Checking for merge-conflict markers …"
+CONFLICT=0
 while IFS= read -r -d '' file; do
-  if [[ ! -f "$file" ]]; then
-    continue
-  fi
-
+  [[ -f "$file" ]] || continue
   case "$file" in
     *.ts|*.tsx|*.js|*.jsx|*.json|*.md|*.mdx|*.css|*.scss|*.html|*.yml|*.yaml)
-      if rg -n "^(<<<<<<< .*$|=======$|>>>>>>> .*$)" -- "$file" >/dev/null 2>&1; then
-        echo "[pre-commit] Conflict marker found in $file"
-        FOUND_CONFLICT_MARKER=1
+      # Use portable grep (rg is not required)
+      if grep -qE "^(<{7} |={7}$|>{7} )" -- "$file" 2>/dev/null; then
+        echo "  ✖  Conflict marker in: $file"
+        CONFLICT=1
       fi
       ;;
   esac
 done < <(git diff --cached --name-only --diff-filter=ACMR -z)
 
-if [[ "${FOUND_CONFLICT_MARKER}" == "1" ]]; then
-  echo "[pre-commit] Resolve conflicts before committing."
+if [[ "$CONFLICT" == "1" ]]; then
+  echo "[pre-commit] Resolve merge conflicts before committing."
   exit 1
 fi
-echo "[pre-commit] Conflict marker check passed."
+echo "[pre-commit] ✔  No conflict markers."
 
-echo "[pre-commit] Checking for generated/build artifacts in staged files..."
-FOUND_GENERATED_ARTIFACTS=0
+# ── 2. Build-artifact guard ──────────────────────────────────────────────────
+echo "[pre-commit] 2/4  Checking for staged build artifacts …"
+ARTIFACT=0
 while IFS= read -r -d '' file; do
   case "$file" in
     .next/*|.next-prepush/*|node_modules/*)
-      echo "[pre-commit] Generated artifact staged: $file"
-      FOUND_GENERATED_ARTIFACTS=1
+      echo "  ✖  Build artifact staged: $file"
+      ARTIFACT=1
       ;;
   esac
 done < <(git diff --cached --name-only --diff-filter=ACMR -z)
 
-if [[ "${FOUND_GENERATED_ARTIFACTS}" == "1" ]]; then
-  echo "[pre-commit] Unstage generated files before committing:"
-  echo "  git reset HEAD -- .next .next-prepush node_modules"
+if [[ "$ARTIFACT" == "1" ]]; then
+  echo "[pre-commit] Unstage generated files first:"
+  echo "    git reset HEAD -- .next .next-prepush node_modules"
   exit 1
 fi
-echo "[pre-commit] Generated artifact check passed."
+echo "[pre-commit] ✔  No build artifacts staged."
 
-echo "[pre-commit] Running lint-staged (Prettier + ESLint on staged files)..."
+# ── 3. Prettier + ESLint (staged files only via lint-staged) ────────────────
+echo "[pre-commit] 3/4  Prettier + ESLint (auto-fix staged files) …"
 node ./node_modules/lint-staged/bin/lint-staged.js
-echo "[pre-commit] lint-staged passed."
+echo "[pre-commit] ✔  Prettier + ESLint passed."
 
-echo "[pre-commit] All checks passed."
+# ── 4. TypeScript – full project (catches cross-file errors immediately) ────
+echo "[pre-commit] 4/4  TypeScript full-project type check …"
+mkdir -p .cache/tsc
+node ./node_modules/typescript/bin/tsc \
+  --noEmit \
+  --skipLibCheck \
+  --incremental \
+  --tsBuildInfoFile .cache/tsc/pre-commit.tsbuildinfo
+echo "[pre-commit] ✔  TypeScript passed."
+
+echo ""
+echo "✅  All pre-commit checks passed. Committing …"

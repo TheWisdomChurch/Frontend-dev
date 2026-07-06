@@ -1,10 +1,11 @@
-'use client';
+﻿'use client';
 
 import { useMemo } from 'react';
 import Image, { type StaticImageData } from 'next/image';
 import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
+import { H3, BodySM, Caption } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 
 type EventAdConfig = {
   id: string;
@@ -27,9 +28,6 @@ type Props = {
   onClose: () => void;
   onRemindLater?: () => void;
 };
-
-const FALLBACK_PRIMARY = '#F7DE12';
-const FALLBACK_PRIMARY_DARK = '#C7A600';
 
 const formatDate = (iso?: string) => {
   if (!iso) return '';
@@ -71,11 +69,6 @@ export default function EventAdModal({
   onClose,
   onRemindLater,
 }: Props) {
-  const theme = useTheme();
-  const colorScheme = theme?.colorScheme;
-  const primary = colorScheme?.primary || FALLBACK_PRIMARY;
-  const primaryDark = colorScheme?.primaryDark || FALLBACK_PRIMARY_DARK;
-
   const safeEvent = {
     title: event?.title || 'Special Event',
     headline: event?.headline || 'Register now',
@@ -127,7 +120,7 @@ export default function EventAdModal({
         {/* Left Column */}
         <div className="space-y-4">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#f7de12]/20 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#f7de12]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
             <Sparkles className="h-3.5 w-3.5" />
             Conference Registration
           </div>
@@ -150,15 +143,15 @@ export default function EventAdModal({
 
           {/* Description & Details Card */}
           <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-            <p className="text-sm italic leading-7 text-white/78">
+            <BodySM className="italic text-white/78">
               {safeEvent.description}
-            </p>
+            </BodySM>
 
             {/* Meta information */}
             <div className="flex flex-wrap gap-4">
               {dateRange && (
                 <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
                     <Calendar className="h-4 w-4" />
                   </div>
                   <span className="text-sm font-medium text-white/80">
@@ -169,7 +162,7 @@ export default function EventAdModal({
 
               {safeEvent.time && (
                 <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
                     <Clock className="h-4 w-4" />
                   </div>
                   <span className="text-sm font-medium text-white/80">
@@ -180,7 +173,7 @@ export default function EventAdModal({
 
               {safeEvent.location && (
                 <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#f7de12]/20 bg-black/25 text-[#f7de12]">
+                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
                     <MapPin className="h-4 w-4" />
                   </div>
                   <span className="text-sm font-medium text-white/80">
@@ -195,39 +188,35 @@ export default function EventAdModal({
         {/* Right Column (Registration) */}
         <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
           <div className="space-y-2">
-            <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/45">
-              Secure Your Spot
-            </p>
-            <h3 className="text-xl font-semibold tracking-tight text-white">
-              {safeEvent.headline}
-            </h3>
-            <p className="text-sm leading-7 text-white/78">
+            <Caption className="text-white/45">Secure Your Spot</Caption>
+            <H3 className="text-white">{safeEvent.headline}</H3>
+            <BodySM className="text-white/78">
               If you have not registered for WPC 2026, secure your seat now.
-            </p>
+            </BodySM>
           </div>
 
           {/* CTA Button */}
-          <button
-            type="button"
+          <Button
+            variant="primary"
             onClick={handleRegister}
             disabled={!registerUrl}
-            className="w-full rounded-2xl py-3.5 text-lg font-bold text-black shadow-lg shadow-[#f7de12]/20 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-            style={{ backgroundColor: primary }}
+            className="w-full py-3.5 text-lg font-bold"
           >
             {safeEvent.ctaLabel}
-          </button>
+          </Button>
 
           {/* Note & Remind Later */}
           <div className="flex items-center justify-between text-xs text-white/40">
             <span>{safeEvent.note}</span>
             {onRemindLater && (
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="xs"
                 onClick={onRemindLater}
-                className="underline-offset-4 hover:text-white hover:underline"
+                className="text-xs text-white/40 underline-offset-4 hover:text-white hover:underline"
               >
                 Remind me later
-              </button>
+              </Button>
             )}
           </div>
         </div>

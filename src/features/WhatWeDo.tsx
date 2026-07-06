@@ -1,150 +1,181 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
-import { whatWeDoData, missionStatement } from '@/lib/data';
-import type { ServiceBox } from '@/lib/types';
-import { H2, BodySM } from '@/shared/text';
-import { useWhatWeDo } from '@/shared/utils/hooks/useWhatwedo';
-import { Section, Container } from '@/shared/layout';
+import { whatWeDoData } from '@/lib/data';
+import { Section } from '@/shared/layout';
+
+const SLIDES = whatWeDoData.slice(0, 4).map((item, i) => ({
+  ...item,
+  headline:
+    [
+      'We raise\nbelievers,\nnot just members.',
+      'We gather as\na people\nof prayer.',
+      'We worship\nwith our\nwhole heart.',
+      'We are shaped\nby the\nliving Word.',
+    ][i] ?? item.title,
+}));
+
+const AUTO_MS = 6000;
 
 export default function WhatWeDo() {
-  const { sectionRef, headingRef, textRef, addToBoxesRef } = useWhatWeDo();
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
 
-  const renderBox = (box: ServiceBox, index: number, featured = false) => {
-    return (
-      <article
-        key={box.id}
-        ref={el => addToBoxesRef(el as HTMLDivElement | null, index)}
-        className={[
-          'group relative flex h-full min-h-0 overflow-hidden rounded-[1.4rem] border border-white/10 bg-[#0b0b0b] shadow-[0_18px_55px_rgba(0,0,0,0.32)] transition duration-500 hover:-translate-y-1 hover:border-white/18 hover:bg-[#101010] hover:shadow-[0_24px_75px_rgba(0,0,0,0.42)]',
-          featured
-            ? 'flex-col lg:min-h-[430px] lg:flex-row'
-            : 'flex-col min-h-[420px]',
-        ].join(' ')}
-      >
-        <div
-          className={[
-            'relative shrink-0 overflow-hidden bg-black',
-            featured
-              ? 'h-64 sm:h-72 lg:h-auto lg:w-[52%]'
-              : 'h-56 sm:h-60 lg:h-64',
-          ].join(' ')}
-        >
-          <Image
-            src={box.image}
-            alt={box.imageAlt}
-            fill
-            sizes={
-              featured
-                ? '(max-width: 1024px) 100vw, 52vw'
-                : '(max-width: 768px) 100vw, 50vw'
-            }
-            quality={88}
-            className="object-cover transition duration-700 ease-out group-hover:scale-105"
-            style={{
-              objectPosition: 'center top',
-              opacity: box.imageOpacity ? box.imageOpacity / 100 : 1,
-            }}
-          />
+  const goTo = useCallback(
+    (i: number) => setActive((i + SLIDES.length) % SLIDES.length),
+    []
+  );
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/20" />
-        </div>
-
-        <div
-          className={[
-            'relative flex min-h-0 flex-1 flex-col justify-between p-5 sm:p-6',
-            featured ? 'lg:p-8' : '',
-          ].join(' ')}
-        >
-          <div>
-            <div className="mb-4 flex items-center gap-3">
-              <span className="h-px w-8 rounded-full bg-[#f7de12]" />
-              <span className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/45">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-            </div>
-
-            <h3
-              className={[
-                'font-semibold tracking-[-0.02em] text-white',
-                featured
-                  ? 'text-xl leading-tight sm:text-2xl'
-                  : 'text-lg leading-snug sm:text-xl',
-              ].join(' ')}
-            >
-              {box.title}
-            </h3>
-
-            <BodySM className="mt-3 max-w-2xl text-sm leading-7 text-white/68 sm:text-[0.95rem]">
-              {box.description}
-            </BodySM>
-          </div>
-
-          <div className="mt-6 h-px w-full bg-gradient-to-r from-[#f7de12]/45 via-white/10 to-transparent" />
-        </div>
-      </article>
-    );
-  };
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => goTo(active + 1), AUTO_MS);
+    return () => clearInterval(t);
+  }, [active, paused, goTo]);
 
   return (
     <Section
       id="what-we-do"
-      ref={sectionRef}
       padding="none"
       fullHeight={false}
       perf="none"
-      className="relative overflow-hidden bg-[#070707] py-16 sm:py-20 lg:py-24"
+      className="bg-[var(--app-dark)]"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-10%] top-10 h-72 w-72 rounded-full bg-[#f7de12]/[0.07] blur-3xl" />
-        <div className="absolute right-[-8%] top-1/3 h-80 w-80 rounded-full bg-white/[0.045] blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
-      </div>
+      <div
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        className="contents"
+      >
+        <div className="grid min-h-[600px] grid-cols-1 lg:grid-cols-2 lg:min-h-[680px]">
+          {/* ── Left — content ──────────────────────────────────── */}
+          <div className="flex flex-col justify-between px-6 py-section-md sm:px-10 lg:px-14 xl:px-20">
+            <div className="flex flex-col">
+              <p className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Who We Are
+              </p>
 
-      <Container size="xl" className="relative z-10 px-4 sm:px-6 lg:px-10">
-        <div className="mb-8 grid gap-5 lg:mb-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div className="min-w-0">
-            <div className="mb-4 inline-flex items-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/60">
-              What to expect
+              {/* Headline — cross-fades between slides */}
+              <div
+                className="relative"
+                // eslint-disable-next-line no-restricted-syntax
+                style={{ minHeight: 'clamp(7rem, 14vw, 11rem)' }}
+              >
+                {SLIDES.map((s, i) => (
+                  <h2
+                    key={i}
+                    className="absolute font-headline font-normal leading-[1.05] text-white"
+                    // eslint-disable-next-line no-restricted-syntax
+                    style={{
+                      fontSize: 'var(--type-display-md)',
+                      opacity: i === active ? 1 : 0,
+                      transform:
+                        i === active
+                          ? 'translateY(0)'
+                          : i < active
+                            ? 'translateY(-6%)'
+                            : 'translateY(6%)',
+                      transition: 'opacity 0.55s ease, transform 0.55s ease',
+                      pointerEvents: i === active ? 'auto' : 'none',
+                    }}
+                  >
+                    {s.headline.split('\n').map((line, li) => (
+                      <span key={li} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </h2>
+                ))}
+              </div>
+
+              {/* Gold rule */}
+              <span
+                className="mt-8 block h-[2px] w-12 bg-[var(--app-primary)]"
+                aria-hidden="true"
+              />
+
+              {/* Description */}
+              <div
+                className="relative mt-6"
+                // eslint-disable-next-line no-restricted-syntax
+                style={{ minHeight: '9rem' }}
+              >
+                {SLIDES.map((s, i) => (
+                  <p
+                    key={i}
+                    className="absolute max-w-[380px] font-ui text-[0.92rem] leading-[1.9] text-white/60"
+                    // eslint-disable-next-line no-restricted-syntax
+                    style={{
+                      opacity: i === active ? 1 : 0,
+                      transform:
+                        i === active ? 'translateY(0)' : 'translateY(6px)',
+                      transition:
+                        'opacity 0.55s ease 0.1s, transform 0.55s ease 0.1s',
+                      pointerEvents: i === active ? 'auto' : 'none',
+                    }}
+                  >
+                    {s.description}
+                  </p>
+                ))}
+              </div>
             </div>
 
-            <H2
-              ref={headingRef}
-              className="max-w-2xl text-left text-[1.85rem] font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-4xl lg:text-[2.75rem]"
-              useThemeColor={false}
-              weight="semibold"
-            >
-              A Sunday experience that feels personal
-            </H2>
-          </div>
-
-          <div
-            ref={textRef}
-            className="rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5"
-          >
-            <BodySM className="max-w-3xl text-sm leading-7 text-white/68 sm:text-base">
-              {missionStatement}
-            </BodySM>
-          </div>
-        </div>
-
-        <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2 lg:gap-6">
-          {whatWeDoData.map((box, index) => {
-            const featured = index === 0 || index === whatWeDoData.length - 1;
-
-            return (
-              <div
-                key={box.id}
-                className={featured ? 'lg:col-span-2' : 'min-h-0'}
+            {/* CTA */}
+            <div className="mt-10">
+              <Link
+                href="/about"
+                className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-[0.8rem] font-bold text-[#0d0a06] transition hover:bg-[var(--app-primary-light)]"
               >
-                {renderBox(box, index, featured)}
-              </div>
-            );
-          })}
+                Our Story
+                <ArrowRight className="h-3.5 w-3.5 transition duration-200 group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </div>
+
+          {/* ── Right — sliding editorial photos ────────────────── */}
+          <div className="relative min-h-[360px] overflow-hidden border-l border-white/[0.05] lg:min-h-0">
+            {SLIDES.map((s, i) => {
+              const src = s.image
+                ? typeof s.image === 'string'
+                  ? s.image
+                  : (s.image as { src: string }).src
+                : '/images/placeholder.webp';
+              return (
+                <div
+                  key={i}
+                  className="absolute inset-0 transition-opacity duration-700"
+                  // eslint-disable-next-line no-restricted-syntax
+                  style={{
+                    opacity: i === active ? 1 : 0,
+                    zIndex: i === active ? 1 : 0,
+                  }}
+                  aria-hidden={i !== active}
+                >
+                  <Image
+                    src={src}
+                    alt={s.imageAlt || 'The Wisdom Church'}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    quality={88}
+                    priority={i === 0}
+                    className="object-cover [object-position:center_20%]"
+                  />
+                  {/* Heavy dark base — image is visible but dramatically darkened */}
+                  <div className="absolute inset-0 bg-black/65" />
+                  {/* Left-to-right blend into content column */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--app-dark)]/95 via-[var(--app-dark)]/55 to-[var(--app-dark)]/25" />
+                  {/* Bottom vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)]/90 via-transparent to-transparent" />
+                  {/* Top vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-[var(--app-dark)]/60 to-transparent" />
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </Container>
+      </div>
     </Section>
   );
 }

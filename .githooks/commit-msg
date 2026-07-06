@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${SKIP_GIT_HOOKS:-0}" == "1" ]]; then
+  echo "[commit-msg] SKIP_GIT_HOOKS=1, skipping checks."
+  exit 0
+fi
+
+echo "[commit-msg] Commit message accepted."

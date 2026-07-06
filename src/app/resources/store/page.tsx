@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import {
-  ArrowRight,
   Bell,
   CheckCircle2,
   Filter,
@@ -28,13 +27,20 @@ import {
 } from '@/lib/store/slices/productSlice';
 
 import ProductModal from '@/features/store/modals/ProductModal';
-import HeroSection from '@/features/hero/PageHero';
-import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
+import {
+  H3,
+  H4,
+  BodyLG,
+  BodySM,
+  SmallText,
+  Caption,
+  Eyebrow,
+} from '@/shared/text';
 import { hero_bg_1 } from '@/shared/assets';
-import Button from '@/shared/utils/buttons/CustomButton';
+import { Button } from '@/shared/utils/buttons';
 import { Section, Container } from '@/shared/layout';
-import CartSidebar from '@/shared/ui/Store/CartSidebar';
-import { useTheme } from '@/shared/contexts/ThemeContext';
+import GridBackground from '@/shared/ui/GridBackground';
+import CartSidebar from '@/features/store/Store/CartSidebar';
 import type { Product } from '@/lib/types';
 import { storeClient } from '@/lib/api/storeClient';
 import PageHero from '@/features/hero/PageHero';
@@ -53,8 +59,6 @@ export default function StorePage() {
     state => state.products
   );
   const { itemCount } = useAppSelector(state => state.cart);
-  const { colorScheme, isDark } = useTheme();
-
   const [showSearchAlert, setShowSearchAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -65,18 +69,6 @@ export default function StorePage() {
   const [loadingProducts, setLoadingProducts] = useState(true);
 
   const productsRef = useRef<HTMLDivElement>(null);
-
-  const cardBackground = isDark ? 'rgba(255,255,255,0.055)' : '#ffffff';
-  const borderColor = isDark ? 'rgba(255,255,255,0.12)' : colorScheme.border;
-  const textColor = colorScheme.text || '#ffffff';
-  const secondaryTextColor =
-    colorScheme.textSecondary || 'rgba(255,255,255,0.6)';
-  const inputBackground = isDark
-    ? 'rgba(255,255,255,0.06)'
-    : colorScheme.surface;
-  const inputBorderColor = isDark
-    ? 'rgba(255,255,255,0.14)'
-    : colorScheme.border;
 
   const categories = useMemo(
     () => [
@@ -224,9 +216,9 @@ export default function StorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
-        title="Wisdom House Store"
+        title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
         description="Discover our exclusive collection of merchandise designed to inspire and uplift. Each item carries a message of faith, hope, and wisdom for your daily journey."
         backgroundImage={hero_bg_1.src}
@@ -236,14 +228,13 @@ export default function StorePage() {
         showScrollIndicator
       />
 
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
+        curvature="full"
         onClick={() => dispatch(toggleCart())}
-        className="fixed bottom-6 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition duration-300 hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
-        style={{
-          background: colorScheme.primaryGradient || colorScheme.primary,
-          color: colorScheme.black,
-        }}
+        className="fixed bottom-6 right-5 z-50 relative h-14 w-14 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] text-black shadow-[0_20px_60px_rgba(0,0,0,0.45)] hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
         aria-label="Open cart"
       >
         <ShoppingBag className="h-6 w-6" />
@@ -253,32 +244,25 @@ export default function StorePage() {
             {itemCount}
           </span>
         )}
-      </button>
+      </Button>
 
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative bg-[#050505]"
+        className="relative bg-[var(--app-dark)]"
       >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(247,222,18,0.12),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(247,222,18,0.08),transparent_34%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10 space-y-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div
-                className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
-                style={{
-                  borderColor: `${colorScheme.primary}33`,
-                  background: `${colorScheme.primary}12`,
-                  color: colorScheme.primary,
-                }}
-              >
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                  Wisdom House Store
+                  Wisdom Church Store
                 </Caption>
               </div>
 
@@ -308,21 +292,16 @@ export default function StorePage() {
                   key={label}
                   className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 text-center backdrop-blur-xl"
                 >
-                  <p
-                    className="text-xl font-bold"
-                    style={{ color: colorScheme.primary }}
-                  >
+                  <BodyLG weight="bold" className="text-[var(--app-primary)]">
                     {value}
-                  </p>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/42">
-                    {label}
-                  </p>
+                  </BodyLG>
+                  <Eyebrow className="mt-1 text-white/42">{label}</Eyebrow>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="sticky top-3 z-30 rounded-[1.75rem] border border-white/10 bg-[#080808]/85 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-4">
+          <div className="sticky top-3 z-30 rounded-[1.75rem] border border-white/10 bg-[var(--app-dark-2)]/85 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-4">
             <div className="grid gap-3 lg:grid-cols-[1fr_280px_auto] lg:items-center">
               <label className="relative block">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
@@ -331,27 +310,31 @@ export default function StorePage() {
                   placeholder="Search products, scripture, gifts..."
                   value={filters.searchTerm}
                   onChange={e => handleSearch(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-11 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-11 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                 />
 
                 {filters.searchTerm && (
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onClick={() => handleSearch('')}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/45 transition hover:text-white"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 min-h-0 h-auto w-auto p-0 text-white/45 hover:text-white"
                     aria-label="Clear search"
                   >
                     <X className="h-4 w-4" />
-                  </button>
+                  </Button>
                 )}
               </label>
 
               <label className="relative block">
+                <span className="sr-only">Filter by category</span>
                 <Filter className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
                 <select
                   value={filters.selectedCategory}
                   onChange={e => handleCategoryClick(e.target.value)}
-                  className="h-12 w-full appearance-none rounded-2xl border border-white/12 bg-[#111] pl-11 pr-10 text-sm text-white outline-none transition hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10"
+                  aria-label="Filter by category"
+                  className="h-12 w-full appearance-none rounded-2xl border border-white/12 bg-[#111] pl-11 pr-10 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
                 >
                   {categories.map(category => (
                     <option key={category.value} value={category.value}>
@@ -362,13 +345,14 @@ export default function StorePage() {
                 <SlidersHorizontal className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
               </label>
 
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={resetFilters}
-                className="h-12 rounded-2xl border border-white/12 bg-white/[0.04] px-5 text-sm font-bold text-white/72 transition hover:bg-white/[0.08] hover:text-white"
+                className="h-12 rounded-2xl border border-white/12 bg-white/[0.04] px-5 text-sm font-bold text-white/72 hover:bg-white/[0.08] hover:text-white"
               >
                 Reset
-              </button>
+              </Button>
             </div>
 
             {showSearchAlert && (
@@ -385,13 +369,16 @@ export default function StorePage() {
                     Try different keywords or browse categories.
                   </SmallText>
                 </div>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowSearchAlert(false)}
-                  className="text-yellow-100/70 transition hover:text-yellow-100"
+                  aria-label="Dismiss alert"
+                  className="min-h-0 h-auto w-auto p-0 text-yellow-100/70 hover:text-yellow-100"
                 >
                   <X className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -401,34 +388,28 @@ export default function StorePage() {
               const active = filters.selectedCategory === category.value;
 
               return (
-                <button
+                <Button
                   key={category.value}
                   type="button"
+                  variant={active ? 'primary' : 'ghost'}
+                  curvature="full"
                   onClick={() => handleCategoryClick(category.value)}
-                  className={`shrink-0 rounded-full border px-4 py-2.5 text-sm font-bold transition ${
+                  className={`shrink-0 px-4 py-2.5 min-h-0 h-auto text-sm font-bold ${
                     active
-                      ? 'border-transparent text-black shadow-[0_14px_35px_rgba(247,222,18,0.16)]'
-                      : 'border-white/12 bg-white/[0.045] text-white/64 hover:bg-white/[0.08] hover:text-white'
+                      ? 'shadow-[0_14px_35px_rgba(201,150,26,0.13)]'
+                      : 'border border-white/12 bg-white/[0.045] text-white/64 hover:bg-white/[0.08] hover:text-white'
                   }`}
-                  style={
-                    active
-                      ? {
-                          backgroundColor: colorScheme.primary,
-                          color: colorScheme.black,
-                        }
-                      : undefined
-                  }
                 >
                   {category.name}
                   <span className="ml-2 opacity-70">({category.count})</span>
-                </button>
+                </Button>
               );
             })}
           </div>
         </Container>
       </Section>
 
-      <Section padding="lg" fullHeight={false} className="bg-[#050505]">
+      <Section padding="lg" fullHeight={false} className="bg-[var(--app-dark)]">
         <Container size="xl">
           <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -486,10 +467,6 @@ export default function StorePage() {
                   curvature="full"
                   elevated
                   className="mt-6 font-bold"
-                  style={{
-                    backgroundColor: colorScheme.primary,
-                    color: colorScheme.black,
-                  }}
                 >
                   View All Products
                 </Button>
@@ -508,13 +485,13 @@ export default function StorePage() {
                   return (
                     <article
                       key={product.id}
-                      className="product-card group overflow-hidden rounded-[1.75rem] border bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
-                      style={{ borderColor }}
+                      className="product-card group overflow-hidden rounded-[1.75rem] border border-white/[0.12] bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
                     >
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
                         onClick={() => handleQuickView(product)}
-                        className="relative block aspect-square w-full overflow-hidden bg-[#0d0d0d]"
+                        className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[#0d0d0d] rounded-none"
                       >
                         {product.image ? (
                           <Image
@@ -547,14 +524,11 @@ export default function StorePage() {
                         </div>
 
                         <div className="absolute inset-x-4 bottom-4 translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                          <span
-                            className="flex h-11 w-full items-center justify-center rounded-full text-sm font-bold text-black"
-                            style={{ backgroundColor: colorScheme.primary }}
-                          >
+                          <span className="flex h-11 w-full items-center justify-center rounded-full text-sm font-bold text-black bg-[var(--app-primary)]">
                             {soldOut ? 'View Product' : 'Quick View'}
                           </span>
                         </div>
-                      </button>
+                      </Button>
 
                       <div className="p-5">
                         <div className="mb-3 flex items-start justify-between gap-3">
@@ -566,13 +540,16 @@ export default function StorePage() {
                             {product.name}
                           </SmallText>
 
-                          <button
+                          <Button
                             type="button"
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.045] text-white/62 transition hover:bg-white/[0.09] hover:text-white"
+                            variant="ghost"
+                            size="icon"
+                            curvature="full"
+                            className="h-9 w-9 shrink-0 border border-white/10 bg-white/[0.045] text-white/62 hover:bg-white/[0.09] hover:text-white"
                             aria-label="Add to wishlist"
                           >
                             <Heart className="h-4 w-4" />
-                          </button>
+                          </Button>
                         </div>
 
                         <Caption
@@ -583,14 +560,13 @@ export default function StorePage() {
                         </Caption>
 
                         <div className="mt-4 flex items-end gap-2">
-                          <BaseText
+                          <BodyLG
                             weight="bold"
-                            className="text-2xl"
-                            style={{ color: colorScheme.primary }}
+                            className="text-2xl text-[var(--app-primary)]"
                             useThemeColor={false}
                           >
                             {product.price}
-                          </BaseText>
+                          </BodyLG>
 
                           {product.originalPrice && (
                             <Caption
@@ -612,12 +588,12 @@ export default function StorePage() {
                               key={label}
                               className="rounded-2xl border border-white/8 bg-black/25 px-2 py-2 text-center"
                             >
-                              <p className="text-sm font-bold text-white">
+                              <BodySM weight="bold" className="text-white">
                                 {value}
-                              </p>
-                              <p className="mt-0.5 text-[10px] uppercase tracking-[0.14em] text-white/38">
+                              </BodySM>
+                              <Eyebrow className="mt-0.5 text-white/38">
                                 {label}
-                              </p>
+                              </Eyebrow>
                             </div>
                           ))}
                         </div>
@@ -631,17 +607,13 @@ export default function StorePage() {
                           onClick={() => handleQuickView(product)}
                           disabled={soldOut}
                           className="mt-5 h-11 w-full font-bold transition hover:scale-[1.01]"
-                          style={{
-                            backgroundColor: colorScheme.primary,
-                            color: colorScheme.black,
-                          }}
                           onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
                             e.currentTarget.style.backgroundColor =
-                              colorScheme.primaryDark || colorScheme.primary;
+                              'var(--app-primary-dark)';
                           }}
                           onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
                             e.currentTarget.style.backgroundColor =
-                              colorScheme.primary;
+                              'var(--app-primary)';
                           }}
                         >
                           {soldOut ? 'Out of Stock' : 'Add to Cart'}
@@ -659,17 +631,14 @@ export default function StorePage() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#070707]"
+        className="relative overflow-hidden bg-[var(--app-dark-2)]"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(247,222,18,0.12),transparent_34%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.10),transparent_34%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto max-w-3xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 text-center shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-8 lg:p-10">
-            <div
-              className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
-              style={{ backgroundColor: `${colorScheme.primary}18` }}
-            >
-              <Tag className="h-7 w-7" style={{ color: colorScheme.primary }} />
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
+              <Tag className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
             <H3
@@ -692,21 +661,11 @@ export default function StorePage() {
 
             <div className="mt-8">
               {emailSubmitted ? (
-                <div
-                  className="mx-auto max-w-md rounded-2xl border p-6"
-                  style={{
-                    backgroundColor: `${colorScheme.success}12`,
-                    borderColor: `${colorScheme.success}30`,
-                  }}
-                >
-                  <CheckCircle2
-                    className="mx-auto h-10 w-10"
-                    style={{ color: colorScheme.success }}
-                  />
+                <div className="mx-auto max-w-md rounded-2xl border border-green-500/20 bg-green-500/[0.07] p-6">
+                  <CheckCircle2 className="mx-auto h-10 w-10 text-green-500" />
                   <SmallText
                     weight="bold"
-                    className="mt-3 block text-lg"
-                    style={{ color: colorScheme.success }}
+                    className="mt-3 block text-lg text-green-500"
                   >
                     You&apos;re In!
                   </SmallText>
@@ -730,12 +689,7 @@ export default function StorePage() {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="your@email.com"
                       required
-                      className="h-12 w-full rounded-2xl border pl-12 pr-4 text-base text-white outline-none transition placeholder:text-white/40 focus:ring-4 focus:ring-yellow-400/10"
-                      style={{
-                        backgroundColor: inputBackground,
-                        borderColor: inputBorderColor,
-                        color: textColor,
-                      }}
+                      className="h-12 w-full rounded-2xl border border-white/[0.14] bg-white/[0.06] pl-12 pr-4 text-base text-white outline-none transition placeholder:text-white/40 focus:ring-4 focus:ring-yellow-400/10"
                     />
                   </label>
 
@@ -747,10 +701,6 @@ export default function StorePage() {
                     elevated
                     disabled={isSubmittingEmail || !email}
                     className="h-12 px-6 font-bold transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-                    style={{
-                      backgroundColor: colorScheme.primary,
-                      color: '#000000',
-                    }}
                   >
                     {isSubmittingEmail ? (
                       <span className="inline-flex items-center gap-2">

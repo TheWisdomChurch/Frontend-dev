@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import apiClient from '@/lib/api';
 import type { LeadershipMember as ApiLeadershipMember } from '@/lib/types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type LeadershipMember = ApiLeadershipMember | any;
 
 interface UseLeadershipState {

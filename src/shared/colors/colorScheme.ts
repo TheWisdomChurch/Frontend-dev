@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/ui/fonts/color/colorScheme.ts
 
 type BackgroundColor = string;
@@ -178,12 +178,12 @@ const createOpacityColors = (
 });
 
 export const darkShades: ColorScheme = {
-  primary: '#F6D34A',
-  primaryLight: '#FFE27F',
-  primaryDark: '#C8A731',
+  primary: '#C9961A',
+  primaryLight: '#E8B44A',
+  primaryDark: '#A0740C',
   secondary: '#0F1115',
-  accent: '#F6D34A',
-  accentText: '#C8A731',
+  accent: '#C9961A',
+  accentText: '#A0740C',
 
   error: '#EF4444',
   success: '#10B981',
@@ -197,19 +197,19 @@ export const darkShades: ColorScheme = {
   subtleText: '#9CA3AF',
   heading: '#FFFFFF',
 
-  background: '#050505',
-  backgroundSecondary: '#0A0B0F',
-  surface: '#0D1014',
-  surfaceVariant: '#141820',
-  card: '#0E1116',
-  body: '#050505',
-  footer: '#060606',
-  pageBackground: '#050505',
+  background: '#060504',
+  backgroundSecondary: '#0e0c0a',
+  surface: '#17140f',
+  surfaceVariant: '#1d1a14',
+  card: '#0c0a07',
+  body: '#060504',
+  footer: '#070503',
+  pageBackground: '#060504',
 
-  button: '#F6D34A',
+  button: '#C9961A',
   buttonText: '#0A0A0A',
-  buttonHover: '#FFE27F',
-  buttonActive: '#C8A731',
+  buttonHover: '#E8B44A',
+  buttonActive: '#A0740C',
 
   border: '#23262F',
   borderLight: '#2E323C',
@@ -217,13 +217,13 @@ export const darkShades: ColorScheme = {
 
   gray: baseGrayScale,
 
-  primaryGradient: 'linear-gradient(135deg, #F6D34A 0%, #C8A731 100%)',
+  primaryGradient: 'linear-gradient(135deg, #E8B44A 0%, #A0740C 100%)',
   primaryGradientLight:
-    'linear-gradient(135deg, rgba(246, 211, 74, 0.12) 0%, rgba(200, 167, 49, 0.12) 100%)',
+    'linear-gradient(135deg, rgba(201, 150, 26, 0.12) 0%, rgba(160, 116, 12, 0.12) 100%)',
   secondaryGradient: 'linear-gradient(135deg, #111318 0%, #050505 100%)',
 
-  focusRing: '0 0 0 3px rgba(246, 211, 74, 0.45)',
-  focusBorder: '#F6D34A',
+  focusRing: '0 0 0 3px rgba(201, 150, 26, 0.40)',
+  focusBorder: '#C9961A',
 
   shadowSm: '0 2px 10px rgba(0,0,0,0.45)',
   shadowMd: '0 10px 30px rgba(0,0,0,0.45)',
@@ -233,11 +233,11 @@ export const darkShades: ColorScheme = {
 
   white: '#FFFFFF',
   black: '#000000',
-  highlight: '#F6D34A',
+  highlight: '#C9961A',
 
   opacity: createOpacityColors(
-    '#F6D34A',
-    '#050505',
+    '#C9961A',
+    'var(--app-surface)',
     '#FFFFFF',
     '#F59E0B',
     '#EF4444',

@@ -6,9 +6,9 @@
 // ============================================================================
 
 // Primary Colors
-$color-primary: #f7de12;
-$color-primary-dark: #d4bc0f;
-$color-primary-light: #f9e755;
+$color-primary: #c9961a;
+$color-primary-dark: #a0740c;
+$color-primary-light: #e8b44a;
 
 // Secondary Colors
 $color-secondary: #1f2937;
@@ -16,7 +16,7 @@ $color-secondary-light: #374151;
 $color-secondary-lighter: #4b5563;
 
 // Accent & Status Colors
-$color-accent: #f7de12;
+$color-accent: #c9961a;
 $color-error: #ef4444;
 $color-success: #10b981;
 $color-warning: #f59e0b;
@@ -295,35 +295,35 @@ $breakpoint-ultrawide: 1920px;
 // ============================================================================
 
 @mixin typography-display-large {
-  font-family: $font-sans;
+  font-family: $font-serif;
   font-size: $text-display-large;
   font-weight: $font-weight-bold;
-  line-height: $line-height-dense;
-  letter-spacing: $letter-spacing-tight;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
 }
 
 @mixin typography-display {
-  font-family: $font-sans;
+  font-family: $font-serif;
   font-size: $text-display;
   font-weight: $font-weight-bold;
-  line-height: $line-height-dense;
-  letter-spacing: $letter-spacing-tight;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
 }
 
 @mixin typography-headline-1 {
-  font-family: $font-sans;
+  font-family: $font-serif;
   font-size: $text-headline-1;
   font-weight: $font-weight-bold;
-  line-height: $line-height-dense;
-  letter-spacing: $letter-spacing-tight;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
 @mixin typography-headline-2 {
-  font-family: $font-sans;
+  font-family: $font-serif;
   font-size: $text-headline-2;
   font-weight: $font-weight-bold;
-  line-height: $line-height-dense;
-  letter-spacing: $letter-spacing-tight;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
 }
 
 @mixin typography-headline-3 {
@@ -442,6 +442,7 @@ $breakpoint-ultrawide: 1920px;
 
 @mixin glass-morphism {
   background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }

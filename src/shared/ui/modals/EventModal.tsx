@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useRef, useState } from 'react';
 import {
@@ -14,6 +14,8 @@ import { addHours, format } from 'date-fns';
 import toast from 'react-hot-toast';
 
 import { BaseModal, modalStyles } from './Base';
+import { Caption, BodySM } from '@/shared/text';
+import { Button } from '@/shared/utils/buttons';
 import type { EventDetailsModalProps } from '@/lib/types';
 
 function parseEventTime(timeString?: string): {
@@ -220,6 +222,7 @@ export function EventDetailsModal({
 
       await navigator.clipboard.writeText(shareText);
       toast.success('Event details copied.');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error?.name !== 'AbortError') {
         toast.error('Unable to share event.');
@@ -280,38 +283,35 @@ export function EventDetailsModal({
 
           <div className="mt-4 grid gap-3 text-sm leading-6 text-white/72">
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-              <Calendar className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <Calendar className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
               <div className="min-w-0">
-                <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
-                  Date
-                </p>
-                <p className="mt-1 font-semibold text-white">
+                <Caption className="text-white/40">Date</Caption>
+                <BodySM weight="semibold" className="mt-1 text-white">
                   {eventDateRange}
-                </p>
+                </BodySM>
               </div>
             </div>
 
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-              <Clock className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <Clock className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
               <div className="min-w-0">
-                <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
-                  Time
-                </p>
-                <p className="mt-1 font-semibold text-white">
+                <Caption className="text-white/40">Time</Caption>
+                <BodySM weight="semibold" className="mt-1 text-white">
                   {event.time || 'Time to be announced'}
-                </p>
+                </BodySM>
               </div>
             </div>
 
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-              <MapPin className="mt-0.5 h-4 w-4 flex-none text-[#f7de12]" />
+              <MapPin className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
               <div className="min-w-0">
-                <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/40">
-                  Location
-                </p>
-                <p className="mt-1 break-words font-semibold text-white">
+                <Caption className="text-white/40">Location</Caption>
+                <BodySM
+                  weight="semibold"
+                  className="mt-1 break-words text-white"
+                >
                   {event.location || 'Venue to be announced'}
-                </p>
+                </BodySM>
               </div>
             </div>
           </div>
@@ -320,20 +320,21 @@ export function EventDetailsModal({
         {event.description ? (
           <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <p className={modalStyles.sectionTitle}>About this event</p>
-            <p className="mt-3 text-sm leading-7 text-white/65">
-              {event.description}
-            </p>
+            <BodySM className="mt-3 text-white/65">{event.description}</BodySM>
           </section>
         ) : null}
 
         <section className="space-y-3">
           {onRegister ? (
-            <button
+            <Button
               ref={registerButtonRef}
               type="button"
+              variant="primary"
+              size="md"
+              curvature="full"
               onClick={handleRegister}
               disabled={disabled}
-              className={modalStyles.primaryButton}
+              className="w-full"
             >
               {isRegistering ? (
                 <span className="inline-flex items-center justify-center">
@@ -343,15 +344,18 @@ export function EventDetailsModal({
               ) : (
                 'Register Now'
               )}
-            </button>
+            </Button>
           ) : null}
 
           <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="md"
+              curvature="full"
               onClick={handleAddToCalendar}
               disabled={disabled}
-              className={modalStyles.ghostButton}
+              className="w-full border border-white/12 bg-white/[0.04]"
               title="Add to calendar"
             >
               {isAddingToCalendar ? (
@@ -370,13 +374,16 @@ export function EventDetailsModal({
                   Add to Calendar
                 </span>
               )}
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
+              curvature="full"
               onClick={handleShare}
               disabled={disabled}
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 text-sm font-bold text-white/82 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-60"
+              className="min-h-12 border border-white/12 bg-white/[0.04] px-5 text-white/82"
               title="Share event"
               aria-label="Share event"
             >
@@ -385,13 +392,13 @@ export function EventDetailsModal({
               ) : (
                 <Share2 className="h-4 w-4" />
               )}
-            </button>
+            </Button>
           </div>
 
-          <p className="text-center text-xs leading-5 text-white/45">
+          <Caption className="text-center text-white/45">
             The .ics file works with Apple Calendar, Google Calendar, Outlook,
             and most calendar apps.
-          </p>
+          </Caption>
         </section>
       </div>
     </BaseModal>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/responsive.ts
  * Professional responsive design system for Wisdom House UI.
  */
@@ -263,7 +263,7 @@ export const responsiveFontSizes = {
 
 export const surfaces = {
   appBackground:
-    'bg-[#050505] text-white bg-[radial-gradient(circle_at_15%_15%,rgba(247,222,18,0.10),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(255,255,255,0.06),transparent_28%)]',
+    'bg-[var(--app-surface)] text-white bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.09),transparent_32%),radial-gradient(circle_at_85%_10%,rgba(255,255,255,0.06),transparent_28%)]',
 
   panel:
     'rounded-[2rem] border border-white/10 bg-white/[0.045] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl',
@@ -274,13 +274,13 @@ export const surfaces = {
     'rounded-[1.75rem] border border-white/10 bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]',
 
   input:
-    'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[#F7DE12]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[#F7DE12]/10',
+    'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10',
 
   select:
-    'w-full rounded-2xl border border-white/12 bg-[#111111] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[#F7DE12]/70 focus:ring-4 focus:ring-[#F7DE12]/10',
+    'w-full rounded-2xl border border-white/12 bg-[var(--app-surface-3)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10',
 
   goldPill:
-    'inline-flex items-center gap-2 rounded-full border border-[#F7DE12]/25 bg-[#F7DE12]/10 px-3 py-1.5 text-[#F7DE12]',
+    'inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]',
 
   mutedPill:
     'inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-white/65',

@@ -5,6 +5,7 @@ import { Laptop2, Moon, Sun } from 'lucide-react';
 import { useTheme, ThemeMode } from '@/shared/contexts/ThemeContext';
 import { cn } from '@/lib/cn';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
+import { Button } from '@/shared/utils/buttons';
 
 type ThemeToggleProps = {
   size?: 'sm' | 'md';
@@ -21,7 +22,7 @@ export default function ThemeToggle({
   size = 'md',
   className = '',
 }: ThemeToggleProps) {
-  const { theme, resolvedTheme, setTheme, colorScheme, mounted } = useTheme();
+  const { theme, resolvedTheme, setTheme, mounted } = useTheme();
 
   const compact = size === 'sm';
   const activeIndex = Math.max(
@@ -53,7 +54,12 @@ export default function ThemeToggle({
 
   if (!mounted) {
     return (
-      <div className={baseClasses} style={containerTone} aria-hidden="true">
+      <div
+        className={baseClasses}
+        // eslint-disable-next-line no-restricted-syntax
+        style={containerTone}
+        aria-hidden="true"
+      >
         <div className="grid grid-cols-3 items-center text-[11px] sm:text-xs font-semibold opacity-0">
           {options.map(opt => {
             const Icon = opt.icon;
@@ -77,7 +83,11 @@ export default function ThemeToggle({
   }
 
   return (
-    <div className={baseClasses} style={containerTone}>
+    <div
+      className={baseClasses}
+      // eslint-disable-next-line no-restricted-syntax
+      style={containerTone}
+    >
       <div
         className={cn(
           'relative grid grid-cols-3 items-center text-[11px] sm:text-xs font-semibold',
@@ -88,12 +98,11 @@ export default function ThemeToggle({
           <motion.div
             key={theme}
             layoutId="theme-pill"
-            className="absolute inset-y-0 rounded-full"
+            className="absolute inset-y-0 rounded-full bg-[linear-gradient(120deg,var(--app-primary)_0%,var(--app-primary-dark)_100%)] shadow-[0_10px_30px_rgba(201,150,26,0.20),0_1px_0_rgba(255,255,255,0.5)_inset]"
+            // eslint-disable-next-line no-restricted-syntax
             style={{
               width: `${pillWidth}%`,
               left: `${activeIndex * pillWidth}%`,
-              background: `linear-gradient(120deg, ${colorScheme.primary} 0%, ${colorScheme.primaryDark} 100%)`,
-              boxShadow: `0 10px 30px ${colorScheme.opacity.primary20}, 0 1px 0 rgba(255,255,255,0.5) inset`,
             }}
             initial={{ opacity: 0.75, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -107,13 +116,14 @@ export default function ThemeToggle({
           const isActive = opt.id === theme;
 
           return (
-            <button
+            <Button
               key={opt.id}
               type="button"
+              variant="ghost"
               onClick={() => setTheme(opt.id)}
               aria-pressed={isActive}
               className={cn(
-                'relative z-10 flex items-center justify-center gap-1.5 px-2 py-1 transition-all duration-200',
+                'relative z-10 gap-1.5 px-2 py-1',
                 compact ? 'h-8' : 'h-9',
                 isActive
                   ? 'text-black'
@@ -130,7 +140,7 @@ export default function ThemeToggle({
                   {opt.label}
                 </span>
               )}
-            </button>
+            </Button>
           );
         })}
       </div>

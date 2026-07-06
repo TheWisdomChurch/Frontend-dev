@@ -2,7 +2,6 @@
 
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/cn';
-import { useTheme } from '../contexts/ThemeContext';
 import { bricolageGrotesque, playfair, worksans } from '../fonts/fonts';
 
 export type FontWeight =
@@ -47,6 +46,10 @@ export interface BaseTextProps {
   align?: 'left' | 'center' | 'right';
   className?: string;
   style?: React.CSSProperties;
+  id?: string;
+  role?: string;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
   onMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -134,7 +137,8 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
       weight,
       fontFamily,
       color,
-      useThemeColor = false,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      useThemeColor: _useThemeColor = false,
       textDecoration = 'none',
       align,
       className,
@@ -143,10 +147,8 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
     },
     ref
   ) => {
-    const { colorScheme } = useTheme();
-
     const resolvedFontFamily = fontFamily || variantFontFamilyMap[variant];
-    const textColor = useThemeColor && !color ? colorScheme.text : color;
+    const textColor = color ?? undefined;
 
     return (
       <Component
@@ -159,6 +161,7 @@ export const BaseText = forwardRef<HTMLElement, BaseTextProps>(
           align && alignClassMap[align],
           className
         )}
+        // eslint-disable-next-line no-restricted-syntax
         style={{
           textDecoration,
           ...(textColor ? { color: textColor } : {}),

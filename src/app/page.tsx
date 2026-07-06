@@ -1,16 +1,11 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import HeroHighlights from '@/features/hero/HeroHighlights';
-import EventsShowcase from '@/features/events/EventsShowcase';
-import JoinUs from '@/features/events/JoinUs';
-import ResourceSection from '@/features/resources/Resource';
 import { apiClient } from '@/lib/api';
 
 const SectionFallback = ({ height = 'min-h-[360px]' }: { height?: string }) => (
-  <div className={`w-full ${height} animate-pulse bg-[#080808]`} />
+  <div className={`w-full ${height} bg-[var(--app-surface-2)]`} />
 );
 
 const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
@@ -18,49 +13,59 @@ const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
   loading: () => <SectionFallback height="min-h-[72svh]" />,
 });
 
+const HeroHighlights = nextDynamic(
+  () => import('@/features/hero/HeroHighlights'),
+  { ssr: false, loading: () => <SectionFallback height="min-h-[220px]" /> }
+);
+
 const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
-  ssr: true,
+  ssr: false,
   loading: () => <SectionFallback />,
 });
 
-const SeniorPastor = nextDynamic(
-  () => import('@/features/leadership/SeniorPastor'),
-  {
-    ssr: true,
-    loading: () => <SectionFallback />,
-  }
+const EventsShowcase = nextDynamic(
+  () => import('@/features/events/EventsShowcase'),
+  { ssr: false, loading: () => <SectionFallback /> }
 );
 
-const Testimonials = nextDynamic(
-  () => import('@/features/testimonials/Testimonials'),
-  {
-    ssr: true,
-    loading: () => <SectionFallback />,
-  }
+const SeniorPastor = nextDynamic(
+  () => import('@/features/leadership/SeniorPastor'),
+  { ssr: false, loading: () => <SectionFallback /> }
+);
+
+const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
+  ssr: false,
+  loading: () => <SectionFallback />,
+});
+
+const HomeTestimonials = nextDynamic(
+  () => import('@/features/testimonials/HomeTestimonials'),
+  { ssr: false, loading: () => <SectionFallback /> }
+);
+
+const ConnectPortal = nextDynamic(
+  () => import('@/features/connect/ConnectPortal'),
+  { ssr: false, loading: () => <SectionFallback height="min-h-[520px]" /> }
 );
 
 const OnlineGiving = nextDynamic(
   () => import('@/features/events/OnlineGiving'),
-  {
-    ssr: true,
-    loading: () => <SectionFallback />,
-  }
+  { ssr: false, loading: () => <SectionFallback /> }
+);
+
+const ResourceSection = nextDynamic(
+  () => import('@/features/resources/Resource'),
+  { ssr: false, loading: () => <SectionFallback /> }
 );
 
 const EventAdModal = nextDynamic(
   () => import('@/shared/ui/modals/EventAdModal'),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
 const ConfessionPopup = nextDynamic(
   () => import('@/shared/ui/modals/ConfessionPopup'),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
 type HomeEventAd = {
@@ -102,11 +107,9 @@ const fallbackEventAd: HomeEventAd = {
 };
 
 export default function Home() {
-  const { colorScheme } = useTheme();
-
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(null);
-  const [showConfessionPopup, setShowConfessionPopup] = useState(true);
+  const [showConfessionPopup, setShowConfessionPopup] = useState(false);
   const [eventAd, setEventAd] = useState<HomeEventAd>(fallbackEventAd);
   const [confessionContent, setConfessionContent] =
     useState<HomeConfessionContent | null>(null);
@@ -151,7 +154,6 @@ export default function Home() {
     }
 
     loadHomepageContent();
-
     return () => {
       mounted = false;
     };
@@ -167,6 +169,13 @@ export default function Home() {
 
   useEffect(() => {
     setNextAdAt(Date.now() + 1200);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowConfessionPopup(true);
+    }, 8000);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -201,63 +210,81 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#050505] text-white">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 opacity-70"
-        style={{
-          background: `
-            radial-gradient(circle at 18% 12%, ${
-              colorScheme?.opacity?.primary20 || 'rgba(247,222,18,0.18)'
-            } 0%, transparent 34%),
-            radial-gradient(circle at 82% 4%, ${
-              colorScheme?.opacity?.primary10 || 'rgba(247,222,18,0.10)'
-            } 0%, transparent 30%),
-            linear-gradient(180deg, #050505 0%, #070707 48%, #050505 100%)
-          `,
-        }}
-      />
-
-      <div className="relative z-10 flex w-full flex-col">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[var(--app-surface)] text-[var(--app-text)]">
+      <div className="relative flex w-full flex-col">
         <HeroMain />
 
-        <section className="home-section" data-gsap="reveal">
+        <section
+          className="home-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <HeroHighlights />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <WhatWeDo />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <EventsShowcase />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <SeniorPastor />
         </section>
 
         <section
           id="join"
-          className="home-section scroll-mt-24"
+          className="home-section perf-section scroll-mt-24"
           data-gsap="reveal"
+          suppressHydrationWarning
         >
           <JoinUs />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
-          <Testimonials />
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
+          <ConnectPortal />
         </section>
 
         <section
-          id="give"
-          className="home-section scroll-mt-24"
+          className="home-section perf-section"
           data-gsap="reveal"
+          suppressHydrationWarning
+        >
+          <HomeTestimonials />
+        </section>
+
+        <section
+          id="giving"
+          className="home-section perf-section scroll-mt-24"
+          data-gsap="reveal"
+          suppressHydrationWarning
         >
           <OnlineGiving />
         </section>
 
-        <section className="home-section" data-gsap="reveal">
+        <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
           <ResourceSection />
         </section>
       </div>
@@ -269,22 +296,10 @@ export default function Home() {
         onRemindLater={handleRemindLater}
       />
 
-      {!showModal && (
-        <button
-          type="button"
-          aria-label="Open conference registration ad"
-          onClick={() => setShowModal(true)}
-          className="fixed bottom-4 right-4 z-[9900] inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/80 px-3.5 py-2.5 text-[11px] font-semibold text-white shadow-2xl backdrop-blur-lg transition duration-300 hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f7de12] sm:bottom-5 sm:px-4 sm:text-sm"
-        >
-          <span className="text-base">📢</span>
-          <span>WPC 2026</span>
-        </button>
-      )}
-
-      {!showModal && showConfessionPopup && (
+      {showConfessionPopup && (
         <ConfessionPopup
           onClose={() => setShowConfessionPopup(false)}
-          delay={1800}
+          delay={0}
           content={confessionContent ?? undefined}
         />
       )}

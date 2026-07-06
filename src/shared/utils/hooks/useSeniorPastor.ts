@@ -26,7 +26,6 @@ export const useSeniorPastor = () => {
   }, []);
 
   const handleLearnMore = () => {
-    console.log('Learn more clicked');
     // You can replace this with navigation or modal opening
   };
 

@@ -1,218 +1,341 @@
-import {
-  BookOpenCheck,
-  CalendarDays,
-  HeartHandshake,
-  Megaphone,
-  ShieldCheck,
-  Sparkles,
-  Users,
-} from 'lucide-react';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
 import PageHero from '@/features/hero/PageHero';
-import { Container, Section } from '@/shared/layout';
+import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import {
-  ActionBanner,
-  FeatureGrid,
-  SplitSection,
-  StatStrip,
-} from '@/shared/components/site/PublicPageBlocks';
 
+export const metadata: Metadata = {
+  title: 'Ministries — Get Connected',
+  description:
+    'Discover ministries for men, women, youth, children, and outreach at The Wisdom Church. Find your place to serve and grow.',
+  openGraph: {
+    title: 'Ministries — Get Connected | The Wisdom Church',
+    description:
+      'Discover ministries for men, women, youth, children, and outreach.',
+    url: 'https://wisdomchurchhq.org/ministries',
+    images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ministries | The Wisdom Church',
+    description:
+      'Discover ministries for men, women, youth, children, and outreach.',
+    images: ['https://wisdomchurchhq.org/og-image.webp'],
+  },
+  alternates: { canonical: '/ministries' },
+};
+
+/* ── Ministries ───────────────────────────────────────── */
 const ministries = [
   {
     title: 'Youth Ministry',
+    tagline: 'A generation on fire.',
     description:
-      'A vibrant discipleship space for teenagers and young adults to grow in faith, leadership, and healthy community.',
-    icon: Sparkles,
+      'A vibrant discipleship space for teenagers and young adults to grow in faith, leadership, and community.',
+    badge: 'Ages 13 – 25',
     href: '/ministries/youth',
-    badge: 'Ages 13-25',
+    image: '/images/conference-2025.webp',
+    overlay:
+      'linear-gradient(to top, rgba(28,10,2,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: "Women's Ministry",
+    tagline: 'Women who lead with purpose.',
     description:
       'A strengthening community for women to grow in scripture, prayer, fellowship, and purposeful service.',
-    icon: HeartHandshake,
-    href: '/ministries/women',
     badge: 'Community',
+    href: '/ministries/women',
+    image: '/images/christmas-eve.webp',
+    overlay:
+      'linear-gradient(to top, rgba(28,6,14,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: "Men's Ministry",
+    tagline: 'Men of integrity and strength.',
     description:
       'A clear discipleship path for men who want to grow in integrity, leadership, and service at home and in church.',
-    icon: ShieldCheck,
-    href: '/ministries/men',
     badge: 'Brotherhood',
+    href: '/ministries/men',
+    image: '/images/supernatural-service.webp',
+    overlay:
+      'linear-gradient(to top, rgba(4,10,28,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: "Children's Ministry",
+    tagline: 'Where little ones meet Jesus.',
     description:
       'A safe and joyful environment where children encounter Jesus through age-appropriate teaching and care.',
-    icon: BookOpenCheck,
+    badge: 'Nursery – Pre-teens',
     href: '/ministries/children',
-    badge: 'Nursery to pre-teens',
+    image: '/images/easter-service.webp',
+    overlay:
+      'linear-gradient(to top, rgba(30,14,2,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: 'Outreach & Missions',
+    tagline: 'Taking the church beyond the walls.',
     description:
-      'Practical expressions of God’s love through service, relief, evangelism, and community development.',
-    icon: Megaphone,
-    href: '/ministries/outreach',
+      "Practical expressions of God's love through service, evangelism, relief, and community development.",
     badge: 'Impact',
+    href: '/ministries/outreach',
+    image: '/images/supernatural-service.webp',
+    overlay:
+      'linear-gradient(to top, rgba(4,20,10,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
   {
     title: 'Pastoral Care',
+    tagline: 'Support when you need it most.',
     description:
       'Support structures for prayer, counseling, life transitions, family care, and spiritual guidance.',
-    icon: Users,
-    href: '/pastoral',
     badge: 'Care',
+    href: '/pastoral',
+    image: '/images/conference-2025.webp',
+    overlay:
+      'linear-gradient(to top, rgba(18,6,30,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
-];
+] as const;
 
-const stats = [
+/* ── Connection pillars ───────────────────────────────── */
+const connection = [
   {
-    label: 'Ministry focus',
-    value: 'Formation and belonging',
-    detail:
-      'Every ministry exists to help people grow in Christ and find a place to serve.',
-    icon: Users,
+    verb: 'Visit',
+    body: 'Show up to any gathering. No prior knowledge, no commitment required — just come.',
+    href: '/contact',
+    cta: 'Plan a visit',
   },
   {
-    label: 'Age coverage',
-    value: 'Children to adults',
-    detail:
-      'The church is intentionally structured to disciple every generation.',
-    icon: CalendarDays,
+    verb: 'Connect',
+    body: 'Talk to our welcome team. Tell us where you are and we will help you find your fit.',
+    href: '/contact',
+    cta: 'Reach out',
   },
   {
-    label: 'Pathway',
-    value: 'Gather, grow, serve',
-    detail:
-      'Each ministry creates a practical route from attendance to active service.',
-    icon: Sparkles,
+    verb: 'Grow',
+    body: 'Stay in, serve consistently, and build the relationships that last a lifetime.',
+    href: '/ministries',
+    cta: 'Explore ministry',
   },
-  {
-    label: 'Support',
-    value: 'Care-led teams',
-    detail:
-      'Teams are built to notice people early and help them connect deeply.',
-    icon: HeartHandshake,
-  },
-];
+] as const;
+
+/* ── Arrow ────────────────────────────────────────────── */
+function Arrow({ className }: { className?: string }) {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 12 12"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M1 6h10M6 1l5 5-5 5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export default function MinistriesPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen">
+      {/* ── 1. Hero ──────────────────────────────────────────── */}
       <PageHero
-        title="Ministries that help every generation belong, mature, and serve well."
-        subtitle="Wisdom Church ministries are designed to make discipleship practical, relational, and responsive to real life."
-        note="Whether you are looking for spiritual growth, accountability, friendship, or a place to serve, there is a ministry pathway for you."
-        chips={['Youth', 'Women', 'Men', 'Children', 'Outreach']}
+        eyebrow="Ministries"
+        title="Every generation has a place here."
+        subtitle="Ministries built to make discipleship practical, relational, and responsive to real life."
+        compact
       />
 
-      <ScrollFadeIn>
-        <StatStrip items={stats} />
-      </ScrollFadeIn>
-
-      <Section padding="lg" className="bg-[#050505]">
-        <Container size="xl" className="space-y-8">
-          <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
-              Ministry areas
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
-              Each ministry has a clear purpose, a defined audience, and a real
-              discipleship pathway.
-            </h2>
-          </ScrollFadeIn>
-          <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
-            <FeatureGrid items={ministries} columns={3} />
-          </ScrollFadeIn>
-        </Container>
-      </Section>
-
-      <Section padding="lg" className="border-y border-white/10 bg-[#080808]">
+      {/* ── 2. Intro — canvas ────────────────────────────────── */}
+      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
-          <ScrollFadeIn data-parallax-global="0.08">
-            <SplitSection
-              eyebrow="How people get connected"
-              title="We do not want ministry involvement to feel vague or hidden."
-              description="Getting connected at Wisdom Church should be clear. We want people to know where to start, what to expect, and how to move from interest to meaningful participation."
-              points={[
-                'Start by visiting a gathering or speaking with a ministry lead.',
-                'Join a ministry community that matches your stage of life or calling.',
-                'Stay consistent long enough to build relationships and trust.',
-                'Move into training, responsibility, and long-term service where appropriate.',
-              ]}
-              panelTitle="What good ministry structure does"
-              panelBody="Healthy ministry structure reduces confusion, helps leaders care better, and makes it easier for people to stay engaged over time."
-              panelItems={[
-                'Clear communication and meeting rhythms.',
-                'Defined leaders and support teams.',
-                'Practical entry points for newcomers.',
-                'Visible next steps for serving and growth.',
-              ]}
-            />
+          <ScrollFadeIn className="flex flex-col gap-6 py-12 lg:flex-row lg:items-end lg:justify-between lg:py-16">
+            <div className="max-w-2xl">
+              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Ministry at Wisdom Church
+              </p>
+              <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
+                We exist to help every person find
+                <em className="italic text-[var(--app-primary)]/80">
+                  {' '}
+                  where they belong{' '}
+                </em>
+                and
+                <em className="italic text-[var(--app-primary)]/80">
+                  {' '}
+                  how they serve.
+                </em>
+              </h2>
+            </div>
+            <Link
+              href="/contact"
+              className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-6 py-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
+            >
+              Get connected <Arrow />
+            </Link>
           </ScrollFadeIn>
         </Container>
-      </Section>
+      </section>
 
-      <Section padding="lg" className="bg-[#050505]">
-        <Container size="xl" className="space-y-8">
-          <ScrollFadeIn className="max-w-3xl space-y-3">
-            <p className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
-              Ministry values
-            </p>
-            <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
-              Our teams are built around consistency, care, doctrine, and
-              service excellence.
-            </h2>
-          </ScrollFadeIn>
-          <ScrollFadeIn delay={0.1} data-parallax-global="0.1">
-            <FeatureGrid
-              columns={2}
-              items={[
-                {
-                  title: 'People before programs',
-                  description:
-                    'Programs matter, but people matter more. Ministry is designed to pastor and form people, not just fill calendars.',
-                  icon: HeartHandshake,
-                },
-                {
-                  title: 'Scripture before hype',
-                  description:
-                    'Our ministries are shaped by biblical truth, not trend cycles. Depth matters as much as energy.',
-                  icon: BookOpenCheck,
-                },
-                {
-                  title: 'Service with structure',
-                  description:
-                    'Strong systems help leaders care consistently and help members know where they fit.',
-                  icon: ShieldCheck,
-                },
-                {
-                  title: 'Growth with accountability',
-                  description:
-                    'We want ministry communities where encouragement and responsibility grow together.',
-                  icon: Users,
-                },
-              ]}
-            />
+      {/* ── 3. Ministry image cards ───────────────────────────── */}
+      <section className="bg-[var(--app-dark)] py-14 lg:py-18">
+        <Container size="xl">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ministries.map((ministry, i) => (
+              <ScrollFadeIn key={ministry.title} delay={i * 0.07}>
+                <Link
+                  href={ministry.href}
+                  className="group relative flex min-h-[480px] flex-col overflow-hidden lg:min-h-[520px]"
+                >
+                  {/* Background image */}
+                  <Image
+                    src={ministry.image}
+                    alt={ministry.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  />
+
+                  {/* Atmospheric colour overlay */}
+                  <div
+                    className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
+                    // eslint-disable-next-line no-restricted-syntax
+                    style={{ background: ministry.overlay }}
+                  />
+
+                  {/* Card content */}
+                  <div className="relative z-10 flex h-full flex-col p-7 lg:p-8">
+                    {/* Badge — top */}
+                    <span className="self-start border border-white/20 px-3.5 py-1.5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm transition-colors duration-200 group-hover:border-[var(--app-primary)]/60 group-hover:text-[var(--app-primary)]">
+                      {ministry.badge}
+                    </span>
+
+                    {/* Spacer */}
+                    <div className="flex-1" />
+
+                    {/* Content — anchored to bottom */}
+                    <div>
+                      {/* Gold rule */}
+                      <div className="mb-4 h-[1.5px] w-8 bg-[var(--app-primary)]/60 transition-all duration-300 group-hover:w-14 group-hover:bg-[var(--app-primary)]" />
+
+                      {/* Tagline */}
+                      <p className="mb-2 font-ui text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[var(--app-primary)]">
+                        {ministry.tagline}
+                      </p>
+
+                      {/* Title */}
+                      <h3 className="font-headline text-[1.75rem] font-normal leading-snug text-white lg:text-[2rem]">
+                        {ministry.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="mt-3 font-ui text-[0.82rem] leading-[1.9] text-white/72">
+                        {ministry.description}
+                      </p>
+
+                      {/* CTA — always visible, prominent */}
+                      <div className="mt-6 flex items-center justify-between">
+                        <span className="inline-flex items-center gap-2.5 bg-[var(--app-primary)] px-5 py-2.5 font-ui text-[0.7rem] font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition-all duration-200 group-hover:brightness-110">
+                          Explore ministry
+                          <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </ScrollFadeIn>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ── 4. How to connect — canvas ───────────────────────── */}
+      <section className="border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+        <Container size="xl">
+          <ScrollFadeIn>
+            <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-16">
+              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Getting connected
+              </p>
+              <h2 className="mt-3 max-w-lg font-headline text-[1.8rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
+                Finding your place is
+                <em className="italic text-[var(--app-primary)]/80">
+                  {' '}
+                  simpler than you think.
+                </em>
+              </h2>
+            </div>
           </ScrollFadeIn>
         </Container>
-      </Section>
 
+        <div className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {connection.map((col, i) => (
+            <ScrollFadeIn key={col.verb} delay={i * 0.09}>
+              <div className="flex flex-col px-8 py-12 lg:px-10 lg:py-16">
+                <div className="mb-7 h-[1.5px] w-8 bg-[var(--app-primary)]/55" />
+                <p className="font-headline text-[2.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[3.4rem]">
+                  {col.verb}
+                </p>
+                <p className="mt-5 font-ui text-[0.84rem] leading-[1.9] text-[var(--app-ink)]/68">
+                  {col.body}
+                </p>
+                <Link
+                  href={col.href}
+                  className="mt-8 inline-flex items-center gap-2.5 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                >
+                  {col.cta}
+                  <Arrow />
+                </Link>
+              </div>
+            </ScrollFadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 5. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <ActionBanner
-          eyebrow="Take a next step"
-          title="If you are ready to connect, we can help you find the right ministry fit."
-          description="Tell us where you are in your faith journey, and we will guide you toward a ministry community or service opportunity that makes sense."
-          primaryHref="/contact"
-          primaryLabel="Get connected"
-          secondaryHref="/events"
-          secondaryLabel="See church rhythm"
-        />
+        <section className="bg-[var(--app-dark)] py-20 lg:py-28">
+          <Container size="lg">
+            <div className="flex flex-col items-center gap-7 text-center">
+              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Take a next step
+              </p>
+              <h2 className="font-headline text-[2rem] font-normal leading-[1.2] text-white sm:text-[2.6rem] lg:text-[3rem]">
+                Ready to find your
+                <br className="hidden sm:block" />{' '}
+                <em className="italic text-[var(--app-primary)]/80">
+                  place to belong?
+                </em>
+              </h2>
+              <div className="h-px w-12 bg-[var(--app-primary)]/40" />
+              <p className="max-w-md font-ui text-[0.88rem] leading-[1.9] text-white/70">
+                Tell us where you are in your faith journey and we will help you
+                find the right ministry community or service opportunity.
+              </p>
+              <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition duration-150 hover:brightness-105"
+                >
+                  Get connected <Arrow />
+                </Link>
+                <Link
+                  href="/events"
+                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white/55 transition duration-150 hover:border-white/35 hover:text-white"
+                >
+                  See church rhythm
+                </Link>
+              </div>
+            </div>
+          </Container>
+        </section>
       </ScrollFadeIn>
-    </div>
+    </main>
   );
 }

@@ -5,7 +5,15 @@ import { ArrowRight, Check } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 import { Container, Section } from '@/shared/layout';
-import { BodyMD, Caption, H2, H3 } from '@/shared/text';
+import {
+  BodyLG,
+  BodyMD,
+  BodySM,
+  Caption,
+  Eyebrow,
+  H2,
+  H3,
+} from '@/shared/text';
 
 export type StatItem = {
   label: string;
@@ -27,6 +35,7 @@ interface SectionHeadingProps {
   title: string;
   description?: string;
   align?: 'left' | 'center';
+  dark?: boolean;
 }
 
 interface StatStripProps {
@@ -36,6 +45,7 @@ interface StatStripProps {
 interface FeatureGridProps {
   items: readonly FeatureItem[];
   columns?: 2 | 3 | 4;
+  dark?: boolean;
 }
 
 interface SplitSectionProps {
@@ -47,6 +57,7 @@ interface SplitSectionProps {
   panelBody?: string;
   panelItems?: readonly string[];
   children?: ReactNode;
+  dark?: boolean;
 }
 
 interface ActionBannerProps {
@@ -66,6 +77,7 @@ export function SectionHeading({
   title,
   description,
   align = 'left',
+  dark = true,
 }: SectionHeadingProps) {
   const centered = align === 'center';
 
@@ -77,15 +89,25 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? (
-        <Caption className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+        <Caption className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
           {eyebrow}
         </Caption>
       ) : null}
-      <H2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl">
+      <H2
+        className={cn(
+          'text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl',
+          dark ? 'text-white' : 'text-[var(--app-ink)]'
+        )}
+      >
         {title}
       </H2>
       {description ? (
-        <BodyMD className="text-base leading-relaxed text-white/68 sm:text-lg">
+        <BodyMD
+          className={cn(
+            'text-base leading-relaxed sm:text-lg',
+            dark ? 'text-white/68' : 'text-[var(--app-ink)]/65'
+          )}
+        >
           {description}
         </BodyMD>
       ) : null}
@@ -97,7 +119,7 @@ export function StatStrip({ items }: StatStripProps) {
   return (
     <Section
       padding="md"
-      className="relative overflow-hidden border-y border-white/10 bg-[#070708]"
+      className="relative overflow-hidden border-y border-white/10 bg-[var(--app-dark-2)]"
     >
       <Container size="xl" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {items.map(item => {
@@ -106,30 +128,23 @@ export function StatStrip({ items }: StatStripProps) {
           return (
             <div
               key={`${item.label}-${item.value}`}
-              className="rounded-[1.4rem] border border-white/12 bg-white/[0.03] p-4 backdrop-blur"
+              className="rounded-card border border-white/12 bg-white/[0.03] p-4 backdrop-blur"
             >
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[0.68rem] uppercase tracking-[0.18em] text-white/52">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-white sm:text-xl">
+                  <Eyebrow className="text-white/52">{item.label}</Eyebrow>
+                  <BodyLG weight="semibold" className="mt-2 text-white">
                     {item.value}
-                  </p>
+                  </BodyLG>
                 </div>
                 {Icon ? (
-                  <div
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10"
-                    style={{ backgroundColor: 'rgba(201, 168, 76, 0.12)' }}
-                  >
-                    <Icon className="h-4 w-4 text-[#d7bb75]" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-card border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.08]">
+                    <Icon className="h-4 w-4 text-[var(--app-primary)]" />
                   </div>
                 ) : null}
               </div>
               {item.detail ? (
-                <p className="text-sm leading-relaxed text-white/62">
-                  {item.detail}
-                </p>
+                <BodySM className="text-white/62">{item.detail}</BodySM>
               ) : null}
             </div>
           );
@@ -142,9 +157,11 @@ export function StatStrip({ items }: StatStripProps) {
 function FeatureCard({
   item,
   interactive,
+  dark = true,
 }: {
   item: FeatureItem;
   interactive: boolean;
+  dark?: boolean;
 }) {
   const Icon = item.icon;
 
@@ -152,29 +169,52 @@ function FeatureCard({
     <>
       <div className="mb-4 flex items-center justify-between gap-3">
         {Icon ? (
-          <div
-            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10"
-            style={{ backgroundColor: 'rgba(201, 168, 76, 0.12)' }}
-          >
-            <Icon className="h-5 w-5 text-[#d7bb75]" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-card border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.08]">
+            <Icon className="h-5 w-5 text-[var(--app-primary)]" />
           </div>
         ) : (
-          <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04]" />
+          <div
+            className={cn(
+              'h-11 w-11 rounded-card border',
+              dark
+                ? 'border-white/10 bg-white/[0.04]'
+                : 'border-[var(--app-ink)]/10 bg-[var(--app-ink)]/[0.03]'
+            )}
+          />
         )}
         {item.badge ? (
-          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-white/58">
+          <span
+            className={cn(
+              'rounded-badge border px-3 py-1 text-[11px] uppercase tracking-[0.14em]',
+              dark
+                ? 'border-white/10 bg-white/[0.03] text-white/58'
+                : 'border-[var(--app-ink)]/10 bg-[var(--app-ink)]/[0.04] text-[var(--app-ink)]/55'
+            )}
+          >
             {item.badge}
           </span>
         ) : null}
       </div>
 
-      <H3 className="text-xl font-semibold text-white">{item.title}</H3>
-      <BodyMD className="mt-3 text-sm leading-relaxed text-white/65">
+      <H3
+        className={cn(
+          'text-xl font-semibold',
+          dark ? 'text-white' : 'text-[var(--app-ink)]'
+        )}
+      >
+        {item.title}
+      </H3>
+      <BodyMD
+        className={cn(
+          'mt-3 text-sm leading-relaxed',
+          dark ? 'text-white/65' : 'text-[var(--app-ink)]/62'
+        )}
+      >
         {item.description}
       </BodyMD>
 
       {interactive ? (
-        <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[#d7bb75]">
+        <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[var(--app-primary)]">
           Explore this page
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
         </span>
@@ -183,7 +223,11 @@ function FeatureCard({
   );
 }
 
-export function FeatureGrid({ items, columns = 3 }: FeatureGridProps) {
+export function FeatureGrid({
+  items,
+  columns = 3,
+  dark = true,
+}: FeatureGridProps) {
   const gridClass =
     columns === 4
       ? 'md:grid-cols-2 xl:grid-cols-4'
@@ -195,23 +239,28 @@ export function FeatureGrid({ items, columns = 3 }: FeatureGridProps) {
     <div className={cn('grid gap-4', gridClass)}>
       {items.map(item => {
         const classes = cn(
-          'group rounded-[1.6rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 transition duration-300',
+          'group rounded-card border p-5 transition duration-300',
+          dark
+            ? 'border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))]'
+            : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]',
           item.href
-            ? 'hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.06]'
+            ? dark
+              ? 'hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.06]'
+              : 'hover:-translate-y-0.5 hover:border-[var(--app-primary)]/25 hover:bg-[var(--app-canvas)]'
             : ''
         );
 
         if (item.href) {
           return (
             <Link key={item.title} href={item.href} className={classes}>
-              <FeatureCard item={item} interactive />
+              <FeatureCard item={item} interactive dark={dark} />
             </Link>
           );
         }
 
         return (
           <div key={item.title} className={classes}>
-            <FeatureCard item={item} interactive={false} />
+            <FeatureCard item={item} interactive={false} dark={dark} />
           </div>
         );
       })}
@@ -228,6 +277,7 @@ export function SplitSection({
   panelBody,
   panelItems = [],
   children,
+  dark = true,
 }: SplitSectionProps) {
   return (
     <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
@@ -236,21 +286,30 @@ export function SplitSection({
           eyebrow={eyebrow}
           title={title}
           description={description}
+          dark={dark}
         />
         {points.length ? (
           <div className="grid gap-3">
             {points.map(point => (
               <div
                 key={point}
-                className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3"
+                className={cn(
+                  'flex items-start gap-3 rounded-card border px-4 py-3',
+                  dark
+                    ? 'border-white/10 bg-white/[0.03]'
+                    : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]'
+                )}
               >
-                <div
-                  className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
-                  style={{ backgroundColor: 'rgba(201, 168, 76, 0.12)' }}
-                >
-                  <Check className="h-4 w-4 text-[#d7bb75]" />
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary)]/[0.10]">
+                  <Check className="h-4 w-4 text-[var(--app-primary)]" />
                 </div>
-                <p className="text-sm leading-relaxed text-white/70">{point}</p>
+                <BodySM
+                  className={
+                    dark ? 'text-white/70' : 'text-[var(--app-ink)]/68'
+                  }
+                >
+                  {point}
+                </BodySM>
               </div>
             ))}
           </div>
@@ -258,25 +317,37 @@ export function SplitSection({
       </div>
 
       <div
-        className="rounded-[1.8rem] border border-white/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25))] p-6 sm:p-7"
-        style={{ boxShadow: '0 24px 70px rgba(0, 0, 0, 0.5)' }}
+        className={cn(
+          'rounded-card border p-6 shadow-[0_24px_70px_rgba(0,0,0,0.12)] sm:p-7',
+          dark
+            ? 'border-white/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25))] shadow-[0_24px_70px_rgba(0,0,0,0.5)]'
+            : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]'
+        )}
       >
         {panelTitle ? (
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d7bb75]">
-            {panelTitle}
-          </p>
+          <Eyebrow className="text-[var(--app-primary)]">{panelTitle}</Eyebrow>
         ) : null}
         {panelBody ? (
-          <p className="mt-4 text-base leading-relaxed text-white/72">
+          <BodyMD
+            className={cn(
+              'mt-4',
+              dark ? 'text-white/72' : 'text-[var(--app-ink)]/68'
+            )}
+          >
             {panelBody}
-          </p>
+          </BodyMD>
         ) : null}
         {panelItems.length ? (
           <div className="mt-6 grid gap-3">
             {panelItems.map(item => (
               <div
                 key={item}
-                className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/72"
+                className={cn(
+                  'rounded-card border px-4 py-3 text-sm',
+                  dark
+                    ? 'border-white/10 bg-black/20 text-white/72'
+                    : 'border-[var(--app-ink)]/8 bg-white/60 text-[var(--app-ink)]/68'
+                )}
               >
                 {item}
               </div>
@@ -301,13 +372,13 @@ export function ActionBanner({
   secondaryTargetBlank = false,
 }: ActionBannerProps) {
   return (
-    <Section padding="lg" className="bg-[#080808]">
+    <Section padding="lg" className="bg-[var(--app-dark-2)]">
       <Container size="xl">
-        <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(215,187,117,0.14),rgba(255,255,255,0.03),rgba(0,0,0,0.22))] p-6 sm:p-8 lg:p-10">
+        <div className="rounded-card border border-white/10 bg-[linear-gradient(135deg,rgba(201,150,26,0.10),rgba(255,255,255,0.03),rgba(0,0,0,0.20))] p-6 sm:p-8 lg:p-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-3">
               {eyebrow ? (
-                <Caption className="text-[0.66rem] uppercase tracking-[0.22em] text-[#d7bb75]">
+                <Caption className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   {eyebrow}
                 </Caption>
               ) : null}
@@ -324,7 +395,7 @@ export function ActionBanner({
                 href={primaryHref}
                 target={primaryTargetBlank ? '_blank' : undefined}
                 rel={primaryTargetBlank ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center rounded-full bg-[#d7bb75] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-90"
+                className="inline-flex items-center justify-center rounded-button bg-[var(--app-primary)] px-6 py-3 text-sm font-semibold text-black transition hover:brightness-105"
               >
                 {primaryLabel}
               </Link>
@@ -333,7 +404,7 @@ export function ActionBanner({
                   href={secondaryHref}
                   target={secondaryTargetBlank ? '_blank' : undefined}
                   rel={secondaryTargetBlank ? 'noopener noreferrer' : undefined}
-                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+                  className="inline-flex items-center justify-center rounded-button border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
                 >
                   {secondaryLabel}
                 </Link>

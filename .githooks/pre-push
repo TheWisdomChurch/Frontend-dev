@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ── Gate ────────────────────────────────────────────────────────────────────
 if [[ "${SKIP_GIT_HOOKS:-0}" == "1" ]]; then
-  echo "[pre-push] SKIP_GIT_HOOKS=1, skipping checks."
+  echo "[pre-push] SKIP_GIT_HOOKS=1 — skipping."
   exit 0
 fi
 
 if [[ ! -d node_modules ]]; then
-  echo "[pre-push] node_modules not found. Run npm install first."
+  echo "[pre-push] ✖  node_modules missing. Run: npm install"
   exit 1
 fi
 
-if [[ "${KEEP_PREPUSH_ARTIFACTS:-0}" != "1" ]]; then
-  rm -rf .next-prepush
-fi
+echo ""
+echo "┌─────────────────────────────────────────────────────────────┐"
+echo "│  pre-push: full repository validation …                     │"
+echo "└─────────────────────────────────────────────────────────────┘"
 
+# Artifact cleanup on exit
 cleanup() {
   if [[ "${KEEP_PREPUSH_ARTIFACTS:-0}" != "1" ]]; then
     rm -rf .next-prepush
@@ -22,28 +25,40 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo ""
-echo "[pre-push] Running repository validation checks..."
+if [[ "${KEEP_PREPUSH_ARTIFACTS:-0}" != "1" ]]; then
+  rm -rf .next-prepush
+fi
 
-echo "[pre-push] TypeScript..."
+# ── 1. TypeScript – full project ─────────────────────────────────────────────
+echo "[pre-push] 1/3  TypeScript full type check …"
 mkdir -p .cache/tsc
-# Skip TypeScript check during push - errors will be caught during development
-# node ./node_modules/typescript/bin/tsc --noEmit --skipLibCheck --incremental --tsBuildInfoFile .cache/tsc/pre-push.tsbuildinfo
-echo "[pre-push] TypeScript check skipped (will be validated during development)."
+node ./node_modules/typescript/bin/tsc \
+  --noEmit \
+  --skipLibCheck \
+  --incremental \
+  --tsBuildInfoFile .cache/tsc/pre-push.tsbuildinfo
+echo "[pre-push] ✔  TypeScript passed."
 
-echo "[pre-push] ESLint..."
-node ./node_modules/eslint/bin/eslint.js . --cache --cache-location .cache/eslint/ --max-warnings 0 --no-warn-ignored
-echo "[pre-push] ESLint passed."
+# ── 2. ESLint – full project (errors only; warnings are non-blocking) ────────
+echo "[pre-push] 2/3  ESLint full scan (errors block push) …"
+node ./node_modules/eslint/bin/eslint.js src \
+  --ext .ts,.tsx,.js,.jsx \
+  --cache \
+  --cache-location .cache/eslint/ \
+  --no-warn-ignored
+echo "[pre-push] ✔  ESLint passed (0 errors)."
 
+# ── 3. Next.js production build ──────────────────────────────────────────────
 if [[ "${SKIP_PREPUSH_BUILD:-0}" == "1" ]]; then
-  echo "[pre-push] SKIP_PREPUSH_BUILD=1, skipping production build."
+  echo "[pre-push] SKIP_PREPUSH_BUILD=1 — skipping build."
+  echo ""
+  echo "✅  TypeScript + ESLint passed. Push approved."
   exit 0
 fi
 
-echo "[pre-push] Production build..."
-# This machine's native SWC path is crashing with a low-level bus error.
-# Force the wasm fallback so pre-push still validates the real production build.
-NEXT_DIST_DIR=.next-prepush NEXT_TEST_WASM=1 node ./node_modules/next/dist/bin/next build --no-lint
-echo "[pre-push] Build passed."
+echo "[pre-push] 3/3  Next.js production build …"
+NEXT_DIST_DIR=.next-prepush node ./node_modules/next/dist/bin/next build --no-lint
+echo "[pre-push] ✔  Build passed."
 
-echo "[pre-push] All checks passed."
+echo ""
+echo "✅  All pre-push checks passed. Pushing …"

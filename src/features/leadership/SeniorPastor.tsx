@@ -1,280 +1,214 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { ArrowRight } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faInstagram,
-  faFacebook,
-  faTwitter,
-} from '@fortawesome/free-brands-svg-icons';
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+
 import { Bishop } from '@/shared/assets';
-import { H1, P } from '@/shared/text';
-import Button from '@/shared/utils/buttons/CustomButton';
-import { useSeniorPastor } from '@/shared/utils/hooks/useSeniorPastor';
-import {
-  Container,
-  Section,
-  PageSection,
-  FlexboxLayout,
-  Gridbox,
-} from '@/shared/layout';
-import { cn } from '@/lib/cn';
-import { gsap } from 'gsap';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { seniorPastorData } from '@/lib/data';
+import { Section } from '@/shared/layout';
 
-interface SeniorPastorProps {
-  className?: string;
-}
+const IgIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.75}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-4 w-4"
+  >
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <circle cx="12" cy="12" r="4.5" />
+    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+  </svg>
+);
 
-export default function SeniorPastor({ className = '' }: SeniorPastorProps) {
-  const { colorScheme } = useTheme();
-  const router = useRouter();
+const FbIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
 
-  const { sectionRef, isVisible } = useSeniorPastor();
-  const textRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+const YtIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0d0a06" />
+  </svg>
+);
 
-  const summary = useMemo(() => {
-    return (
-      seniorPastorData?.description?.[0]?.replace(/\s+/g, ' ').trim() ||
-      'Bishop Gabriel Ayilara leads The Wisdom House Church with practical teaching, prayer, and a heart for raising strong believers and families.'
-    );
-  }, []);
+const XIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+  </svg>
+);
 
-  useEffect(() => {
-    if (!isVisible) return;
+const SOCIALS = [
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/gabrielayilara?igsh=MXZpMHhnNGloMnViZw==',
+    Icon: IgIcon,
+  },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/wisdomhousehq',
+    Icon: FbIcon,
+  },
+  {
+    label: 'YouTube',
+    href: 'https://www.youtube.com/@wisdomchurchhq',
+    Icon: YtIcon,
+  },
+  { label: 'X', href: 'https://x.com/wisdomchurchhq', Icon: XIcon },
+];
 
-    const ctx = gsap.context(() => {
-      if (textRef.current) {
-        gsap.fromTo(
-          textRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
-        );
-      }
+const BIO_PREVIEW_LENGTH = 220;
 
-      if (imageRef.current) {
-        gsap.fromTo(
-          imageRef.current,
-          { y: 40, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.9,
-            ease: 'power3.out',
-            delay: 0.1,
-          }
-        );
-      }
-    });
+export default function SeniorPastor() {
+  const [bioExpanded, setBioExpanded] = useState(false);
 
-    return () => ctx.revert();
-  }, [isVisible]);
+  const bio = useMemo(
+    () =>
+      (seniorPastorData?.description ?? [])
+        .slice(0, 1)
+        .map(s => s.replace(/\s+/g, ' ').trim())
+        .join(' ') ||
+      "Bishop Gabriel Ayilara is the Senior Pastor of The Wisdom Church. Over the years, he has faithfully discipled and mentored countless individuals, demonstrating the practical workings of God's Word in everyday life. He is lawfully wedded to Pastor Kenny Ayilara, and together they are blessed with godly children. Through their exemplary marriage and ministry, they continue to inspire, equip, and impact lives for the Kingdom of God. His vision for The Wisdom Church is to create a place where everyone can encounter God's transformative love and discover their unique purpose.",
+    []
+  );
 
-  const goToLeadership = () => router.push('/leadership');
-
-  const primary = colorScheme.primary || '#fbbf24';
+  const canExpand = bio.length > BIO_PREVIEW_LENGTH;
 
   return (
     <Section
-      ref={sectionRef}
       padding="none"
-      className={cn(
-        'relative w-full overflow-hidden bg-slate-950 text-white',
-        'min-h-[420px] md:min-h-[480px]',
-        className
-      )}
+      fullHeight={false}
+      className="relative w-full overflow-hidden bg-[var(--app-dark)]"
     >
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.86), rgba(0,0,0,0.92)), url(${Bishop.src})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black/85" />
+      {/* Two-column grid — fixed: removed inline style that broke mobile */}
+      <div className="grid min-h-[580px] grid-cols-1 lg:grid-cols-2 lg:min-h-[700px]">
+        {/* ── Left — cinematic full-height portrait ────────── */}
+        <div className="relative order-1 h-[56vw] max-h-[520px] overflow-hidden lg:order-none lg:h-auto lg:max-h-none">
+          <Image
+            src={Bishop}
+            alt="Bishop Gabriel Ayilara — Senior Pastor, The Wisdom Church"
+            fill
+            priority={false}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            quality={92}
+            className="object-cover object-top"
+          />
+          {/* Mobile bottom fade */}
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[var(--app-dark)] to-transparent lg:hidden" />
+          {/* Desktop right-edge blend */}
+          <div className="absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-r from-transparent to-[var(--app-dark)] lg:block" />
+        </div>
 
-      <Container size="xl" className="relative z-10 py-6 md:py-8">
-        <FlexboxLayout
-          direction="column"
-          justify="center"
-          align="center"
-          className="w-full h-full"
-        >
-          <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-8 md:gap-10 items-center w-full">
-            {/* Text column */}
-            <div
-              ref={textRef}
-              className="space-y-2.5 md:space-y-4 order-2 md:order-1"
+        {/* ── Right — editorial content ──────────────────── */}
+        <div className="order-2 flex flex-col justify-center px-6 py-12 sm:px-10 lg:order-none lg:px-12 xl:px-16">
+          {/* Eyebrow */}
+          <p className="mb-6 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Senior Pastor
+          </p>
+
+          {/* Name */}
+          <h2
+            className="font-headline font-normal text-white"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', lineHeight: 1.1 }}
+          >
+            Bishop Gabriel
+            <br />
+            Ayilara
+          </h2>
+
+          {/* Pull quote */}
+          <blockquote
+            className="relative mt-8 pl-5"
+            // eslint-disable-next-line no-restricted-syntax
+            style={{ borderLeft: '2px solid var(--app-primary)' }}
+          >
+            <p
+              className="font-headline font-normal italic text-white/78"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{
+                fontSize: 'clamp(1.05rem, 1.8vw, 1.35rem)',
+                lineHeight: 1.6,
+              }}
             >
-              <P className="text-[11px] md:text-xs uppercase tracking-[0.18em] text-white/70">
-                Meet our Senior Pastor
-              </P>
+              &ldquo;You are not just a member —
+              <br className="hidden sm:block" />
+              you are a carrier of God&rsquo;s glory.&rdquo;
+            </p>
+          </blockquote>
 
-              <div className="space-y-2">
-                <H1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-tight">
-                  Bishop Gabriel Ayilara
-                </H1>
-                <P className="text-sm md:text-base text-white/80">
-                  Senior Pastor, The Wisdom House Church
-                </P>
-              </div>
-
-              <div
-                className="h-1 w-20 rounded-full"
-                style={{ background: primary }}
-              />
-
-              <div className="space-y-3">
-                <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed">
-                  {summary}
-                </P>
-
-                <div className="flex flex-nowrap gap-2.5 pt-1 overflow-x-auto sm:flex-wrap sm:overflow-visible">
-                  <Button
-                    onClick={() =>
-                      window.open(
-                        'https://www.instagram.com/gabrielayilara',
-                        '_blank',
-                        'noopener,noreferrer'
-                      )
-                    }
-                    variant="primary"
-                    size="xs"
-                    curvature="full"
-                    leftIcon={
-                      <FontAwesomeIcon icon={faInstagram} className="w-4 h-4" />
-                    }
-                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold shadow-lg min-w-max"
-                    style={{
-                      background: 'linear-gradient(135deg, #E4405F, #C13584)',
-                      color: '#fff',
-                    }}
-                  >
-                    Instagram
-                  </Button>
-
-                  <Button
-                    onClick={() =>
-                      window.open(
-                        'https://facebook.com',
-                        '_blank',
-                        'noopener,noreferrer'
-                      )
-                    }
-                    variant="outline"
-                    size="xs"
-                    curvature="full"
-                    leftIcon={
-                      <FontAwesomeIcon icon={faFacebook} className="w-4 h-4" />
-                    }
-                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold min-w-max"
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.08)',
-                      color: '#fff',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                    }}
-                  >
-                    Facebook
-                  </Button>
-
-                  <Button
-                    onClick={() =>
-                      window.open(
-                        'https://twitter.com',
-                        '_blank',
-                        'noopener,noreferrer'
-                      )
-                    }
-                    variant="outline"
-                    size="xs"
-                    curvature="full"
-                    leftIcon={
-                      <FontAwesomeIcon icon={faTwitter} className="w-4 h-4" />
-                    }
-                    className="px-4 py-2 text-[11px] sm:text-[13px] font-semibold min-w-max"
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.08)',
-                      color: '#fff',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                    }}
-                  >
-                    X (Twitter)
-                  </Button>
-                </div>
-              </div>
+          {/* Bio — accordion on mobile */}
+          <div className="mt-7 max-w-[420px]">
+            <div
+              className="overflow-hidden transition-all duration-400 ease-in-out lg:max-h-none"
+              // eslint-disable-next-line no-restricted-syntax
+              style={{
+                maxHeight:
+                  typeof window !== 'undefined' && window.innerWidth < 1024
+                    ? bioExpanded
+                      ? '600px'
+                      : '5.5rem'
+                    : 'none',
+              }}
+              suppressHydrationWarning
+            >
+              <p className="font-ui text-[0.92rem] leading-[1.9] text-white/70">
+                {bio}
+              </p>
             </div>
 
-            {/* Portrait column */}
-            <div
-              ref={imageRef}
-              className="flex justify-center md:justify-end order-1 md:order-2"
-            >
-              <div className="relative w-full max-w-[200px] sm:max-w-[230px] md:max-w-[300px] aspect-[3/4] rounded-full md:rounded-3xl overflow-hidden border border-white/12 shadow-2xl">
-                <Image
-                  src={Bishop}
-                  alt="Bishop Gabriel Ayilara"
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 480px"
-                  className="object-cover"
-                  style={{ objectPosition: 'center 20%' }}
+            {canExpand && (
+              <button
+                type="button"
+                onClick={() => setBioExpanded(p => !p)}
+                className="mt-3 inline-flex items-center gap-1.5 font-ui text-[0.78rem] font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-primary-light)] lg:hidden"
+              >
+                {bioExpanded ? 'Read less' : 'Read more'}
+                <ChevronDown
+                  className={`h-3.5 w-3.5 transition-transform duration-300 ${bioExpanded ? 'rotate-180' : ''}`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
-
-                <div className="hidden md:flex absolute bottom-4 left-4 right-4 items-center justify-between text-sm font-semibold text-white">
-                  <span className="text-white/90">Bishop Gabriel Ayilara</span>
-                  <span
-                    className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md"
-                    style={{
-                      background:
-                        colorScheme.opacity?.primary20 ??
-                        'rgba(255,255,255,0.14)',
-                      border: '1px solid rgba(255,255,255,0.2)',
-                    }}
-                  >
-                    Senior Pastor
-                  </span>
-                </div>
-              </div>
-            </div>
+              </button>
+            )}
           </div>
 
-          <div className="mt-8 md:mt-10 w-full">
-            <div className="rounded-2xl border border-white/12 bg-white/5 backdrop-blur-xl p-5 md:p-6">
-              <P className="text-[11px] md:text-xs uppercase tracking-[0.2em] text-white/60">
-                Leadership
-              </P>
-              <H1 className="text-lg sm:text-xl md:text-2xl font-semibold text-white leading-tight mt-2">
-                Guided with vision, prayer, and care.
-              </H1>
-              <P className="text-sm md:text-base text-white/75 max-w-3xl leading-relaxed mt-3">
-                Our leaders are devoted to building a Spirit‑filled community
-                rooted in the Word, integrity, and compassionate service.
-              </P>
-              <div className="pt-4">
-                <Button
-                  onClick={goToLeadership}
-                  variant="primary"
-                  size="xs"
-                  curvature="full"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
-                  className="w-full sm:w-auto px-5 py-2 text-[13px] font-semibold shadow-lg"
-                  style={{ backgroundColor: primary, color: '#0b0b0b' }}
+          {/* Links row */}
+          <div className="mt-8 flex flex-wrap items-center gap-6">
+            <Link
+              href="/leadership"
+              className="group inline-flex items-center gap-1.5 font-ui text-[0.8rem] font-semibold text-[var(--app-primary)] transition"
+            >
+              Meet the team
+              <span
+                className="transition duration-200 group-hover:translate-x-1"
+                aria-hidden="true"
+              >
+                →
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-2">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="flex h-8 w-8 items-center justify-center border border-white/10 bg-white/[0.04] text-white/40 transition hover:border-white/22 hover:text-white/75"
                 >
-                  View leadership
-                </Button>
-              </div>
+                  <Icon />
+                </a>
+              ))}
             </div>
           </div>
-        </FlexboxLayout>
-      </Container>
+        </div>
+      </div>
     </Section>
   );
 }

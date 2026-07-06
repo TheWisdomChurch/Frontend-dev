@@ -1,3 +1,11 @@
+import lader from './lader.jpeg';
+import lader_2 from './lader_2.jpg';
+import lader_1 from './lader_1.jpg';
+import WhatsappCommunity from './Whatsapp (1).jpeg';
+import WhatsappCommunity_2 from './Whatsapp (2).jpeg';
+import WhatwedoPhoto_1 from './Whatwedo (1).jpg';
+import WhatwedoPhoto_2 from './Whatwedo (2).jpg';
+import WhatwedoPhoto_3 from './Whatwedo (3).jpg';
 import Banner_1 from './banner1.webp';
 import Banner_2 from './banner2.webp';
 import Banner_3 from './banner3.webp';
@@ -64,6 +72,14 @@ import Min_Adura from './Aduragbemi.jpg';
 import NL from './7NL_img.jpeg';
 
 export {
+  lader,
+  lader_1,
+  lader_2,
+  WhatsappCommunity,
+  WhatsappCommunity_2,
+  WhatwedoPhoto_1,
+  WhatwedoPhoto_2,
+  WhatwedoPhoto_3,
   Banner_1,
   WisdomShirt_2,
   wisdomShirt_1,

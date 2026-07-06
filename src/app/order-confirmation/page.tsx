@@ -1,4 +1,4 @@
-﻿// src/app/order-confirmation/page.tsx
+// src/app/order-confirmation/page.tsx
 'use client';
 
 import { Suspense, useEffect } from 'react';
@@ -16,9 +16,9 @@ import {
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
-import { H2, BaseText, LightText } from '@/shared/text';
+import GridBackground from '@/shared/ui/GridBackground';
+import { H2, BodySM, BaseText, LightText } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import OrderConfirmation from '@/features/store/Store/orderDetails';
 import PageHero from '@/features/hero/PageHero';
 
@@ -41,8 +41,6 @@ const nextSteps = [
 ];
 
 function SimpleConfirmation() {
-  const { colorScheme } = useTheme();
-
   useEffect(() => {
     gsap.fromTo(
       '.confirmation-animate',
@@ -59,7 +57,7 @@ function SimpleConfirmation() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--app-dark)] text-white">
       <PageHero
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
@@ -70,25 +68,18 @@ function SimpleConfirmation() {
       <Section
         padding="lg"
         fullHeight={false}
-        className="relative overflow-hidden bg-[#050505]"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
       >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(247,222,18,0.14),transparent_34%),radial-gradient(circle_at_15%_30%,rgba(255,255,255,0.06),transparent_30%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-25" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.11),transparent_34%),radial-gradient(circle_at_15%_30%,rgba(255,255,255,0.06),transparent_30%)]" />
+          <GridBackground />
         </div>
 
         <Container size="xl" className="relative z-10">
           <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
             <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
               <div className="confirmation-animate border-b border-white/10 p-6 text-center sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                <div
-                  className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border shadow-[0_20px_70px_rgba(0,0,0,0.35)]"
-                  style={{
-                    backgroundColor: `${colorScheme.success}18`,
-                    borderColor: `${colorScheme.success}30`,
-                    color: colorScheme.success,
-                  }}
-                >
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10 text-green-500 shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
                   <CheckCircle2 className="h-12 w-12" />
                 </div>
 
@@ -123,10 +114,6 @@ function SimpleConfirmation() {
                       curvature="full"
                       leftIcon={<ShoppingBag className="h-5 w-5" />}
                       className="h-12 w-full px-6 font-bold sm:w-auto"
-                      style={{
-                        backgroundColor: colorScheme.primary,
-                        color: colorScheme.black,
-                      }}
                     >
                       Continue Shopping
                     </Button>
@@ -138,11 +125,7 @@ function SimpleConfirmation() {
                       size="lg"
                       curvature="full"
                       leftIcon={<Home className="h-5 w-5" />}
-                      className="h-12 w-full border px-6 font-bold text-white sm:w-auto"
-                      style={{
-                        borderColor: `${colorScheme.primary}88`,
-                        color: colorScheme.primary,
-                      }}
+                      className="h-12 w-full border border-[var(--app-primary)]/50 px-6 font-bold text-[var(--app-primary)] sm:w-auto"
                     >
                       Back to Home
                     </Button>
@@ -152,10 +135,7 @@ function SimpleConfirmation() {
 
               <div className="p-6 sm:p-8 lg:p-10">
                 <div className="confirmation-animate mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-white/65">
-                  <PackageCheck
-                    className="h-3.5 w-3.5"
-                    style={{ color: colorScheme.primary }}
-                  />
+                  <PackageCheck className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.22em]">
                     What happens next
                   </span>
@@ -169,26 +149,21 @@ function SimpleConfirmation() {
                       <div
                         key={item.title}
                         className="confirmation-animate rounded-[1.35rem] border border-white/10 bg-black/24 p-4"
+                        // eslint-disable-next-line no-restricted-syntax
                         style={{ transitionDelay: `${index * 60}ms` }}
                       >
                         <div className="flex gap-4">
-                          <div
-                            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
-                            style={{
-                              backgroundColor: `${colorScheme.primary}18`,
-                              color: colorScheme.primary,
-                            }}
-                          >
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
                             <Icon className="h-5 w-5" />
                           </div>
 
                           <div>
-                            <p className="font-semibold text-white">
+                            <BodySM weight="semibold" className="text-white">
                               {item.title}
-                            </p>
-                            <p className="mt-1 text-sm leading-6 text-white/55">
+                            </BodySM>
+                            <BodySM className="mt-1 text-white/55">
                               {item.description}
-                            </p>
+                            </BodySM>
                           </div>
                         </div>
                       </div>
@@ -197,15 +172,14 @@ function SimpleConfirmation() {
                 </div>
 
                 <div className="confirmation-animate mt-6 rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-sm leading-6 text-white/60">
+                  <BodySM className="text-white/60">
                     Need help with your order? Contact the church/store team
                     from the contact page and include your order information.
-                  </p>
+                  </BodySM>
 
                   <Link
                     href="/contact"
-                    className="mt-4 inline-flex items-center gap-2 text-sm font-bold"
-                    style={{ color: colorScheme.primary }}
+                    className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[var(--app-primary)]"
                   >
                     Contact support
                     <ArrowRight className="h-4 w-4" />

@@ -1,5 +1,3 @@
-'use client';
-
 import type {
   EventPublic,
   PublicFormContentSection,
@@ -42,7 +40,7 @@ const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
    CACHE & RETRY CONFIG
 ============================================================================ */
 
-const REQUEST_CACHE = new Map<string, { data: any; timestamp: number }>();
+const REQUEST_CACHE = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000; // Start with 1s, exponential backoff
@@ -169,7 +167,7 @@ function getErrorMessage(err: unknown): string {
    Fetch Utilities
 ============================================================================ */
 
-async function safeParseJson(res: Response): Promise<any | null> {
+async function safeParseJson(res: Response): Promise<unknown> {
   const ct = res.headers.get('content-type') || '';
   if (!ct.includes('application/json')) return null;
   try {
@@ -179,11 +177,12 @@ async function safeParseJson(res: Response): Promise<any | null> {
   }
 }
 
-function unwrapData<T>(res: any): T {
+function unwrapData<T>(res: unknown): T {
   if (!res || typeof res !== 'object') return res as T;
   if ('data' in res) {
-    const d = (res as any).data;
-    if (d && typeof d === 'object' && 'data' in d) return d.data as T;
+    const d = (res as Record<string, unknown>).data;
+    if (d && typeof d === 'object' && 'data' in d)
+      return (d as Record<string, unknown>).data as T;
     return d as T;
   }
   return res as T;
@@ -201,8 +200,8 @@ function toQueryString(params: Record<string, unknown>): string {
   return query ? `?${query}` : '';
 }
 
-function extractArrayData<T>(res: any): T[] {
-  const data = unwrapData<any>(res);
+function extractArrayData<T>(res: unknown): T[] {
+  const data = unwrapData<unknown>(res);
 
   if (Array.isArray(data)) {
     return data as T[];
@@ -254,7 +253,7 @@ async function request<T>(
     ...(options.headers || {}),
   };
 
-  let lastError: any = null;
+  let lastError: unknown = null;
 
   // Retry logic with exponential backoff
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
@@ -276,7 +275,10 @@ async function request<T>(
       const json = await safeParseJson(res);
       const payload =
         json ??
-        ({ message: await res.text().catch(() => '') } as Record<string, any>);
+        ({ message: await res.text().catch(() => '') } as Record<
+          string,
+          unknown
+        >);
 
       if (!res.ok) {
         // Don't retry on client errors (4xx)
@@ -319,7 +321,7 @@ async function request<T>(
       }
 
       return payload as T;
-    } catch (err: any) {
+    } catch (err: unknown) {
       lastError = err;
 
       // Don't retry on API errors (already processed)
@@ -338,7 +340,7 @@ async function request<T>(
   }
 
   // If all retries failed, throw the last error
-  if (lastError) {
+  if (lastError !== null) {
     if (isApiError(lastError)) throw lastError;
     throw createApiError(getErrorMessage(lastError), 0, lastError);
   }
@@ -356,6 +358,7 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     lastName,
     email,
     phone,
+    phoneCode,
     title,
     department,
     departmentSection,
@@ -365,8 +368,14 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     isExistingMember,
     currentAssignment,
     birthday,
+    registrationType,
     sourceChannel,
     notes,
+    occupation,
+    married,
+    spouse,
+    anniversaryDate,
+    about,
   } = payload;
 
   return {
@@ -374,6 +383,7 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     lastName,
     email,
     phone,
+    phoneCode,
     title,
     department,
     departmentSection,
@@ -383,8 +393,14 @@ function mapWorkforcePayload(payload: WorkforceRegistrationData) {
     isExistingMember,
     currentAssignment,
     birthday,
+    registrationType,
     sourceChannel,
     notes,
+    occupation,
+    married,
+    spouse,
+    anniversary: anniversaryDate,
+    about,
   };
 }
 
@@ -818,34 +834,37 @@ function normalizePublicFormPayload(input: unknown): PublicFormPayload {
   return payload;
 }
 
-function normalizeTestimonial(raw: any): Testimonial {
-  const firstName = raw?.firstName ?? raw?.first_name;
-  const lastName = raw?.lastName ?? raw?.last_name;
+function normalizeTestimonial(raw: unknown): Testimonial {
+  const r = isRecord(raw) ? raw : {};
+  const firstName = (r.firstName ?? r.first_name) as string | undefined;
+  const lastName = (r.lastName ?? r.last_name) as string | undefined;
 
-  const isAnonymous =
-    raw?.isAnonymous ?? raw?.is_anonymous ?? raw?.anonymous ?? false;
-  const isApproved =
-    raw?.isApproved ?? raw?.is_approved ?? raw?.approved ?? undefined;
+  const isAnonymous = r.isAnonymous ?? r.is_anonymous ?? r.anonymous ?? false;
+  const isApproved = (r.isApproved ?? r.is_approved ?? r.approved) as
+    | boolean
+    | undefined;
 
   const imageUrl =
-    raw?.imageUrl ?? raw?.image_url ?? raw?.image ?? raw?.imageURL ?? null;
+    ((r.imageUrl ?? r.image_url ?? r.image ?? r.imageURL) as
+      | string
+      | null
+      | undefined) ?? null;
 
-  const createdAt = raw?.createdAt ?? raw?.created_at;
-  const updatedAt = raw?.updatedAt ?? raw?.updated_at;
+  const createdAt = (r.createdAt ?? r.created_at) as string | undefined;
+  const updatedAt = (r.updatedAt ?? r.updated_at) as string | undefined;
 
   const fullName =
-    raw?.fullName ??
-    raw?.full_name ??
+    ((r.fullName ?? r.full_name) as string | undefined) ??
     (firstName || lastName
       ? `${firstName ?? ''} ${lastName ?? ''}`.trim()
       : undefined);
 
   return {
-    id: raw?.id,
+    id: r.id as string | number,
     firstName,
     lastName,
     fullName,
-    testimony: raw?.testimony ?? '',
+    testimony: (r.testimony as string) ?? '',
     imageUrl,
     isAnonymous: Boolean(isAnonymous),
     isApproved,
@@ -861,14 +880,14 @@ function normalizeTestimonial(raw: any): Testimonial {
 export const apiClient = {
   async listEvents(): Promise<EventPublic[]> {
     const qs = toQueryString({ page: 1, limit: 100 });
-    const res = await request<any>(`/events${qs}`, { method: 'GET' });
+    const res = await request<unknown>(`/events${qs}`, { method: 'GET' });
     return extractArrayData<unknown>(res)
       .map(mapBackendEvent)
       .filter((item): item is EventPublic => item !== null);
   },
 
   async getEvent(id: string): Promise<EventPublic> {
-    const res = await request<any>(`/events/${encodeURIComponent(id)}`, {
+    const res = await request<unknown>(`/events/${encodeURIComponent(id)}`, {
       method: 'GET',
     });
     const item = mapBackendEvent(unwrapData<unknown>(res));
@@ -886,14 +905,14 @@ export const apiClient = {
 
   async listReels(): Promise<ReelPublic[]> {
     const qs = toQueryString({ page: 1, limit: 30 });
-    const res = await request<any>(`/reels${qs}`, { method: 'GET' });
+    const res = await request<unknown>(`/reels${qs}`, { method: 'GET' });
     return extractArrayData<unknown>(res)
       .map(mapBackendReel)
       .filter((item): item is ReelPublic => item !== null);
   },
 
   async getPublicForm(slug: string): Promise<PublicFormPayload> {
-    const res = await request<any>(
+    const res = await request<unknown>(
       `/forms/${encodeURIComponent(slug)}`,
       {
         method: 'GET',
@@ -906,7 +925,7 @@ export const apiClient = {
   async submitPublicForm(
     slug: string,
     body: PublicFormSubmissionRequest
-  ): Promise<any> {
+  ): Promise<unknown> {
     const values =
       isRecord(body) && isRecord(body.values)
         ? body.values
@@ -914,97 +933,99 @@ export const apiClient = {
           ? body.answers
           : {};
 
-    const res = await request<any>(
+    const res = await request<unknown>(
       `/forms/${encodeURIComponent(slug)}/submissions`,
       {
         method: 'POST',
         body: JSON.stringify({ values }),
       }
     );
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
   },
 
   async listApprovedTestimonials(): Promise<Testimonial[]> {
-    const res = await request<any>(
+    const res = await request<unknown>(
       `/testimonials?approved=true`,
       {
         method: 'GET',
       },
       { skipCache: true }
     );
-    const data = unwrapData<any>(res);
+    const data = unwrapData<unknown>(res);
     return Array.isArray(data) ? data.map(normalizeTestimonial) : [];
   },
 
   async submitTestimonial(
     payload: CreateTestimonialRequest
   ): Promise<Testimonial> {
-    const res = await request<any>('/testimonials', {
+    const res = await request<unknown>('/testimonials', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-    return normalizeTestimonial(unwrapData<any>(res));
+    return normalizeTestimonial(unwrapData<unknown>(res));
   },
 
   async subscribe(payload: { name?: string; email: string }) {
-    return request<any>('/notifications/subscribe', {
+    return request<unknown>('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
   },
 
   async listGivingOptions(): Promise<GivingOption[]> {
-    const res = await request<any>('/giving/options', {
+    const res = await request<unknown>('/giving/options', {
       method: 'GET',
     });
-    const data = unwrapData<any>(res);
+    const data = unwrapData<unknown>(res);
     return Array.isArray(data) ? (data as GivingOption[]) : [];
   },
 
   async getHomepageAd(): Promise<Record<string, unknown> | null> {
-    const res = await request<any>('/content/homepage-ad', { method: 'GET' });
-    const data = unwrapData<any>(res);
+    const res = await request<unknown>('/content/homepage-ad', {
+      method: 'GET',
+    });
+    const data = unwrapData<unknown>(res);
     return data && typeof data === 'object'
       ? (data as Record<string, unknown>)
       : null;
   },
 
   async getConfessionContent(): Promise<Record<string, unknown> | null> {
-    const res = await request<any>('/content/confession-popup', {
+    const res = await request<unknown>('/content/confession-popup', {
       method: 'GET',
     });
-    const data = unwrapData<any>(res);
+    const data = unwrapData<unknown>(res);
     return data && typeof data === 'object'
       ? (data as Record<string, unknown>)
       : null;
   },
 
-  async applyWorkforce(payload: WorkforceRegistrationData): Promise<any> {
-    const res = await request<any>('/workforce/apply', {
+  async applyWorkforce(payload: WorkforceRegistrationData): Promise<unknown> {
+    const res = await request<unknown>('/workforce/apply', {
       method: 'POST',
       body: JSON.stringify(mapWorkforcePayload(payload)),
     });
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
   },
 
   async applyWorkforceServing(
     payload: WorkforceRegistrationData
-  ): Promise<any> {
+  ): Promise<unknown> {
     const body = {
       ...mapWorkforcePayload(payload),
       status: 'serving',
     };
 
-    const res = await request<any>('/workforce/serving/register', {
+    const res = await request<unknown>('/workforce/serving/register', {
       method: 'POST',
       body: JSON.stringify(body),
     });
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
   },
 
   async submitPastoralCareRequest(
     payload: PastoralCareRequestData
-  ): Promise<any> {
+  ): Promise<unknown> {
     const body = {
       title: payload.title,
       firstName: payload.firstName,
@@ -1020,14 +1041,14 @@ export const apiClient = {
       sourceChannel: payload.sourceChannel ?? 'frontend:web:pastoral',
     };
 
-    const res = await request<any>('/pastoral-care/requests', {
+    const res = await request<unknown>('/pastoral-care/requests', {
       method: 'POST',
       body: JSON.stringify(body),
     });
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
   },
 
-  async submitGivingIntent(payload: GivingIntentData): Promise<any> {
+  async submitGivingIntent(payload: GivingIntentData): Promise<unknown> {
     const body = {
       title: payload.title,
       description: payload.description,
@@ -1035,14 +1056,14 @@ export const apiClient = {
       metadata: payload.metadata ?? {},
     };
 
-    const res = await request<any>('/giving/intents', {
+    const res = await request<unknown>('/giving/intents', {
       method: 'POST',
       body: JSON.stringify(body),
     });
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
   },
 
-  async submitContactMessage(payload: ContactMessageData): Promise<any> {
+  async submitContactMessage(payload: ContactMessageData): Promise<unknown> {
     const body = {
       firstName: payload.firstName,
       lastName: payload.lastName,
@@ -1054,19 +1075,43 @@ export const apiClient = {
       metadata: payload.metadata ?? {},
     };
 
-    const res = await request<any>('/contact/messages', {
+    const res = await request<unknown>('/contact/messages', {
       method: 'POST',
       body: JSON.stringify(body),
     });
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
   },
 
-  async applyWorkforceNew(payload: WorkforceRegistrationData): Promise<any> {
-    const res = await request<any>('/workforce/apply', {
+  async applyWorkforceNew(
+    payload: WorkforceRegistrationData
+  ): Promise<unknown> {
+    const res = await request<unknown>('/workforce/apply', {
       method: 'POST',
       body: JSON.stringify(mapWorkforcePayload(payload)),
     });
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
+  },
+
+  async lookupWorkforceMember(
+    email: string
+  ): Promise<Record<string, unknown> | null> {
+    try {
+      const res = await request<unknown>(
+        `/workforce/member/lookup?email=${encodeURIComponent(email)}`
+      );
+      const data = unwrapData<unknown>(res);
+      return data && typeof data === 'object'
+        ? (data as Record<string, unknown>)
+        : null;
+    } catch (err) {
+      if (
+        isApiError(err) &&
+        (err.statusCode === 404 || err.statusCode === 400)
+      ) {
+        return null;
+      }
+      return null;
+    }
   },
 
   /* -----------------------------
@@ -1078,15 +1123,19 @@ export const apiClient = {
 
   async listLeadership(role?: LeadershipRole): Promise<LeadershipMember[]> {
     const qs = toQueryString({ role });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await request<any>(`/leadership${qs}`, { method: 'GET' });
     return unwrapData<LeadershipMember[]>(res);
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async applyLeadership(payload: LeadershipApplicationRequest): Promise<any> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await request<any>('/leadership/apply', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return unwrapData<any>(res);
   },
 
@@ -1097,6 +1146,7 @@ export const apiClient = {
     form.append('file', file);
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res = await request<any>('/leadership/upload-image', {
         method: 'POST',
         body: form,
@@ -1104,6 +1154,7 @@ export const apiClient = {
       return unwrapData<{ url: string; key?: string }>(res);
     } catch (error) {
       if (isApiError(error) && error.statusCode === 404) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const fallbackRes = await request<any>('/leadership/upload', {
           method: 'POST',
           body: form,

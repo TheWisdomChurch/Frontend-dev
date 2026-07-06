@@ -9,6 +9,7 @@ import React, {
   useEffect,
 } from 'react';
 import gsap from 'gsap';
+import { Button } from '@/shared/utils/buttons';
 
 export interface Notification {
   id: string;
@@ -117,19 +118,7 @@ function NotificationStack({
   removeNotification: (id: string) => void;
 }) {
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: '100px',
-        right: '20px',
-        zIndex: 9999,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        maxWidth: '400px',
-        pointerEvents: 'none',
-      }}
-    >
+    <div className="pointer-events-none fixed right-[20px] top-[100px] z-[9999] flex max-w-[400px] flex-col gap-3">
       {notifications.map(notif => (
         <NotificationItem
           key={notif.id}
@@ -206,18 +195,9 @@ function NotificationItem({
     <div
       id={`notification-${notification.id}`}
       ref={itemRef}
-      style={{
-        background: colors.bg,
-        border: `1.5px solid ${colors.border}`,
-        borderRadius: '12px',
-        padding: '16px',
-        display: 'flex',
-        gap: '12px',
-        alignItems: 'flex-start',
-        backdropFilter: 'blur(10px)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-        pointerEvents: 'auto',
-      }}
+      className="pointer-events-auto flex items-start gap-3 rounded-xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-md"
+      // eslint-disable-next-line no-restricted-syntax
+      style={{ background: colors.bg, border: `1.5px solid ${colors.border}` }}
       onMouseEnter={e => {
         gsap.to(e.currentTarget, {
           x: -5,
@@ -232,54 +212,27 @@ function NotificationItem({
       }}
     >
       <div
-        style={{
-          minWidth: '24px',
-          height: '24px',
-          borderRadius: '50%',
-          background: colors.border,
-          color: '#fff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '14px',
-          fontWeight: 'bold',
-        }}
+        className="flex h-6 min-w-6 items-center justify-center rounded-full text-sm font-bold text-white"
+        // eslint-disable-next-line no-restricted-syntax
+        style={{ background: colors.border }}
       >
         {colors.icon}
       </div>
 
-      <div
-        style={{
-          flex: 1,
-          color: '#F5F0E8',
-          fontSize: '14px',
-          lineHeight: '1.5',
-        }}
-      >
+      <div className="flex-1 text-sm leading-[1.5] text-[#F5F0E8]">
         {notification.message}
       </div>
 
-      <button
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
         onClick={() => onRemove(notification.id)}
-        style={{
-          background: 'none',
-          border: 'none',
-          color: '#999',
-          cursor: 'pointer',
-          fontSize: '18px',
-          padding: '0',
-          minWidth: '24px',
-          transition: 'color 0.2s',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.color = '#C9A84C';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.color = '#999';
-        }}
+        aria-label="Dismiss notification"
+        className="min-w-6 min-h-0 h-auto p-0 text-[18px] text-[#999] hover:text-[#C9A84C]"
       >
         ✕
-      </button>
+      </Button>
     </div>
   );
 }
