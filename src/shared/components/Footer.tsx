@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { useState } from 'react';
 import { MapPin, Mail, Phone } from 'lucide-react';
 
@@ -150,6 +151,7 @@ export default function Footer() {
             >
               <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.05]">
                 <Image
+                  quality={IMAGE_QUALITY}
                   src={WisdomeHouseLogo}
                   alt=""
                   fill
@@ -229,7 +231,7 @@ export default function Footer() {
                 <button
                   type="submit"
                   disabled={subState === 'loading'}
-                  className="h-10 bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold uppercase tracking-[0.12em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60"
+                  className="h-10 bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60"
                 >
                   {subState === 'loading'
                     ? 'Sending…'

@@ -42,8 +42,10 @@ import { Section, Container } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
 import CartSidebar from '@/features/store/Store/CartSidebar';
 import type { Product } from '@/lib/types';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { storeClient } from '@/lib/api/storeClient';
 import PageHero from '@/features/hero/PageHero';
+import ReduxProvider from '@/shared/providers/ReduxProvider';
 
 const categoryLabels: Record<string, string> = {
   all: 'All Products',
@@ -52,7 +54,7 @@ const categoryLabels: Record<string, string> = {
   utilities: 'Utilities',
 };
 
-export default function StorePage() {
+function StorePageContent() {
   const dispatch = useAppDispatch();
 
   const { products, filteredProducts, filters } = useAppSelector(
@@ -500,6 +502,7 @@ export default function StorePage() {
                             fill
                             className="object-contain p-5 transition duration-500 group-hover:scale-105"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            quality={IMAGE_QUALITY}
                           />
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">
@@ -729,6 +732,7 @@ export default function StorePage() {
       </Section>
 
       <ProductModal
+        key={selectedProduct?.id ?? 'none'}
         product={selectedProduct}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -736,5 +740,13 @@ export default function StorePage() {
 
       <CartSidebar />
     </div>
+  );
+}
+
+export default function StorePage() {
+  return (
+    <ReduxProvider>
+      <StorePageContent />
+    </ReduxProvider>
   );
 }

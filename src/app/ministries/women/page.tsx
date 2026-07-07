@@ -83,7 +83,7 @@ export default function WomenMinistryPage() {
       />
 
       {/* ── 2. Flourish Conference — dark ────────────────────── */}
-      <section className="border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn className="pt-14 lg:pt-18">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -136,7 +136,7 @@ export default function WomenMinistryPage() {
       </section>
 
       {/* ── 3. Mission — canvas ──────────────────────────────── */}
-      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -162,7 +162,7 @@ export default function WomenMinistryPage() {
       </section>
 
       {/* ── 4. What we do — dark ─────────────────────────────── */}
-      <section className="border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn className="pt-16 lg:pt-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -196,7 +196,7 @@ export default function WomenMinistryPage() {
       </section>
 
       {/* ── 5. Core values — canvas ──────────────────────────── */}
-      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-14">
@@ -233,7 +233,7 @@ export default function WomenMinistryPage() {
 
       {/* ── 6. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

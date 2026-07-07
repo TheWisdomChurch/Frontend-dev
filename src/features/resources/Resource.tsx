@@ -27,6 +27,7 @@ import {
 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
@@ -174,7 +175,7 @@ function ResourceCarousel() {
                   alt={item.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  quality={85}
+                  quality={IMAGE_QUALITY}
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
                 />
                 {/* Bottom-up gradient so text is readable, top stays bright */}
@@ -381,7 +382,7 @@ export default function ResourceSection() {
                   href={videoUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   <PlayCircle className="h-4 w-4" />
                   Watch now

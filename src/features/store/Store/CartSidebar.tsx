@@ -15,7 +15,7 @@ import { Button } from '@/shared/utils/buttons';
 import { BaseText, LightText } from '@/shared/text';
 import { FlexboxLayout } from '@/shared/layout';
 
-const CartSidebar: React.FC = () => {
+const CartSidebar = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { items, total, itemCount, isCartOpen } = useAppSelector(

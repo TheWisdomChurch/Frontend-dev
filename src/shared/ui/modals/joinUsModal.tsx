@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { ArrowUpRight, Camera, MessageCircle, PlayCircle } from 'lucide-react';
 
 import { communityLinks } from '@/lib/data';
@@ -32,6 +33,7 @@ export default function JoinCommunityModal({
         <div className="flex items-center gap-3 pb-1">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/40">
             <Image
+              quality={IMAGE_QUALITY}
               src={WisdomeHouseLogo}
               alt="The Wisdom Church"
               width={28}

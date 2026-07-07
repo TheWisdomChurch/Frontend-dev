@@ -5,18 +5,18 @@
 // ========================================
 // PRIMARY COLORS
 // ========================================
-$primary: #C9961A;
-$primary-light: #E8B44A;
-$primary-lighter: #F5D98A;
-$primary-dark: #A0740C;
-$primary-darker: #7A5608;
+$primary: #c9961a;
+$primary-light: #e8b44a;
+$primary-lighter: #f5d98a;
+$primary-dark: #a0740c;
+$primary-darker: #7a5608;
 
 // ========================================
 // SECONDARY COLORS
 // ========================================
-$secondary: #E8952A; // Warm copper
-$secondary-light: #F0AD58;
-$secondary-dark: #C4761A;
+$secondary: #e8952a; // Warm copper
+$secondary-light: #f0ad58;
+$secondary-dark: #c4761a;
 
 // ========================================
 // SEMANTIC COLORS
@@ -126,62 +126,3 @@ $white-op-10: rgba($white, 0.1);
 $white-op-20: rgba($white, 0.2);
 $white-op-30: rgba($white, 0.3);
 $white-op-50: rgba($white, 0.5);
-
-// ========================================
-// UTILITY CLASSES
-// ========================================
-.text-primary {
-  color: $text-primary;
-}
-
-.text-secondary {
-  color: $text-secondary;
-}
-
-.text-tertiary {
-  color: $text-tertiary;
-}
-
-.text-accent {
-  color: $primary;
-}
-
-.text-success {
-  color: $success;
-}
-
-.text-error {
-  color: $error;
-}
-
-.text-warning {
-  color: $warning;
-}
-
-.bg-primary {
-  background-color: $bg-primary;
-}
-
-.bg-secondary {
-  background-color: $bg-secondary;
-}
-
-.bg-accent {
-  background-color: $primary;
-}
-
-.bg-success {
-  background-color: $success;
-}
-
-.bg-error {
-  background-color: $error;
-}
-
-.border-primary {
-  border-color: $border-light;
-}
-
-.border-accent {
-  border-color: $primary;
-}

@@ -55,9 +55,9 @@ const radiusClasses = {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-[var(--app-primary)]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
+    'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-[var(--app-primary)]/20 hover:border-[var(--app-primary-hover)] hover:bg-[var(--app-primary-hover)]',
   'accent-yellow':
-    'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-[var(--app-primary)]/20 hover:border-[#ffe93d] hover:bg-[#ffe93d]',
+    'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-[var(--app-primary)]/20 hover:border-[var(--app-primary-hover)] hover:bg-[var(--app-primary-hover)]',
   'accent-orange':
     'border-orange-500 bg-orange-500 text-white shadow-orange-500/20 hover:border-orange-400 hover:bg-orange-400',
   secondary:

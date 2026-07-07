@@ -104,7 +104,7 @@ export default function CookiesPage() {
       {/* ── Document body ─────────────────────────────────────── */}
       <div className="mx-auto max-w-4xl px-6 py-16 lg:py-24">
         {/* Overview */}
-        <section className="border-b border-[var(--app-ink)]/10 pb-14">
+        <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/10 pb-14">
           <p className="mb-4 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Overview
           </p>
@@ -117,7 +117,7 @@ export default function CookiesPage() {
         </section>
 
         {/* Cookie tables */}
-        <section className="space-y-14 border-b border-[var(--app-ink)]/10 py-14">
+        <section className="overflow-hidden min-w-0 space-y-14 border-b border-[var(--app-ink)]/10 py-14">
           <p className="mb-2 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Cookies we use
           </p>
@@ -183,7 +183,7 @@ export default function CookiesPage() {
         </section>
 
         {/* What we do not do */}
-        <section className="border-b border-[var(--app-ink)]/10 py-14">
+        <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/10 py-14">
           <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             What we don't do
           </p>
@@ -204,7 +204,7 @@ export default function CookiesPage() {
         </section>
 
         {/* Your choices */}
-        <section className="border-b border-[var(--app-ink)]/10 py-14">
+        <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/10 py-14">
           <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Your choices
           </p>
@@ -225,7 +225,7 @@ export default function CookiesPage() {
         </section>
 
         {/* Contact */}
-        <section className="py-14">
+        <section className="overflow-hidden min-w-0 py-14">
           <p className="mb-4 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Questions?
           </p>

@@ -31,14 +31,22 @@
   --app-primary: #c9961a;
   --app-primary-light: #e8b44a;
   --app-primary-dark: #a0740c;
+  --app-primary-hover: #ffe93d;
   --app-primary-10: rgba(201, 150, 26, 0.1);
   --app-primary-20: rgba(201, 150, 26, 0.2);
   --app-primary-40: rgba(201, 150, 26, 0.4);
+
+  /* Brand-partner colors */
+  --app-whatsapp: #25d366;
+
+  /* Base corner radius consumed by Tailwind's rounded-lg/md/sm utilities */
+  --radius: 0.875rem;
 
   /* Dark surface tokens — used in hero sections, feature panels, cards */
   --app-dark: #07060a;
   --app-dark-2: #0e0c0a;
   --app-dark-3: #17140f;
+  --app-dark-input: #1a1814;
 
   /* Display type scale */
   --type-display-xl: clamp(4rem, 9vw, 7.5rem);
@@ -1332,7 +1340,7 @@ body.nav-open {
 }
 
 .btn-primary:hover {
-  background: #ffe93d;
+  background: var(--app-primary-hover);
   box-shadow: 0 14px 34px var(--app-primary-40);
 }
 

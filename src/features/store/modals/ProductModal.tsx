@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useAppDispatch } from '@/shared/utils/hooks/redux';
@@ -11,31 +11,22 @@ import { useWindowSize } from '@/shared/utils/hooks/useWindowSize';
 import { FlexboxLayout } from '@/shared/layout';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import type { ProductModalProps } from '@/lib/types';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
-const ProductModal: React.FC<ProductModalProps> = ({
-  product,
-  isOpen,
-  onClose,
-}) => {
+const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const dispatch = useAppDispatch();
   const windowSize = useWindowSize();
 
-  const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
+  // Parent remounts this component (via `key={product.id}`) whenever the
+  // product changes, so these initial values are always fresh per product.
+  const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
+  const [selectedColor, setSelectedColor] = useState(product?.colors[0] || '');
   const [quantity, setQuantity] = useState(1);
 
   const isMobile = useMemo(() => {
     if (!windowSize.width) return false;
     return windowSize.width < 640;
   }, [windowSize.width]);
-
-  useEffect(() => {
-    if (product) {
-      setSelectedSize(product.sizes[0] || '');
-      setSelectedColor(product.colors[0] || '');
-      setQuantity(1);
-    }
-  }, [product]);
 
   if (!product) return null;
 
@@ -72,6 +63,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
+            quality={IMAGE_QUALITY}
             priority={false}
           />
         </div>

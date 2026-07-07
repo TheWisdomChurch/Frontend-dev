@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Loader from '@/shared/ui/Loader';
-import {
-  getPendingApiRequests,
-  subscribeToApiPending,
-} from '@/lib/apiActivity';
+import { subscribeToApiPending } from '@/lib/apiActivity';
 
 const STARTUP_SETTLE_MS = 280;
 const STARTUP_MIN_VISIBLE_MS = 1800;
@@ -22,7 +19,8 @@ export default function AppStartupLoader() {
   }, []);
 
   useEffect(() => {
-    setPendingRequests(getPendingApiRequests());
+    // subscribeToApiPending invokes the listener immediately with the
+    // current pending count, so no separate initial setState is needed.
     const unsubscribe = subscribeToApiPending(setPendingRequests);
     return unsubscribe;
   }, []);

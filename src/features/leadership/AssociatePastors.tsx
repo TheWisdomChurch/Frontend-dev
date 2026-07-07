@@ -12,6 +12,7 @@ import { useLeadership } from '@/hooks/useLeadership';
 import { pastorsData } from '@/lib/data';
 import { Card } from '@/shared/ui/cards';
 import GridBackground from '@/shared/ui/GridBackground';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 type Leader = (typeof pastorsData)[number] & {
   id?: string | number;
@@ -56,7 +57,7 @@ function LeaderCard({
             fill
             className="object-cover object-[center_18%] transition duration-700 ease-out group-hover:scale-105"
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 25vw"
-            quality={88}
+            quality={IMAGE_QUALITY}
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-[#111]">

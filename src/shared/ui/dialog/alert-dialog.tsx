@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 interface AlertDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -12,7 +10,7 @@ interface AlertDialogProps {
   cancelText?: string;
 }
 
-export const AlertDialog: React.FC<AlertDialogProps> = ({
+export const AlertDialog = ({
   open,
   onOpenChange,
   title = 'Confirm Action',
@@ -20,7 +18,7 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
   onConfirm,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
-}) => {
+}: AlertDialogProps) => {
   if (!open) return null;
 
   return (

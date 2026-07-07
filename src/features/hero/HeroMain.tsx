@@ -13,6 +13,7 @@ import { lader as laderImg } from '@/shared/assets';
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import type { YouTubeVideo } from '@/lib/types';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 if (
   typeof window !== 'undefined' &&
@@ -102,6 +103,8 @@ export default function HeroSection({
   const bodyRef = useRef<HTMLParagraphElement | null>(null);
   const ctaRef = useRef<HTMLDivElement | null>(null);
 
+  // setCurrentSlide is reserved for future slide-navigation controls (dots/arrows).
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentSlide, setCurrentSlide] = useState(0);
   const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
 
@@ -111,11 +114,14 @@ export default function HeroSection({
     return valid.length > 0 ? valid : [FALLBACK_SLIDE];
   }, [externalSlides, backendSlides]);
 
-  const slide = safeSlides[currentSlide] ?? safeSlides[0];
-
-  useEffect(() => {
-    setCurrentSlide(prev => Math.min(prev, safeSlides.length - 1));
-  }, [safeSlides.length]);
+  // Clamped at render time (instead of synced via effect) so an out-of-range
+  // index — e.g. safeSlides shrinking after currentSlide was set — never
+  // points past the end of the array.
+  const activeSlideIndex = Math.max(
+    0,
+    Math.min(currentSlide, safeSlides.length - 1)
+  );
+  const slide = safeSlides[activeSlideIndex];
 
   // GSAP entry animation — per-line clip reveal + stagger
   useEffect(() => {
@@ -283,7 +289,7 @@ export default function HeroSection({
             fill
             priority
             sizes="100vw"
-            quality={90}
+            quality={IMAGE_QUALITY}
             className="object-cover animate-[kenburns_18s_ease-in-out_infinite_alternate]"
             // eslint-disable-next-line no-restricted-syntax
             style={{ objectPosition: 'center 30%' }}
@@ -302,7 +308,7 @@ export default function HeroSection({
             fill
             priority
             sizes="100vw"
-            quality={90}
+            quality={IMAGE_QUALITY}
             className="object-cover"
             // eslint-disable-next-line no-restricted-syntax
             style={{ objectPosition: 'center 28%' }}
@@ -326,7 +332,7 @@ export default function HeroSection({
               key={(s as any)?.id || i}
               className={[
                 'absolute inset-0 transition-all duration-700 ease-out',
-                i === currentSlide ? 'z-10 opacity-100' : 'z-0 opacity-0',
+                i === activeSlideIndex ? 'z-10 opacity-100' : 'z-0 opacity-0',
               ].join(' ')}
             >
               <div className="relative h-full w-full" data-parallax="0.18">
@@ -336,7 +342,7 @@ export default function HeroSection({
                   fill
                   priority={i === 0}
                   sizes="100vw"
-                  quality={90}
+                  quality={IMAGE_QUALITY}
                   className="object-cover"
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ objectPosition: img.objectPosition || 'center 28%' }}
@@ -404,7 +410,7 @@ export default function HeroSection({
               />
               <Link
                 href={primaryCtaHref}
-                className="group relative inline-flex h-12 items-center gap-2.5 bg-[var(--app-primary)] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                className="group relative inline-flex h-12 items-center gap-2.5 bg-[var(--app-primary)] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
               >
                 <CalendarDays className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 {primaryCtaLabel}

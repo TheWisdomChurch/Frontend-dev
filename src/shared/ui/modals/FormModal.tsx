@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { useForm } from 'react-hook-form';
 import * as ZodResolvers from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
@@ -274,6 +275,7 @@ export function EventRegistrationModal({
             <div className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/35">
               <div className="relative h-40 w-full sm:h-48 md:h-56">
                 <Image
+                  quality={IMAGE_QUALITY}
                   src={event.image_url}
                   alt={`${event.title} program`}
                   fill
@@ -287,7 +289,7 @@ export function EventRegistrationModal({
           ) : null}
 
           {eyebrow || lead || highlight ? (
-            <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
               {eyebrow ? (
                 <p className={modalStyles.sectionTitle}>{eyebrow}</p>
               ) : null}
@@ -346,7 +348,7 @@ export function EventRegistrationModal({
             className="space-y-5"
           >
             {step === 'personal' ? (
-              <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+              <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
                 <div className="mb-5">
                   <p className={modalStyles.sectionTitle}>Personal details</p>
                   <BodySM className="mt-1 text-white/55">
@@ -510,7 +512,7 @@ export function EventRegistrationModal({
             ) : null}
 
             {step === 'volunteer' ? (
-              <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+              <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
                 <div className="mb-5">
                   <p className={modalStyles.sectionTitle}>Volunteer interest</p>
                   <BodySM className="mt-1 text-white/55">
@@ -576,7 +578,7 @@ export function EventRegistrationModal({
             ) : null}
 
             {step === 'additional' ? (
-              <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+              <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
                 <div className="mb-5">
                   <p className={modalStyles.sectionTitle}>Additional details</p>
                   <BodySM className="mt-1 text-white/55">

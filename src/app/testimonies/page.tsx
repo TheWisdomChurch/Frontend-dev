@@ -140,7 +140,7 @@ export default function TestimoniesPage() {
         {/* ── 2. Featured testimony — dark ─────────────────── */}
         {!loading && featured && (
           <ScrollFadeIn>
-            <section className="relative overflow-hidden border-b border-white/8 bg-[var(--app-dark)] py-20 lg:py-28">
+            <section className="min-w-0 relative overflow-hidden border-b border-white/8 bg-[var(--app-dark)] py-20 lg:py-28">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(201,150,26,0.07),transparent)]" />
               <Container size="md" className="relative text-center">
                 <OpenQuote className="text-[5rem] text-[var(--app-primary)]/30 lg:text-[7rem]" />
@@ -160,7 +160,7 @@ export default function TestimoniesPage() {
         )}
 
         {/* ── 3. Testimony grid — canvas ───────────────────── */}
-        <section className="bg-[var(--app-canvas)] py-16 lg:py-20">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
           <Container size="xl">
             {/* Section header */}
             <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -254,7 +254,7 @@ export default function TestimoniesPage() {
 
         {/* ── 4. CTA — dark ──────────────────────────────────── */}
         <ScrollFadeIn>
-          <section className="bg-[var(--app-dark)] py-20 lg:py-24">
+          <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
             <Container size="lg">
               <div className="flex flex-col items-center gap-7 text-center">
                 <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

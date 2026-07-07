@@ -7,6 +7,7 @@ import { ArrowRight } from 'lucide-react';
 
 import { whatWeDoData } from '@/lib/data';
 import { Section } from '@/shared/layout';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 const SLIDES = whatWeDoData.slice(0, 4).map((item, i) => ({
   ...item,
@@ -126,7 +127,7 @@ export default function WhatWeDo() {
             <div className="mt-10">
               <Link
                 href="/about"
-                className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-[0.8rem] font-bold text-[#0d0a06] transition hover:bg-[var(--app-primary-light)]"
+                className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-[0.8rem] font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
               >
                 Our Story
                 <ArrowRight className="h-3.5 w-3.5 transition duration-200 group-hover:translate-x-1" />
@@ -158,7 +159,7 @@ export default function WhatWeDo() {
                     alt={s.imageAlt || 'The Wisdom Church'}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    quality={88}
+                    quality={IMAGE_QUALITY}
                     priority={i === 0}
                     className="object-cover [object-position:center_20%]"
                   />

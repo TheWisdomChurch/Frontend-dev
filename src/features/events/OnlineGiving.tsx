@@ -146,7 +146,7 @@ export default function OnlineGiving() {
                       actionLabel: 'Got it',
                     })
                   }
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   Give Online
                 </button>

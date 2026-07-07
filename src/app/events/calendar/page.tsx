@@ -147,7 +147,7 @@ export default function CalendarPage() {
         compact
       />
 
-      <section className="bg-[var(--app-canvas)] py-14 lg:py-18">
+      <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-14 lg:py-18">
         <Container size="xl">
           {/* Month navigation */}
           <ScrollFadeIn className="mb-10 flex items-center justify-between">
