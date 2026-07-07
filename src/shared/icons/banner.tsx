@@ -1,5 +1,6 @@
 // components/icons/banners.tsx
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { Banner_1, Banner_2, Banner_3 } from '../assets';
 
 interface BannerProps {
@@ -31,6 +32,7 @@ export function Banner({
 
   return (
     <Image
+      quality={IMAGE_QUALITY}
       src={banners[banner]}
       alt={alt || defaultAlt[banner]}
       width={width}

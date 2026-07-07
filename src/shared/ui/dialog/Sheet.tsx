@@ -36,12 +36,12 @@ interface SheetProps {
   children: React.ReactNode;
 }
 
-const Sheet: React.FC<SheetProps> = ({
+const Sheet = ({
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
   children,
-}) => {
+}: SheetProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen! : uncontrolledOpen;

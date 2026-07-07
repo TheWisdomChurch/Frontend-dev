@@ -15,7 +15,6 @@ import { H2, H3, BodyMD, BodyLG, BodySM, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import { useTheme } from '@/shared/contexts/ThemeContext';
 import { apiClient } from '@/lib/api';
 
 interface PastoralCareFormData {
@@ -33,9 +32,6 @@ interface PastoralCareFormData {
 }
 
 const PastoralCareUnit = () => {
-  const { isDark } = useTheme();
-  const isDarkMode = isDark;
-
   const [formData, setFormData] = useState<PastoralCareFormData>({
     title: '',
     firstName: '',
@@ -191,7 +187,7 @@ const PastoralCareUnit = () => {
   return (
     <Section
       padding="xl"
-      className={`relative overflow-hidden ${isDarkMode ? 'bg-[#000000]' : 'bg-[rgba(255,255,255,0.06)]'}`}
+      className="relative overflow-hidden bg-[rgba(255,255,255,0.06)]"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -205,9 +201,7 @@ const PastoralCareUnit = () => {
           <Caption className="text-sm font-semibold uppercase tracking-wider mb-4 text-[var(--app-primary)]">
             Pastoral Care Services
           </Caption>
-          <H2
-            className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
-          >
+          <H2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-[#000000]">
             Pastoral Care Events
           </H2>
           <BodyLG className="text-base sm:text-lg max-w-2xl mx-auto opacity-80 text-[rgba(255,255,255,0.65)]">
@@ -219,9 +213,7 @@ const PastoralCareUnit = () => {
 
         {/* Registration Form */}
         <div className="max-w-4xl mx-auto">
-          <div
-            className={`rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl border border-[rgba(255,255,255,0.12)] ${isDarkMode ? 'bg-[rgba(255,255,255,0.05)]' : 'bg-white'}`}
-          >
+          <div className="rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl border border-[rgba(255,255,255,0.12)] bg-white">
             {/* Form Header */}
             <div className="p-5 md:p-7 text-center text-white bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))]">
               <H3 className="text-xl md:text-2xl font-semibold mb-1">
@@ -250,7 +242,7 @@ const PastoralCareUnit = () => {
                     <div>
                       <label
                         htmlFor="title"
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className="block text-sm font-semibold mb-2 text-[#000000]"
                       >
                         Title *
                       </label>
@@ -260,11 +252,7 @@ const PastoralCareUnit = () => {
                           name="title"
                           value={formData.title}
                           onChange={handleInputChange}
-                          className={`w-full px-3.5 py-2.75 rounded-lg border transition-all duration-200 appearance-none cursor-pointer ${
-                            isDarkMode
-                              ? 'bg-gray-900 text-white border-white/10'
-                              : 'bg-white text-gray-900 border-white/10'
-                          } focus:border-primary focus:ring-2 focus:ring-primary/25`}
+                          className="w-full px-3.5 py-2.75 rounded-lg border transition-all duration-200 appearance-none cursor-pointer bg-white text-gray-900 border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25"
                         >
                           <option value="">Select Title</option>
                           {titles.map(title => (
@@ -286,9 +274,7 @@ const PastoralCareUnit = () => {
 
                     {/* First Name */}
                     <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
-                      >
+                      <label className="block text-sm font-semibold mb-2 text-[#000000]">
                         First Name *
                       </label>
                       <input
@@ -297,18 +283,14 @@ const PastoralCareUnit = () => {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         placeholder="Enter your first name"
-                        className={`w-full px-3.5 py-2.75 rounded-lg border transition-all duration-200 ${
-                          isDarkMode
-                            ? 'bg-gray-900 text-white placeholder-gray-500 border-white/10'
-                            : 'bg-white text-gray-900 placeholder-gray-500 border-white/10'
-                        } focus:border-primary focus:ring-2 focus:ring-primary/25`}
+                        className="w-full px-3.5 py-2.75 rounded-lg border transition-all duration-200 bg-white text-gray-900 placeholder-gray-500 border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/25"
                       />
                     </div>
 
                     {/* Last Name */}
                     <div>
                       <label
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
                         Last Name *
                       </label>
@@ -322,7 +304,7 @@ const PastoralCareUnit = () => {
                           errors.lastName
                             ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                             : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                        } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
+                        } bg-white text-gray-900 placeholder-gray-500`}
                       />
                       {errors.lastName && (
                         <Caption className="mt-1 text-red-400">
@@ -334,7 +316,7 @@ const PastoralCareUnit = () => {
                     {/* Contact Number */}
                     <div>
                       <label
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
                         Contact Number *
                       </label>
@@ -353,7 +335,7 @@ const PastoralCareUnit = () => {
                             errors.contactNumber
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                               : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
+                          } bg-white text-gray-900 placeholder-gray-500`}
                         />
                       </div>
                       {errors.contactNumber && (
@@ -366,7 +348,7 @@ const PastoralCareUnit = () => {
                     {/* Email Address */}
                     <div>
                       <label
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
                         Email Address *
                       </label>
@@ -385,7 +367,7 @@ const PastoralCareUnit = () => {
                             errors.email
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                               : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
+                          } bg-white text-gray-900 placeholder-gray-500`}
                         />
                       </div>
                       {errors.email && (
@@ -398,7 +380,7 @@ const PastoralCareUnit = () => {
                     {/* Contact Address */}
                     <div className="md:col-span-2">
                       <label
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
                         Contact Address *
                       </label>
@@ -417,7 +399,7 @@ const PastoralCareUnit = () => {
                             errors.contactAddress
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                               : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
+                          } bg-white text-gray-900 placeholder-gray-500`}
                         />
                       </div>
                       {errors.contactAddress && (
@@ -443,7 +425,7 @@ const PastoralCareUnit = () => {
                     <div>
                       <label
                         htmlFor="eventDate"
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
                         Event Date *
                       </label>
@@ -464,7 +446,7 @@ const PastoralCareUnit = () => {
                             errors.eventDate
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                               : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                          } bg-white text-gray-900`}
                         />
                       </div>
                       {errors.eventDate && (
@@ -478,7 +460,7 @@ const PastoralCareUnit = () => {
                     <div>
                       <label
                         htmlFor="eventType"
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
                         Event Type *
                       </label>
@@ -492,7 +474,7 @@ const PastoralCareUnit = () => {
                             errors.eventType
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                               : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                          } bg-white text-gray-900`}
                         >
                           <option value="">Select Event Type</option>
                           {eventTypes.map(type => (
@@ -521,7 +503,7 @@ const PastoralCareUnit = () => {
                     <div>
                       <label
                         htmlFor="churchRole"
-                        className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
                         Church Role Requested *
                       </label>
@@ -535,7 +517,7 @@ const PastoralCareUnit = () => {
                             errors.churchRole
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                               : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                          } bg-white text-gray-900`}
                         >
                           <option value="">Select Preferred Role</option>
                           {churchRoles.map(role => (
@@ -564,7 +546,7 @@ const PastoralCareUnit = () => {
                     {showCustomRole && (
                       <div>
                         <label
-                          className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-[#FFFFFF]' : 'text-[#000000]'}`}
+                          className={`block text-sm font-semibold mb-2 text-[#000000]`}
                         >
                           Specify Custom Role *
                         </label>
@@ -578,7 +560,7 @@ const PastoralCareUnit = () => {
                             errors.customRole
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                               : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } ${isDarkMode ? 'bg-gray-800 text-white placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500'}`}
+                          } bg-white text-gray-900 placeholder-gray-500`}
                         />
                         {errors.customRole && (
                           <Caption className="mt-1 text-red-400">
@@ -614,11 +596,7 @@ const PastoralCareUnit = () => {
                         onChange={handleInputChange}
                         placeholder="Please share any additional details, special requests, or specific needs for your event..."
                         rows={4}
-                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 resize-vertical ${
-                          isDarkMode
-                            ? 'bg-gray-800 text-white placeholder-gray-400 border-gray-600 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                            : 'bg-white text-gray-900 placeholder-gray-500 border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                        }`}
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 resize-vertical bg-white text-gray-900 placeholder-gray-500 border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20"
                       />
                     </div>
                   </div>

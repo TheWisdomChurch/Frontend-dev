@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import Link from 'next/link';
 
 import PageHero from '@/features/hero/PageHero';
@@ -83,7 +84,7 @@ export default function AboutPage() {
       />
 
       {/* ── 2. Service info strip — canvas ───────────────────── */}
-      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <div className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {serviceInfo.map(item => (
@@ -132,7 +133,7 @@ export default function AboutPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
               <Link
                 href="/contact"
-                className="inline-flex w-fit items-center gap-2 rounded-button bg-[var(--app-primary)] px-6 py-2.5 font-ui text-[0.77rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:brightness-105"
+                className="inline-flex w-fit items-center gap-2 rounded-button bg-[var(--app-primary)] px-6 py-2.5 font-ui text-[0.77rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105"
               >
                 Plan your visit
               </Link>
@@ -148,6 +149,7 @@ export default function AboutPage() {
           {/* Photo column */}
           <div className="relative h-72 order-1 lg:order-2 lg:h-auto">
             <Image
+              quality={IMAGE_QUALITY}
               src={lader_1}
               alt="Wisdom Church congregation"
               fill
@@ -161,7 +163,7 @@ export default function AboutPage() {
       </Section>
 
       {/* ── 4. Culture pillars — editorial rows ──────────────── */}
-      <section className="border-y border-[var(--app-ink)]/8">
+      <section className="overflow-hidden min-w-0 border-y border-[var(--app-ink)]/8">
         {/* Section header */}
         <div className="bg-[var(--app-canvas)] px-6 py-10 lg:px-10">
           <Container size="xl">
@@ -218,7 +220,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 5. Leadership ───────────────────────────────────── */}
-      <section className="overflow-hidden">
+      <section className="overflow-hidden min-w-0">
         {/* Leadership intro header — dark */}
         <ScrollFadeIn>
           <div className="bg-[var(--app-dark)] px-6 py-14 lg:py-18">
@@ -260,8 +262,9 @@ export default function AboutPage() {
           <ScrollFadeIn>
             <article className="group flex flex-col bg-[var(--app-canvas)]">
               {/* Portrait image — fixed portrait height, doesn't overflow */}
-              <div className="relative h-[420px] overflow-hidden lg:h-[480px]">
+              <div className="relative h-[420px] overflow-hidden md:h-[520px] lg:h-[480px]">
                 <Image
+                  quality={IMAGE_QUALITY}
                   src={leaders[0].image}
                   alt={leaders[0].name}
                   fill
@@ -294,6 +297,7 @@ export default function AboutPage() {
             <article className="group relative min-h-[640px] overflow-hidden bg-[var(--app-dark)] lg:min-h-[700px]">
               {/* Portrait image — fills the entire dark panel */}
               <Image
+                quality={IMAGE_QUALITY}
                 src={leaders[1].image}
                 alt={leaders[1].name}
                 fill
@@ -340,7 +344,7 @@ export default function AboutPage() {
 
       {/* ── 6. CTA ──────────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="relative overflow-hidden border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)] py-20 lg:py-28">
+        <section className="relative overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)] py-20 lg:py-28">
           {/* Faint gold radial — warm glow, not visible, just warmth */}
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_100%,rgba(201,150,26,0.06),transparent)]" />
 

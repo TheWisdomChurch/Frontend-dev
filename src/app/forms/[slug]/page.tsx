@@ -11,6 +11,7 @@ import { Button } from '@/shared/utils/buttons';
 import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient from '@/lib/api';
 import type { EventPublic, PublicFormField, PublicFormPayload } from '@/lib';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -1037,6 +1038,7 @@ export default function PublicFormPage() {
             alt={event?.title || form?.title || 'Event banner'}
             fill
             priority
+            quality={IMAGE_QUALITY}
             sizes="(max-width: 768px) 100vw, 0px"
             className="object-cover md:hidden"
           />
@@ -1044,7 +1046,8 @@ export default function PublicFormPage() {
             src={EventBannerDesktop}
             alt={event?.title || form?.title || 'Event banner'}
             fill
-            priority
+            priority={false}
+            quality={IMAGE_QUALITY}
             sizes="(max-width: 1024px) 100vw, 100vw"
             className="hidden object-cover md:block"
           />

@@ -13,9 +13,6 @@ export type { EventPublic, ReelPublic } from './apiTypes';
 // Data utilities
 export * from './data';
 
-// YouTube utilities
-export * from './youtube';
-
 // Responsive utilities
 export * from './responsive';
 export * from './modal-responsive';

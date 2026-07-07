@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { WisdomeHouseLogo } from '@/shared/assets';
 
 interface LoaderProps {
@@ -42,6 +43,7 @@ export default function Loader({
           <div className="relative grid h-24 w-24 place-items-center rounded-[2rem] border border-white/10 bg-black/60 shadow-2xl shadow-[var(--app-primary)]/15 backdrop-blur-xl sm:h-28 sm:w-28">
             <div className="absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_35%_20%,rgba(255,255,255,0.18),transparent_45%)]" />
             <Image
+              quality={IMAGE_QUALITY}
               src={WisdomeHouseLogo}
               alt="The Wisdom Church"
               width={74}

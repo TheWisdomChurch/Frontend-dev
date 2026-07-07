@@ -1,12 +1,11 @@
-/* global URL */
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import reactHooks from 'eslint-plugin-react-hooks';
+import nextConfig from 'eslint-config-next';
 import { fileURLToPath } from 'url';
 
 const tsRoot = fileURLToPath(new URL('.', import.meta.url));
 
-export default [
+const config = [
   {
     ignores: [
       'node_modules/**',
@@ -23,6 +22,7 @@ export default [
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  ...nextConfig,
   {
     files: ['**/*.{ts,tsx,js,jsx}', '*.{ts,tsx,js,jsx}'],
     languageOptions: {
@@ -30,16 +30,14 @@ export default [
         project: './tsconfig.json',
         tsconfigRootDir: tsRoot,
       },
-      globals: {
-        URL: 'readonly',
-      },
-    },
-    plugins: {
-      'react-hooks': reactHooks,
     },
     rules: {
       'react/no-unescaped-entities': 'off',
       'react-hooks/exhaustive-deps': 'off',
+      // Kept as a warning rather than an error: the remaining instances are
+      // deliberate SSR-hydration guards ("mounted" flags) and window/timer-
+      // dependent synchronization that genuinely cannot run during render.
+      'react-hooks/set-state-in-effect': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
       'no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
@@ -69,3 +67,5 @@ export default [
     },
   },
 ];
+
+export default config;

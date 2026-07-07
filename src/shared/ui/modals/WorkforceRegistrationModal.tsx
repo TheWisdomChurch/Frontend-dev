@@ -149,7 +149,7 @@ export function WorkforceRegistrationModal({
         forceBottomSheet
       >
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
-          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+          <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5 flex items-center gap-3">
               <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
                 <Users className="h-5 w-5" />
@@ -242,7 +242,7 @@ export function WorkforceRegistrationModal({
             </div>
           </section>
 
-          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+          <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5">
               <p className={modalStyles.sectionTitle}>Leadership information</p>
               <BodySM className="mt-1 text-white/55">
@@ -335,7 +335,7 @@ export function WorkforceRegistrationModal({
             </div>
           </section>
 
-          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+          <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <div className="mb-5">
               <p className={modalStyles.sectionTitle}>Additional details</p>
               <BodySM className="mt-1 text-white/55">

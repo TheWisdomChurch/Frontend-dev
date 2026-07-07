@@ -53,9 +53,9 @@ export default function BlogPage() {
                 href="https://www.youtube.com/@wisdomchurchhq"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:brightness-105 active:scale-[0.98]"
+                className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
               >
-                <Play className="h-3.5 w-3.5 fill-[#0d0a06]" />
+                <Play className="h-3.5 w-3.5 fill-[var(--app-ink)]" />
                 Watch our messages
               </a>
 
@@ -99,7 +99,7 @@ export default function BlogPage() {
                 href="https://wa.me/2347069995333"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex h-10 items-center gap-2 border border-[#25D366]/25 bg-[#25D366]/10 px-5 font-ui text-[0.75rem] font-bold text-[#25D366] transition hover:bg-[#25D366]/18"
+                className="mt-5 inline-flex h-10 items-center gap-2 border border-[var(--app-whatsapp)]/25 bg-[var(--app-whatsapp)]/10 px-5 font-ui text-[0.75rem] font-bold text-[var(--app-whatsapp)] transition hover:bg-[var(--app-whatsapp)]/18"
               >
                 Join WhatsApp community
               </a>

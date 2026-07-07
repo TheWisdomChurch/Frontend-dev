@@ -130,7 +130,7 @@ type ModalValues = z.infer<typeof modalSchema>;
 const mInput =
   'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
 const mSelect =
-  'w-full border border-white/12 bg-[#1a1814] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -570,7 +570,7 @@ export default function JoinWisdomHouse() {
                     type="button"
                     onClick={handleLookup}
                     disabled={lookupStatus === 'loading' || !lookupEmail}
-                    className="inline-flex h-12 min-w-[110px] items-center justify-center gap-2 bg-[var(--app-primary)] px-4 font-ui text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]"
+                    className="inline-flex h-12 min-w-[110px] items-center justify-center gap-2 bg-[var(--app-primary)] px-4 font-ui text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]"
                   >
                     {lookupStatus === 'loading' ? (
                       <Loader2 className="h-4 w-4 animate-spin" />

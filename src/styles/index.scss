@@ -2,10 +2,8 @@
 // This is the main entry point that imports all styles in the correct order
 
 // 1. Design Tokens & Variables
-@use 'tokens';
 @use 'variables';
 @use 'colors';
-@use 'theme';
 
 // 2. Base Styles
 @use 'base';

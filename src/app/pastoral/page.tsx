@@ -80,7 +80,7 @@ export default function PastoralPage() {
       />
 
       {/* ── 2. Statement — dark ──────────────────────────────── */}
-      <section className="border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-8 py-16 lg:flex-row lg:items-end lg:justify-between lg:py-20">
             <div className="max-w-xl">
@@ -189,7 +189,7 @@ export default function PastoralPage() {
 
       {/* ── 4. Confidentiality — canvas-2 ────────────────────── */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-canvas-2)] py-16 lg:py-20">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-canvas-2)] py-16 lg:py-20">
           <Container size="xl">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-24">
               <div className="lg:max-w-sm">
@@ -216,7 +216,7 @@ export default function PastoralPage() {
 
       {/* ── 5. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

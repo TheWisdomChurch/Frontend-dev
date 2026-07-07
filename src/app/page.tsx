@@ -108,7 +108,9 @@ const fallbackEventAd: HomeEventAd = {
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
-  const [nextAdAt, setNextAdAt] = useState<number | null>(null);
+  const [nextAdAt, setNextAdAt] = useState<number | null>(
+    () => Date.now() + 1200
+  );
   const [showConfessionPopup, setShowConfessionPopup] = useState(false);
   const [eventAd, setEventAd] = useState<HomeEventAd>(fallbackEventAd);
   const [confessionContent, setConfessionContent] =
@@ -165,10 +167,6 @@ export default function Home() {
     return () => {
       document.body.classList.remove('home-page');
     };
-  }, []);
-
-  useEffect(() => {
-    setNextAdAt(Date.now() + 1200);
   }, []);
 
   useEffect(() => {

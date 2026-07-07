@@ -234,7 +234,7 @@ export default function CookieConsentBanner() {
                 onClick={() =>
                   apply({ essential: true, analytics: true, marketing: true })
                 }
-                className="inline-flex h-9 items-center rounded-lg bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold text-[#0d0a06] transition hover:bg-[var(--app-primary-light)]"
+                className="inline-flex h-9 items-center rounded-lg bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
               >
                 Accept all
               </button>

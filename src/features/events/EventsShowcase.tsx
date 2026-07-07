@@ -407,7 +407,7 @@ export default function EventsShowcase() {
   const onlyFeatured = !!featured && rest.length === 0;
 
   return (
-    <section className="bg-[var(--app-canvas)] py-16 lg:py-20">
+    <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
       <Container size="xl">
         {/* ── Section header ──────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -422,7 +422,7 @@ export default function EventsShowcase() {
 
           <div className="flex items-center gap-5">
             {/* Category tabs */}
-            <div className="flex gap-0 border border-[var(--app-ink)]/10">
+            <div className="flex gap-0 overflow-x-auto border border-[var(--app-ink)]/10">
               {(Object.keys(CATEGORY_LABELS) as Category[]).map(cat => (
                 <button
                   key={cat}

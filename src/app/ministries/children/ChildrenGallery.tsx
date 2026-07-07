@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import img1 from '@/shared/assets/wisdomChild_1.jpeg';
 import img2 from '@/shared/assets/WisdomChild_2.jpeg';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 const slides = [
   { src: img1, alt: 'Children in ministry at Wisdom Church' },
@@ -75,6 +76,7 @@ export default function ChildrenGallery() {
               className="object-cover object-center"
               priority={i === 0}
               sizes="100vw"
+              quality={IMAGE_QUALITY}
             />
             {/* Bottom vignette so dots stay legible */}
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />

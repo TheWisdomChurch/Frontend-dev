@@ -21,6 +21,7 @@ import { H2, BodySM, BaseText, LightText } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import OrderConfirmation from '@/features/store/Store/orderDetails';
 import PageHero from '@/features/hero/PageHero';
+import ReduxProvider from '@/shared/providers/ReduxProvider';
 
 const nextSteps = [
   {
@@ -203,8 +204,10 @@ function OrderConfirmationContent() {
 
 export default function OrderConfirmationPage() {
   return (
-    <Suspense fallback={<SimpleConfirmation />}>
-      <OrderConfirmationContent />
-    </Suspense>
+    <ReduxProvider>
+      <Suspense fallback={<SimpleConfirmation />}>
+        <OrderConfirmationContent />
+      </Suspense>
+    </ReduxProvider>
   );
 }

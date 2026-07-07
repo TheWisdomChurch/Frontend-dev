@@ -423,7 +423,7 @@ export default function ContactPage() {
       </Section>
 
       {/* ── Find us strip ────────────────────────────────────── */}
-      <section className="border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]">
+      <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]">
         <Container size="xl">
           <div className="flex flex-col gap-1.5 py-7 sm:flex-row sm:items-center sm:justify-between sm:py-6">
             <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/60">

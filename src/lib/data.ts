@@ -4,7 +4,6 @@ import {
   Radio,
   Calendar,
   ShoppingBag,
-  BookOpen,
   Heart,
 } from 'lucide-react';
 import {
@@ -807,16 +806,6 @@ export const resourceLinks = [
     gradient: 'from-red-500/20 to-pink-600/10',
     glow: 'rgba(236, 72, 153, 0.4)',
     actionText: 'Shop Now →',
-  },
-  {
-    title: 'Publications',
-    subtitle: 'Resources for spiritual growth',
-    description: 'Devotionals, study guides, prayer journals, and more',
-    path: '/resources/publications',
-    icon: BookOpen,
-    gradient: 'from-pink-500/20 to-purple-600/10',
-    glow: 'rgba(168, 85, 247, 0.4)',
-    actionText: 'Read More →',
   },
   {
     title: 'Pastoral Care',

@@ -278,7 +278,7 @@ export function EventDetailsModal({
           </div>
         ) : null}
 
-        <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
           <p className={modalStyles.sectionTitle}>Event details</p>
 
           <div className="mt-4 grid gap-3 text-sm leading-6 text-white/72">
@@ -318,13 +318,13 @@ export function EventDetailsModal({
         </section>
 
         {event.description ? (
-          <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+          <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
             <p className={modalStyles.sectionTitle}>About this event</p>
             <BodySM className="mt-3 text-white/65">{event.description}</BodySM>
           </section>
         ) : null}
 
-        <section className="space-y-3">
+        <section className="overflow-hidden min-w-0 space-y-3">
           {onRegister ? (
             <Button
               ref={registerButtonRef}

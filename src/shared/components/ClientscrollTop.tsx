@@ -18,7 +18,7 @@ export default function ClientScrollToTop() {
       type="button"
       aria-label="Scroll to top"
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className={`fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center bg-[var(--app-primary)] text-[#0d0a06] shadow-lg shadow-[var(--app-primary)]/30 transition-all duration-300 hover:bg-[var(--app-primary-light)] active:scale-[0.95] ${
+      className={`fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center bg-[var(--app-primary)] text-[var(--app-ink)] shadow-lg shadow-[var(--app-primary)]/30 transition-all duration-300 hover:bg-[var(--app-primary-light)] active:scale-[0.95] ${
         visible
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-3 pointer-events-none'

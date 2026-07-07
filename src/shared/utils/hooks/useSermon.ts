@@ -71,11 +71,9 @@ export const useSermonUtil = () => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    if (!currentVideo && videos.length > 0) {
-      setCurrentVideo(videos[0]);
-    }
-  }, [videos, currentVideo]);
+  // Falls back to the first video until the viewer explicitly picks one —
+  // derived at render time instead of synced via effect.
+  const displayedVideo = currentVideo ?? videos[0];
 
   const smoothScrollToElement = useCallback(
     (element: HTMLElement | null, offset = 80) => {
@@ -575,7 +573,7 @@ export const useSermonUtil = () => {
     selectedPreacher,
     selectedYear,
     sortBy,
-    currentVideo,
+    currentVideo: displayedVideo,
     playerKey,
     groupedSeries,
     ungroupedSeries,

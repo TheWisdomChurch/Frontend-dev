@@ -94,7 +94,7 @@ export default function UpcomingPage() {
         compact
       />
 
-      <section className="bg-[var(--app-canvas)] py-14 lg:py-18">
+      <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-14 lg:py-18">
         <Container size="xl">
           <ScrollFadeIn className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
