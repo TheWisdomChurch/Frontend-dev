@@ -6,8 +6,9 @@ import { useDispatch } from 'react-redux';
 import SermonUtil from '@/features/resources/Sermons';
 import { AppDispatch } from '@/lib/store';
 import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
+import ReduxProvider from '@/shared/providers/ReduxProvider';
 
-export default function SermonPage() {
+function SermonPageContent() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -15,4 +16,12 @@ export default function SermonPage() {
   }, [dispatch]);
 
   return <SermonUtil />;
+}
+
+export default function SermonPage() {
+  return (
+    <ReduxProvider>
+      <SermonPageContent />
+    </ReduxProvider>
+  );
 }

@@ -91,6 +91,9 @@ export const useOnlineGiving = (total: number) => {
       }
     });
   };
+  // createScrollFunctions only reads scrollContainerRef.current inside the
+  // returned click-handler closures, never synchronously during render.
+  // eslint-disable-next-line react-hooks/refs
   const { scrollLeft, scrollRight } = createScrollFunctions(scrollContainerRef);
   const previousCard = () => setCurrentIndex(prev => Math.max(0, prev - 1));
   const nextCard = () => setCurrentIndex(prev => Math.min(total - 1, prev + 1));

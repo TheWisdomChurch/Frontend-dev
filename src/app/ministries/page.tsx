@@ -5,6 +5,7 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 export const metadata: Metadata = {
   title: 'Ministries — Get Connected',
@@ -153,7 +154,7 @@ export default function MinistriesPage() {
       />
 
       {/* ── 2. Intro — canvas ────────────────────────────────── */}
-      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-6 py-12 lg:flex-row lg:items-end lg:justify-between lg:py-16">
             <div className="max-w-2xl">
@@ -184,7 +185,7 @@ export default function MinistriesPage() {
       </section>
 
       {/* ── 3. Ministry image cards ───────────────────────────── */}
-      <section className="bg-[var(--app-dark)] py-14 lg:py-18">
+      <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-14 lg:py-18">
         <Container size="xl">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ministries.map((ministry, i) => (
@@ -199,6 +200,7 @@ export default function MinistriesPage() {
                     alt={ministry.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    quality={IMAGE_QUALITY}
                     className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   />
 
@@ -256,7 +258,7 @@ export default function MinistriesPage() {
       </section>
 
       {/* ── 4. How to connect — canvas ───────────────────────── */}
-      <section className="border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-16">
@@ -300,7 +302,7 @@ export default function MinistriesPage() {
 
       {/* ── 5. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Play } from 'lucide-react';
 
 import { WhatsappCommunity } from '@/shared/assets';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 /* ── Social icons ───────────────────────────────────── */
 
@@ -74,7 +75,7 @@ const SOCIALS = [
 
 export default function ConnectPortal() {
   return (
-    <section className="relative w-full overflow-hidden bg-[var(--app-dark)]">
+    <section className="min-w-0 relative w-full overflow-hidden bg-[var(--app-dark)]">
       <div className="lg:grid lg:grid-cols-2 lg:items-stretch">
         {/* ── Left — community image (full image visible, not cropped) ── */}
         <div className="relative order-2 bg-[var(--app-dark)] lg:order-1">
@@ -91,7 +92,7 @@ export default function ConnectPortal() {
               alt="Wisdom Church community gathering"
               fill
               sizes="100vw"
-              quality={88}
+              quality={IMAGE_QUALITY}
               className="object-cover object-top"
             />
             {/* Bottom fade into section bg */}
@@ -105,7 +106,7 @@ export default function ConnectPortal() {
               alt="Wisdom Church community gathering"
               fill
               sizes="50vw"
-              quality={88}
+              quality={IMAGE_QUALITY}
               className="object-contain object-center"
             />
             {/* Right-edge blend into content column */}
@@ -147,9 +148,9 @@ export default function ConnectPortal() {
               href="https://www.youtube.com/@wisdomchurchhq"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
             >
-              <Play className="h-3.5 w-3.5 fill-[#0d0a06]" />
+              <Play className="h-3.5 w-3.5 fill-[var(--app-ink)]" />
               Stream services live
             </a>
 
@@ -158,7 +159,7 @@ export default function ConnectPortal() {
               href="https://wa.me/2347069995333"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-11 items-center gap-2.5 border border-[#25D366]/30 bg-[#25D366]/10 px-6 font-ui text-[0.78rem] font-bold text-[#25D366] transition hover:border-[#25D366]/50 hover:bg-[#25D366]/18 active:scale-[0.98]"
+              className="inline-flex h-11 items-center gap-2.5 border border-[var(--app-whatsapp)]/30 bg-[var(--app-whatsapp)]/10 px-6 font-ui text-[0.78rem] font-bold text-[var(--app-whatsapp)] transition hover:border-[var(--app-whatsapp)]/50 hover:bg-[var(--app-whatsapp)]/18 active:scale-[0.98]"
             >
               <WaIcon />
               Join WhatsApp community

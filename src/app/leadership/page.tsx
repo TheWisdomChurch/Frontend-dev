@@ -5,6 +5,7 @@ import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 /* ── Role labels ────────────────────────────────────────── */
 
@@ -36,13 +37,14 @@ function CanvasCard({ leader }: { leader: LeadershipMember }) {
   return (
     <article className="group flex flex-col bg-[var(--app-canvas)]">
       {/* Image */}
-      <div className="relative h-[420px] overflow-hidden bg-[var(--app-canvas-2)] lg:h-[480px]">
+      <div className="relative h-[420px] overflow-hidden bg-[var(--app-canvas-2)] sm:h-[360px] lg:h-[480px]">
         {leader.imageUrl ? (
           <Image
             src={leader.imageUrl}
             alt={name}
             fill
             sizes="(max-width: 640px) 100vw, 50vw"
+            quality={IMAGE_QUALITY}
             className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
           />
         ) : (
@@ -85,6 +87,7 @@ function DarkCard({ leader }: { leader: LeadershipMember }) {
           alt={name}
           fill
           sizes="(max-width: 640px) 100vw, 50vw"
+          quality={IMAGE_QUALITY}
           className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
         />
       ) : (
@@ -156,7 +159,7 @@ export default async function LeadershipPage() {
       />
 
       {/* ── 2. Senior leadership header — dark ───────────────── */}
-      <section className="border-b border-white/8 bg-[var(--app-dark)] px-6 py-14 lg:px-10 lg:py-18">
+      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)] px-6 py-14 lg:px-10 lg:py-18">
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-lg">
@@ -198,7 +201,7 @@ export default async function LeadershipPage() {
 
       {/* ── 4. Board header — canvas ─────────────────────────── */}
       {board.length > 0 && (
-        <section className="border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+        <section className="overflow-hidden min-w-0 border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
           <Container size="xl">
             <ScrollFadeIn className="py-12 lg:py-14">
               <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -251,7 +254,7 @@ export default async function LeadershipPage() {
 
       {/* ── 5. CTA ───────────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-dark)] py-20 lg:py-24">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

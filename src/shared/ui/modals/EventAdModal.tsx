@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import Image, { type StaticImageData } from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { H3, BodySM, Caption } from '@/shared/text';
@@ -129,6 +130,7 @@ export default function EventAdModal({
           {safeEvent.image && (
             <div className="relative h-44 overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.04] sm:h-52">
               <Image
+                quality={IMAGE_QUALITY}
                 src={safeEvent.image}
                 alt={safeEvent.title}
                 fill

@@ -8,6 +8,7 @@ import { ChevronDown } from 'lucide-react';
 import { Bishop } from '@/shared/assets';
 import { seniorPastorData } from '@/lib/data';
 import { Section } from '@/shared/layout';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 const IgIcon = () => (
   <svg
@@ -89,14 +90,14 @@ export default function SeniorPastor() {
       {/* Two-column grid — fixed: removed inline style that broke mobile */}
       <div className="grid min-h-[580px] grid-cols-1 lg:grid-cols-2 lg:min-h-[700px]">
         {/* ── Left — cinematic full-height portrait ────────── */}
-        <div className="relative order-1 h-[56vw] max-h-[520px] overflow-hidden lg:order-none lg:h-auto lg:max-h-none">
+        <div className="relative order-1 aspect-[25/14] max-h-[520px] overflow-hidden lg:order-none lg:aspect-auto lg:h-auto lg:max-h-none">
           <Image
             src={Bishop}
             alt="Bishop Gabriel Ayilara — Senior Pastor, The Wisdom Church"
             fill
             priority={false}
             sizes="(max-width: 1024px) 100vw, 50vw"
-            quality={92}
+            quality={IMAGE_QUALITY}
             className="object-cover object-top"
           />
           {/* Mobile bottom fade */}
@@ -146,17 +147,9 @@ export default function SeniorPastor() {
           {/* Bio — accordion on mobile */}
           <div className="mt-7 max-w-[420px]">
             <div
-              className="overflow-hidden transition-all duration-400 ease-in-out lg:max-h-none"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{
-                maxHeight:
-                  typeof window !== 'undefined' && window.innerWidth < 1024
-                    ? bioExpanded
-                      ? '600px'
-                      : '5.5rem'
-                    : 'none',
-              }}
-              suppressHydrationWarning
+              className={`overflow-hidden transition-all duration-400 ease-in-out lg:max-h-none ${
+                bioExpanded ? 'max-h-[600px]' : 'max-h-[5.5rem]'
+              }`}
             >
               <p className="font-ui text-[0.92rem] leading-[1.9] text-white/70">
                 {bio}

@@ -6,6 +6,7 @@ import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -110,13 +111,14 @@ function EventCard({ event }: { event: EventPublic }) {
   return (
     <article className="group flex flex-col overflow-hidden border border-white/10 bg-white/[0.03] transition duration-300 hover:border-[var(--app-primary)]/35">
       {/* Image / date block */}
-      <div className="relative h-[180px] overflow-hidden bg-[var(--app-dark-2)]">
+      <div className="relative aspect-[2/1] overflow-hidden bg-[var(--app-dark-2)]">
         {imgSrc ? (
           <Image
             src={imgSrc}
             alt={event.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            quality={IMAGE_QUALITY}
             className="object-cover transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
@@ -233,7 +235,7 @@ export default async function EventsPage() {
       />
 
       {/* ── 2. Weekly rhythm — canvas, always present ────────── */}
-      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="py-12 lg:py-16">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -299,7 +301,7 @@ export default async function EventsPage() {
       </section>
 
       {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
-      <section className="bg-[var(--app-dark)] py-16 lg:py-20">
+      <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
         <Container size="xl">
           {/* Header */}
           <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -335,7 +337,7 @@ export default async function EventsPage() {
 
       {/* ── 4. CTA strip ─────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="border-t border-white/8 bg-[var(--app-dark-2)] py-10">
+        <section className="overflow-hidden min-w-0 border-t border-white/8 bg-[var(--app-dark-2)] py-10">
           <Container size="xl">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>

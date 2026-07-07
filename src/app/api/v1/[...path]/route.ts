@@ -18,7 +18,7 @@ type RouteParams = {
 };
 
 type RouteContext = {
-  params: RouteParams | Promise<RouteParams>;
+  params: Promise<RouteParams>;
 };
 
 const HOP_BY_HOP_HEADERS = new Set([

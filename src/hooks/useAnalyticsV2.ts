@@ -114,10 +114,12 @@ export const useFormTracking = (formName: string) => {
  * Track time spent on page/section
  */
 export const useTimeTracking = (eventName: string, threshold?: number) => {
-  const startTimeRef = useRef(Date.now());
+  const startTimeRef = useRef(0);
   const analytics = useAnalytics();
 
   useEffect(() => {
+    startTimeRef.current = Date.now();
+
     return () => {
       const timeSpent = Date.now() - startTimeRef.current;
 
@@ -323,21 +325,4 @@ export const useSessionInfo = () => {
     createdAt: session.createdAt,
     isActive: Date.now() - session.lastActivityAt < 5 * 60 * 1000,
   };
-};
-
-export default {
-  useAnalytics,
-  usePageView,
-  useComponentView,
-  useClickTracking,
-  useFormTracking,
-  useTimeTracking,
-  useScrollTracking,
-  useEngagementTracking,
-  useUserIdentification,
-  useMediaTracking,
-  useSearchTracking,
-  useConversionTracking,
-  useErrorTracking,
-  useSessionInfo,
 };

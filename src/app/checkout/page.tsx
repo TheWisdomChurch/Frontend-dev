@@ -11,8 +11,9 @@ import PageHero from '@/features/hero/PageHero';
 import { H1, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
+import ReduxProvider from '@/shared/providers/ReduxProvider';
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
 
@@ -93,5 +94,13 @@ export default function CheckoutPage() {
         </Container>
       </Section>
     </main>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <ReduxProvider>
+      <CheckoutPageContent />
+    </ReduxProvider>
   );
 }

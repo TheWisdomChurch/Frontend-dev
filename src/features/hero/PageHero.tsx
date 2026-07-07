@@ -1,6 +1,5 @@
-'use client';
-
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import type { StaticImageData } from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -51,6 +50,7 @@ export default function PageHero({
       {/* Background image */}
       <div className="absolute inset-0 -z-10">
         <Image
+          quality={IMAGE_QUALITY}
           src={bgSrc}
           alt=""
           fill
@@ -120,7 +120,7 @@ export default function PageHero({
               <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-center">
                 <Link
                   href="/contact"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[#0d0a06] transition hover:brightness-105 active:scale-[0.98]"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
                 >
                   {primaryButtonText}
                   <ArrowRight className="h-3.5 w-3.5" />

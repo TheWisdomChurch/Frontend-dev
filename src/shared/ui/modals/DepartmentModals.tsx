@@ -550,7 +550,7 @@ export function JoinUsModal({
 
         <form onSubmit={handleSubmit(submitForm)} className="space-y-5">
           {step === 'personal' ? (
-            <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
               <div className="mb-5">
                 <p className={modalStyles.sectionTitle}>Personal information</p>
                 <BodySM className="mt-1 text-white/55">
@@ -644,7 +644,7 @@ export function JoinUsModal({
           ) : null}
 
           {step === 'department' ? (
-            <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
               <div className="mb-5">
                 <p className={modalStyles.sectionTitle}>Department & role</p>
                 <BodySM className="mt-1 text-white/55">
@@ -766,7 +766,7 @@ export function JoinUsModal({
           ) : null}
 
           {step === 'availability' ? (
-            <section className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+            <section className="overflow-hidden min-w-0 rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5">
               <div className="mb-5">
                 <p className={modalStyles.sectionTitle}>
                   Availability & details

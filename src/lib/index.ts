@@ -9,12 +9,6 @@
 export { cn } from './cn';
 
 // ============================================
-// Theme & Colors
-// ============================================
-export * from './theme';
-
-// ============================================
-// ============================================
 // API & Data
 // ============================================
 export { default, apiClient } from './api';
@@ -41,11 +35,6 @@ export * from './data';
 export { motion, AnimatePresence } from './safe-motion';
 export * from './responsive';
 export * from './modal-responsive';
-
-// ============================================
-// Media & Content
-// ============================================
-export * from './youtube';
 
 // ============================================
 // Analytics

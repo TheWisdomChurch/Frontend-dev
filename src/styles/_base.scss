@@ -44,27 +44,29 @@ html {
 
 body {
   min-height: 100vh;
-  font-family: var(--font-sans), var(--font-ui-fallback);
+  font-family:
+    var(--font-bricolage), 'Inter', 'SF Pro Text', 'Segoe UI', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
   font-weight: 400;
   line-height: 1.65;
   letter-spacing: 0.005em;
-  color: var(--color-text, #111827);
-  background-color: var(--color-background);
+  color: var(--app-text);
+  background-color: var(--app-surface);
   background-image:
     radial-gradient(
       1200px 1200px at 15% 20%,
-      color-mix(in srgb, var(--color-primary) 12%, transparent),
+      color-mix(in srgb, var(--app-primary) 12%, transparent),
       transparent 55%
     ),
     radial-gradient(
       900px 900px at 85% 0%,
-      color-mix(in srgb, var(--color-primary-dark) 10%, transparent),
+      color-mix(in srgb, var(--app-primary-dark) 10%, transparent),
       transparent 52%
     ),
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--color-background) 98%, transparent) 0%,
-      color-mix(in srgb, var(--color-background) 94%, transparent) 100%
+      color-mix(in srgb, var(--app-surface) 98%, transparent) 0%,
+      color-mix(in srgb, var(--app-surface) 94%, transparent) 100%
     );
   background-attachment: fixed;
   transition:
@@ -81,7 +83,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-sans), var(--font-ui-fallback);
+  font-family:
+    var(--font-bricolage), 'Inter', 'SF Pro Text', 'Segoe UI', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
   font-weight: 600;
   letter-spacing: -0.012em;
   text-wrap: balance;
@@ -124,20 +128,8 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--app-primary);
   outline-offset: 2px;
-}
-
-:root.theme-transition *,
-:root.theme-transition *::before,
-:root.theme-transition *::after {
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease,
-    border-color 0.35s ease,
-    fill 0.35s ease,
-    stroke 0.35s ease,
-    box-shadow 0.35s ease;
 }
 
 main.page-shell {

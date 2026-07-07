@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import { ArrowLeft, BookOpen } from 'lucide-react';
 
 import { BaseModal } from '@/shared/ui/modals/Base';
@@ -63,6 +64,7 @@ export default function ConfessionPopup({
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/40">
               <Image
+                quality={IMAGE_QUALITY}
                 src={WisdomeHouseLogo}
                 alt="The Wisdom Church"
                 width={28}
@@ -124,7 +126,7 @@ export default function ConfessionPopup({
             <button
               type="button"
               onClick={handleClose}
-              className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
             >
               Continue
             </button>
@@ -168,7 +170,7 @@ export default function ConfessionPopup({
             <button
               type="button"
               onClick={handleClose}
-              className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[#0d0a06] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
             >
               I Believe It
             </button>

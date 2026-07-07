@@ -69,7 +69,7 @@ export default function WeeklyPage() {
       />
 
       {/* Service panels */}
-      <section className="bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)]">
         <Container size="xl">
           <div className="divide-y divide-[var(--app-ink)]/8 border-b border-[var(--app-ink)]/8 py-14 lg:py-18">
             {services.map((svc, i) => (
@@ -129,7 +129,7 @@ export default function WeeklyPage() {
 
       {/* CTA dark */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-dark)] py-16 lg:py-20">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

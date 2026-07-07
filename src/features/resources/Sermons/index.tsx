@@ -331,7 +331,7 @@ const SermonUtil = () => {
       />
 
       {/* ── 2. Featured player — dark ─────────────────────────── */}
-      <section className="border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
         <Container size="xl">
           {loading && !currentVideo ? (
             <div className="grid gap-14 py-14 lg:grid-cols-[1.3fr_1fr] lg:py-18">
@@ -501,7 +501,7 @@ const SermonUtil = () => {
 
       {/* ── 3. Series categories — canvas ─────────────────────── */}
       {hasSeries && (
-        <section className="bg-[var(--app-canvas)] py-16 lg:py-20">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
           <Container size="xl">
             <ScrollFadeIn className="mb-10">
               <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -591,7 +591,7 @@ const SermonUtil = () => {
                 className={darkSelectCls}
               >
                 {seriesOptions.map(s => (
-                  <option key={s} value={s} className="bg-[#07060a]">
+                  <option key={s} value={s} className="bg-[var(--app-dark)]">
                     {s === 'all'
                       ? 'All series'
                       : s.startsWith('group:')
@@ -607,7 +607,7 @@ const SermonUtil = () => {
                 className={darkSelectCls}
               >
                 {preacherOptions.map(p => (
-                  <option key={p} value={p} className="bg-[#07060a]">
+                  <option key={p} value={p} className="bg-[var(--app-dark)]">
                     {p === 'all' ? 'All preachers' : p}
                   </option>
                 ))}
@@ -619,7 +619,7 @@ const SermonUtil = () => {
                 className={darkSelectCls}
               >
                 {yearOptions.map(y => (
-                  <option key={y} value={y} className="bg-[#07060a]">
+                  <option key={y} value={y} className="bg-[var(--app-dark)]">
                     {y === 'all' ? 'All years' : y}
                   </option>
                 ))}
@@ -634,13 +634,13 @@ const SermonUtil = () => {
                 }
                 className={darkSelectCls}
               >
-                <option value="newest" className="bg-[#07060a]">
+                <option value="newest" className="bg-[var(--app-dark)]">
                   Newest
                 </option>
-                <option value="oldest" className="bg-[#07060a]">
+                <option value="oldest" className="bg-[var(--app-dark)]">
                   Oldest
                 </option>
-                <option value="popular" className="bg-[#07060a]">
+                <option value="popular" className="bg-[var(--app-dark)]">
                   Popular
                 </option>
               </select>
@@ -738,7 +738,7 @@ const SermonUtil = () => {
 
       {/* ── 5. CTA — canvas ───────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-canvas)] py-20 lg:py-24">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-20 lg:py-24">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

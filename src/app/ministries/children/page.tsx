@@ -85,7 +85,7 @@ export default function ChildrenMinistryPage() {
       />
 
       {/* ── 2. Mission statement — dark ──────────────────────── */}
-      <section className="border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -110,7 +110,7 @@ export default function ChildrenMinistryPage() {
       </section>
 
       {/* ── 3. What we do — canvas ───────────────────────────── */}
-      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="pt-16 lg:pt-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -144,7 +144,7 @@ export default function ChildrenMinistryPage() {
       </section>
 
       {/* ── 4. Gallery — dark ────────────────────────────────── */}
-      <section className="border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
         <Container size="xl">
           <ScrollFadeIn className="pt-14 lg:pt-18">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -165,7 +165,7 @@ export default function ChildrenMinistryPage() {
       </section>
 
       {/* ── 5. For parents — canvas ──────────────────────────── */}
-      <section className="border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-14">
@@ -202,7 +202,7 @@ export default function ChildrenMinistryPage() {
 
       {/* ── 6. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

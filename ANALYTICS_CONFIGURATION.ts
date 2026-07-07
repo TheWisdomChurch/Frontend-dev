@@ -414,7 +414,7 @@ export const PerformanceRecommendations = {
   },
 };
 
-export default {
+const analyticsConfiguration = {
   REQUIRED_ENV_VARS,
   GoogleAnalyticsIntegration,
   MixpanelIntegration,
@@ -427,3 +427,5 @@ export default {
   PrivacyChecklist,
   PerformanceRecommendations,
 };
+
+export default analyticsConfiguration;

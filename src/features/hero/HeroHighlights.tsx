@@ -68,7 +68,7 @@ const inputClass =
   'w-full rounded-input border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const selectClass =
-  'w-full rounded-input border border-white/12 bg-[#1a1814] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'w-full rounded-input border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 /* ─────────────────────────────────────────────────────────
    Modal shell
@@ -194,7 +194,7 @@ export default function HeroHighlights() {
   return (
     <>
       {/* ── Editorial belief strip ────────────────────────────── */}
-      <section className="border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <div className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {ACTIONS.map(action => {

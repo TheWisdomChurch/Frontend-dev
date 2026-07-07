@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { IMAGE_QUALITY } from '@/shared/constants';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -20,11 +21,6 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: 'Watch',
     href: '/resources/sermons',
-    children: [
-      { label: 'Sermons', href: '/resources/sermons' },
-      { label: 'Blog', href: '/resources/blogs' },
-      { label: 'Publications', href: '/resources/publications' },
-    ],
   },
   {
     label: 'Ministries',
@@ -131,6 +127,7 @@ export default function Header() {
             aria-label="The Wisdom Church — home"
           >
             <Image
+              quality={IMAGE_QUALITY}
               src="/logo.webp"
               alt=""
               width={36}
@@ -211,6 +208,7 @@ export default function Header() {
               aria-label="The Wisdom Church — home"
             >
               <Image
+                quality={IMAGE_QUALITY}
                 src="/logo.webp"
                 alt=""
                 width={30}

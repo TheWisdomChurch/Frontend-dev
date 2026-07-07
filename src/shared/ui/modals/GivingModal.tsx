@@ -1,7 +1,8 @@
 ﻿'use client';
 
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { IMAGE_QUALITY } from '@/shared/constants';
+import { useCallback, useState } from 'react';
 import { Check, Copy, ShieldCheck } from 'lucide-react';
 
 import { BaseModal, modalStyles } from './Base';
@@ -15,12 +16,7 @@ export default function GivingModal({
   givingOption,
 }: GivingModalProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setCopiedIndex(null);
-    }
-  }, [isOpen]);
+  const displayedCopiedIndex = isOpen ? copiedIndex : null;
 
   const copyToClipboard = useCallback(async (text: string, index: number) => {
     try {
@@ -47,7 +43,7 @@ export default function GivingModal({
       forceBottomSheet
     >
       <div className="space-y-5">
-        <section className="border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/8 p-5">
+        <section className="overflow-hidden min-w-0 border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/8 p-5">
           <blockquote
             className="pl-4"
             // eslint-disable-next-line no-restricted-syntax
@@ -79,7 +75,7 @@ export default function GivingModal({
 
           <div className="space-y-4">
             {givingOption.accounts.map((account, index) => {
-              const isCopied = copiedIndex === index;
+              const isCopied = displayedCopiedIndex === index;
 
               return (
                 <article
@@ -90,6 +86,7 @@ export default function GivingModal({
                     <div className="grid h-10 w-10 flex-none place-items-center overflow-hidden border border-white/10 bg-black/30">
                       {account.image ? (
                         <Image
+                          quality={IMAGE_QUALITY}
                           src={account.image}
                           alt={account.bank}
                           width={48}
