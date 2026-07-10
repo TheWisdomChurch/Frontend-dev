@@ -6,15 +6,27 @@ import {
   useCallback,
   useEffect,
   useId,
-  useMemo,
   useRef,
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
+import {
+  AnimatePresence,
+  motion,
+  useDragControls,
+  useMotionValue,
+  useTransform,
+  type PanInfo,
+} from 'framer-motion';
 import { CheckCircle2, Clock, Loader2, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { H2, H3, BodySM } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
+import { useMediaQuery } from '@/hooks';
+
+// A drag past this distance, or a fast-enough flick, dismisses the sheet.
+const DRAG_CLOSE_OFFSET = 120;
+const DRAG_CLOSE_VELOCITY = 500;
 
 // ---------------------------------------------------------------------------
 // Style tokens shared across all modal content
@@ -67,6 +79,201 @@ function getFocusableElements(element: HTMLElement): HTMLElement[] {
   ).filter(node => node.offsetParent !== null);
 }
 
+// ---------------------------------------------------------------------------
+// ModalPanel — backdrop + draggable sheet/dialog panel.
+// Mounted only while open (inside AnimatePresence) so its drag motion value
+// always starts fresh, and so both open and close get a real transition.
+// ---------------------------------------------------------------------------
+
+interface ModalPanelProps {
+  modalRef: React.RefObject<HTMLDivElement | null>;
+  titleId: string;
+  subtitleId: string;
+  title?: string;
+  subtitle?: string;
+  children: ReactNode;
+  showCloseButton: boolean;
+  showHandle: boolean;
+  maxWidth: string;
+  isLoading: boolean;
+  loadingText: string;
+  isSheet: boolean;
+  dragEnabled: boolean;
+  canClose: boolean;
+  close: () => void;
+}
+
+function ModalPanel({
+  modalRef,
+  titleId,
+  subtitleId,
+  title,
+  subtitle,
+  children,
+  showCloseButton,
+  showHandle,
+  maxWidth,
+  isLoading,
+  loadingText,
+  isSheet,
+  dragEnabled,
+  canClose,
+  close,
+}: ModalPanelProps) {
+  const dragControls = useDragControls();
+  const y = useMotionValue(0);
+  const backdropOpacity = useTransform(y, [0, 300], [1, 0.55]);
+
+  const startDrag = useCallback(
+    (event: React.PointerEvent) => {
+      if (!dragEnabled) return;
+      dragControls.start(event);
+    },
+    [dragEnabled, dragControls]
+  );
+
+  const handleDragEnd = useCallback(
+    (_event: PointerEvent, info: PanInfo) => {
+      if (
+        info.offset.y > DRAG_CLOSE_OFFSET ||
+        info.velocity.y > DRAG_CLOSE_VELOCITY
+      ) {
+        close();
+      }
+    },
+    [close]
+  );
+
+  const panelVariants = isSheet
+    ? {
+        initial: { opacity: 0, y: '100%' },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: '100%' },
+      }
+    : {
+        initial: { opacity: 0, y: 12, scale: 0.98 },
+        animate: { opacity: 1, y: 0, scale: 1 },
+        exit: { opacity: 0, y: 12, scale: 0.98 },
+      };
+
+  const modalClassName = cn(
+    'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/[0.07] bg-[#0d0b09] text-white shadow-2xl shadow-black/65 backdrop-blur-2xl',
+    isSheet
+      ? 'max-h-[90svh] rounded-t-[1.25rem] rounded-b-none'
+      : 'max-h-[88svh] rounded-[0.875rem] sm:max-h-[90vh]',
+    maxWidth
+  );
+
+  return (
+    <motion.div
+      className={cn(
+        'fixed inset-0 z-[9999] flex px-3 py-4 backdrop-blur-md',
+        isSheet
+          ? 'items-end justify-center sm:items-center'
+          : 'items-center justify-center'
+      )}
+      // eslint-disable-next-line no-restricted-syntax -- opacity tracks the drag motion value, genuinely dynamic
+      style={{ backgroundColor: 'rgba(0,0,0,0.72)', opacity: backdropOpacity }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      role="presentation"
+      onMouseDown={event => {
+        if (event.target === event.currentTarget) close();
+      }}
+    >
+      <motion.div
+        ref={modalRef}
+        className={modalClassName}
+        style={dragEnabled ? { y } : undefined}
+        variants={panelVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={{ type: 'spring', damping: 32, stiffness: 340 }}
+        drag={dragEnabled ? 'y' : false}
+        dragListener={false}
+        dragControls={dragControls}
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0, bottom: 0.55 }}
+        onDragEnd={handleDragEnd}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={subtitle ? subtitleId : undefined}
+        aria-busy={isLoading}
+      >
+        {isLoading ? (
+          <div className="absolute inset-0 z-30 grid place-items-center bg-black/65 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/45 px-5 py-4">
+              <Loader2 className="h-6 w-6 animate-spin text-[var(--app-primary)]" />
+              <BodySM className="text-white/75">{loadingText}</BodySM>
+            </div>
+          </div>
+        ) : null}
+
+        {showHandle ? (
+          <div
+            onPointerDown={startDrag}
+            className={cn(
+              'flex justify-center px-4 pt-3 sm:hidden',
+              dragEnabled && 'cursor-grab touch-none active:cursor-grabbing'
+            )}
+          >
+            <div className="h-1.5 w-12 rounded-full bg-white/22" />
+          </div>
+        ) : null}
+
+        {title || subtitle || showCloseButton ? (
+          <header
+            onPointerDown={startDrag}
+            className={cn(
+              'flex items-start justify-between gap-4 border-b border-white/[0.07] px-5 py-4 sm:px-6 sm:py-5',
+              dragEnabled && 'touch-none sm:touch-auto'
+            )}
+          >
+            <div className="min-w-0">
+              {title ? (
+                <h2
+                  id={titleId}
+                  className="font-headline text-[1.25rem] font-normal leading-snug text-white sm:text-[1.4rem]"
+                >
+                  {title}
+                </h2>
+              ) : null}
+
+              {subtitle ? (
+                <p
+                  id={subtitleId}
+                  className="mt-1.5 font-ui text-[0.78rem] leading-[1.7] text-white/45"
+                >
+                  {subtitle}
+                </p>
+              ) : null}
+            </div>
+
+            {showCloseButton ? (
+              <button
+                type="button"
+                onClick={close}
+                disabled={!canClose}
+                aria-label="Close modal"
+                className="grid h-9 w-9 flex-none place-items-center border border-white/10 bg-white/[0.04] text-white/50 transition hover:bg-white/[0.09] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            ) : null}
+          </header>
+        ) : null}
+
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6 sm:py-6">
+          {children}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export const BaseModal = memo(function BaseModal({
   isOpen,
   onClose,
@@ -88,8 +295,10 @@ export const BaseModal = memo(function BaseModal({
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
   const subtitleId = useId();
+  const isMobile = useMediaQuery('(max-width: 639px)');
 
   const isSheet = forceBottomSheet;
+  const dragEnabled = isSheet && isMobile;
   const canClose = !preventClose && !isLoading;
 
   const close = useCallback(() => {
@@ -182,127 +391,32 @@ export const BaseModal = memo(function BaseModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, mounted, onEscapeClose, canClose, close]);
 
-  const modalClassName = useMemo(
-    () =>
-      cn(
-        'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/[0.07] bg-[#0d0b09] text-white shadow-2xl shadow-black/65 backdrop-blur-2xl',
-        'motion-safe:animate-[modal-enter_220ms_ease-out]',
-        isSheet
-          ? 'max-h-[90svh] rounded-t-[1.25rem] rounded-b-none'
-          : 'max-h-[88svh] rounded-[0.875rem] sm:max-h-[90vh]',
-        maxWidth
-      ),
-    [isSheet, maxWidth]
-  );
-
-  if (!mounted || !isOpen) return null;
+  if (!mounted) return null;
 
   return createPortal(
-    <div
-      className={cn(
-        'fixed inset-0 z-[9999] flex bg-black/72 px-3 py-4 backdrop-blur-md',
-        isSheet
-          ? 'items-end justify-center sm:items-center'
-          : 'items-center justify-center'
-      )}
-      role="presentation"
-      onMouseDown={event => {
-        if (event.target === event.currentTarget) close();
-      }}
-    >
-      <div
-        ref={modalRef}
-        className={modalClassName}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        aria-describedby={subtitle ? subtitleId : undefined}
-        aria-busy={isLoading}
-      >
-        {isLoading ? (
-          <div className="absolute inset-0 z-30 grid place-items-center bg-black/65 backdrop-blur-sm">
-            <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/45 px-5 py-4">
-              <Loader2 className="h-6 w-6 animate-spin text-[var(--app-primary)]" />
-              <BodySM className="text-white/75">{loadingText}</BodySM>
-            </div>
-          </div>
-        ) : null}
-
-        {showHandle ? (
-          <div className="flex justify-center px-4 pt-3 sm:hidden">
-            <div className="h-1.5 w-12 rounded-full bg-white/22" />
-          </div>
-        ) : null}
-
-        {title || subtitle || showCloseButton ? (
-          <header className="flex items-start justify-between gap-4 border-b border-white/[0.07] px-5 py-4 sm:px-6 sm:py-5">
-            <div className="min-w-0">
-              {title ? (
-                <h2
-                  id={titleId}
-                  className="font-headline text-[1.25rem] font-normal leading-snug text-white sm:text-[1.4rem]"
-                >
-                  {title}
-                </h2>
-              ) : null}
-
-              {subtitle ? (
-                <p
-                  id={subtitleId}
-                  className="mt-1.5 font-ui text-[0.78rem] leading-[1.7] text-white/45"
-                >
-                  {subtitle}
-                </p>
-              ) : null}
-            </div>
-
-            {showCloseButton ? (
-              <button
-                type="button"
-                onClick={close}
-                disabled={!canClose}
-                aria-label="Close modal"
-                className="grid h-9 w-9 flex-none place-items-center border border-white/10 bg-white/[0.04] text-white/50 transition hover:bg-white/[0.09] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            ) : null}
-          </header>
-        ) : null}
-
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6 sm:py-6">
+    <AnimatePresence>
+      {isOpen ? (
+        <ModalPanel
+          key="modal-panel"
+          modalRef={modalRef}
+          titleId={titleId}
+          subtitleId={subtitleId}
+          title={title}
+          subtitle={subtitle}
+          showCloseButton={showCloseButton}
+          showHandle={showHandle}
+          maxWidth={maxWidth}
+          isLoading={isLoading}
+          loadingText={loadingText}
+          isSheet={isSheet}
+          dragEnabled={dragEnabled}
+          canClose={canClose}
+          close={close}
+        >
           {children}
-        </div>
-      </div>
-
-      <style jsx global>{`
-        @keyframes modal-enter {
-          from {
-            opacity: 0;
-            transform: translateY(12px) scale(0.98);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        @media (max-width: 640px) {
-          @keyframes modal-enter {
-            from {
-              opacity: 0;
-              transform: translateY(100%);
-            }
-
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        }
-      `}</style>
-    </div>,
+        </ModalPanel>
+      ) : null}
+    </AnimatePresence>,
     document.body
   );
 });
