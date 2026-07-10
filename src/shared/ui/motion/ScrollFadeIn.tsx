@@ -1,9 +1,10 @@
 'use client';
 
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import type { HTMLMotionProps } from 'framer-motion';
 import { motion } from '@/lib/safe-motion';
 
-interface ScrollFadeInProps extends HTMLAttributes<HTMLDivElement> {
+interface ScrollFadeInProps extends HTMLMotionProps<'div'> {
   children: ReactNode;
   delay?: number;
   y?: number;

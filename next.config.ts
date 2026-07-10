@@ -28,6 +28,8 @@ const nextConfig: NextConfig = {
         hostname: 'www.thewisdomhousechurch.org',
         pathname: '/**',
       },
+      // YouTube thumbnails — sermons feed pulls video images from here.
+      { protocol: 'https', hostname: '*.ytimg.com', pathname: '/**' },
       // Cloud storage — add your CDN/S3 hostname here if images are served from one
     ],
     qualities: [85],

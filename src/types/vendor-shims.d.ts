@@ -1,11 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-declare module 'framer-motion' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export const AnimatePresence: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export const motion: any;
-}
-
 declare module 'gsap' {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export const gsap: any;
