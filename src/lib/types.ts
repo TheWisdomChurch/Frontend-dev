@@ -263,6 +263,15 @@ export interface ContactMessageData {
   metadata?: Record<string, unknown>;
 }
 
+export interface PrayerRequestData {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  request: string;
+  category?: string;
+  isAnonymous?: boolean;
+}
+
 export interface WorkforceRegistrationModalProps {
   isOpen: boolean;
   onClose: () => void;
