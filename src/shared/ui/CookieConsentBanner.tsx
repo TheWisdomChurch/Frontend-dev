@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Button } from '@/shared/utils/buttons';
+import { useIsClient } from '@/hooks';
 
 /* ── Storage ─────────────────────────────────────────────── */
 
@@ -28,15 +29,17 @@ const basePrefs: CookiePreferences = {
   version: 1,
 };
 
-function readSaved(): CookiePreferences | null {
+function readRawSaved(): string | null {
   if (typeof window === 'undefined') return null;
   const match = document.cookie.match(
     new RegExp(
       `(?:^|; )${PREFS_KEY.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
     )
   );
-  const raw = match ? decodeURIComponent(match[1]) : null;
-  if (!raw) return null;
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function parseSaved(raw: string): CookiePreferences | null {
   try {
     const parsed = JSON.parse(raw) as Partial<CookiePreferences>;
     return {
@@ -49,6 +52,31 @@ function readSaved(): CookiePreferences | null {
   } catch {
     return null;
   }
+}
+
+// Cookies aren't a subscribable store (no in-tab change events), so this is
+// a read-only snapshot: real value once mounted on the client, null on the
+// server. No subscription is needed since nothing else in this tab mutates
+// the cookie except this component's own `apply()`. The raw string is
+// cached so repeated reads return the same object reference when the
+// cookie hasn't actually changed, as useSyncExternalStore requires.
+let cachedRaw: string | null = null;
+let cachedSavedPrefs: CookiePreferences | null = null;
+
+function getSavedPrefsSnapshot(): CookiePreferences | null {
+  const raw = readRawSaved();
+  if (raw !== cachedRaw) {
+    cachedRaw = raw;
+    cachedSavedPrefs = raw ? parseSaved(raw) : null;
+  }
+  return cachedSavedPrefs;
+}
+
+function subscribeNever() {
+  return () => {};
+}
+function getSavedPrefsServerSnapshot() {
+  return null;
 }
 
 function writeCookies(prefs: CookiePreferences) {
@@ -102,23 +130,28 @@ function Toggle({
 /* ── Component ─────────────────────────────────────────── */
 
 export default function CookieConsentBanner() {
-  const [mounted, setMounted] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const mounted = useIsClient();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [prefs, setPrefs] = useState<CookiePreferences>(basePrefs);
+  const [visible, setVisible] = useState(false);
+
+  const savedPrefs = useSyncExternalStore(
+    subscribeNever,
+    getSavedPrefsSnapshot,
+    getSavedPrefsServerSnapshot
+  );
+  // Optimistic local write so the UI updates immediately on `apply()`,
+  // without waiting for a fresh cookie read.
+  const [overridePrefs, setOverridePrefs] = useState<CookiePreferences | null>(
+    null
+  );
+  const prefs = overridePrefs ?? savedPrefs ?? basePrefs;
 
   useEffect(() => {
-    setMounted(true);
-    const saved = readSaved();
-    if (saved) {
-      setPrefs(saved);
-      setVisible(false);
-    } else {
-      // Delay so it doesn't compete with page load animations
-      const t = window.setTimeout(() => setVisible(true), 2000);
-      return () => clearTimeout(t);
-    }
-  }, []);
+    if (savedPrefs) return;
+    // Delay so it doesn't compete with page load animations
+    const t = window.setTimeout(() => setVisible(true), 2000);
+    return () => clearTimeout(t);
+  }, [savedPrefs]);
 
   const apply = (next: Omit<CookiePreferences, 'updatedAt' | 'version'>) => {
     const payload: CookiePreferences = {
@@ -127,7 +160,7 @@ export default function CookieConsentBanner() {
       updatedAt: new Date().toISOString(),
       version: 1,
     };
-    setPrefs(payload);
+    setOverridePrefs(payload);
     writeCookies(payload);
     window.dispatchEvent(
       new CustomEvent('wc:cookie-consent-updated', { detail: payload })
@@ -271,9 +304,9 @@ export default function CookieConsentBanner() {
                 label={`Toggle ${row.label} cookies`}
                 onChange={() => {
                   if (row.key === 'analytics')
-                    setPrefs(p => ({ ...p, analytics: !p.analytics }));
+                    setOverridePrefs({ ...prefs, analytics: !prefs.analytics });
                   if (row.key === 'marketing')
-                    setPrefs(p => ({ ...p, marketing: !p.marketing }));
+                    setOverridePrefs({ ...prefs, marketing: !prefs.marketing });
                 }}
               />
             </div>

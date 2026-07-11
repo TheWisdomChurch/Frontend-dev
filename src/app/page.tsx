@@ -179,13 +179,7 @@ export default function Home() {
   useEffect(() => {
     if (nextAdAt === null) return;
 
-    const timeLeft = nextAdAt - Date.now();
-
-    if (timeLeft <= 0) {
-      setShowModal(true);
-      return;
-    }
-
+    const timeLeft = Math.max(0, nextAdAt - Date.now());
     const timer = window.setTimeout(() => {
       setShowModal(true);
     }, timeLeft);

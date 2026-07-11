@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import {
   getScreenSize,
   getResponsiveValue,
@@ -26,42 +26,81 @@ export interface UseResponsiveReturn {
   getValue: (config: Record<ScreenSize, string>) => string;
 }
 
-export function useResponsive(): UseResponsiveReturn {
-  const [mounted, setMounted] = useState(false);
-  const [dimensions, setDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
-    'portrait'
+// ---------------------------------------------------------------------------
+// useIsClient — the SSR-hydration-safe replacement for the classic
+// `const [mounted, setMounted] = useState(false); useEffect(() => setMounted(true), [])`
+// pattern. useSyncExternalStore lets the server and first client render
+// legitimately differ (server: false, client: true) without ever calling
+// setState inside an effect.
+// ---------------------------------------------------------------------------
+
+function subscribeNever() {
+  return () => {};
+}
+function getClientSnapshot() {
+  return true;
+}
+function getServerSnapshot() {
+  return false;
+}
+
+export function useIsClient(): boolean {
+  return useSyncExternalStore(
+    subscribeNever,
+    getClientSnapshot,
+    getServerSnapshot
   );
+}
 
-  useEffect(() => {
-    setMounted(true);
+// ---------------------------------------------------------------------------
+// Viewport dimensions — shared external store keyed off window resize.
+// ---------------------------------------------------------------------------
 
-    const handleResize = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+const SERVER_DIMENSIONS = { width: 0, height: 0 };
+let cachedDimensions = SERVER_DIMENSIONS;
 
-      setDimensions({ width, height });
-      setOrientation(height > width ? 'portrait' : 'landscape');
-    };
+function subscribeToViewport(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
+  window.addEventListener('resize', callback);
+  window.addEventListener('orientationchange', callback);
+  return () => {
+    window.removeEventListener('resize', callback);
+    window.removeEventListener('orientationchange', callback);
+  };
+}
 
-    handleResize();
+function getViewportSnapshot() {
+  if (typeof window === 'undefined') return SERVER_DIMENSIONS;
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
-    };
-  }, []);
+  if (cachedDimensions.width !== width || cachedDimensions.height !== height) {
+    cachedDimensions = { width, height };
+  }
 
-  const screenSize = useMemo<ScreenSize>(() => {
-    if (!mounted) return 'mobile';
-    return getScreenSize(dimensions.width);
-  }, [mounted, dimensions.width]);
+  return cachedDimensions;
+}
+
+function getViewportServerSnapshot() {
+  return SERVER_DIMENSIONS;
+}
+
+export function useResponsive(): UseResponsiveReturn {
+  const dimensions = useSyncExternalStore(
+    subscribeToViewport,
+    getViewportSnapshot,
+    getViewportServerSnapshot
+  );
+  const mounted = dimensions !== SERVER_DIMENSIONS;
+
+  const orientation: 'portrait' | 'landscape' =
+    dimensions.height > dimensions.width ? 'portrait' : 'landscape';
+
+  const screenSize = useMemo<ScreenSize>(
+    () => getScreenSize(dimensions.width),
+    [dimensions.width]
+  );
 
   const screenChecks = useMemo(
     () => ({
@@ -79,10 +118,9 @@ export function useResponsive(): UseResponsiveReturn {
 
     return {
       isTouchDevice:
-        typeof window !== 'undefined' &&
-        ('ontouchstart' in window ||
-          navigator.maxTouchPoints > 0 ||
-          'msMaxTouchPoints' in navigator),
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        'msMaxTouchPoints' in navigator,
     };
   }, [mounted]);
 
@@ -146,29 +184,35 @@ export function useShowOnScreenSize(
   return showOnArray.includes(screenSize);
 }
 
+// ---------------------------------------------------------------------------
+// useMediaQuery — matchMedia as an external store, no effect/setState.
+// ---------------------------------------------------------------------------
+
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      if (typeof window === 'undefined') return () => {};
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+      const mediaQuery = window.matchMedia(query);
 
-    const mediaQuery = window.matchMedia(query);
-    setMatches(mediaQuery.matches);
+      if (typeof mediaQuery.addEventListener === 'function') {
+        mediaQuery.addEventListener('change', callback);
+        return () => mediaQuery.removeEventListener('change', callback);
+      }
 
-    const handler = (e: MediaQueryListEvent) => {
-      setMatches(e.matches);
-    };
+      mediaQuery.addListener(callback);
+      return () => mediaQuery.removeListener(callback);
+    },
+    [query]
+  );
 
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', handler);
-      return () => mediaQuery.removeEventListener('change', handler);
-    }
+  const getSnapshot = useCallback(
+    () =>
+      typeof window === 'undefined' ? false : window.matchMedia(query).matches,
+    [query]
+  );
 
-    mediaQuery.addListener(handler);
-    return () => mediaQuery.removeListener(handler);
-  }, [query]);
-
-  return matches;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
 export function useTouchDevice(): boolean {

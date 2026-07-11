@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { AlertCircle, Building, Truck, X } from 'lucide-react';
 import { Button } from '@/shared/utils/buttons';
 import { FlexboxLayout } from '@/shared/layout';
 import { H4, SmallText, Caption } from '@/shared/text';
+import { useIsClient, useMediaQuery } from '@/hooks';
 
 interface OnlinePaymentModalProps {
   isOpen: boolean;
@@ -19,17 +20,9 @@ const OnlinePaymentModal = ({
   onClose,
   onSelectTransfer,
 }: OnlinePaymentModalProps) => {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const mounted = useIsClient();
+  const isMobile = useMediaQuery('(max-width: 767px)');
   const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   useEffect(() => {
     if (isOpen) {

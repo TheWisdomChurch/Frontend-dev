@@ -1,14 +1,6 @@
 ﻿'use client';
 
-import {
-  memo,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from 'react';
+import { memo, ReactNode, useCallback, useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import {
   AnimatePresence,
@@ -22,7 +14,7 @@ import { CheckCircle2, Clock, Loader2, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { H2, H3, BodySM } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
-import { useMediaQuery } from '@/hooks';
+import { useIsClient, useMediaQuery } from '@/hooks';
 
 // A drag past this distance, or a fast-enough flick, dismisses the sheet.
 const DRAG_CLOSE_OFFSET = 120;
@@ -290,7 +282,7 @@ export const BaseModal = memo(function BaseModal({
   initialFocusRef,
   forceBottomSheet = false,
 }: BaseModalProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
@@ -305,10 +297,6 @@ export const BaseModal = memo(function BaseModal({
     if (!canClose) return;
     onClose();
   }, [canClose, onClose]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!isOpen || !mounted) return;
