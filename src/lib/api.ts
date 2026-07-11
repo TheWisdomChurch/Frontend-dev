@@ -22,6 +22,7 @@ import type {
   LeadershipRole,
   WorkforceRegistrationData,
   ContactMessageData,
+  PrayerRequestData,
 } from './types';
 import { trackApiRequestStart, trackApiRequestEnd } from './apiActivity';
 import { resolveConfiguredApiOrigin } from './apiOrigin';
@@ -1042,6 +1043,25 @@ export const apiClient = {
     };
 
     const res = await request<unknown>('/pastoral-care/requests', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return unwrapData<unknown>(res);
+  },
+
+  async submitPrayerRequest(payload: PrayerRequestData): Promise<unknown> {
+    // Backend expects snake_case here (unlike pastoral-care/contact) — see
+    // service.SubmitPrayerRequest in the backend.
+    const body = {
+      first_name: payload.firstName,
+      last_name: payload.lastName,
+      email: payload.email || undefined,
+      request: payload.request,
+      category: payload.category || undefined,
+      is_anonymous: payload.isAnonymous ?? false,
+    };
+
+    const res = await request<unknown>('/prayer-requests', {
       method: 'POST',
       body: JSON.stringify(body),
     });
