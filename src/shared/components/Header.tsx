@@ -69,6 +69,7 @@ const SOCIALS = [
 export default function Header() {
   const pathname = usePathname() || '/';
   const [navOpen, setNavOpen] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
   const isActive = (href: string) => {
@@ -79,10 +80,12 @@ export default function Header() {
 
   const close = () => setNavOpen(false);
 
-  // Close on route change
-  useEffect(() => {
-    close();
-  }, [pathname]);
+  // Close on route change — adjusted during render rather than in an
+  // effect, per React's guidance for resetting state on a changing key.
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setNavOpen(false);
+  }
 
   // Scroll tracking for header background
   useEffect(() => {

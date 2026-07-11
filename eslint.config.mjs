@@ -34,10 +34,6 @@ const config = [
     rules: {
       'react/no-unescaped-entities': 'off',
       'react-hooks/exhaustive-deps': 'off',
-      // Kept as a warning rather than an error: the remaining instances are
-      // deliberate SSR-hydration guards ("mounted" flags) and window/timer-
-      // dependent synchronization that genuinely cannot run during render.
-      'react-hooks/set-state-in-effect': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
       'no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',

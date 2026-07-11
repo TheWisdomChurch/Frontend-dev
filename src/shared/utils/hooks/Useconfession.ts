@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useIsClient } from '@/hooks';
 
 type ModalStep = 'welcome' | 'confession';
 
@@ -35,11 +36,9 @@ export function useWelcomeModal({
 }: UseWelcomeModalProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>('welcome');
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
 
   useEffect(() => {
-    setMounted(true);
-
     if (hasSeenBefore()) return;
 
     const showTimer = window.setTimeout(
