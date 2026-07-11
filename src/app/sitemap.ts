@@ -2,42 +2,9 @@
 import type { MetadataRoute } from 'next';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
-const API_BASE_URL =
-  process.env.API_BASE_URL ||
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, '') ||
-  process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/api\/v1\/?$/, '');
 
 // How often Next should refresh this sitemap (seconds)
 export const revalidate = 3600; // 1 hour
-
-type ApiResource = {
-  slug: string;
-  updatedAt?: string;
-  createdAt?: string;
-};
-
-function toLastMod(dateLike?: string): Date | undefined {
-  if (!dateLike) return undefined;
-  const d = new Date(dateLike);
-  return Number.isNaN(d.getTime()) ? undefined : d;
-}
-
-async function fetchJSON<T>(path: string): Promise<T | null> {
-  if (!API_BASE_URL) return null;
-
-  try {
-    const res = await fetch(`${API_BASE_URL}${path}`, {
-      // Sitemap should not be cached forever; use revalidate above
-      next: { revalidate },
-      headers: { Accept: 'application/json' },
-    });
-
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -190,17 +157,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Optional dynamic routes from API if available.
-  const resources = await fetchJSON<ApiResource[]>('/api/v1/public/resources');
-
-  const eventRoutes: MetadataRoute.Sitemap = [];
-  const resourceRoutes: MetadataRoute.Sitemap =
-    resources?.map(r => ({
-      url: `${SITE_URL}/resources/${encodeURIComponent(r.slug)}`,
-      lastModified: toLastMod(r.updatedAt ?? r.createdAt) ?? now,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    })) ?? [];
-
-  return [...staticRoutes, ...eventRoutes, ...resourceRoutes];
+  return [...staticRoutes];
 }

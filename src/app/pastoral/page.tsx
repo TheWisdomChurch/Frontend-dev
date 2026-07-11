@@ -4,6 +4,7 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import PastoralCareUnit from '@/shared/ui/forms/eventsForm/PastoralCare';
 
 export const metadata: Metadata = {
   title: 'Pastoral Care — Wisdom Church',
@@ -100,7 +101,7 @@ export default function PastoralPage() {
               </p>
             </div>
             <Link
-              href="/contact"
+              href="#care-pathways"
               className="inline-flex items-center gap-2 self-start border border-white/20 px-7 py-3.5 font-ui text-[0.72rem] font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
             >
               Request support <Arrow />

@@ -53,6 +53,7 @@ const PastoralCareUnit = () => {
   const errors: Partial<PastoralCareFormData> = {};
 
   const eventTypes = [
+    'Counseling Session',
     'Wedding Ceremony',
     'Naming Ceremony',
     'Birthday Celebration',
