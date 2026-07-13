@@ -49,16 +49,22 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       forceBottomSheet
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="relative w-full h-64 sm:h-72 lg:h-full rounded-2xl overflow-hidden">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            quality={IMAGE_QUALITY}
-            priority={false}
-          />
+        <div className="relative w-full h-64 sm:h-72 lg:h-full rounded-2xl overflow-hidden bg-[#0d0d0d]">
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              quality={IMAGE_QUALITY}
+              priority={false}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ShoppingBag className="h-12 w-12 text-white/35" />
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

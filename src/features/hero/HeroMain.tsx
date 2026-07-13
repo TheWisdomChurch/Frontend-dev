@@ -60,12 +60,12 @@ function normalizeImage(image: unknown, fallbackAlt = 'Slide image') {
     };
     const src = typeof t.src === 'string' ? t.src : t.src?.src || '';
     return {
-      src: src || '/images/placeholder.webp',
+      src: src || null,
       alt: t.alt || fallbackAlt,
       objectPosition: t.objectPosition,
     };
   }
-  return { src: '/images/placeholder.webp', alt: fallbackAlt };
+  return { src: null, alt: fallbackAlt };
 }
 
 export default function HeroSection({
@@ -314,17 +314,23 @@ export default function HeroSection({
               ].join(' ')}
             >
               <div className="relative h-full w-full" data-parallax="0.18">
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  priority={i === 0}
-                  sizes="100vw"
-                  quality={IMAGE_QUALITY}
-                  className="object-cover"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ objectPosition: img.objectPosition || 'center 28%' }}
-                />
+                {img.src ? (
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    priority={i === 0}
+                    sizes="100vw"
+                    quality={IMAGE_QUALITY}
+                    className="object-cover"
+                    // eslint-disable-next-line no-restricted-syntax
+                    style={{
+                      objectPosition: img.objectPosition || 'center 28%',
+                    }}
+                  />
+                ) : (
+                  <div className="h-full w-full bg-[var(--app-dark-2)]" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
               </div>

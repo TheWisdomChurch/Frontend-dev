@@ -138,11 +138,10 @@ export default function WhatWeDo() {
           {/* ── Right — sliding editorial photos ────────────────── */}
           <div className="relative min-h-[360px] overflow-hidden border-l border-white/[0.05] lg:min-h-0">
             {SLIDES.map((s, i) => {
-              const src = s.image
-                ? typeof s.image === 'string'
+              const src =
+                typeof s.image === 'string'
                   ? s.image
-                  : (s.image as { src: string }).src
-                : '/images/placeholder.webp';
+                  : (s.image as { src: string }).src;
               return (
                 <div
                   key={i}

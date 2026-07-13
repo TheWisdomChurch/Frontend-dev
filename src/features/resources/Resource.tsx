@@ -306,7 +306,7 @@ export default function ResourceSection() {
     recentVideo?.thumbnail ||
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (recentVideo as any)?.thumbnails?.medium?.url ||
-    '/images/placeholder.webp';
+    null;
   const videoUrl = recentVideo?.id
     ? `https://www.youtube.com/watch?v=${recentVideo.id}`
     : null;
@@ -433,12 +433,16 @@ export default function ResourceSection() {
               </div>
             ) : recentVideo ? (
               <>
-                <img
-                  src={thumb}
-                  alt={recentVideo.title}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  loading="lazy"
-                />
+                {thumb ? (
+                  <img
+                    src={thumb}
+                    alt={recentVideo.title}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-[var(--app-ink)]/8" />
+                )}
                 <div className="absolute inset-0 bg-black/20" />
                 {videoUrl ? (
                   <a
