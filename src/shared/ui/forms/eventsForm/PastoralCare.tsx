@@ -614,17 +614,11 @@ const PastoralCareUnit = () => {
                   <Button
                     type="submit"
                     variant="primary"
+                    loading={isSubmitting}
                     disabled={isSubmitting}
                     className="w-full rounded-xl py-4 font-black text-lg"
                   >
-                    {isSubmitting ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                        <span>Submitting...</span>
-                      </div>
-                    ) : (
-                      'Submit Registration'
-                    )}
+                    {isSubmitting ? 'Submitting...' : 'Submit Registration'}
                   </Button>
 
                   <BodyMD className="mt-4 text-center text-white/60">

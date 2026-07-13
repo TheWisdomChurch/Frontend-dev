@@ -13,7 +13,6 @@ import {
   Building,
   DoorOpen,
   Heart,
-  Loader2,
   Music,
   Shield,
   UserCheck,
@@ -668,19 +667,15 @@ export function EventRegistrationModal({
                 <Button
                   variant="primary"
                   onClick={handleNextStep}
+                  loading={isSubmitting}
                   disabled={isSubmitting}
                   className="w-full sm:w-auto"
                 >
-                  {isSubmitting ? (
-                    <span className="inline-flex items-center justify-center">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Submitting...
-                    </span>
-                  ) : step === 'additional' ? (
-                    'Submit Registration'
-                  ) : (
-                    'Continue'
-                  )}
+                  {isSubmitting
+                    ? 'Submitting...'
+                    : step === 'additional'
+                      ? 'Submit Registration'
+                      : 'Continue'}
                 </Button>
               </div>
             </div>

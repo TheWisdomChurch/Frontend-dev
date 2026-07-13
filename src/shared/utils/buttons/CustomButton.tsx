@@ -45,6 +45,18 @@ const sizeClasses: Record<ButtonSize, string> = {
   icon: 'h-11 w-11 p-0',
 };
 
+// Applied to the inner content span (icon/spinner + label), which is the
+// button's only in-flow flex child — the gap classes above live on the
+// outer <button> where they have no visible effect.
+const contentGapClasses: Record<ButtonSize, string> = {
+  xs: 'gap-1.5',
+  sm: 'gap-2',
+  md: 'gap-2',
+  lg: 'gap-2.5',
+  xl: 'gap-3',
+  icon: 'gap-0',
+};
+
 const radiusClasses = {
   sm: 'rounded-lg',
   md: 'rounded-xl',
@@ -134,7 +146,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         <span className="pointer-events-none absolute inset-0 translate-x-[-120%] bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[120%]" />
 
-        <span className="relative z-10 flex min-w-0 items-center justify-center gap-inherit">
+        <span
+          className={cn(
+            'relative z-10 flex min-w-0 items-center justify-center',
+            contentGapClasses[size]
+          )}
+        >
           {loading ? (
             <Loader2 className="shrink-0 animate-spin" aria-hidden="true" />
           ) : leftIcon ? (

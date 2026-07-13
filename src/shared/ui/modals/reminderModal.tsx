@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as ZodResolvers from '@hookform/resolvers/zod';
-import { Calendar, Clock, Loader2, MapPin } from 'lucide-react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -169,17 +169,11 @@ export function ReminderModal({
             <Button
               type="submit"
               variant="primary"
+              loading={isProcessing}
               disabled={!isValid || isProcessing}
               className="w-full"
             >
-              {isProcessing ? (
-                <span className="inline-flex items-center justify-center">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Setting Reminder...
-                </span>
-              ) : (
-                'Set Reminder'
-              )}
+              {isProcessing ? 'Setting Reminder...' : 'Set Reminder'}
             </Button>
           </form>
         </div>

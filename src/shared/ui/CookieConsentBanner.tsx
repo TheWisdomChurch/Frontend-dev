@@ -283,6 +283,7 @@ export default function CookieConsentBanner() {
         title="Cookie preferences"
         subtitle={summary}
         maxWidth="max-w-lg"
+        forceBottomSheet
       >
         <div className="space-y-3">
           {COOKIE_ROWS.map(row => (
