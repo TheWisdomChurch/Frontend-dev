@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   ArrowUpRight,
   Camera,
@@ -26,7 +27,10 @@ type ContactFormData = {
   phone: string;
   topic: string;
   message: string;
+  isAnonymous: boolean;
 };
+
+const PRAYER_TOPIC_VALUE = 'prayer';
 
 type SocialLink = {
   platform: string;
@@ -42,6 +46,7 @@ const initialFormData: ContactFormData = {
   phone: '',
   topic: '',
   message: '',
+  isAnonymous: false,
 };
 
 const inputCls =
@@ -50,9 +55,17 @@ const inputCls =
 const labelCls =
   'block font-ui text-[0.6rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/45';
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState<ContactFormData>(initialFormData);
+function ContactPageContent() {
+  const searchParams = useSearchParams();
+  const [formData, setFormData] = useState<ContactFormData>(() => ({
+    ...initialFormData,
+    topic:
+      searchParams.get('topic') === PRAYER_TOPIC_VALUE
+        ? PRAYER_TOPIC_VALUE
+        : initialFormData.topic,
+  }));
   const [submitted, setSubmitted] = useState(false);
+  const [submittedPrayerRequest, setSubmittedPrayerRequest] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -90,17 +103,30 @@ export default function ContactPage() {
       setFormData(cur => ({ ...cur, [field]: e.target.value }));
     };
 
+  const isPrayerRequest = formData.topic === PRAYER_TOPIC_VALUE;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
     setSubmitted(false);
     setError(null);
     try {
-      await apiClient.submitContactMessage({
-        ...formData,
-        sourceChannel: 'frontend:web:contact-page',
-      });
+      if (isPrayerRequest) {
+        await apiClient.submitPrayerRequest({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          request: formData.message,
+          isAnonymous: formData.isAnonymous,
+        });
+      } else {
+        await apiClient.submitContactMessage({
+          ...formData,
+          sourceChannel: 'frontend:web:contact-page',
+        });
+      }
       setSubmitted(true);
+      setSubmittedPrayerRequest(isPrayerRequest);
       setFormData(initialFormData);
     } catch (err) {
       const fields = mapValidationErrors(err);
@@ -255,6 +281,7 @@ export default function ContactPage() {
                 </div>
 
                 <form
+                  id="contact-form"
                   onSubmit={handleSubmit}
                   className="space-y-0 divide-y divide-[var(--app-ink)]/6"
                 >
@@ -334,6 +361,9 @@ export default function ContactPage() {
                       >
                         <option value="">Select a topic</option>
                         <option value="visit">Planning a visit</option>
+                        <option value={PRAYER_TOPIC_VALUE}>
+                          Prayer request
+                        </option>
                         <option value="connect">
                           Connect &amp; get involved
                         </option>
@@ -347,7 +377,11 @@ export default function ContactPage() {
                   {/* Message */}
                   <div className="px-7 py-5 sm:px-8">
                     <label className="block">
-                      <span className={labelCls}>Your message</span>
+                      <span className={labelCls}>
+                        {isPrayerRequest
+                          ? 'Your prayer request'
+                          : 'Your message'}
+                      </span>
                       <textarea
                         rows={5}
                         name="message"
@@ -355,9 +389,29 @@ export default function ContactPage() {
                         onChange={updateField('message')}
                         required
                         className={`${inputCls} mt-2 min-h-[120px] resize-none`}
-                        placeholder="Write your message here..."
+                        placeholder={
+                          isPrayerRequest
+                            ? 'Share what you would like us to pray with you about...'
+                            : 'Write your message here...'
+                        }
                       />
                     </label>
+                    {isPrayerRequest && (
+                      <label className="mt-3 flex items-center gap-2.5 font-ui text-[0.8rem] text-[var(--app-ink)]/70">
+                        <input
+                          type="checkbox"
+                          checked={formData.isAnonymous}
+                          onChange={e =>
+                            setFormData(cur => ({
+                              ...cur,
+                              isAnonymous: e.target.checked,
+                            }))
+                          }
+                          className="h-4 w-4 rounded border-[var(--app-ink)]/20 accent-[var(--app-primary)]"
+                        />
+                        Keep my request anonymous to the prayer team
+                      </label>
+                    )}
                   </div>
 
                   {/* Footer row */}
@@ -403,7 +457,9 @@ export default function ContactPage() {
                       className="border-t border-emerald-100 bg-emerald-50 px-7 py-4 font-ui text-[0.82rem] text-emerald-700 sm:px-8"
                       aria-live="polite"
                     >
-                      Message sent. Our team will be in touch within 24 hours.
+                      {submittedPrayerRequest
+                        ? 'Your prayer request has been received. Our pastoral team will be praying with you.'
+                        : 'Message sent. Our team will be in touch within 24 hours.'}
                     </div>
                   )}
 
@@ -439,5 +495,13 @@ export default function ContactPage() {
         </Container>
       </section>
     </main>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={null}>
+      <ContactPageContent />
+    </Suspense>
   );
 }

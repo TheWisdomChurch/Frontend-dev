@@ -4,6 +4,7 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import PastoralCareUnit from '@/shared/ui/forms/eventsForm/PastoralCare';
 
 export const metadata: Metadata = {
   title: 'Pastoral Care — Wisdom Church',
@@ -100,7 +101,7 @@ export default function PastoralPage() {
               </p>
             </div>
             <Link
-              href="/contact"
+              href="#care-pathways"
               className="inline-flex items-center gap-2 self-start border border-white/20 px-7 py-3.5 font-ui text-[0.72rem] font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
             >
               Request support <Arrow />
@@ -110,9 +111,10 @@ export default function PastoralPage() {
       </section>
 
       {/* ── 3. Care services — full editorial sections ────────── */}
-      {services.map(svc => (
+      {services.map((svc, i) => (
         <ScrollFadeIn key={svc.id}>
           <section
+            id={i === 0 ? 'care-pathways' : undefined}
             className={`border-b ${
               svc.dark
                 ? 'border-white/8 bg-[var(--app-dark)]'
@@ -143,7 +145,11 @@ export default function PastoralPage() {
                   </p>
                   <div className="mt-8">
                     <Link
-                      href="/contact"
+                      href={
+                        svc.id === 'counseling'
+                          ? '#request-form'
+                          : '/contact?topic=prayer#contact-form'
+                      }
                       className={[
                         'inline-flex items-center gap-2 border px-6 py-3 font-ui text-[0.72rem] font-semibold transition duration-150',
                         svc.dark
@@ -187,6 +193,11 @@ export default function PastoralPage() {
         </ScrollFadeIn>
       ))}
 
+      {/* ── 3.5 Pastoral care request form — counseling & event bookings ── */}
+      <div id="request-form">
+        <PastoralCareUnit />
+      </div>
+
       {/* ── 4. Confidentiality — canvas-2 ────────────────────── */}
       <ScrollFadeIn>
         <section className="overflow-hidden min-w-0 bg-[var(--app-canvas-2)] py-16 lg:py-20">
@@ -228,12 +239,12 @@ export default function PastoralPage() {
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
               <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
-                Reach out through the contact page and tell us what you need. We
+                Choose counseling or prayer above and tell us what you need. We
                 will make sure it gets to the right person on our team.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href="/contact"
+                  href="#care-pathways"
                   className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
                   Request support <Arrow />

@@ -1,6 +1,7 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
+import { motion } from '@/lib/safe-motion';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { WisdomeHouseLogo } from '@/shared/assets';
 
@@ -9,6 +10,19 @@ interface LoaderProps {
   subLabel?: string;
   fullscreen?: boolean;
 }
+
+const textVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      delay,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+};
 
 export default function Loader({
   label = 'Equipped & Empowered for Greatness',
@@ -25,51 +39,74 @@ export default function Loader({
       aria-live="polite"
       aria-label={subLabel}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(201,150,26,0.14),transparent_32%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.06),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(201,150,26,0.08),transparent_40%)]" />
-      <div className="absolute inset-0 motion-safe:animate-[loader-bg-shift_12s_ease-in-out_infinite] bg-[radial-gradient(circle_at_30%_60%,rgba(201,150,26,0.10),transparent_35%)]" />
+      {/* Single soft ambient glow — calm, not busy */}
+      <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--app-primary)]/[0.08] blur-[90px] motion-safe:animate-[loader-glow_4s_ease-in-out_infinite] sm:h-[26rem] sm:w-[26rem]" />
 
-      <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:46px_46px] [mask-image:radial-gradient(circle_at_50%_45%,black_22%,transparent_75%)] motion-safe:animate-[loader-grid_14s_linear_infinite]" />
+      <div className="relative z-10 flex w-full max-w-sm flex-col items-center px-6 text-center">
+        {/* Mark — one steady ring, one gentle breathing scale. No competing motion. */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{
+            opacity: 1,
+            scale: [0.98, 1.03, 0.98],
+          }}
+          transition={{
+            opacity: { duration: 0.5, ease: 'easeOut' },
+            scale: {
+              duration: 2.6,
+              ease: 'easeInOut',
+              repeat: Infinity,
+              delay: 0.5,
+            },
+          }}
+          className="relative grid h-28 w-28 place-items-center sm:h-32 sm:w-32"
+        >
+          <div className="absolute inset-0 rounded-full border border-white/[0.08]" />
+          <div className="absolute inset-0 rounded-full border-t-2 border-[var(--app-primary)] border-r-transparent border-b-transparent border-l-transparent motion-safe:animate-[loader-spin_1.6s_linear_infinite]" />
 
-      <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--app-primary)]/10 blur-3xl motion-safe:animate-pulse sm:h-96 sm:w-96" />
-
-      <div className="relative z-10 flex w-full max-w-md flex-col items-center px-6 text-center">
-        <div className="relative grid h-32 w-32 place-items-center sm:h-36 sm:w-36">
-          <div className="absolute inset-0 rounded-full border border-[var(--app-primary)]/20" />
-          <div className="absolute inset-0 rounded-full border-t border-[var(--app-primary)] border-r-transparent border-b-transparent border-l-transparent motion-safe:animate-[loader-spin_1.8s_linear_infinite]" />
-          <div className="absolute inset-3 rounded-full border border-white/10" />
-          <div className="absolute inset-3 rounded-full border-r border-white/70 border-t-transparent border-b-transparent border-l-transparent motion-safe:animate-[loader-spin-reverse_3.2s_linear_infinite]" />
-          <div className="absolute inset-[-10px] rounded-full border border-[var(--app-primary)]/25 opacity-70 motion-safe:animate-[loader-ripple_2.4s_ease-out_infinite]" />
-
-          <div className="relative grid h-24 w-24 place-items-center rounded-[2rem] border border-white/10 bg-black/60 shadow-2xl shadow-[var(--app-primary)]/15 backdrop-blur-xl sm:h-28 sm:w-28">
-            <div className="absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_35%_20%,rgba(255,255,255,0.18),transparent_45%)]" />
+          <div className="relative grid h-20 w-20 place-items-center rounded-[1.75rem] border border-white/[0.08] bg-black/50 shadow-2xl shadow-black/40 backdrop-blur-xl sm:h-[5.5rem] sm:w-[5.5rem]">
             <Image
               quality={IMAGE_QUALITY}
               src={WisdomeHouseLogo}
               alt="The Wisdom Church"
-              width={74}
-              height={74}
+              width={60}
+              height={60}
               priority
-              className="relative h-16 w-16 object-contain drop-shadow-[0_0_18px_rgba(201,150,26,0.35)] sm:h-[72px] sm:w-[72px]"
+              className="relative h-12 w-12 object-contain sm:h-14 sm:w-14"
             />
           </div>
-        </div>
+        </motion.div>
 
-        <div className="mt-7 space-y-2">
-          <p className="text-balance text-base font-semibold tracking-tight text-white sm:text-lg">
+        <div className="mt-8 space-y-2">
+          <motion.p
+            custom={0.25}
+            initial="hidden"
+            animate="visible"
+            variants={textVariants}
+            className="text-balance text-base font-semibold tracking-tight text-white sm:text-lg"
+          >
             {label}
-          </p>
-          <p className="text-sm text-white/60">{subLabel}</p>
+          </motion.p>
+          <motion.p
+            custom={0.35}
+            initial="hidden"
+            animate="visible"
+            variants={textVariants}
+            className="text-sm text-white/50"
+          >
+            {subLabel}
+          </motion.p>
         </div>
 
-        <div className="mt-7 h-1 w-56 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent motion-safe:animate-[loader-progress_1.45s_ease-in-out_infinite]" />
-        </div>
-
-        <div className="mt-5 flex items-center gap-2" aria-hidden="true">
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)] motion-safe:animate-[loader-dot_1.2s_ease-in-out_infinite]" />
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)] motion-safe:animate-[loader-dot_1.2s_ease-in-out_0.15s_infinite]" />
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)] motion-safe:animate-[loader-dot_1.2s_ease-in-out_0.3s_infinite]" />
-        </div>
+        <motion.div
+          custom={0.45}
+          initial="hidden"
+          animate="visible"
+          variants={textVariants}
+          className="mt-8 h-[3px] w-40 overflow-hidden rounded-full bg-white/[0.08]"
+        >
+          <div className="h-full w-1/3 rounded-full bg-gradient-to-r from-transparent via-[var(--app-primary)] to-transparent motion-safe:animate-[loader-progress_1.6s_ease-in-out_infinite]" />
+        </motion.div>
       </div>
 
       <style jsx global>{`
@@ -79,70 +116,23 @@ export default function Loader({
           }
         }
 
-        @keyframes loader-spin-reverse {
-          to {
-            transform: rotate(-360deg);
-          }
-        }
-
-        @keyframes loader-ripple {
-          0% {
-            transform: scale(0.92);
-            opacity: 0.8;
-          }
-
-          100% {
-            transform: scale(1.18);
-            opacity: 0;
-          }
-        }
-
         @keyframes loader-progress {
           0% {
-            transform: translateX(-120%);
+            transform: translateX(-140%);
           }
 
           100% {
-            transform: translateX(220%);
+            transform: translateX(240%);
           }
         }
 
-        @keyframes loader-dot {
+        @keyframes loader-glow {
           0%,
           100% {
-            transform: translateY(0);
-            opacity: 0.35;
-          }
-
-          50% {
-            transform: translateY(-5px);
-            opacity: 1;
-          }
-        }
-
-        @keyframes loader-bg-shift {
-          0%,
-          100% {
-            opacity: 0.4;
-            transform: scale(1) translateX(0);
+            opacity: 0.7;
           }
           50% {
             opacity: 1;
-            transform: scale(1.4) translateX(6%);
-          }
-        }
-
-        @keyframes loader-grid {
-          0% {
-            background-position:
-              0 0,
-              0 0;
-          }
-
-          100% {
-            background-position:
-              46px 46px,
-              46px 46px;
           }
         }
       `}</style>

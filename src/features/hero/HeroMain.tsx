@@ -25,25 +25,6 @@ if (
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
 
-const FALLBACK_UPCOMING = {
-  label: 'Upcoming',
-  title: 'Wisdom Power Conference 26',
-  date: 'Mar 21 – 23, 2026',
-  ctaLabel: 'Reserve a seat',
-  ctaTarget: '#programs',
-};
-
-const FALLBACK_SLIDE = {
-  id: 'fallback-hero-slide',
-  type: 'hero',
-  title: 'The Wave\nof Greatness',
-  subtitle: '',
-  description:
-    "A Spirit-filled community — equipped, empowered, and raised to carry God's glory.",
-  image: '/images/lader.jpeg',
-  upcoming: FALLBACK_UPCOMING,
-} as unknown as HeroSlide;
-
 /* ── Page content override (for inner pages) ─────────── */
 export interface HeroPageContent {
   eyebrow?: string;
@@ -79,12 +60,12 @@ function normalizeImage(image: unknown, fallbackAlt = 'Slide image') {
     };
     const src = typeof t.src === 'string' ? t.src : t.src?.src || '';
     return {
-      src: src || '/images/placeholder.webp',
+      src: src || null,
       alt: t.alt || fallbackAlt,
       objectPosition: t.objectPosition,
     };
   }
-  return { src: '/images/placeholder.webp', alt: fallbackAlt };
+  return { src: null, alt: fallbackAlt };
 }
 
 export default function HeroSection({
@@ -110,8 +91,7 @@ export default function HeroSection({
 
   const safeSlides = useMemo<HeroSlide[]>(() => {
     const source = externalSlides || backendSlides;
-    const valid = Array.isArray(source) ? source.filter(Boolean) : [];
-    return valid.length > 0 ? valid : [FALLBACK_SLIDE];
+    return Array.isArray(source) ? source.filter(Boolean) : [];
   }, [externalSlides, backendSlides]);
 
   // Clamped at render time (instead of synced via effect) so an out-of-range
@@ -321,12 +301,10 @@ export default function HeroSection({
       {/* ── API slide images (homepage only) ──────────────────── */}
       {!content &&
         safeSlides.map((s, i) => {
-          const isFallback = (s as any)?.id === 'fallback-hero-slide';
           const img = normalizeImage(
             (s as any).image,
             (s as any)?.title || `Slide ${i + 1}`
           );
-          if (isFallback) return null;
           return (
             <div
               key={(s as any)?.id || i}
@@ -336,17 +314,23 @@ export default function HeroSection({
               ].join(' ')}
             >
               <div className="relative h-full w-full" data-parallax="0.18">
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  priority={i === 0}
-                  sizes="100vw"
-                  quality={IMAGE_QUALITY}
-                  className="object-cover"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ objectPosition: img.objectPosition || 'center 28%' }}
-                />
+                {img.src ? (
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    priority={i === 0}
+                    sizes="100vw"
+                    quality={IMAGE_QUALITY}
+                    className="object-cover"
+                    // eslint-disable-next-line no-restricted-syntax
+                    style={{
+                      objectPosition: img.objectPosition || 'center 28%',
+                    }}
+                  />
+                ) : (
+                  <div className="h-full w-full bg-[var(--app-dark-2)]" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
               </div>

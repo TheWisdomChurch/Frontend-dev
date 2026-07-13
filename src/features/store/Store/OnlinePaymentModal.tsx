@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { AlertCircle, Building, Truck, X } from 'lucide-react';
 import { Button } from '@/shared/utils/buttons';
 import { FlexboxLayout } from '@/shared/layout';
 import { H4, SmallText, Caption } from '@/shared/text';
+import { useIsClient, useMediaQuery } from '@/hooks';
 
 interface OnlinePaymentModalProps {
   isOpen: boolean;
@@ -19,17 +20,9 @@ const OnlinePaymentModal = ({
   onClose,
   onSelectTransfer,
 }: OnlinePaymentModalProps) => {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const mounted = useIsClient();
+  const isMobile = useMediaQuery('(max-width: 767px)');
   const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -199,11 +192,9 @@ const OnlinePaymentModal = ({
                   handleClose();
                   onSelectTransfer();
                 }}
-                className="w-full py-2"
+                className="w-full py-2 text-sm font-semibold"
               >
-                <SmallText weight="semibold" className="text-sm">
-                  Use Bank Transfer
-                </SmallText>
+                Use Bank Transfer
               </Button>
 
               <Button
@@ -211,11 +202,9 @@ const OnlinePaymentModal = ({
                 size="md"
                 curvature="xl"
                 onClick={handleClose}
-                className="w-full py-2 border-[var(--app-primary)] text-[var(--app-primary)]"
+                className="w-full py-2 border-[var(--app-primary)] text-sm font-medium text-[var(--app-primary)]"
               >
-                <SmallText weight="medium" className="text-sm">
-                  Close
-                </SmallText>
+                Close
               </Button>
             </FlexboxLayout>
           </div>

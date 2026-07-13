@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import PageHero from '@/features/hero/PageHero';
@@ -36,6 +36,26 @@ function mapTestimony(item: ApiTestimonial): UiTestimony {
 
 const FORM_BASE =
   process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/share-testimony';
+
+// window.location.origin is stable for the component's lifetime, so this
+// is read as a one-shot external snapshot rather than synced via effect.
+function subscribeNever() {
+  return () => {};
+}
+function getShareUrlSnapshot() {
+  try {
+    const returnTo = `${window.location.origin}/testimonies?testimonial_submitted=1`;
+    const url = new URL(FORM_BASE, window.location.origin);
+    url.searchParams.set('return_to', returnTo);
+    url.searchParams.set('return_delay_ms', '1800');
+    return url.toString();
+  } catch {
+    return FORM_BASE;
+  }
+}
+function getShareUrlServerSnapshot() {
+  return FORM_BASE;
+}
 
 /* ── Quote mark ─────────────────────────────────────────── */
 
@@ -80,8 +100,14 @@ export default function TestimoniesPage() {
 
   const [testimonies, setTestimonies] = useState<UiTestimony[]>([]);
   const [loading, setLoading] = useState(true);
-  const [shareUrl, setShareUrl] = useState(FORM_BASE);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const shareUrl = useSyncExternalStore(
+    subscribeNever,
+    getShareUrlSnapshot,
+    getShareUrlServerSnapshot
+  );
+  const [showSuccess, setShowSuccess] = useState(
+    () => searchParams.get('testimonial_submitted') === '1'
+  );
 
   /* Load testimonies */
   useEffect(() => {
@@ -102,25 +128,6 @@ export default function TestimoniesPage() {
       live = false;
     };
   }, []);
-
-  /* Build share URL with return-to param */
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const returnTo = `${window.location.origin}/testimonies?testimonial_submitted=1`;
-      const url = new URL(FORM_BASE, window.location.origin);
-      url.searchParams.set('return_to', returnTo);
-      url.searchParams.set('return_delay_ms', '1800');
-      setShareUrl(url.toString());
-    } catch {
-      setShareUrl(FORM_BASE);
-    }
-  }, []);
-
-  /* Success modal after form redirect */
-  useEffect(() => {
-    if (searchParams.get('testimonial_submitted') === '1') setShowSuccess(true);
-  }, [searchParams]);
 
   const visible = useMemo(() => testimonies.slice(0, 24), [testimonies]);
   const featured = visible[0] ?? null;

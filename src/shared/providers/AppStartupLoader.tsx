@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from '@/lib/safe-motion';
 import Loader from '@/shared/ui/Loader';
 import { subscribeToApiPending } from '@/lib/apiActivity';
 
@@ -53,7 +54,18 @@ export default function AppStartupLoader() {
     return () => window.clearTimeout(failSafe);
   }, [startupComplete]);
 
-  if (startupComplete) return null;
-
-  return <Loader />;
+  return (
+    <AnimatePresence>
+      {startupComplete ? null : (
+        <motion.div
+          key="startup-loader"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
+          <Loader />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }

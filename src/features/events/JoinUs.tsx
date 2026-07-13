@@ -511,6 +511,7 @@ export default function JoinWisdomHouse() {
         subtitle="Complete your details and our team will follow up with your next step."
         maxWidth="max-w-2xl"
         preventClose={submitting}
+        forceBottomSheet
       >
         <div className="space-y-5">
           {/* ── New / Existing toggle ─────────────────────── */}
@@ -798,25 +799,16 @@ export default function JoinWisdomHouse() {
                 variant="primary"
                 size="md"
                 curvature="sm"
+                loading={submitting}
                 disabled={submitting}
+                rightIcon={!submitting && <ArrowRight />}
                 className="h-12 w-full font-semibold"
               >
-                {submitting ? (
-                  <span className="inline-flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Submitting…
-                  </span>
-                ) : existing && lookupStatus === 'found' ? (
-                  <span className="inline-flex items-center gap-2">
-                    Update my profile
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-2">
-                    Submit application
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                )}
+                {submitting
+                  ? 'Submitting…'
+                  : existing && lookupStatus === 'found'
+                    ? 'Update my profile'
+                    : 'Submit application'}
               </Button>
             </form>
           )}

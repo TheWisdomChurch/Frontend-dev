@@ -21,6 +21,7 @@ import {
   GroupedSeriesData,
   UngroupedSeriesData,
 } from '@/lib/types';
+import { useIsClient } from '@/hooks';
 
 if (
   typeof window !== 'undefined' &&
@@ -37,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
 
 export const useSermonUtil = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useIsClient();
 
   const sermonsState = useSelector((state: RootState) => state.sermons);
 
@@ -66,10 +67,6 @@ export const useSermonUtil = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const horizontalGridRef = useRef<HTMLDivElement>(null);
   const featuredCategoriesRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // Falls back to the first video until the viewer explicitly picks one —
   // derived at render time instead of synced via effect.

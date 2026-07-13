@@ -6,7 +6,6 @@ import {
   CalendarPlus,
   Check,
   Clock,
-  Loader2,
   MapPin,
   Share2,
 } from 'lucide-react';
@@ -333,17 +332,11 @@ export function EventDetailsModal({
               size="md"
               curvature="full"
               onClick={handleRegister}
+              loading={isRegistering}
               disabled={disabled}
               className="w-full"
             >
-              {isRegistering ? (
-                <span className="inline-flex items-center justify-center">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Registering...
-                </span>
-              ) : (
-                'Register Now'
-              )}
+              {isRegistering ? 'Registering...' : 'Register Now'}
             </Button>
           ) : null}
 
@@ -354,26 +347,20 @@ export function EventDetailsModal({
               size="md"
               curvature="full"
               onClick={handleAddToCalendar}
+              loading={isAddingToCalendar}
+              leftIcon={
+                !isAddingToCalendar &&
+                (addedToCalendar ? <Check /> : <CalendarPlus />)
+              }
               disabled={disabled}
               className="w-full border border-white/12 bg-white/[0.04]"
               title="Add to calendar"
             >
-              {isAddingToCalendar ? (
-                <span className="inline-flex items-center justify-center">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
-                </span>
-              ) : addedToCalendar ? (
-                <span className="inline-flex items-center justify-center">
-                  <Check className="mr-2 h-4 w-4" />
-                  Calendar Downloaded
-                </span>
-              ) : (
-                <span className="inline-flex items-center justify-center">
-                  <CalendarPlus className="mr-2 h-4 w-4" />
-                  Add to Calendar
-                </span>
-              )}
+              {isAddingToCalendar
+                ? 'Creating...'
+                : addedToCalendar
+                  ? 'Calendar Downloaded'
+                  : 'Add to Calendar'}
             </Button>
 
             <Button
@@ -386,13 +373,9 @@ export function EventDetailsModal({
               className="min-h-12 border border-white/12 bg-white/[0.04] px-5 text-white/82"
               title="Share event"
               aria-label="Share event"
-            >
-              {isSharing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Share2 className="h-4 w-4" />
-              )}
-            </Button>
+              loading={isSharing}
+              leftIcon={<Share2 />}
+            />
           </div>
 
           <Caption className="text-center text-white/45">

@@ -116,6 +116,7 @@ export default function EventAdModal({
       onClose={onClose}
       title={safeEvent.title}
       maxWidth="max-w-4xl"
+      forceBottomSheet
     >
       <div className="space-y-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:space-y-0">
         {/* Left Column */}

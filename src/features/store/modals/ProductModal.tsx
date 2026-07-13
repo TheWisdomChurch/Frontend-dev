@@ -1,13 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useAppDispatch } from '@/shared/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Button } from '@/shared/utils/buttons';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
-import { useWindowSize } from '@/shared/utils/hooks/useWindowSize';
 import { FlexboxLayout } from '@/shared/layout';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import type { ProductModalProps } from '@/lib/types';
@@ -15,18 +14,12 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 
 const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const dispatch = useAppDispatch();
-  const windowSize = useWindowSize();
 
   // Parent remounts this component (via `key={product.id}`) whenever the
   // product changes, so these initial values are always fresh per product.
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
   const [selectedColor, setSelectedColor] = useState(product?.colors[0] || '');
   const [quantity, setQuantity] = useState(1);
-
-  const isMobile = useMemo(() => {
-    if (!windowSize.width) return false;
-    return windowSize.width < 640;
-  }, [windowSize.width]);
 
   if (!product) return null;
 
@@ -53,19 +46,25 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       title={product.name}
       subtitle={product.category}
       maxWidth="max-w-3xl"
-      forceBottomSheet={isMobile}
+      forceBottomSheet
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="relative w-full h-64 sm:h-72 lg:h-full rounded-2xl overflow-hidden">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            quality={IMAGE_QUALITY}
-            priority={false}
-          />
+        <div className="relative w-full h-64 sm:h-72 lg:h-full rounded-2xl overflow-hidden bg-[#0d0d0d]">
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              quality={IMAGE_QUALITY}
+              priority={false}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ShoppingBag className="h-12 w-12 text-white/35" />
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -169,8 +168,8 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
             className="w-full"
             onClick={handleAddToCart}
             disabled={product.stock <= 0}
+            leftIcon={product.stock > 0 && <ShoppingBag />}
           >
-            <ShoppingBag className="w-4 h-4 mr-2" />
             {product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
           </Button>
         </div>

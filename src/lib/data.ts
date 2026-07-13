@@ -14,7 +14,6 @@ import {
   Slide,
   Ministry,
   ServiceBox,
-  Testimonial,
   // GivingOption,
   Photo,
   Product,
@@ -106,42 +105,6 @@ export const defaultSlides: Slide[] = [
       ctaLabel: 'Get directions',
       ctaTarget: '#programs',
     },
-  },
-];
-
-export const testimonialsData: Testimonial[] = [
-  {
-    id: 1,
-    firstName: 'Michael',
-    lastName: 'Johnson',
-    fullName: 'Michael Johnson',
-    image: Bishop.src,
-    testimony:
-      'This church has transformed my life. The community here is unlike any other - supportive, loving, and genuinely committed to helping each other grow in faith. The teachings are biblically sound and practically applicable to everyday life.',
-    date: '2024-01-15',
-    anonymous: false,
-  },
-  {
-    id: 2,
-    firstName: 'Sarah',
-    lastName: 'Williams',
-    fullName: 'Sarah Williams',
-    image: Min_Adura.src,
-    testimony:
-      'As a young professional, finding a church that speaks to my generation while maintaining biblical truth was challenging. This church does it perfectly! The youth programs are engaging and the community is welcoming.',
-    date: '2024-02-20',
-    anonymous: false,
-  },
-  {
-    id: 3,
-    firstName: 'Robert',
-    lastName: 'Chen',
-    fullName: 'Robert Chen',
-    image: Children_head.src,
-    testimony:
-      "The outreach programs have allowed me to serve my community in meaningful ways. I've found purpose and fulfillment through serving here. The leadership is supportive and empowering.",
-    date: '2024-03-10',
-    anonymous: false,
   },
 ];
 
