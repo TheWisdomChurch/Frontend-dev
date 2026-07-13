@@ -192,11 +192,9 @@ const OnlinePaymentModal = ({
                   handleClose();
                   onSelectTransfer();
                 }}
-                className="w-full py-2"
+                className="w-full py-2 text-sm font-semibold"
               >
-                <SmallText weight="semibold" className="text-sm">
-                  Use Bank Transfer
-                </SmallText>
+                Use Bank Transfer
               </Button>
 
               <Button
@@ -204,11 +202,9 @@ const OnlinePaymentModal = ({
                 size="md"
                 curvature="xl"
                 onClick={handleClose}
-                className="w-full py-2 border-[var(--app-primary)] text-[var(--app-primary)]"
+                className="w-full py-2 border-[var(--app-primary)] text-sm font-medium text-[var(--app-primary)]"
               >
-                <SmallText weight="medium" className="text-sm">
-                  Close
-                </SmallText>
+                Close
               </Button>
             </FlexboxLayout>
           </div>

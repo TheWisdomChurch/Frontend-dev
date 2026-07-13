@@ -17,7 +17,6 @@ import {
   DoorOpen,
   Globe,
   Heart,
-  Loader2,
   Mail,
   MapPin,
   MessageSquare,
@@ -969,9 +968,9 @@ export function JoinUsModal({
                 variant="ghost"
                 onClick={handlePrevStep}
                 disabled={step === 'personal' || isSubmitting}
+                leftIcon={<ChevronRight className="rotate-180" />}
                 className="w-full sm:w-auto"
               >
-                <ChevronRight className="mr-2 h-4 w-4 rotate-180" />
                 Back
               </Button>
 
@@ -979,25 +978,19 @@ export function JoinUsModal({
                 type="button"
                 variant="primary"
                 onClick={handleNextStep}
+                loading={isSubmitting}
                 disabled={isSubmitting}
+                rightIcon={
+                  !isSubmitting &&
+                  (step === 'availability' ? <Check /> : <ChevronRight />)
+                }
                 className="w-full sm:w-auto"
               >
-                {isSubmitting ? (
-                  <span className="inline-flex items-center justify-center">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting...
-                  </span>
-                ) : step === 'availability' ? (
-                  <span className="inline-flex items-center justify-center">
-                    Submit Application
-                    <Check className="ml-2 h-4 w-4" />
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center justify-center">
-                    Continue
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </span>
-                )}
+                {isSubmitting
+                  ? 'Submitting...'
+                  : step === 'availability'
+                    ? 'Submit Application'
+                    : 'Continue'}
               </Button>
             </div>
           </div>

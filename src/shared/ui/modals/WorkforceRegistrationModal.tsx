@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as ZodResolvers from '@hookform/resolvers/zod';
-import { Loader2, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { BaseModal, modalStyles } from './Base';
@@ -414,17 +414,11 @@ export function WorkforceRegistrationModal({
             <Button
               type="submit"
               variant="primary"
+              loading={isSubmitting}
               disabled={!isValid || isSubmitting}
               className="w-full"
             >
-              {isSubmitting ? (
-                <span className="inline-flex items-center justify-center">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Submitting...
-                </span>
-              ) : (
-                'Submit Workforce Details'
-              )}
+              {isSubmitting ? 'Submitting...' : 'Submit Workforce Details'}
             </Button>
           </div>
         </form>

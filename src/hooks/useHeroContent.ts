@@ -27,29 +27,6 @@ export interface HeroSlide {
   type: 'event' | 'reel' | 'highlight';
 }
 
-const DEFAULT_FALLBACK_SLIDES: HeroSlide[] = [
-  {
-    id: 'welcome',
-    title: 'Welcome to The Wisdom Church',
-    subtitle: 'Equipping and Empowering for greatness',
-    description:
-      'A Spirit-filled family helping believers grow in faith, purpose, and community.',
-    image: {
-      src: '/HEADER.webp',
-      alt: "Experience God's Transforming Power",
-      objectPosition: 'center',
-    },
-    upcoming: {
-      label: 'Welcome',
-      title: 'Join Our Community',
-      date: 'Year-round',
-      ctaLabel: 'Get Started',
-      ctaTarget: '#join',
-    },
-    type: 'highlight',
-  },
-];
-
 const FETCH_TIMEOUT_MS = 12000;
 const RETRY_DELAY_MS = 2500;
 const MAX_RETRIES = 1;
@@ -163,7 +140,7 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
 }
 
 export const useHeroContent = () => {
-  const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_FALLBACK_SLIDES);
+  const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -224,9 +201,7 @@ export const useHeroContent = () => {
         ? reels.slice(0, 2).map(mapReelToHeroSlide)
         : [];
 
-      const nextSlides = [...upcomingEvents, ...reelSlides];
-
-      setSlides(nextSlides.length > 0 ? nextSlides : DEFAULT_FALLBACK_SLIDES);
+      setSlides([...upcomingEvents, ...reelSlides]);
       setError(null);
       retryCountRef.current = 0;
     } catch (err) {
@@ -241,12 +216,10 @@ export const useHeroContent = () => {
       if (process.env.NODE_ENV !== 'production' && !isSoftTimeout) {
         console.error('Error fetching hero content:', errorMessage, err);
       } else if (process.env.NODE_ENV !== 'production' && isSoftTimeout) {
-        console.warn(
-          'Hero content fetch timed out. Falling back to default slides.'
-        );
+        console.warn('Hero content fetch timed out.');
       }
 
-      setSlides(DEFAULT_FALLBACK_SLIDES);
+      setSlides([]);
 
       if (isSoftTimeout) {
         setError(null);

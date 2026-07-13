@@ -2,18 +2,20 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Play } from 'lucide-react';
+import NextImage from 'next/image';
+import { ImageOff, Play } from 'lucide-react';
 
-import { hero_bg_1, hero_bg_3, EventBannerDesktop } from '@/shared/assets';
+import { EventBannerDesktop } from '@/shared/assets';
 import { Container } from '@/shared/layout';
 import { apiClient } from '@/lib/api';
-import type { EventPublic } from '@/lib/apiTypes';
+import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 import { BaseModal } from '@/shared/ui/modals/Base';
+import { IMAGE_QUALITY } from '@/shared/constants';
 
 /* ── Types ──────────────────────────────────────────────── */
 
-type Category = 'program' | 'media' | 'reel';
+type Category = 'program' | 'reel';
 
 type Slide = {
   id: string;
@@ -33,38 +35,8 @@ type Slide = {
 
 const CATEGORY_LABELS: Record<Category, string> = {
   program: 'Programs',
-  media: 'Media',
   reel: 'Reels',
 };
-
-const STATIC_SLIDES: Slide[] = [
-  {
-    id: 'media-stories',
-    title: 'Media Stories',
-    description:
-      'Short testimonies, sermon clips, and behind-the-scenes moments from the Wisdom Church community.',
-    date: 'Updated weekly',
-    location: 'Content Hub',
-    imageUrl: hero_bg_1.src,
-    cta: 'Explore media',
-    href: '/resources',
-    badge: 'Media',
-    category: 'media',
-  },
-  {
-    id: 'highlights-reels',
-    title: 'Highlights & Reels',
-    description:
-      'Quick reels from recent services, worship moments, and church events.',
-    date: 'Updated weekly',
-    location: 'Media Team',
-    imageUrl: hero_bg_3.src,
-    cta: 'Watch reels',
-    href: '/resources/sermons',
-    badge: 'Reel',
-    category: 'reel',
-  },
-];
 
 /* ── Helpers ────────────────────────────────────────────── */
 
@@ -85,6 +57,42 @@ function statusBadge(startAt?: string, endAt?: string): string {
   if (now >= start && now <= end) return 'Live now';
   if (now < start) return 'Upcoming';
   return 'Recent';
+}
+
+/* ── Slide image — real next/image, honest empty state on load failure ── */
+
+function SlideImage({
+  src,
+  alt,
+  sizes,
+  className,
+}: {
+  src: string;
+  alt: string;
+  sizes: string;
+  className?: string;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-[var(--app-dark-2)]">
+        <ImageOff className="h-6 w-6 text-white/25" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  return (
+    <NextImage
+      src={src}
+      alt={alt}
+      fill
+      quality={IMAGE_QUALITY}
+      sizes={sizes}
+      className={className}
+      onError={() => setFailed(true)}
+    />
+  );
 }
 
 function Arrow() {
@@ -146,11 +154,15 @@ function FeaturedCard({
       <div
         className={`relative shrink-0 overflow-hidden ${fullWidth ? 'w-1/2 lg:w-[55%]' : 'w-[52%]'}`}
       >
-        <img
+        <SlideImage
           src={slide.imageUrl}
           alt={slide.title}
-          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-          loading="lazy"
+          sizes={
+            fullWidth
+              ? '(max-width: 1024px) 50vw, 55vw'
+              : '(max-width: 1024px) 52vw, 30vw'
+          }
+          className="object-cover transition duration-700 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--app-ink)]/35" />
         {isReel && (
@@ -244,11 +256,11 @@ function PortraitCard({
     >
       {/* Image */}
       <div className="relative aspect-[4/5] overflow-hidden bg-[var(--app-ink)]/8">
-        <img
+        <SlideImage
           src={slide.imageUrl}
           alt={slide.title}
-          className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-          loading="lazy"
+          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 22vw"
+          className="object-cover transition duration-500 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
         {isReel && (
@@ -306,9 +318,7 @@ function EmptyState({ category }: { category: Category }) {
       <p className="font-headline text-[1.5rem] font-normal text-[var(--app-ink)]">
         {category === 'program'
           ? 'No programs scheduled right now.'
-          : category === 'media'
-            ? 'Media content coming soon.'
-            : 'Reels coming soon.'}
+          : 'No reels published yet.'}
       </p>
       <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/48">
         {category === 'program'
@@ -355,8 +365,10 @@ function gridCols(restCount: number) {
 
 export default function EventsShowcase() {
   const [category, setCategory] = useState<Category>('program');
-  const [loading, setLoading] = useState(true);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [loadingReels, setLoadingReels] = useState(true);
   const [events, setEvents] = useState<EventPublic[]>([]);
+  const [reels, setReels] = useState<ReelPublic[]>([]);
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
   useEffect(() => {
@@ -370,7 +382,25 @@ export default function EventsShowcase() {
         if (live) setEvents([]);
       })
       .finally(() => {
-        if (live) setLoading(false);
+        if (live) setLoadingEvents(false);
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let live = true;
+    apiClient
+      .listReels()
+      .then(data => {
+        if (live) setReels(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (live) setReels([]);
+      })
+      .finally(() => {
+        if (live) setLoadingReels(false);
       });
     return () => {
       live = false;
@@ -396,12 +426,25 @@ export default function EventsShowcase() {
     [events]
   );
 
-  const activeSlides = useMemo<Slide[]>(() => {
-    if (category === 'program') return programSlides;
-    return STATIC_SLIDES.filter(s => s.category === category);
-  }, [category, programSlides]);
+  const reelSlides = useMemo<Slide[]>(
+    () =>
+      reels.map(r => ({
+        id: r.id,
+        title: r.title,
+        description: r.description || 'Watch this moment from Wisdom Church.',
+        date: formatDate(r.publishedAt),
+        location: 'Wisdom Church',
+        imageUrl: r.thumbnailUrl || '',
+        cta: 'Watch reel',
+        badge: 'Reel',
+        category: 'reel' as const,
+        videoUrl: r.videoUrl,
+      })),
+    [reels]
+  );
 
-  const isLoading = loading && category === 'program';
+  const activeSlides = category === 'program' ? programSlides : reelSlides;
+  const isLoading = category === 'program' ? loadingEvents : loadingReels;
   const featured = activeSlides[0] ?? null;
   const rest = activeSlides.slice(1, 4);
   const onlyFeatured = !!featured && rest.length === 0;
@@ -422,11 +465,17 @@ export default function EventsShowcase() {
 
           <div className="flex items-center gap-5">
             {/* Category tabs */}
-            <div className="flex gap-0 overflow-x-auto border border-[var(--app-ink)]/10">
+            <div
+              role="tablist"
+              aria-label="Event content category"
+              className="flex gap-0 overflow-x-auto border border-[var(--app-ink)]/10"
+            >
               {(Object.keys(CATEGORY_LABELS) as Category[]).map(cat => (
                 <button
                   key={cat}
                   type="button"
+                  role="tab"
+                  aria-selected={category === cat}
                   onClick={() => setCategory(cat)}
                   className={[
                     'px-4 py-2.5 font-ui text-[0.72rem] font-semibold transition duration-150',
@@ -515,6 +564,7 @@ export default function EventsShowcase() {
           title={reelModal.title}
           subtitle={reelModal.description}
           maxWidth="max-w-3xl"
+          forceBottomSheet
         >
           {reelModal.videoUrl ? (
             <video
@@ -525,8 +575,11 @@ export default function EventsShowcase() {
               <source src={reelModal.videoUrl} type="video/mp4" />
             </video>
           ) : (
-            <div className="flex aspect-video w-full items-center justify-center bg-black/70">
-              <Play className="h-10 w-10 text-white/50" />
+            <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 bg-[var(--app-dark-2)]">
+              <Play className="h-10 w-10 text-white/30" />
+              <p className="font-ui text-[0.8rem] text-white/45">
+                This reel&apos;s video isn&apos;t available right now.
+              </p>
             </div>
           )}
         </BaseModal>

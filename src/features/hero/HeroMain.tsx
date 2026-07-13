@@ -25,25 +25,6 @@ if (
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
 
-const FALLBACK_UPCOMING = {
-  label: 'Upcoming',
-  title: 'Wisdom Power Conference 26',
-  date: 'Mar 21 – 23, 2026',
-  ctaLabel: 'Reserve a seat',
-  ctaTarget: '#programs',
-};
-
-const FALLBACK_SLIDE = {
-  id: 'fallback-hero-slide',
-  type: 'hero',
-  title: 'The Wave\nof Greatness',
-  subtitle: '',
-  description:
-    "A Spirit-filled community — equipped, empowered, and raised to carry God's glory.",
-  image: '/images/lader.jpeg',
-  upcoming: FALLBACK_UPCOMING,
-} as unknown as HeroSlide;
-
 /* ── Page content override (for inner pages) ─────────── */
 export interface HeroPageContent {
   eyebrow?: string;
@@ -110,8 +91,7 @@ export default function HeroSection({
 
   const safeSlides = useMemo<HeroSlide[]>(() => {
     const source = externalSlides || backendSlides;
-    const valid = Array.isArray(source) ? source.filter(Boolean) : [];
-    return valid.length > 0 ? valid : [FALLBACK_SLIDE];
+    return Array.isArray(source) ? source.filter(Boolean) : [];
   }, [externalSlides, backendSlides]);
 
   // Clamped at render time (instead of synced via effect) so an out-of-range
@@ -321,12 +301,10 @@ export default function HeroSection({
       {/* ── API slide images (homepage only) ──────────────────── */}
       {!content &&
         safeSlides.map((s, i) => {
-          const isFallback = (s as any)?.id === 'fallback-hero-slide';
           const img = normalizeImage(
             (s as any).image,
             (s as any)?.title || `Slide ${i + 1}`
           );
-          if (isFallback) return null;
           return (
             <div
               key={(s as any)?.id || i}

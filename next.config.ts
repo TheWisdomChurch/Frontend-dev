@@ -30,6 +30,8 @@ const nextConfig: NextConfig = {
       },
       // YouTube thumbnails — sermons feed pulls video images from here.
       { protocol: 'https', hostname: '*.ytimg.com', pathname: '/**' },
+      // Supabase storage — admin-uploaded media (homepage ads, etc.)
+      { protocol: 'https', hostname: '*.supabase.co', pathname: '/**' },
       // Cloud storage — add your CDN/S3 hostname here if images are served from one
     ],
     qualities: [85],

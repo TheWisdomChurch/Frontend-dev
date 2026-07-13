@@ -94,6 +94,7 @@ function ModalShell({
       title={title}
       subtitle={subtitle}
       maxWidth="max-w-2xl"
+      forceBottomSheet
     >
       <div className="space-y-5">{children}</div>
     </BaseModal>

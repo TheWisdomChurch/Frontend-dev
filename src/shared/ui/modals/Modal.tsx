@@ -136,7 +136,12 @@ function ModalPanel({
     [close]
   );
 
-  const panelVariants = isSheet
+  // Sheet-specific corner treatment and slide-from-bottom entrance only
+  // apply when the modal is actually rendering as a mobile bottom sheet
+  // (isSheet && isMobile, i.e. dragEnabled) — desktop always gets a clean
+  // centered dialog with rounded corners and a fade+scale entrance, even
+  // for sheet-enabled modals.
+  const panelVariants = dragEnabled
     ? {
         initial: { opacity: 0, y: '100%' },
         animate: { opacity: 1, y: 0 },
@@ -150,7 +155,7 @@ function ModalPanel({
 
   const modalClassName = cn(
     'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/[0.07] bg-[#0d0b09] text-white shadow-2xl shadow-black/65 backdrop-blur-2xl',
-    isSheet
+    dragEnabled
       ? 'max-h-[90svh] rounded-t-[1.25rem] rounded-b-none'
       : 'max-h-[88svh] rounded-[0.875rem] sm:max-h-[90vh]',
     maxWidth
