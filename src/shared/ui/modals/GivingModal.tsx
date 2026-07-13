@@ -33,6 +33,13 @@ export default function GivingModal({
 
   if (!givingOption) return null;
 
+  // Defensive: the giving options API is admin-configured server-side data,
+  // not a compile-time constant — an option with a missing/malformed
+  // `accounts` array must not crash the whole modal on open.
+  const accounts = Array.isArray(givingOption.accounts)
+    ? givingOption.accounts
+    : [];
+
   return (
     <BaseModal
       isOpen={isOpen}
@@ -74,7 +81,13 @@ export default function GivingModal({
           </div>
 
           <div className="space-y-4">
-            {givingOption.accounts.map((account, index) => {
+            {accounts.length === 0 ? (
+              <p className="font-ui text-[0.8rem] leading-[1.7] text-white/45">
+                Account details are being updated. Please use &ldquo;Other ways
+                to give&rdquo; below or contact us to complete your gift.
+              </p>
+            ) : null}
+            {accounts.map((account, index) => {
               const isCopied = displayedCopiedIndex === index;
 
               return (
