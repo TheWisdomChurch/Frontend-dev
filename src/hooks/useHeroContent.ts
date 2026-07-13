@@ -10,7 +10,7 @@ export interface HeroSlide {
   subtitle: string;
   description?: string;
   image: {
-    src: string;
+    src: string | null;
     alt: string;
     objectPosition?: string;
   };
@@ -76,8 +76,7 @@ function mapEventToHeroSlide(event: EventPublic): HeroSlide {
     subtitle: event.title || 'Upcoming Event',
     description: event.description || undefined,
     image: {
-      src:
-        event.imageUrl || event.bannerUrl || '/images/event-placeholder.webp',
+      src: event.imageUrl || event.bannerUrl || null,
       alt: event.title || 'Church event',
       objectPosition: 'center',
     },
@@ -101,7 +100,7 @@ function mapReelToHeroSlide(reel: ReelPublic): HeroSlide {
     subtitle: 'Latest Media',
     description: reel.description || undefined,
     image: {
-      src: reel.thumbnailUrl || '/images/reel-placeholder.webp',
+      src: reel.thumbnailUrl || null,
       alt: reel.title || 'Media reel',
       objectPosition: 'center',
     },

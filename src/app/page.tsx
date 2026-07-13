@@ -90,29 +90,13 @@ type HomeConfessionContent = {
   motto: string;
 };
 
-const fallbackEventAd: HomeEventAd = {
-  id: 'wpc-2026',
-  title: 'Wisdom Power Conference 2026',
-  headline: 'Have you registered for WPC 2026?',
-  description:
-    'Join three days of worship, impartation, and encounters designed to refresh your spirit and strengthen your walk.',
-  startAt: '2026-03-20T18:00:00Z',
-  endAt: '2026-03-22T20:00:00Z',
-  time: 'Morning Session • Evening Session',
-  location: 'Honor Gardens opposite Dominion City, Alasia Bus stop',
-  image: '/HEADER.webp',
-  registerUrl: 'https://admin.wisdomchurchhq.org/forms/wpc26',
-  ctaLabel: 'Register now',
-  note: 'You will be returned to the main website after you finish.',
-};
-
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [nextAdAt, setNextAdAt] = useState<number | null>(
     () => Date.now() + 1200
   );
   const [showConfessionPopup, setShowConfessionPopup] = useState(false);
-  const [eventAd, setEventAd] = useState<HomeEventAd>(fallbackEventAd);
+  const [eventAd, setEventAd] = useState<HomeEventAd | null>(null);
   const [confessionContent, setConfessionContent] =
     useState<HomeConfessionContent | null>(null);
 
@@ -129,25 +113,42 @@ export default function Home() {
         if (!mounted) return;
 
         if (adPayload && typeof adPayload === 'object') {
-          setEventAd(prev => ({
-            ...prev,
-            ...(adPayload as Partial<HomeEventAd>),
-          }));
+          const ad = adPayload as Record<string, unknown>;
+          const title = String(ad.title || '').trim();
+
+          // Only show the ad once the API actually gives us a title —
+          // otherwise there's nothing real to advertise.
+          if (title) {
+            setEventAd({
+              id: String(ad.id || '').trim(),
+              title,
+              headline: String(ad.headline || '').trim(),
+              description: String(ad.description || '').trim(),
+              startAt: String(ad.startAt || '').trim(),
+              endAt: String(ad.endAt || '').trim(),
+              time: String(ad.time || '').trim(),
+              location: String(ad.location || '').trim(),
+              image: String(ad.image || '').trim(),
+              registerUrl: String(ad.registerUrl || '').trim(),
+              ctaLabel: String(ad.ctaLabel || '').trim() || 'Register now',
+              note: String(ad.note || '').trim(),
+            });
+          }
         }
 
         if (confessionPayload && typeof confessionPayload === 'object') {
+          // Pass through whatever the API actually returned — empty fields
+          // fall through to ConfessionPopup's own real default copy rather
+          // than being padded with fabricated text here.
           setConfessionContent({
-            welcomeTitle:
-              String(confessionPayload.welcomeTitle || '').trim() ||
-              'Welcome Home',
-            welcomeMessage:
-              String(confessionPayload.welcomeMessage || '').trim() ||
-              'You are in a place of worship, truth, and transformation.',
-            confessionText:
-              String(confessionPayload.confessionText || '').trim() || '',
-            motto:
-              String(confessionPayload.motto || '').trim() ||
-              'We begin to prosper, we continue to prosper, until we become very prosperous.',
+            welcomeTitle: String(confessionPayload.welcomeTitle || '').trim(),
+            welcomeMessage: String(
+              confessionPayload.welcomeMessage || ''
+            ).trim(),
+            confessionText: String(
+              confessionPayload.confessionText || ''
+            ).trim(),
+            motto: String(confessionPayload.motto || '').trim(),
           });
         }
       } catch (error) {
@@ -281,12 +282,14 @@ export default function Home() {
         </section>
       </div>
 
-      <EventAdModal
-        open={showModal}
-        event={eventAd}
-        onClose={handleCloseModal}
-        onRemindLater={handleRemindLater}
-      />
+      {eventAd && (
+        <EventAdModal
+          open={showModal}
+          event={eventAd}
+          onClose={handleCloseModal}
+          onRemindLater={handleRemindLater}
+        />
+      )}
 
       {showConfessionPopup && (
         <ConfessionPopup
