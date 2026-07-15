@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { useAppSelector } from '@/shared/utils/hooks/redux';
 import { FlexboxLayout } from '@/shared/layout';
 import { H2, H3, H4, BaseText, Caption } from '@/shared/text';
@@ -176,18 +177,30 @@ const OrderConfirmation = () => {
   const handleShare = async () => {
     setIsSharing(true);
     try {
-      if (navigator.share) {
-        await navigator.share({
-          title: `Order Confirmation - ${orderDetails?.orderId}`,
-          text: `I just placed an order at Wisdom Church! Order ID: ${orderDetails?.orderId}`,
-          url: window.location.href,
-        });
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        alert('Order link copied to clipboard!');
+      const shareData = {
+        title: `Order Confirmation - ${orderDetails?.orderId}`,
+        text: `I just placed an order at Wisdom Church! Order ID: ${orderDetails?.orderId}`,
+        url: typeof window !== 'undefined' ? window.location.href : undefined,
+      };
+
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.share &&
+        navigator.canShare?.(shareData)
+      ) {
+        await navigator.share(shareData);
+        toast.success('Order shared.');
+        return;
       }
-    } catch (error) {
+
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success('Order link copied to clipboard.');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.error('Error sharing:', error);
+      if (error?.name !== 'AbortError') {
+        toast.error('Unable to share this order.');
+      }
     } finally {
       setIsSharing(false);
     }

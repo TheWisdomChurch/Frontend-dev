@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import React, { useCallback, useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   ArrowRight,
   CalendarClock,
@@ -13,11 +14,18 @@ import {
 } from 'lucide-react';
 
 import { BaseModal } from '@/shared/ui/modals/Base';
+import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { Container } from '@/shared/layout';
 import { Card } from '@/shared/ui/cards';
 import { Button } from '@/shared/utils/buttons';
 import { Caption } from '@/shared/text';
-import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
+import { apiClient } from '@/lib/api';
+
+function splitFullName(value: string): { firstName: string; lastName: string } {
+  const parts = value.trim().split(/\s+/);
+  const firstName = parts.shift() || '';
+  return { firstName, lastName: parts.join(' ').trim() || firstName };
+}
 
 /* ─────────────────────────────────────────────────────────
    Types & Data
@@ -127,69 +135,124 @@ type JoinState = {
    Component
 ───────────────────────────────────────────────────────── */
 
+const initialVisit: VisitState = {
+  name: '',
+  email: '',
+  phone: '',
+  date: '',
+  time: '',
+  attendance: '1',
+  notes: '',
+};
+const initialWatch: WatchState = { name: '', email: '' };
+const initialJoin: JoinState = {
+  name: '',
+  email: '',
+  phone: '',
+  department: departments[0],
+  experience: '',
+};
+
 export default function HeroHighlights() {
-  const { open: showUnavailable } = useServiceUnavailable();
-
   const [modal, setModal] = useState<ModalKey>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState<{
+    title: string;
+    message: string;
+  } | null>(null);
 
-  const [visit, setVisit] = useState<VisitState>({
-    name: '',
-    email: '',
-    phone: '',
-    date: '',
-    time: '',
-    attendance: '1',
-    notes: '',
-  });
-  const [watch, setWatch] = useState<WatchState>({ name: '', email: '' });
-  const [join, setJoin] = useState<JoinState>({
-    name: '',
-    email: '',
-    phone: '',
-    department: departments[0],
-    experience: '',
-  });
+  const [visit, setVisit] = useState<VisitState>(initialVisit);
+  const [watch, setWatch] = useState<WatchState>(initialWatch);
+  const [join, setJoin] = useState<JoinState>(initialJoin);
 
   const openModal = useCallback((key: ModalKey) => setModal(key), []);
   const closeModal = useCallback(() => setModal(null), []);
 
-  const onUnavailable = useCallback(() => {
-    closeModal();
-    showUnavailable({
-      title: 'Coming soon',
-      message: 'We are polishing this for production.',
-      actionLabel: 'Got it',
-    });
-  }, [closeModal, showUnavailable]);
+  const onSubmitVisit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const { firstName, lastName } = splitFullName(visit.name);
+      await apiClient.submitContactMessage({
+        firstName,
+        lastName,
+        email: visit.email,
+        phone: visit.phone || undefined,
+        topic: 'visit',
+        message:
+          visit.notes.trim() ||
+          `Requesting a visit appointment for ${visit.attendance} ${visit.attendance === '1' ? 'person' : 'people'}.`,
+        sourceChannel: 'frontend:web:hero:plan-visit',
+        metadata: {
+          preferredDate: visit.date || undefined,
+          preferredTime: visit.time || undefined,
+          attendance: visit.attendance,
+        },
+      });
+      closeModal();
+      setVisit(initialVisit);
+      setSuccess({
+        title: 'Visit request received',
+        message:
+          "We've got your details and will email you directions and a reminder before Sunday.",
+      });
+    } catch (error) {
+      console.error('Failed to submit visit request:', error);
+      toast.error('We could not submit your visit request. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-  const onSubmitVisit = (e: React.FormEvent) => {
+  const onSubmitWatch = async (e: React.FormEvent) => {
     e.preventDefault();
-    onUnavailable();
-    setVisit({
-      name: '',
-      email: '',
-      phone: '',
-      date: '',
-      time: '',
-      attendance: '1',
-      notes: '',
-    });
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      await apiClient.subscribe({ name: watch.name, email: watch.email });
+      closeModal();
+      setWatch(initialWatch);
+      setSuccess({
+        title: "You're on the list",
+        message: "We'll email you a reminder 30 minutes before we go live.",
+      });
+    } catch (error) {
+      console.error('Failed to subscribe to service reminders:', error);
+      toast.error('We could not save your reminder. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
-  const onSubmitWatch = (e: React.FormEvent) => {
+
+  const onSubmitJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    onUnavailable();
-    setWatch({ name: '', email: '' });
-  };
-  const onSubmitJoin = (e: React.FormEvent) => {
-    e.preventDefault();
-    onUnavailable();
-    setJoin({
-      name: '',
-      email: '',
-      phone: '',
-      department: departments[0],
-      experience: '',
-    });
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const { firstName, lastName } = splitFullName(join.name);
+      await apiClient.applyWorkforceNew({
+        firstName,
+        lastName,
+        email: join.email,
+        phone: join.phone || undefined,
+        department: join.department,
+        notes: join.experience || undefined,
+        registrationType: 'new',
+        sourceChannel: 'frontend:web:hero:join-team',
+      });
+      closeModal();
+      setJoin(initialJoin);
+      setSuccess({
+        title: 'Interest sent',
+        message: `Thanks for stepping up! The ${join.department} team lead will reach out within 24 hours.`,
+      });
+    } catch (error) {
+      console.error('Failed to submit workforce interest:', error);
+      toast.error('We could not submit your interest. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -341,7 +404,13 @@ export default function HeroHighlights() {
             value={visit.notes}
             onChange={e => setVisit(p => ({ ...p, notes: e.target.value }))}
           />
-          <Button type="submit" variant="primary" className="w-full">
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full"
+            loading={submitting}
+            disabled={submitting}
+          >
             Confirm appointment <ArrowRight className="h-4 w-4" />
           </Button>
           <Caption className="text-white/50">
@@ -390,7 +459,13 @@ export default function HeroHighlights() {
             onChange={e => setWatch(p => ({ ...p, email: e.target.value }))}
             required
           />
-          <Button type="submit" variant="primary" className="w-full">
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full"
+            loading={submitting}
+            disabled={submitting}
+          >
             Notify me <ArrowRight className="h-4 w-4" />
           </Button>
           <Caption className="text-white/50">
@@ -474,7 +549,13 @@ export default function HeroHighlights() {
             value={join.experience}
             onChange={e => setJoin(p => ({ ...p, experience: e.target.value }))}
           />
-          <Button type="submit" variant="primary" className="w-full">
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full"
+            loading={submitting}
+            disabled={submitting}
+          >
             Send interest <ArrowRight className="h-4 w-4" />
           </Button>
           <Caption className="text-white/50">
@@ -482,6 +563,13 @@ export default function HeroHighlights() {
           </Caption>
         </form>
       </ModalShell>
+
+      <SuccessModal
+        isOpen={success !== null}
+        onClose={() => setSuccess(null)}
+        title={success?.title}
+        message={success?.message}
+      />
     </>
   );
 }
