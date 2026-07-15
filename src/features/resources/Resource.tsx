@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 import {
   ArrowRight,
   BookOpen,
@@ -297,6 +298,7 @@ export default function ResourceSection() {
       window.setTimeout(() => setSubmitted(false), 2800);
     } catch {
       setSubmitted(false);
+      toast.error('We could not subscribe you. Please try again.');
     } finally {
       setSubmitting(false);
     }
