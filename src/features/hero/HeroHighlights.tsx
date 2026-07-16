@@ -7,7 +7,6 @@ import {
   CalendarClock,
   Clock,
   Headphones,
-  HeartHandshake,
   MapPin,
   PlayCircle,
   Users,
@@ -31,17 +30,6 @@ function splitFullName(value: string): { firstName: string; lastName: string } {
    Types & Data
 ───────────────────────────────────────────────────────── */
 
-const departments = [
-  'Media',
-  'Music',
-  'Hospitality',
-  'Protocol',
-  'Prayer',
-  'Children',
-  'Ushering',
-] as const;
-
-type Department = (typeof departments)[number];
 type ModalKey = 'visit' | 'watch' | 'join' | null;
 
 const ACTIONS = [
@@ -123,13 +111,6 @@ type VisitState = {
   notes: string;
 };
 type WatchState = { name: string; email: string };
-type JoinState = {
-  name: string;
-  email: string;
-  phone: string;
-  department: Department;
-  experience: string;
-};
 
 /* ─────────────────────────────────────────────────────────
    Component
@@ -145,13 +126,6 @@ const initialVisit: VisitState = {
   notes: '',
 };
 const initialWatch: WatchState = { name: '', email: '' };
-const initialJoin: JoinState = {
-  name: '',
-  email: '',
-  phone: '',
-  department: departments[0],
-  experience: '',
-};
 
 export default function HeroHighlights() {
   const [modal, setModal] = useState<ModalKey>(null);
@@ -163,7 +137,6 @@ export default function HeroHighlights() {
 
   const [visit, setVisit] = useState<VisitState>(initialVisit);
   const [watch, setWatch] = useState<WatchState>(initialWatch);
-  const [join, setJoin] = useState<JoinState>(initialJoin);
 
   const openModal = useCallback((key: ModalKey) => setModal(key), []);
   const closeModal = useCallback(() => setModal(null), []);
@@ -225,35 +198,11 @@ export default function HeroHighlights() {
     }
   };
 
-  const onSubmitJoin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (submitting) return;
-    setSubmitting(true);
-    try {
-      const { firstName, lastName } = splitFullName(join.name);
-      await apiClient.applyWorkforceNew({
-        firstName,
-        lastName,
-        email: join.email,
-        phone: join.phone || undefined,
-        department: join.department,
-        notes: join.experience || undefined,
-        registrationType: 'new',
-        sourceChannel: 'frontend:web:hero:join-team',
-      });
-      closeModal();
-      setJoin(initialJoin);
-      setSuccess({
-        title: 'Interest sent',
-        message: `Thanks for stepping up! The ${join.department} team lead will reach out within 24 hours.`,
-      });
-    } catch (error) {
-      console.error('Failed to submit workforce interest:', error);
-      toast.error('We could not submit your interest. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const goToJoinSection = useCallback(() => {
+    document
+      .getElementById('join')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   return (
     <>
@@ -267,7 +216,11 @@ export default function HeroHighlights() {
                 <button
                   key={action.key}
                   type="button"
-                  onClick={() => openModal(action.key)}
+                  onClick={() =>
+                    action.key === 'join'
+                      ? goToJoinSection()
+                      : openModal(action.key)
+                  }
                   className="group relative flex flex-col justify-between px-6 py-7 text-left transition duration-200 hover:bg-[var(--app-canvas-2)] sm:px-8 sm:py-8"
                 >
                   <div className="flex items-start justify-between">
@@ -470,96 +423,6 @@ export default function HeroHighlights() {
           </Button>
           <Caption className="text-white/50">
             Service reminders only. No spam.
-          </Caption>
-        </form>
-      </ModalShell>
-
-      {/* ── Join a team modal ─────────────────────────────────── */}
-      <ModalShell
-        open={modal === 'join'}
-        onClose={closeModal}
-        title="Join a serve team"
-        subtitle="Pick a department and we'll connect you with the team lead within 24 hours."
-      >
-        <form className="space-y-4" onSubmit={onSubmitJoin}>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <input
-              type="text"
-              placeholder="Full name"
-              className={inputClass}
-              value={join.name}
-              onChange={e => setJoin(p => ({ ...p, name: e.target.value }))}
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email address"
-              className={inputClass}
-              value={join.email}
-              onChange={e => setJoin(p => ({ ...p, email: e.target.value }))}
-              required
-            />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <input
-              type="tel"
-              placeholder="Phone (optional)"
-              className={inputClass}
-              value={join.phone}
-              onChange={e => setJoin(p => ({ ...p, phone: e.target.value }))}
-            />
-            <select
-              className={selectClass}
-              value={join.department}
-              onChange={e =>
-                setJoin(p => ({
-                  ...p,
-                  department: e.target.value as Department,
-                }))
-              }
-              required
-              aria-label="Select department"
-            >
-              {departments.map(d => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Card padding="sm" className="rounded-xl bg-white/[0.045]">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
-                <HeartHandshake className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">
-                  Serve with excellence
-                </p>
-                <p className="mt-1 text-xs text-white/55">
-                  Choose the department you feel called to, and our team will
-                  help you take the next step.
-                </p>
-              </div>
-            </div>
-          </Card>
-          <textarea
-            placeholder="Any experience? (optional)"
-            className={`${inputClass} min-h-[110px] resize-none`}
-            value={join.experience}
-            onChange={e => setJoin(p => ({ ...p, experience: e.target.value }))}
-          />
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-            loading={submitting}
-            disabled={submitting}
-          >
-            Send interest <ArrowRight className="h-4 w-4" />
-          </Button>
-          <Caption className="text-white/50">
-            We'll reach out by email or phone if provided. No spam.
           </Caption>
         </form>
       </ModalShell>

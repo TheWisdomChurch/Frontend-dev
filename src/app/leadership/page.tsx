@@ -6,6 +6,8 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildPersonSchema } from '@/lib/seo';
 
 /* ── Role labels ────────────────────────────────────────── */
 
@@ -150,6 +152,19 @@ export default async function LeadershipPage() {
 
   return (
     <main className="min-h-screen">
+      {leaders.map(leader => (
+        <JsonLd
+          key={leader.id}
+          data={buildPersonSchema({
+            name: `${leader.firstName} ${leader.lastName}`.trim(),
+            role: ROLE_LABEL[leader.role],
+            bio: leader.bio || undefined,
+            imageUrl: leader.imageUrl || undefined,
+            path: '/leadership',
+          })}
+        />
+      ))}
+
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <PageHero
         eyebrow="Leadership"

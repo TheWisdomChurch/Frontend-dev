@@ -3,11 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import toast from 'react-hot-toast';
 import {
   ArrowRight,
   BookOpen,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -18,14 +16,7 @@ import {
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
-import { Button } from '@/shared/utils/buttons';
-import { apiClient } from '@/lib/api';
-import {
-  WhatWeDo_3,
-  Deacon_1,
-  wisdomShirt_1,
-  WhatsappCommunity_2,
-} from '@/shared/assets';
+import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import { IMAGE_QUALITY } from '@/shared/constants';
@@ -60,15 +51,6 @@ const ALL_RESOURCES = [
     cta: 'Visit store',
     img: wisdomShirt_1,
     icon: ShoppingBag,
-  },
-  {
-    title: 'Events',
-    label: 'Programs',
-    desc: 'Upcoming services, conferences, and special gatherings.',
-    href: '/events',
-    cta: 'View events',
-    img: WhatsappCommunity_2,
-    icon: Calendar,
   },
   {
     title: 'Ministries',
@@ -214,17 +196,9 @@ function ResourceCarousel() {
   );
 }
 
-type Subscriber = { name: string; email: string };
-
 export default function ResourceSection() {
   const [recentVideo, setRecentVideo] = useState<YouTubeVideo | null>(null);
   const [loading, setLoading] = useState(true);
-  const [subscriber, setSubscriber] = useState<Subscriber>({
-    name: '',
-    email: '',
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [shouldFetch, setShouldFetch] = useState(false);
 
   const fetchedOnce = useRef(false);
@@ -282,27 +256,6 @@ export default function ResourceSection() {
       mounted = false;
     };
   }, [shouldFetch]);
-
-  const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const email = subscriber.email.trim();
-    if (!email) return;
-    setSubmitting(true);
-    try {
-      await apiClient.subscribe({
-        name: subscriber.name.trim() || undefined,
-        email,
-      });
-      setSubscriber({ name: '', email: '' });
-      setSubmitted(true);
-      window.setTimeout(() => setSubmitted(false), 2800);
-    } catch {
-      setSubmitted(false);
-      toast.error('We could not subscribe you. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const thumb =
     recentVideo?.thumbnail ||
@@ -397,34 +350,6 @@ export default function ResourceSection() {
                 All sermons <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-
-            {/* Subscribe form */}
-            <form onSubmit={handleSubscribe} className="mt-10 max-w-[380px]">
-              <p className="mb-3 text-[0.72rem] font-semibold text-[var(--app-ink)]/50">
-                Get service reminders in your inbox
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  required
-                  value={subscriber.email}
-                  onChange={e =>
-                    setSubscriber(p => ({ ...p, email: e.target.value }))
-                  }
-                  placeholder="Email address"
-                  className="h-11 flex-1 border border-[var(--app-ink)]/15 bg-white px-4 text-sm text-[var(--app-ink)] outline-none placeholder:text-[var(--app-ink)]/30 focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10"
-                />
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="sm"
-                  disabled={submitting}
-                  className="h-11 px-5 text-[0.78rem]"
-                >
-                  {submitting ? 'Sending…' : submitted ? '✓ Done' : 'Subscribe'}
-                </Button>
-              </div>
-            </form>
           </div>
 
           {/* Right — video thumbnail */}

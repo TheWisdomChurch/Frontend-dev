@@ -16,47 +16,47 @@ const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
 
 const HeroHighlights = nextDynamic(
   () => import('@/features/hero/HeroHighlights'),
-  { ssr: false, loading: () => <SectionFallback height="min-h-[220px]" /> }
+  { ssr: true, loading: () => <SectionFallback height="min-h-[220px]" /> }
 );
 
 const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
-  ssr: false,
+  ssr: true,
   loading: () => <SectionFallback />,
 });
 
 const EventsShowcase = nextDynamic(
   () => import('@/features/events/EventsShowcase'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const SeniorPastor = nextDynamic(
   () => import('@/features/leadership/SeniorPastor'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
-  ssr: false,
+  ssr: true,
   loading: () => <SectionFallback />,
 });
 
 const HomeTestimonials = nextDynamic(
   () => import('@/features/testimonials/HomeTestimonials'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const ConnectPortal = nextDynamic(
   () => import('@/features/connect/ConnectPortal'),
-  { ssr: false, loading: () => <SectionFallback height="min-h-[520px]" /> }
+  { ssr: true, loading: () => <SectionFallback height="min-h-[520px]" /> }
 );
 
 const OnlineGiving = nextDynamic(
   () => import('@/features/events/OnlineGiving'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const ResourceSection = nextDynamic(
   () => import('@/features/resources/Resource'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const EventAdModal = nextDynamic(
@@ -180,19 +180,19 @@ export default function Home() {
         <HeroMain />
 
         <section
-          className="home-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
-          <HeroHighlights />
-        </section>
-
-        <section
           className="home-section perf-section"
           data-gsap="reveal"
           suppressHydrationWarning
         >
           <WhatWeDo />
+        </section>
+
+        <section
+          className="home-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
+          <HeroHighlights />
         </section>
 
         <section
@@ -212,6 +212,14 @@ export default function Home() {
         </section>
 
         <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
+          <HomeTestimonials />
+        </section>
+
+        <section
           id="join"
           className="home-section perf-section scroll-mt-24"
           data-gsap="reveal"
@@ -226,14 +234,6 @@ export default function Home() {
           suppressHydrationWarning
         >
           <ConnectPortal />
-        </section>
-
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
-          <HomeTestimonials />
         </section>
 
         <section
