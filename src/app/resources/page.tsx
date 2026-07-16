@@ -23,6 +23,8 @@ import GridBackground from '@/shared/ui/GridBackground';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { resourceLinks } from '@/lib/data';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 type Category =
   | 'all'
@@ -138,6 +140,13 @@ export default function ResourcesPage() {
 
   return (
     <div className="min-h-screen bg-[var(--app-dark)] text-white">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Resources', path: '/resources' },
+        ])}
+      />
+
       <PageHero
         title="Resource Center"
         subtitle="Everything you need in one place."

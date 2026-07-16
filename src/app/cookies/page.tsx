@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Cookies & Privacy — Wisdom Church',
   description:
     'How Wisdom Church uses cookies and handles your data on this website.',
-};
+  path: '/cookies',
+});
 
 const cookieGroups = [
   {

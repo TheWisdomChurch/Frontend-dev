@@ -4,12 +4,14 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Women's Ministry — Wisdom Church",
   description:
     "A women's ministry built for spiritual growth, genuine community, and purpose-filled living at every stage of life. Part of The Wisdom Church, Lagos.",
-};
+  path: '/ministries/women',
+});
 
 /* ── What we do ───────────────────────────────────────── */
 const activities = [

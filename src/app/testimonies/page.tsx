@@ -9,6 +9,8 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -136,6 +138,13 @@ export default function TestimoniesPage() {
   return (
     <>
       <main className="min-h-screen">
+        <JsonLd
+          data={buildBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Testimonies', path: '/testimonies' },
+          ])}
+        />
+
         {/* ── 1. Hero ────────────────────────────────────────── */}
         <PageHero
           eyebrow="Testimonies"

@@ -5,6 +5,8 @@ import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import PastoralCareUnit from '@/shared/ui/forms/eventsForm/PastoralCare';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Pastoral Care — Wisdom Church',
@@ -72,6 +74,13 @@ function Arrow() {
 export default function PastoralPage() {
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Pastoral Care', path: '/pastoral' },
+        ])}
+      />
+
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <PageHero
         eyebrow="Pastoral Care"

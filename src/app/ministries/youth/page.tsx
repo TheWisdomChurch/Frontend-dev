@@ -4,12 +4,14 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Youth Ministry — Wisdom Church',
   description:
     'A youth ministry built for conviction, community, and confident Christian living for ages 13–25. Part of The Wisdom Church, Lagos.',
-};
+  path: '/ministries/youth',
+});
 
 /* ── What we do ───────────────────────────────────────── */
 const activities = [
