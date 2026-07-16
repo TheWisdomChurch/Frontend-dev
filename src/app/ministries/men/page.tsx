@@ -4,12 +4,14 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Men's Ministry — Wisdom Church",
   description:
     "A men's ministry built on integrity, biblical brotherhood, and leadership that serves. Part of The Wisdom Church, Lagos.",
-};
+  path: '/ministries/men',
+});
 
 /* ── What we do ───────────────────────────────────────── */
 const activities = [

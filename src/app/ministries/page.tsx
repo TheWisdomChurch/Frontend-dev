@@ -6,6 +6,8 @@ import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Ministries — Get Connected',
@@ -145,6 +147,13 @@ function Arrow({ className }: { className?: string }) {
 export default function MinistriesPage() {
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Ministries', path: '/ministries' },
+        ])}
+      />
+
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <PageHero
         eyebrow="Ministries"

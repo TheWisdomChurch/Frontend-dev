@@ -8,7 +8,7 @@ import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildEventSchema } from '@/lib/seo';
+import { buildEventSchema, buildBreadcrumbSchema } from '@/lib/seo';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -228,6 +228,13 @@ export default async function EventsPage() {
 
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Events', path: '/events' },
+        ])}
+      />
+
       {events
         .filter(event => Boolean(event.startAt))
         .map(event => (

@@ -18,6 +18,8 @@ import PageHero from '@/features/hero/PageHero';
 import { H2, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 import apiClient, { mapValidationErrors } from '@/lib/api';
 
 type ContactFormData = {
@@ -143,6 +145,13 @@ function ContactPageContent() {
 
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Contact', path: '/contact' },
+        ])}
+      />
+
       {/* ── Hero ─────────────────────────────────────────────── */}
       <PageHero
         eyebrow="Get in touch"

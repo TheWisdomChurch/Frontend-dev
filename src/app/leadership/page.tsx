@@ -7,7 +7,7 @@ import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildPersonSchema } from '@/lib/seo';
+import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
 
 /* ── Role labels ────────────────────────────────────────── */
 
@@ -152,6 +152,13 @@ export default async function LeadershipPage() {
 
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Leadership', path: '/leadership' },
+        ])}
+      />
+
       {leaders.map(leader => (
         <JsonLd
           key={leader.id}

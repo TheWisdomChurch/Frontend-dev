@@ -8,6 +8,8 @@ import { Bishop, PstKenny, lader_1 } from '@/shared/assets';
 import { H2, BodyMD, BodySM } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,6 +77,13 @@ const leaders = [
 export default function AboutPage() {
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about' },
+        ])}
+      />
+
       {/* ── 1. Page hero ─────────────────────────────────────── */}
       <PageHero
         eyebrow="About Wisdom Church"

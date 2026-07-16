@@ -8,6 +8,42 @@ export function canonicalUrl(path: string): string {
   return `${SITE_URL}${normalized}`;
 }
 
+interface PageMetadataInput {
+  title: string;
+  description: string;
+  path: string;
+}
+
+// Standard OG/Twitter/canonical block for pages that only declared a bare
+// title+description — fills the gap without repeating the domain/OG image
+// inline in every page file.
+export function buildPageMetadata({
+  title,
+  description,
+  path,
+}: PageMetadataInput) {
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalUrl(path) },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl(path),
+      siteName: SITE_NAME,
+      images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630 }],
+      locale: 'en_US',
+      type: 'website' as const,
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title,
+      description,
+      images: [DEFAULT_OG_IMAGE],
+    },
+  };
+}
+
 interface EventSchemaInput {
   id: string;
   title: string;
