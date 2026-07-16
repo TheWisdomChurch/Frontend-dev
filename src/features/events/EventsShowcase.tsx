@@ -322,7 +322,7 @@ function EmptyState({ category }: { category: Category }) {
       </p>
       <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/48">
         {category === 'program'
-          ? 'Join us every Sunday at 9:00 AM and Thursday at 6:00 PM at Honor Gardens, Lekki-Epe Expressway.'
+          ? 'Join us every Sunday at 9:00 AM, and for Daily Prayer Mon–Fri at 7:00 AM, at Honor Gardens, Lekki-Epe Expressway.'
           : 'Check back soon — new content is added regularly.'}
       </p>
       <Link

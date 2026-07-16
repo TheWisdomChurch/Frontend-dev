@@ -179,7 +179,7 @@ function ContactPageContent() {
                       Sundays · 9:00 AM
                     </p>
                     <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/70">
-                      Thursdays · 6:00 PM
+                      Daily Prayer · 7:00 AM
                     </p>
                   </div>
                 </div>

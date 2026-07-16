@@ -351,7 +351,7 @@ export default function ResourceSection() {
           {/* Left — content */}
           <div className="flex flex-col">
             <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/35">
-              Sundays 9:00 AM · Thursdays 6:00 PM
+              Sundays 9:00 AM · Daily Prayer 7:00 AM
             </p>
 
             {loading ? (

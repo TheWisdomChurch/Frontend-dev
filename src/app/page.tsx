@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
 import { apiClient } from '@/lib/api';
+import { usePromoModalQueue } from '@/hooks';
 
 const SectionFallback = ({ height = 'min-h-[360px]' }: { height?: string }) => (
   <div className={`w-full ${height} bg-[var(--app-surface-2)]`} />
@@ -63,6 +64,11 @@ const EventAdModal = nextDynamic(
   { ssr: false, loading: () => null }
 );
 
+const DailyPrayerAdModal = nextDynamic(
+  () => import('@/shared/ui/modals/DailyPrayerAdModal'),
+  { ssr: false, loading: () => null }
+);
+
 const ConfessionPopup = nextDynamic(
   () => import('@/shared/ui/modals/ConfessionPopup'),
   { ssr: false, loading: () => null }
@@ -91,14 +97,12 @@ type HomeConfessionContent = {
 };
 
 export default function Home() {
-  const [showModal, setShowModal] = useState(false);
-  const [nextAdAt, setNextAdAt] = useState<number | null>(
-    () => Date.now() + 1200
-  );
-  const [showConfessionPopup, setShowConfessionPopup] = useState(false);
   const [eventAd, setEventAd] = useState<HomeEventAd | null>(null);
   const [confessionContent, setConfessionContent] =
     useState<HomeConfessionContent | null>(null);
+
+  const { active: activePromoModal, closeActive: closePromoModal } =
+    usePromoModalQueue({ eventAdAvailable: eventAd !== null });
 
   useEffect(() => {
     let mounted = true;
@@ -169,38 +173,6 @@ export default function Home() {
       document.body.classList.remove('home-page');
     };
   }, []);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setShowConfessionPopup(true);
-    }, 8000);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (nextAdAt === null) return;
-
-    const timeLeft = Math.max(0, nextAdAt - Date.now());
-    const timer = window.setTimeout(() => {
-      setShowModal(true);
-    }, timeLeft);
-
-    return () => window.clearTimeout(timer);
-  }, [nextAdAt]);
-
-  const persistAdCooldown = (cooldownMs: number) => {
-    setNextAdAt(Date.now() + cooldownMs);
-  };
-
-  const handleCloseModal = () => {
-    persistAdCooldown(1000 * 60 * 20);
-    setShowModal(false);
-  };
-
-  const handleRemindLater = () => {
-    persistAdCooldown(1000 * 60 * 45);
-    setShowModal(false);
-  };
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[var(--app-surface)] text-[var(--app-text)]">
@@ -284,20 +256,24 @@ export default function Home() {
 
       {eventAd && (
         <EventAdModal
-          open={showModal}
+          open={activePromoModal === 'event'}
           event={eventAd}
-          onClose={handleCloseModal}
-          onRemindLater={handleRemindLater}
+          onClose={() => closePromoModal(false)}
+          onRemindLater={() => closePromoModal(true)}
         />
       )}
 
-      {showConfessionPopup && (
-        <ConfessionPopup
-          onClose={() => setShowConfessionPopup(false)}
-          delay={0}
-          content={confessionContent ?? undefined}
-        />
-      )}
+      <DailyPrayerAdModal
+        open={activePromoModal === 'dailyPrayer'}
+        onClose={() => closePromoModal()}
+        onRemindTomorrow={() => closePromoModal()}
+      />
+
+      <ConfessionPopup
+        open={activePromoModal === 'confession'}
+        onClose={() => closePromoModal()}
+        content={confessionContent ?? undefined}
+      />
     </div>
   );
 }

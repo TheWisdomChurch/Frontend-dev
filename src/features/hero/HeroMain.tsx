@@ -228,9 +228,9 @@ export default function HeroSection({
   }, []);
 
   // Resolve display content (content prop overrides dynamic slide)
-  const eyebrow = content?.eyebrow ?? 'The Wave of Greatness';
+  const eyebrow = content?.eyebrow ?? 'The Wisdom Church';
   const titleLines = (
-    content?.title ?? String((slide as any)?.title || 'The Wave\nof Greatness')
+    content?.title ?? String((slide as any)?.title || 'The Wisdom Church')
   )
     .split('\n')
     .map(l => l.trim())

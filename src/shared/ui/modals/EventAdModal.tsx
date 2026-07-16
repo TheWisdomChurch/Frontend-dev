@@ -1,12 +1,11 @@
-﻿'use client';
+'use client';
 
 import { useMemo } from 'react';
-import Image, { type StaticImageData } from 'next/image';
-import { IMAGE_QUALITY } from '@/shared/constants';
-import { Calendar, MapPin, Clock, Sparkles } from 'lucide-react';
-import { BaseModal } from '@/shared/ui/modals/Base';
-import { H3, BodySM, Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { type StaticImageData } from 'next/image';
+import { Calendar, Clock, MapPin } from 'lucide-react';
+import PromoAdModal, {
+  type PromoAdModalMetaItem,
+} from '@/shared/ui/modals/PromoAdModal';
 
 type EventAdConfig = {
   id: string;
@@ -105,125 +104,37 @@ export default function EventAdModal({
     }
   }, [safeEvent.registerUrl]);
 
+  const meta = useMemo(() => {
+    const items: PromoAdModalMetaItem[] = [];
+    if (dateRange) items.push({ icon: Calendar, label: dateRange });
+    if (safeEvent.time) items.push({ icon: Clock, label: safeEvent.time });
+    if (safeEvent.location)
+      items.push({ icon: MapPin, label: safeEvent.location });
+    return items;
+  }, [dateRange, safeEvent.time, safeEvent.location]);
+
   const handleRegister = () => {
     if (!registerUrl) return;
     window.location.assign(registerUrl);
   };
 
   return (
-    <BaseModal
-      isOpen={open}
+    <PromoAdModal
+      open={open}
       onClose={onClose}
+      onSecondaryAction={onRemindLater}
+      badgeLabel="Conference Registration"
+      liveIndicator
       title={safeEvent.title}
-      maxWidth="max-w-4xl"
-      forceBottomSheet
-    >
-      <div className="space-y-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:space-y-0">
-        {/* Left Column */}
-        <div className="space-y-4">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-            <Sparkles className="h-3.5 w-3.5" />
-            Conference Registration
-          </div>
-
-          {/* Event Image */}
-          {safeEvent.image && (
-            <div className="relative h-44 overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.04] sm:h-52">
-              <Image
-                quality={IMAGE_QUALITY}
-                src={safeEvent.image}
-                alt={safeEvent.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 620px"
-                priority
-              />
-              {/* Overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-            </div>
-          )}
-
-          {/* Description & Details Card */}
-          <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-            <BodySM className="italic text-white/78">
-              {safeEvent.description}
-            </BodySM>
-
-            {/* Meta information */}
-            <div className="flex flex-wrap gap-4">
-              {dateRange && (
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
-                    <Calendar className="h-4 w-4" />
-                  </div>
-                  <span className="text-sm font-medium text-white/80">
-                    {dateRange}
-                  </span>
-                </div>
-              )}
-
-              {safeEvent.time && (
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
-                    <Clock className="h-4 w-4" />
-                  </div>
-                  <span className="text-sm font-medium text-white/80">
-                    {safeEvent.time}
-                  </span>
-                </div>
-              )}
-
-              {safeEvent.location && (
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-black/25 text-[var(--app-primary)]">
-                    <MapPin className="h-4 w-4" />
-                  </div>
-                  <span className="text-sm font-medium text-white/80">
-                    {safeEvent.location}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column (Registration) */}
-        <div className="space-y-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-          <div className="space-y-2">
-            <Caption className="text-white/45">Secure Your Spot</Caption>
-            <H3 className="text-white">{safeEvent.headline}</H3>
-            <BodySM className="text-white/78">
-              If you have not registered for WPC 2026, secure your seat now.
-            </BodySM>
-          </div>
-
-          {/* CTA Button */}
-          <Button
-            variant="primary"
-            onClick={handleRegister}
-            disabled={!registerUrl}
-            className="w-full py-3.5 text-lg font-bold"
-          >
-            {safeEvent.ctaLabel}
-          </Button>
-
-          {/* Note & Remind Later */}
-          <div className="flex items-center justify-between text-xs text-white/40">
-            <span>{safeEvent.note}</span>
-            {onRemindLater && (
-              <Button
-                variant="ghost"
-                size="xs"
-                onClick={onRemindLater}
-                className="text-xs text-white/40 underline-offset-4 hover:text-white hover:underline"
-              >
-                Remind me later
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    </BaseModal>
+      headline={safeEvent.headline}
+      description={safeEvent.description}
+      image={safeEvent.image}
+      meta={meta}
+      primaryCtaLabel={safeEvent.ctaLabel}
+      onPrimaryAction={handleRegister}
+      primaryCtaDisabled={!registerUrl}
+      secondaryCtaLabel={onRemindLater ? 'Remind me later' : undefined}
+      note={safeEvent.note}
+    />
   );
 }

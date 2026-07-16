@@ -132,7 +132,7 @@ export default function UpcomingPage() {
                 </h3>
                 <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/50">
                   Check back soon. In the meantime, join us every Sunday at 9:00
-                  AM and Thursday at 6:00 PM.
+                  AM, and for Daily Prayer Mon–Fri at 7:00 AM.
                 </p>
                 <Link
                   href="/events/weekly"
