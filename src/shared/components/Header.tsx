@@ -321,8 +321,10 @@ export default function Header() {
 
                 <div className="nav-panel__divider" aria-hidden="true" />
 
-                <p className="nav-panel__eyebrow">Thursday Midweek</p>
-                <p className="nav-panel__detail">6:00 PM · Honor Gardens</p>
+                <p className="nav-panel__eyebrow">Daily Prayer</p>
+                <p className="nav-panel__detail">
+                  Mon–Fri · 7:00 AM · Honor Gardens
+                </p>
               </div>
 
               <div className="nav-socials">

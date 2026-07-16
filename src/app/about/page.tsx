@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 const serviceInfo = [
   { label: 'Sunday Worship', value: 'Every Sunday', detail: '9:00 AM WAT' },
-  { label: 'Midweek Service', value: 'Every Thursday', detail: '6:00 PM WAT' },
+  { label: 'Daily Prayer', value: 'Monday – Friday', detail: '7:00 AM WAT' },
   { label: 'Location', value: 'Honor Gardens', detail: 'Lekki-Epe, Lagos' },
 ] as const;
 
@@ -402,7 +402,7 @@ export default function AboutPage() {
 
               {/* Service times */}
               <p className="font-ui text-[0.72rem] tracking-[0.04em] text-[var(--app-ink)]/35">
-                Sundays 9:00 AM &nbsp;·&nbsp; Thursdays 6:00 PM &nbsp;·&nbsp;
+                Sundays 9:00 AM &nbsp;·&nbsp; Daily Prayer 7:00 AM &nbsp;·&nbsp;
                 Honor Gardens, Lekki-Epe
               </p>
             </div>

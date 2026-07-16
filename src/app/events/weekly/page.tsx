@@ -8,7 +8,7 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 export const metadata: Metadata = {
   title: 'Weekly Services — Wisdom Church',
   description:
-    'Join us every Sunday at 9:00 AM and Thursday at 6:00 PM at Honor Gardens, Lekki-Epe Expressway, Lagos.',
+    'Join us every Sunday at 9:00 AM and for Daily Prayer, Monday–Friday at 7:00 AM, at Honor Gardens, Lekki-Epe Expressway, Lagos.',
 };
 
 const services = [
@@ -25,15 +25,15 @@ const services = [
     ],
   },
   {
-    day: 'Thursday',
-    time: '6:00 PM',
-    name: 'Midweek Power Service',
+    day: 'Mon – Fri',
+    time: '7:00 AM',
+    name: 'Daily Morning Prayer',
     description:
-      'A mid-week reset — deep prayer, focused teaching, and meaningful fellowship with the community.',
+      'Start every weekday in prayer, declaration, and the Word — a solid foundation before the day begins.',
     details: [
-      'Runs approximately 90 minutes',
+      'Runs approximately 45 minutes',
       'Open to all ages',
-      'Great entry point for first-timers',
+      'Join in person or via livestream',
     ],
   },
 ] as const;
@@ -64,7 +64,7 @@ export default function WeeklyPage() {
       <PageHero
         eyebrow="Weekly Services"
         title="We gather. Every week."
-        subtitle="Two services a week — Sunday morning and Thursday evening — both open to everyone."
+        subtitle="Sunday morning worship, and Daily Prayer every weekday morning — all open to everyone."
         compact
       />
 

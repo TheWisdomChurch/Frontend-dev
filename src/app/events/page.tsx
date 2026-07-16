@@ -71,10 +71,10 @@ const WEEKLY = [
       'Spirit-filled corporate worship, prayer, and the preached Word.',
   },
   {
-    day: 'Thursday',
-    time: '6:00 PM',
-    name: 'Midweek Power Service',
-    description: 'Midweek gathering for prayer, teaching, and community.',
+    day: 'Mon – Fri',
+    time: '7:00 AM',
+    name: 'Daily Morning Prayer',
+    description: 'Start the day in prayer, declaration, and the Word.',
   },
 ] as const;
 
@@ -200,8 +200,8 @@ function EmptyState() {
           Events are on their way.
         </h3>
         <p className="max-w-sm font-ui text-[0.83rem] leading-[1.85] text-white/65">
-          Nothing is scheduled right now. In the meantime, join us for our
-          weekly services every Sunday and Thursday.
+          Nothing is scheduled right now. In the meantime, join us for Sunday
+          Worship and Daily Prayer, Monday through Friday.
         </p>
         <Link
           href="/contact"

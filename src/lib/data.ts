@@ -11,7 +11,6 @@ import {
   ExtendedNavLink,
   Leader,
   MinistryLeader,
-  Slide,
   Ministry,
   ServiceBox,
   // GivingOption,
@@ -20,9 +19,6 @@ import {
 } from './types';
 
 import {
-  hero_bg_1,
-  hero_bg_2,
-  hero_bg_3,
   Associate_1,
   Associate_2,
   ProvidusBank,
@@ -49,64 +45,6 @@ import {
   Deacon_2,
   Bishop,
 } from '@/shared/assets';
-
-export const defaultSlides: Slide[] = [
-  {
-    title: 'Welcome to The Wisdom Church',
-    subtitle: 'Equiping and Empowering for greatness',
-    // description:
-    //   'Where lives are transformed through faith.',
-    image: {
-      src: hero_bg_1.src,
-      alt: "Experience God's Transforming Power",
-    },
-    upcoming: {
-      label: 'Upcoming',
-      title: 'Wisdom Power Conference',
-      date: 'Mar 20 - 22',
-      time: 'Morning Session • Evening Session',
-      location: 'Honors Gardens, Alasia opposite Dominion City Headquarters',
-      ctaLabel: 'Reserve a seat',
-      ctaTarget: '#programs',
-    },
-  },
-  {
-    title: 'Join Our Vibrant Community',
-    subtitle: 'Deepen Your Spiritual Journey',
-    // description: 'Grow together in faith, love, and service to others.',
-    image: {
-      src: hero_bg_2.src,
-      alt: 'Deepen Your Spiritual Journey',
-    },
-    upcoming: {
-      label: 'Past',
-      title: '7 Nights of Lifting',
-      date: 'Nov 20 - 27',
-      time: '6 PM',
-      location: 'Honors Garden Event Center',
-      ctaLabel: 'Plan a visit',
-      ctaTarget: '#programs',
-    },
-  },
-  {
-    title: 'Build Lasting Relationships',
-    subtitle: 'Connect With Believers',
-    // description: 'Experience genuine fellowship and relationships in Christ.',
-    image: {
-      src: hero_bg_3.src,
-      alt: 'Connect With Believers',
-    },
-    upcoming: {
-      label: 'Midweek',
-      title: 'Bible Study ',
-      date: 'Thursday',
-      time: '6:00 PM WAT',
-      location: 'Livestream',
-      ctaLabel: 'Get directions',
-      ctaTarget: '#programs',
-    },
-  },
-];
 
 export const testimonialFormFields = {
   maxImageSize: 5 * 1024 * 1024, // 5MB

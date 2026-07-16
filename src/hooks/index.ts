@@ -16,3 +16,4 @@ export * from './useResponsive';
 
 // Form & Modal Hooks
 export * from './useModalForm';
+export * from './usePromoModalQueue';

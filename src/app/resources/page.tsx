@@ -46,7 +46,7 @@ const categories: Array<{ key: Category; label: string }> = [
 const quickActions = [
   {
     title: 'Watch live',
-    desc: 'Sunday & Thursday stream',
+    desc: 'Sunday & daily prayer stream',
     href: '/resources/sermons',
     icon: Radio,
   },
