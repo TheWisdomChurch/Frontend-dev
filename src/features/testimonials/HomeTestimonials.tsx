@@ -6,6 +6,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 
 import { Container, Section } from '@/shared/layout';
+import {
+  staggerContainer,
+  staggerItem,
+} from '@/shared/ui/motion/staggerReveal';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
@@ -118,7 +122,7 @@ export default function HomeTestimonials() {
             {/* Decorative " */}
             {!loading && quotes.length > 0 && (
               <span
-                className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 select-none font-headline text-[10rem] leading-none text-[var(--app-primary)] opacity-[0.07]"
+                className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 select-none font-headline text-[13rem] leading-none text-[var(--app-primary)] opacity-[0.1]"
                 aria-hidden="true"
               >
                 &ldquo;
@@ -129,21 +133,25 @@ export default function HomeTestimonials() {
               {!loading && q ? (
                 <motion.div
                   key={q.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.36 }}
+                  variants={staggerContainer}
+                  initial="hidden"
+                  animate="show"
+                  exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }}
                   className="relative text-center"
                 >
-                  <blockquote
+                  <motion.blockquote
+                    variants={staggerItem}
                     className="font-headline font-normal italic leading-[1.55] text-[var(--app-ink)]"
                     // eslint-disable-next-line no-restricted-syntax
                     style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.75rem)' }}
                   >
                     &ldquo;{q.text}&rdquo;
-                  </blockquote>
+                  </motion.blockquote>
 
-                  <div className="mt-7 flex items-center justify-center gap-3">
+                  <motion.div
+                    variants={staggerItem}
+                    className="mt-7 flex items-center justify-center gap-3"
+                  >
                     <span className="block h-[1.5px] w-8 bg-[var(--app-ink)]/20" />
                     <div className="text-center">
                       <p className="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]">
@@ -154,7 +162,7 @@ export default function HomeTestimonials() {
                       </p>
                     </div>
                     <span className="block h-[1.5px] w-8 bg-[var(--app-ink)]/20" />
-                  </div>
+                  </motion.div>
                 </motion.div>
               ) : null}
             </AnimatePresence>

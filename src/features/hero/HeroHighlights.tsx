@@ -2,6 +2,7 @@
 
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   CalendarClock,
@@ -19,6 +20,11 @@ import { Card } from '@/shared/ui/cards';
 import { Button } from '@/shared/utils/buttons';
 import { Caption } from '@/shared/text';
 import { apiClient } from '@/lib/api';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 function splitFullName(value: string): { firstName: string; lastName: string } {
   const parts = value.trim().split(/\s+/);
@@ -209,25 +215,41 @@ export default function HeroHighlights() {
       {/* ── Editorial belief strip ────────────────────────────── */}
       <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
-          <div className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+          >
             {ACTIONS.map(action => {
               const Icon = action.icon;
               return (
-                <button
+                <motion.button
                   key={action.key}
+                  variants={staggerItem}
                   type="button"
                   onClick={() =>
                     action.key === 'join'
                       ? goToJoinSection()
                       : openModal(action.key)
                   }
-                  className="group relative flex flex-col justify-between px-6 py-7 text-left transition duration-200 hover:bg-[var(--app-canvas-2)] sm:px-8 sm:py-8"
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                  className="group relative flex flex-col justify-between px-6 py-7 text-left transition-colors duration-200 hover:bg-[var(--app-canvas-2)] sm:px-8 sm:py-8"
                 >
                   <div className="flex items-start justify-between">
-                    <Icon
-                      className="h-4 w-4 text-[var(--app-ink)]/25 transition duration-200 group-hover:text-[var(--app-primary)]"
-                      aria-hidden="true"
-                    />
+                    <span className="relative">
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[var(--app-primary)]/0 blur-lg transition-colors duration-300 group-hover:bg-[var(--app-primary)]/20"
+                      />
+                      <Icon
+                        className="h-4 w-4 text-[var(--app-ink)]/25 transition duration-200 group-hover:text-[var(--app-primary)]"
+                        aria-hidden="true"
+                      />
+                    </span>
                     <ArrowRight
                       className="h-3.5 w-3.5 text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:translate-x-1 group-hover:opacity-100"
                       aria-hidden="true"
@@ -249,10 +271,10 @@ export default function HeroHighlights() {
                   >
                     {action.cta} <ArrowRight className="h-3.5 w-3.5" />
                   </span>
-                </button>
+                </motion.button>
               );
             })}
-          </div>
+          </motion.div>
         </Container>
       </section>
 

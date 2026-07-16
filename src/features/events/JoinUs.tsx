@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import * as ZodResolvers from '@hookform/resolvers/zod';
@@ -25,6 +26,11 @@ import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableConte
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { BodySM, Caption } from '@/shared/text';
 import { apiClient } from '@/lib/api';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 const { zodResolver } = ZodResolvers;
 
@@ -402,7 +408,7 @@ export default function JoinWisdomHouse() {
             <h2
               className="font-headline font-normal text-[var(--app-ink)]"
               // eslint-disable-next-line no-restricted-syntax
-              style={{ fontSize: 'var(--type-display-sm)' }}
+              style={{ fontSize: 'var(--type-display-md)' }}
             >
               Serve with excellence.
             </h2>
@@ -421,17 +427,27 @@ export default function JoinWisdomHouse() {
         </div>
 
         {/* ── Department grid ───────────────────────────────────── */}
-        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-card bg-[var(--app-ink)]/8 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={staggerViewport}
+          className="grid grid-cols-1 gap-px overflow-hidden rounded-card bg-[var(--app-ink)]/8 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {departments.map((dept, index) => {
             const Icon = dept.icon;
             const isActive = activeCard === index;
             return (
-              <button
+              <motion.button
                 key={dept.title}
+                variants={staggerItem}
                 type="button"
                 onClick={() => openFor(dept.title)}
                 onMouseEnter={() => setActiveCard(index)}
-                className={`group relative flex flex-col overflow-hidden p-6 text-left transition-all duration-300 sm:p-7 ${
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                className={`group relative flex flex-col overflow-hidden p-6 text-left transition-colors duration-300 sm:p-7 ${
                   isActive
                     ? 'bg-[var(--app-canvas-2)] shadow-[inset_0_0_0_1px_rgba(201,150,26,0.18)]'
                     : 'bg-[var(--app-canvas)] hover:bg-[var(--app-canvas-2)] hover:shadow-[inset_0_0_0_1px_rgba(201,150,26,0.18)]'
@@ -478,10 +494,10 @@ export default function JoinWisdomHouse() {
                     className={`h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 ${isActive ? 'translate-x-0.5' : ''}`}
                   />
                 </span>
-              </button>
+              </motion.button>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* ── General CTA ──────────────────────────────────────── */}
         <div className="mt-8 flex justify-center">

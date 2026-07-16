@@ -18,6 +18,7 @@ husky/
 # next.js
 /.next/
 /.next-prepush/
+/.next-verify/
 /out/
 /public/_optimized/
 lintstagedrc.json
