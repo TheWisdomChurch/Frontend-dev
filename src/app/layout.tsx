@@ -1,5 +1,6 @@
 ﻿import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 
 import '@/app/globals.scss';
 
@@ -157,6 +158,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <MetaPixel />
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
