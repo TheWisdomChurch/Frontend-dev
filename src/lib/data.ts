@@ -6,26 +6,13 @@ import {
   ShoppingBag,
   Heart,
 } from 'lucide-react';
-import {
-  NavLink,
-  ExtendedNavLink,
-  Leader,
-  MinistryLeader,
-  Ministry,
-  ServiceBox,
-  // GivingOption,
-  Photo,
-  Product,
-} from './types';
+import { Leader, MinistryLeader, ServiceBox } from './types';
 
 import {
   Associate_1,
   Associate_2,
   ProvidusBank,
   KeystoneBank,
-  Dept_1,
-  Dept_2,
-  Dept_3,
   // Dept_4,
   // What_to_expect_images
   WhatWedo_1,
@@ -36,125 +23,10 @@ import {
   Children_head,
   PstKenny,
   Min_Adura,
-  Cap_1,
-  WisdomShirt_2,
-  Mug_1,
-  Tote,
-  wisdomShirt_1,
   Deacon_1,
   Deacon_2,
   Bishop,
 } from '@/shared/assets';
-
-export const testimonialFormFields = {
-  maxImageSize: 5 * 1024 * 1024, // 5MB
-  maxTestimonyLength: 1000,
-  allowedImageTypes: ['image/jpeg', 'image/png', 'image/webp'],
-};
-// Extended navigation links with icons and dropdowns
-export const extendedNavLinks: ExtendedNavLink[] = [
-  {
-    label: 'Home',
-    href: '/',
-    icon: 'Home',
-    isActive: true,
-  },
-  {
-    label: 'About',
-    href: '/about',
-    icon: 'Users',
-    dropdown: [{ label: 'Leadership', href: '/about/leadership' }],
-  },
-  {
-    label: 'Ministries',
-    href: '/ministries',
-    icon: 'Users',
-  },
-  {
-    label: 'Events',
-    href: '/events',
-    icon: 'Calendar',
-  },
-  {
-    label: 'Resources',
-    href: '/resources',
-    icon: 'BookOpen',
-    dropdown: [
-      { label: 'Sermons', href: '/resources/sermons' },
-      // { label: 'Blog', href: '/resources/blogs' },
-      { label: 'Publications', href: '/resources/publications' },
-      { label: 'Store', href: '/resources/store' },
-    ],
-  },
-  {
-    label: 'Contact',
-    href: '/contact',
-    icon: 'Phone',
-  },
-];
-
-// Keep your existing data
-export const navLinks: NavLink[] = [
-  { href: '#sermons', label: 'Sermons' },
-  { href: '#livestream', label: 'Livestream' },
-  { href: '#ministries', label: 'Ministries' },
-  { href: '#community', label: 'Community' },
-  { href: '/generate', label: 'Generate' },
-];
-
-export const leaders: Leader[] = [
-  {
-    id: 1,
-    name: 'Rev. Victor Jimba',
-    role: 'Resident Pastor',
-    image: Associate_2,
-    description:
-      'Provides overall spiritual leadership and vision for the church.',
-  },
-  {
-    id: 2,
-    name: 'Pastor Kehinde Ayilara',
-    role: 'Senior Pastor',
-    image: PstKenny,
-    description: 'Supports the senior pastor in ministry and pastoral care.',
-  },
-
-  {
-    id: 3,
-    name: 'Pastor Bamidele',
-    role: 'Associate Pastor',
-    image: Associate_1,
-    description: 'Manages technical operations and equipment.',
-  },
-];
-
-export const ministries: Ministry[] = [
-  {
-    name: 'Kids Ministry',
-    description: 'Fun and faith for the next generation.',
-    imageId: Children_head,
-  },
-  {
-    name: 'Youth Group',
-    description: 'Connecting teens with God and each other.',
-    imageId: 'ministry-2',
-  },
-  {
-    name: 'Worship Team',
-    description: 'Leading the congregation in praise.',
-    imageId: Min_Adura,
-  },
-  {
-    name: 'Community Outreach',
-    description: 'Serving our city with love and action.',
-    imageId: Associate_2,
-  },
-];
-
-export const youtubeLivestreams = {
-  current: 'jfKfPfyJRdk',
-  previous: ['3tmd-ClafbY', '6-x1g_c1g4o', 'dQw4w9WgXcQ'],
-};
 
 // What we do
 export const whatWeDoData: ServiceBox[] = [
@@ -199,6 +71,11 @@ export const whatWeDoData: ServiceBox[] = [
 export const missionStatement = `At The Wisdom Church, we are committed to spreading the Gospel and empowering believers through the Word of God and the Holy Spirit.
    Our mission is to create a community where faith thrives and transformation is possible.`;
 
+// Real leadership content, not currently rendered anywhere in the frontend.
+// The live /leadership page already pulls real leaders from
+// apiClient.listLeadership() — these names/bios are the source-of-truth
+// reference for entering these people into the admin portal so they start
+// showing up there. Not dead/fake data — kept intentionally until entered.
 export const pastorsData: Leader[] = [
   {
     id: 1,
@@ -234,6 +111,9 @@ export const pastorsData: Leader[] = [
       'Assist in discipleship, mentorship, and faith-building activities',
   },
 ];
+
+// Same as pastorsData above — real reference content pending admin-portal
+// entry, not rendered anywhere in the frontend currently.
 export const deaconsData: Leader[] = [
   {
     id: 1,
@@ -343,39 +223,6 @@ export const ministryLeadersData: MinistryLeader[] = [
     image: Associate_1,
     description:
       'Builds strong Christian men through discipleship and accountability.',
-  },
-];
-
-export const photos: Photo[] = [
-  {
-    title: 'Media Department',
-    image: Dept_3,
-    link: '#',
-  },
-  {
-    title: 'Service Preparatory Unit',
-    image: Dept_2,
-    link: '#',
-  },
-  {
-    title: 'Music(WaveCityMusic)',
-    image: Dept_1,
-    link: '#',
-  },
-  {
-    title: 'Prayer/Intercessory Unit',
-    image: WhatWedo_2,
-    link: '#',
-  },
-  {
-    title: 'Protocol/Ushering Department',
-    image: Img_1,
-    link: '#',
-  },
-  {
-    title: 'Children Department',
-    image: Children_head,
-    link: '#',
   },
 ];
 
@@ -626,42 +473,6 @@ Our dear esteemed Pastor Bishop Gabriel Ayilara, is the Senior Pastor of the Wis
 // dedication, lives are forever changed, and a
 // legacy of faith, hope, and impact is being
 // etched into eternity.
-export const Ministries = [
-  {
-    title: "Children's Ministry",
-    subtitle: 'Nurturing Young Hearts in Faith',
-    description:
-      "Where kids discover God's love through fun, stories, and truth.",
-    path: '/ministries/children',
-  },
-  {
-    title: 'Youth Ministry',
-    subtitle: 'Igniting the Next Generation',
-    description:
-      'A place for teens to belong, believe, and become who God made them to be.',
-    path: '/ministries/youth',
-  },
-  {
-    title: "Women's Ministry",
-    subtitle: 'Growing Together in Grace',
-    description: 'Women supporting women — in prayer, study, and sisterhood.',
-    path: '/ministries/women',
-  },
-  {
-    title: "Men's Ministry",
-    subtitle: 'Iron Sharpens Iron',
-    description:
-      'Building godly men who lead, serve, and stand strong in faith.',
-    path: '/ministries/men',
-  },
-  {
-    title: 'Outreach Ministry',
-    subtitle: 'Hands Extended, Hearts Transformed',
-    description: "Taking God's love beyond walls — locally and globally.",
-    path: '/ministries/outreach',
-  },
-];
-
 // Define the missing type for resource links
 
 export const resourceLinks = [
@@ -717,72 +528,5 @@ export const resourceLinks = [
     gradient: 'from-purple-500/20 to-indigo-600/10',
     glow: 'rgba(99, 102, 241, 0.4)',
     actionText: 'Get Support →',
-  },
-];
-export const merchandise: Product[] = [
-  {
-    id: 1,
-    name: 'Wisdom Church Polo Shirt',
-    category: 'clothing',
-    price: '₦6,000',
-    originalPrice: '₦7,500',
-    image: wisdomShirt_1.src,
-    description: 'Premium quality polo shirt with Wisdom Church logo',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    colors: ['Navy', 'Black', 'White', 'Gray'],
-    tags: ['polo', 'shirt', 'clothing', 'premium'],
-    stock: 50,
-  },
-  {
-    id: 2,
-    name: 'Wisdom Church Classic Tee',
-    category: 'clothing',
-    price: '₦4,500',
-    originalPrice: '₦5,500',
-    image: WisdomShirt_2.src,
-    description: 'Comfortable classic t-shirt with Wisdom Church design',
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['White', 'Black', 'Gray'],
-    tags: ['t-shirt', 'tee', 'casual'],
-    stock: 75,
-  },
-  {
-    id: 3,
-    name: 'Wisdom Church Cap',
-    category: 'accessories',
-    price: '₦3,500',
-    originalPrice: '₦4,500',
-    image: Cap_1.src,
-    description: 'Stylish cap with Wisdom Church logo embroidery',
-    sizes: ['One Size'],
-    colors: ['Black', 'Navy', 'Red'],
-    tags: ['cap', 'hat', 'accessory'],
-    stock: 30,
-  },
-  {
-    id: 4,
-    name: 'Wisdom Church Inspirational Mug',
-    category: 'utilities',
-    price: '₦2,500',
-    originalPrice: '₦3,000',
-    image: Mug_1.src,
-    description: 'Ceramic mug with daily inspirational quotes',
-    sizes: ['One Size'],
-    colors: ['White', 'Black'],
-    tags: ['mug', 'cup', 'drinkware', 'inspiration'],
-    stock: 100,
-  },
-  {
-    id: 5,
-    name: 'Wisdom Church Tote Bag',
-    category: 'accessories',
-    price: '₦4,000',
-    originalPrice: '₦5,000',
-    image: Tote.src,
-    description: 'Eco-friendly tote bag with motivational message',
-    sizes: ['One Size'],
-    colors: ['Natural', 'Black', 'Blue'],
-    tags: ['tote', 'bag', 'eco-friendly', 'carry'],
-    stock: 40,
   },
 ];

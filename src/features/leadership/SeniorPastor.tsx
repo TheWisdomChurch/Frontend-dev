@@ -2,13 +2,28 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import { Bishop } from '@/shared/assets';
-import { seniorPastorData } from '@/lib/data';
+import { apiClient } from '@/lib/api';
+import type { LeadershipMember } from '@/lib/types';
 import { Section } from '@/shared/layout';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import SectionGlow from '@/shared/ui/SectionGlow';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
+
+// Real content, kept static since the backend leadership schema has no
+// quote/personal-social-link fields yet — name, bio, and photo below are
+// fetched live from the leadership API so they stay admin-portal editable.
+const FALLBACK_NAME = 'Bishop Gabriel Ayilara';
+const FALLBACK_BIO =
+  "Bishop Gabriel Ayilara is the Senior Pastor of The Wisdom Church. Over the years, he has faithfully discipled and mentored countless individuals, demonstrating the practical workings of God's Word in everyday life. He is lawfully wedded to Pastor Kenny Ayilara, and together they are blessed with godly children. Through their exemplary marriage and ministry, they continue to inspire, equip, and impact lives for the Kingdom of God. His vision for The Wisdom Church is to create a place where everyone can encounter God's transformative love and discover their unique purpose.";
 
 const IgIcon = () => (
   <svg
@@ -68,16 +83,35 @@ const BIO_PREVIEW_LENGTH = 220;
 
 export default function SeniorPastor() {
   const [bioExpanded, setBioExpanded] = useState(false);
+  const [leader, setLeader] = useState<LeadershipMember | null>(null);
 
-  const bio = useMemo(
-    () =>
-      (seniorPastorData?.description ?? [])
-        .slice(0, 1)
-        .map(s => s.replace(/\s+/g, ' ').trim())
-        .join(' ') ||
-      "Bishop Gabriel Ayilara is the Senior Pastor of The Wisdom Church. Over the years, he has faithfully discipled and mentored countless individuals, demonstrating the practical workings of God's Word in everyday life. He is lawfully wedded to Pastor Kenny Ayilara, and together they are blessed with godly children. Through their exemplary marriage and ministry, they continue to inspire, equip, and impact lives for the Kingdom of God. His vision for The Wisdom Church is to create a place where everyone can encounter God's transformative love and discover their unique purpose.",
-    []
-  );
+  useEffect(() => {
+    let mounted = true;
+
+    apiClient
+      .listLeadership('senior_pastor')
+      .then(members => {
+        if (mounted && members.length > 0) setLeader(members[0]);
+      })
+      .catch(() => {
+        // Real fallback copy below still renders — this is a real,
+        // permanent bio, not a fabricated stand-in.
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const fullName = leader
+    ? `${leader.firstName} ${leader.lastName}`.trim() || FALLBACK_NAME
+    : FALLBACK_NAME;
+  const bio = leader?.bio || FALLBACK_BIO;
+  const imageSrc = leader?.imageUrl || Bishop;
+
+  const nameWords = fullName.trim().split(/\s+/);
+  const nameLastWord = nameWords.pop() ?? fullName;
+  const nameFirstPart = nameWords.join(' ');
 
   const canExpand = bio.length > BIO_PREVIEW_LENGTH;
 
@@ -91,15 +125,17 @@ export default function SeniorPastor() {
       <div className="grid min-h-[580px] grid-cols-1 lg:grid-cols-2 lg:min-h-[700px]">
         {/* ── Left — cinematic full-height portrait ────────── */}
         <div className="relative order-1 aspect-[25/14] max-h-[520px] overflow-hidden lg:order-none lg:aspect-auto lg:h-auto lg:max-h-none">
-          <Image
-            src={Bishop}
-            alt="Bishop Gabriel Ayilara — Senior Pastor, The Wisdom Church"
-            fill
-            priority={false}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            quality={IMAGE_QUALITY}
-            className="object-cover object-top"
-          />
+          <div className="absolute inset-0" data-parallax-global="0.12">
+            <Image
+              src={imageSrc}
+              alt={`${fullName} — Senior Pastor, The Wisdom Church`}
+              fill
+              priority={false}
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              quality={IMAGE_QUALITY}
+              className="object-cover object-top"
+            />
+          </div>
           {/* Mobile bottom fade */}
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[var(--app-dark)] to-transparent lg:hidden" />
           {/* Desktop right-edge blend */}
@@ -107,25 +143,42 @@ export default function SeniorPastor() {
         </div>
 
         {/* ── Right — editorial content ──────────────────── */}
-        <div className="order-2 flex flex-col justify-center px-6 py-12 sm:px-10 lg:order-none lg:px-12 xl:px-16">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={staggerViewport}
+          className="relative order-2 flex flex-col justify-center px-6 py-12 sm:px-10 lg:order-none lg:px-12 xl:px-16"
+        >
+          <SectionGlow />
+
           {/* Eyebrow */}
-          <p className="mb-6 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <motion.p
+            variants={staggerItem}
+            className="mb-6 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+          >
             Senior Pastor
-          </p>
+          </motion.p>
 
           {/* Name */}
-          <h2
+          <motion.h2
+            variants={staggerItem}
             className="font-headline font-normal text-white"
             // eslint-disable-next-line no-restricted-syntax
-            style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', lineHeight: 1.1 }}
+            style={{ fontSize: 'var(--type-display-md)', lineHeight: 1.05 }}
           >
-            Bishop Gabriel
-            <br />
-            Ayilara
-          </h2>
+            {nameFirstPart && (
+              <>
+                {nameFirstPart}
+                <br />
+              </>
+            )}
+            {nameLastWord}
+          </motion.h2>
 
           {/* Pull quote */}
-          <blockquote
+          <motion.blockquote
+            variants={staggerItem}
             className="relative mt-8 pl-5"
             // eslint-disable-next-line no-restricted-syntax
             style={{ borderLeft: '2px solid var(--app-primary)' }}
@@ -142,10 +195,10 @@ export default function SeniorPastor() {
               <br className="hidden sm:block" />
               you are a carrier of God&rsquo;s glory.&rdquo;
             </p>
-          </blockquote>
+          </motion.blockquote>
 
           {/* Bio — accordion on mobile */}
-          <div className="mt-7 max-w-[420px]">
+          <motion.div variants={staggerItem} className="mt-7 max-w-[420px]">
             <div
               className={`overflow-hidden transition-all duration-400 ease-in-out lg:max-h-none ${
                 bioExpanded ? 'max-h-[600px]' : 'max-h-[5.5rem]'
@@ -168,10 +221,13 @@ export default function SeniorPastor() {
                 />
               </button>
             )}
-          </div>
+          </motion.div>
 
           {/* Links row */}
-          <div className="mt-8 flex flex-wrap items-center gap-6">
+          <motion.div
+            variants={staggerItem}
+            className="mt-8 flex flex-wrap items-center gap-6"
+          >
             <Link
               href="/leadership"
               className="group inline-flex items-center gap-1.5 font-ui text-[0.8rem] font-semibold text-[var(--app-primary)] transition"
@@ -199,8 +255,8 @@ export default function SeniorPastor() {
                 </a>
               ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </Section>
   );

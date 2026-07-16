@@ -6,7 +6,6 @@
 
 // Content Hooks
 export * from './useHeroContent';
-export * from './useLeadership';
 
 // Analytics Hooks (V2 - Professional)
 export * from './useAnalyticsV2';

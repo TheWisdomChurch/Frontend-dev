@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { ArrowRight, Heart, Phone } from 'lucide-react';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
@@ -10,6 +11,12 @@ import { handleContactCall } from '@/shared/utils/functionUtils/contactUtils';
 import apiClient from '@/lib/api';
 import type { GivingOption } from '@/lib/types';
 import { Section, Container } from '@/shared/layout';
+import SectionGlow from '@/shared/ui/SectionGlow';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 export default function OnlineGiving() {
   const { open } = useServiceUnavailable();
@@ -54,7 +61,8 @@ export default function OnlineGiving() {
 
   return (
     <>
-      <Section padding="none" className="bg-[var(--app-dark)]">
+      <Section padding="none" className="relative bg-[var(--app-dark)]">
+        <SectionGlow variant="double" />
         <Container size="xl" className="py-section-lg">
           <div className="mx-auto max-w-[720px]">
             {/* Gold rule */}
@@ -89,7 +97,11 @@ export default function OnlineGiving() {
 
             {/* Giving options */}
             {!loading && givingOptions.length > 0 ? (
-              <div
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="show"
+                viewport={staggerViewport}
                 className={`mt-12 grid gap-4 ${
                   givingOptions.length === 1
                     ? 'max-w-sm mx-auto'
@@ -99,11 +111,15 @@ export default function OnlineGiving() {
                 }`}
               >
                 {givingOptions.slice(0, 3).map(opt => (
-                  <button
+                  <motion.button
                     key={opt.title}
+                    variants={staggerItem}
                     type="button"
                     onClick={() => handleGive(opt)}
-                    className="group relative flex flex-col p-6 text-left border border-white/10 bg-white/[0.04] transition-all duration-300 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.07] hover:shadow-[inset_0_1px_0_rgba(201,150,26,0.15)]"
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                    className="group relative flex flex-col p-6 text-left border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.07] hover:shadow-[inset_0_1px_0_rgba(201,150,26,0.15)]"
                   >
                     {/* Gold top accent */}
                     <span
@@ -131,9 +147,9 @@ export default function OnlineGiving() {
                       </span>
                       <ArrowRight className="h-3.5 w-3.5 text-white/25 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
                     </span>
-                  </button>
+                  </motion.button>
                 ))}
-              </div>
+              </motion.div>
             ) : !loading ? (
               <div className="mt-12 text-center">
                 <button

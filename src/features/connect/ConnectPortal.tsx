@@ -1,10 +1,17 @@
 ﻿'use client';
 
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 
 import { WhatsappCommunity } from '@/shared/assets';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import SectionGlow from '@/shared/ui/SectionGlow';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 /* ── Social icons ───────────────────────────────────── */
 
@@ -118,31 +125,49 @@ export default function ConnectPortal() {
         </div>
 
         {/* ── Right — social content ───────────────────────────────── */}
-        <div className="order-1 flex flex-col justify-center px-8 py-14 sm:px-12 lg:order-2 lg:px-14 xl:px-20">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={staggerViewport}
+          className="relative order-1 flex flex-col justify-center px-8 py-14 sm:px-12 lg:order-2 lg:px-14 xl:px-20"
+        >
+          <SectionGlow />
+
           {/* Eyebrow */}
-          <p className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <motion.p
+            variants={staggerItem}
+            className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+          >
             Stay Connected
-          </p>
+          </motion.p>
 
           {/* Headline */}
-          <h2
+          <motion.h2
+            variants={staggerItem}
             className="font-headline font-normal text-white"
             // eslint-disable-next-line no-restricted-syntax
-            style={{ fontSize: 'var(--type-display-sm)' }}
+            style={{ fontSize: 'var(--type-display-md)' }}
           >
             Join our online
             <br />
             community
-          </h2>
+          </motion.h2>
 
           {/* Sub-copy */}
-          <p className="mt-5 max-w-[400px] font-ui text-[0.92rem] leading-[1.85] text-white/55">
+          <motion.p
+            variants={staggerItem}
+            className="mt-5 max-w-[400px] font-ui text-[0.92rem] leading-[1.85] text-white/55"
+          >
             Watch live services, receive weekly messages, and connect with the
             Wisdom Church community wherever you are in the world.
-          </p>
+          </motion.p>
 
           {/* Primary CTAs */}
-          <div className="mt-8 flex flex-wrap gap-3">
+          <motion.div
+            variants={staggerItem}
+            className="mt-8 flex flex-wrap gap-3"
+          >
             {/* Stream live */}
             <a
               href="https://www.youtube.com/@wisdomchurchhq"
@@ -164,15 +189,15 @@ export default function ConnectPortal() {
               <WaIcon />
               Join WhatsApp community
             </a>
-          </div>
+          </motion.div>
 
-          {/* Divider */}
-          <span className="mt-10 block h-px w-12 bg-white/10" />
-
-          {/* Follow us */}
-          <p className="mb-4 mt-8 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-white/28">
-            Follow us
-          </p>
+          {/* Divider + Follow us */}
+          <motion.div variants={staggerItem}>
+            <span className="mt-10 block h-px w-12 bg-white/10" />
+            <p className="mb-4 mt-8 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-white/28">
+              Follow us
+            </p>
+          </motion.div>
           <div className="flex flex-wrap gap-3">
             {SOCIALS.map(s => (
               <a
@@ -187,7 +212,7 @@ export default function ConnectPortal() {
               </a>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
