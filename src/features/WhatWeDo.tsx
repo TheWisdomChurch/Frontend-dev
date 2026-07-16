@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { whatWeDoData } from '@/lib/data';
 import { Section } from '@/shared/layout';
@@ -120,6 +120,49 @@ export default function WhatWeDo() {
                     {s.description}
                   </p>
                 ))}
+              </div>
+
+              {/* Manual navigation */}
+              <div className="mt-8 flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => goTo(active - 1)}
+                  aria-label="Previous"
+                  className="grid h-9 w-9 flex-none place-items-center rounded-full border border-white/15 text-white/50 transition hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                </button>
+
+                <div
+                  className="flex items-center gap-2"
+                  role="tablist"
+                  aria-label="What we do slides"
+                >
+                  {SLIDES.map((s, i) => (
+                    <button
+                      key={s.title}
+                      type="button"
+                      role="tab"
+                      aria-selected={i === active}
+                      aria-label={`Go to slide ${i + 1}`}
+                      onClick={() => goTo(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        i === active
+                          ? 'w-6 bg-[var(--app-primary)]'
+                          : 'w-1.5 bg-white/20 hover:bg-white/35'
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => goTo(active + 1)}
+                  aria-label="Next"
+                  className="grid h-9 w-9 flex-none place-items-center rounded-full border border-white/15 text-white/50 transition hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
+                >
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
               </div>
             </div>
 

@@ -4,6 +4,8 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildRecurringEventSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Weekly Services — Wisdom Church',
@@ -58,9 +60,36 @@ function Arrow() {
   );
 }
 
+const RECURRING_SCHEMAS = [
+  buildRecurringEventSchema({
+    name: 'Sunday Worship Service',
+    description:
+      'Our flagship gathering — Spirit-filled worship, corporate prayer, and the preached Word.',
+    dayOfWeek: ['https://schema.org/Sunday'],
+    startTime: '09:00',
+  }),
+  buildRecurringEventSchema({
+    name: 'Daily Morning Prayer',
+    description:
+      'Start every weekday in prayer, declaration, and the Word — a solid foundation before the day begins.',
+    dayOfWeek: [
+      'https://schema.org/Monday',
+      'https://schema.org/Tuesday',
+      'https://schema.org/Wednesday',
+      'https://schema.org/Thursday',
+      'https://schema.org/Friday',
+    ],
+    startTime: '07:00',
+  }),
+];
+
 export default function WeeklyPage() {
   return (
     <main className="min-h-screen">
+      {RECURRING_SCHEMAS.map((schema, i) => (
+        <JsonLd key={i} data={schema} />
+      ))}
+
       <PageHero
         eyebrow="Weekly Services"
         title="We gather. Every week."

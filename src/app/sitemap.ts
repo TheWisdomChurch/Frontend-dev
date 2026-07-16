@@ -1,10 +1,13 @@
 // src/app/sitemap.ts
 import type { MetadataRoute } from 'next';
-
-const SITE_URL = 'https://wisdomchurchhq.org';
+import { SITE_URL } from '@/lib/seo';
 
 // How often Next should refresh this sitemap (seconds)
 export const revalidate = 3600; // 1 hour
+
+// A fixed date for genuinely static legal pages — "now" on every rebuild
+// gives Google no real freshness signal for content that doesn't change.
+const LEGAL_LAST_MODIFIED = new Date('2026-01-01');
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -145,13 +148,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${SITE_URL}/terms`,
-      lastModified: now,
+      lastModified: LEGAL_LAST_MODIFIED,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${SITE_URL}/cookies`,
-      lastModified: now,
+      lastModified: LEGAL_LAST_MODIFIED,
       changeFrequency: 'yearly',
       priority: 0.25,
     },

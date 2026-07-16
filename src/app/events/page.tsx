@@ -7,6 +7,8 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildEventSchema } from '@/lib/seo';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -226,6 +228,11 @@ export default async function EventsPage() {
 
   return (
     <main className="min-h-screen">
+      {events
+        .filter(event => Boolean(event.startAt))
+        .map(event => (
+          <JsonLd key={event.id} data={buildEventSchema(event)} />
+        ))}
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <PageHero
         eyebrow="Events & Programs"

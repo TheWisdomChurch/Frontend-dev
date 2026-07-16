@@ -6,6 +6,10 @@ export type PromoModalKey = 'event' | 'dailyPrayer' | 'confession';
 
 const TRIGGER_DELAY_MS = 1200;
 const ADVANCE_GRACE_MS = 900;
+// A brand-new visitor (nothing in localStorage yet) can be eligible for all
+// three modals at once — give them a longer breather between each one so
+// the first visit doesn't feel like three stacked interrupts.
+const FIRST_VISIT_ADVANCE_GRACE_MS = 4000;
 
 const DAILY_PRAYER_STORAGE_KEY = 'wisdom_daily_prayer_last_shown';
 const CONFESSION_STORAGE_KEY = 'wisdom_confession_last_shown';
@@ -68,6 +72,15 @@ export function usePromoModalQueue({
   const eventCooldownUntilRef = useRef(0);
   const triggerTimerRef = useRef<number | null>(null);
   const advanceTimerRef = useRef<number | null>(null);
+  // Captured once, before this session can mark anything as seen — true
+  // only for a visitor whose browser has never shown either
+  // localStorage-gated modal before. Lazily computed on first render only.
+  const isFirstVisitRef = useRef<boolean | null>(null);
+  if (isFirstVisitRef.current === null) {
+    isFirstVisitRef.current =
+      readStorage(DAILY_PRAYER_STORAGE_KEY) === null &&
+      readStorage(CONFESSION_STORAGE_KEY) === null;
+  }
 
   const eligible = useCallback(
     (key: PromoModalKey): boolean => {
@@ -120,9 +133,12 @@ export function usePromoModalQueue({
       }
 
       setActive(null);
+      const graceMs = isFirstVisitRef.current
+        ? FIRST_VISIT_ADVANCE_GRACE_MS
+        : ADVANCE_GRACE_MS;
       advanceTimerRef.current = window.setTimeout(() => {
         setActive(nextEligible());
-      }, ADVANCE_GRACE_MS);
+      }, graceMs);
     },
     [active, nextEligible]
   );
