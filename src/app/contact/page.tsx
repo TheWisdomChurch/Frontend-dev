@@ -21,6 +21,7 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import apiClient, { mapValidationErrors } from '@/lib/api';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
 type ContactFormData = {
   firstName: string;
@@ -33,6 +34,8 @@ type ContactFormData = {
 };
 
 const PRAYER_TOPIC_VALUE = 'prayer';
+const VISIT_TOPIC_VALUE = 'visit';
+const PREFILLABLE_TOPICS = [PRAYER_TOPIC_VALUE, VISIT_TOPIC_VALUE];
 
 type SocialLink = {
   platform: string;
@@ -59,13 +62,15 @@ const labelCls =
 
 function ContactPageContent() {
   const searchParams = useSearchParams();
-  const [formData, setFormData] = useState<ContactFormData>(() => ({
-    ...initialFormData,
-    topic:
-      searchParams.get('topic') === PRAYER_TOPIC_VALUE
-        ? PRAYER_TOPIC_VALUE
+  const [formData, setFormData] = useState<ContactFormData>(() => {
+    const requestedTopic = searchParams.get('topic');
+    return {
+      ...initialFormData,
+      topic: PREFILLABLE_TOPICS.includes(requestedTopic ?? '')
+        ? (requestedTopic as string)
         : initialFormData.topic,
-  }));
+    };
+  });
   const [submitted, setSubmitted] = useState(false);
   const [submittedPrayerRequest, setSubmittedPrayerRequest] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -176,19 +181,24 @@ function ContactPageContent() {
                     </p>
                   </div>
                   <p className="font-headline text-[1.45rem] font-normal leading-snug text-[var(--app-ink)]">
-                    Honor Gardens
+                    {SERVICE_INFO.venue.name}
                   </p>
                   <div className="space-y-1 font-ui text-[0.82rem] leading-[1.7] text-[var(--app-ink)]/70">
-                    <p>Opposite Dominion Church HQ</p>
-                    <p>Alasia bus stop, Lekki-Epe Expressway</p>
-                    <p>Lagos, Nigeria</p>
+                    <p>{SERVICE_INFO.venue.streetAddress}</p>
+                    <p>
+                      {SERVICE_INFO.venue.locality},{' '}
+                      {SERVICE_INFO.venue.country === 'NG'
+                        ? 'Nigeria'
+                        : SERVICE_INFO.venue.country}
+                    </p>
                   </div>
                   <div className="pt-1 space-y-0.5">
                     <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/70">
-                      Sundays · 9:00 AM
+                      {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
                     </p>
                     <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/70">
-                      Daily Prayer · 7:00 AM
+                      {SERVICE_INFO.dailyPrayer.label} ·{' '}
+                      {SERVICE_INFO.dailyPrayer.time}
                     </p>
                   </div>
                 </div>
@@ -492,10 +502,10 @@ function ContactPageContent() {
         <Container size="xl">
           <div className="flex flex-col gap-1.5 py-7 sm:flex-row sm:items-center sm:justify-between sm:py-6">
             <p className="font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/60">
-              Honor Gardens, Alasia bus stop, Lekki-Epe Expressway, Lagos
+              {SERVICE_INFO.venue.full}
             </p>
             <Link
-              href="/events"
+              href="/events/weekly"
               className="font-ui text-[0.76rem] font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-ink)]"
             >
               See service times →

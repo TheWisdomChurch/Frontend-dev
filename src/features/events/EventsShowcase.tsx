@@ -12,6 +12,7 @@ import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import {
   staggerContainer,
@@ -44,6 +45,17 @@ const CATEGORY_LABELS: Record<Category, string> = {
 };
 
 /* ── Helpers ────────────────────────────────────────────── */
+
+// Matches the sort/filter logic used on the /events hub so the "featured"
+// event is consistent between the homepage and the hub instead of the two
+// diverging due to independent, uncoordinated ordering.
+function getEventTimestamp(event: EventPublic): number {
+  if (event.startAt) {
+    const t = new Date(event.startAt).getTime();
+    if (!Number.isNaN(t)) return t;
+  }
+  return Number.MAX_SAFE_INTEGER;
+}
 
 function formatDate(startAt?: string): string {
   if (!startAt) return 'Date TBA';
@@ -327,7 +339,7 @@ function EmptyState({ category }: { category: Category }) {
       </p>
       <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/48">
         {category === 'program'
-          ? 'Join us every Sunday at 9:00 AM, and for Daily Prayer Mon–Fri at 7:00 AM, at Honor Gardens, Lekki-Epe Expressway.'
+          ? `Join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time}, and for ${SERVICE_INFO.dailyPrayer.label} ${SERVICE_INFO.dailyPrayer.daysShort} at ${SERVICE_INFO.dailyPrayer.time}, at ${SERVICE_INFO.venue.short}.`
           : 'Check back soon — new content is added regularly.'}
       </p>
       <Link
@@ -414,20 +426,22 @@ export default function EventsShowcase() {
 
   const programSlides = useMemo<Slide[]>(
     () =>
-      events.map(e => ({
-        id: e.id,
-        title: e.title,
-        description: e.description || 'Join us for this gathering.',
-        date: formatDate(e.startAt),
-        location: e.location || 'Honor Gardens, Lagos',
-        imageUrl: e.bannerUrl || e.imageUrl || EventBannerDesktop.src,
-        cta: 'Save a seat',
-        href: e.formSlug ? `/forms/${e.formSlug}` : '/events',
-        badge: statusBadge(e.startAt, e.endAt),
-        category: 'program' as const,
-        start: e.startAt,
-        end: e.endAt,
-      })),
+      [...events]
+        .sort((a, b) => getEventTimestamp(a) - getEventTimestamp(b))
+        .map(e => ({
+          id: e.id,
+          title: e.title,
+          description: e.description || 'Join us for this gathering.',
+          date: formatDate(e.startAt),
+          location: e.location || SERVICE_INFO.venue.short,
+          imageUrl: e.bannerUrl || e.imageUrl || EventBannerDesktop.src,
+          cta: 'Save a seat',
+          href: e.formSlug ? `/forms/${e.formSlug}` : '/events',
+          badge: statusBadge(e.startAt, e.endAt),
+          category: 'program' as const,
+          start: e.startAt,
+          end: e.endAt,
+        })),
     [events]
   );
 

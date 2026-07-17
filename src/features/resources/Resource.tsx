@@ -21,6 +21,7 @@ import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import {
   staggerContainer,
   staggerItem,
@@ -322,7 +323,8 @@ export default function ResourceSection() {
           {/* Left — content */}
           <motion.div variants={staggerItem} className="flex flex-col">
             <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/35">
-              Sundays 9:00 AM · Daily Prayer 7:00 AM
+              {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} ·{' '}
+              {SERVICE_INFO.dailyPrayer.label} {SERVICE_INFO.dailyPrayer.time}
             </p>
 
             {loading ? (

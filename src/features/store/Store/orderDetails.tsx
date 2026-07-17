@@ -821,16 +821,6 @@ const OrderConfirmation = () => {
             >
               Continue Shopping
             </Button>
-
-            <Button
-              variant="outline"
-              size="lg"
-              curvature="full"
-              onClick={() => router.push('/orders')}
-              className="w-full border-white/[0.12] text-white"
-            >
-              View All Orders
-            </Button>
           </div>
         </div>
       </div>

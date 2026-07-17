@@ -25,6 +25,7 @@ import {
   staggerItem,
   staggerViewport,
 } from '@/shared/ui/motion/staggerReveal';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
 function splitFullName(value: string): { firstName: string; lastName: string } {
   const parts = value.trim().split(/\s+/);
@@ -42,7 +43,7 @@ const ACTIONS = [
   {
     key: 'visit' as const,
     label: 'Plan a Visit',
-    sub: 'Sundays · 9:00 AM',
+    sub: `${SERVICE_INFO.sunday.day}s · ${SERVICE_INFO.sunday.time}`,
     cta: 'Plan now',
     icon: MapPin,
   },
@@ -365,7 +366,8 @@ export default function HeroHighlights() {
             <div className="flex flex-wrap gap-2 text-xs text-white/70">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
                 <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />{' '}
-                Sundays 9:00 AM (WAT)
+                {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} (
+                {SERVICE_INFO.sunday.timezone})
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
                 <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />{' '}

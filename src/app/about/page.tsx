@@ -4,14 +4,25 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import Link from 'next/link';
 
 import PageHero from '@/features/hero/PageHero';
-import { Bishop, PstKenny, lader_1 } from '@/shared/assets';
-import { H2, BodyMD, BodySM } from '@/shared/text';
+import { lader_1 } from '@/shared/assets';
+import { H2, BodyMD } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import SectionGlow from '@/shared/ui/SectionGlow';
+import { apiClient } from '@/lib/api';
+import type { LeadershipMember, LeadershipRole } from '@/lib/types';
+import { CanvasCard, DarkCard } from '@/features/leadership/LeadershipCards';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
+// Same senior-role definition /leadership uses — kept in sync so About's
+// leadership spotlight and the full directory always agree on titles.
+const SENIOR_ROLES: LeadershipRole[] = [
+  'senior_pastor',
+  'associate_pastor',
+  'reverend',
+];
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
@@ -36,9 +47,21 @@ export const metadata: Metadata = {
 };
 
 const serviceInfo = [
-  { label: 'Sunday Worship', value: 'Every Sunday', detail: '9:00 AM WAT' },
-  { label: 'Daily Prayer', value: 'Monday – Friday', detail: '7:00 AM WAT' },
-  { label: 'Location', value: 'Honor Gardens', detail: 'Lekki-Epe, Lagos' },
+  {
+    label: SERVICE_INFO.sunday.label,
+    value: `Every ${SERVICE_INFO.sunday.day}`,
+    detail: `${SERVICE_INFO.sunday.time} ${SERVICE_INFO.sunday.timezone}`,
+  },
+  {
+    label: SERVICE_INFO.dailyPrayer.label,
+    value: SERVICE_INFO.dailyPrayer.days,
+    detail: `${SERVICE_INFO.dailyPrayer.time} ${SERVICE_INFO.dailyPrayer.timezone}`,
+  },
+  {
+    label: 'Location',
+    value: SERVICE_INFO.venue.name,
+    detail: `${SERVICE_INFO.venue.area}, ${SERVICE_INFO.venue.locality}`,
+  },
 ] as const;
 
 const pillars = [
@@ -60,22 +83,14 @@ const pillars = [
   },
 ] as const;
 
-const leaders = [
-  {
-    image: Bishop,
-    name: 'Bishop Gabriel Ayilara',
-    role: 'Senior Pastor',
-    bio: 'A visionary leader committed to raising complete believers through sound teaching and faithful pastoral care.',
-  },
-  {
-    image: PstKenny,
-    name: 'Pastor Kenny Ayilara',
-    role: 'Co-Pastor',
-    bio: 'A steady pastoral voice building discipleship pathways, family care structures, and strong ministry culture.',
-  },
-] as const;
+export default async function AboutPage() {
+  const allLeaders = await apiClient
+    .listLeadership()
+    .catch(() => [] as LeadershipMember[]);
+  const leaders = allLeaders
+    .filter(l => SENIOR_ROLES.includes(l.role))
+    .slice(0, 2);
 
-export default function AboutPage() {
   return (
     <main className="min-h-screen">
       <JsonLd
@@ -271,78 +286,21 @@ export default function AboutPage() {
           </div>
         </ScrollFadeIn>
 
-        {/* 2-panel grid — canvas left, dark right */}
-        <div className="grid lg:grid-cols-2">
-          {/* ── Panel 1: Bishop — canvas / editorial ── */}
-          <ScrollFadeIn>
-            <article className="group flex flex-col bg-[var(--app-canvas)]">
-              {/* Portrait image — fixed portrait height, doesn't overflow */}
-              <div className="relative h-[420px] overflow-hidden md:h-[520px] lg:h-[480px]">
-                <Image
-                  quality={IMAGE_QUALITY}
-                  src={leaders[0].image}
-                  alt={leaders[0].name}
-                  fill
-                  priority
-                  className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-                {/* Canvas gradient fade — blends image into the content strip */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--app-canvas)] to-transparent" />
-              </div>
-
-              {/* Content strip */}
-              <div className="border-t border-[var(--app-ink)]/6 bg-[var(--app-canvas)] px-7 py-7 lg:px-10 lg:py-8">
-                <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                  {leaders[0].role}
-                </p>
-                <h3 className="mt-2 font-headline text-[1.6rem] font-normal leading-snug text-[var(--app-ink)] lg:text-[1.85rem]">
-                  {leaders[0].name}
-                </h3>
-                <div className="mt-3 h-px w-8 bg-[var(--app-primary)]/45" />
-                <BodySM className="mt-3 max-w-sm leading-[1.9] text-[var(--app-ink)]/70">
-                  {leaders[0].bio}
-                </BodySM>
-              </div>
-            </article>
-          </ScrollFadeIn>
-
-          {/* ── Panel 2: Pastor Kenny — cinematic / dark ── */}
-          <ScrollFadeIn delay={0.08}>
-            <article className="group relative min-h-[640px] overflow-hidden bg-[var(--app-dark)] lg:min-h-[700px]">
-              {/* Portrait image — fills the entire dark panel */}
-              <Image
-                quality={IMAGE_QUALITY}
-                src={leaders[1].image}
-                alt={leaders[1].name}
-                fill
-                priority
-                className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-
-              {/* Gradient — heavier at bottom to guarantee text legibility */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/75 to-[var(--app-dark)]/15" />
-
-              {/* Thin gold top rule */}
-              <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--app-primary)]/50 to-transparent" />
-
-              {/* Content — anchored to the bottom of the panel */}
-              <div className="absolute inset-x-0 bottom-0 px-7 pb-9 pt-14 lg:px-10 lg:pb-11">
-                <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                  {leaders[1].role}
-                </p>
-                <h3 className="mt-2 font-headline text-[1.6rem] font-normal leading-snug text-white lg:text-[1.85rem]">
-                  {leaders[1].name}
-                </h3>
-                <div className="mt-3 h-px w-8 bg-[var(--app-primary)]/45" />
-                <BodySM className="mt-3 max-w-sm leading-[1.9] text-white/78">
-                  {leaders[1].bio}
-                </BodySM>
-              </div>
-            </article>
-          </ScrollFadeIn>
-        </div>
+        {/* 2-panel grid — canvas left, dark right. Same CanvasCard/DarkCard
+            components /leadership uses, so this spotlight can never drift
+            from the full directory. */}
+        {leaders.length > 0 && (
+          <div className="grid lg:grid-cols-2">
+            <ScrollFadeIn>
+              <CanvasCard leader={leaders[0]} />
+            </ScrollFadeIn>
+            {leaders[1] && (
+              <ScrollFadeIn delay={0.08}>
+                <DarkCard leader={leaders[1]} />
+              </ScrollFadeIn>
+            )}
+          </div>
+        )}
 
         {/* Mobile link — hidden on lg where header shows it */}
         <div className="border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)] px-6 py-5 lg:hidden">
@@ -417,8 +375,10 @@ export default function AboutPage() {
 
               {/* Service times */}
               <p className="font-ui text-[0.72rem] tracking-[0.04em] text-[var(--app-ink)]/35">
-                Sundays 9:00 AM &nbsp;·&nbsp; Daily Prayer 7:00 AM &nbsp;·&nbsp;
-                Honor Gardens, Lekki-Epe
+                {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time}{' '}
+                &nbsp;·&nbsp; {SERVICE_INFO.dailyPrayer.label}{' '}
+                {SERVICE_INFO.dailyPrayer.time} &nbsp;·&nbsp;{' '}
+                {SERVICE_INFO.venue.short}
               </p>
             </div>
           </Container>

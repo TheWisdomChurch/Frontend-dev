@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { useState } from 'react';
 import { MapPin, Mail, Phone } from 'lucide-react';
 
@@ -176,17 +177,18 @@ export default function Footer() {
 
             <div className="mt-6 space-y-2">
               <p className="font-ui text-[0.75rem] font-semibold text-white/75">
-                Sundays · 9:00 AM
+                {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
               </p>
               <p className="font-ui text-[0.75rem] font-semibold text-white/75">
-                Daily Prayer · 7:00 AM
+                {SERVICE_INFO.dailyPrayer.label} ·{' '}
+                {SERVICE_INFO.dailyPrayer.time}
               </p>
             </div>
 
             <div className="mt-5 space-y-2 font-body text-[0.8rem] text-white/52">
               <p className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
-                Honor Gardens, Lekki-Epe Expressway, Lagos
+                {SERVICE_INFO.venue.full}
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />

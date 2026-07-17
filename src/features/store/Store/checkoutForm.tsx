@@ -87,10 +87,11 @@ const CheckoutForm = () => {
     {
       id: 'online',
       title: 'Online Payment',
-      description: 'Pay instantly with card or digital wallet',
+      description: 'Currently under maintenance',
       icon: CreditCard,
       color: '#22c55e',
       fee: 0,
+      disabled: true,
     },
     {
       id: 'delivery',
@@ -419,6 +420,7 @@ const CheckoutForm = () => {
                   key={method.id}
                   type="button"
                   variant="ghost"
+                  aria-disabled={method.disabled}
                   onClick={() => {
                     if (method.id === 'online') {
                       setShowOnlinePaymentModal(true);
@@ -429,14 +431,16 @@ const CheckoutForm = () => {
                       }));
                     }
                   }}
-                  className={`p-4 rounded-2xl !justify-start text-left text-white bg-white/[0.04] ${
-                    isSelected
-                      ? 'border-2 ring-2 ring-offset-2'
-                      : 'border border-white/[0.14] hover:scale-[1.02]'
+                  className={`relative p-4 rounded-2xl !justify-start text-left text-white bg-white/[0.04] ${
+                    method.disabled
+                      ? 'opacity-55 border border-white/[0.14]'
+                      : isSelected
+                        ? 'border-2 ring-2 ring-offset-2'
+                        : 'border border-white/[0.14] hover:scale-[1.02]'
                   }`}
                   // eslint-disable-next-line no-restricted-syntax
                   style={
-                    isSelected
+                    !method.disabled && isSelected
                       ? {
                           borderColor: method.color,
                           boxShadow: `0 0 0 2px ${method.color}20`,
@@ -444,6 +448,11 @@ const CheckoutForm = () => {
                       : undefined
                   }
                 >
+                  {method.disabled && (
+                    <span className="absolute right-3 top-3 rounded-full border border-white/20 bg-black/40 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-white/60">
+                      Coming soon
+                    </span>
+                  )}
                   <FlexboxLayout align="center" gap="sm" className="mb-2">
                     <div
                       className="w-10 h-10 rounded-full flex items-center justify-center"

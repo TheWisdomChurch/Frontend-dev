@@ -6,6 +6,7 @@ import { CalendarDays, Clock, Sunrise } from 'lucide-react';
 import PromoAdModal, {
   type PromoAdModalMetaItem,
 } from '@/shared/ui/modals/PromoAdModal';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
 type Props = {
   open: boolean;
@@ -22,8 +23,11 @@ export default function DailyPrayerAdModal({
 
   const meta = useMemo<PromoAdModalMetaItem[]>(
     () => [
-      { icon: CalendarDays, label: 'Monday – Friday' },
-      { icon: Clock, label: '7:00 AM WAT' },
+      { icon: CalendarDays, label: SERVICE_INFO.dailyPrayer.days },
+      {
+        icon: Clock,
+        label: `${SERVICE_INFO.dailyPrayer.time} ${SERVICE_INFO.dailyPrayer.timezone}`,
+      },
     ],
     []
   );
