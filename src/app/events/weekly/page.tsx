@@ -4,6 +4,7 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildRecurringEventSchema } from '@/lib/seo';
 
@@ -158,7 +159,8 @@ export default function WeeklyPage() {
 
       {/* CTA dark */}
       <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

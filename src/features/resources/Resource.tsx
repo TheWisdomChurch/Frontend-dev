@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   BookOpen,
@@ -20,6 +21,11 @@ import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
@@ -115,24 +121,30 @@ function ResourceCarousel() {
 
         {/* Navigation arrows */}
         <div className="flex shrink-0 items-center gap-2">
-          <button
+          <motion.button
             type="button"
             onClick={prev}
             disabled={!canPrev}
             aria-label="Previous"
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            whileHover={canPrev ? { scale: 1.08 } : undefined}
+            whileTap={canPrev ? { scale: 0.94 } : undefined}
+            transition={{ type: 'spring', stiffness: 400, damping: 26 }}
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             type="button"
             onClick={next}
             disabled={!canNext}
             aria-label="Next"
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            whileHover={canNext ? { scale: 1.08 } : undefined}
+            whileTap={canNext ? { scale: 0.94 } : undefined}
+            transition={{ type: 'spring', stiffness: 400, damping: 26 }}
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -300,9 +312,15 @@ export default function ResourceSection() {
         </div>
 
         {/* ── Layout ───────────────────────────────────────── */}
-        <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={staggerViewport}
+          className="grid gap-8 lg:grid-cols-2 lg:items-center"
+        >
           {/* Left — content */}
-          <div className="flex flex-col">
+          <motion.div variants={staggerItem} className="flex flex-col">
             <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/35">
               Sundays 9:00 AM · Daily Prayer 7:00 AM
             </p>
@@ -350,10 +368,13 @@ export default function ResourceSection() {
                 All sermons <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right — video thumbnail */}
-          <div className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl">
+          <motion.div
+            variants={staggerItem}
+            className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl"
+          >
             {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-[var(--app-ink)]/20" />
@@ -393,8 +414,8 @@ export default function ResourceSection() {
                 </p>
               </div>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* ── You can do more ──────────────────────────────── */}
         <ResourceCarousel />

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
@@ -315,7 +316,8 @@ export default async function EventsPage() {
       </section>
 
       {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
-      <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+      <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+        <SectionGlow />
         <Container size="xl">
           {/* Header */}
           <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">

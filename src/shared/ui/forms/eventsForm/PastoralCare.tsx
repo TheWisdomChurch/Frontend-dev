@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Calendar,
   User,
@@ -10,12 +11,21 @@ import {
   MessageCircle,
   ChevronDown,
   CheckCircle2,
+  Lock,
 } from 'lucide-react';
 import { H2, H3, BodyMD, BodyLG, BodySM, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { apiClient } from '@/lib/api';
+
+// A counseling request is a fundamentally different, confidential ask from
+// an event/officiant booking — this form serves both (one backend endpoint,
+// no access to add a second), so it adapts its fields based on how the
+// visitor arrived rather than showing every event-booking field to someone
+// asking for private pastoral counseling.
+const COUNSELING_EVENT_TYPE = 'Counseling Session';
+const COUNSELING_DEFAULT_ROLE = 'Prayer Partner';
 
 interface PastoralCareFormData {
   title: string;
@@ -32,6 +42,9 @@ interface PastoralCareFormData {
 }
 
 const PastoralCareUnit = () => {
+  const searchParams = useSearchParams();
+  const isCounseling = searchParams.get('intent') === 'counseling';
+
   const [formData, setFormData] = useState<PastoralCareFormData>({
     title: '',
     firstName: '',
@@ -40,8 +53,8 @@ const PastoralCareUnit = () => {
     email: '',
     contactAddress: '',
     eventDate: '',
-    eventType: '',
-    churchRole: '',
+    eventType: isCounseling ? COUNSELING_EVENT_TYPE : '',
+    churchRole: isCounseling ? COUNSELING_DEFAULT_ROLE : '',
     customRole: '',
     comments: '',
   });
@@ -101,17 +114,19 @@ const PastoralCareUnit = () => {
       e.preventDefault();
       setSubmitError('');
 
-      const requiredFields: Array<keyof PastoralCareFormData> = [
-        'title',
-        'firstName',
-        'lastName',
-        'contactNumber',
-        'email',
-        'contactAddress',
-        'eventDate',
-        'eventType',
-        'churchRole',
-      ];
+      const requiredFields: Array<keyof PastoralCareFormData> = isCounseling
+        ? ['title', 'firstName', 'lastName', 'contactNumber', 'email']
+        : [
+            'title',
+            'firstName',
+            'lastName',
+            'contactNumber',
+            'email',
+            'contactAddress',
+            'eventDate',
+            'eventType',
+            'churchRole',
+          ];
       const missing = requiredFields.some(
         field => !String(formData[field] || '').trim()
       );
@@ -141,7 +156,9 @@ const PastoralCareUnit = () => {
           churchRole: formData.churchRole,
           customRole: showCustomRole ? formData.customRole : undefined,
           comments: formData.comments,
-          sourceChannel: 'frontend:web:pastoral-care',
+          sourceChannel: isCounseling
+            ? 'frontend:web:pastoral-care:counseling'
+            : 'frontend:web:pastoral-care:event',
         });
 
         // Reset form
@@ -153,8 +170,8 @@ const PastoralCareUnit = () => {
           email: '',
           contactAddress: '',
           eventDate: '',
-          eventType: '',
-          churchRole: '',
+          eventType: isCounseling ? COUNSELING_EVENT_TYPE : '',
+          churchRole: isCounseling ? COUNSELING_DEFAULT_ROLE : '',
           customRole: '',
           comments: '',
         });
@@ -171,7 +188,7 @@ const PastoralCareUnit = () => {
         setIsSubmitting(false);
       }
     },
-    [formData, showCustomRole]
+    [formData, showCustomRole, isCounseling]
   );
 
   const getMinDate = useCallback(() => {
@@ -200,15 +217,19 @@ const PastoralCareUnit = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <Caption className="text-sm font-semibold uppercase tracking-wider mb-4 text-[var(--app-primary)]">
-            Pastoral Care Services
+            {isCounseling
+              ? 'Confidential Counseling'
+              : 'Pastoral Care Services'}
           </Caption>
           <H2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-[#000000]">
-            Pastoral Care Events
+            {isCounseling
+              ? 'Request a Counseling Session'
+              : 'Pastoral Care Events'}
           </H2>
           <BodyLG className="text-base sm:text-lg max-w-2xl mx-auto opacity-80 text-[rgba(255,255,255,0.65)]">
-            Let us be part of your special moments. Register for pastoral care
-            services and let our ministry team support you in your celebrations
-            and milestones.
+            {isCounseling
+              ? 'Share a few details below and a member of our pastoral team will reach out privately to arrange a time to talk.'
+              : 'Let us be part of your special moments. Register for pastoral care services and let our ministry team support you in your celebrations and milestones.'}
           </BodyLG>
         </div>
 
@@ -218,11 +239,17 @@ const PastoralCareUnit = () => {
             {/* Form Header */}
             <div className="p-5 md:p-7 text-center text-white bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))]">
               <H3 className="text-xl md:text-2xl font-semibold mb-1">
-                Pastoral Care Request
+                {isCounseling ? 'Counseling Request' : 'Pastoral Care Request'}
               </H3>
               <BodyMD className="opacity-85 text-sm md:text-base">
-                Share your details and we’ll follow up promptly. Email
-                confirmation will be sent after submission.
+                {isCounseling ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+                    Confidential — only our pastoral team will see this.
+                  </span>
+                ) : (
+                  'Share your details and we’ll follow up promptly. Email confirmation will be sent after submission.'
+                )}
               </BodyMD>
             </div>
 
@@ -383,7 +410,9 @@ const PastoralCareUnit = () => {
                       <label
                         className={`block text-sm font-semibold mb-2 text-[#000000]`}
                       >
-                        Contact Address *
+                        {isCounseling
+                          ? 'Where would you prefer to meet? (optional)'
+                          : 'Contact Address *'}
                       </label>
                       <div className="relative">
                         <MapPin
@@ -395,7 +424,11 @@ const PastoralCareUnit = () => {
                           name="contactAddress"
                           value={formData.contactAddress}
                           onChange={handleInputChange}
-                          placeholder="Enter your complete address"
+                          placeholder={
+                            isCounseling
+                              ? 'In person, phone, or video call — up to you'
+                              : 'Enter your complete address'
+                          }
                           className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 ${
                             errors.contactAddress
                               ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
@@ -412,166 +445,170 @@ const PastoralCareUnit = () => {
                   </div>
                 </div>
 
-                {/* Event Details Section */}
-                <div className="space-y-6 border-t border-white/[0.12] pt-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Calendar className="w-5 h-5 text-[var(--app-primary)]" />
-                    <H3 className="text-xl font-bold text-white">
-                      Event Details
-                    </H3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Event Date */}
-                    <div>
-                      <label
-                        htmlFor="eventDate"
-                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
-                      >
-                        Event Date *
-                      </label>
-                      <div className="relative">
-                        <Calendar
-                          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                          size={20}
-                        />
-                        <input
-                          id="eventDate"
-                          type="date"
-                          name="eventDate"
-                          value={formData.eventDate}
-                          onChange={handleInputChange}
-                          min={getMinDate()}
-                          max={getMaxDate()}
-                          className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 ${
-                            errors.eventDate
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                              : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } bg-white text-gray-900`}
-                        />
-                      </div>
-                      {errors.eventDate && (
-                        <Caption className="mt-1 text-red-400">
-                          {errors.eventDate}
-                        </Caption>
-                      )}
+                {/* Event Details Section — hidden entirely for confidential
+                    counseling requests, where eventType/churchRole are
+                    pre-set programmatically and irrelevant to the visitor */}
+                {!isCounseling && (
+                  <div className="space-y-6 border-t border-white/[0.12] pt-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Calendar className="w-5 h-5 text-[var(--app-primary)]" />
+                      <H3 className="text-xl font-bold text-white">
+                        Event Details
+                      </H3>
                     </div>
 
-                    {/* Event Type */}
-                    <div>
-                      <label
-                        htmlFor="eventType"
-                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
-                      >
-                        Event Type *
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="eventType"
-                          name="eventType"
-                          value={formData.eventType}
-                          onChange={handleInputChange}
-                          className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 appearance-none cursor-pointer ${
-                            errors.eventType
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                              : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } bg-white text-gray-900`}
-                        >
-                          <option value="">Select Event Type</option>
-                          {eventTypes.map(type => (
-                            <option
-                              key={type}
-                              value={type}
-                              className="bg-white text-gray-900"
-                            >
-                              {type}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
-                          size={20}
-                        />
-                      </div>
-                      {errors.eventType && (
-                        <Caption className="mt-1 text-red-400">
-                          {errors.eventType}
-                        </Caption>
-                      )}
-                    </div>
-
-                    {/* Church Role */}
-                    <div>
-                      <label
-                        htmlFor="churchRole"
-                        className={`block text-sm font-semibold mb-2 text-[#000000]`}
-                      >
-                        Church Role Requested *
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="churchRole"
-                          name="churchRole"
-                          value={formData.churchRole}
-                          onChange={handleInputChange}
-                          className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 appearance-none cursor-pointer ${
-                            errors.churchRole
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                              : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } bg-white text-gray-900`}
-                        >
-                          <option value="">Select Preferred Role</option>
-                          {churchRoles.map(role => (
-                            <option
-                              key={role}
-                              value={role}
-                              className="bg-white text-gray-900"
-                            >
-                              {role}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
-                          size={20}
-                        />
-                      </div>
-                      {errors.churchRole && (
-                        <Caption className="mt-1 text-red-400">
-                          {errors.churchRole}
-                        </Caption>
-                      )}
-                    </div>
-
-                    {/* Custom Role (conditionally shown) */}
-                    {showCustomRole && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Event Date */}
                       <div>
                         <label
+                          htmlFor="eventDate"
                           className={`block text-sm font-semibold mb-2 text-[#000000]`}
                         >
-                          Specify Custom Role *
+                          Event Date *
                         </label>
-                        <input
-                          type="text"
-                          name="customRole"
-                          value={formData.customRole}
-                          onChange={handleInputChange}
-                          placeholder="Enter your preferred role"
-                          className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 ${
-                            errors.customRole
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                              : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
-                          } bg-white text-gray-900 placeholder-gray-500`}
-                        />
-                        {errors.customRole && (
+                        <div className="relative">
+                          <Calendar
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                            size={20}
+                          />
+                          <input
+                            id="eventDate"
+                            type="date"
+                            name="eventDate"
+                            value={formData.eventDate}
+                            onChange={handleInputChange}
+                            min={getMinDate()}
+                            max={getMaxDate()}
+                            className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 ${
+                              errors.eventDate
+                                ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
+                                : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
+                            } bg-white text-gray-900`}
+                          />
+                        </div>
+                        {errors.eventDate && (
                           <Caption className="mt-1 text-red-400">
-                            {errors.customRole}
+                            {errors.eventDate}
                           </Caption>
                         )}
                       </div>
-                    )}
+
+                      {/* Event Type */}
+                      <div>
+                        <label
+                          htmlFor="eventType"
+                          className={`block text-sm font-semibold mb-2 text-[#000000]`}
+                        >
+                          Event Type *
+                        </label>
+                        <div className="relative">
+                          <select
+                            id="eventType"
+                            name="eventType"
+                            value={formData.eventType}
+                            onChange={handleInputChange}
+                            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 appearance-none cursor-pointer ${
+                              errors.eventType
+                                ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
+                                : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
+                            } bg-white text-gray-900`}
+                          >
+                            <option value="">Select Event Type</option>
+                            {eventTypes.map(type => (
+                              <option
+                                key={type}
+                                value={type}
+                                className="bg-white text-gray-900"
+                              >
+                                {type}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
+                            size={20}
+                          />
+                        </div>
+                        {errors.eventType && (
+                          <Caption className="mt-1 text-red-400">
+                            {errors.eventType}
+                          </Caption>
+                        )}
+                      </div>
+
+                      {/* Church Role */}
+                      <div>
+                        <label
+                          htmlFor="churchRole"
+                          className={`block text-sm font-semibold mb-2 text-[#000000]`}
+                        >
+                          Church Role Requested *
+                        </label>
+                        <div className="relative">
+                          <select
+                            id="churchRole"
+                            name="churchRole"
+                            value={formData.churchRole}
+                            onChange={handleInputChange}
+                            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 appearance-none cursor-pointer ${
+                              errors.churchRole
+                                ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
+                                : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
+                            } bg-white text-gray-900`}
+                          >
+                            <option value="">Select Preferred Role</option>
+                            {churchRoles.map(role => (
+                              <option
+                                key={role}
+                                value={role}
+                                className="bg-white text-gray-900"
+                              >
+                                {role}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[var(--app-primary)]"
+                            size={20}
+                          />
+                        </div>
+                        {errors.churchRole && (
+                          <Caption className="mt-1 text-red-400">
+                            {errors.churchRole}
+                          </Caption>
+                        )}
+                      </div>
+
+                      {/* Custom Role (conditionally shown) */}
+                      {showCustomRole && (
+                        <div>
+                          <label
+                            className={`block text-sm font-semibold mb-2 text-[#000000]`}
+                          >
+                            Specify Custom Role *
+                          </label>
+                          <input
+                            type="text"
+                            name="customRole"
+                            value={formData.customRole}
+                            onChange={handleInputChange}
+                            placeholder="Enter your preferred role"
+                            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 ${
+                              errors.customRole
+                                ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
+                                : 'border-gray-300 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-20'
+                            } bg-white text-gray-900 placeholder-gray-500`}
+                          />
+                          {errors.customRole && (
+                            <Caption className="mt-1 text-red-400">
+                              {errors.customRole}
+                            </Caption>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Additional Comments */}
                 <div className="border-t border-white/[0.12] pt-6">

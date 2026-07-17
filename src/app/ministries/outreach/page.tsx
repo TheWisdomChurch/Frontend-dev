@@ -4,6 +4,7 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
@@ -86,7 +87,8 @@ export default function OutreachPage() {
       />
 
       {/* ── 2. Mission — dark ────────────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -146,7 +148,8 @@ export default function OutreachPage() {
       </section>
 
       {/* ── 4. Core values — dark ────────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-white/8 py-12 lg:py-14">

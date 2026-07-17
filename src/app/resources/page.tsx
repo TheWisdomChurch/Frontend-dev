@@ -8,6 +8,7 @@ import {
   BookOpen,
   CalendarDays,
   Headphones,
+  Newspaper,
   Radio,
   Search,
   Sparkles,
@@ -20,6 +21,7 @@ import { Button } from '@/shared/utils/buttons';
 import PageHero from '@/features/hero/PageHero';
 import { Container, Section } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { resourceLinks } from '@/lib/data';
@@ -77,6 +79,12 @@ const quickActions = [
     icon: BookOpen,
   },
   {
+    title: 'Blog',
+    desc: 'Devotionals & articles',
+    href: '/resources/blogs',
+    icon: Newspaper,
+  },
+  {
     title: 'Care & Counsel',
     desc: 'Pastoral support',
     href: '/pastoral',
@@ -112,7 +120,8 @@ export default function ResourcesPage() {
         (activeCategory === 'events' && path.includes('/events')) ||
         (activeCategory === 'store' && path.includes('/store')) ||
         (activeCategory === 'care' && path.includes('/pastoral')) ||
-        (activeCategory === 'books' && path.includes('/publications'));
+        (activeCategory === 'books' &&
+          (path.includes('/publications') || path.includes('/blogs')));
 
       if (!term) return categoryMatch;
 
@@ -159,6 +168,7 @@ export default function ResourcesPage() {
         padding="lg"
         className="relative overflow-hidden bg-[var(--app-dark)]"
       >
+        <SectionGlow />
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_16%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_86%_8%,rgba(255,255,255,0.07),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
           <GridBackground />

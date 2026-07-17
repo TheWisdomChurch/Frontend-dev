@@ -5,6 +5,7 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
@@ -194,7 +195,8 @@ export default function MinistriesPage() {
       </section>
 
       {/* ── 3. Ministry image cards ───────────────────────────── */}
-      <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-14 lg:py-18">
+      <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-14 lg:py-18">
+        <SectionGlow />
         <Container size="xl">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ministries.map((ministry, i) => (
@@ -311,7 +313,8 @@ export default function MinistriesPage() {
 
       {/* ── 5. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

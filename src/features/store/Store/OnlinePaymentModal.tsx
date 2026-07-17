@@ -1,13 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import { gsap } from 'gsap';
-import { AlertCircle, Building, Truck, X } from 'lucide-react';
+import { AlertCircle, Building, Truck } from 'lucide-react';
+import { BaseModal } from '@/shared/ui/modals/Base';
 import { Button } from '@/shared/utils/buttons';
-import { FlexboxLayout } from '@/shared/layout';
-import { H4, SmallText, Caption } from '@/shared/text';
-import { useIsClient, useMediaQuery } from '@/hooks';
+import { H3, BodySM, Caption } from '@/shared/text';
 
 interface OnlinePaymentModalProps {
   isOpen: boolean;
@@ -15,203 +11,81 @@ interface OnlinePaymentModalProps {
   onSelectTransfer: () => void;
 }
 
+// Same "feature unavailable" visual language as ServiceUnavailableSheet
+// (src/shared/ui/modals/Modal.tsx), built directly on BaseModal instead of
+// a bespoke portal/GSAP implementation — this one needs a second action
+// (jump straight to bank transfer), which ServiceUnavailableSheet doesn't
+// support.
 const OnlinePaymentModal = ({
   isOpen,
   onClose,
   onSelectTransfer,
 }: OnlinePaymentModalProps) => {
-  const mounted = useIsClient();
-  const isMobile = useMediaQuery('(max-width: 767px)');
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.touchAction = 'none';
-    } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'auto';
-      document.body.style.touchAction = 'auto';
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      const tl = gsap.timeline();
-      if (isMobile) {
-        tl.fromTo(
-          modalRef.current,
-          { y: '100%', opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
-        );
-      } else {
-        tl.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.95, y: 20 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-        );
-      }
-    }
-  }, [isOpen, isMobile]);
-
-  const handleClose = () => {
-    if (modalRef.current) {
-      if (isMobile) {
-        gsap.to(modalRef.current, {
-          y: '100%',
-          opacity: 0,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
-      } else {
-        gsap.to(modalRef.current, {
-          opacity: 0,
-          scale: 0.95,
-          y: 20,
-          duration: 0.3,
-          ease: 'power2.in',
-          onComplete: onClose,
-        });
-      }
-    } else {
-      onClose();
-    }
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) handleClose();
-  };
-
-  if (!mounted || !isOpen) return null;
-
-  return createPortal(
-    <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-3 ${isMobile ? 'pb-0' : ''}`}
-      onClick={handleBackdropClick}
+  return (
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      showHandle
+      showCloseButton={false}
+      forceBottomSheet
+      maxWidth="max-w-lg"
     >
-      <div
-        ref={modalRef}
-        className={`
-          w-full mx-auto overflow-hidden border shadow-xl bg-black border-[var(--app-primary)]
-          ${isMobile ? 'rounded-t-2xl rounded-b-none max-h-[85vh]' : 'rounded-2xl max-w-md max-h-[85vh]'}
-        `}
-      >
-        {isMobile && (
-          <div className="flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing">
-            <div className="w-10 h-1 rounded-full bg-[var(--app-primary)]" />
-          </div>
-        )}
+      <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
+        <div className="pointer-events-none absolute right-0 top-0 h-44 w-44 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
 
-        <div className="flex flex-col h-full">
-          <div className="relative h-12 flex items-center justify-center border-b border-[var(--app-primary)] px-4">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={handleClose}
-              aria-label="Close modal"
-              className="absolute top-2.5 right-2.5 min-h-0 h-7 w-7 p-1 bg-[var(--app-primary)]/10"
-            >
-              <X className="w-3 h-3 text-[var(--app-primary)]" />
-            </Button>
-
-            <H4
-              fontFamily="bricolage"
-              className="text-base text-[var(--app-primary)]"
-              useThemeColor={false}
-              weight="bold"
-            >
-              Service Unavailable
-            </H4>
-          </div>
-
-          <div
-            className={`overflow-y-auto ${isMobile ? 'p-4 max-h-[calc(85vh-7rem)]' : 'p-5 max-h-[calc(85vh-8rem)]'}`}
-          >
-            <div className="space-y-4">
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-3">
-                  <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400" />
-                </div>
-
-                <SmallText
-                  weight="semibold"
-                  className="text-sm mb-1 text-[var(--app-primary)]"
-                >
-                  Online Payment Temporarily Unavailable
-                </SmallText>
-
-                <Caption className="text-xs mb-3 text-white">
-                  Our online payment gateway is currently undergoing
-                  maintenance. Please use our bank transfer option or pay on
-                  delivery.
-                </Caption>
-              </div>
-
-              <div className="space-y-2">
-                <FlexboxLayout align="center" gap="sm">
-                  <div className="w-4 h-4 rounded-full bg-blue-400/20 flex items-center justify-center flex-shrink-0">
-                    <Building className="w-2.5 h-2.5 text-blue-400" />
-                  </div>
-                  <Caption className="text-xs text-white">
-                    <strong>Bank Transfer:</strong> Transfer to our account and
-                    upload payment proof
-                  </Caption>
-                </FlexboxLayout>
-
-                <FlexboxLayout align="center" gap="sm">
-                  <div className="w-4 h-4 rounded-full bg-yellow-400/20 flex items-center justify-center flex-shrink-0">
-                    <Truck className="w-2.5 h-2.5 text-yellow-400" />
-                  </div>
-                  <Caption className="text-xs text-white">
-                    <strong>Pay on Delivery:</strong> Pay with cash or card when
-                    your order arrives
-                  </Caption>
-                </FlexboxLayout>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-[var(--app-primary)] p-3">
-            <FlexboxLayout direction="column" gap="xs">
-              <Button
-                variant="primary"
-                size="md"
-                curvature="xl"
-                onClick={() => {
-                  handleClose();
-                  onSelectTransfer();
-                }}
-                className="w-full py-2 text-sm font-semibold"
-              >
-                Use Bank Transfer
-              </Button>
-
-              <Button
-                variant="outline"
-                size="md"
-                curvature="xl"
-                onClick={handleClose}
-                className="w-full py-2 border-[var(--app-primary)] text-sm font-medium text-[var(--app-primary)]"
-              >
-                Close
-              </Button>
-            </FlexboxLayout>
+        <div className="relative flex items-start justify-between gap-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/75">
+            <AlertCircle className="h-3.5 w-3.5 text-[var(--app-primary)]" />
+            Service unavailable
           </div>
         </div>
+
+        <div className="relative mt-5">
+          <H3 className="text-white">Online payment is temporarily down</H3>
+          <BodySM className="mt-2 text-white/65">
+            Our online payment gateway is currently undergoing maintenance.
+            Please use bank transfer or pay on delivery instead.
+          </BodySM>
+        </div>
+
+        <div className="relative mt-5 space-y-2.5">
+          <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-blue-400/15 text-blue-300">
+              <Building className="h-3.5 w-3.5" />
+            </div>
+            <Caption className="text-white/70">
+              <strong className="text-white">Bank Transfer:</strong> transfer to
+              our account and upload payment proof
+            </Caption>
+          </div>
+          <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-yellow-400/15 text-yellow-300">
+              <Truck className="h-3.5 w-3.5" />
+            </div>
+            <Caption className="text-white/70">
+              <strong className="text-white">Pay on Delivery:</strong> pay with
+              cash or card when your order arrives
+            </Caption>
+          </div>
+        </div>
+
+        <div className="relative mt-6 flex flex-col gap-2.5">
+          <Button
+            variant="primary"
+            onClick={() => {
+              onSelectTransfer();
+              onClose();
+            }}
+            className="w-full"
+          >
+            Use Bank Transfer
+          </Button>
+          <Button variant="ghost" onClick={onClose} className="w-full">
+            Close
+          </Button>
+        </div>
       </div>
-    </div>,
-    document.body
+    </BaseModal>
   );
 };
 
