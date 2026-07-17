@@ -84,7 +84,7 @@ export default function ChildrenMinistryPage() {
         eyebrow="Children's Ministry"
         title="Where little ones meet Jesus."
         subtitle="Safe, joyful, and built around families — from nursery through pre-teen years."
-        compact
+        backgroundImage="/images/easter-service.webp"
       />
 
       {/* ── 2. Mission statement — dark ──────────────────────── */}
@@ -93,7 +93,7 @@ export default function ChildrenMinistryPage() {
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Our purpose
+              Our mission
             </p>
             <h2 className="mt-4 max-w-2xl font-headline text-[1.8rem] font-normal leading-snug text-white sm:text-[2.3rem]">
               Children should experience church as a place of

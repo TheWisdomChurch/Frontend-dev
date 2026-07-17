@@ -7,17 +7,17 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildRecurringEventSchema } from '@/lib/seo';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
 export const metadata: Metadata = {
   title: 'Weekly Services — Wisdom Church',
-  description:
-    'Join us every Sunday at 9:00 AM and for Daily Prayer, Monday–Friday at 7:00 AM, at Honor Gardens, Lekki-Epe Expressway, Lagos.',
+  description: `Join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time} and for ${SERVICE_INFO.dailyPrayer.label}, ${SERVICE_INFO.dailyPrayer.days} at ${SERVICE_INFO.dailyPrayer.time}, at ${SERVICE_INFO.venue.full}.`,
 };
 
 const services = [
   {
-    day: 'Sunday',
-    time: '9:00 AM',
+    day: SERVICE_INFO.sunday.day,
+    time: SERVICE_INFO.sunday.time,
     name: 'Sunday Worship Service',
     description:
       'Our flagship gathering — Spirit-filled worship, corporate prayer, and the preached Word. All are welcome.',
@@ -28,8 +28,8 @@ const services = [
     ],
   },
   {
-    day: 'Mon – Fri',
-    time: '7:00 AM',
+    day: SERVICE_INFO.dailyPrayer.daysShort,
+    time: SERVICE_INFO.dailyPrayer.time,
     name: 'Daily Morning Prayer',
     description:
       'Start every weekday in prayer, declaration, and the Word — a solid foundation before the day begins.',
@@ -139,12 +139,13 @@ export default function WeeklyPage() {
                       ))}
                     </ul>
                     <p className="font-ui text-[0.78rem] text-[var(--app-ink)]/55">
-                      Honor Gardens, opposite Dominion Church HQ,
-                      <br />
-                      Alasia bus stop, Lekki-Epe Expressway, Lagos
+                      {SERVICE_INFO.venue.name},{' '}
+                      {SERVICE_INFO.venue.streetAddress}
+                      ,<br />
+                      {SERVICE_INFO.venue.locality}
                     </p>
                     <Link
-                      href="/contact"
+                      href="/contact?topic=visit"
                       className="inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                     >
                       Plan your visit <Arrow />

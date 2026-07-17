@@ -8,10 +8,17 @@ import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildEventSchema, buildBreadcrumbSchema } from '@/lib/seo';
 
 /* ── Utilities ──────────────────────────────────────────── */
+
+// Kept outside the component body so the impure Date.now() read happens at
+// call time (each request), not as a value captured during render.
+function isUpcoming(event: EventPublic): boolean {
+  return getTimestamp(event) >= Date.now();
+}
 
 function getTimestamp(event: EventPublic): number {
   if (event.startAt) {
@@ -67,15 +74,15 @@ function registerHref(event: EventPublic): string | null {
 
 const WEEKLY = [
   {
-    day: 'Sunday',
-    time: '9:00 AM',
+    day: SERVICE_INFO.sunday.day,
+    time: SERVICE_INFO.sunday.time,
     name: 'Sunday Worship Service',
     description:
       'Spirit-filled corporate worship, prayer, and the preached Word.',
   },
   {
-    day: 'Mon – Fri',
-    time: '7:00 AM',
+    day: SERVICE_INFO.dailyPrayer.daysShort,
+    time: SERVICE_INFO.dailyPrayer.time,
     name: 'Daily Morning Prayer',
     description: 'Start the day in prayer, declaration, and the Word.',
   },
@@ -207,7 +214,7 @@ function EmptyState() {
           Worship and Daily Prayer, Monday through Friday.
         </p>
         <Link
-          href="/contact"
+          href="/contact?topic=visit"
           className="inline-flex items-center gap-2 border border-white/18 px-6 py-2.5 font-ui text-[0.72rem] font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
         >
           Plan a visit <Arrow />
@@ -223,9 +230,9 @@ export default async function EventsPage() {
   const rawEvents = await apiClient
     .listEvents()
     .catch(() => [] as EventPublic[]);
-  const events = [...rawEvents].sort(
-    (a, b) => getTimestamp(a) - getTimestamp(b)
-  );
+  const events = [...rawEvents]
+    .filter(isUpcoming)
+    .sort((a, b) => getTimestamp(a) - getTimestamp(b));
 
   return (
     <main className="min-h-screen">
@@ -248,6 +255,30 @@ export default async function EventsPage() {
         subtitle="Weekly services, special gatherings, and everything in between."
         compact
       />
+
+      {/* ── 1.5 Sub-nav — other ways to browse events ────────── */}
+      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+        <Container size="xl">
+          <nav
+            aria-label="Events sections"
+            className="flex flex-wrap gap-2 py-5"
+          >
+            {[
+              { href: '/events/weekly', label: 'Weekly Services' },
+              { href: '/events/calendar', label: 'Calendar View' },
+              { href: '/events/upcoming', label: 'Upcoming (List)' },
+            ].map(item => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="inline-flex items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              >
+                {item.label} <Arrow />
+              </Link>
+            ))}
+          </nav>
+        </Container>
+      </section>
 
       {/* ── 2. Weekly rhythm — canvas, always present ────────── */}
       <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
@@ -294,13 +325,13 @@ export default async function EventsPage() {
                       {svc.description}
                     </p>
                     <p className="font-ui text-[0.75rem] text-[var(--app-ink)]/50">
-                      Honor Gardens, Lekki-Epe Expressway, Lagos
+                      {SERVICE_INFO.venue.full}
                     </p>
                   </div>
 
                   {/* CTA */}
                   <Link
-                    href="/contact"
+                    href="/contact?topic=visit"
                     className="mt-1 inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                   >
                     Plan a visit <Arrow />

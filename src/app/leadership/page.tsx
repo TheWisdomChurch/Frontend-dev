@@ -1,24 +1,17 @@
-import Image from 'next/image';
-
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
-
-/* ── Role labels ────────────────────────────────────────── */
-
-const ROLE_LABEL: Record<LeadershipRole, string> = {
-  senior_pastor: 'Senior Pastor',
-  associate_pastor: 'Associate Pastor',
-  deacon: 'Deacon',
-  deaconess: 'Deaconess',
-  reverend: 'Reverend',
-};
+import {
+  CanvasCard,
+  DarkCard,
+  ROLE_LABEL,
+  initials,
+} from '@/features/leadership/LeadershipCards';
 
 const SENIOR_ROLES: LeadershipRole[] = [
   'senior_pastor',
@@ -26,98 +19,6 @@ const SENIOR_ROLES: LeadershipRole[] = [
   'reverend',
 ];
 const BOARD_ROLES: LeadershipRole[] = ['deacon', 'deaconess'];
-
-/* ── Initials fallback ──────────────────────────────────── */
-
-function initials(first = '', last = '') {
-  return `${first.trim()[0] ?? ''}${last.trim()[0] ?? ''}`.toUpperCase() || '—';
-}
-
-/* ── Portrait card — canvas (light) ────────────────────── */
-
-function CanvasCard({ leader }: { leader: LeadershipMember }) {
-  const name = `${leader.firstName} ${leader.lastName}`.trim();
-  return (
-    <article className="group flex flex-col bg-[var(--app-canvas)]">
-      {/* Image */}
-      <div className="relative h-[420px] overflow-hidden bg-[var(--app-canvas-2)] sm:h-[360px] lg:h-[480px]">
-        {leader.imageUrl ? (
-          <Image
-            src={leader.imageUrl}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 100vw, 50vw"
-            quality={IMAGE_QUALITY}
-            className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <span className="font-headline text-[7rem] font-normal leading-none text-[var(--app-ink)]/8">
-              {initials(leader.firstName, leader.lastName)}
-            </span>
-          </div>
-        )}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[var(--app-canvas)] to-transparent" />
-      </div>
-      {/* Content */}
-      <div className="border-t border-[var(--app-ink)]/6 px-7 py-7 lg:px-10 lg:py-8">
-        <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-          {ROLE_LABEL[leader.role]}
-        </p>
-        <h3 className="mt-2 font-headline text-[1.5rem] font-normal leading-snug text-[var(--app-ink)]">
-          {name}
-        </h3>
-        <div className="mt-3 h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-        {leader.bio && (
-          <p className="mt-4 font-ui text-[0.83rem] leading-[1.9] text-[var(--app-ink)]/70">
-            {leader.bio}
-          </p>
-        )}
-      </div>
-    </article>
-  );
-}
-
-/* ── Portrait card — dark (cinematic) ──────────────────── */
-
-function DarkCard({ leader }: { leader: LeadershipMember }) {
-  const name = `${leader.firstName} ${leader.lastName}`.trim();
-  return (
-    <article className="group relative min-h-[520px] overflow-hidden bg-[var(--app-dark)] lg:min-h-[580px]">
-      {leader.imageUrl ? (
-        <Image
-          src={leader.imageUrl}
-          alt={name}
-          fill
-          sizes="(max-width: 640px) 100vw, 50vw"
-          quality={IMAGE_QUALITY}
-          className="object-cover object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
-        />
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-headline text-[7rem] font-normal leading-none text-white/[0.05]">
-            {initials(leader.firstName, leader.lastName)}
-          </span>
-        </div>
-      )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/72 to-[var(--app-dark)]/12" />
-      <div className="absolute inset-x-0 bottom-0 px-7 pb-9 pt-14 lg:px-10 lg:pb-11">
-        <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-          {ROLE_LABEL[leader.role]}
-        </p>
-        <h3 className="mt-2 font-headline text-[1.5rem] font-normal leading-snug text-white">
-          {name}
-        </h3>
-        <div className="mt-3 h-[1.5px] w-8 bg-[var(--app-primary)]/60" />
-        {leader.bio && (
-          <p className="mt-4 font-ui text-[0.83rem] leading-[1.9] text-white/68">
-            {leader.bio}
-          </p>
-        )}
-      </div>
-    </article>
-  );
-}
 
 /* ── Empty state ────────────────────────────────────────── */
 

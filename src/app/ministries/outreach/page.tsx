@@ -212,10 +212,10 @@ export default function OutreachPage() {
                   Join outreach <Arrow />
                 </Link>
                 <Link
-                  href="/events/upcoming"
+                  href="/events/weekly"
                   className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
-                  See upcoming events
+                  See weekly services
                 </Link>
               </div>
             </div>

@@ -8,6 +8,7 @@ import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
 function getTimestamp(event: EventPublic): number {
   if (event.startAt) {
@@ -131,8 +132,11 @@ export default function UpcomingPage() {
                   Nothing scheduled yet.
                 </h3>
                 <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/50">
-                  Check back soon. In the meantime, join us every Sunday at 9:00
-                  AM, and for Daily Prayer Mon–Fri at 7:00 AM.
+                  Check back soon. In the meantime, join us every{' '}
+                  {SERVICE_INFO.sunday.day} at {SERVICE_INFO.sunday.time}, and
+                  for {SERVICE_INFO.dailyPrayer.label}{' '}
+                  {SERVICE_INFO.dailyPrayer.daysShort} at{' '}
+                  {SERVICE_INFO.dailyPrayer.time}.
                 </p>
                 <Link
                   href="/events/weekly"
