@@ -5,6 +5,8 @@ import {
   Calendar,
   ShoppingBag,
   Heart,
+  BookOpen,
+  Newspaper,
 } from 'lucide-react';
 import { Leader, MinistryLeader, ServiceBox } from './types';
 

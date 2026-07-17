@@ -1001,29 +1001,6 @@ export const apiClient = {
       : null;
   },
 
-  async applyWorkforce(payload: WorkforceRegistrationData): Promise<unknown> {
-    const res = await request<unknown>('/workforce/apply', {
-      method: 'POST',
-      body: JSON.stringify(mapWorkforcePayload(payload)),
-    });
-    return unwrapData<unknown>(res);
-  },
-
-  async applyWorkforceServing(
-    payload: WorkforceRegistrationData
-  ): Promise<unknown> {
-    const body = {
-      ...mapWorkforcePayload(payload),
-      status: 'serving',
-    };
-
-    const res = await request<unknown>('/workforce/serving/register', {
-      method: 'POST',
-      body: JSON.stringify(body),
-    });
-    return unwrapData<unknown>(res);
-  },
-
   async submitPastoralCareRequest(
     payload: PastoralCareRequestData
   ): Promise<unknown> {

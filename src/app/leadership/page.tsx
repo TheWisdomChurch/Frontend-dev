@@ -3,6 +3,7 @@ import Image from 'next/image';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
 import { IMAGE_QUALITY } from '@/shared/constants';
@@ -181,7 +182,8 @@ export default async function LeadershipPage() {
       />
 
       {/* ── 2. Senior leadership header — dark ───────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)] px-6 py-14 lg:px-10 lg:py-18">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)] px-6 py-14 lg:px-10 lg:py-18">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-lg">
@@ -202,7 +204,8 @@ export default async function LeadershipPage() {
 
       {/* ── 3. Senior portrait panels ────────────────────────── */}
       {seniorTeam.length === 0 ? (
-        <div className="bg-[var(--app-dark)] px-6 py-10 lg:px-10">
+        <div className="relative bg-[var(--app-dark)] px-6 py-10 lg:px-10">
+          <SectionGlow />
           <Container size="xl">
             <EmptyState dark />
           </Container>
@@ -276,7 +279,8 @@ export default async function LeadershipPage() {
 
       {/* ── 5. CTA ───────────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
+        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
+          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

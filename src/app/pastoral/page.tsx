@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import PastoralCareUnit from '@/shared/ui/forms/eventsForm/PastoralCare';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
@@ -90,7 +92,8 @@ export default function PastoralPage() {
       />
 
       {/* ── 2. Statement — dark ──────────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-8 py-16 lg:flex-row lg:items-end lg:justify-between lg:py-20">
             <div className="max-w-xl">
@@ -124,12 +127,13 @@ export default function PastoralPage() {
         <ScrollFadeIn key={svc.id}>
           <section
             id={i === 0 ? 'care-pathways' : undefined}
-            className={`border-b ${
+            className={`relative border-b ${
               svc.dark
                 ? 'border-white/8 bg-[var(--app-dark)]'
                 : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'
             }`}
           >
+            {svc.dark && <SectionGlow />}
             <Container size="xl">
               <div className="grid gap-12 py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-24 lg:py-24">
                 {/* Left — title + description */}
@@ -156,7 +160,7 @@ export default function PastoralPage() {
                     <Link
                       href={
                         svc.id === 'counseling'
-                          ? '#request-form'
+                          ? '/pastoral?intent=counseling#request-form'
                           : '/contact?topic=prayer#contact-form'
                       }
                       className={[
@@ -204,7 +208,9 @@ export default function PastoralPage() {
 
       {/* ── 3.5 Pastoral care request form — counseling & event bookings ── */}
       <div id="request-form">
-        <PastoralCareUnit />
+        <Suspense fallback={null}>
+          <PastoralCareUnit />
+        </Suspense>
       </div>
 
       {/* ── 4. Confidentiality — canvas-2 ────────────────────── */}
@@ -236,7 +242,8 @@ export default function PastoralPage() {
 
       {/* ── 5. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

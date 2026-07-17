@@ -10,6 +10,7 @@ import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
+import SectionGlow from '@/shared/ui/SectionGlow';
 
 export const dynamic = 'force-dynamic';
 
@@ -117,7 +118,11 @@ export default function AboutPage() {
       </section>
 
       {/* ── 3. Editorial identity split — dark ───────────────── */}
-      <Section padding="none" className="overflow-hidden bg-[var(--app-dark)]">
+      <Section
+        padding="none"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
+      >
+        <SectionGlow />
         <div className="grid lg:grid-cols-[1fr_1fr] lg:min-h-[580px]">
           {/* Text column */}
           <ScrollFadeIn className="flex flex-col justify-center gap-7 px-6 py-16 sm:px-10 lg:px-14 xl:px-18 order-2 lg:order-1">
@@ -232,7 +237,8 @@ export default function AboutPage() {
       <section className="overflow-hidden min-w-0">
         {/* Leadership intro header — dark */}
         <ScrollFadeIn>
-          <div className="bg-[var(--app-dark)] px-6 py-14 lg:py-18">
+          <div className="relative bg-[var(--app-dark)] px-6 py-14 lg:py-18">
+            <SectionGlow />
             <Container size="xl">
               <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
                 <div className="max-w-lg">
