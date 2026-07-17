@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -307,11 +308,15 @@ export default function Header() {
             >
               <div className="nav-panel">
                 <p className="nav-panel__eyebrow">Next Service</p>
-                <p className="nav-panel__title">This Sunday</p>
-                <p className="nav-panel__detail">9:00 AM · WAT</p>
-                <p className="nav-panel__detail">Honor Gardens, Lekki-Epe</p>
+                <p className="nav-panel__title">
+                  This {SERVICE_INFO.sunday.day}
+                </p>
+                <p className="nav-panel__detail">
+                  {SERVICE_INFO.sunday.time} · {SERVICE_INFO.sunday.timezone}
+                </p>
+                <p className="nav-panel__detail">{SERVICE_INFO.venue.short}</p>
                 <Link
-                  href="/events"
+                  href="/contact?topic=visit"
                   className="nav-panel__cta"
                   onClick={close}
                   tabIndex={navOpen ? 0 : -1}
@@ -321,9 +326,12 @@ export default function Header() {
 
                 <div className="nav-panel__divider" aria-hidden="true" />
 
-                <p className="nav-panel__eyebrow">Daily Prayer</p>
+                <p className="nav-panel__eyebrow">
+                  {SERVICE_INFO.dailyPrayer.label}
+                </p>
                 <p className="nav-panel__detail">
-                  Mon–Fri · 7:00 AM · Honor Gardens
+                  {SERVICE_INFO.dailyPrayer.daysShort} ·{' '}
+                  {SERVICE_INFO.dailyPrayer.time} · {SERVICE_INFO.venue.name}
                 </p>
               </div>
 
@@ -351,10 +359,12 @@ export default function Header() {
           <div className="nav-overlay__footer">
             <div>
               <p className="nav-footer__label">Next Service</p>
-              <p className="nav-footer__time">Sunday · 9:00 AM</p>
-              <p className="nav-footer__venue">Honor Gardens, Lekki-Epe</p>
+              <p className="nav-footer__time">
+                {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}
+              </p>
+              <p className="nav-footer__venue">{SERVICE_INFO.venue.short}</p>
               <Link
-                href="/events"
+                href="/contact?topic=visit"
                 className="nav-footer__cta"
                 onClick={close}
                 tabIndex={navOpen ? 0 : -1}

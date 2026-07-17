@@ -1,3 +1,5 @@
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+
 export const SITE_URL = 'https://wisdomchurchhq.org';
 export const SITE_NAME = 'The Wisdom Church';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.webp`;
@@ -72,13 +74,12 @@ export function buildEventSchema(event: EventSchemaInput) {
     url: canonicalUrl(`/events/${event.id}`),
     location: {
       '@type': 'Place',
-      name: event.location || 'Honor Gardens',
+      name: event.location || SERVICE_INFO.venue.name,
       address: {
         '@type': 'PostalAddress',
-        streetAddress:
-          'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway',
-        addressLocality: 'Lagos',
-        addressCountry: 'NG',
+        streetAddress: `${SERVICE_INFO.venue.name}, ${SERVICE_INFO.venue.streetAddress}`,
+        addressLocality: SERVICE_INFO.venue.locality,
+        addressCountry: SERVICE_INFO.venue.country,
       },
     },
     organizer: {
@@ -124,13 +125,12 @@ export function buildRecurringEventSchema({
     eventStatus: 'https://schema.org/EventScheduled',
     location: {
       '@type': 'Place',
-      name: 'Honor Gardens',
+      name: SERVICE_INFO.venue.name,
       address: {
         '@type': 'PostalAddress',
-        streetAddress:
-          'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway',
-        addressLocality: 'Lagos',
-        addressCountry: 'NG',
+        streetAddress: `${SERVICE_INFO.venue.name}, ${SERVICE_INFO.venue.streetAddress}`,
+        addressLocality: SERVICE_INFO.venue.locality,
+        addressCountry: SERVICE_INFO.venue.country,
       },
     },
     organizer: {

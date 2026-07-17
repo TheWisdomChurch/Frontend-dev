@@ -7,7 +7,6 @@ import {
   Bell,
   CheckCircle2,
   Filter,
-  Heart,
   Mail,
   Search,
   ShoppingBag,
@@ -549,17 +548,6 @@ function StorePageContent() {
                           >
                             {product.name}
                           </SmallText>
-
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            curvature="full"
-                            className="h-9 w-9 shrink-0 border border-white/10 bg-white/[0.045] text-white/62 hover:bg-white/[0.09] hover:text-white"
-                            aria-label="Add to wishlist"
-                          >
-                            <Heart className="h-4 w-4" />
-                          </Button>
                         </div>
 
                         <Caption

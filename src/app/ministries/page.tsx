@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Heart } from 'lucide-react';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
@@ -84,29 +85,22 @@ const ministries = [
       "Practical expressions of God's love through service, evangelism, relief, and community development.",
     badge: 'Impact',
     href: '/ministries/outreach',
-    image: '/images/supernatural-service.webp',
+    image: '/images/conference-2025.webp',
     overlay:
       'linear-gradient(to top, rgba(4,20,10,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
   },
-  {
-    title: 'Pastoral Care',
-    tagline: 'Support when you need it most.',
-    description:
-      'Support structures for prayer, counseling, life transitions, family care, and spiritual guidance.',
-    badge: 'Care',
-    href: '/pastoral',
-    image: '/images/conference-2025.webp',
-    overlay:
-      'linear-gradient(to top, rgba(18,6,30,0.97) 0%, rgba(7,6,10,0.65) 50%, rgba(7,6,10,0.38) 100%)',
-  },
 ] as const;
+
+// Pastoral Care is intentionally not part of the grid above — it's a
+// top-level /pastoral page, not a /ministries/* page, so it gets its own
+// distinct callout instead of implying a URL taxonomy that doesn't exist.
 
 /* ── Connection pillars ───────────────────────────────── */
 const connection = [
   {
     verb: 'Visit',
     body: 'Show up to any gathering. No prior knowledge, no commitment required — just come.',
-    href: '/contact',
+    href: '/contact?topic=visit',
     cta: 'Plan a visit',
   },
   {
@@ -118,8 +112,8 @@ const connection = [
   {
     verb: 'Grow',
     body: 'Stay in, serve consistently, and build the relationships that last a lifetime.',
-    href: '/ministries',
-    cta: 'Explore ministry',
+    href: '/about',
+    cta: 'Our story',
   },
 ] as const;
 
@@ -264,6 +258,38 @@ export default function MinistriesPage() {
                 </Link>
               </ScrollFadeIn>
             ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ── 3.5 Pastoral Care — distinct callout, not a ministry tile ── */}
+      <section className="overflow-hidden min-w-0 border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]">
+        <Container size="xl">
+          <div className="flex flex-col items-start gap-6 py-12 lg:flex-row lg:items-center lg:justify-between lg:py-14">
+            <div className="flex items-start gap-5">
+              <div className="grid h-12 w-12 flex-none place-items-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/[0.08] text-[var(--app-primary)]">
+                <Heart className="h-5 w-5" />
+              </div>
+              <div className="max-w-xl">
+                <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  Beyond ministries — care &amp; support
+                </p>
+                <h3 className="mt-2 font-headline text-[1.4rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[1.7rem]">
+                  Need counseling, prayer, or help with a life moment?
+                </h3>
+                <p className="mt-2 font-ui text-[0.85rem] leading-[1.85] text-[var(--app-ink)]/65">
+                  Pastoral Care isn&apos;t a ministry team to join — it&apos;s
+                  our support structure for prayer, confidential counseling, and
+                  life transitions, whenever you need it.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/pastoral"
+              className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-6 py-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+            >
+              Visit Pastoral Care <Arrow />
+            </Link>
           </div>
         </Container>
       </section>

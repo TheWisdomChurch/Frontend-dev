@@ -8,6 +8,7 @@ import MetaPixel from '@/shared/analytics/MetaPixel';
 import { bricolageGrotesque, playfair, worksans } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
+import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
 const SITE_NAME = 'The Wisdom Church';
@@ -113,10 +114,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     },
     address: {
       '@type': 'PostalAddress',
-      streetAddress:
-        'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway',
-      addressLocality: 'Lagos',
-      addressCountry: 'NG',
+      streetAddress: `${SERVICE_INFO.venue.name}, ${SERVICE_INFO.venue.streetAddress}`,
+      addressLocality: SERVICE_INFO.venue.locality,
+      addressCountry: SERVICE_INFO.venue.country,
     },
   };
 
