@@ -12,6 +12,11 @@ import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import SectionGlow from '@/shared/ui/SectionGlow';
+import {
+  staggerContainer,
+  staggerItem,
+} from '@/shared/ui/motion/staggerReveal';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -322,7 +327,7 @@ function EmptyState({ category }: { category: Category }) {
       </p>
       <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/48">
         {category === 'program'
-          ? 'Join us every Sunday at 9:00 AM and Thursday at 6:00 PM at Honor Gardens, Lekki-Epe Expressway.'
+          ? 'Join us every Sunday at 9:00 AM, and for Daily Prayer Mon–Fri at 7:00 AM, at Honor Gardens, Lekki-Epe Expressway.'
           : 'Check back soon — new content is added regularly.'}
       </p>
       <Link
@@ -450,7 +455,8 @@ export default function EventsShowcase() {
   const onlyFeatured = !!featured && rest.length === 0;
 
   return (
-    <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
+    <section className="relative overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
+      <SectionGlow />
       <Container size="xl">
         {/* ── Section header ──────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -512,10 +518,15 @@ export default function EventsShowcase() {
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.25 }}
             >
-              <div className={`grid gap-5 ${gridCols(rest.length)}`}>
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                animate="show"
+                className={`grid gap-5 ${gridCols(rest.length)}`}
+              >
                 {/* Featured */}
                 {featured && (
-                  <div>
+                  <motion.div variants={staggerItem}>
                     <FeaturedCard
                       slide={featured}
                       fullWidth={onlyFeatured}
@@ -525,22 +536,23 @@ export default function EventsShowcase() {
                           : undefined
                       }
                     />
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* Portrait cards */}
                 {rest.map(slide => (
-                  <PortraitCard
-                    key={slide.id}
-                    slide={slide}
-                    onClick={
-                      slide.category === 'reel'
-                        ? () => setReelModal(slide)
-                        : undefined
-                    }
-                  />
+                  <motion.div key={slide.id} variants={staggerItem}>
+                    <PortraitCard
+                      slide={slide}
+                      onClick={
+                        slide.category === 'reel'
+                          ? () => setReelModal(slide)
+                          : undefined
+                      }
+                    />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </motion.div>
           </AnimatePresence>
         )}

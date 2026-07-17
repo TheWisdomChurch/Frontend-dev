@@ -4,12 +4,15 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Men's Ministry — Wisdom Church",
   description:
     "A men's ministry built on integrity, biblical brotherhood, and leadership that serves. Part of The Wisdom Church, Lagos.",
-};
+  path: '/ministries/men',
+});
 
 /* ── What we do ───────────────────────────────────────── */
 const activities = [
@@ -83,7 +86,8 @@ export default function MenMinistryPage() {
       />
 
       {/* ── 2. Men's Conference — dark ───────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="pt-14 lg:pt-18">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -158,7 +162,8 @@ export default function MenMinistryPage() {
       </section>
 
       {/* ── 4. What we do — dark ─────────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="pt-16 lg:pt-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -229,7 +234,8 @@ export default function MenMinistryPage() {
 
       {/* ── 6. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

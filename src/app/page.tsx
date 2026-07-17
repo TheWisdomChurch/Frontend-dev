@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import nextDynamic from 'next/dynamic';
 import { apiClient } from '@/lib/api';
+import { usePromoModalQueue } from '@/hooks';
 
 const SectionFallback = ({ height = 'min-h-[360px]' }: { height?: string }) => (
   <div className={`w-full ${height} bg-[var(--app-surface-2)]`} />
@@ -15,51 +16,56 @@ const HeroMain = nextDynamic(() => import('@/features/hero/HeroMain'), {
 
 const HeroHighlights = nextDynamic(
   () => import('@/features/hero/HeroHighlights'),
-  { ssr: false, loading: () => <SectionFallback height="min-h-[220px]" /> }
+  { ssr: true, loading: () => <SectionFallback height="min-h-[220px]" /> }
 );
 
 const WhatWeDo = nextDynamic(() => import('@/features/WhatWeDo'), {
-  ssr: false,
+  ssr: true,
   loading: () => <SectionFallback />,
 });
 
 const EventsShowcase = nextDynamic(
   () => import('@/features/events/EventsShowcase'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const SeniorPastor = nextDynamic(
   () => import('@/features/leadership/SeniorPastor'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
-  ssr: false,
+  ssr: true,
   loading: () => <SectionFallback />,
 });
 
 const HomeTestimonials = nextDynamic(
   () => import('@/features/testimonials/HomeTestimonials'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const ConnectPortal = nextDynamic(
   () => import('@/features/connect/ConnectPortal'),
-  { ssr: false, loading: () => <SectionFallback height="min-h-[520px]" /> }
+  { ssr: true, loading: () => <SectionFallback height="min-h-[520px]" /> }
 );
 
 const OnlineGiving = nextDynamic(
   () => import('@/features/events/OnlineGiving'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const ResourceSection = nextDynamic(
   () => import('@/features/resources/Resource'),
-  { ssr: false, loading: () => <SectionFallback /> }
+  { ssr: true, loading: () => <SectionFallback /> }
 );
 
 const EventAdModal = nextDynamic(
   () => import('@/shared/ui/modals/EventAdModal'),
+  { ssr: false, loading: () => null }
+);
+
+const DailyPrayerAdModal = nextDynamic(
+  () => import('@/shared/ui/modals/DailyPrayerAdModal'),
   { ssr: false, loading: () => null }
 );
 
@@ -91,14 +97,12 @@ type HomeConfessionContent = {
 };
 
 export default function Home() {
-  const [showModal, setShowModal] = useState(false);
-  const [nextAdAt, setNextAdAt] = useState<number | null>(
-    () => Date.now() + 1200
-  );
-  const [showConfessionPopup, setShowConfessionPopup] = useState(false);
   const [eventAd, setEventAd] = useState<HomeEventAd | null>(null);
   const [confessionContent, setConfessionContent] =
     useState<HomeConfessionContent | null>(null);
+
+  const { active: activePromoModal, closeActive: closePromoModal } =
+    usePromoModalQueue({ eventAdAvailable: eventAd !== null });
 
   useEffect(() => {
     let mounted = true;
@@ -170,50 +174,10 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setShowConfessionPopup(true);
-    }, 8000);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (nextAdAt === null) return;
-
-    const timeLeft = Math.max(0, nextAdAt - Date.now());
-    const timer = window.setTimeout(() => {
-      setShowModal(true);
-    }, timeLeft);
-
-    return () => window.clearTimeout(timer);
-  }, [nextAdAt]);
-
-  const persistAdCooldown = (cooldownMs: number) => {
-    setNextAdAt(Date.now() + cooldownMs);
-  };
-
-  const handleCloseModal = () => {
-    persistAdCooldown(1000 * 60 * 20);
-    setShowModal(false);
-  };
-
-  const handleRemindLater = () => {
-    persistAdCooldown(1000 * 60 * 45);
-    setShowModal(false);
-  };
-
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[var(--app-surface)] text-[var(--app-text)]">
       <div className="relative flex w-full flex-col">
         <HeroMain />
-
-        <section
-          className="home-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
-          <HeroHighlights />
-        </section>
 
         <section
           className="home-section perf-section"
@@ -221,6 +185,14 @@ export default function Home() {
           suppressHydrationWarning
         >
           <WhatWeDo />
+        </section>
+
+        <section
+          className="home-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
+          <HeroHighlights />
         </section>
 
         <section
@@ -240,6 +212,14 @@ export default function Home() {
         </section>
 
         <section
+          className="home-section perf-section"
+          data-gsap="reveal"
+          suppressHydrationWarning
+        >
+          <HomeTestimonials />
+        </section>
+
+        <section
           id="join"
           className="home-section perf-section scroll-mt-24"
           data-gsap="reveal"
@@ -254,14 +234,6 @@ export default function Home() {
           suppressHydrationWarning
         >
           <ConnectPortal />
-        </section>
-
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
-          <HomeTestimonials />
         </section>
 
         <section
@@ -284,20 +256,24 @@ export default function Home() {
 
       {eventAd && (
         <EventAdModal
-          open={showModal}
+          open={activePromoModal === 'event'}
           event={eventAd}
-          onClose={handleCloseModal}
-          onRemindLater={handleRemindLater}
+          onClose={() => closePromoModal(false)}
+          onRemindLater={() => closePromoModal(true)}
         />
       )}
 
-      {showConfessionPopup && (
-        <ConfessionPopup
-          onClose={() => setShowConfessionPopup(false)}
-          delay={0}
-          content={confessionContent ?? undefined}
-        />
-      )}
+      <DailyPrayerAdModal
+        open={activePromoModal === 'dailyPrayer'}
+        onClose={() => closePromoModal()}
+        onRemindTomorrow={() => closePromoModal()}
+      />
+
+      <ConfessionPopup
+        open={activePromoModal === 'confession'}
+        onClose={() => closePromoModal()}
+        content={confessionContent ?? undefined}
+      />
     </div>
   );
 }

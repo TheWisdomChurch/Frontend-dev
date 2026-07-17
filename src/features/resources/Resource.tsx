@@ -3,11 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   BookOpen,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -18,17 +17,15 @@ import {
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
-import { Button } from '@/shared/utils/buttons';
-import { apiClient } from '@/lib/api';
-import {
-  WhatWeDo_3,
-  Deacon_1,
-  wisdomShirt_1,
-  WhatsappCommunity_2,
-} from '@/shared/assets';
+import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
@@ -60,15 +57,6 @@ const ALL_RESOURCES = [
     cta: 'Visit store',
     img: wisdomShirt_1,
     icon: ShoppingBag,
-  },
-  {
-    title: 'Events',
-    label: 'Programs',
-    desc: 'Upcoming services, conferences, and special gatherings.',
-    href: '/events',
-    cta: 'View events',
-    img: WhatsappCommunity_2,
-    icon: Calendar,
   },
   {
     title: 'Ministries',
@@ -133,24 +121,30 @@ function ResourceCarousel() {
 
         {/* Navigation arrows */}
         <div className="flex shrink-0 items-center gap-2">
-          <button
+          <motion.button
             type="button"
             onClick={prev}
             disabled={!canPrev}
             aria-label="Previous"
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            whileHover={canPrev ? { scale: 1.08 } : undefined}
+            whileTap={canPrev ? { scale: 0.94 } : undefined}
+            transition={{ type: 'spring', stiffness: 400, damping: 26 }}
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             type="button"
             onClick={next}
             disabled={!canNext}
             aria-label="Next"
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            whileHover={canNext ? { scale: 1.08 } : undefined}
+            whileTap={canNext ? { scale: 0.94 } : undefined}
+            transition={{ type: 'spring', stiffness: 400, damping: 26 }}
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -214,17 +208,9 @@ function ResourceCarousel() {
   );
 }
 
-type Subscriber = { name: string; email: string };
-
 export default function ResourceSection() {
   const [recentVideo, setRecentVideo] = useState<YouTubeVideo | null>(null);
   const [loading, setLoading] = useState(true);
-  const [subscriber, setSubscriber] = useState<Subscriber>({
-    name: '',
-    email: '',
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [shouldFetch, setShouldFetch] = useState(false);
 
   const fetchedOnce = useRef(false);
@@ -283,27 +269,6 @@ export default function ResourceSection() {
     };
   }, [shouldFetch]);
 
-  const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const email = subscriber.email.trim();
-    if (!email) return;
-    setSubmitting(true);
-    try {
-      await apiClient.subscribe({
-        name: subscriber.name.trim() || undefined,
-        email,
-      });
-      setSubscriber({ name: '', email: '' });
-      setSubmitted(true);
-      window.setTimeout(() => setSubmitted(false), 2800);
-    } catch {
-      setSubmitted(false);
-      toast.error('We could not subscribe you. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const thumb =
     recentVideo?.thumbnail ||
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -347,11 +312,17 @@ export default function ResourceSection() {
         </div>
 
         {/* ── Layout ───────────────────────────────────────── */}
-        <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={staggerViewport}
+          className="grid gap-8 lg:grid-cols-2 lg:items-center"
+        >
           {/* Left — content */}
-          <div className="flex flex-col">
+          <motion.div variants={staggerItem} className="flex flex-col">
             <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/35">
-              Sundays 9:00 AM · Thursdays 6:00 PM
+              Sundays 9:00 AM · Daily Prayer 7:00 AM
             </p>
 
             {loading ? (
@@ -397,38 +368,13 @@ export default function ResourceSection() {
                 All sermons <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-
-            {/* Subscribe form */}
-            <form onSubmit={handleSubscribe} className="mt-10 max-w-[380px]">
-              <p className="mb-3 text-[0.72rem] font-semibold text-[var(--app-ink)]/50">
-                Get service reminders in your inbox
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  required
-                  value={subscriber.email}
-                  onChange={e =>
-                    setSubscriber(p => ({ ...p, email: e.target.value }))
-                  }
-                  placeholder="Email address"
-                  className="h-11 flex-1 border border-[var(--app-ink)]/15 bg-white px-4 text-sm text-[var(--app-ink)] outline-none placeholder:text-[var(--app-ink)]/30 focus:border-[var(--app-primary)]/60 focus:ring-2 focus:ring-[var(--app-primary)]/10"
-                />
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="sm"
-                  disabled={submitting}
-                  className="h-11 px-5 text-[0.78rem]"
-                >
-                  {submitting ? 'Sending…' : submitted ? '✓ Done' : 'Subscribe'}
-                </Button>
-              </div>
-            </form>
-          </div>
+          </motion.div>
 
           {/* Right — video thumbnail */}
-          <div className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl">
+          <motion.div
+            variants={staggerItem}
+            className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl"
+          >
             {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-[var(--app-ink)]/20" />
@@ -468,8 +414,8 @@ export default function ResourceSection() {
                 </p>
               </div>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* ── You can do more ──────────────────────────────── */}
         <ResourceCarousel />

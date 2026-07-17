@@ -4,13 +4,16 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import ChildrenGallery from './ChildrenGallery';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Children's Ministry — Wisdom Church",
   description:
     'A safe, joyful, and Bible-centered ministry for children from nursery through pre-teen years at The Wisdom Church.',
-};
+  path: '/ministries/children',
+});
 
 /* ── What we do ───────────────────────────────────────── */
 const activities = [
@@ -85,7 +88,8 @@ export default function ChildrenMinistryPage() {
       />
 
       {/* ── 2. Mission statement — dark ──────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -144,7 +148,8 @@ export default function ChildrenMinistryPage() {
       </section>
 
       {/* ── 4. Gallery — dark ────────────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="pt-14 lg:pt-18">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -202,7 +207,8 @@ export default function ChildrenMinistryPage() {
 
       {/* ── 6. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
+          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

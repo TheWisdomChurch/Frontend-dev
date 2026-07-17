@@ -7,6 +7,7 @@ import Image from 'next/image';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
@@ -93,7 +94,8 @@ export default function SpecialEventsPage() {
         compact
       />
 
-      <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+      <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+        <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="mb-12">
             <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

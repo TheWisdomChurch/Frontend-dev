@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import type { JSX } from 'react';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Terms of Use — Wisdom Church',
   description:
     "Terms governing your access to Wisdom Church's website, livestreams, and digital services.",
-};
+  path: '/terms',
+});
 
 const sections = [
   {

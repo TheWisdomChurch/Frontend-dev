@@ -9,6 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, CalendarDays, PlayCircle } from 'lucide-react';
 
 import { Section, Container } from '@/shared/layout';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { lader as laderImg } from '@/shared/assets';
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
@@ -228,9 +229,9 @@ export default function HeroSection({
   }, []);
 
   // Resolve display content (content prop overrides dynamic slide)
-  const eyebrow = content?.eyebrow ?? 'The Wave of Greatness';
+  const eyebrow = content?.eyebrow ?? 'Welcome Home';
   const titleLines = (
-    content?.title ?? String((slide as any)?.title || 'The Wave\nof Greatness')
+    content?.title ?? String((slide as any)?.title || 'The Wisdom Church')
   )
     .split('\n')
     .map(l => l.trim())
@@ -343,7 +344,8 @@ export default function HeroSection({
         size="xl"
         className="relative z-20 flex min-h-[100svh] flex-col justify-center px-4 pb-20 pt-28 sm:px-6 sm:pb-24 sm:pt-32 lg:px-10 lg:pb-28 lg:pt-36"
       >
-        <div className="max-w-[640px]">
+        <div className="relative max-w-[640px]">
+          <SectionGlow />
           {/* Eyebrow — elastic bounce entry + continuous gentle float */}
           <p
             ref={eyebrowRef}

@@ -84,7 +84,32 @@ const nextConfig: NextConfig = {
   },
 
   async redirects() {
-    return [];
+    return [
+      // Legacy domain — canonicalize to the current domain to avoid
+      // duplicate-content indexing of the old church URL.
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.thewisdomhousechurch.org',
+          },
+        ],
+        destination: 'https://wisdomchurchhq.org/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'thewisdomhousechurch.org',
+          },
+        ],
+        destination: 'https://wisdomchurchhq.org/:path*',
+        permanent: true,
+      },
+    ];
   },
 
   async rewrites() {

@@ -2,12 +2,18 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { whatWeDoData } from '@/lib/data';
 import { Section } from '@/shared/layout';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 const SLIDES = whatWeDoData.slice(0, 4).map((item, i) => ({
   ...item,
@@ -52,14 +58,24 @@ export default function WhatWeDo() {
       >
         <div className="grid min-h-[600px] grid-cols-1 lg:grid-cols-2 lg:min-h-[680px]">
           {/* ── Left — content ──────────────────────────────────── */}
-          <div className="flex flex-col justify-between px-6 py-section-md sm:px-10 lg:px-14 xl:px-20">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="flex flex-col justify-between px-6 py-section-md sm:px-10 lg:px-14 xl:px-20"
+          >
             <div className="flex flex-col">
-              <p className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <motion.p
+                variants={staggerItem}
+                className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+              >
                 Who We Are
-              </p>
+              </motion.p>
 
               {/* Headline — cross-fades between slides */}
-              <div
+              <motion.div
+                variants={staggerItem}
                 className="relative"
                 // eslint-disable-next-line no-restricted-syntax
                 style={{ minHeight: 'clamp(7rem, 14vw, 11rem)' }}
@@ -89,16 +105,18 @@ export default function WhatWeDo() {
                     ))}
                   </h2>
                 ))}
-              </div>
+              </motion.div>
 
               {/* Gold rule */}
-              <span
+              <motion.span
+                variants={staggerItem}
                 className="mt-8 block h-[2px] w-12 bg-[var(--app-primary)]"
                 aria-hidden="true"
               />
 
               {/* Description */}
-              <div
+              <motion.div
+                variants={staggerItem}
                 className="relative mt-6"
                 // eslint-disable-next-line no-restricted-syntax
                 style={{ minHeight: '9rem' }}
@@ -120,11 +138,57 @@ export default function WhatWeDo() {
                     {s.description}
                   </p>
                 ))}
-              </div>
+              </motion.div>
+
+              {/* Manual navigation */}
+              <motion.div
+                variants={staggerItem}
+                className="mt-8 flex items-center gap-4"
+              >
+                <button
+                  type="button"
+                  onClick={() => goTo(active - 1)}
+                  aria-label="Previous"
+                  className="grid h-9 w-9 flex-none place-items-center rounded-full border border-white/15 text-white/50 transition hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                </button>
+
+                <div
+                  className="flex items-center gap-2"
+                  role="tablist"
+                  aria-label="What we do slides"
+                >
+                  {SLIDES.map((s, i) => (
+                    <button
+                      key={s.title}
+                      type="button"
+                      role="tab"
+                      aria-selected={i === active}
+                      aria-label={`Go to slide ${i + 1}`}
+                      onClick={() => goTo(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        i === active
+                          ? 'w-6 bg-[var(--app-primary)]'
+                          : 'w-1.5 bg-white/20 hover:bg-white/35'
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => goTo(active + 1)}
+                  aria-label="Next"
+                  className="grid h-9 w-9 flex-none place-items-center rounded-full border border-white/15 text-white/50 transition hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
+                >
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </motion.div>
             </div>
 
             {/* CTA */}
-            <div className="mt-10">
+            <motion.div variants={staggerItem} className="mt-10">
               <Link
                 href="/about"
                 className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-[0.8rem] font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
@@ -132,11 +196,17 @@ export default function WhatWeDo() {
                 Our Story
                 <ArrowRight className="h-3.5 w-3.5 transition duration-200 group-hover:translate-x-1" />
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* ── Right — sliding editorial photos ────────────────── */}
-          <div className="relative min-h-[360px] overflow-hidden border-l border-white/[0.05] lg:min-h-0">
+          <motion.div
+            variants={staggerItem}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="relative min-h-[360px] overflow-hidden border-l border-white/[0.05] lg:min-h-0"
+          >
             {SLIDES.map((s, i) => {
               const src =
                 typeof s.image === 'string'
@@ -173,7 +243,7 @@ export default function WhatWeDo() {
                 </div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </div>
     </Section>

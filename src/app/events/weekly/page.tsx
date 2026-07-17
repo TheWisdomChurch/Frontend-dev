@@ -4,11 +4,14 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildRecurringEventSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Weekly Services — Wisdom Church',
   description:
-    'Join us every Sunday at 9:00 AM and Thursday at 6:00 PM at Honor Gardens, Lekki-Epe Expressway, Lagos.',
+    'Join us every Sunday at 9:00 AM and for Daily Prayer, Monday–Friday at 7:00 AM, at Honor Gardens, Lekki-Epe Expressway, Lagos.',
 };
 
 const services = [
@@ -25,15 +28,15 @@ const services = [
     ],
   },
   {
-    day: 'Thursday',
-    time: '6:00 PM',
-    name: 'Midweek Power Service',
+    day: 'Mon – Fri',
+    time: '7:00 AM',
+    name: 'Daily Morning Prayer',
     description:
-      'A mid-week reset — deep prayer, focused teaching, and meaningful fellowship with the community.',
+      'Start every weekday in prayer, declaration, and the Word — a solid foundation before the day begins.',
     details: [
-      'Runs approximately 90 minutes',
+      'Runs approximately 45 minutes',
       'Open to all ages',
-      'Great entry point for first-timers',
+      'Join in person or via livestream',
     ],
   },
 ] as const;
@@ -58,13 +61,40 @@ function Arrow() {
   );
 }
 
+const RECURRING_SCHEMAS = [
+  buildRecurringEventSchema({
+    name: 'Sunday Worship Service',
+    description:
+      'Our flagship gathering — Spirit-filled worship, corporate prayer, and the preached Word.',
+    dayOfWeek: ['https://schema.org/Sunday'],
+    startTime: '09:00',
+  }),
+  buildRecurringEventSchema({
+    name: 'Daily Morning Prayer',
+    description:
+      'Start every weekday in prayer, declaration, and the Word — a solid foundation before the day begins.',
+    dayOfWeek: [
+      'https://schema.org/Monday',
+      'https://schema.org/Tuesday',
+      'https://schema.org/Wednesday',
+      'https://schema.org/Thursday',
+      'https://schema.org/Friday',
+    ],
+    startTime: '07:00',
+  }),
+];
+
 export default function WeeklyPage() {
   return (
     <main className="min-h-screen">
+      {RECURRING_SCHEMAS.map((schema, i) => (
+        <JsonLd key={i} data={schema} />
+      ))}
+
       <PageHero
         eyebrow="Weekly Services"
         title="We gather. Every week."
-        subtitle="Two services a week — Sunday morning and Thursday evening — both open to everyone."
+        subtitle="Sunday morning worship, and Daily Prayer every weekday morning — all open to everyone."
         compact
       />
 
@@ -129,7 +159,8 @@ export default function WeeklyPage() {
 
       {/* CTA dark */}
       <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

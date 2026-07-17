@@ -6,9 +6,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -136,6 +139,13 @@ export default function TestimoniesPage() {
   return (
     <>
       <main className="min-h-screen">
+        <JsonLd
+          data={buildBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Testimonies', path: '/testimonies' },
+          ])}
+        />
+
         {/* ── 1. Hero ────────────────────────────────────────── */}
         <PageHero
           eyebrow="Testimonies"
@@ -148,6 +158,7 @@ export default function TestimoniesPage() {
         {!loading && featured && (
           <ScrollFadeIn>
             <section className="min-w-0 relative overflow-hidden border-b border-white/8 bg-[var(--app-dark)] py-20 lg:py-28">
+              <SectionGlow />
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(201,150,26,0.07),transparent)]" />
               <Container size="md" className="relative text-center">
                 <OpenQuote className="text-[5rem] text-[var(--app-primary)]/30 lg:text-[7rem]" />
@@ -261,7 +272,8 @@ export default function TestimoniesPage() {
 
         {/* ── 4. CTA — dark ──────────────────────────────────── */}
         <ScrollFadeIn>
-          <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
+          <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
+            <SectionGlow />
             <Container size="lg">
               <div className="flex flex-col items-center gap-7 text-center">
                 <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">

@@ -4,9 +4,12 @@ import Link from 'next/link';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildEventSchema, buildBreadcrumbSchema } from '@/lib/seo';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -71,10 +74,10 @@ const WEEKLY = [
       'Spirit-filled corporate worship, prayer, and the preached Word.',
   },
   {
-    day: 'Thursday',
-    time: '6:00 PM',
-    name: 'Midweek Power Service',
-    description: 'Midweek gathering for prayer, teaching, and community.',
+    day: 'Mon – Fri',
+    time: '7:00 AM',
+    name: 'Daily Morning Prayer',
+    description: 'Start the day in prayer, declaration, and the Word.',
   },
 ] as const;
 
@@ -200,8 +203,8 @@ function EmptyState() {
           Events are on their way.
         </h3>
         <p className="max-w-sm font-ui text-[0.83rem] leading-[1.85] text-white/65">
-          Nothing is scheduled right now. In the meantime, join us for our
-          weekly services every Sunday and Thursday.
+          Nothing is scheduled right now. In the meantime, join us for Sunday
+          Worship and Daily Prayer, Monday through Friday.
         </p>
         <Link
           href="/contact"
@@ -226,6 +229,18 @@ export default async function EventsPage() {
 
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Events', path: '/events' },
+        ])}
+      />
+
+      {events
+        .filter(event => Boolean(event.startAt))
+        .map(event => (
+          <JsonLd key={event.id} data={buildEventSchema(event)} />
+        ))}
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <PageHero
         eyebrow="Events & Programs"
@@ -301,7 +316,8 @@ export default async function EventsPage() {
       </section>
 
       {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
-      <section className="overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+      <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
+        <SectionGlow />
         <Container size="xl">
           {/* Header */}
           <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">

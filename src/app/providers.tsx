@@ -13,6 +13,7 @@ import ClientScrollToTop from '@/shared/components/ClientscrollTop';
 import ScrollHandler from '@/shared/components/ClientScrollHandler';
 import CookieConsentBanner from '@/shared/ui/CookieConsentBanner';
 import GlobalScrollEffects from '@/shared/components/GlobalScrollEffects';
+import PageTipHost from '@/shared/components/PageTipHost';
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -41,6 +42,7 @@ export function Providers({ children }: { children: ReactNode }) {
 
               <ClientScrollToTop />
               <CookieConsentBanner />
+              <PageTipHost />
             </ErrorBoundary>
           </HeaderProvider>
         </ServiceUnavailableProvider>

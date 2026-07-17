@@ -40,6 +40,7 @@ import { hero_bg_1 } from '@/shared/assets';
 import { Button } from '@/shared/utils/buttons';
 import { Section, Container } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
+import SectionGlow from '@/shared/ui/SectionGlow';
 import CartSidebar from '@/features/store/Store/CartSidebar';
 import type { Product } from '@/lib/types';
 import { IMAGE_QUALITY } from '@/shared/constants';
@@ -253,6 +254,7 @@ function StorePageContent() {
         fullHeight={false}
         className="relative bg-[var(--app-dark)]"
       >
+        <SectionGlow />
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
           <GridBackground />
@@ -411,7 +413,12 @@ function StorePageContent() {
         </Container>
       </Section>
 
-      <Section padding="lg" fullHeight={false} className="bg-[var(--app-dark)]">
+      <Section
+        padding="lg"
+        fullHeight={false}
+        className="relative bg-[var(--app-dark)]"
+      >
+        <SectionGlow />
         <Container size="xl">
           <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>

@@ -8,6 +8,9 @@ import { Bishop, PstKenny, lader_1 } from '@/shared/assets';
 import { H2, BodyMD, BodySM } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema } from '@/lib/seo';
+import SectionGlow from '@/shared/ui/SectionGlow';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +37,7 @@ export const metadata: Metadata = {
 
 const serviceInfo = [
   { label: 'Sunday Worship', value: 'Every Sunday', detail: '9:00 AM WAT' },
-  { label: 'Midweek Service', value: 'Every Thursday', detail: '6:00 PM WAT' },
+  { label: 'Daily Prayer', value: 'Monday – Friday', detail: '7:00 AM WAT' },
   { label: 'Location', value: 'Honor Gardens', detail: 'Lekki-Epe, Lagos' },
 ] as const;
 
@@ -75,6 +78,13 @@ const leaders = [
 export default function AboutPage() {
   return (
     <main className="min-h-screen">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about' },
+        ])}
+      />
+
       {/* ── 1. Page hero ─────────────────────────────────────── */}
       <PageHero
         eyebrow="About Wisdom Church"
@@ -108,7 +118,11 @@ export default function AboutPage() {
       </section>
 
       {/* ── 3. Editorial identity split — dark ───────────────── */}
-      <Section padding="none" className="overflow-hidden bg-[var(--app-dark)]">
+      <Section
+        padding="none"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
+      >
+        <SectionGlow />
         <div className="grid lg:grid-cols-[1fr_1fr] lg:min-h-[580px]">
           {/* Text column */}
           <ScrollFadeIn className="flex flex-col justify-center gap-7 px-6 py-16 sm:px-10 lg:px-14 xl:px-18 order-2 lg:order-1">
@@ -223,7 +237,8 @@ export default function AboutPage() {
       <section className="overflow-hidden min-w-0">
         {/* Leadership intro header — dark */}
         <ScrollFadeIn>
-          <div className="bg-[var(--app-dark)] px-6 py-14 lg:py-18">
+          <div className="relative bg-[var(--app-dark)] px-6 py-14 lg:py-18">
+            <SectionGlow />
             <Container size="xl">
               <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
                 <div className="max-w-lg">
@@ -402,7 +417,7 @@ export default function AboutPage() {
 
               {/* Service times */}
               <p className="font-ui text-[0.72rem] tracking-[0.04em] text-[var(--app-ink)]/35">
-                Sundays 9:00 AM &nbsp;·&nbsp; Thursdays 6:00 PM &nbsp;·&nbsp;
+                Sundays 9:00 AM &nbsp;·&nbsp; Daily Prayer 7:00 AM &nbsp;·&nbsp;
                 Honor Gardens, Lekki-Epe
               </p>
             </div>

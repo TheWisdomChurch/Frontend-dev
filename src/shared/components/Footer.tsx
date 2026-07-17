@@ -179,7 +179,7 @@ export default function Footer() {
                 Sundays · 9:00 AM
               </p>
               <p className="font-ui text-[0.75rem] font-semibold text-white/75">
-                Thursdays · 6:00 PM
+                Daily Prayer · 7:00 AM
               </p>
             </div>
 
