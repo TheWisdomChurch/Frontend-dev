@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -9,15 +9,15 @@ import {
   ArrowRight,
   Baby,
   CheckCircle2,
-  ChevronRight,
+  ChevronLeft,
   Cpu,
-  Loader2,
+  HeartHandshake,
   Music,
-  Search,
+  Sparkles,
+  Target,
   Users,
   Users2,
   Video,
-  X,
 } from 'lucide-react';
 
 import { Container, Section } from '@/shared/layout';
@@ -25,12 +25,35 @@ import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { BodySM, Caption } from '@/shared/text';
+import { Media } from '@/shared/ui/Media';
+import SectionGlow from '@/shared/ui/SectionGlow';
+import { Dept_1 } from '@/shared/assets';
 import { apiClient } from '@/lib/api';
 import {
   staggerContainer,
   staggerItem,
   staggerViewport,
 } from '@/shared/ui/motion/staggerReveal';
+
+/* ─── Why serve ────────────────────────────────────────────────────── */
+
+const valuePillars = [
+  {
+    icon: Sparkles,
+    title: 'Discover your gift',
+    body: 'Every skill has a place to serve here.',
+  },
+  {
+    icon: HeartHandshake,
+    title: 'Build real community',
+    body: 'Serve alongside people who become family.',
+  },
+  {
+    icon: Target,
+    title: 'Make eternal impact',
+    body: 'Your seat here matters more than you know.',
+  },
+] as const;
 
 const { zodResolver } = ZodResolvers;
 
@@ -43,6 +66,14 @@ const departments = [
     apiDepartment: 'Protocol',
     icon: Users,
     description: 'First touch hospitality and service flow.',
+    detail:
+      'The first face a visitor sees and the team that keeps every service moving without friction — from the car park to the sanctuary door.',
+    responsibilities: [
+      'Welcome and direct guests and members as they arrive',
+      'Manage seating, overflow, and altar-call flow during service',
+      'Coordinate offering collection and special moments',
+      'Keep exits, aisles, and emergency routes clear throughout',
+    ],
   },
   {
     title: 'Media & Broadcast',
@@ -50,6 +81,14 @@ const departments = [
     apiDepartment: 'Media',
     icon: Video,
     description: 'Cameras, lighting, sound, and storytelling.',
+    detail:
+      "The team behind every camera angle, every lyric on screen, and every service that reaches people who couldn't be in the room.",
+    responsibilities: [
+      'Operate cameras and switch live service broadcasts',
+      'Run lighting and stage visuals during worship and ministration',
+      'Edit and publish sermon clips, reels, and highlight content',
+      'Manage livestream setup across YouTube and other platforms',
+    ],
   },
   {
     title: 'Wave City Music',
@@ -57,6 +96,14 @@ const departments = [
     apiDepartment: 'Music',
     icon: Music,
     description: 'Lead worship and craft the atmosphere.',
+    detail:
+      'Vocalists, instrumentalists, and sound engineers who lead the church into worship and shape the atmosphere of every gathering.',
+    responsibilities: [
+      'Rehearse and lead worship as a vocalist or instrumentalist',
+      'Run live sound, mixing, and stage monitoring',
+      'Prepare set lists and arrangements with the music director',
+      'Serve consistently across weekly services and special programs',
+    ],
   },
   {
     title: 'Children Ministry',
@@ -64,6 +111,14 @@ const departments = [
     apiDepartment: 'Children',
     icon: Baby,
     description: 'Shepherd the next generation with love.',
+    detail:
+      'A safe, joyful space where children build their first real foundations in the Word — led by adults who take that responsibility seriously.',
+    responsibilities: [
+      'Teach age-appropriate Bible lessons and lead worship for kids',
+      'Supervise and care for children throughout each service',
+      'Plan activities, games, and creative learning moments',
+      "Partner with parents to keep them informed on their child's growth",
+    ],
   },
   {
     title: 'Youth & Campus',
@@ -71,6 +126,14 @@ const departments = [
     apiDepartment: 'Youth',
     icon: Users2,
     description: 'Mentor teens and young adults.',
+    detail:
+      "Walking with teenagers and young adults through real questions, real pressure, and the process of building a faith that's actually theirs.",
+    responsibilities: [
+      'Lead or support small-group discussions and mentorship',
+      'Help plan and run youth gatherings and campus outreach',
+      'Build genuine relationships beyond the weekly meeting',
+      'Model consistency and character young people can follow',
+    ],
   },
   {
     title: 'Technical Team',
@@ -78,8 +141,18 @@ const departments = [
     apiDepartment: 'Technical',
     icon: Cpu,
     description: 'Keep every service running flawlessly.',
+    detail:
+      'The quiet infrastructure behind every service — power, screens, streaming, and systems — so nothing visible ever breaks.',
+    responsibilities: [
+      'Set up and maintain audio, visual, and streaming equipment',
+      'Troubleshoot technical issues in real time during service',
+      'Manage church software, screens, and presentation systems',
+      'Support other departments with technical needs as they arise',
+    ],
   },
 ] as const;
+
+type Department = (typeof departments)[number];
 
 const countryCodes = [
   { code: '+234', label: 'NG' },
@@ -145,40 +218,35 @@ function FieldError({ message }: { message?: string }) {
   );
 }
 
-/* ─── Lookup status type ──────────────────────────────────────────── */
-
-type LookupStatus = 'idle' | 'loading' | 'found' | 'not_found';
+const defaultValues: ModalValues = {
+  fullName: '',
+  phoneCode: '+234',
+  phone: '',
+  email: '',
+  birthday: '',
+  occupation: '',
+  department: '',
+  married: 'no',
+  spouse: '',
+  anniversary: '',
+  about: '',
+};
 
 /* ─── Component ───────────────────────────────────────────────────── */
 
 export default function JoinWisdomHouse() {
   const { open } = useServiceUnavailable();
 
-  const [openModal, setOpenModal] = useState(false);
-  const [existing, setExisting] = useState(false);
+  // modalStep === null means closed. 'detail' shows the department
+  // description; 'form' shows the application form. Both steps share one
+  // BaseModal instance so advancing/going back never re-mounts the overlay.
+  const [modalStep, setModalStep] = useState<'detail' | 'form' | null>(null);
+  const [selectedDept, setSelectedDept] = useState<Department | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [activeCard, setActiveCard] = useState<number>(0);
 
-  // Existing member lookup state
-  const [lookupEmail, setLookupEmail] = useState('');
-  const [lookupStatus, setLookupStatus] = useState<LookupStatus>('idle');
-  const [foundName, setFoundName] = useState('');
-  const lookupEmailRef = useRef<HTMLInputElement>(null);
-
   const departmentOptions = useMemo(() => departments.map(d => d.title), []);
-
-  // Lookup responses return the stored department code (e.g. "Protocol"),
-  // but the <select> options are display titles (e.g. "Ushers & Protocol").
-  // Map code -> title so pre-fill actually selects the right option.
-  const resolveDepartmentTitle = useCallback((raw: string) => {
-    const match = departments.find(
-      d =>
-        d.apiDepartment.toLowerCase() === raw.toLowerCase() ||
-        d.title.toLowerCase() === raw.toLowerCase()
-    );
-    return match?.title || raw;
-  }, []);
 
   const {
     register,
@@ -186,135 +254,33 @@ export default function JoinWisdomHouse() {
     formState: { errors },
     reset,
     watch,
-    setValue,
-    getValues,
   } = useForm<ModalValues>({
     resolver: zodResolver(modalSchema),
-    defaultValues: {
-      fullName: '',
-      phoneCode: '+234',
-      phone: '',
-      email: '',
-      birthday: '',
-      occupation: '',
-      department: '',
-      married: 'no',
-      spouse: '',
-      anniversary: '',
-      about: '',
-    },
+    defaultValues,
   });
 
   const marriedValue = watch('married');
 
   const openFor = useCallback(
-    (dept: string) => {
-      reset({
-        fullName: '',
-        phoneCode: '+234',
-        phone: '',
-        email: '',
-        birthday: '',
-        occupation: '',
-        department: dept,
-        married: 'no',
-        spouse: '',
-        anniversary: '',
-        about: '',
-      });
-      setExisting(false);
-      setLookupEmail('');
-      setLookupStatus('idle');
-      setFoundName('');
-      setOpenModal(true);
+    (dept: Department) => {
+      reset({ ...defaultValues, department: dept.title });
+      setSelectedDept(dept);
+      setModalStep('detail');
     },
     [reset]
   );
 
-  const switchMode = useCallback(
-    (isExisting: boolean) => {
-      setExisting(isExisting);
-      setLookupEmail('');
-      setLookupStatus('idle');
-      setFoundName('');
-      if (!isExisting) {
-        // Reset form when switching back to new member, preserve department
-        reset({
-          fullName: '',
-          phoneCode: '+234',
-          phone: '',
-          email: '',
-          birthday: '',
-          occupation: '',
-          department: getValues('department'),
-          married: 'no',
-          spouse: '',
-          anniversary: '',
-          about: '',
-        });
-      }
-    },
-    [reset, getValues]
-  );
+  const openGeneric = useCallback(() => {
+    reset(defaultValues);
+    setSelectedDept(null);
+    setModalStep('form');
+  }, [reset]);
 
-  const handleLookup = useCallback(async () => {
-    if (!lookupEmail || !lookupEmail.includes('@')) return;
-    setLookupStatus('loading');
-    try {
-      const profile = await apiClient.lookupWorkforceMember(lookupEmail);
-      if (profile) {
-        const name =
-          typeof profile.firstName === 'string' &&
-          typeof profile.lastName === 'string'
-            ? `${profile.firstName} ${profile.lastName}`.trim()
-            : typeof profile.fullName === 'string'
-              ? profile.fullName
-              : '';
-
-        setFoundName(name);
-        setLookupStatus('found');
-
-        // Pre-fill form with fetched data
-        const current = getValues();
-        reset({
-          ...current,
-          fullName: name || current.fullName,
-          email: lookupEmail,
-          phone:
-            typeof profile.phone === 'string' ? profile.phone : current.phone,
-          phoneCode:
-            typeof profile.phoneCode === 'string'
-              ? profile.phoneCode
-              : current.phoneCode,
-          occupation:
-            typeof profile.occupation === 'string'
-              ? profile.occupation
-              : current.occupation,
-          department:
-            typeof profile.department === 'string' && profile.department
-              ? resolveDepartmentTitle(profile.department)
-              : current.department,
-          married:
-            profile.married === 'yes' || profile.married === 'no'
-              ? profile.married
-              : current.married,
-          spouse:
-            typeof profile.spouse === 'string'
-              ? profile.spouse
-              : current.spouse,
-          about:
-            typeof profile.about === 'string' ? profile.about : current.about,
-        });
-      } else {
-        setLookupStatus('not_found');
-        // Pre-fill email so the user doesn't have to re-type it
-        setValue('email', lookupEmail);
-      }
-    } catch {
-      setLookupStatus('not_found');
-      setValue('email', lookupEmail);
-    }
-  }, [lookupEmail, reset, setValue, getValues, resolveDepartmentTitle]);
+  const closeModal = useCallback(() => {
+    if (submitting) return;
+    setModalStep(null);
+    setSelectedDept(null);
+  }, [submitting]);
 
   const splitName = (v: string) => {
     const parts = v.trim().split(/\s+/);
@@ -338,12 +304,6 @@ export default function JoinWisdomHouse() {
       setSubmitting(true);
       const { firstName, lastName } = splitName(values.fullName);
       const dept = getDeptMeta(values.department);
-      const registrationType =
-        existing && lookupStatus === 'found'
-          ? 'update'
-          : existing
-            ? 'existing'
-            : 'new';
 
       await apiClient.applyWorkforceNew({
         firstName,
@@ -355,30 +315,20 @@ export default function JoinWisdomHouse() {
         occupation: values.occupation || '',
         department: dept.department,
         departmentSection: dept.departmentSection,
-        registrationType,
+        registrationType: 'new',
         married: values.married,
         spouse: values.married === 'yes' ? values.spouse || '' : '',
         anniversaryDate:
           values.married === 'yes' ? values.anniversary || '' : '',
         about: values.about || '',
         sourceChannel: 'frontend:web:join-us',
-        notes: [
-          `Original team: ${dept.originalLabel}`,
-          `Member status: ${registrationType}`,
-          existing && lookupStatus === 'found'
-            ? `Profile updated for: ${values.email}`
-            : '',
-        ]
-          .filter(Boolean)
-          .join('\n'),
+        notes: `Original team: ${dept.originalLabel}`,
       });
 
-      setOpenModal(false);
+      setModalStep(null);
+      setSelectedDept(null);
       setSubmitted(true);
-      reset();
-      setLookupEmail('');
-      setLookupStatus('idle');
-      setFoundName('');
+      reset(defaultValues);
       setTimeout(() => setSubmitted(false), 4000);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Please try again.';
@@ -388,51 +338,81 @@ export default function JoinWisdomHouse() {
     }
   });
 
-  // Show form when: new member OR existing + lookup done (found or not_found)
-  const showForm =
-    !existing || lookupStatus === 'found' || lookupStatus === 'not_found';
-
   return (
     <Section
       padding="none"
       fullHeight={false}
-      className="bg-[var(--app-canvas)]"
+      className="relative overflow-hidden bg-[var(--app-dark)]"
     >
-      <Container size="xl" className="py-section-md">
-        {/* ── Header ───────────────────────────────────────────── */}
-        <div className="mb-12 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="mb-3 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Join the workforce
-            </p>
-            <h2
-              className="font-headline font-normal text-[var(--app-ink)]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ fontSize: 'var(--type-display-md)' }}
-            >
-              Serve with excellence.
-            </h2>
-            <p className="mt-3 max-w-[460px] font-ui text-[0.95rem] leading-[1.8] text-[var(--app-ink)]/60">
-              Use your gifts to build the church. Every team here has a role and
-              a seat — find yours.
-            </p>
-          </div>
+      <SectionGlow variant="double" />
 
-          {submitted && (
-            <div className="inline-flex items-center gap-2 font-ui text-[0.82rem] font-semibold text-[var(--app-primary)]">
-              <CheckCircle2 className="h-4 w-4" />
-              Application received. We'll be in touch soon.
-            </div>
-          )}
+      {/* ── Photo banner ─────────────────────────────────────── */}
+      <div className="relative overflow-hidden border-b border-white/8">
+        <div className="absolute inset-0">
+          <Media
+            src={Dept_1}
+            alt=""
+            sizes="100vw"
+            className="object-[center_28%] opacity-[0.5]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_25%,rgba(201,150,26,0.18),transparent_55%)]" />
         </div>
 
-        {/* ── Department grid ───────────────────────────────────── */}
+        <Container size="xl" className="relative py-14 lg:py-[4.5rem]">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="mb-3 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Join the workforce
+              </p>
+              <h2
+                className="font-headline font-normal text-white"
+                // eslint-disable-next-line no-restricted-syntax
+                style={{ fontSize: 'var(--type-display-md)' }}
+              >
+                Serve with excellence.
+              </h2>
+              <p className="mt-3 max-w-[460px] font-ui text-[0.95rem] leading-[1.8] text-white/62">
+                Use your gifts to build the church. Every team here has a role
+                and a seat — find yours.
+              </p>
+            </div>
+
+            {submitted && (
+              <div className="inline-flex items-center gap-2 font-ui text-[0.82rem] font-semibold text-[var(--app-primary)]">
+                <CheckCircle2 className="h-4 w-4" />
+                Application received. We'll be in touch soon.
+              </div>
+            )}
+          </div>
+
+          {/* ── Why serve ─────────────────────────────────────── */}
+          <div className="mt-11 grid grid-cols-1 gap-6 border-t border-white/10 pt-9 sm:grid-cols-3 sm:gap-8">
+            {valuePillars.map(pillar => (
+              <div key={pillar.title} className="flex items-start gap-3.5">
+                <pillar.icon className="mt-0.5 h-[1.15rem] w-[1.15rem] flex-none text-[var(--app-primary)]" />
+                <div>
+                  <p className="font-ui text-[0.82rem] font-bold text-white">
+                    {pillar.title}
+                  </p>
+                  <p className="mt-1 font-ui text-[0.78rem] leading-[1.6] text-white/50">
+                    {pillar.body}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </div>
+
+      {/* ── Department grid ───────────────────────────────────── */}
+      <Container size="xl" className="relative py-14 lg:py-[4.5rem]">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
           viewport={staggerViewport}
-          className="grid grid-cols-1 gap-px overflow-hidden rounded-card bg-[var(--app-ink)]/8 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 gap-px overflow-hidden rounded-card bg-white/8 sm:grid-cols-2 lg:grid-cols-3"
         >
           {departments.map((dept, index) => {
             const Icon = dept.icon;
@@ -442,15 +422,15 @@ export default function JoinWisdomHouse() {
                 key={dept.title}
                 variants={staggerItem}
                 type="button"
-                onClick={() => openFor(dept.title)}
+                onClick={() => openFor(dept)}
                 onMouseEnter={() => setActiveCard(index)}
                 whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: 'spring', stiffness: 380, damping: 28 }}
                 className={`group relative flex flex-col overflow-hidden p-6 text-left transition-colors duration-300 sm:p-7 ${
                   isActive
-                    ? 'bg-[var(--app-canvas-2)] shadow-[inset_0_0_0_1px_rgba(201,150,26,0.18)]'
-                    : 'bg-[var(--app-canvas)] hover:bg-[var(--app-canvas-2)] hover:shadow-[inset_0_0_0_1px_rgba(201,150,26,0.18)]'
+                    ? 'bg-white/[0.045] shadow-[inset_0_0_0_1px_rgba(201,150,26,0.28)]'
+                    : 'bg-white/[0.02] hover:bg-white/[0.045] hover:shadow-[inset_0_0_0_1px_rgba(201,150,26,0.28)]'
                 }`}
               >
                 <span
@@ -462,34 +442,32 @@ export default function JoinWisdomHouse() {
                   aria-hidden="true"
                 />
                 <div
-                  className={`mb-5 flex h-11 w-11 items-center justify-center transition-all duration-300 group-hover:scale-[1.08] ${
+                  className={`mb-5 flex h-12 w-12 items-center justify-center transition-all duration-300 group-hover:scale-[1.08] ${
                     isActive
-                      ? 'scale-[1.08] bg-[var(--app-primary)]/14'
-                      : 'bg-[var(--app-ink)]/6 group-hover:bg-[var(--app-primary)]/14'
+                      ? 'scale-[1.08] bg-[var(--app-primary)]/16 ring-1 ring-[var(--app-primary)]/30'
+                      : 'bg-white/6 ring-1 ring-white/0 group-hover:bg-[var(--app-primary)]/16 group-hover:ring-[var(--app-primary)]/30'
                   }`}
                 >
                   <Icon
-                    className={`h-[1.1rem] w-[1.1rem] transition duration-300 group-hover:text-[var(--app-primary)] ${
-                      isActive
-                        ? 'text-[var(--app-primary)]'
-                        : 'text-[var(--app-ink)]/40'
+                    className={`h-[1.15rem] w-[1.15rem] transition duration-300 group-hover:text-[var(--app-primary)] ${
+                      isActive ? 'text-[var(--app-primary)]' : 'text-white/45'
                     }`}
                   />
                 </div>
-                <p className="font-ui text-[0.88rem] font-bold text-[var(--app-ink)]">
+                <p className="font-ui text-[0.9rem] font-bold text-white">
                   {dept.title}
                 </p>
-                <p className="mt-1.5 font-ui text-[0.78rem] leading-[1.65] text-[var(--app-ink)]/50">
+                <p className="mt-1.5 font-ui text-[0.78rem] leading-[1.65] text-white/48">
                   {dept.description}
                 </p>
                 <span
                   className={`mt-5 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold transition-all duration-200 group-hover:gap-2.5 group-hover:text-[var(--app-primary)] ${
                     isActive
                       ? 'gap-2.5 text-[var(--app-primary)]'
-                      : 'text-[var(--app-ink)]/30'
+                      : 'text-white/32'
                   }`}
                 >
-                  Apply{' '}
+                  View team{' '}
                   <ArrowRight
                     className={`h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 ${isActive ? 'translate-x-0.5' : ''}`}
                   />
@@ -500,175 +478,99 @@ export default function JoinWisdomHouse() {
         </motion.div>
 
         {/* ── General CTA ──────────────────────────────────────── */}
-        <div className="mt-8 flex justify-center">
+        <div className="mt-9 flex flex-col items-center gap-3">
           <button
             type="button"
-            onClick={() => openFor('')}
-            className="group inline-flex h-11 items-center gap-2 border border-[var(--app-ink)]/20 bg-transparent px-6 font-ui text-[0.78rem] font-semibold text-[var(--app-ink)]/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
+            onClick={openGeneric}
+            className="group inline-flex h-11 items-center gap-2 border border-white/18 bg-transparent px-6 font-ui text-[0.78rem] font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
           >
             Not sure which team? Apply anyway
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
+          <p className="font-ui text-[0.74rem] text-white/35">
+            No experience required — just a willing heart.
+          </p>
         </div>
       </Container>
 
-      {/* ── Application modal ─────────────────────────────────────── */}
+      {/* ── Department detail + application modal ─────────────────── */}
       <BaseModal
-        isOpen={openModal}
-        onClose={() => {
-          if (!submitting) {
-            setOpenModal(false);
-            setLookupEmail('');
-            setLookupStatus('idle');
-            setFoundName('');
-          }
-        }}
-        title="Join the workforce"
-        subtitle="Complete your details and our team will follow up with your next step."
+        isOpen={modalStep !== null}
+        onClose={closeModal}
+        title={
+          modalStep === 'detail' && selectedDept
+            ? selectedDept.title
+            : 'Join the workforce'
+        }
+        subtitle={
+          modalStep === 'detail' && selectedDept
+            ? selectedDept.description
+            : 'Complete your details and our team will follow up with your next step.'
+        }
         maxWidth="max-w-2xl"
         preventClose={submitting}
         forceBottomSheet
       >
-        <div className="space-y-5">
-          {/* ── New / Existing toggle ─────────────────────── */}
-          <div className="grid grid-cols-2 gap-1.5 border border-white/10 bg-white/[0.04] p-1.5">
+        {/* ── Step 1: department detail ─────────────────────────── */}
+        {modalStep === 'detail' && selectedDept && (
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 flex-none items-center justify-center bg-[var(--app-primary)]/14">
+                <selectedDept.icon className="h-6 w-6 text-[var(--app-primary)]" />
+              </div>
+              <p className="font-ui text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                {selectedDept.section} Team
+              </p>
+            </div>
+
+            <p className="font-ui text-[0.92rem] leading-[1.85] text-white/70">
+              {selectedDept.detail}
+            </p>
+
+            <div className="border border-white/10 bg-white/[0.035] p-5">
+              <p className="mb-3.5 font-ui text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/40">
+                What you'll do
+              </p>
+              <ul className="space-y-2.5">
+                {selectedDept.responsibilities.map(r => (
+                  <li key={r} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
+                    <span className="font-ui text-[0.85rem] leading-[1.7] text-white/65">
+                      {r}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <Button
               type="button"
-              onClick={() => switchMode(false)}
-              variant={!existing ? 'primary' : 'ghost'}
-              size="sm"
+              onClick={() => setModalStep('form')}
+              variant="primary"
+              size="md"
               curvature="sm"
-              className={!existing ? '' : 'text-white/55 hover:text-white'}
+              rightIcon={<ArrowRight />}
+              className="h-12 w-full font-semibold"
             >
-              New member
-            </Button>
-            <Button
-              type="button"
-              onClick={() => switchMode(true)}
-              variant={existing ? 'primary' : 'ghost'}
-              size="sm"
-              curvature="sm"
-              className={existing ? '' : 'text-white/55 hover:text-white'}
-            >
-              Existing member
+              Join this team
             </Button>
           </div>
+        )}
 
-          {/* ── Existing member lookup ────────────────────── */}
-          {existing &&
-            lookupStatus !== 'found' &&
-            lookupStatus !== 'not_found' && (
-              <div className="space-y-3 border border-white/10 bg-white/[0.035] p-5">
-                <p className="font-ui text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]">
-                  Find your profile
-                </p>
-                <p className="font-ui text-[0.85rem] leading-[1.75] text-white/58">
-                  Enter the email address you used when you first registered.
-                  We'll pre-fill your current details so you only update what's
-                  changed.
-                </p>
-                <div className="flex gap-2">
-                  <input
-                    ref={lookupEmailRef}
-                    type="email"
-                    value={lookupEmail}
-                    onChange={e => setLookupEmail(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleLookup();
-                      }
-                    }}
-                    placeholder="your@email.com"
-                    className={`${mInput} flex-1`}
-                    disabled={lookupStatus === 'loading'}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleLookup}
-                    disabled={lookupStatus === 'loading' || !lookupEmail}
-                    className="inline-flex h-12 min-w-[110px] items-center justify-center gap-2 bg-[var(--app-primary)] px-4 font-ui text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]"
-                  >
-                    {lookupStatus === 'loading' ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <>
-                        <Search className="h-3.5 w-3.5" />
-                        Find
-                      </>
-                    )}
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLookupStatus('not_found');
-                    setValue('email', lookupEmail);
-                  }}
-                  className="font-ui text-[0.76rem] text-white/38 transition hover:text-white/65"
-                >
-                  Skip — fill in manually instead
-                </button>
-              </div>
+        {/* ── Step 2: application form ──────────────────────────── */}
+        {modalStep === 'form' && (
+          <div className="space-y-5">
+            {selectedDept && (
+              <button
+                type="button"
+                onClick={() => setModalStep('detail')}
+                className="inline-flex items-center gap-1.5 font-ui text-[0.78rem] font-semibold text-white/45 transition hover:text-white/75"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                Back to {selectedDept.title}
+              </button>
             )}
 
-          {/* ── Found banner ──────────────────────────────── */}
-          {existing && lookupStatus === 'found' && (
-            <div className="flex items-start gap-3 border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/8 p-4">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
-              <div className="min-w-0 flex-1">
-                <p className="font-ui text-[0.82rem] font-semibold text-white">
-                  Profile found{foundName ? ` — ${foundName}` : ''}
-                </p>
-                <p className="mt-0.5 font-ui text-[0.76rem] text-white/55">
-                  Your details have been pre-filled. Update anything that's
-                  changed and submit — our admin team will be notified.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setLookupStatus('idle');
-                  setFoundName('');
-                  setLookupEmail('');
-                }}
-                aria-label="Clear lookup"
-                className="text-white/35 transition hover:text-white/70"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-
-          {/* ── Not found notice ─────────────────────────── */}
-          {existing && lookupStatus === 'not_found' && (
-            <div className="flex items-start gap-3 border border-white/10 bg-white/[0.04] p-4">
-              <ChevronRight className="mt-0.5 h-4 w-4 flex-none text-white/40" />
-              <div className="min-w-0 flex-1">
-                <p className="font-ui text-[0.82rem] font-semibold text-white/80">
-                  No profile found
-                </p>
-                <p className="mt-0.5 font-ui text-[0.76rem] text-white/50">
-                  Fill in your details below and we'll create your workforce
-                  record.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setLookupStatus('idle');
-                  setLookupEmail('');
-                }}
-                aria-label="Try a different email"
-                className="text-white/35 transition hover:text-white/70"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-
-          {/* ── Application form ──────────────────────────── */}
-          {showForm && (
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
@@ -804,9 +706,8 @@ export default function JoinWisdomHouse() {
               {/* What happens next */}
               <div className="border border-white/8 bg-white/[0.025] px-4 py-3">
                 <Caption className="text-white/38">
-                  {existing && lookupStatus === 'found'
-                    ? 'Submitting will update your profile and notify our admin team by email.'
-                    : 'After submitting, our team will review your application and follow up within 3–5 days.'}
+                  After submitting, our team will review your application and
+                  follow up within 3–5 days.
                 </Caption>
               </div>
 
@@ -820,15 +721,11 @@ export default function JoinWisdomHouse() {
                 rightIcon={!submitting && <ArrowRight />}
                 className="h-12 w-full font-semibold"
               >
-                {submitting
-                  ? 'Submitting…'
-                  : existing && lookupStatus === 'found'
-                    ? 'Update my profile'
-                    : 'Submit application'}
+                {submitting ? 'Submitting…' : 'Submit application'}
               </Button>
             </form>
-          )}
-        </div>
+          </div>
+        )}
       </BaseModal>
     </Section>
   );
