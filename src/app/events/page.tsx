@@ -120,7 +120,7 @@ function EventCard({ event }: { event: EventPublic }) {
   return (
     <article className="group flex flex-col overflow-hidden border border-white/10 bg-white/[0.03] transition duration-300 hover:border-[var(--app-primary)]/35">
       {/* Image / date block */}
-      <div className="relative aspect-[2/1] overflow-hidden bg-[var(--app-dark-2)]">
+      <div className="relative aspect-video overflow-hidden bg-[var(--app-dark-2)]">
         {imgSrc ? (
           <Media
             src={imgSrc}
