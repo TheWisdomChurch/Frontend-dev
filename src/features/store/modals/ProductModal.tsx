@@ -48,7 +48,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       forceBottomSheet
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="relative w-full h-64 sm:h-72 lg:h-full rounded-2xl overflow-hidden bg-[#0d0d0d]">
+        <div className="relative w-full aspect-square h-auto lg:aspect-auto lg:h-full rounded-2xl overflow-hidden bg-[#0d0d0d]">
           <Media
             src={product.image}
             alt={product.name}
