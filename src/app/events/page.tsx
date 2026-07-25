@@ -1,13 +1,12 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
+import { Media } from '@/shared/ui/Media';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildEventSchema, buildBreadcrumbSchema } from '@/lib/seo';
@@ -123,13 +122,11 @@ function EventCard({ event }: { event: EventPublic }) {
       {/* Image / date block */}
       <div className="relative aspect-[2/1] overflow-hidden bg-[var(--app-dark-2)]">
         {imgSrc ? (
-          <Image
+          <Media
             src={imgSrc}
             alt={event.title}
-            fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            quality={IMAGE_QUALITY}
-            className="object-cover transition duration-500 group-hover:scale-[1.04]"
+            className="transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           /* No-image: bold date display */

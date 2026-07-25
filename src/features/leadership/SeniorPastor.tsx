@@ -1,6 +1,5 @@
 ﻿'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -10,7 +9,7 @@ import { Bishop } from '@/shared/assets';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember } from '@/lib/types';
 import { Section } from '@/shared/layout';
-import { IMAGE_QUALITY } from '@/shared/constants';
+import { Media } from '@/shared/ui/Media';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import {
   staggerContainer,
@@ -126,14 +125,11 @@ export default function SeniorPastor() {
         {/* ── Left — cinematic full-height portrait ────────── */}
         <div className="relative order-1 aspect-[25/14] max-h-[520px] overflow-hidden lg:order-none lg:aspect-auto lg:h-auto lg:max-h-none">
           <div className="absolute inset-0" data-parallax-global="0.12">
-            <Image
+            <Media
               src={imageSrc}
               alt={`${fullName} — Senior Pastor, The Wisdom Church`}
-              fill
-              priority={false}
               sizes="(max-width: 1024px) 100vw, 50vw"
-              quality={IMAGE_QUALITY}
-              className="object-cover object-top"
+              className="object-top"
             />
           </div>
           {/* Mobile bottom fade */}
