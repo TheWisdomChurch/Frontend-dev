@@ -1,7 +1,6 @@
 ﻿'use client';
 
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
-import Image from 'next/image';
 import { gsap } from 'gsap';
 import {
   Bell,
@@ -42,7 +41,7 @@ import GridBackground from '@/shared/ui/GridBackground';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import CartSidebar from '@/features/store/Store/CartSidebar';
 import type { Product } from '@/lib/types';
-import { IMAGE_QUALITY } from '@/shared/constants';
+import { Media } from '@/shared/ui/Media';
 import { storeClient } from '@/lib/api/storeClient';
 import PageHero from '@/features/hero/PageHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
@@ -501,20 +500,16 @@ function StorePageContent() {
                         onClick={() => handleQuickView(product)}
                         className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[#0d0d0d] rounded-none"
                       >
-                        {product.image ? (
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            className="object-contain p-5 transition duration-500 group-hover:scale-105"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            quality={IMAGE_QUALITY}
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center">
+                        <Media
+                          src={product.image}
+                          alt={product.name}
+                          className="transition duration-500 group-hover:scale-105"
+                          frameClassName="bg-transparent"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                          fallback={
                             <ShoppingBag className="h-12 w-12 text-white/35" />
-                          </div>
-                        )}
+                          }
+                        />
 
                         <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/10 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
 
