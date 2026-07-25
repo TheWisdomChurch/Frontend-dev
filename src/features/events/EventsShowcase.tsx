@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import NextImage from 'next/image';
-import { ImageOff, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 
 import { EventBannerDesktop } from '@/shared/assets';
 import { Container } from '@/shared/layout';
@@ -11,9 +10,9 @@ import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import SectionGlow from '@/shared/ui/SectionGlow';
+import { Media } from '@/shared/ui/Media';
 import {
   staggerContainer,
   staggerItem,
@@ -76,42 +75,6 @@ function statusBadge(startAt?: string, endAt?: string): string {
   return 'Recent';
 }
 
-/* ── Slide image — real next/image, honest empty state on load failure ── */
-
-function SlideImage({
-  src,
-  alt,
-  sizes,
-  className,
-}: {
-  src: string;
-  alt: string;
-  sizes: string;
-  className?: string;
-}) {
-  const [failed, setFailed] = useState(false);
-
-  if (!src || failed) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center bg-[var(--app-dark-2)]">
-        <ImageOff className="h-6 w-6 text-white/25" aria-hidden="true" />
-      </div>
-    );
-  }
-
-  return (
-    <NextImage
-      src={src}
-      alt={alt}
-      fill
-      quality={IMAGE_QUALITY}
-      sizes={sizes}
-      className={className}
-      onError={() => setFailed(true)}
-    />
-  );
-}
-
 function Arrow() {
   return (
     <svg
@@ -171,15 +134,16 @@ function FeaturedCard({
       <div
         className={`relative shrink-0 overflow-hidden ${fullWidth ? 'w-1/2 lg:w-[55%]' : 'w-[52%]'}`}
       >
-        <SlideImage
+        <Media
           src={slide.imageUrl}
           alt={slide.title}
+          frameClassName="bg-[var(--app-dark-2)]"
           sizes={
             fullWidth
               ? '(max-width: 1024px) 50vw, 55vw'
               : '(max-width: 1024px) 52vw, 30vw'
           }
-          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+          className="transition duration-700 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--app-ink)]/35" />
         {isReel && (
@@ -273,11 +237,12 @@ function PortraitCard({
     >
       {/* Image */}
       <div className="relative aspect-[4/5] overflow-hidden bg-[var(--app-ink)]/8">
-        <SlideImage
+        <Media
           src={slide.imageUrl}
           alt={slide.title}
+          frameClassName="bg-[var(--app-ink)]/8"
           sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 22vw"
-          className="object-cover transition duration-500 group-hover:scale-[1.04]"
+          className="transition duration-500 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
         {isReel && (

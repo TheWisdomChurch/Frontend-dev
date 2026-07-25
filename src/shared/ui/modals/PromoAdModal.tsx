@@ -1,11 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import Image, { type StaticImageData } from 'next/image';
+import { type StaticImageData } from 'next/image';
 import { motion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { Sparkles } from 'lucide-react';
-import { IMAGE_QUALITY } from '@/shared/constants';
+import { Media } from '@/shared/ui/Media';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { H3, BodySM, Caption } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
@@ -122,12 +122,10 @@ export default function PromoAdModal({
             />
 
             {imageSrc ? (
-              <Image
-                quality={IMAGE_QUALITY}
+              <Media
                 src={imageSrc}
                 alt={title}
-                fill
-                className="object-cover"
+                frameClassName="bg-transparent"
                 sizes="(max-width: 1024px) 100vw, 620px"
                 priority
               />

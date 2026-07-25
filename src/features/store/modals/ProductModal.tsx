@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useAppDispatch } from '@/shared/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
@@ -9,8 +8,8 @@ import { Button } from '@/shared/utils/buttons';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
 import { FlexboxLayout } from '@/shared/layout';
 import { BaseModal } from '@/shared/ui/modals/Base';
+import { Media } from '@/shared/ui/Media';
 import type { ProductModalProps } from '@/lib/types';
-import { IMAGE_QUALITY } from '@/shared/constants';
 
 const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const dispatch = useAppDispatch();
@@ -50,21 +49,13 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="relative w-full h-64 sm:h-72 lg:h-full rounded-2xl overflow-hidden bg-[#0d0d0d]">
-          {product.image ? (
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              quality={IMAGE_QUALITY}
-              priority={false}
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <ShoppingBag className="h-12 w-12 text-white/35" />
-            </div>
-          )}
+          <Media
+            src={product.image}
+            alt={product.name}
+            frameClassName="bg-[#0d0d0d]"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            fallback={<ShoppingBag className="h-12 w-12 text-white/35" />}
+          />
         </div>
 
         <div className="space-y-4">
