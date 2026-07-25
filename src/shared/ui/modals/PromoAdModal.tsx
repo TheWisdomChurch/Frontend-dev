@@ -107,7 +107,7 @@ export default function PromoAdModal({
           {/* Hero visual — real image or icon-forward gradient block */}
           <motion.div
             variants={itemVariants}
-            className="relative h-44 overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.04] sm:h-52"
+            className="relative aspect-video overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.04]"
           >
             {/* Ambient glow */}
             <motion.div
