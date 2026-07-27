@@ -123,13 +123,13 @@ export default function SeniorPastor() {
       {/* Two-column grid — fixed: removed inline style that broke mobile */}
       <div className="grid min-h-[580px] grid-cols-1 lg:grid-cols-2 lg:min-h-[700px]">
         {/* ── Left — cinematic full-height portrait ────────── */}
-        <div className="relative order-1 aspect-[25/14] max-h-[520px] overflow-hidden lg:order-none lg:aspect-auto lg:h-auto lg:max-h-none">
+        <div className="relative order-1 aspect-[4/5] max-h-[680px] overflow-hidden sm:aspect-[3/4] lg:order-none lg:aspect-auto lg:h-auto lg:max-h-none">
           <div className="absolute inset-0" data-parallax-global="0.12">
             <Media
               src={imageSrc}
               alt={`${fullName} — Senior Pastor, The Wisdom Church`}
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-top"
+              className="object-[center_8%] sm:object-top"
             />
           </div>
           {/* Mobile bottom fade */}

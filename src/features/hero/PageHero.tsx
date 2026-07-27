@@ -55,7 +55,7 @@ export default function PageHero({
           alt=""
           fill
           priority
-          className="object-cover object-center"
+          className="object-cover object-[center_24%] sm:object-[center_30%] lg:object-center"
           sizes="100vw"
         />
 

@@ -37,7 +37,8 @@ export function Banner({
       alt={alt || defaultAlt[banner]}
       width={width}
       height={height}
-      className={className}
+      sizes="(max-width: 640px) 100vw, 800px"
+      className={`block max-w-full object-cover ${className}`}
     />
   );
 }

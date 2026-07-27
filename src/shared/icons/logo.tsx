@@ -17,7 +17,8 @@ export function Logo({ className = '', width = 32, height = 32 }: LogoProps) {
       alt="Wisdom Church Logo"
       width={width}
       height={height}
-      className={className}
+      sizes={`${width}px`}
+      className={`block max-w-full object-contain ${className}`}
       priority
     />
   );

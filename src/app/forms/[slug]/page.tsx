@@ -1040,7 +1040,7 @@ export default function PublicFormPage() {
             priority
             quality={IMAGE_QUALITY}
             sizes="(max-width: 768px) 100vw, 0px"
-            className="object-cover md:hidden"
+            className="object-cover object-top md:hidden"
           />
           <Image
             src={EventBannerDesktop}
@@ -1049,7 +1049,7 @@ export default function PublicFormPage() {
             priority={false}
             quality={IMAGE_QUALITY}
             sizes="(max-width: 1024px) 100vw, 100vw"
-            className="hidden object-cover md:block"
+            className="hidden object-cover object-center md:block"
           />
         </div>
 

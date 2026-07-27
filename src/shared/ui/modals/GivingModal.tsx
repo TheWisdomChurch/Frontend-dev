@@ -104,7 +104,7 @@ export default function GivingModal({
                           alt={account.bank}
                           width={48}
                           height={48}
-                          className="h-full w-full object-cover"
+                          className="h-full w-full object-contain p-1"
                         />
                       ) : (
                         <span className="text-lg font-black text-[var(--app-primary)]">

@@ -230,7 +230,7 @@ export default function WhatWeDo() {
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     quality={IMAGE_QUALITY}
                     priority={i === 0}
-                    className="object-cover [object-position:center_20%]"
+                    className="object-cover object-[center_14%] sm:object-[center_18%] lg:object-[center_20%]"
                   />
                   {/* Heavy dark base — image is visible but dramatically darkened */}
                   <div className="absolute inset-0 bg-black/65" />

@@ -11,9 +11,9 @@ interface MediaProps {
   alt: string;
   /**
    * Applied to the <Image> itself — object-position (e.g. object-top,
-   * object-[center_8%]), hover transforms, etc. Fit is always cover: the
-   * frame is filled edge-to-edge and cropped, at every source aspect ratio,
-   * with no letterboxing and no partially-empty sides. Pair with a frame
+   * object-[center_8%]), hover transforms, etc. Cover is the default; use
+   * `fit="contain"` for products, logos, and artwork that must not be cropped.
+   * Pair cover images with a frame
    * whose aspect ratio suits the content (aspect-square, aspect-[4/5], a
    * fixed height) and an object-position tuned to the subject so cropping
    * lands where it should.
@@ -30,10 +30,8 @@ interface MediaProps {
 }
 
 /**
- * Single frame every image on the site renders through. Always fills its
- * frame edge-to-edge (object-cover) — no letterboxing, no blurred backdrop,
- * no visible gaps on any side regardless of the uploaded source's aspect
- * ratio. A failed or missing src never falls through to the browser's
+ * Shared responsive frame for content images. A failed or missing src never
+ * falls through to the browser's
  * broken-image icon; it renders a neutral placeholder instead.
  */
 export function Media({

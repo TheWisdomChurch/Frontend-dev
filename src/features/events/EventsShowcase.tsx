@@ -142,7 +142,7 @@ function FeaturedCard({
               ? '(max-width: 1023px) 100vw, 55vw'
               : '(max-width: 1023px) 100vw, 30vw'
           }
-          className="transition duration-700 group-hover:scale-[1.04]"
+          className="object-[center_22%] sm:object-center transition duration-700 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-ink)]/45 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[var(--app-ink)]/35" />
         {isReel && (
@@ -239,7 +239,7 @@ function PortraitCard({
           alt={slide.title}
           frameClassName="bg-[var(--app-ink)]/8"
           sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 22vw"
-          className="transition duration-500 group-hover:scale-[1.04]"
+          className="object-[center_18%] sm:object-center transition duration-500 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
         {isReel && (

@@ -126,7 +126,7 @@ function EventCard({ event }: { event: EventPublic }) {
             src={imgSrc}
             alt={event.title}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="transition duration-500 group-hover:scale-[1.04]"
+            className="object-[center_22%] sm:object-center transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           /* No-image: bold date display */

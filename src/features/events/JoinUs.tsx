@@ -351,7 +351,7 @@ export default function JoinWisdomHouse() {
             src={Dept_1}
             alt=""
             sizes="100vw"
-            className="object-[center_28%] opacity-[0.5]"
+            className="object-[center_18%] opacity-[0.5] sm:object-[center_24%] lg:object-[center_28%]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_25%,rgba(201,150,26,0.18),transparent_55%)]" />

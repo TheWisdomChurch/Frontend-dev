@@ -164,7 +164,7 @@ function ResourceCarousel() {
               <Link
                 key={item.title}
                 href={item.href}
-                className="group relative flex h-[380px] w-full shrink-0 flex-col justify-end overflow-hidden sm:h-[360px] sm:w-[calc(50%-0.625rem)] lg:h-[400px] lg:w-[calc(33.333%-0.833rem)]"
+                className="group relative flex aspect-[4/5] min-h-[360px] w-full shrink-0 flex-col justify-end overflow-hidden sm:aspect-[3/4] sm:w-[calc(50%-0.625rem)] lg:aspect-[4/5] lg:w-[calc(33.333%-0.833rem)]"
               >
                 {/* Background image — covers card fully, no gaps */}
                 <Image
@@ -173,7 +173,7 @@ function ResourceCarousel() {
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   quality={IMAGE_QUALITY}
-                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
+                  className="object-cover object-[center_20%] sm:object-center transition-transform duration-700 group-hover:scale-[1.04]"
                 />
                 {/* Bottom-up gradient so text is readable, top stays bright */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/5" />

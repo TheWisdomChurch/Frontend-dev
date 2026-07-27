@@ -503,8 +503,9 @@ function StorePageContent() {
                         <Media
                           src={product.image}
                           alt={product.name}
-                          className="transition duration-500 group-hover:scale-105"
-                          frameClassName="bg-transparent"
+                          fit="contain"
+                          className="p-4 transition duration-500 group-hover:scale-105 sm:p-5"
+                          frameClassName="bg-[#0d0d0d]"
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                           fallback={
                             <ShoppingBag className="h-12 w-12 text-white/35" />
