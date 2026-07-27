@@ -95,7 +95,8 @@ function Arrow() {
   );
 }
 
-/* ── Featured card — always full-width on mobile, horizontal split on lg ── */
+/* ── Featured card — stacked (image top, content below) through tablet,
+   horizontal split from lg up ── */
 
 function FeaturedCard({
   slide,
@@ -123,16 +124,14 @@ function FeaturedCard({
     <div
       {...interactiveProps}
       className={[
-        'group relative flex overflow-hidden bg-[var(--app-ink)]',
-        fullWidth
-          ? 'min-h-[320px] lg:min-h-[400px]'
-          : 'min-h-[280px] lg:min-h-[360px]',
+        'group relative flex flex-col overflow-hidden bg-[var(--app-ink)] lg:flex-row',
+        fullWidth ? 'lg:min-h-[400px]' : 'lg:min-h-[360px]',
         onClick ? 'cursor-pointer' : '',
       ].join(' ')}
     >
-      {/* Image — left half */}
+      {/* Image — full-width top block through tablet, left column from lg up */}
       <div
-        className={`relative shrink-0 overflow-hidden ${fullWidth ? 'w-1/2 lg:w-[55%]' : 'w-[52%]'}`}
+        className={`relative aspect-[16/10] w-full shrink-0 overflow-hidden sm:aspect-[2/1] lg:aspect-auto ${fullWidth ? 'lg:w-1/2' : 'lg:w-[52%]'}`}
       >
         <Media
           src={slide.imageUrl}
@@ -140,12 +139,12 @@ function FeaturedCard({
           frameClassName="bg-[var(--app-dark-2)]"
           sizes={
             fullWidth
-              ? '(max-width: 1024px) 50vw, 55vw'
-              : '(max-width: 1024px) 52vw, 30vw'
+              ? '(max-width: 1023px) 100vw, 55vw'
+              : '(max-width: 1023px) 100vw, 30vw'
           }
           className="transition duration-700 group-hover:scale-[1.04]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--app-ink)]/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-ink)]/45 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[var(--app-ink)]/35" />
         {isReel && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl transition duration-300 group-hover:scale-[1.1]">
@@ -155,16 +154,16 @@ function FeaturedCard({
         )}
       </div>
 
-      {/* Content — right half */}
+      {/* Content — full-width bottom block through tablet, right column from lg up */}
       <div
-        className={`flex flex-1 flex-col justify-between ${fullWidth ? 'p-8 lg:p-12' : 'p-6 lg:p-8'}`}
+        className={`flex flex-1 flex-col justify-between p-6 sm:p-7 ${fullWidth ? 'lg:p-12' : 'lg:p-8'}`}
       >
         <div>
           <span className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             {slide.badge} · Featured
           </span>
           <p
-            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-[1.7rem] lg:text-[2.1rem]' : 'text-[1.4rem] lg:text-[1.65rem]'}`}
+            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-[1.5rem] sm:text-[1.8rem] lg:text-[2.1rem]' : 'text-[1.3rem] sm:text-[1.5rem] lg:text-[1.65rem]'}`}
           >
             {slide.title}
           </p>
@@ -322,8 +321,8 @@ function EmptyState({ category }: { category: Category }) {
 
 function Skeleton() {
   return (
-    <div className="grid gap-5 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-      <div className="min-h-[320px] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] lg:min-h-[360px]" />
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="aspect-[16/10] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] sm:col-span-2 sm:aspect-[2/1] lg:col-span-1 lg:aspect-auto lg:min-h-[360px]" />
       {[0, 1, 2].map(i => (
         <div
           key={i}
@@ -338,9 +337,10 @@ function Skeleton() {
 
 function gridCols(restCount: number) {
   if (restCount === 0) return '';
-  if (restCount === 1) return 'lg:grid-cols-[1.5fr_1fr]';
-  if (restCount === 2) return 'lg:grid-cols-[1.4fr_repeat(2,1fr)]';
-  return 'lg:grid-cols-[1.4fr_repeat(3,1fr)]';
+  if (restCount === 1) return 'sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr]';
+  if (restCount === 2)
+    return 'sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(2,1fr)]';
+  return 'sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]';
 }
 
 /* ── Main component ─────────────────────────────────────── */
