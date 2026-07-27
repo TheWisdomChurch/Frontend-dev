@@ -97,7 +97,7 @@ export default function CookiesPage() {
             trackers, no marketing pixels, no profiling. Here is exactly what we
             store and why.
           </p>
-          <p className="mt-5 font-ui text-label text-white/28">
+          <p className="mt-5 font-ui text-label text-white/45">
             Last updated: July 2026
           </p>
         </div>
@@ -148,13 +148,13 @@ export default function CookiesPage() {
               {/* Table */}
               <div className="overflow-hidden border border-[var(--app-ink)]/10">
                 <div className="hidden grid-cols-[1.4fr_2.4fr_0.7fr] border-b border-[var(--app-ink)]/8 bg-[var(--app-ink)]/[0.035] px-5 py-2.5 sm:grid">
-                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/60">
                     Cookie
                   </span>
-                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/60">
                     Purpose
                   </span>
-                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/60">
                     Duration
                   </span>
                 </div>
@@ -174,7 +174,7 @@ export default function CookiesPage() {
                     <span className="font-ui text-body-sm leading-[1.7] text-[var(--app-ink)]/65">
                       {cookie.purpose}
                     </span>
-                    <span className="mt-1 font-ui text-body-sm text-[var(--app-ink)]/42 sm:mt-0">
+                    <span className="mt-1 font-ui text-body-sm text-[var(--app-ink)]/60 sm:mt-0">
                       {cookie.duration}
                     </span>
                   </div>

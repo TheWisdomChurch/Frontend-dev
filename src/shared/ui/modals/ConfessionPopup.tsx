@@ -228,7 +228,7 @@ export default function ConfessionPopup({
               <blockquote className="relative pl-4">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -left-1 -top-5 font-headline text-[3.5rem] leading-none text-[var(--app-primary)]/18"
+                  className="pointer-events-none absolute -left-1 -top-5 font-headline text-display-sm leading-none text-[var(--app-primary)]/18"
                 >
                   &ldquo;
                 </span>
@@ -279,7 +279,7 @@ export default function ConfessionPopup({
                 </button>
               </div>
 
-              <p className="text-center font-ui text-eyebrow uppercase tracking-[0.16em] text-white/22">
+              <p className="text-center font-ui text-eyebrow uppercase tracking-[0.16em] text-white/45">
                 This confession appears periodically — revisit any time.
               </p>
             </motion.div>

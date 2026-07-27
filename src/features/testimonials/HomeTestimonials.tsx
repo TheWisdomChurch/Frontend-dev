@@ -97,7 +97,7 @@ export default function HomeTestimonials() {
             {loading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                 <span className="block h-2 w-2 animate-ping rounded-full bg-[var(--app-primary)]" />
-                <p className="font-ui text-label uppercase tracking-[0.18em] text-[var(--app-ink)]/30">
+                <p className="font-ui text-label uppercase tracking-[0.18em] text-[var(--app-ink)]/60">
                   Loading testimonies…
                 </p>
               </div>
@@ -107,13 +107,13 @@ export default function HomeTestimonials() {
             {!loading && quotes.length === 0 && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
                 <p
-                  className="font-headline font-normal italic text-[var(--app-ink)]/35"
+                  className="font-headline font-normal italic text-[var(--app-ink)]/60"
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}
                 >
                   Testimonies coming soon.
                 </p>
-                <p className="font-ui text-label text-[var(--app-ink)]/25">
+                <p className="font-ui text-label text-[var(--app-ink)]/60">
                   Be the first to share your story.
                 </p>
               </div>
@@ -176,7 +176,7 @@ export default function HomeTestimonials() {
               type="button"
               onClick={prev}
               aria-label="Previous testimonial"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -205,7 +205,7 @@ export default function HomeTestimonials() {
               type="button"
               onClick={next}
               aria-label="Next testimonial"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80"
             >
               <ChevronRight className="h-4 w-4" />
             </button>

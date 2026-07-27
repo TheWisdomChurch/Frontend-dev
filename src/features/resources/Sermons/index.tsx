@@ -162,7 +162,7 @@ function SermonCard({
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <span className="font-headline text-[3rem] font-normal text-white/8">
+            <span className="font-headline text-display-sm font-normal text-white/8">
               W
             </span>
           </div>
@@ -240,7 +240,7 @@ function CategoryCard({
               </p>
             )}
           </div>
-          <span className="shrink-0 translate-x-0 font-ui text-label text-[var(--app-ink)]/30 transition duration-200 group-hover:translate-x-1 group-hover:text-[var(--app-primary)]">
+          <span className="shrink-0 translate-x-0 font-ui text-label text-[var(--app-ink)]/60 transition duration-200 group-hover:translate-x-1 group-hover:text-[var(--app-primary)]">
             →
           </span>
         </div>
@@ -252,7 +252,7 @@ function CategoryCard({
           {!isUngrouped &&
             'uniqueSeries' in group &&
             group.uniqueSeries.length > 1 && (
-              <span className="font-ui text-caption text-[var(--app-ink)]/32">
+              <span className="font-ui text-caption text-[var(--app-ink)]/60">
                 · {group.uniqueSeries.length} series
               </span>
             )}
@@ -413,7 +413,7 @@ const SermonUtil = () => {
                       <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                         Recent uploads
                       </p>
-                      <span className="font-ui text-caption text-white/28">
+                      <span className="font-ui text-caption text-white/45">
                         {recentVideos.length} videos
                       </span>
                     </div>
@@ -462,7 +462,7 @@ const SermonUtil = () => {
                               >
                                 {video.title}
                               </p>
-                              <p className="mt-0.5 font-ui text-caption text-white/32 truncate">
+                              <p className="mt-0.5 font-ui text-caption text-white/45 truncate">
                                 {video.series}
                               </p>
                             </div>
@@ -507,7 +507,7 @@ const SermonUtil = () => {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Browse by category
               </p>
-              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-heading-lg">
                 Explore the sermon library.
               </h2>
             </ScrollFadeIn>
@@ -744,7 +744,7 @@ const SermonUtil = () => {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Stay connected
               </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.4rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
                 Never miss a message
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}

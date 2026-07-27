@@ -171,7 +171,7 @@ export default function CalendarPage() {
               <p className="font-headline text-heading-md font-normal text-[var(--app-ink)]">
                 {MONTHS[viewMonth]}
               </p>
-              <p className="font-ui text-label font-semibold text-[var(--app-ink)]/40">
+              <p className="font-ui text-label font-semibold text-[var(--app-ink)]/60">
                 {viewYear}
               </p>
             </div>
@@ -201,7 +201,7 @@ export default function CalendarPage() {
                 {DAYS.map(d => (
                   <div
                     key={d}
-                    className="py-2.5 text-center font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/35"
+                    className="py-2.5 text-center font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/60"
                   >
                     {d}
                   </div>
@@ -251,7 +251,7 @@ export default function CalendarPage() {
                                   </span>
                                 ))}
                                 {eventsByDay[day].length > 2 && (
-                                  <span className="font-ui text-eyebrow text-[var(--app-ink)]/35">
+                                  <span className="font-ui text-eyebrow text-[var(--app-ink)]/60">
                                     +{eventsByDay[day].length - 2} more
                                   </span>
                                 )}
@@ -297,7 +297,7 @@ export default function CalendarPage() {
                           {ev.title}
                         </p>
                         {ev.location && (
-                          <p className="font-ui text-label text-[var(--app-ink)]/40 truncate">
+                          <p className="font-ui text-label text-[var(--app-ink)]/60 truncate">
                             {ev.location}
                           </p>
                         )}
@@ -319,7 +319,7 @@ export default function CalendarPage() {
 
           {!loading && monthEvents.length === 0 && (
             <ScrollFadeIn className="mt-10">
-              <p className="font-ui text-body-sm text-[var(--app-ink)]/38 text-center py-6">
+              <p className="font-ui text-body-sm text-[var(--app-ink)]/60 text-center py-6">
                 No events scheduled for {MONTHS[viewMonth]}. Navigate to another
                 month or{' '}
                 <Link

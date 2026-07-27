@@ -13,7 +13,7 @@ export default function LeadershipError({
       <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
         Something went wrong
       </p>
-      <h2 className="font-headline text-[2rem] font-normal text-white">
+      <h2 className="font-headline text-heading-lg font-normal text-white">
         Leadership profiles could not load.
       </h2>
       <p className="max-w-md font-ui text-body-sm leading-[2] text-white/65">

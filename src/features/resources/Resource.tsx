@@ -130,7 +130,7 @@ function ResourceCarousel() {
             whileHover={canPrev ? { scale: 1.08 } : undefined}
             whileTap={canPrev ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
           </motion.button>
@@ -142,7 +142,7 @@ function ResourceCarousel() {
             whileHover={canNext ? { scale: 1.08 } : undefined}
             whileTap={canNext ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/40 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
           </motion.button>
@@ -322,13 +322,13 @@ export default function ResourceSection() {
         >
           {/* Left — content */}
           <motion.div variants={staggerItem} className="flex flex-col">
-            <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/35">
+            <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/60">
               {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} ·{' '}
               {SERVICE_INFO.dailyPrayer.label} {SERVICE_INFO.dailyPrayer.time}
             </p>
 
             {loading ? (
-              <div className="flex h-24 items-center gap-3 text-sm text-[var(--app-ink)]/40">
+              <div className="flex h-24 items-center gap-3 text-sm text-[var(--app-ink)]/60">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Loading latest message…
               </div>
@@ -346,7 +346,7 @@ export default function ResourceSection() {
                 </p>
               </>
             ) : (
-              <h3 className="font-headline text-heading-md font-normal text-[var(--app-ink)]/40">
+              <h3 className="font-headline text-heading-md font-normal text-[var(--app-ink)]/60">
                 Message coming soon
               </h3>
             )}
@@ -379,7 +379,7 @@ export default function ResourceSection() {
           >
             {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-[var(--app-ink)]/20" />
+                <Loader2 className="h-8 w-8 animate-spin text-[var(--app-ink)]/60" />
               </div>
             ) : recentVideo ? (
               <>
@@ -410,8 +410,8 @@ export default function ResourceSection() {
               </>
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
-                <PlayCircle className="h-10 w-10 text-[var(--app-ink)]/20" />
-                <p className="text-sm text-[var(--app-ink)]/30">
+                <PlayCircle className="h-10 w-10 text-[var(--app-ink)]/60" />
+                <p className="text-sm text-[var(--app-ink)]/60">
                   Latest message coming soon
                 </p>
               </div>

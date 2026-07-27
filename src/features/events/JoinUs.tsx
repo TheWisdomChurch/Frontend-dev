@@ -207,7 +207,7 @@ type ModalValues = z.infer<typeof modalSchema>;
 /* ─── Field styles ────────────────────────────────────────────────── */
 
 const mInput =
-  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
 const mSelect =
   'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
@@ -462,7 +462,7 @@ export default function JoinWisdomHouse() {
                   className={`mt-5 inline-flex items-center gap-1.5 font-ui text-label font-semibold transition-all duration-200 group-hover:gap-2.5 group-hover:text-[var(--app-primary)] ${
                     isActive
                       ? 'gap-2.5 text-[var(--app-primary)]'
-                      : 'text-white/32'
+                      : 'text-white/45'
                   }`}
                 >
                   View team{' '}

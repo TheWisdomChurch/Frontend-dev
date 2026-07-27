@@ -134,7 +134,7 @@ function EventCard({ event }: { event: EventPublic }) {
             <span className="font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               {date.month}
             </span>
-            <span className="font-headline text-[3.5rem] font-normal leading-none text-white/90">
+            <span className="font-headline text-display-sm font-normal leading-none text-white/90">
               {date.day}
             </span>
           </div>
@@ -284,7 +284,7 @@ export default async function EventsPage() {
             <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Weekly rhythm
             </p>
-            <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
+            <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
               We gather every week.
               <em className="italic text-[var(--app-primary)]/75">
                 {' '}
@@ -302,7 +302,7 @@ export default async function EventsPage() {
                 >
                   {/* Day + time */}
                   <div className="flex items-baseline gap-4">
-                    <p className="font-headline text-[2.2rem] font-normal leading-none text-[var(--app-ink)] lg:text-[2.6rem]">
+                    <p className="font-headline text-heading-lg font-normal leading-none text-[var(--app-ink)] lg:text-heading-lg">
                       {svc.day}
                     </p>
                     <p className="font-ui text-body-sm font-bold text-[var(--app-primary)]">
@@ -353,7 +353,7 @@ export default async function EventsPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Upcoming events
               </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.1rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 Special gatherings &amp; programs.
               </h2>
             </div>

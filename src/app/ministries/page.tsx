@@ -165,7 +165,7 @@ export default function MinistriesPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Ministry at Wisdom Church
               </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
                 We exist to help every person find
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -237,7 +237,7 @@ export default function MinistriesPage() {
                       </p>
 
                       {/* Title */}
-                      <h3 className="font-headline text-heading-md font-normal leading-snug text-white lg:text-[2rem]">
+                      <h3 className="font-headline text-heading-md font-normal leading-snug text-white lg:text-heading-lg">
                         {ministry.title}
                       </h3>
 
@@ -302,7 +302,7 @@ export default function MinistriesPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Getting connected
               </p>
-              <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
+              <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
                 Finding your place is
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -318,7 +318,7 @@ export default function MinistriesPage() {
             <ScrollFadeIn key={col.verb} delay={i * 0.09}>
               <div className="flex flex-col px-8 py-12 lg:px-10 lg:py-16">
                 <div className="mb-7 h-[1.5px] w-8 bg-[var(--app-primary)]/55" />
-                <p className="font-headline text-[2.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[3.4rem]">
+                <p className="font-headline text-display-sm font-normal leading-none text-[var(--app-ink)] lg:text-display-sm">
                   {col.verb}
                 </p>
                 <p className="mt-5 font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/68">
@@ -346,7 +346,7 @@ export default function MinistriesPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Take a next step
               </p>
-              <h2 className="font-headline text-[2rem] font-normal leading-[1.2] text-white sm:text-[2.6rem] lg:text-[3rem]">
+              <h2 className="font-headline text-heading-lg font-normal leading-[1.2] text-white sm:text-heading-lg lg:text-display-sm">
                 Ready to find your
                 <br className="hidden sm:block" />{' '}
                 <em className="italic text-[var(--app-primary)]/80">

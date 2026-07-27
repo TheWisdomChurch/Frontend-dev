@@ -163,7 +163,7 @@ function FeaturedCard({
             {slide.badge} · Featured
           </span>
           <p
-            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-heading-md sm:text-heading-md lg:text-[2.1rem]' : 'text-heading-sm sm:text-heading-md lg:text-heading-md'}`}
+            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-heading-md sm:text-heading-md lg:text-heading-lg' : 'text-heading-sm sm:text-heading-md lg:text-heading-md'}`}
           >
             {slide.title}
           </p>
@@ -264,7 +264,7 @@ function PortraitCard({
           {slide.title}
         </p>
         {slide.location && (
-          <p className="font-ui text-label text-[var(--app-ink)]/40">
+          <p className="font-ui text-label text-[var(--app-ink)]/60">
             {slide.location}
           </p>
         )}
@@ -441,7 +441,7 @@ export default function EventsShowcase() {
             <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Events &amp; Programs
             </p>
-            <h2 className="font-headline text-[2rem] font-normal leading-tight text-[var(--app-ink)] sm:text-[2.5rem] lg:text-[2.8rem]">
+            <h2 className="font-headline text-heading-lg font-normal leading-tight text-[var(--app-ink)] sm:text-heading-lg lg:text-display-sm">
               What&apos;s happening
             </h2>
           </div>
@@ -568,7 +568,7 @@ export default function EventsShowcase() {
             </video>
           ) : (
             <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 bg-[var(--app-dark-2)]">
-              <Play className="h-10 w-10 text-white/30" />
+              <Play className="h-10 w-10 text-white/45" />
               <p className="font-ui text-body-sm text-white/45">
                 This reel&apos;s video isn&apos;t available right now.
               </p>

@@ -110,7 +110,7 @@ export default function WeeklyPage() {
                   {/* Left — day + time */}
                   <div>
                     <div className="flex items-baseline gap-5">
-                      <p className="font-headline text-[3.5rem] font-normal leading-none text-[var(--app-ink)] lg:text-[4.5rem]">
+                      <p className="font-headline text-display-sm font-normal leading-none text-[var(--app-ink)] lg:text-display-md">
                         {svc.day}
                       </p>
                       <p className="font-ui text-body-lg font-bold text-[var(--app-primary)]">
@@ -167,7 +167,7 @@ export default function WeeklyPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 First time?
               </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.4rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 Walk in. You belong here.
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />

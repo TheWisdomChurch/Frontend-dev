@@ -43,7 +43,7 @@ type FieldErrors = Partial<Record<keyof PastoralCareFormData, string>>;
    across every other form on the site (JoinUs, HeroHighlights) ───── */
 
 const fieldInput =
-  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 const fieldInputError =
   'w-full border border-rose-400/50 bg-rose-500/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20';
@@ -243,7 +243,7 @@ const PastoralCareUnit = () => {
               ? 'Confidential Counseling'
               : 'Pastoral Care Services'}
           </p>
-          <h2 className="mt-4 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.3rem]">
+          <h2 className="mt-4 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
             {isCounseling
               ? 'Request a counseling session'
               : 'Register for pastoral care'}

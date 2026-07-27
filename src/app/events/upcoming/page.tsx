@@ -102,7 +102,7 @@ export default function UpcomingPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Coming up
               </p>
-              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-heading-lg">
                 Upcoming events &amp; programs.
               </h2>
             </div>
@@ -161,7 +161,7 @@ export default function UpcomingPage() {
                     <div className="group grid items-start gap-6 py-8 lg:grid-cols-[120px_1fr_auto] lg:gap-10 lg:py-9">
                       {/* Date column */}
                       <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
-                        <p className="font-headline text-[2.2rem] font-normal leading-none text-[var(--app-ink)]">
+                        <p className="font-headline text-heading-lg font-normal leading-none text-[var(--app-ink)]">
                           {date.day}
                         </p>
                         <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
@@ -180,7 +180,7 @@ export default function UpcomingPage() {
                           </p>
                         )}
                         {event.location && (
-                          <p className="font-ui text-label text-[var(--app-ink)]/38">
+                          <p className="font-ui text-label text-[var(--app-ink)]/60">
                             {event.location}
                           </p>
                         )}
@@ -196,7 +196,7 @@ export default function UpcomingPage() {
                             Register <Arrow />
                           </a>
                         ) : (
-                          <span className="inline-flex items-center border border-[var(--app-ink)]/10 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/35">
+                          <span className="inline-flex items-center border border-[var(--app-ink)]/10 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/60">
                             Free entry
                           </span>
                         )}

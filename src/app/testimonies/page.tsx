@@ -161,7 +161,7 @@ export default function TestimoniesPage() {
               <SectionGlow />
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(201,150,26,0.07),transparent)]" />
               <Container size="md" className="relative text-center">
-                <OpenQuote className="text-[5rem] text-[var(--app-primary)]/30 lg:text-[7rem]" />
+                <OpenQuote className="text-display-lg text-[var(--app-primary)]/30 lg:text-display-xl" />
                 <p className="mx-auto mt-2 max-w-2xl font-headline text-heading-sm font-normal leading-[1.65] text-white sm:text-heading-md lg:text-heading-md">
                   {featured.quote}
                 </p>
@@ -186,7 +186,7 @@ export default function TestimoniesPage() {
                 <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Community stories
                 </p>
-                <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-[2rem]">
+                <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-heading-lg">
                   What God has done in our community.
                 </h2>
               </div>
@@ -245,7 +245,7 @@ export default function TestimoniesPage() {
                       className={`flex flex-col p-6 lg:p-7 ${i % 3 === 1 ? 'bg-[var(--app-canvas-2)]' : 'border border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'}`}
                     >
                       {/* Quote mark */}
-                      <OpenQuote className="mb-1 text-[2.5rem] text-[var(--app-primary)]/35" />
+                      <OpenQuote className="mb-1 text-heading-lg text-[var(--app-primary)]/35" />
                       {/* Quote text */}
                       <p className="font-headline text-body-lg font-normal leading-[1.7] text-[var(--app-ink)] line-clamp-6">
                         {testimony.quote}
@@ -258,7 +258,7 @@ export default function TestimoniesPage() {
                             ? 'Anonymous member'
                             : testimony.name}
                         </p>
-                        <p className="mt-0.5 font-ui text-caption text-[var(--app-ink)]/35">
+                        <p className="mt-0.5 font-ui text-caption text-[var(--app-ink)]/60">
                           Wisdom Church
                         </p>
                       </div>
@@ -279,7 +279,7 @@ export default function TestimoniesPage() {
                 <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Share your story
                 </p>
-                <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.4rem]">
+                <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                   If God has done something in your life,
                   <em className="italic text-[var(--app-primary)]/80">
                     {' '}

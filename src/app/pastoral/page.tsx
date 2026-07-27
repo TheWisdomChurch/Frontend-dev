@@ -100,7 +100,7 @@ export default function PastoralPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Pastoral support
               </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.3rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 You do not need to figure out
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -143,7 +143,7 @@ export default function PastoralPage() {
                   </p>
                   <div className="mt-4 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
                   <h2
-                    className={`mt-5 font-headline text-[2rem] font-normal leading-snug lg:text-[2.4rem] ${
+                    className={`mt-5 font-headline text-heading-lg font-normal leading-snug lg:text-heading-lg ${
                       svc.dark ? 'text-white' : 'text-[var(--app-ink)]'
                     }`}
                   >
@@ -249,7 +249,7 @@ export default function PastoralPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Reach out
               </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.5rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 You do not have to carry this
                 <em className="italic text-[var(--app-primary)]/80"> alone.</em>
               </h2>

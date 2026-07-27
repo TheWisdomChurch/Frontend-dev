@@ -93,7 +93,7 @@ export default function PrivacyPage() {
             explains what we collect, why we collect it, and how we protect it —
             in plain language.
           </p>
-          <p className="mt-5 font-ui text-label text-white/28">
+          <p className="mt-5 font-ui text-label text-white/45">
             Last updated: July 2026
           </p>
         </div>
@@ -104,7 +104,7 @@ export default function PrivacyPage() {
         {/* ── Sticky TOC ── */}
         <aside className="hidden lg:block">
           <div className="sticky top-24">
-            <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/38">
+            <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/60">
               Sections
             </p>
             <nav aria-label="Privacy Policy table of contents">
@@ -127,19 +127,19 @@ export default function PrivacyPage() {
               <div className="mt-8 border-t border-[var(--app-ink)]/8 pt-6 space-y-1.5">
                 <Link
                   href="/cookies"
-                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/60 transition hover:text-[var(--app-primary)]"
                 >
                   → Cookies & Privacy
                 </Link>
                 <Link
                   href="/terms"
-                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/60 transition hover:text-[var(--app-primary)]"
                 >
                   → Terms of Use
                 </Link>
                 <Link
                   href="/contact"
-                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/60 transition hover:text-[var(--app-primary)]"
                 >
                   → Contact us
                 </Link>

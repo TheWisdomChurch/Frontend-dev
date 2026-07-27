@@ -31,7 +31,7 @@ export function CanvasCard({ leader }: { leader: LeadershipMember }) {
           sizes="(max-width: 640px) 100vw, 50vw"
           className="object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
           fallback={
-            <span className="font-headline text-[7rem] font-normal leading-none text-[var(--app-ink)]/8">
+            <span className="font-headline text-display-xl font-normal leading-none text-[var(--app-ink)]/8">
               {initials(leader.firstName, leader.lastName)}
             </span>
           }
@@ -70,7 +70,7 @@ export function DarkCard({ leader }: { leader: LeadershipMember }) {
         sizes="(max-width: 640px) 100vw, 50vw"
         className="object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
         fallback={
-          <span className="font-headline text-[7rem] font-normal leading-none text-white/[0.05]">
+          <span className="font-headline text-display-xl font-normal leading-none text-white/[0.05]">
             {initials(leader.firstName, leader.lastName)}
           </span>
         }

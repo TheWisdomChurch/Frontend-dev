@@ -228,7 +228,7 @@ export default function Footer() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="Your email"
-                  className="h-10 w-full border border-white/10 bg-white/[0.05] px-3.5 font-body text-body-sm text-white outline-none placeholder:text-white/25 transition focus:border-[var(--app-primary)]/50 focus:bg-white/[0.08]"
+                  className="h-10 w-full border border-white/10 bg-white/[0.05] px-3.5 font-body text-body-sm text-white outline-none placeholder:text-white/45 transition focus:border-[var(--app-primary)]/50 focus:bg-white/[0.08]"
                 />
                 <button
                   type="submit"
@@ -247,7 +247,7 @@ export default function Footer() {
             </form>
 
             <div>
-              <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/25">
+              <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/45">
                 Follow
               </p>
               <div className="flex items-center gap-2">

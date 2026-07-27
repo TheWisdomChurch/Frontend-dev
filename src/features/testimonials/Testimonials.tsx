@@ -73,7 +73,7 @@ function TestimonyPreview({
           className={`h-4 w-4 shrink-0 transition ${
             active
               ? 'text-[var(--app-primary)]'
-              : 'text-white/30 group-hover:translate-x-1 group-hover:text-white/70'
+              : 'text-white/45 group-hover:translate-x-1 group-hover:text-white/70'
           }`}
         />
       </div>

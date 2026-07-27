@@ -87,7 +87,7 @@ export default function PageHero({
                 {eyebrow}
               </p>
             ) : null}
-            <H1 className="font-headline text-[2rem] font-semibold leading-[1.16] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.6)] sm:text-[2.5rem] lg:text-[2.9rem]">
+            <H1 className="font-headline text-heading-lg font-semibold leading-[1.16] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.6)] sm:text-heading-lg lg:text-display-sm">
               {title}
             </H1>
             {subtitle ? (
@@ -107,7 +107,7 @@ export default function PageHero({
 
             <div className="h-px w-12 bg-[var(--app-primary)]/55" />
 
-            <H1 className="font-headline text-[2rem] font-semibold leading-[1.18] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)] sm:text-[2.6rem] lg:text-[3.1rem]">
+            <H1 className="font-headline text-heading-lg font-semibold leading-[1.18] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)] sm:text-heading-lg lg:text-display-sm">
               {title}
             </H1>
             {subtitle ? (

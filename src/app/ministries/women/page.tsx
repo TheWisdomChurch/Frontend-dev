@@ -95,7 +95,7 @@ export default function WomenMinistryPage() {
                 <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Flourish · Women&apos;s Conference 2025
                 </p>
-                <h2 className="mt-3 font-headline text-[2rem] font-normal leading-snug text-white sm:text-[2.6rem] lg:text-[3rem]">
+                <h2 className="mt-3 font-headline text-heading-lg font-normal leading-snug text-white sm:text-heading-lg lg:text-display-sm">
                   Rooted. Rising.
                   <em className="italic text-[var(--app-primary)]/80">
                     {' '}
@@ -146,7 +146,7 @@ export default function WomenMinistryPage() {
             <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Our mission
             </p>
-            <h2 className="mt-4 max-w-2xl font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
+            <h2 className="mt-4 max-w-2xl font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
               Women flourish best where
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -173,7 +173,7 @@ export default function WomenMinistryPage() {
             <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               What we do
             </p>
-            <h2 className="mt-3 max-w-xl font-headline text-heading-md font-normal leading-snug text-white sm:text-[2rem]">
+            <h2 className="mt-3 max-w-xl font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
               Built for women who want to
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -208,7 +208,7 @@ export default function WomenMinistryPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 What shapes us
               </p>
-              <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
                 The values that define
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -223,7 +223,7 @@ export default function WomenMinistryPage() {
               <ScrollFadeIn key={v.title} delay={i * 0.08}>
                 <div className="flex flex-col py-10 sm:px-8 lg:px-10 lg:py-12">
                   <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
-                  <h3 className="font-headline text-heading-md font-normal leading-none text-[var(--app-ink)] lg:text-[2.2rem]">
+                  <h3 className="font-headline text-heading-md font-normal leading-none text-[var(--app-ink)] lg:text-heading-lg">
                     {v.title}
                   </h3>
                   <p className="mt-4 font-ui text-body-sm leading-[1.95] text-[var(--app-ink)]/68">
@@ -245,7 +245,7 @@ export default function WomenMinistryPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Join the ministry
               </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.5rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 Step into a sisterhood
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}

@@ -78,7 +78,7 @@ const alignClassMap = {
 };
 
 const variantClassMap: Record<TextVariant, string> = {
-  hero: 'text-[2.15rem] leading-[1.04] tracking-[-0.045em] sm:text-5xl lg:text-6xl xl:text-[4rem] font-semibold text-balance',
+  hero: 'text-heading-lg leading-[1.04] tracking-[-0.045em] sm:text-5xl lg:text-6xl xl:text-display-md font-semibold text-balance',
   h1: 'text-3xl leading-[1.08] tracking-[-0.04em] sm:text-4xl lg:text-5xl font-semibold text-balance',
   h2: 'text-2xl leading-[1.12] tracking-[-0.035em] sm:text-3xl lg:text-4xl font-semibold text-balance',
   h3: 'text-xl leading-[1.2] tracking-[-0.025em] sm:text-2xl lg:text-3xl font-semibold text-balance',

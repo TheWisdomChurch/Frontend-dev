@@ -194,7 +194,7 @@ export default function ConnectPortal() {
           {/* Divider + Follow us */}
           <motion.div variants={staggerItem}>
             <span className="mt-10 block h-px w-12 bg-white/10" />
-            <p className="mb-4 mt-8 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/28">
+            <p className="mb-4 mt-8 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/45">
               Follow us
             </p>
           </motion.div>

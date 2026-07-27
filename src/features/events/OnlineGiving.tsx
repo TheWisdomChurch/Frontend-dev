@@ -88,7 +88,7 @@ export default function OnlineGiving() {
               &ldquo;As each has purposed in his heart, so let him give… God
               loves a cheerful giver.&rdquo;
               <br />
-              <span className="not-italic text-white/25">
+              <span className="not-italic text-white/45">
                 2 Corinthians 9:7
               </span>
             </p>
@@ -143,7 +143,7 @@ export default function OnlineGiving() {
                       <span className="font-ui text-label font-semibold text-[var(--app-primary)]/70 transition group-hover:text-[var(--app-primary)]">
                         Give now
                       </span>
-                      <ArrowRight className="h-3.5 w-3.5 text-white/25 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
+                      <ArrowRight className="h-3.5 w-3.5 text-white/45 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
                     </span>
                   </motion.button>
                 ))}
@@ -179,14 +179,14 @@ export default function OnlineGiving() {
               </button>
               <Link
                 href="/contact"
-                className="inline-flex h-10 items-center px-5 font-ui text-label text-white/30 transition hover:text-white/65"
+                className="inline-flex h-10 items-center px-5 font-ui text-label text-white/45 transition hover:text-white/65"
               >
                 Contact us
               </Link>
             </div>
 
             {/* Trust line */}
-            <p className="mt-10 text-center font-ui text-caption uppercase tracking-[0.18em] text-white/18">
+            <p className="mt-10 text-center font-ui text-caption uppercase tracking-[0.18em] text-white/45">
               100% Secured · Instant Receipt · Tax Deductible
             </p>
           </div>

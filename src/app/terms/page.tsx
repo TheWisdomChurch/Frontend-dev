@@ -154,7 +154,7 @@ export default function TermsPage(): JSX.Element {
             registrations, forms, and related digital services. By using the
             site you agree to them.
           </p>
-          <p className="mt-5 font-ui text-label text-white/28">
+          <p className="mt-5 font-ui text-label text-white/45">
             Last updated: February 2026
           </p>
         </div>
@@ -165,7 +165,7 @@ export default function TermsPage(): JSX.Element {
         {/* ── Sticky TOC ── */}
         <aside className="hidden lg:block">
           <div className="sticky top-24">
-            <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/38">
+            <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/60">
               Sections
             </p>
             <nav aria-label="Terms of Use table of contents">
@@ -188,19 +188,19 @@ export default function TermsPage(): JSX.Element {
               <div className="mt-8 border-t border-[var(--app-ink)]/8 pt-6 space-y-1.5">
                 <Link
                   href="/privacy"
-                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/60 transition hover:text-[var(--app-primary)]"
                 >
                   → Privacy Policy
                 </Link>
                 <Link
                   href="/cookies"
-                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/60 transition hover:text-[var(--app-primary)]"
                 >
                   → Cookies & Privacy
                 </Link>
                 <Link
                   href="/contact"
-                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/60 transition hover:text-[var(--app-primary)]"
                 >
                   → Contact us
                 </Link>

@@ -144,7 +144,7 @@ export default async function AboutPage() {
             <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Who we are
             </p>
-            <h2 className="font-headline text-[2rem] font-normal leading-[1.18] text-white sm:text-[2.5rem] lg:text-[3rem]">
+            <h2 className="font-headline text-heading-lg font-normal leading-[1.18] text-white sm:text-heading-lg lg:text-display-sm">
               Building a church
               <br className="hidden sm:block" />
               where people
@@ -260,7 +260,7 @@ export default async function AboutPage() {
                   <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                     Leadership
                   </p>
-                  <h2 className="mt-3 font-headline text-heading-md font-normal leading-[1.18] text-white sm:text-[2.4rem] lg:text-[2.8rem]">
+                  <h2 className="mt-3 font-headline text-heading-md font-normal leading-[1.18] text-white sm:text-heading-lg lg:text-display-sm">
                     The people who shepherd
                     <br className="hidden sm:block" />
                     <em className="italic text-[var(--app-primary)]/80">
@@ -327,7 +327,7 @@ export default async function AboutPage() {
                 Visit Wisdom Church
               </p>
 
-              <h2 className="font-headline text-[2.1rem] font-normal leading-[1.2] text-[var(--app-ink)] sm:text-[2.7rem] lg:text-[3.1rem]">
+              <h2 className="font-headline text-heading-lg font-normal leading-[1.2] text-[var(--app-ink)] sm:text-display-sm lg:text-display-sm">
                 Come and find your place
                 <br className="hidden sm:block" /> in{' '}
                 <em className="italic text-[var(--app-primary)]/75">
@@ -374,7 +374,7 @@ export default async function AboutPage() {
               </div>
 
               {/* Service times */}
-              <p className="font-ui text-label tracking-[0.04em] text-[var(--app-ink)]/35">
+              <p className="font-ui text-label tracking-[0.04em] text-[var(--app-ink)]/60">
                 {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time}{' '}
                 &nbsp;·&nbsp; {SERVICE_INFO.dailyPrayer.label}{' '}
                 {SERVICE_INFO.dailyPrayer.time} &nbsp;·&nbsp;{' '}

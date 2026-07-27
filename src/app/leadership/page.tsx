@@ -91,7 +91,7 @@ export default async function LeadershipPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Pastoral leadership
               </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.2rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 Shepherds of the
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -133,7 +133,7 @@ export default async function LeadershipPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Board of leaders
               </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
                 Deacons &amp; Deaconesses.
               </h2>
             </ScrollFadeIn>
@@ -150,7 +150,7 @@ export default async function LeadershipPage() {
                     <div className="grid items-center gap-3 py-6 sm:grid-cols-[1fr_auto] sm:gap-10">
                       <div className="flex items-center gap-5">
                         {/* Initials badge */}
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] font-ui text-label font-bold text-[var(--app-ink)]/40">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] font-ui text-label font-bold text-[var(--app-ink)]/60">
                           {initials(leader.firstName, leader.lastName)}
                         </div>
                         <div>
@@ -164,7 +164,7 @@ export default async function LeadershipPage() {
                           )}
                         </div>
                       </div>
-                      <span className="self-start border border-[var(--app-ink)]/10 px-3 py-1 font-ui text-eyebrow uppercase tracking-[0.14em] text-[var(--app-ink)]/38 sm:self-auto">
+                      <span className="self-start border border-[var(--app-ink)]/10 px-3 py-1 font-ui text-eyebrow uppercase tracking-[0.14em] text-[var(--app-ink)]/60 sm:self-auto">
                         {ROLE_LABEL[leader.role]}
                       </span>
                     </div>
@@ -187,7 +187,7 @@ export default async function LeadershipPage() {
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Serve with us
               </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.4rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 Leadership is an invitation,
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}

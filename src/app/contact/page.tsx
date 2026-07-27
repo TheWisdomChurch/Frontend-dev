@@ -55,7 +55,7 @@ const initialFormData: ContactFormData = {
 };
 
 const inputCls =
-  'w-full rounded-[3px] border border-[var(--app-ink)]/12 bg-white px-3.5 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-ink)]/28 outline-none transition-all duration-150 focus:border-l-[3px] focus:border-l-[var(--app-primary)] focus:border-[var(--app-primary)]/40';
+  'w-full rounded-[3px] border border-[var(--app-ink)]/12 bg-white px-3.5 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-ink)]/60 outline-none transition-all duration-150 focus:border-l-[3px] focus:border-l-[var(--app-primary)] focus:border-[var(--app-primary)]/40';
 
 const labelCls =
   'block font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/45';
@@ -253,7 +253,7 @@ function ContactPageContent() {
 
                 {/* Social */}
                 <div className="space-y-4">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-ink)]/40">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-ink)]/60">
                     Follow us
                   </p>
                   <div className="flex flex-col gap-3">
@@ -272,7 +272,7 @@ function ContactPageContent() {
                           <span className="font-ui text-body-sm font-semibold text-[var(--app-ink)]">
                             {s.platform}
                           </span>
-                          <span className="font-ui text-label text-[var(--app-ink)]/40">
+                          <span className="font-ui text-label text-[var(--app-ink)]/60">
                             {s.handle}
                           </span>
                         </span>
@@ -352,7 +352,7 @@ function ContactPageContent() {
                     <label className="block px-7 py-5 sm:px-8">
                       <span className={labelCls}>
                         Phone{' '}
-                        <span className="normal-case font-normal tracking-normal text-[var(--app-ink)]/30">
+                        <span className="normal-case font-normal tracking-normal text-[var(--app-ink)]/60">
                           (optional)
                         </span>
                       </span>
@@ -459,7 +459,7 @@ function ContactPageContent() {
                         </svg>
                       )}
                     </button>
-                    <Caption className="text-[var(--app-ink)]/38">
+                    <Caption className="text-[var(--app-ink)]/60">
                       For pastoral care, visit our{' '}
                       <Link
                         href="/pastoral"

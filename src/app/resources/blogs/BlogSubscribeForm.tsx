@@ -48,7 +48,7 @@ export function BlogSubscribeForm() {
         value={email}
         onChange={e => setEmail(e.target.value)}
         disabled={status === 'loading'}
-        className="flex-1 border border-white/15 bg-white/[0.04] px-4 py-3 font-ui text-body-sm text-white placeholder:text-white/30 focus:border-[var(--app-primary)]/60 focus:outline-none disabled:opacity-50"
+        className="flex-1 border border-white/15 bg-white/[0.04] px-4 py-3 font-ui text-body-sm text-white placeholder:text-white/45 focus:border-[var(--app-primary)]/60 focus:outline-none disabled:opacity-50"
       />
       <button
         type="submit"
