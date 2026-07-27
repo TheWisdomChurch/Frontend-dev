@@ -83,7 +83,7 @@ export default function PageHero({
           /* ── Compact: left-aligned, clears fixed 72px header ── */
           <div className="flex min-h-[360px] max-w-2xl flex-col justify-center gap-5 pb-14 pt-[calc(var(--app-header-height)+2.5rem)] sm:min-h-[400px] sm:pb-16">
             {eyebrow ? (
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 {eyebrow}
               </p>
             ) : null}
@@ -100,7 +100,7 @@ export default function PageHero({
           /* ── Full hero: centered, tall ── */
           <div className="mx-auto flex min-h-[480px] max-w-3xl flex-col items-center justify-center gap-5 pb-24 pt-[calc(var(--app-header-height)+4rem)] text-center sm:min-h-[540px] sm:pb-28 sm:pt-[calc(var(--app-header-height)+5rem)]">
             {eyebrow ? (
-              <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 {eyebrow}
               </p>
             ) : null}
@@ -120,14 +120,14 @@ export default function PageHero({
               <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-center">
                 <Link
                   href="/contact"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
                 >
                   {primaryButtonText}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
                 <Link
                   href="/about"
-                  className="inline-flex h-11 items-center justify-center rounded-button border border-white/20 bg-white/[0.06] px-7 font-ui text-[0.78rem] font-semibold text-white/75 backdrop-blur-sm transition hover:border-white/35 hover:text-white"
+                  className="inline-flex h-11 items-center justify-center rounded-button border border-white/20 bg-white/[0.06] px-7 font-ui text-label font-semibold text-white/75 backdrop-blur-sm transition hover:border-white/35 hover:text-white"
                 >
                   {secondaryButtonText}
                 </Link>

@@ -92,10 +92,10 @@ export default function ChildrenMinistryPage() {
         <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Our mission
             </p>
-            <h2 className="mt-4 max-w-2xl font-headline text-[1.8rem] font-normal leading-snug text-white sm:text-[2.3rem]">
+            <h2 className="mt-4 max-w-2xl font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.3rem]">
               Children should experience church as a place of
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -103,7 +103,7 @@ export default function ChildrenMinistryPage() {
               </em>
             </h2>
             <div className="mt-8 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-            <p className="mt-6 max-w-xl font-ui text-[0.87rem] leading-[2] text-white/70">
+            <p className="mt-6 max-w-xl font-ui text-body-sm leading-[2] text-white/70">
               The children&apos;s ministry exists to help young people know God
               early, feel genuinely cared for at church, and build spiritual
               foundations that support growth well into their teenage years and
@@ -117,10 +117,10 @@ export default function ChildrenMinistryPage() {
       <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="pt-16 lg:pt-20">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               What we do
             </p>
-            <h2 className="mt-3 max-w-xl font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
+            <h2 className="mt-3 max-w-xl font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
               Programs built for
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -134,10 +134,10 @@ export default function ChildrenMinistryPage() {
               <ScrollFadeIn key={item.title} delay={i * 0.07}>
                 <div className="border-t border-[var(--app-ink)]/10 py-8">
                   <div className="mb-4 h-[1.5px] w-6 bg-[var(--app-primary)]/50" />
-                  <h3 className="font-headline text-[1.25rem] font-normal text-[var(--app-ink)]">
+                  <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                     {item.title}
                   </h3>
-                  <p className="mt-3 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/68">
+                  <p className="mt-3 font-ui text-body-sm leading-[1.95] text-[var(--app-ink)]/68">
                     {item.description}
                   </p>
                 </div>
@@ -152,10 +152,10 @@ export default function ChildrenMinistryPage() {
         <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="pt-14 lg:pt-18">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Life in our ministry
             </p>
-            <h2 className="mt-3 max-w-lg font-headline text-[1.6rem] font-normal leading-snug text-white sm:text-[1.9rem]">
+            <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-md">
               A glimpse of what Sunday looks like
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -174,10 +174,10 @@ export default function ChildrenMinistryPage() {
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-14">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 A word to parents
               </p>
-              <h2 className="mt-3 max-w-xl font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-3 max-w-xl font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
                 Your child will be in
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -192,10 +192,10 @@ export default function ChildrenMinistryPage() {
               <ScrollFadeIn key={p.title} delay={i * 0.08}>
                 <div className="flex flex-col py-10 sm:px-8 lg:px-10 lg:py-12">
                   <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
-                  <h3 className="font-headline text-[1.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[2.2rem]">
+                  <h3 className="font-headline text-heading-md font-normal leading-none text-[var(--app-ink)] lg:text-[2.2rem]">
                     {p.title}
                   </h3>
-                  <p className="mt-4 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/68">
+                  <p className="mt-4 font-ui text-body-sm leading-[1.95] text-[var(--app-ink)]/68">
                     {p.body}
                   </p>
                 </div>
@@ -211,10 +211,10 @@ export default function ChildrenMinistryPage() {
           <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Join the ministry
               </p>
-              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.5rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.5rem]">
                 Connect your child to a
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -222,20 +222,20 @@ export default function ChildrenMinistryPage() {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
+              <p className="max-w-md font-ui text-body-sm leading-[2] text-white/70">
                 Reach out and we will help your family understand what to
                 expect, meet the team, and settle comfortably into the ministry.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
                   Connect my family <Arrow />
                 </Link>
                 <Link
                   href="/events/weekly"
-                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white/50 transition hover:border-white/35 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/50 transition hover:border-white/35 hover:text-white"
                 >
                   See service times
                 </Link>

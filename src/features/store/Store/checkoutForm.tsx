@@ -449,7 +449,7 @@ const CheckoutForm = () => {
                   }
                 >
                   {method.disabled && (
-                    <span className="absolute right-3 top-3 rounded-full border border-white/20 bg-black/40 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-white/60">
+                    <span className="absolute right-3 top-3 rounded-full border border-white/20 bg-black/40 px-2 py-0.5 text-eyebrow font-bold uppercase tracking-[0.08em] text-white/60">
                       Coming soon
                     </span>
                   )}

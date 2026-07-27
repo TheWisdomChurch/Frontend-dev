@@ -151,7 +151,7 @@ export default function SeniorPastor() {
           {/* Eyebrow */}
           <motion.p
             variants={staggerItem}
-            className="mb-6 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+            className="mb-6 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
           >
             Senior Pastor
           </motion.p>
@@ -200,7 +200,7 @@ export default function SeniorPastor() {
                 bioExpanded ? 'max-h-[600px]' : 'max-h-[5.5rem]'
               }`}
             >
-              <p className="font-ui text-[0.92rem] leading-[1.9] text-white/70">
+              <p className="font-ui text-body-md leading-[1.9] text-white/70">
                 {bio}
               </p>
             </div>
@@ -209,7 +209,7 @@ export default function SeniorPastor() {
               <button
                 type="button"
                 onClick={() => setBioExpanded(p => !p)}
-                className="mt-3 inline-flex items-center gap-1.5 font-ui text-[0.78rem] font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-primary-light)] lg:hidden"
+                className="mt-3 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-primary-light)] lg:hidden"
               >
                 {bioExpanded ? 'Read less' : 'Read more'}
                 <ChevronDown
@@ -226,7 +226,7 @@ export default function SeniorPastor() {
           >
             <Link
               href="/leadership"
-              className="group inline-flex items-center gap-1.5 font-ui text-[0.8rem] font-semibold text-[var(--app-primary)] transition"
+              className="group inline-flex items-center gap-1.5 font-ui text-body-sm font-semibold text-[var(--app-primary)] transition"
             >
               Meet the team
               <span

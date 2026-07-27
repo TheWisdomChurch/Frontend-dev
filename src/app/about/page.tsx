@@ -117,13 +117,13 @@ export default async function AboutPage() {
                 key={item.label}
                 className="flex flex-col gap-1 px-6 py-7 sm:px-8 sm:py-8"
               >
-                <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   {item.label}
                 </p>
-                <p className="mt-0.5 font-headline text-[1.3rem] font-normal leading-snug text-[var(--app-ink)]">
+                <p className="mt-0.5 font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
                   {item.value}
                 </p>
-                <p className="mt-0.5 font-ui text-[0.76rem] text-[var(--app-ink)]/48">
+                <p className="mt-0.5 font-ui text-label text-[var(--app-ink)]/48">
                   {item.detail}
                 </p>
               </div>
@@ -141,7 +141,7 @@ export default async function AboutPage() {
         <div className="grid lg:grid-cols-[1fr_1fr] lg:min-h-[580px]">
           {/* Text column */}
           <ScrollFadeIn className="flex flex-col justify-center gap-7 px-6 py-16 sm:px-10 lg:px-14 xl:px-18 order-2 lg:order-1">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Who we are
             </p>
             <h2 className="font-headline text-[2rem] font-normal leading-[1.18] text-white sm:text-[2.5rem] lg:text-[3rem]">
@@ -162,13 +162,13 @@ export default async function AboutPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
               <Link
                 href="/contact"
-                className="inline-flex w-fit items-center gap-2 rounded-button bg-[var(--app-primary)] px-6 py-2.5 font-ui text-[0.77rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105"
+                className="inline-flex w-fit items-center gap-2 rounded-button bg-[var(--app-primary)] px-6 py-2.5 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105"
               >
                 Plan your visit
               </Link>
               <Link
                 href="/ministries"
-                className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
+                className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
               >
                 Explore ministries →
               </Link>
@@ -198,16 +198,16 @@ export default async function AboutPage() {
           <Container size="xl">
             <ScrollFadeIn className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Our culture
                 </p>
-                <H2 className="mt-2 max-w-sm font-headline text-[1.5rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[1.75rem]">
+                <H2 className="mt-2 max-w-sm font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-md">
                   What shapes everything we do.
                 </H2>
               </div>
               <Link
                 href="/ministries"
-                className="hidden items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/55 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)] sm:inline-flex"
+                className="hidden items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)] sm:inline-flex"
               >
                 Explore ministries →
               </Link>
@@ -231,13 +231,13 @@ export default async function AboutPage() {
                     {/* Title */}
                     <div className="flex items-start gap-5">
                       <div className="mt-[0.6rem] h-[1.5px] w-6 shrink-0 bg-[var(--app-primary)]/55" />
-                      <p className="font-headline text-[1.3rem] font-normal leading-snug text-[var(--app-ink)] lg:text-[1.55rem]">
+                      <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)] lg:text-heading-md">
                         {pillar.title}
                       </p>
                     </div>
 
                     {/* Body */}
-                    <p className="pl-11 font-ui text-[0.86rem] leading-[1.9] text-[var(--app-ink)]/70 lg:max-w-lg lg:pl-0">
+                    <p className="pl-11 font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/70 lg:max-w-lg lg:pl-0">
                       {pillar.body}
                     </p>
                   </div>
@@ -257,10 +257,10 @@ export default async function AboutPage() {
             <Container size="xl">
               <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
                 <div className="max-w-lg">
-                  <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                     Leadership
                   </p>
-                  <h2 className="mt-3 font-headline text-[1.9rem] font-normal leading-[1.18] text-white sm:text-[2.4rem] lg:text-[2.8rem]">
+                  <h2 className="mt-3 font-headline text-heading-md font-normal leading-[1.18] text-white sm:text-[2.4rem] lg:text-[2.8rem]">
                     The people who shepherd
                     <br className="hidden sm:block" />
                     <em className="italic text-[var(--app-primary)]/80">
@@ -269,7 +269,7 @@ export default async function AboutPage() {
                     </em>
                   </h2>
                   <div className="mt-5 h-px w-10 bg-[var(--app-primary)]/40" />
-                  <p className="mt-4 font-ui text-[0.88rem] leading-[1.85] text-white/50 max-w-sm">
+                  <p className="mt-4 font-ui text-body-sm leading-[1.85] text-white/50 max-w-sm">
                     Wisdom Church is led by pastors who believe that sound
                     teaching, faithful prayer, and genuine care build lasting
                     community.
@@ -277,7 +277,7 @@ export default async function AboutPage() {
                 </div>
                 <Link
                   href="/leadership"
-                  className="hidden items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)] lg:inline-flex"
+                  className="hidden items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)] lg:inline-flex"
                 >
                   Meet the full team →
                 </Link>
@@ -307,7 +307,7 @@ export default async function AboutPage() {
           <Container size="xl">
             <Link
               href="/leadership"
-              className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)]"
+              className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)]"
             >
               Meet the full team →
             </Link>
@@ -323,7 +323,7 @@ export default async function AboutPage() {
 
           <Container size="lg" className="relative">
             <div className="flex flex-col items-center gap-8 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Visit Wisdom Church
               </p>
 
@@ -337,7 +337,7 @@ export default async function AboutPage() {
 
               <div className="h-px w-12 bg-[var(--app-primary)]/40" />
 
-              <p className="max-w-md font-ui text-[0.9rem] leading-[1.85] text-[var(--app-ink)]/52">
+              <p className="max-w-md font-ui text-body-md leading-[1.85] text-[var(--app-ink)]/52">
                 Whether you are exploring faith for the first time or looking
                 for a church home in Lagos — you are welcome here, exactly as
                 you are.
@@ -346,7 +346,7 @@ export default async function AboutPage() {
               <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                 >
                   Plan your visit
                   <svg
@@ -367,14 +367,14 @@ export default async function AboutPage() {
                 </Link>
                 <Link
                   href="/ministries"
-                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-ink)]/35 hover:text-[var(--app-ink)]"
+                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-ink)]/35 hover:text-[var(--app-ink)]"
                 >
                   Explore ministries
                 </Link>
               </div>
 
               {/* Service times */}
-              <p className="font-ui text-[0.72rem] tracking-[0.04em] text-[var(--app-ink)]/35">
+              <p className="font-ui text-label tracking-[0.04em] text-[var(--app-ink)]/35">
                 {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time}{' '}
                 &nbsp;·&nbsp; {SERVICE_INFO.dailyPrayer.label}{' '}
                 {SERVICE_INFO.dailyPrayer.time} &nbsp;·&nbsp;{' '}

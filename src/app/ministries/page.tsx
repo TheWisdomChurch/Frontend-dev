@@ -162,10 +162,10 @@ export default function MinistriesPage() {
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-6 py-12 lg:flex-row lg:items-end lg:justify-between lg:py-16">
             <div className="max-w-2xl">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Ministry at Wisdom Church
               </p>
-              <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
                 We exist to help every person find
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -180,7 +180,7 @@ export default function MinistriesPage() {
             </div>
             <Link
               href="/contact"
-              className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-6 py-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
+              className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-6 py-3 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
             >
               Get connected <Arrow />
             </Link>
@@ -219,7 +219,7 @@ export default function MinistriesPage() {
                   {/* Card content */}
                   <div className="relative z-10 flex h-full flex-col p-7 lg:p-8">
                     {/* Badge — top */}
-                    <span className="self-start border border-white/20 px-3.5 py-1.5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm transition-colors duration-200 group-hover:border-[var(--app-primary)]/60 group-hover:text-[var(--app-primary)]">
+                    <span className="self-start border border-white/20 px-3.5 py-1.5 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm transition-colors duration-200 group-hover:border-[var(--app-primary)]/60 group-hover:text-[var(--app-primary)]">
                       {ministry.badge}
                     </span>
 
@@ -232,23 +232,23 @@ export default function MinistriesPage() {
                       <div className="mb-4 h-[1.5px] w-8 bg-[var(--app-primary)]/60 transition-all duration-300 group-hover:w-14 group-hover:bg-[var(--app-primary)]" />
 
                       {/* Tagline */}
-                      <p className="mb-2 font-ui text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[var(--app-primary)]">
+                      <p className="mb-2 font-ui text-label font-semibold uppercase tracking-[0.16em] text-[var(--app-primary)]">
                         {ministry.tagline}
                       </p>
 
                       {/* Title */}
-                      <h3 className="font-headline text-[1.75rem] font-normal leading-snug text-white lg:text-[2rem]">
+                      <h3 className="font-headline text-heading-md font-normal leading-snug text-white lg:text-[2rem]">
                         {ministry.title}
                       </h3>
 
                       {/* Description */}
-                      <p className="mt-3 font-ui text-[0.82rem] leading-[1.9] text-white/72">
+                      <p className="mt-3 font-ui text-body-sm leading-[1.9] text-white/72">
                         {ministry.description}
                       </p>
 
                       {/* CTA — always visible, prominent */}
                       <div className="mt-6 flex items-center justify-between">
-                        <span className="inline-flex items-center gap-2.5 bg-[var(--app-primary)] px-5 py-2.5 font-ui text-[0.7rem] font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition-all duration-200 group-hover:brightness-110">
+                        <span className="inline-flex items-center gap-2.5 bg-[var(--app-primary)] px-5 py-2.5 font-ui text-label font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition-all duration-200 group-hover:brightness-110">
                           Explore ministry
                           <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
                         </span>
@@ -271,13 +271,13 @@ export default function MinistriesPage() {
                 <Heart className="h-5 w-5" />
               </div>
               <div className="max-w-xl">
-                <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Beyond ministries — care &amp; support
                 </p>
-                <h3 className="mt-2 font-headline text-[1.4rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[1.7rem]">
+                <h3 className="mt-2 font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)] sm:text-heading-md">
                   Need counseling, prayer, or help with a life moment?
                 </h3>
-                <p className="mt-2 font-ui text-[0.85rem] leading-[1.85] text-[var(--app-ink)]/65">
+                <p className="mt-2 font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/65">
                   Pastoral Care isn&apos;t a ministry team to join — it&apos;s
                   our support structure for prayer, confidential counseling, and
                   life transitions, whenever you need it.
@@ -286,7 +286,7 @@ export default function MinistriesPage() {
             </div>
             <Link
               href="/pastoral"
-              className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-6 py-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-6 py-3 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
             >
               Visit Pastoral Care <Arrow />
             </Link>
@@ -299,10 +299,10 @@ export default function MinistriesPage() {
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-16">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Getting connected
               </p>
-              <h2 className="mt-3 max-w-lg font-headline text-[1.8rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
+              <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
                 Finding your place is
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -321,12 +321,12 @@ export default function MinistriesPage() {
                 <p className="font-headline text-[2.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[3.4rem]">
                   {col.verb}
                 </p>
-                <p className="mt-5 font-ui text-[0.84rem] leading-[1.9] text-[var(--app-ink)]/68">
+                <p className="mt-5 font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/68">
                   {col.body}
                 </p>
                 <Link
                   href={col.href}
-                  className="mt-8 inline-flex items-center gap-2.5 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="mt-8 inline-flex items-center gap-2.5 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   {col.cta}
                   <Arrow />
@@ -343,7 +343,7 @@ export default function MinistriesPage() {
           <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Take a next step
               </p>
               <h2 className="font-headline text-[2rem] font-normal leading-[1.2] text-white sm:text-[2.6rem] lg:text-[3rem]">
@@ -354,20 +354,20 @@ export default function MinistriesPage() {
                 </em>
               </h2>
               <div className="h-px w-12 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.88rem] leading-[1.9] text-white/70">
+              <p className="max-w-md font-ui text-body-sm leading-[1.9] text-white/70">
                 Tell us where you are in your faith journey and we will help you
                 find the right ministry community or service opportunity.
               </p>
               <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition duration-150 hover:brightness-105"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition duration-150 hover:brightness-105"
                 >
                   Get connected <Arrow />
                 </Link>
                 <Link
                   href="/events"
-                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white/55 transition duration-150 hover:border-white/35 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/55 transition duration-150 hover:border-white/35 hover:text-white"
                 >
                   See church rhythm
                 </Link>

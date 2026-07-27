@@ -225,10 +225,10 @@ export default function CookieConsentBanner() {
                 <ShieldCheck className="h-4 w-4 text-[var(--app-primary)]" />
               </div>
               <div className="min-w-0">
-                <p className="font-ui text-[0.78rem] font-bold text-white">
+                <p className="font-ui text-label font-bold text-white">
                   We use cookies
                 </p>
-                <p className="mt-0.5 font-body text-[0.76rem] leading-[1.6] text-white/55">
+                <p className="mt-0.5 font-body text-label leading-[1.6] text-white/55">
                   Essential cookies keep the site working. Optional analytics
                   help us improve it.{' '}
                   <Link
@@ -246,7 +246,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => setSettingsOpen(true)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/12 px-3.5 font-ui text-[0.75rem] font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/12 px-3.5 font-ui text-label font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Manage
@@ -257,7 +257,7 @@ export default function CookieConsentBanner() {
                 onClick={() =>
                   apply({ essential: true, analytics: false, marketing: false })
                 }
-                className="inline-flex h-9 items-center rounded-lg border border-white/12 px-3.5 font-ui text-[0.75rem] font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
+                className="inline-flex h-9 items-center rounded-lg border border-white/12 px-3.5 font-ui text-label font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
               >
                 Essential only
               </button>
@@ -267,7 +267,7 @@ export default function CookieConsentBanner() {
                 onClick={() =>
                   apply({ essential: true, analytics: true, marketing: true })
                 }
-                className="inline-flex h-9 items-center rounded-lg bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
+                className="inline-flex h-9 items-center rounded-lg bg-[var(--app-primary)] px-4 font-ui text-label font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
               >
                 Accept all
               </button>
@@ -292,10 +292,10 @@ export default function CookieConsentBanner() {
               className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.03] px-4 py-3.5"
             >
               <div className="min-w-0">
-                <p className="font-ui text-[0.82rem] font-semibold text-white">
+                <p className="font-ui text-body-sm font-semibold text-white">
                   {row.label}
                 </p>
-                <p className="mt-0.5 font-body text-[0.76rem] leading-[1.5] text-white/50">
+                <p className="mt-0.5 font-body text-label leading-[1.5] text-white/50">
                   {row.description}
                 </p>
               </div>

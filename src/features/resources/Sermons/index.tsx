@@ -81,11 +81,11 @@ function VideoModal({
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
           <div className="min-w-0 flex-1 pr-4">
             {video.series && (
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 {video.series}
               </p>
             )}
-            <p className="mt-0.5 font-headline text-[1rem] font-normal text-white line-clamp-1">
+            <p className="mt-0.5 font-headline text-body-lg font-normal text-white line-clamp-1">
               {video.title}
             </p>
           </div>
@@ -110,13 +110,13 @@ function VideoModal({
 
         {/* Meta */}
         <div className="border-t border-white/10 px-6 py-4">
-          <p className="font-ui text-[0.78rem] text-white/40">
+          <p className="font-ui text-label text-white/40">
             {video.preacher}
             {video.publishedAt && ` · ${formatDate(video.publishedAt)}`}
             {video.duration && ` · ${video.duration}`}
           </p>
           {video.description && (
-            <p className="mt-2 font-ui text-[0.82rem] leading-[1.75] text-white/48 line-clamp-2">
+            <p className="mt-2 font-ui text-body-sm leading-[1.75] text-white/48 line-clamp-2">
               {video.description}
             </p>
           )}
@@ -178,14 +178,14 @@ function SermonCard({
       {/* Content */}
       <div className="pt-4">
         {video.series && (
-          <p className="mb-1.5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+          <p className="mb-1.5 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
             {video.series}
           </p>
         )}
-        <h3 className="font-headline text-[1rem] font-normal leading-snug text-white line-clamp-2 transition duration-150 group-hover:text-white/75">
+        <h3 className="font-headline text-body-lg font-normal leading-snug text-white line-clamp-2 transition duration-150 group-hover:text-white/75">
           {video.title}
         </h3>
-        <p className="mt-2 font-ui text-[0.74rem] text-white/35">
+        <p className="mt-2 font-ui text-label text-white/35">
           {video.preacher}
           {video.publishedAt && ` · ${formatDate(video.publishedAt)}`}
         </p>
@@ -231,28 +231,28 @@ function CategoryCard({
       <div className="px-5 py-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="font-headline text-[1.05rem] font-normal text-[var(--app-ink)] line-clamp-2 transition duration-150 group-hover:text-[var(--app-primary)]">
+            <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)] line-clamp-2 transition duration-150 group-hover:text-[var(--app-primary)]">
               {group.name}
             </h3>
             {'description' in group && group.description && (
-              <p className="mt-1.5 font-ui text-[0.74rem] leading-[1.7] text-[var(--app-ink)]/45 line-clamp-2">
+              <p className="mt-1.5 font-ui text-label leading-[1.7] text-[var(--app-ink)]/45 line-clamp-2">
                 {group.description}
               </p>
             )}
           </div>
-          <span className="shrink-0 translate-x-0 font-ui text-[0.7rem] text-[var(--app-ink)]/30 transition duration-200 group-hover:translate-x-1 group-hover:text-[var(--app-primary)]">
+          <span className="shrink-0 translate-x-0 font-ui text-label text-[var(--app-ink)]/30 transition duration-200 group-hover:translate-x-1 group-hover:text-[var(--app-primary)]">
             →
           </span>
         </div>
 
         <div className="mt-4 flex items-center gap-3">
-          <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[var(--app-primary)]">
+          <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-primary)]">
             {group.count} {group.count === 1 ? 'message' : 'messages'}
           </span>
           {!isUngrouped &&
             'uniqueSeries' in group &&
             group.uniqueSeries.length > 1 && (
-              <span className="font-ui text-[0.65rem] text-[var(--app-ink)]/32">
+              <span className="font-ui text-caption text-[var(--app-ink)]/32">
                 · {group.uniqueSeries.length} series
               </span>
             )}
@@ -265,7 +265,7 @@ function CategoryCard({
 /* ── Shared select style ─────────────────────────────────── */
 
 const darkSelectCls =
-  'border border-white/10 bg-white/[0.05] px-4 py-2.5 font-ui text-[0.82rem] text-white focus:border-[var(--app-primary)] focus:outline-none transition';
+  'border border-white/10 bg-white/[0.05] px-4 py-2.5 font-ui text-body-sm text-white focus:border-[var(--app-primary)] focus:outline-none transition';
 
 /* ── Main component ──────────────────────────────────────── */
 
@@ -358,7 +358,7 @@ const SermonUtil = () => {
               <div className="grid gap-10 py-14 lg:grid-cols-[1.3fr_1fr] lg:gap-14 lg:py-18">
                 {/* Player column */}
                 <div>
-                  <p className="mb-4 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                     {currentVideo === videos[0]
                       ? 'Latest message'
                       : 'Now playing'}
@@ -373,14 +373,14 @@ const SermonUtil = () => {
                   </div>
                   <div className="mt-6">
                     {currentVideo.series && (
-                      <p className="mb-1.5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                      <p className="mb-1.5 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                         {currentVideo.series}
                       </p>
                     )}
-                    <h2 className="font-headline text-[1.45rem] font-normal leading-snug text-white sm:text-[1.8rem]">
+                    <h2 className="font-headline text-heading-sm font-normal leading-snug text-white sm:text-heading-md">
                       {currentVideo.title}
                     </h2>
-                    <p className="mt-2 font-ui text-[0.78rem] text-white/38">
+                    <p className="mt-2 font-ui text-label text-white/38">
                       {currentVideo.preacher}
                       {currentVideo.publishedAt &&
                         ` · ${new Date(
@@ -392,14 +392,14 @@ const SermonUtil = () => {
                         })}`}
                     </p>
                     {currentVideo.description && (
-                      <p className="mt-3 font-ui text-[0.83rem] leading-[1.85] text-white/45 line-clamp-3">
+                      <p className="mt-3 font-ui text-body-sm leading-[1.85] text-white/45 line-clamp-3">
                         {currentVideo.description}
                       </p>
                     )}
                     <button
                       type="button"
                       onClick={handleWatchSeries}
-                      className="mt-5 inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                      className="mt-5 inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                     >
                       View full series <Arrow />
                     </button>
@@ -410,10 +410,10 @@ const SermonUtil = () => {
                 {recentVideos.length > 0 && (
                   <div>
                     <div className="mb-5 flex items-center justify-between">
-                      <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                      <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                         Recent uploads
                       </p>
-                      <span className="font-ui text-[0.68rem] text-white/28">
+                      <span className="font-ui text-caption text-white/28">
                         {recentVideos.length} videos
                       </span>
                     </div>
@@ -449,20 +449,20 @@ const SermonUtil = () => {
                                 </div>
                               )}
                               {idx === 0 && !isActive && (
-                                <span className="absolute -right-1 -top-1 bg-[var(--app-primary)] px-1.5 py-0.5 font-ui text-[0.5rem] font-bold uppercase tracking-wide text-[var(--app-ink)]">
+                                <span className="absolute -right-1 -top-1 bg-[var(--app-primary)] px-1.5 py-0.5 font-ui text-eyebrow font-bold uppercase tracking-wide text-[var(--app-ink)]">
                                   New
                                 </span>
                               )}
                             </div>
                             <div className="min-w-0 flex-1">
                               <p
-                                className={`font-headline text-[0.9rem] font-normal leading-snug line-clamp-2 ${
+                                className={`font-headline text-body-md font-normal leading-snug line-clamp-2 ${
                                   isActive ? 'text-white' : 'text-white/78'
                                 }`}
                               >
                                 {video.title}
                               </p>
-                              <p className="mt-0.5 font-ui text-[0.68rem] text-white/32 truncate">
+                              <p className="mt-0.5 font-ui text-caption text-white/32 truncate">
                                 {video.series}
                               </p>
                             </div>
@@ -478,10 +478,10 @@ const SermonUtil = () => {
             <ScrollFadeIn>
               <div className="flex flex-col items-center gap-5 py-20 text-center">
                 <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                <h2 className="font-headline text-[1.5rem] font-normal text-white">
+                <h2 className="font-headline text-heading-md font-normal text-white">
                   Sermons loading soon.
                 </h2>
-                <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-white/40">
+                <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/40">
                   Our full sermon library will appear here. In the meantime,
                   visit our YouTube channel.
                 </p>
@@ -489,7 +489,7 @@ const SermonUtil = () => {
                   href="https://www.youtube.com/@wisdomhousehq"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   Visit YouTube channel <Arrow />
                 </a>
@@ -504,10 +504,10 @@ const SermonUtil = () => {
         <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
           <Container size="xl">
             <ScrollFadeIn className="mb-10">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Browse by category
               </p>
-              <h2 className="mt-2 font-headline text-[1.6rem] font-normal text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-[2rem]">
                 Explore the sermon library.
               </h2>
             </ScrollFadeIn>
@@ -535,7 +535,7 @@ const SermonUtil = () => {
             {ungroupedSeries.length > 0 && (
               <>
                 <ScrollFadeIn className="mb-6 mt-12">
-                  <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                     More series
                   </p>
                 </ScrollFadeIn>
@@ -559,7 +559,7 @@ const SermonUtil = () => {
               <button
                 type="button"
                 onClick={() => handleSeriesClick('all')}
-                className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 View all sermons <Arrow />
               </button>
@@ -582,7 +582,7 @@ const SermonUtil = () => {
                 value={searchTerm}
                 onChange={e => handleSearchChange(e.target.value)}
                 placeholder="Search sermons..."
-                className="border border-white/10 bg-white/[0.05] px-4 py-2.5 font-ui text-[0.82rem] text-white placeholder-white/28 focus:border-[var(--app-primary)] focus:outline-none transition"
+                className="border border-white/10 bg-white/[0.05] px-4 py-2.5 font-ui text-body-sm text-white placeholder-white/28 focus:border-[var(--app-primary)] focus:outline-none transition"
               />
               <select
                 aria-label="Filter by series"
@@ -647,7 +647,7 @@ const SermonUtil = () => {
             </div>
 
             <div className="mt-4 flex items-center justify-between">
-              <p className="font-ui text-[0.78rem] text-white/35">
+              <p className="font-ui text-label text-white/35">
                 {filteredVideos.length}{' '}
                 {filteredVideos.length === 1 ? 'message' : 'messages'}
                 {hasActiveFilters && ' found'}
@@ -656,7 +656,7 @@ const SermonUtil = () => {
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="font-ui text-[0.72rem] text-[var(--app-primary)] transition hover:underline"
+                  className="font-ui text-label text-[var(--app-primary)] transition hover:underline"
                 >
                   Clear filters
                 </button>
@@ -682,17 +682,17 @@ const SermonUtil = () => {
             <ScrollFadeIn>
               <div className="flex flex-col items-center gap-5 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
                 <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                <h3 className="font-headline text-[1.4rem] font-normal text-white">
+                <h3 className="font-headline text-heading-sm font-normal text-white">
                   No sermons match your search.
                 </h3>
-                <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-white/40">
+                <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/40">
                   Try adjusting your filters or searching with different
                   keywords.
                 </p>
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   Clear all filters <Arrow />
                 </button>
@@ -727,7 +727,7 @@ const SermonUtil = () => {
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="inline-flex items-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex items-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 Load more sermons
               </button>
@@ -741,10 +741,10 @@ const SermonUtil = () => {
         <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-20 lg:py-24">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Stay connected
               </p>
-              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.4rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.4rem]">
                 Never miss a message
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -752,7 +752,7 @@ const SermonUtil = () => {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-[var(--app-ink)]/50">
+              <p className="max-w-md font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/50">
                 Subscribe to the Wisdom Church YouTube channel and receive new
                 sermons, conference messages, and live service alerts every
                 week.
@@ -762,13 +762,13 @@ const SermonUtil = () => {
                   href="https://www.youtube.com/@wisdomhousehq"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                 >
                   Subscribe on YouTube <Arrow />
                 </a>
                 <Link
                   href="/events/weekly"
-                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   View service times
                 </Link>

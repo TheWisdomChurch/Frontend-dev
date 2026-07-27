@@ -92,7 +92,7 @@ export default function WomenMinistryPage() {
           <ScrollFadeIn className="pt-14 lg:pt-18">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Flourish · Women&apos;s Conference 2025
                 </p>
                 <h2 className="mt-3 font-headline text-[2rem] font-normal leading-snug text-white sm:text-[2.6rem] lg:text-[3rem]">
@@ -102,7 +102,7 @@ export default function WomenMinistryPage() {
                     Flourishing.
                   </em>
                 </h2>
-                <p className="mt-5 max-w-xl font-ui text-[0.86rem] leading-[2] text-white/70">
+                <p className="mt-5 max-w-xl font-ui text-body-sm leading-[2] text-white/70">
                   Flourish is the Wisdom Church Women&apos;s Conference — a
                   gathering where women come together in worship, the Word, and
                   honest community to celebrate what God is doing in and through
@@ -114,7 +114,7 @@ export default function WomenMinistryPage() {
               </div>
               <Link
                 href="/contact"
-                className="inline-flex shrink-0 items-center gap-2 self-start border border-white/18 px-6 py-3 font-ui text-[0.72rem] font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
+                className="inline-flex shrink-0 items-center gap-2 self-start border border-white/18 px-6 py-3 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
               >
                 Stay updated on next conference <Arrow />
               </Link>
@@ -143,10 +143,10 @@ export default function WomenMinistryPage() {
       <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Our mission
             </p>
-            <h2 className="mt-4 max-w-2xl font-headline text-[1.8rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
+            <h2 className="mt-4 max-w-2xl font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.3rem]">
               Women flourish best where
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -155,7 +155,7 @@ export default function WomenMinistryPage() {
               work together.
             </h2>
             <div className="mt-8 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-            <p className="mt-6 max-w-xl font-ui text-[0.87rem] leading-[2] text-[var(--app-ink)]/70">
+            <p className="mt-6 max-w-xl font-ui text-body-sm leading-[2] text-[var(--app-ink)]/70">
               This ministry creates space for women to deepen their walk with
               God, carry one another through real life, and grow into stronger
               service, leadership, and witness. Spiritual depth and community
@@ -170,10 +170,10 @@ export default function WomenMinistryPage() {
         <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="pt-16 lg:pt-20">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               What we do
             </p>
-            <h2 className="mt-3 max-w-xl font-headline text-[1.7rem] font-normal leading-snug text-white sm:text-[2rem]">
+            <h2 className="mt-3 max-w-xl font-headline text-heading-md font-normal leading-snug text-white sm:text-[2rem]">
               Built for women who want to
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -187,10 +187,10 @@ export default function WomenMinistryPage() {
               <ScrollFadeIn key={item.title} delay={i * 0.07}>
                 <div className="border-t border-white/8 py-8">
                   <div className="mb-4 h-[1.5px] w-6 bg-[var(--app-primary)]/50" />
-                  <h3 className="font-headline text-[1.25rem] font-normal text-white">
+                  <h3 className="font-headline text-heading-sm font-normal text-white">
                     {item.title}
                   </h3>
-                  <p className="mt-3 font-ui text-[0.84rem] leading-[1.95] text-white/70">
+                  <p className="mt-3 font-ui text-body-sm leading-[1.95] text-white/70">
                     {item.description}
                   </p>
                 </div>
@@ -205,10 +205,10 @@ export default function WomenMinistryPage() {
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-[var(--app-ink)]/8 py-12 lg:py-14">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 What shapes us
               </p>
-              <h2 className="mt-3 max-w-lg font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
                 The values that define
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -223,10 +223,10 @@ export default function WomenMinistryPage() {
               <ScrollFadeIn key={v.title} delay={i * 0.08}>
                 <div className="flex flex-col py-10 sm:px-8 lg:px-10 lg:py-12">
                   <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
-                  <h3 className="font-headline text-[1.8rem] font-normal leading-none text-[var(--app-ink)] lg:text-[2.2rem]">
+                  <h3 className="font-headline text-heading-md font-normal leading-none text-[var(--app-ink)] lg:text-[2.2rem]">
                     {v.title}
                   </h3>
-                  <p className="mt-4 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/68">
+                  <p className="mt-4 font-ui text-body-sm leading-[1.95] text-[var(--app-ink)]/68">
                     {v.body}
                   </p>
                 </div>
@@ -242,10 +242,10 @@ export default function WomenMinistryPage() {
           <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Join the ministry
               </p>
-              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.5rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.5rem]">
                 Step into a sisterhood
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -253,20 +253,20 @@ export default function WomenMinistryPage() {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
+              <p className="max-w-md font-ui text-body-sm leading-[2] text-white/70">
                 Reach out and we will help you find the right starting point —
                 whether that is fellowship, prayer, Bible study, or service.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
                   Join the sisterhood <Arrow />
                 </Link>
                 <Link
                   href="/events/weekly"
-                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white/50 transition hover:border-white/35 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/50 transition hover:border-white/35 hover:text-white"
                 >
                   See service times
                 </Link>

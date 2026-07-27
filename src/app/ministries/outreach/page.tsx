@@ -91,10 +91,10 @@ export default function OutreachPage() {
         <SectionGlow />
         <Container size="xl">
           <ScrollFadeIn className="py-16 lg:py-20">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Our mission
             </p>
-            <h2 className="mt-4 max-w-2xl font-headline text-[1.8rem] font-normal leading-snug text-white sm:text-[2.3rem]">
+            <h2 className="mt-4 max-w-2xl font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.3rem]">
               Outreach should carry both the
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -103,7 +103,7 @@ export default function OutreachPage() {
               and the wisdom to serve people well.
             </h2>
             <div className="mt-8 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-            <p className="mt-6 max-w-xl font-ui text-[0.87rem] leading-[2] text-white/70">
+            <p className="mt-6 max-w-xl font-ui text-body-sm leading-[2] text-white/70">
               This ministry exists to meet practical needs, strengthen human
               dignity, and create meaningful opportunities for the church to
               serve its city with love and clarity. Mission is not occasional
@@ -117,10 +117,10 @@ export default function OutreachPage() {
       <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="pt-16 lg:pt-20">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               What we do
             </p>
-            <h2 className="mt-3 max-w-xl font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
+            <h2 className="mt-3 max-w-xl font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
               Built for those who want to
               <em className="italic text-[var(--app-primary)]/80">
                 {' '}
@@ -134,10 +134,10 @@ export default function OutreachPage() {
               <ScrollFadeIn key={item.title} delay={i * 0.07}>
                 <div className="border-t border-[var(--app-ink)]/10 py-8">
                   <div className="mb-4 h-[1.5px] w-6 bg-[var(--app-primary)]/50" />
-                  <h3 className="font-headline text-[1.25rem] font-normal text-[var(--app-ink)]">
+                  <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                     {item.title}
                   </h3>
-                  <p className="mt-3 font-ui text-[0.84rem] leading-[1.95] text-[var(--app-ink)]/68">
+                  <p className="mt-3 font-ui text-body-sm leading-[1.95] text-[var(--app-ink)]/68">
                     {item.description}
                   </p>
                 </div>
@@ -153,10 +153,10 @@ export default function OutreachPage() {
         <Container size="xl">
           <ScrollFadeIn>
             <div className="border-b border-white/8 py-12 lg:py-14">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 What shapes us
               </p>
-              <h2 className="mt-3 max-w-lg font-headline text-[1.7rem] font-normal leading-snug text-white sm:text-[2rem]">
+              <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-white sm:text-[2rem]">
                 The values behind
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -171,10 +171,10 @@ export default function OutreachPage() {
               <ScrollFadeIn key={v.title} delay={i * 0.08}>
                 <div className="flex flex-col py-10 sm:px-8 lg:px-10 lg:py-12">
                   <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
-                  <h3 className="font-headline text-[1.8rem] font-normal leading-none text-white lg:text-[2.2rem]">
+                  <h3 className="font-headline text-heading-md font-normal leading-none text-white lg:text-[2.2rem]">
                     {v.title}
                   </h3>
-                  <p className="mt-4 font-ui text-[0.84rem] leading-[1.95] text-white/70">
+                  <p className="mt-4 font-ui text-body-sm leading-[1.95] text-white/70">
                     {v.body}
                   </p>
                 </div>
@@ -189,10 +189,10 @@ export default function OutreachPage() {
         <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-20 lg:py-28">
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Get involved
               </p>
-              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.5rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.5rem]">
                 Ready to serve
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -200,20 +200,20 @@ export default function OutreachPage() {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/35" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-[var(--app-ink)]/68">
+              <p className="max-w-md font-ui text-body-sm leading-[2] text-[var(--app-ink)]/68">
                 Reach out and we will connect you to the next outreach
                 initiative or community service opportunity.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
                   Join outreach <Arrow />
                 </Link>
                 <Link
                   href="/events/weekly"
-                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   See weekly services
                 </Link>

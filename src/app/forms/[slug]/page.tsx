@@ -46,13 +46,13 @@ const fieldShellClass =
   'rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5';
 
 const fieldBaseClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-[0.95rem] text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-body-md text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const fieldSelectClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-dark-2)] px-4 py-3 text-[0.95rem] text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-dark-2)] px-4 py-3 text-body-md text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const labelClass =
-  'block text-[0.73rem] font-bold uppercase tracking-[0.16em] text-white/60';
+  'block text-label font-bold uppercase tracking-[0.16em] text-white/60';
 
 function onlyDigits(value: string): string {
   return value.replace(/\D/g, '');

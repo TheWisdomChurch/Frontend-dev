@@ -29,12 +29,12 @@ function EmptyState({ dark }: { dark?: boolean }) {
     >
       <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
       <p
-        className={`font-headline text-[1.3rem] font-normal ${dark ? 'text-white' : 'text-[var(--app-ink)]'}`}
+        className={`font-headline text-heading-sm font-normal ${dark ? 'text-white' : 'text-[var(--app-ink)]'}`}
       >
         Leadership listings coming soon.
       </p>
       <p
-        className={`max-w-sm font-ui text-[0.82rem] leading-[1.85] ${dark ? 'text-white/65' : 'text-[var(--app-ink)]/65'}`}
+        className={`max-w-sm font-ui text-body-sm leading-[1.85] ${dark ? 'text-white/65' : 'text-[var(--app-ink)]/65'}`}
       >
         Our leadership directory will be published here shortly.
       </p>
@@ -88,10 +88,10 @@ export default async function LeadershipPage() {
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-lg">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Pastoral leadership
               </p>
-              <h2 className="mt-3 font-headline text-[1.8rem] font-normal leading-snug text-white sm:text-[2.2rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.2rem]">
                 Shepherds of the
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -130,10 +130,10 @@ export default async function LeadershipPage() {
         <section className="overflow-hidden min-w-0 border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
           <Container size="xl">
             <ScrollFadeIn className="py-12 lg:py-14">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Board of leaders
               </p>
-              <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2rem]">
                 Deacons &amp; Deaconesses.
               </h2>
             </ScrollFadeIn>
@@ -150,21 +150,21 @@ export default async function LeadershipPage() {
                     <div className="grid items-center gap-3 py-6 sm:grid-cols-[1fr_auto] sm:gap-10">
                       <div className="flex items-center gap-5">
                         {/* Initials badge */}
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] font-ui text-[0.72rem] font-bold text-[var(--app-ink)]/40">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] font-ui text-label font-bold text-[var(--app-ink)]/40">
                           {initials(leader.firstName, leader.lastName)}
                         </div>
                         <div>
-                          <p className="font-headline text-[1.05rem] font-normal text-[var(--app-ink)]">
+                          <p className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                             {leader.firstName} {leader.lastName}
                           </p>
                           {leader.bio && (
-                            <p className="mt-0.5 font-ui text-[0.75rem] text-[var(--app-ink)]/55 line-clamp-1">
+                            <p className="mt-0.5 font-ui text-label text-[var(--app-ink)]/55 line-clamp-1">
                               {leader.bio}
                             </p>
                           )}
                         </div>
                       </div>
-                      <span className="self-start border border-[var(--app-ink)]/10 px-3 py-1 font-ui text-[0.6rem] uppercase tracking-[0.14em] text-[var(--app-ink)]/38 sm:self-auto">
+                      <span className="self-start border border-[var(--app-ink)]/10 px-3 py-1 font-ui text-eyebrow uppercase tracking-[0.14em] text-[var(--app-ink)]/38 sm:self-auto">
                         {ROLE_LABEL[leader.role]}
                       </span>
                     </div>
@@ -184,10 +184,10 @@ export default async function LeadershipPage() {
           <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Serve with us
               </p>
-              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.4rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.4rem]">
                 Leadership is an invitation,
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
@@ -195,13 +195,13 @@ export default async function LeadershipPage() {
                 </em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/70">
+              <p className="max-w-md font-ui text-body-sm leading-[1.9] text-white/70">
                 If you feel called to serve the church in a meaningful way, we
                 would love to have a conversation with you.
               </p>
               <a
                 href="/contact"
-                className="inline-flex items-center gap-2 border border-white/20 px-7 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex items-center gap-2 border border-white/20 px-7 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.12em] text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 Get in touch
                 <svg

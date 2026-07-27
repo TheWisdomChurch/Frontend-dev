@@ -190,7 +190,7 @@ export default function TestimoniesPage() {
         <Container size="xl" className="py-14 sm:py-16 lg:py-20">
           <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+              <p className="mb-3 text-label font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
                 Testimony stories
               </p>
               <H2 className="max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">

@@ -77,7 +77,7 @@ const SOCIALS = [
 
 function ColHead({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+    <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
       {children}
     </p>
   );
@@ -92,7 +92,7 @@ function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
         <li key={l.href}>
           <Link
             href={l.href}
-            className="group inline-flex items-center gap-1.5 font-ui text-[0.88rem] text-white/60 transition hover:text-white"
+            className="group inline-flex items-center gap-1.5 font-ui text-body-sm text-white/60 transition hover:text-white"
           >
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
               {l.label}
@@ -161,31 +161,31 @@ export default function Footer() {
                 />
               </span>
               <div className="flex flex-col leading-none">
-                <span className="font-ui text-[0.58rem] uppercase tracking-[0.25em] text-white/45">
+                <span className="font-ui text-eyebrow uppercase tracking-[0.25em] text-white/45">
                   The
                 </span>
-                <span className="font-ui text-[0.8rem] font-bold uppercase tracking-[0.18em] text-white">
+                <span className="font-ui text-body-sm font-bold uppercase tracking-[0.18em] text-white">
                   Wisdom Church
                 </span>
               </div>
             </Link>
 
-            <p className="font-ui text-[0.88rem] leading-[1.85] text-white/60">
+            <p className="font-ui text-body-sm leading-[1.85] text-white/60">
               A Spirit-filled community raised to carry God's glory — equipping
               every believer with the Word, prayer, and purpose.
             </p>
 
             <div className="mt-6 space-y-2">
-              <p className="font-ui text-[0.75rem] font-semibold text-white/75">
+              <p className="font-ui text-label font-semibold text-white/75">
                 {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
               </p>
-              <p className="font-ui text-[0.75rem] font-semibold text-white/75">
+              <p className="font-ui text-label font-semibold text-white/75">
                 {SERVICE_INFO.dailyPrayer.label} ·{' '}
                 {SERVICE_INFO.dailyPrayer.time}
               </p>
             </div>
 
-            <div className="mt-5 space-y-2 font-body text-[0.8rem] text-white/52">
+            <div className="mt-5 space-y-2 font-body text-body-sm text-white/52">
               <p className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
                 {SERVICE_INFO.venue.full}
@@ -218,7 +218,7 @@ export default function Footer() {
             <ColHead>Stay Connected</ColHead>
 
             <form onSubmit={handleSubscribe} className="mb-8">
-              <p className="mb-3 font-body text-[0.78rem] text-white/40">
+              <p className="mb-3 font-body text-label text-white/40">
                 Get weekly reminders and updates.
               </p>
               <div className="flex flex-col gap-2">
@@ -228,12 +228,12 @@ export default function Footer() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="Your email"
-                  className="h-10 w-full border border-white/10 bg-white/[0.05] px-3.5 font-body text-[0.82rem] text-white outline-none placeholder:text-white/25 transition focus:border-[var(--app-primary)]/50 focus:bg-white/[0.08]"
+                  className="h-10 w-full border border-white/10 bg-white/[0.05] px-3.5 font-body text-body-sm text-white outline-none placeholder:text-white/25 transition focus:border-[var(--app-primary)]/50 focus:bg-white/[0.08]"
                 />
                 <button
                   type="submit"
                   disabled={subState === 'loading'}
-                  className="h-10 bg-[var(--app-primary)] px-4 font-ui text-[0.75rem] font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60"
+                  className="h-10 bg-[var(--app-primary)] px-4 font-ui text-label font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60"
                 >
                   {subState === 'loading'
                     ? 'Sending…'
@@ -247,7 +247,7 @@ export default function Footer() {
             </form>
 
             <div>
-              <p className="mb-3 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-white/25">
+              <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/25">
                 Follow
               </p>
               <div className="flex items-center gap-2">
@@ -270,24 +270,24 @@ export default function Footer() {
 
         {/* ── Bottom bar ────────────────────────────────────── */}
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/[0.07] pt-7 sm:flex-row sm:items-center">
-          <p className="font-body text-[0.75rem] text-white/45">
+          <p className="font-body text-label text-white/45">
             © {new Date().getFullYear()} The Wisdom Church · Lagos, Nigeria
           </p>
 
           <div className="flex items-center gap-5">
-            <span className="font-ui text-[0.68rem] uppercase tracking-[0.2em] text-white/38">
+            <span className="font-ui text-caption uppercase tracking-[0.2em] text-white/38">
               Worship · Word · Community
             </span>
             <div className="flex gap-4">
               <Link
                 href="/privacy"
-                className="font-body text-[0.73rem] text-white/45 transition hover:text-white/75"
+                className="font-body text-label text-white/45 transition hover:text-white/75"
               >
                 Privacy
               </Link>
               <Link
                 href="/cookies"
-                className="font-body text-[0.73rem] text-white/45 transition hover:text-white/75"
+                className="font-body text-label text-white/45 transition hover:text-white/75"
               >
                 Cookies
               </Link>

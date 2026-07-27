@@ -87,7 +87,7 @@ export default function HomeTestimonials() {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Eyebrow */}
-          <p className="mb-10 text-center text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-10 text-center text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Testimonies
           </p>
 
@@ -97,7 +97,7 @@ export default function HomeTestimonials() {
             {loading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                 <span className="block h-2 w-2 animate-ping rounded-full bg-[var(--app-primary)]" />
-                <p className="font-ui text-[0.72rem] uppercase tracking-[0.18em] text-[var(--app-ink)]/30">
+                <p className="font-ui text-label uppercase tracking-[0.18em] text-[var(--app-ink)]/30">
                   Loading testimonies…
                 </p>
               </div>
@@ -113,7 +113,7 @@ export default function HomeTestimonials() {
                 >
                   Testimonies coming soon.
                 </p>
-                <p className="font-ui text-[0.72rem] text-[var(--app-ink)]/25">
+                <p className="font-ui text-label text-[var(--app-ink)]/25">
                   Be the first to share your story.
                 </p>
               </div>
@@ -154,10 +154,10 @@ export default function HomeTestimonials() {
                   >
                     <span className="block h-[1.5px] w-8 bg-[var(--app-ink)]/20" />
                     <div className="text-center">
-                      <p className="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]">
+                      <p className="text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]">
                         {q.name}
                       </p>
-                      <p className="mt-0.5 text-[0.7rem] text-[var(--app-ink)]/45">
+                      <p className="mt-0.5 text-label text-[var(--app-ink)]/45">
                         {q.role}
                       </p>
                     </div>
@@ -215,7 +215,7 @@ export default function HomeTestimonials() {
           <div className="mt-8 text-center">
             <Link
               href="/forms/share-testimony"
-              className="inline-flex items-center gap-1.5 text-[0.75rem] font-semibold text-[var(--app-primary)] transition hover:gap-2.5"
+              className="inline-flex items-center gap-1.5 text-label font-semibold text-[var(--app-primary)] transition hover:gap-2.5"
             >
               Share your story →
             </Link>

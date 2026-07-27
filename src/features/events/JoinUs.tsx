@@ -213,9 +213,7 @@ const mSelect =
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return (
-    <p className="mt-1.5 font-ui text-[0.72rem] text-rose-300">{message}</p>
-  );
+  return <p className="mt-1.5 font-ui text-label text-rose-300">{message}</p>;
 }
 
 const defaultValues: ModalValues = {
@@ -362,7 +360,7 @@ export default function JoinWisdomHouse() {
         <Container size="xl" className="relative py-14 lg:py-[4.5rem]">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="mb-3 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Join the workforce
               </p>
               <h2
@@ -372,14 +370,14 @@ export default function JoinWisdomHouse() {
               >
                 Serve with excellence.
               </h2>
-              <p className="mt-3 max-w-[460px] font-ui text-[0.95rem] leading-[1.8] text-white/62">
+              <p className="mt-3 max-w-[460px] font-ui text-body-md leading-[1.8] text-white/62">
                 Use your gifts to build the church. Every team here has a role
                 and a seat — find yours.
               </p>
             </div>
 
             {submitted && (
-              <div className="inline-flex items-center gap-2 font-ui text-[0.82rem] font-semibold text-[var(--app-primary)]">
+              <div className="inline-flex items-center gap-2 font-ui text-body-sm font-semibold text-[var(--app-primary)]">
                 <CheckCircle2 className="h-4 w-4" />
                 Application received. We'll be in touch soon.
               </div>
@@ -392,10 +390,10 @@ export default function JoinWisdomHouse() {
               <div key={pillar.title} className="flex items-start gap-3.5">
                 <pillar.icon className="mt-0.5 h-[1.15rem] w-[1.15rem] flex-none text-[var(--app-primary)]" />
                 <div>
-                  <p className="font-ui text-[0.82rem] font-bold text-white">
+                  <p className="font-ui text-body-sm font-bold text-white">
                     {pillar.title}
                   </p>
-                  <p className="mt-1 font-ui text-[0.78rem] leading-[1.6] text-white/50">
+                  <p className="mt-1 font-ui text-label leading-[1.6] text-white/50">
                     {pillar.body}
                   </p>
                 </div>
@@ -454,14 +452,14 @@ export default function JoinWisdomHouse() {
                     }`}
                   />
                 </div>
-                <p className="font-ui text-[0.9rem] font-bold text-white">
+                <p className="font-ui text-body-md font-bold text-white">
                   {dept.title}
                 </p>
-                <p className="mt-1.5 font-ui text-[0.78rem] leading-[1.65] text-white/48">
+                <p className="mt-1.5 font-ui text-label leading-[1.65] text-white/48">
                   {dept.description}
                 </p>
                 <span
-                  className={`mt-5 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold transition-all duration-200 group-hover:gap-2.5 group-hover:text-[var(--app-primary)] ${
+                  className={`mt-5 inline-flex items-center gap-1.5 font-ui text-label font-semibold transition-all duration-200 group-hover:gap-2.5 group-hover:text-[var(--app-primary)] ${
                     isActive
                       ? 'gap-2.5 text-[var(--app-primary)]'
                       : 'text-white/32'
@@ -482,12 +480,12 @@ export default function JoinWisdomHouse() {
           <button
             type="button"
             onClick={openGeneric}
-            className="group inline-flex h-11 items-center gap-2 border border-white/18 bg-transparent px-6 font-ui text-[0.78rem] font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
+            className="group inline-flex h-11 items-center gap-2 border border-white/18 bg-transparent px-6 font-ui text-label font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
           >
             Not sure which team? Apply anyway
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
-          <p className="font-ui text-[0.74rem] text-white/35">
+          <p className="font-ui text-label text-white/35">
             No experience required — just a willing heart.
           </p>
         </div>
@@ -518,24 +516,24 @@ export default function JoinWisdomHouse() {
               <div className="flex h-14 w-14 flex-none items-center justify-center bg-[var(--app-primary)]/14">
                 <selectedDept.icon className="h-6 w-6 text-[var(--app-primary)]" />
               </div>
-              <p className="font-ui text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+              <p className="font-ui text-caption font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                 {selectedDept.section} Team
               </p>
             </div>
 
-            <p className="font-ui text-[0.92rem] leading-[1.85] text-white/70">
+            <p className="font-ui text-body-md leading-[1.85] text-white/70">
               {selectedDept.detail}
             </p>
 
             <div className="border border-white/10 bg-white/[0.035] p-5">
-              <p className="mb-3.5 font-ui text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/40">
+              <p className="mb-3.5 font-ui text-label font-bold uppercase tracking-[0.16em] text-white/40">
                 What you'll do
               </p>
               <ul className="space-y-2.5">
                 {selectedDept.responsibilities.map(r => (
                   <li key={r} className="flex items-start gap-2.5">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
-                    <span className="font-ui text-[0.85rem] leading-[1.7] text-white/65">
+                    <span className="font-ui text-body-sm leading-[1.7] text-white/65">
                       {r}
                     </span>
                   </li>
@@ -564,7 +562,7 @@ export default function JoinWisdomHouse() {
               <button
                 type="button"
                 onClick={() => setModalStep('detail')}
-                className="inline-flex items-center gap-1.5 font-ui text-[0.78rem] font-semibold text-white/45 transition hover:text-white/75"
+                className="inline-flex items-center gap-1.5 font-ui text-label font-semibold text-white/45 transition hover:text-white/75"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
                 Back to {selectedDept.title}
@@ -652,7 +650,7 @@ export default function JoinWisdomHouse() {
                   {(['no', 'yes'] as const).map(value => (
                     <label
                       key={value}
-                      className={`flex cursor-pointer items-center justify-center border px-3 py-2.5 font-ui text-[0.82rem] font-semibold transition ${
+                      className={`flex cursor-pointer items-center justify-center border px-3 py-2.5 font-ui text-body-sm font-semibold transition ${
                         marriedValue === value
                           ? 'border-[var(--app-primary)]/50 bg-[var(--app-primary)]/10 text-white'
                           : 'border-white/10 bg-black/20 text-white/55 hover:border-white/20 hover:text-white/75'

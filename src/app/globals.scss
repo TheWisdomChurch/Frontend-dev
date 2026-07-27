@@ -55,6 +55,21 @@
   --type-display-sm: clamp(1.75rem, 3vw, 2.75rem);
   --type-lead: clamp(1.05rem, 1.5vw, 1.25rem);
 
+  /* Heading scale — section/card-level, below display */
+  --type-heading-lg: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
+  --type-heading-md: clamp(1.25rem, 1rem + 1vw, 1.65rem);
+  --type-heading-sm: clamp(1.05rem, 0.94rem + 0.5vw, 1.3rem);
+
+  /* Body scale */
+  --type-body-lg: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
+  --type-body-md: clamp(0.85rem, 0.82rem + 0.15vw, 0.92rem);
+  --type-body-sm: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
+
+  /* Micro scale — labels, captions, eyebrows */
+  --type-label: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
+  --type-caption: clamp(0.68rem, 0.66rem + 0.08vw, 0.72rem);
+  --type-eyebrow: clamp(0.58rem, 0.57rem + 0.05vw, 0.64rem);
+
   /* Section spacing scale */
   --section-xs: clamp(3rem, 6vw, 5rem);
   --section-sm: clamp(5rem, 8vw, 7rem);

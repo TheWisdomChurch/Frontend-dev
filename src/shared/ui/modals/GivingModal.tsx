@@ -56,12 +56,12 @@ export default function GivingModal({
             // eslint-disable-next-line no-restricted-syntax
             style={{ borderLeft: '2px solid var(--app-primary)' }}
           >
-            <p className="font-ui text-[0.84rem] italic leading-[1.85] text-white/65">
+            <p className="font-ui text-body-sm italic leading-[1.85] text-white/65">
               &ldquo;Each of you should give what you have decided in your heart
               to give, not reluctantly or under compulsion, for God loves a
               cheerful giver.&rdquo;
             </p>
-            <p className="mt-3 font-ui text-[0.72rem] font-bold text-[var(--app-primary)]">
+            <p className="mt-3 font-ui text-label font-bold text-[var(--app-primary)]">
               2 Corinthians 9:7
             </p>
           </blockquote>
@@ -74,7 +74,7 @@ export default function GivingModal({
               <H3 className="mt-2 text-white">Account Details</H3>
             </div>
 
-            <div className="hidden items-center gap-1.5 border border-white/10 bg-white/[0.04] px-3 py-1.5 font-ui text-[0.68rem] font-semibold text-white/50 sm:flex">
+            <div className="hidden items-center gap-1.5 border border-white/10 bg-white/[0.04] px-3 py-1.5 font-ui text-caption font-semibold text-white/50 sm:flex">
               <ShieldCheck className="h-3.5 w-3.5 text-[var(--app-primary)]" />
               Secure giving
             </div>
@@ -82,7 +82,7 @@ export default function GivingModal({
 
           <div className="space-y-4">
             {accounts.length === 0 ? (
-              <p className="font-ui text-[0.8rem] leading-[1.7] text-white/45">
+              <p className="font-ui text-body-sm leading-[1.7] text-white/45">
                 Account details are being updated. Please use &ldquo;Other ways
                 to give&rdquo; below or contact us to complete your gift.
               </p>
@@ -183,7 +183,7 @@ export default function GivingModal({
           </div>
         </section>
 
-        <p className="font-ui text-[0.76rem] leading-[1.75] text-white/35">
+        <p className="font-ui text-label leading-[1.75] text-white/35">
           After transfer, keep your receipt for reference. Thank you for giving
           cheerfully and supporting the work of ministry.
         </p>

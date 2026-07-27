@@ -89,16 +89,16 @@ const variantClassMap: Record<TextVariant, string> = {
   'body-xl':
     'text-base leading-7 sm:text-lg sm:leading-8 lg:text-xl lg:leading-9 font-normal text-pretty',
   'body-lg':
-    'text-[0.98rem] leading-7 sm:text-base sm:leading-7 lg:text-lg lg:leading-8 font-normal text-pretty',
+    'text-body-md leading-7 sm:text-base sm:leading-7 lg:text-lg lg:leading-8 font-normal text-pretty',
   'body-md':
-    'text-sm leading-6 sm:text-[0.95rem] sm:leading-7 lg:text-base lg:leading-7 font-normal text-pretty',
+    'text-sm leading-6 sm:text-body-md sm:leading-7 lg:text-base lg:leading-7 font-normal text-pretty',
   'body-sm':
-    'text-[0.82rem] leading-6 sm:text-sm sm:leading-6 font-normal text-pretty',
-  'body-xs': 'text-xs leading-5 sm:text-[0.8rem] sm:leading-5 font-normal',
+    'text-body-sm leading-6 sm:text-sm sm:leading-6 font-normal text-pretty',
+  'body-xs': 'text-xs leading-5 sm:text-body-sm sm:leading-5 font-normal',
 
   caption: 'text-xs leading-5 font-medium tracking-[0.02em]',
   eyebrow:
-    'text-[0.68rem] leading-5 font-bold uppercase tracking-[0.22em] sm:text-xs',
+    'text-caption leading-5 font-bold uppercase tracking-[0.22em] sm:text-xs',
 
   'elegant-xl':
     'text-2xl leading-snug sm:text-3xl lg:text-4xl font-normal text-balance',

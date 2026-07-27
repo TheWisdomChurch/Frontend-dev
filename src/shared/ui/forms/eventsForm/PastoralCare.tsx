@@ -55,13 +55,11 @@ const fieldSelectError =
   'w-full border border-rose-400/50 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20';
 
 const fieldLabel =
-  'block font-ui text-[0.66rem] font-bold uppercase tracking-[0.15em] text-white/45';
+  'block font-ui text-caption font-bold uppercase tracking-[0.15em] text-white/45';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return (
-    <p className="mt-1.5 font-ui text-[0.72rem] text-rose-300">{message}</p>
-  );
+  return <p className="mt-1.5 font-ui text-label text-rose-300">{message}</p>;
 }
 
 const PastoralCareUnit = () => {
@@ -240,23 +238,23 @@ const PastoralCareUnit = () => {
       <Container size="xl">
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             {isCounseling
               ? 'Confidential Counseling'
               : 'Pastoral Care Services'}
           </p>
-          <h2 className="mt-4 font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.3rem]">
+          <h2 className="mt-4 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.3rem]">
             {isCounseling
               ? 'Request a counseling session'
               : 'Register for pastoral care'}
           </h2>
-          <p className="mt-5 font-ui text-[0.88rem] leading-[2] text-white/68">
+          <p className="mt-5 font-ui text-body-sm leading-[2] text-white/68">
             {isCounseling
               ? 'Share a few details below and a member of our pastoral team will reach out privately to arrange a time to talk.'
               : 'Let us be part of your special moments. Register below and our ministry team will support you in your celebrations and milestones.'}
           </p>
           {isCounseling && (
-            <p className="mt-4 inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-4 py-2 font-ui text-[0.74rem] text-white/60">
+            <p className="mt-4 inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-4 py-2 font-ui text-label text-white/60">
               <Lock className="h-3.5 w-3.5 flex-none text-[var(--app-primary)]" />
               Confidential — only our pastoral team will see this.
             </p>
@@ -270,7 +268,7 @@ const PastoralCareUnit = () => {
             <div className="space-y-5">
               <div className="flex items-center gap-2.5 border-b border-white/8 pb-4">
                 <User className="h-4 w-4 text-[var(--app-primary)]" />
-                <p className="font-ui text-[0.72rem] font-bold uppercase tracking-[0.14em] text-white/70">
+                <p className="font-ui text-label font-bold uppercase tracking-[0.14em] text-white/70">
                   Personal information
                 </p>
               </div>
@@ -379,7 +377,7 @@ const PastoralCareUnit = () => {
               <div className="space-y-5 border-t border-white/8 pt-6">
                 <div className="flex items-center gap-2.5 border-b border-white/8 pb-4">
                   <Calendar className="h-4 w-4 text-[var(--app-primary)]" />
-                  <p className="font-ui text-[0.72rem] font-bold uppercase tracking-[0.14em] text-white/70">
+                  <p className="font-ui text-label font-bold uppercase tracking-[0.14em] text-white/70">
                     Event details
                   </p>
                 </div>
@@ -468,7 +466,7 @@ const PastoralCareUnit = () => {
             <div className="space-y-3 border-t border-white/8 pt-6">
               <div className="flex items-center gap-2.5 border-b border-white/8 pb-4">
                 <MessageCircle className="h-4 w-4 text-[var(--app-primary)]" />
-                <p className="font-ui text-[0.72rem] font-bold uppercase tracking-[0.14em] text-white/70">
+                <p className="font-ui text-label font-bold uppercase tracking-[0.14em] text-white/70">
                   Additional information
                 </p>
               </div>
@@ -490,7 +488,7 @@ const PastoralCareUnit = () => {
             {/* Submit */}
             <div className="border-t border-white/8 pt-6">
               {submitError && (
-                <div className="mb-4 border border-rose-400/40 bg-rose-500/10 px-4 py-3 font-ui text-[0.82rem] text-rose-200">
+                <div className="mb-4 border border-rose-400/40 bg-rose-500/10 px-4 py-3 font-ui text-body-sm text-rose-200">
                   {submitError}
                 </div>
               )}
@@ -500,12 +498,12 @@ const PastoralCareUnit = () => {
                 variant="primary"
                 loading={isSubmitting}
                 disabled={isSubmitting}
-                className="h-12 w-full font-ui text-[0.85rem] font-bold"
+                className="h-12 w-full font-ui text-body-sm font-bold"
               >
                 {isSubmitting ? 'Submitting…' : 'Submit request'}
               </Button>
 
-              <p className="mt-4 text-center font-ui text-[0.78rem] leading-[1.7] text-white/45">
+              <p className="mt-4 text-center font-ui text-label leading-[1.7] text-white/45">
                 We&apos;ll contact you within 24–48 hours to discuss your
                 request and confirm next steps.
               </p>
@@ -527,7 +525,7 @@ const PastoralCareUnit = () => {
           <div className="flex h-10 w-10 flex-none items-center justify-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
             <CheckCircle2 className="h-5 w-5" />
           </div>
-          <p className="font-ui text-[0.82rem] leading-[1.7] text-white/75">
+          <p className="font-ui text-body-sm leading-[1.7] text-white/75">
             Thank you. Our team will review and reach out soon. A confirmation
             email has been sent to the address you provided.
           </p>

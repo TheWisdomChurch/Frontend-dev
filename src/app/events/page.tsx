@@ -131,7 +131,7 @@ function EventCard({ event }: { event: EventPublic }) {
         ) : (
           /* No-image: bold date display */
           <div className="flex h-full flex-col items-center justify-center gap-1">
-            <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <span className="font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               {date.month}
             </span>
             <span className="font-headline text-[3.5rem] font-normal leading-none text-white/90">
@@ -144,10 +144,10 @@ function EventCard({ event }: { event: EventPublic }) {
         {/* Date badge — only when there's an image */}
         {imgSrc && (
           <div className="absolute bottom-3 left-4 flex items-baseline gap-2">
-            <span className="font-headline text-[1.8rem] font-normal leading-none text-white">
+            <span className="font-headline text-heading-md font-normal leading-none text-white">
               {date.day}
             </span>
-            <span className="font-ui text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+            <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
               {date.month}
             </span>
           </div>
@@ -156,24 +156,24 @@ function EventCard({ event }: { event: EventPublic }) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-5 pt-4">
-        <h3 className="font-headline text-[1.1rem] font-normal leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
+        <h3 className="font-headline text-heading-sm font-normal leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
           {event.title}
         </h3>
 
         {event.description && (
-          <p className="font-ui text-[0.8rem] leading-[1.8] text-white/65 line-clamp-2">
+          <p className="font-ui text-body-sm leading-[1.8] text-white/65 line-clamp-2">
             {event.description}
           </p>
         )}
 
         <div className="mt-auto space-y-1.5 border-t border-white/8 pt-4">
           {time && (
-            <p className="font-ui text-[0.75rem] font-semibold text-white/55">
+            <p className="font-ui text-label font-semibold text-white/55">
               {date.full} · {time}
             </p>
           )}
           {event.location && (
-            <p className="font-ui text-[0.75rem] text-white/38 line-clamp-1">
+            <p className="font-ui text-label text-white/38 line-clamp-1">
               {event.location}
             </p>
           )}
@@ -182,12 +182,12 @@ function EventCard({ event }: { event: EventPublic }) {
         {href ? (
           <a
             href={href}
-            className="mt-2 inline-flex items-center gap-2 self-start border border-[var(--app-primary)]/40 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-primary)] transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+            className="mt-2 inline-flex items-center gap-2 self-start border border-[var(--app-primary)]/40 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
           >
             Register <Arrow />
           </a>
         ) : (
-          <span className="mt-2 inline-flex items-center gap-2 self-start border border-white/12 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-white/35">
+          <span className="mt-2 inline-flex items-center gap-2 self-start border border-white/12 px-5 py-2.5 font-ui text-label font-semibold text-white/35">
             Free entry
           </span>
         )}
@@ -203,16 +203,16 @@ function EmptyState() {
     <ScrollFadeIn>
       <div className="flex flex-col items-center gap-6 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
         <div className="h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-        <h3 className="font-headline text-[1.5rem] font-normal text-white">
+        <h3 className="font-headline text-heading-md font-normal text-white">
           Events are on their way.
         </h3>
-        <p className="max-w-sm font-ui text-[0.83rem] leading-[1.85] text-white/65">
+        <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/65">
           Nothing is scheduled right now. In the meantime, join us for Sunday
           Worship and Daily Prayer, Monday through Friday.
         </p>
         <Link
           href="/contact?topic=visit"
-          className="inline-flex items-center gap-2 border border-white/18 px-6 py-2.5 font-ui text-[0.72rem] font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+          className="inline-flex items-center gap-2 border border-white/18 px-6 py-2.5 font-ui text-label font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
         >
           Plan a visit <Arrow />
         </Link>
@@ -268,7 +268,7 @@ export default async function EventsPage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="inline-flex items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 {item.label} <Arrow />
               </Link>
@@ -281,10 +281,10 @@ export default async function EventsPage() {
       <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
         <Container size="xl">
           <ScrollFadeIn className="py-12 lg:py-16">
-            <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Weekly rhythm
             </p>
-            <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
+            <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-[2.1rem]">
               We gather every week.
               <em className="italic text-[var(--app-primary)]/75">
                 {' '}
@@ -305,7 +305,7 @@ export default async function EventsPage() {
                     <p className="font-headline text-[2.2rem] font-normal leading-none text-[var(--app-ink)] lg:text-[2.6rem]">
                       {svc.day}
                     </p>
-                    <p className="font-ui text-[0.88rem] font-bold text-[var(--app-primary)]">
+                    <p className="font-ui text-body-sm font-bold text-[var(--app-primary)]">
                       {svc.time}
                     </p>
                   </div>
@@ -315,13 +315,13 @@ export default async function EventsPage() {
 
                   {/* Service info */}
                   <div className="space-y-1.5">
-                    <p className="font-headline text-[1.1rem] font-normal text-[var(--app-ink)]">
+                    <p className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                       {svc.name}
                     </p>
-                    <p className="font-ui text-[0.8rem] leading-[1.8] text-[var(--app-ink)]/65">
+                    <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/65">
                       {svc.description}
                     </p>
-                    <p className="font-ui text-[0.75rem] text-[var(--app-ink)]/50">
+                    <p className="font-ui text-label text-[var(--app-ink)]/50">
                       {SERVICE_INFO.venue.full}
                     </p>
                   </div>
@@ -329,7 +329,7 @@ export default async function EventsPage() {
                   {/* CTA */}
                   <Link
                     href="/contact?topic=visit"
-                    className="mt-1 inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                    className="mt-1 inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                   >
                     Plan a visit <Arrow />
                   </Link>
@@ -350,15 +350,15 @@ export default async function EventsPage() {
           {/* Header */}
           <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Upcoming events
               </p>
-              <h2 className="mt-3 font-headline text-[1.7rem] font-normal leading-snug text-white sm:text-[2.1rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.1rem]">
                 Special gatherings &amp; programs.
               </h2>
             </div>
             {events.length > 0 && (
-              <span className="inline-flex items-center self-start border border-white/12 px-4 py-2 font-ui text-[0.72rem] font-semibold text-white/45 sm:self-auto">
+              <span className="inline-flex items-center self-start border border-white/12 px-4 py-2 font-ui text-label font-semibold text-white/45 sm:self-auto">
                 {events.length} event{events.length !== 1 ? 's' : ''}
               </span>
             )}
@@ -385,16 +385,16 @@ export default async function EventsPage() {
           <Container size="xl">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-headline text-[1.2rem] font-normal text-white">
+                <p className="font-headline text-heading-sm font-normal text-white">
                   Have a question about an event?
                 </p>
-                <p className="mt-1 font-ui text-[0.8rem] text-white/55">
+                <p className="mt-1 font-ui text-body-sm text-white/55">
                   Our team is happy to help — reach out any time.
                 </p>
               </div>
               <Link
                 href="/contact"
-                className="inline-flex shrink-0 items-center gap-2 border border-white/20 px-6 py-3 font-ui text-[0.72rem] font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex shrink-0 items-center gap-2 border border-white/20 px-6 py-3 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 Contact us <Arrow />
               </Link>

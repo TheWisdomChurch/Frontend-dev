@@ -127,7 +127,7 @@ export default function ConfessionPopup({
               >
                 <CheckCircle2 className="h-8 w-8" />
               </motion.div>
-              <p className="font-headline text-[1.2rem] font-normal text-white">
+              <p className="font-headline text-heading-sm font-normal text-white">
                 Confession made. Amen.
               </p>
             </motion.div>
@@ -153,10 +153,10 @@ export default function ConfessionPopup({
                   />
                 </div>
                 <div>
-                  <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                     The Wisdom Church
                   </p>
-                  <p className="font-ui text-[0.68rem] text-white/35">
+                  <p className="font-ui text-caption text-white/35">
                     Lagos · Nigeria
                   </p>
                 </div>
@@ -186,10 +186,10 @@ export default function ConfessionPopup({
               {/* Headline */}
               <div>
                 <StepDots step={currentStep} />
-                <h3 className="mt-3 font-headline text-[1.65rem] font-normal leading-[1.15] text-white">
+                <h3 className="mt-3 font-headline text-heading-md font-normal leading-[1.15] text-white">
                   {welcomeTitle}
                 </h3>
-                <p className="mt-4 font-ui text-[0.86rem] leading-[1.9] text-white/68">
+                <p className="mt-4 font-ui text-body-sm leading-[1.9] text-white/68">
                   {welcomeMessage}
                 </p>
               </div>
@@ -199,7 +199,7 @@ export default function ConfessionPopup({
                 <button
                   type="button"
                   onClick={() => setCurrentStep('confession')}
-                  className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-[0.78rem] font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
+                  className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-label font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
                 >
                   <BookOpen className="h-3.5 w-3.5 shrink-0" />
                   Read Confession
@@ -207,7 +207,7 @@ export default function ConfessionPopup({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-label font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   Continue
                 </button>
@@ -237,7 +237,7 @@ export default function ConfessionPopup({
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ background: 'var(--app-primary)' }}
                 />
-                <p className="relative font-headline text-[1.15rem] font-normal italic leading-[1.7] text-white/85">
+                <p className="relative font-headline text-heading-sm font-normal italic leading-[1.7] text-white/85">
                   {motto}
                 </p>
               </blockquote>
@@ -253,7 +253,7 @@ export default function ConfessionPopup({
                   <motion.p
                     key={`${paragraph.slice(0, 24)}-${index}`}
                     variants={paragraphVariants}
-                    className="font-ui text-[0.84rem] leading-[1.9] text-white/75"
+                    className="font-ui text-body-sm leading-[1.9] text-white/75"
                   >
                     {paragraph}
                   </motion.p>
@@ -265,7 +265,7 @@ export default function ConfessionPopup({
                 <button
                   type="button"
                   onClick={() => setCurrentStep('welcome')}
-                  className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-[0.78rem] font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
+                  className="inline-flex h-11 items-center justify-center gap-2 border border-white/12 bg-white/[0.04] font-ui text-label font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white active:scale-[0.98]"
                 >
                   <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
                   Back
@@ -273,13 +273,13 @@ export default function ConfessionPopup({
                 <button
                   type="button"
                   onClick={handleBelieve}
-                  className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-[0.78rem] font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-11 items-center justify-center bg-[var(--app-primary)] font-ui text-label font-bold uppercase tracking-[0.08em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   I Believe It
                 </button>
               </div>
 
-              <p className="text-center font-ui text-[0.62rem] uppercase tracking-[0.16em] text-white/22">
+              <p className="text-center font-ui text-eyebrow uppercase tracking-[0.16em] text-white/22">
                 This confession appears periodically — revisit any time.
               </p>
             </motion.div>

@@ -159,42 +159,40 @@ function FeaturedCard({
         className={`flex flex-1 flex-col justify-between p-6 sm:p-7 ${fullWidth ? 'lg:p-12' : 'lg:p-8'}`}
       >
         <div>
-          <span className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             {slide.badge} · Featured
           </span>
           <p
-            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-[1.5rem] sm:text-[1.8rem] lg:text-[2.1rem]' : 'text-[1.3rem] sm:text-[1.5rem] lg:text-[1.65rem]'}`}
+            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-heading-md sm:text-heading-md lg:text-[2.1rem]' : 'text-heading-sm sm:text-heading-md lg:text-heading-md'}`}
           >
             {slide.title}
           </p>
-          <p className="mt-3 line-clamp-3 font-ui text-[0.82rem] leading-[1.8] text-white/68">
+          <p className="mt-3 line-clamp-3 font-ui text-body-sm leading-[1.8] text-white/68">
             {slide.description}
           </p>
         </div>
 
         <div className="mt-6 space-y-2">
           {slide.date !== 'Date TBA' && (
-            <p className="font-ui text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/40">
+            <p className="font-ui text-caption font-semibold uppercase tracking-[0.14em] text-white/40">
               {slide.date}
             </p>
           )}
           {slide.location && (
-            <p className="font-ui text-[0.72rem] text-white/35">
-              {slide.location}
-            </p>
+            <p className="font-ui text-label text-white/35">{slide.location}</p>
           )}
           {/* CTA — Link for navigable cards, plain styled span for reel (whole card is clickable) */}
           {slide.href && !isReel && (
             <Link
               href={slide.href}
-              className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               {slide.cta} <Arrow />
             </Link>
           )}
           {isReel && (
-            <span className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-white/60">
+            <span className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60">
               {slide.cta} <Arrow />
             </span>
           )}
@@ -252,21 +250,21 @@ function PortraitCard({
           </div>
         )}
         {/* Date pill */}
-        <div className="absolute left-4 top-4 bg-[var(--app-primary)] px-2.5 py-1 font-ui text-[0.58rem] font-bold uppercase tracking-[0.16em] text-[var(--app-ink)]">
+        <div className="absolute left-4 top-4 bg-[var(--app-primary)] px-2.5 py-1 font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-ink)]">
           {slide.date}
         </div>
       </div>
 
       {/* Text */}
       <div className="flex flex-1 flex-col gap-2 px-5 py-4">
-        <span className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+        <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
           {slide.badge}
         </span>
-        <p className="font-headline text-[1.05rem] font-normal leading-snug text-[var(--app-ink)] line-clamp-2">
+        <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)] line-clamp-2">
           {slide.title}
         </p>
         {slide.location && (
-          <p className="font-ui text-[0.73rem] text-[var(--app-ink)]/40">
+          <p className="font-ui text-label text-[var(--app-ink)]/40">
             {slide.location}
           </p>
         )}
@@ -274,14 +272,14 @@ function PortraitCard({
         {slide.href && !isReel && (
           <Link
             href={slide.href}
-            className="mt-auto pt-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
+            className="mt-auto pt-3 font-ui text-label font-semibold text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             {slide.cta} →
           </Link>
         )}
         {isReel && (
-          <span className="mt-auto pt-3 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/45">
+          <span className="mt-auto pt-3 font-ui text-label font-semibold text-[var(--app-ink)]/45">
             {slide.cta} →
           </span>
         )}
@@ -296,19 +294,19 @@ function EmptyState({ category }: { category: Category }) {
   return (
     <div className="flex min-h-[300px] flex-col items-center justify-center gap-6 border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] px-8 py-16 text-center lg:min-h-[360px]">
       <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-      <p className="font-headline text-[1.5rem] font-normal text-[var(--app-ink)]">
+      <p className="font-headline text-heading-md font-normal text-[var(--app-ink)]">
         {category === 'program'
           ? 'No programs scheduled right now.'
           : 'No reels published yet.'}
       </p>
-      <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/48">
+      <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/48">
         {category === 'program'
           ? `Join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time}, and for ${SERVICE_INFO.dailyPrayer.label} ${SERVICE_INFO.dailyPrayer.daysShort} at ${SERVICE_INFO.dailyPrayer.time}, at ${SERVICE_INFO.venue.short}.`
           : 'Check back soon — new content is added regularly.'}
       </p>
       <Link
         href={category === 'program' ? '/events' : '/resources'}
-        className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+        className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
       >
         {category === 'program' ? 'View all events' : 'Go to resources'}{' '}
         <Arrow />
@@ -440,7 +438,7 @@ export default function EventsShowcase() {
         {/* ── Section header ──────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-2 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Events &amp; Programs
             </p>
             <h2 className="font-headline text-[2rem] font-normal leading-tight text-[var(--app-ink)] sm:text-[2.5rem] lg:text-[2.8rem]">
@@ -463,7 +461,7 @@ export default function EventsShowcase() {
                   aria-selected={category === cat}
                   onClick={() => setCategory(cat)}
                   className={[
-                    'px-4 py-2.5 font-ui text-[0.72rem] font-semibold transition duration-150',
+                    'px-4 py-2.5 font-ui text-label font-semibold transition duration-150',
                     category === cat
                       ? 'bg-[var(--app-ink)] text-white'
                       : 'text-[var(--app-ink)]/45 hover:bg-[var(--app-canvas-2)] hover:text-[var(--app-ink)]/70',
@@ -476,7 +474,7 @@ export default function EventsShowcase() {
 
             <Link
               href="/events"
-              className="hidden items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
+              className="hidden items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
             >
               See all <Arrow />
             </Link>
@@ -543,7 +541,7 @@ export default function EventsShowcase() {
         <div className="mt-8 sm:hidden">
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 border border-[var(--app-ink)]/14 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+            className="inline-flex items-center gap-2 border border-[var(--app-ink)]/14 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
           >
             See all events <Arrow />
           </Link>
@@ -571,7 +569,7 @@ export default function EventsShowcase() {
           ) : (
             <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 bg-[var(--app-dark-2)]">
               <Play className="h-10 w-10 text-white/30" />
-              <p className="font-ui text-[0.8rem] text-white/45">
+              <p className="font-ui text-body-sm text-white/45">
                 This reel&apos;s video isn&apos;t available right now.
               </p>
             </div>

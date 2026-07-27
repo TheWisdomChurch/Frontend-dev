@@ -84,7 +84,7 @@ export default function OnlineGiving() {
             </h2>
 
             {/* Scripture */}
-            <p className="mx-auto mt-7 max-w-[460px] text-center text-[0.95rem] italic leading-[1.8] text-white/68">
+            <p className="mx-auto mt-7 max-w-[460px] text-center text-body-md italic leading-[1.8] text-white/68">
               &ldquo;As each has purposed in his heart, so let him give… God
               loves a cheerful giver.&rdquo;
               <br />
@@ -130,17 +130,17 @@ export default function OnlineGiving() {
                       <Heart className="h-4 w-4 text-[var(--app-primary)]" />
                     </div>
 
-                    <p className="font-ui text-[0.82rem] font-bold text-white">
+                    <p className="font-ui text-body-sm font-bold text-white">
                       {opt.title}
                     </p>
                     {opt.description ? (
-                      <p className="mt-1.5 font-ui text-[0.76rem] leading-[1.65] text-white/45">
+                      <p className="mt-1.5 font-ui text-label leading-[1.65] text-white/45">
                         {opt.description}
                       </p>
                     ) : null}
 
                     <span className="mt-auto flex items-center justify-between pt-5">
-                      <span className="font-ui text-[0.72rem] font-semibold text-[var(--app-primary)]/70 transition group-hover:text-[var(--app-primary)]">
+                      <span className="font-ui text-label font-semibold text-[var(--app-primary)]/70 transition group-hover:text-[var(--app-primary)]">
                         Give now
                       </span>
                       <ArrowRight className="h-3.5 w-3.5 text-white/25 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
@@ -160,7 +160,7 @@ export default function OnlineGiving() {
                       actionLabel: 'Got it',
                     })
                   }
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   Give Online
                 </button>
@@ -172,21 +172,21 @@ export default function OnlineGiving() {
               <button
                 type="button"
                 onClick={handleContactCall}
-                className="inline-flex h-10 items-center gap-2 border border-white/12 px-5 font-ui text-[0.75rem] font-semibold text-white/50 transition hover:border-white/22 hover:text-white/80 active:scale-[0.98]"
+                className="inline-flex h-10 items-center gap-2 border border-white/12 px-5 font-ui text-label font-semibold text-white/50 transition hover:border-white/22 hover:text-white/80 active:scale-[0.98]"
               >
                 <Phone className="h-3.5 w-3.5" />
                 Other ways to give
               </button>
               <Link
                 href="/contact"
-                className="inline-flex h-10 items-center px-5 font-ui text-[0.75rem] text-white/30 transition hover:text-white/65"
+                className="inline-flex h-10 items-center px-5 font-ui text-label text-white/30 transition hover:text-white/65"
               >
                 Contact us
               </Link>
             </div>
 
             {/* Trust line */}
-            <p className="mt-10 text-center font-ui text-[0.65rem] uppercase tracking-[0.18em] text-white/18">
+            <p className="mt-10 text-center font-ui text-caption uppercase tracking-[0.18em] text-white/18">
               100% Secured · Instant Receipt · Tax Deductible
             </p>
           </div>

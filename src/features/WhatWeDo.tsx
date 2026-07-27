@@ -68,7 +68,7 @@ export default function WhatWeDo() {
             <div className="flex flex-col">
               <motion.p
                 variants={staggerItem}
-                className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+                className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
               >
                 Who We Are
               </motion.p>
@@ -124,7 +124,7 @@ export default function WhatWeDo() {
                 {SLIDES.map((s, i) => (
                   <p
                     key={i}
-                    className="absolute max-w-[380px] font-ui text-[0.92rem] leading-[1.9] text-white/60"
+                    className="absolute max-w-[380px] font-ui text-body-md leading-[1.9] text-white/60"
                     // eslint-disable-next-line no-restricted-syntax
                     style={{
                       opacity: i === active ? 1 : 0,
@@ -191,7 +191,7 @@ export default function WhatWeDo() {
             <motion.div variants={staggerItem} className="mt-10">
               <Link
                 href="/about"
-                className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-[0.8rem] font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
+                className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-body-sm font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
               >
                 Our Story
                 <ArrowRight className="h-3.5 w-3.5 transition duration-200 group-hover:translate-x-1" />

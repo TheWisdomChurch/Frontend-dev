@@ -29,7 +29,7 @@ export default function PageTipCard({
             <Info className="h-3.5 w-3.5" />
           </div>
 
-          <p className="flex-1 pt-0.5 text-[0.82rem] leading-[1.5] text-white/80">
+          <p className="flex-1 pt-0.5 text-body-sm leading-[1.5] text-white/80">
             {message}
           </p>
 

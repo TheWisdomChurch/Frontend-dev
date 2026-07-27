@@ -76,7 +76,7 @@ export default function PublicationPage() {
                 href="https://wa.me/2347069995333"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
+                className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
               >
                 <MessageCircle className="h-3.5 w-3.5" />
                 Request via WhatsApp
@@ -84,7 +84,7 @@ export default function PublicationPage() {
 
               <Link
                 href="/contact"
-                className="inline-flex h-11 items-center gap-2 border border-white/15 bg-transparent px-7 font-ui text-[0.78rem] font-semibold text-white/65 transition hover:border-white/30 hover:text-white"
+                className="inline-flex h-11 items-center gap-2 border border-white/15 bg-transparent px-7 font-ui text-label font-semibold text-white/65 transition hover:border-white/30 hover:text-white"
               >
                 Contact us
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -95,7 +95,7 @@ export default function PublicationPage() {
           {/* Available now cards */}
           <ScrollFadeIn delay={0.1}>
             <div className="mx-auto mt-16 max-w-3xl">
-              <p className="mb-5 font-ui text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/45">
+              <p className="mb-5 font-ui text-caption font-bold uppercase tracking-[0.2em] text-white/45">
                 Available now — request directly
               </p>
               <div className="grid gap-4 sm:grid-cols-3">
@@ -115,14 +115,14 @@ export default function PublicationPage() {
                   >
                     <Download className="h-4 w-4 text-[var(--app-primary)]" />
                     <div>
-                      <p className="font-ui text-[0.85rem] font-semibold text-white">
+                      <p className="font-ui text-body-sm font-semibold text-white">
                         {item.label}
                       </p>
-                      <p className="mt-1 font-ui text-[0.75rem] leading-[1.7] text-white/62">
+                      <p className="mt-1 font-ui text-label leading-[1.7] text-white/62">
                         {item.detail}
                       </p>
                     </div>
-                    <span className="mt-auto inline-flex items-center gap-1 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] transition group-hover:translate-x-0.5">
+                    <span className="mt-auto inline-flex items-center gap-1 font-ui text-label font-semibold text-[var(--app-primary)] transition group-hover:translate-x-0.5">
                       {item.action} →
                     </span>
                   </a>

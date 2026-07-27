@@ -118,7 +118,7 @@ export default function ChildrenGallery() {
         </div>
 
         {/* Slide counter — bottom-right */}
-        <span className="absolute bottom-5 right-6 z-10 font-ui text-[0.62rem] font-semibold tabular-nums text-white/55">
+        <span className="absolute bottom-5 right-6 z-10 font-ui text-eyebrow font-semibold tabular-nums text-white/55">
           {current + 1} / {slides.length}
         </span>
       </div>

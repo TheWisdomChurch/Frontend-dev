@@ -137,7 +137,7 @@ export default function ConnectPortal() {
           {/* Eyebrow */}
           <motion.p
             variants={staggerItem}
-            className="mb-5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+            className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
           >
             Stay Connected
           </motion.p>
@@ -157,7 +157,7 @@ export default function ConnectPortal() {
           {/* Sub-copy */}
           <motion.p
             variants={staggerItem}
-            className="mt-5 max-w-[400px] font-ui text-[0.92rem] leading-[1.85] text-white/55"
+            className="mt-5 max-w-[400px] font-ui text-body-md leading-[1.85] text-white/55"
           >
             Watch live services, receive weekly messages, and connect with the
             Wisdom Church community wherever you are in the world.
@@ -173,7 +173,7 @@ export default function ConnectPortal() {
               href="https://www.youtube.com/@wisdomhousehq"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
             >
               <Play className="h-3.5 w-3.5 fill-[var(--app-ink)]" />
               Stream services live
@@ -184,7 +184,7 @@ export default function ConnectPortal() {
               href="https://wa.me/2347069995333"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-11 items-center gap-2.5 border border-[var(--app-whatsapp)]/30 bg-[var(--app-whatsapp)]/10 px-6 font-ui text-[0.78rem] font-bold text-[var(--app-whatsapp)] transition hover:border-[var(--app-whatsapp)]/50 hover:bg-[var(--app-whatsapp)]/18 active:scale-[0.98]"
+              className="inline-flex h-11 items-center gap-2.5 border border-[var(--app-whatsapp)]/30 bg-[var(--app-whatsapp)]/10 px-6 font-ui text-label font-bold text-[var(--app-whatsapp)] transition hover:border-[var(--app-whatsapp)]/50 hover:bg-[var(--app-whatsapp)]/18 active:scale-[0.98]"
             >
               <WaIcon />
               Join WhatsApp community
@@ -194,7 +194,7 @@ export default function ConnectPortal() {
           {/* Divider + Follow us */}
           <motion.div variants={staggerItem}>
             <span className="mt-10 block h-px w-12 bg-white/10" />
-            <p className="mb-4 mt-8 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-white/28">
+            <p className="mb-4 mt-8 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/28">
               Follow us
             </p>
           </motion.div>
@@ -205,7 +205,7 @@ export default function ConnectPortal() {
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-4 py-2 font-ui text-[0.75rem] font-semibold text-white/55 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white"
+                className="group inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-4 py-2 font-ui text-label font-semibold text-white/55 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white"
               >
                 <s.Icon />
                 {s.label}

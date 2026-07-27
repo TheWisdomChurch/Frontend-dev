@@ -99,15 +99,15 @@ export default function UpcomingPage() {
         <Container size="xl">
           <ScrollFadeIn className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Coming up
               </p>
-              <h2 className="mt-2 font-headline text-[1.6rem] font-normal text-[var(--app-ink)] sm:text-[2rem]">
+              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-[2rem]">
                 Upcoming events &amp; programs.
               </h2>
             </div>
             {!loading && events.length > 0 && (
-              <span className="inline-flex self-start items-center border border-[var(--app-ink)]/12 px-4 py-2 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/45 sm:self-auto">
+              <span className="inline-flex self-start items-center border border-[var(--app-ink)]/12 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/45 sm:self-auto">
                 {events.length} upcoming
               </span>
             )}
@@ -128,10 +128,10 @@ export default function UpcomingPage() {
             <ScrollFadeIn>
               <div className="flex flex-col items-center gap-5 border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] px-8 py-16 text-center">
                 <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                <h3 className="font-headline text-[1.4rem] font-normal text-[var(--app-ink)]">
+                <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                   Nothing scheduled yet.
                 </h3>
-                <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/50">
+                <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/50">
                   Check back soon. In the meantime, join us every{' '}
                   {SERVICE_INFO.sunday.day} at {SERVICE_INFO.sunday.time}, and
                   for {SERVICE_INFO.dailyPrayer.label}{' '}
@@ -140,7 +140,7 @@ export default function UpcomingPage() {
                 </p>
                 <Link
                   href="/events/weekly"
-                  className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   See weekly services <Arrow />
                 </Link>
@@ -164,23 +164,23 @@ export default function UpcomingPage() {
                         <p className="font-headline text-[2.2rem] font-normal leading-none text-[var(--app-ink)]">
                           {date.day}
                         </p>
-                        <p className="font-ui text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                        <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                           {date.month}
                         </p>
                       </div>
 
                       {/* Content */}
                       <div className="space-y-2">
-                        <h3 className="font-headline text-[1.2rem] font-normal leading-snug text-[var(--app-ink)]">
+                        <h3 className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
                           {event.title}
                         </h3>
                         {event.description && (
-                          <p className="font-ui text-[0.82rem] leading-[1.8] text-[var(--app-ink)]/68 line-clamp-2">
+                          <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/68 line-clamp-2">
                             {event.description}
                           </p>
                         )}
                         {event.location && (
-                          <p className="font-ui text-[0.75rem] text-[var(--app-ink)]/38">
+                          <p className="font-ui text-label text-[var(--app-ink)]/38">
                             {event.location}
                           </p>
                         )}
@@ -191,12 +191,12 @@ export default function UpcomingPage() {
                         {href ? (
                           <a
                             href={href}
-                            className="inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                            className="inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                           >
                             Register <Arrow />
                           </a>
                         ) : (
-                          <span className="inline-flex items-center border border-[var(--app-ink)]/10 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/35">
+                          <span className="inline-flex items-center border border-[var(--app-ink)]/10 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/35">
                             Free entry
                           </span>
                         )}

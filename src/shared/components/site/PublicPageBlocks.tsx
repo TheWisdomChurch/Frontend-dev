@@ -89,7 +89,7 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? (
-        <Caption className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
+        <Caption className="text-caption uppercase tracking-[0.22em] text-[var(--app-primary)]">
           {eyebrow}
         </Caption>
       ) : null}
@@ -378,7 +378,7 @@ export function ActionBanner({
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-3">
               {eyebrow ? (
-                <Caption className="text-[0.66rem] uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <Caption className="text-caption uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   {eyebrow}
                 </Caption>
               ) : null}

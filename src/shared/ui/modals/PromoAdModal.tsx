@@ -90,7 +90,7 @@ export default function PromoAdModal({
         {/* Badge */}
         <motion.div
           variants={itemVariants}
-          className="inline-flex items-center gap-2 border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/8 px-3 py-1.5 font-ui text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]"
+          className="inline-flex items-center gap-2 border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/8 px-3 py-1.5 font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]"
         >
           <BadgeIcon className="h-3.5 w-3.5" />
           {badgeLabel}
@@ -128,14 +128,14 @@ export default function PromoAdModal({
         {/* Heading */}
         <motion.div variants={itemVariants}>
           {showEyebrow && (
-            <p className="font-ui text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/40">
+            <p className="font-ui text-caption font-semibold uppercase tracking-[0.12em] text-white/40">
               {title}
             </p>
           )}
-          <h3 className="mt-1.5 font-headline text-[1.4rem] font-normal leading-snug text-white">
+          <h3 className="mt-1.5 font-headline text-heading-sm font-normal leading-snug text-white">
             {headline}
           </h3>
-          <p className="mt-2.5 font-ui text-[0.84rem] leading-[1.75] text-white/62">
+          <p className="mt-2.5 font-ui text-body-sm leading-[1.75] text-white/62">
             {description}
           </p>
         </motion.div>
@@ -149,7 +149,7 @@ export default function PromoAdModal({
             {meta.map(({ icon: MetaIcon, label }) => (
               <div
                 key={label}
-                className="flex items-center gap-2 font-ui text-[0.78rem] text-white/60"
+                className="flex items-center gap-2 font-ui text-label text-white/60"
               >
                 <MetaIcon className="h-3.5 w-3.5 flex-none text-[var(--app-primary)]" />
                 {label}
@@ -167,13 +167,13 @@ export default function PromoAdModal({
             whileHover={primaryCtaDisabled ? undefined : { scale: 1.01 }}
             whileTap={primaryCtaDisabled ? undefined : { scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 420, damping: 24 }}
-            className="h-12 w-full font-ui text-[0.85rem] font-bold"
+            className="h-12 w-full font-ui text-body-sm font-bold"
           >
             {primaryCtaLabel}
           </MotionButton>
 
           {(note || secondaryCtaLabel) && (
-            <div className="flex items-center justify-between gap-3 font-ui text-[0.72rem] text-white/40">
+            <div className="flex items-center justify-between gap-3 font-ui text-label text-white/40">
               {note && <span>{note}</span>}
               {secondaryCtaLabel && onSecondaryAction && (
                 <button

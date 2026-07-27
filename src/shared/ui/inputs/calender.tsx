@@ -136,7 +136,7 @@ function Calendar({
             {weekDays.map(day => (
               <div
                 key={day}
-                className="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] text-center"
+                className="text-muted-foreground rounded-md w-9 font-normal text-body-sm text-center"
               >
                 {day}
               </div>

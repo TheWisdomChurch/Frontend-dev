@@ -113,15 +113,15 @@ export default function WeeklyPage() {
                       <p className="font-headline text-[3.5rem] font-normal leading-none text-[var(--app-ink)] lg:text-[4.5rem]">
                         {svc.day}
                       </p>
-                      <p className="font-ui text-[1rem] font-bold text-[var(--app-primary)]">
+                      <p className="font-ui text-body-lg font-bold text-[var(--app-primary)]">
                         {svc.time}
                       </p>
                     </div>
                     <div className="mt-6 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-                    <p className="mt-5 font-headline text-[1.3rem] font-normal text-[var(--app-ink)]">
+                    <p className="mt-5 font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                       {svc.name}
                     </p>
-                    <p className="mt-3 font-ui text-[0.85rem] leading-[1.9] text-[var(--app-ink)]/70 max-w-sm">
+                    <p className="mt-3 font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/70 max-w-sm">
                       {svc.description}
                     </p>
                   </div>
@@ -132,13 +132,13 @@ export default function WeeklyPage() {
                       {svc.details.map(d => (
                         <li key={d} className="flex items-start gap-3">
                           <div className="mt-[0.55rem] h-[1.5px] w-4 shrink-0 bg-[var(--app-primary)]/55" />
-                          <span className="font-ui text-[0.83rem] leading-[1.8] text-[var(--app-ink)]/72">
+                          <span className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/72">
                             {d}
                           </span>
                         </li>
                       ))}
                     </ul>
-                    <p className="font-ui text-[0.78rem] text-[var(--app-ink)]/55">
+                    <p className="font-ui text-label text-[var(--app-ink)]/55">
                       {SERVICE_INFO.venue.name},{' '}
                       {SERVICE_INFO.venue.streetAddress}
                       ,<br />
@@ -146,7 +146,7 @@ export default function WeeklyPage() {
                     </p>
                     <Link
                       href="/contact?topic=visit"
-                      className="inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                      className="inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                     >
                       Plan your visit <Arrow />
                     </Link>
@@ -164,27 +164,27 @@ export default function WeeklyPage() {
           <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 First time?
               </p>
-              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.4rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.4rem]">
                 Walk in. You belong here.
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/70">
+              <p className="max-w-md font-ui text-body-sm leading-[1.9] text-white/70">
                 No pressure, no expectations — just come and experience the
                 community. Our welcome team will be right there when you arrive.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
                   Let us know you're coming <Arrow />
                 </Link>
                 <Link
                   href="/events"
-                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white/55 transition hover:border-white/35 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/55 transition hover:border-white/35 hover:text-white"
                 >
                   See all events
                 </Link>

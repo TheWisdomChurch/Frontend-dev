@@ -308,7 +308,7 @@ export default function HeroSection({
           {/* Eyebrow — elastic bounce entry + continuous gentle float */}
           <p
             ref={eyebrowRef}
-            className="mb-6 inline-block text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+            className="mb-6 inline-block text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
           >
             {eyebrow}
           </p>
@@ -339,7 +339,7 @@ export default function HeroSection({
           {/* Body */}
           <p
             ref={bodyRef}
-            className="mt-6 max-w-[420px] font-ui text-[1rem] leading-[1.75] text-white/70 sm:text-[1.05rem]"
+            className="mt-6 max-w-[420px] font-ui text-body-lg leading-[1.75] text-white/70 sm:text-heading-sm"
           >
             {description}
           </p>
@@ -355,7 +355,7 @@ export default function HeroSection({
               />
               <Link
                 href={primaryCtaHref}
-                className="group relative inline-flex h-12 items-center gap-2.5 bg-[var(--app-primary)] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                className="group relative inline-flex h-12 items-center gap-2.5 bg-[var(--app-primary)] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
               >
                 <CalendarDays className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 {primaryCtaLabel}
@@ -369,7 +369,7 @@ export default function HeroSection({
                 href={secondaryCtaHref}
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex h-12 items-center gap-2.5 border border-white/25 bg-white/[0.08] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm transition hover:bg-white/[0.14] active:scale-[0.98]"
+                className="group inline-flex h-12 items-center gap-2.5 border border-white/25 bg-white/[0.08] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm transition hover:bg-white/[0.14] active:scale-[0.98]"
               >
                 <span className="relative flex h-2.5 w-2.5 flex-none items-center justify-center">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-70" />
@@ -381,7 +381,7 @@ export default function HeroSection({
             ) : (
               <Link
                 href={secondaryCtaHref}
-                className="group inline-flex h-12 items-center gap-2.5 border border-white/25 bg-white/[0.08] px-7 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm transition hover:bg-white/[0.14] active:scale-[0.98]"
+                className="group inline-flex h-12 items-center gap-2.5 border border-white/25 bg-white/[0.08] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm transition hover:bg-white/[0.14] active:scale-[0.98]"
               >
                 <ArrowRight className="h-4 w-4" />
                 {secondaryCtaLabel}

@@ -162,12 +162,12 @@ export default function TestimoniesPage() {
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(201,150,26,0.07),transparent)]" />
               <Container size="md" className="relative text-center">
                 <OpenQuote className="text-[5rem] text-[var(--app-primary)]/30 lg:text-[7rem]" />
-                <p className="mx-auto mt-2 max-w-2xl font-headline text-[1.3rem] font-normal leading-[1.65] text-white sm:text-[1.6rem] lg:text-[1.85rem]">
+                <p className="mx-auto mt-2 max-w-2xl font-headline text-heading-sm font-normal leading-[1.65] text-white sm:text-heading-md lg:text-heading-md">
                   {featured.quote}
                 </p>
                 <div className="mx-auto mt-8 flex items-center justify-center gap-4">
                   <div className="h-px w-8 bg-[var(--app-primary)]/45" />
-                  <p className="font-ui text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                  <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                     {featured.isAnonymous ? 'Anonymous member' : featured.name}
                   </p>
                   <div className="h-px w-8 bg-[var(--app-primary)]/45" />
@@ -183,10 +183,10 @@ export default function TestimoniesPage() {
             {/* Section header */}
             <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Community stories
                 </p>
-                <h2 className="mt-2 font-headline text-[1.6rem] font-normal text-[var(--app-ink)] sm:text-[2rem]">
+                <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-[2rem]">
                   What God has done in our community.
                 </h2>
               </div>
@@ -194,7 +194,7 @@ export default function TestimoniesPage() {
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:self-auto"
+                className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:self-auto"
               >
                 Share your story <Arrow />
               </a>
@@ -217,10 +217,10 @@ export default function TestimoniesPage() {
               <ScrollFadeIn>
                 <div className="flex flex-col items-center gap-5 border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] px-8 py-16 text-center">
                   <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                  <h3 className="font-headline text-[1.4rem] font-normal text-[var(--app-ink)]">
+                  <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                     Stories are coming.
                   </h3>
-                  <p className="max-w-sm font-ui text-[0.82rem] leading-[1.85] text-[var(--app-ink)]/50">
+                  <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/50">
                     Approved testimonies will appear here. Be the first to share
                     what God has done in your life.
                   </p>
@@ -228,7 +228,7 @@ export default function TestimoniesPage() {
                     href={shareUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-[0.7rem] font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                    className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                   >
                     Share your story <Arrow />
                   </a>
@@ -247,18 +247,18 @@ export default function TestimoniesPage() {
                       {/* Quote mark */}
                       <OpenQuote className="mb-1 text-[2.5rem] text-[var(--app-primary)]/35" />
                       {/* Quote text */}
-                      <p className="font-headline text-[1rem] font-normal leading-[1.7] text-[var(--app-ink)] line-clamp-6">
+                      <p className="font-headline text-body-lg font-normal leading-[1.7] text-[var(--app-ink)] line-clamp-6">
                         {testimony.quote}
                       </p>
                       {/* Attribution */}
                       <div className="mt-5 border-t border-[var(--app-ink)]/8 pt-4">
                         <div className="h-[1.5px] w-5 bg-[var(--app-primary)]/45" />
-                        <p className="mt-3 font-ui text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/55">
+                        <p className="mt-3 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/55">
                           {testimony.isAnonymous
                             ? 'Anonymous member'
                             : testimony.name}
                         </p>
-                        <p className="mt-0.5 font-ui text-[0.68rem] text-[var(--app-ink)]/35">
+                        <p className="mt-0.5 font-ui text-caption text-[var(--app-ink)]/35">
                           Wisdom Church
                         </p>
                       </div>
@@ -276,10 +276,10 @@ export default function TestimoniesPage() {
             <SectionGlow />
             <Container size="lg">
               <div className="flex flex-col items-center gap-7 text-center">
-                <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Share your story
                 </p>
-                <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.4rem]">
+                <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.4rem]">
                   If God has done something in your life,
                   <em className="italic text-[var(--app-primary)]/80">
                     {' '}
@@ -287,7 +287,7 @@ export default function TestimoniesPage() {
                   </em>
                 </h2>
                 <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-                <p className="max-w-md font-ui text-[0.85rem] leading-[1.9] text-white/70">
+                <p className="max-w-md font-ui text-body-sm leading-[1.9] text-white/70">
                   Testimonies encourage the people who are still praying, still
                   waiting, and still learning to trust. Your story matters.
                 </p>
@@ -295,7 +295,7 @@ export default function TestimoniesPage() {
                   href={shareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                  className="inline-flex items-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
                   Submit a testimony <Arrow />
                 </a>

@@ -97,24 +97,24 @@ export default function PastoralPage() {
         <Container size="xl">
           <ScrollFadeIn className="flex flex-col gap-8 py-16 lg:flex-row lg:items-end lg:justify-between lg:py-20">
             <div className="max-w-xl">
-              <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Pastoral support
               </p>
-              <h2 className="mt-3 font-headline text-[1.8rem] font-normal leading-snug text-white sm:text-[2.3rem]">
+              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.3rem]">
                 You do not need to figure out
                 <em className="italic text-[var(--app-primary)]/80">
                   {' '}
                   where to start.
                 </em>
               </h2>
-              <p className="mt-5 max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
+              <p className="mt-5 max-w-md font-ui text-body-sm leading-[2] text-white/70">
                 Choose a care pathway below and we will make sure your request
                 reaches the right person on our team.
               </p>
             </div>
             <Link
               href="#care-pathways"
-              className="inline-flex items-center gap-2 self-start border border-white/20 px-7 py-3.5 font-ui text-[0.72rem] font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
+              className="inline-flex items-center gap-2 self-start border border-white/20 px-7 py-3.5 font-ui text-label font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
             >
               Request support <Arrow />
             </Link>
@@ -138,7 +138,7 @@ export default function PastoralPage() {
               <div className="grid gap-12 py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-24 lg:py-24">
                 {/* Left — title + description */}
                 <div className="flex flex-col justify-center">
-                  <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                     Pastoral care
                   </p>
                   <div className="mt-4 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
@@ -150,7 +150,7 @@ export default function PastoralPage() {
                     {svc.title}
                   </h2>
                   <p
-                    className={`mt-5 max-w-md font-ui text-[0.88rem] leading-[2] ${
+                    className={`mt-5 max-w-md font-ui text-body-sm leading-[2] ${
                       svc.dark ? 'text-white/70' : 'text-[var(--app-ink)]/70'
                     }`}
                   >
@@ -164,7 +164,7 @@ export default function PastoralPage() {
                           : '/contact?topic=prayer#contact-form'
                       }
                       className={[
-                        'inline-flex items-center gap-2 border px-6 py-3 font-ui text-[0.72rem] font-semibold transition duration-150',
+                        'inline-flex items-center gap-2 border px-6 py-3 font-ui text-label font-semibold transition duration-150',
                         svc.dark
                           ? 'border-white/18 text-white/50 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]'
                           : 'border-[var(--app-ink)]/18 text-[var(--app-ink)]/50 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]',
@@ -188,7 +188,7 @@ export default function PastoralPage() {
                           }`}
                         />
                         <span
-                          className={`font-ui text-[0.88rem] leading-[1.85] ${
+                          className={`font-ui text-body-sm leading-[1.85] ${
                             svc.dark
                               ? 'text-white/72'
                               : 'text-[var(--app-ink)]/72'
@@ -219,16 +219,16 @@ export default function PastoralPage() {
           <Container size="xl">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-24">
               <div className="lg:max-w-sm">
-                <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   Handled with care
                 </p>
-                <h2 className="mt-3 font-headline text-[1.5rem] font-normal leading-snug text-[var(--app-ink)] sm:text-[1.85rem]">
+                <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-md">
                   Everything you share is treated with discretion.
                 </h2>
               </div>
               <div className="flex-1">
                 <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/45" />
-                <p className="mt-5 font-ui text-[0.87rem] leading-[2] text-[var(--app-ink)]/70">
+                <p className="mt-5 font-ui text-body-sm leading-[2] text-[var(--app-ink)]/70">
                   Pastoral care works best when people can speak openly.
                   Sensitive matters are handled by our pastoral team with
                   maturity, confidentiality, and respect for the person
@@ -246,28 +246,28 @@ export default function PastoralPage() {
           <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-[0.55rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Reach out
               </p>
-              <h2 className="font-headline text-[1.9rem] font-normal leading-snug text-white sm:text-[2.5rem]">
+              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-[2.5rem]">
                 You do not have to carry this
                 <em className="italic text-[var(--app-primary)]/80"> alone.</em>
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-[0.85rem] leading-[2] text-white/70">
+              <p className="max-w-md font-ui text-body-sm leading-[2] text-white/70">
                 Choose counseling or prayer above and tell us what you need. We
                 will make sure it gets to the right person on our team.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="#care-pathways"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-[0.75rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
                   Request support <Arrow />
                 </Link>
                 <Link
                   href="/events/weekly"
-                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white/50 transition hover:border-white/35 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/50 transition hover:border-white/35 hover:text-white"
                 >
                   View service times
                 </Link>

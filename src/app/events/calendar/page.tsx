@@ -168,10 +168,10 @@ export default function CalendarPage() {
               </svg>
             </button>
             <div className="text-center">
-              <p className="font-headline text-[1.6rem] font-normal text-[var(--app-ink)]">
+              <p className="font-headline text-heading-md font-normal text-[var(--app-ink)]">
                 {MONTHS[viewMonth]}
               </p>
-              <p className="font-ui text-[0.72rem] font-semibold text-[var(--app-ink)]/40">
+              <p className="font-ui text-label font-semibold text-[var(--app-ink)]/40">
                 {viewYear}
               </p>
             </div>
@@ -201,7 +201,7 @@ export default function CalendarPage() {
                 {DAYS.map(d => (
                   <div
                     key={d}
-                    className="py-2.5 text-center font-ui text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/35"
+                    className="py-2.5 text-center font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/35"
                   >
                     {d}
                   </div>
@@ -232,7 +232,7 @@ export default function CalendarPage() {
                           <>
                             <span
                               className={[
-                                'font-ui text-[0.72rem] font-semibold',
+                                'font-ui text-label font-semibold',
                                 isToday(day)
                                   ? 'text-[var(--app-primary)]'
                                   : 'text-[var(--app-ink)]/50',
@@ -245,13 +245,13 @@ export default function CalendarPage() {
                                 {eventsByDay[day].slice(0, 2).map(ev => (
                                   <span
                                     key={ev.id}
-                                    className="block truncate rounded-[2px] bg-[var(--app-primary)]/15 px-1 py-0.5 font-ui text-[0.58rem] text-[var(--app-primary)] leading-tight"
+                                    className="block truncate rounded-[2px] bg-[var(--app-primary)]/15 px-1 py-0.5 font-ui text-eyebrow text-[var(--app-primary)] leading-tight"
                                   >
                                     {ev.title}
                                   </span>
                                 ))}
                                 {eventsByDay[day].length > 2 && (
-                                  <span className="font-ui text-[0.55rem] text-[var(--app-ink)]/35">
+                                  <span className="font-ui text-eyebrow text-[var(--app-ink)]/35">
                                     +{eventsByDay[day].length - 2} more
                                   </span>
                                 )}
@@ -270,7 +270,7 @@ export default function CalendarPage() {
           {/* This month event list */}
           {!loading && monthEvents.length > 0 && (
             <ScrollFadeIn className="mt-12">
-              <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+              <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Events this month
               </p>
               <div className="divide-y divide-[var(--app-ink)]/8 border-y border-[var(--app-ink)]/8">
@@ -283,21 +283,21 @@ export default function CalendarPage() {
                   return (
                     <div key={ev.id} className="flex items-center gap-6 py-5">
                       <div className="w-14 shrink-0 text-right">
-                        <p className="font-headline text-[1.6rem] font-normal leading-none text-[var(--app-ink)]">
+                        <p className="font-headline text-heading-md font-normal leading-none text-[var(--app-ink)]">
                           {d.getDate()}
                         </p>
-                        <p className="font-ui text-[0.6rem] font-bold uppercase tracking-[0.14em] text-[var(--app-primary)]">
+                        <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-primary)]">
                           {d
                             .toLocaleString('en', { month: 'short' })
                             .toUpperCase()}
                         </p>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-headline text-[1rem] font-normal text-[var(--app-ink)] truncate">
+                        <p className="font-headline text-body-lg font-normal text-[var(--app-ink)] truncate">
                           {ev.title}
                         </p>
                         {ev.location && (
-                          <p className="font-ui text-[0.74rem] text-[var(--app-ink)]/40 truncate">
+                          <p className="font-ui text-label text-[var(--app-ink)]/40 truncate">
                             {ev.location}
                           </p>
                         )}
@@ -305,7 +305,7 @@ export default function CalendarPage() {
                       {href && (
                         <a
                           href={href}
-                          className="shrink-0 inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-4 py-2 font-ui text-[0.68rem] font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                          className="shrink-0 inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-4 py-2 font-ui text-caption font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                         >
                           Register <Arrow />
                         </a>
@@ -319,7 +319,7 @@ export default function CalendarPage() {
 
           {!loading && monthEvents.length === 0 && (
             <ScrollFadeIn className="mt-10">
-              <p className="font-ui text-[0.82rem] text-[var(--app-ink)]/38 text-center py-6">
+              <p className="font-ui text-body-sm text-[var(--app-ink)]/38 text-center py-6">
                 No events scheduled for {MONTHS[viewMonth]}. Navigate to another
                 month or{' '}
                 <Link

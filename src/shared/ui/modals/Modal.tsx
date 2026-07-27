@@ -28,7 +28,7 @@ export const modalStyles = {
   sectionTitle:
     'text-xs font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]',
   label:
-    'mb-2 block text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/60',
+    'mb-2 block text-label font-bold uppercase tracking-[0.16em] text-white/60',
   input:
     'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   select:
@@ -233,7 +233,7 @@ function ModalPanel({
               {title ? (
                 <h2
                   id={titleId}
-                  className="font-headline text-[1.25rem] font-normal leading-snug text-white sm:text-[1.4rem]"
+                  className="font-headline text-heading-sm font-normal leading-snug text-white sm:text-heading-sm"
                 >
                   {title}
                 </h2>
@@ -242,7 +242,7 @@ function ModalPanel({
               {subtitle ? (
                 <p
                   id={subtitleId}
-                  className="mt-1.5 font-ui text-[0.78rem] leading-[1.7] text-white/45"
+                  className="mt-1.5 font-ui text-label leading-[1.7] text-white/45"
                 >
                   {subtitle}
                 </p>
@@ -492,7 +492,7 @@ export function ServiceUnavailableSheet({
         <div className="pointer-events-none absolute right-0 top-0 h-44 w-44 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
 
         <div className="relative flex items-start justify-between gap-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/75">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-label font-bold uppercase tracking-[0.18em] text-white/75">
             <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
             Heads up
           </div>

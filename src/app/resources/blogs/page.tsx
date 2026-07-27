@@ -53,7 +53,7 @@ export default function BlogPage() {
                 href="https://www.youtube.com/@wisdomhousehq"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
+                className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"
               >
                 <Play className="h-3.5 w-3.5 fill-[var(--app-ink)]" />
                 Watch our messages
@@ -61,7 +61,7 @@ export default function BlogPage() {
 
               <Link
                 href="/resources/sermons"
-                className="inline-flex h-11 items-center gap-2 border border-white/15 bg-transparent px-7 font-ui text-[0.78rem] font-semibold text-white/65 transition hover:border-white/30 hover:text-white"
+                className="inline-flex h-11 items-center gap-2 border border-white/15 bg-transparent px-7 font-ui text-label font-semibold text-white/65 transition hover:border-white/30 hover:text-white"
               >
                 Browse sermons
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -72,10 +72,10 @@ export default function BlogPage() {
           {/* Notify me form */}
           <ScrollFadeIn delay={0.1}>
             <div className="mx-auto mt-16 max-w-xl border border-white/8 bg-white/[0.025] p-8 text-center">
-              <p className="font-ui text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+              <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                 Get notified
               </p>
-              <p className="mt-2 font-ui text-[0.88rem] text-white/70">
+              <p className="mt-2 font-ui text-body-sm text-white/70">
                 Be the first to know when devotionals and articles go live. Drop
                 your email below.
               </p>
@@ -88,10 +88,10 @@ export default function BlogPage() {
           {/* WhatsApp update strip */}
           <ScrollFadeIn delay={0.15}>
             <div className="mx-auto mt-5 max-w-xl border border-white/8 bg-white/[0.025] p-6 text-center">
-              <p className="font-ui text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+              <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                 Or join our community
               </p>
-              <p className="mt-2 font-ui text-[0.88rem] text-white/65">
+              <p className="mt-2 font-ui text-body-sm text-white/65">
                 Get devotionals, sermon notes, and church updates directly via
                 WhatsApp.
               </p>
@@ -99,7 +99,7 @@ export default function BlogPage() {
                 href="https://wa.me/2347069995333"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex h-10 items-center gap-2 border border-[var(--app-whatsapp)]/25 bg-[var(--app-whatsapp)]/10 px-5 font-ui text-[0.75rem] font-bold text-[var(--app-whatsapp)] transition hover:bg-[var(--app-whatsapp)]/18"
+                className="mt-5 inline-flex h-10 items-center gap-2 border border-[var(--app-whatsapp)]/25 bg-[var(--app-whatsapp)]/10 px-5 font-ui text-label font-bold text-[var(--app-whatsapp)] transition hover:bg-[var(--app-whatsapp)]/18"
               >
                 Join WhatsApp community
               </a>

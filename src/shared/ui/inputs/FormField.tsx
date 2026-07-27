@@ -21,7 +21,7 @@ export default function FormField({
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label className="block text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/60">
+        <label className="block text-label font-bold uppercase tracking-[0.16em] text-white/60">
           {label}
           {required && (
             <span className="ml-1 text-[var(--status-error)]">*</span>

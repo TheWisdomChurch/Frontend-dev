@@ -139,7 +139,7 @@ export default function TermsPage(): JSX.Element {
       {/* ── Dark hero ─────────────────────────────────────────── */}
       <div className="bg-[var(--app-dark)] px-6 pb-20 pt-32">
         <div className="mx-auto max-w-5xl">
-          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Legal · Terms
           </p>
           <h1
@@ -149,12 +149,12 @@ export default function TermsPage(): JSX.Element {
           >
             Terms of Use
           </h1>
-          <p className="mt-5 max-w-xl font-ui text-[0.95rem] leading-[1.9] text-white/62">
+          <p className="mt-5 max-w-xl font-ui text-body-md leading-[1.9] text-white/62">
             These terms govern your access to our website, livestreams, event
             registrations, forms, and related digital services. By using the
             site you agree to them.
           </p>
-          <p className="mt-5 font-ui text-[0.7rem] text-white/28">
+          <p className="mt-5 font-ui text-label text-white/28">
             Last updated: February 2026
           </p>
         </div>
@@ -165,7 +165,7 @@ export default function TermsPage(): JSX.Element {
         {/* ── Sticky TOC ── */}
         <aside className="hidden lg:block">
           <div className="sticky top-24">
-            <p className="mb-4 font-ui text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/38">
+            <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/38">
               Sections
             </p>
             <nav aria-label="Terms of Use table of contents">
@@ -174,9 +174,9 @@ export default function TermsPage(): JSX.Element {
                   <li key={s.id}>
                     <a
                       href={`#${s.id}`}
-                      className="group flex items-center gap-2.5 py-1 font-ui text-[0.78rem] text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
+                      className="group flex items-center gap-2.5 py-1 font-ui text-label text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
                     >
-                      <span className="text-[0.62rem] font-bold text-[var(--app-primary)]/50 group-hover:text-[var(--app-primary)]">
+                      <span className="text-eyebrow font-bold text-[var(--app-primary)]/50 group-hover:text-[var(--app-primary)]">
                         {s.number}
                       </span>
                       {s.title}
@@ -188,19 +188,19 @@ export default function TermsPage(): JSX.Element {
               <div className="mt-8 border-t border-[var(--app-ink)]/8 pt-6 space-y-1.5">
                 <Link
                   href="/privacy"
-                  className="block font-ui text-[0.76rem] text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
                 >
                   → Privacy Policy
                 </Link>
                 <Link
                   href="/cookies"
-                  className="block font-ui text-[0.76rem] text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
                 >
                   → Cookies & Privacy
                 </Link>
                 <Link
                   href="/contact"
-                  className="block font-ui text-[0.76rem] text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
+                  className="block font-ui text-label text-[var(--app-ink)]/40 transition hover:text-[var(--app-primary)]"
                 >
                   → Contact us
                 </Link>
@@ -218,16 +218,16 @@ export default function TermsPage(): JSX.Element {
               className={`py-10 ${index < sections.length - 1 ? 'border-b border-[var(--app-ink)]/8' : ''}`}
             >
               <div className="flex items-start gap-5">
-                <span className="mt-1 w-8 flex-none font-ui text-[0.65rem] font-bold text-[var(--app-primary)]/60">
+                <span className="mt-1 w-8 flex-none font-ui text-caption font-bold text-[var(--app-primary)]/60">
                   {section.number}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h2 className="font-headline text-[1.15rem] font-normal text-[var(--app-ink)]">
+                  <h2 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                     {section.title}
                   </h2>
 
                   {section.body && (
-                    <p className="mt-3 font-ui text-[0.9rem] leading-[2] text-[var(--app-ink)]/65">
+                    <p className="mt-3 font-ui text-body-md leading-[2] text-[var(--app-ink)]/65">
                       {section.body}
                     </p>
                   )}
@@ -237,7 +237,7 @@ export default function TermsPage(): JSX.Element {
                       {section.list.map(item => (
                         <li
                           key={item}
-                          className="flex items-start gap-3 font-ui text-[0.9rem] leading-[1.85] text-[var(--app-ink)]/65"
+                          className="flex items-start gap-3 font-ui text-body-md leading-[1.85] text-[var(--app-ink)]/65"
                         >
                           <span
                             className="mt-2.5 h-[2px] w-3.5 flex-none bg-[var(--app-primary)]/60"
@@ -255,7 +255,7 @@ export default function TermsPage(): JSX.Element {
                         <Link
                           key={l.href}
                           href={l.href}
-                          className="font-ui text-[0.85rem] font-semibold text-[var(--app-primary)] underline underline-offset-4 transition hover:text-[var(--app-primary-light)]"
+                          className="font-ui text-body-sm font-semibold text-[var(--app-primary)] underline underline-offset-4 transition hover:text-[var(--app-primary-light)]"
                         >
                           {l.label}
                         </Link>
@@ -267,7 +267,7 @@ export default function TermsPage(): JSX.Element {
                     <div className="mt-3">
                       <Link
                         href={section.link.href}
-                        className="font-ui text-[0.85rem] font-semibold text-[var(--app-primary)] underline underline-offset-4 transition hover:text-[var(--app-primary-light)]"
+                        className="font-ui text-body-sm font-semibold text-[var(--app-primary)] underline underline-offset-4 transition hover:text-[var(--app-primary-light)]"
                       >
                         {section.link.label}
                       </Link>
@@ -285,19 +285,19 @@ export default function TermsPage(): JSX.Element {
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-8 gap-y-3">
           <Link
             href="/contact"
-            className="inline-flex h-10 items-center bg-[var(--app-primary)] px-6 font-ui text-[0.76rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
+            className="inline-flex h-10 items-center bg-[var(--app-primary)] px-6 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
           >
             Contact us
           </Link>
           <Link
             href="/privacy"
-            className="font-ui text-[0.82rem] text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+            className="font-ui text-body-sm text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
           >
             Privacy Policy
           </Link>
           <Link
             href="/cookies"
-            className="font-ui text-[0.82rem] text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+            className="font-ui text-body-sm text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
           >
             Cookies & Privacy
           </Link>

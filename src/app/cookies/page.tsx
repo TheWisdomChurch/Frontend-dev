@@ -82,7 +82,7 @@ export default function CookiesPage() {
       {/* ── Dark hero ─────────────────────────────────────────── */}
       <div className="bg-[var(--app-dark)] px-6 pb-20 pt-32">
         <div className="mx-auto max-w-4xl">
-          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Legal · Cookies
           </p>
           <h1
@@ -92,12 +92,12 @@ export default function CookiesPage() {
           >
             Cookies &amp; Privacy
           </h1>
-          <p className="mt-5 max-w-xl font-ui text-[0.95rem] leading-[1.9] text-white/62">
+          <p className="mt-5 max-w-xl font-ui text-body-md leading-[1.9] text-white/62">
             We use only the cookies this site needs to function — no advertising
             trackers, no marketing pixels, no profiling. Here is exactly what we
             store and why.
           </p>
-          <p className="mt-5 font-ui text-[0.7rem] text-white/28">
+          <p className="mt-5 font-ui text-label text-white/28">
             Last updated: July 2026
           </p>
         </div>
@@ -107,10 +107,10 @@ export default function CookiesPage() {
       <div className="mx-auto max-w-4xl px-6 py-16 lg:py-24">
         {/* Overview */}
         <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/10 pb-14">
-          <p className="mb-4 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Overview
           </p>
-          <p className="max-w-2xl font-ui text-[0.96rem] leading-[2] text-[var(--app-ink)]/70">
+          <p className="max-w-2xl font-ui text-body-md leading-[2] text-[var(--app-ink)]/70">
             Cookies are small text files placed in your browser when you visit a
             website. We use a minimal set — only what is necessary to keep the
             site running and to remember your basic preferences. We do not use
@@ -120,18 +120,18 @@ export default function CookiesPage() {
 
         {/* Cookie tables */}
         <section className="overflow-hidden min-w-0 space-y-14 border-b border-[var(--app-ink)]/10 py-14">
-          <p className="mb-2 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Cookies we use
           </p>
 
           {cookieGroups.map(group => (
             <div key={group.category}>
               <div className="mb-3 flex flex-wrap items-center gap-3">
-                <h2 className="font-headline text-[1.35rem] font-normal text-[var(--app-ink)]">
+                <h2 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                   {group.category}
                 </h2>
                 <span
-                  className={`px-2.5 py-0.5 font-ui text-[0.6rem] font-bold uppercase tracking-[0.12em] ${
+                  className={`px-2.5 py-0.5 font-ui text-eyebrow font-bold uppercase tracking-[0.12em] ${
                     group.category === 'Essential'
                       ? 'bg-[var(--app-ink)]/8 text-[var(--app-ink)]/50'
                       : 'bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
@@ -141,20 +141,20 @@ export default function CookiesPage() {
                 </span>
               </div>
 
-              <p className="mb-5 max-w-xl font-ui text-[0.88rem] leading-[1.85] text-[var(--app-ink)]/55">
+              <p className="mb-5 max-w-xl font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/55">
                 {group.description}
               </p>
 
               {/* Table */}
               <div className="overflow-hidden border border-[var(--app-ink)]/10">
                 <div className="hidden grid-cols-[1.4fr_2.4fr_0.7fr] border-b border-[var(--app-ink)]/8 bg-[var(--app-ink)]/[0.035] px-5 py-2.5 sm:grid">
-                  <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
                     Cookie
                   </span>
-                  <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
                     Purpose
                   </span>
-                  <span className="font-ui text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
+                  <span className="font-ui text-caption font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/38">
                     Duration
                   </span>
                 </div>
@@ -168,13 +168,13 @@ export default function CookiesPage() {
                         : ''
                     } bg-white/50`}
                   >
-                    <span className="mb-1 font-ui text-[0.85rem] font-semibold text-[var(--app-ink)] sm:mb-0">
+                    <span className="mb-1 font-ui text-body-sm font-semibold text-[var(--app-ink)] sm:mb-0">
                       {cookie.name}
                     </span>
-                    <span className="font-ui text-[0.85rem] leading-[1.7] text-[var(--app-ink)]/65">
+                    <span className="font-ui text-body-sm leading-[1.7] text-[var(--app-ink)]/65">
                       {cookie.purpose}
                     </span>
-                    <span className="mt-1 font-ui text-[0.8rem] text-[var(--app-ink)]/42 sm:mt-0">
+                    <span className="mt-1 font-ui text-body-sm text-[var(--app-ink)]/42 sm:mt-0">
                       {cookie.duration}
                     </span>
                   </div>
@@ -186,14 +186,14 @@ export default function CookiesPage() {
 
         {/* What we do not do */}
         <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/10 py-14">
-          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             What we don't do
           </p>
           <ul className="space-y-3.5">
             {notUsed.map(item => (
               <li
                 key={item}
-                className="flex items-start gap-3.5 font-ui text-[0.9rem] leading-[1.85] text-[var(--app-ink)]/70"
+                className="flex items-start gap-3.5 font-ui text-body-md leading-[1.85] text-[var(--app-ink)]/70"
               >
                 <span
                   className="mt-2.5 h-[2px] w-4 flex-none bg-[var(--app-primary)]"
@@ -207,14 +207,14 @@ export default function CookiesPage() {
 
         {/* Your choices */}
         <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/10 py-14">
-          <p className="mb-5 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Your choices
           </p>
           <ul className="space-y-3.5">
             {choices.map(item => (
               <li
                 key={item}
-                className="flex items-start gap-3.5 font-ui text-[0.9rem] leading-[1.85] text-[var(--app-ink)]/70"
+                className="flex items-start gap-3.5 font-ui text-body-md leading-[1.85] text-[var(--app-ink)]/70"
               >
                 <span
                   className="mt-2.5 h-[2px] w-4 flex-none bg-[var(--app-primary)]"
@@ -228,10 +228,10 @@ export default function CookiesPage() {
 
         {/* Contact */}
         <section className="overflow-hidden min-w-0 py-14">
-          <p className="mb-4 font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-4 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Questions?
           </p>
-          <p className="mb-7 max-w-lg font-ui text-[0.92rem] leading-[1.9] text-[var(--app-ink)]/65">
+          <p className="mb-7 max-w-lg font-ui text-body-md leading-[1.9] text-[var(--app-ink)]/65">
             If you have questions about our cookie use or wish to request
             deletion of data you submitted, contact us through the Contact page
             or visit the church office.
@@ -239,19 +239,19 @@ export default function CookiesPage() {
           <div className="flex flex-wrap items-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex h-11 items-center bg-[var(--app-primary)] px-7 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              className="inline-flex h-11 items-center bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
             >
               Contact us
             </Link>
             <Link
               href="/privacy"
-              className="inline-flex h-11 items-center gap-1 font-ui text-[0.82rem] font-semibold text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+              className="inline-flex h-11 items-center gap-1 font-ui text-body-sm font-semibold text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
             >
               Privacy Policy →
             </Link>
             <Link
               href="/terms"
-              className="inline-flex h-11 items-center gap-1 font-ui text-[0.82rem] font-semibold text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
+              className="inline-flex h-11 items-center gap-1 font-ui text-body-sm font-semibold text-[var(--app-ink)]/50 transition hover:text-[var(--app-primary)]"
             >
               Terms of Use →
             </Link>

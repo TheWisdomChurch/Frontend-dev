@@ -108,7 +108,7 @@ function ResourceCarousel() {
       {/* Header */}
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="mb-2 font-ui text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Explore
           </p>
           <h3
@@ -186,16 +186,16 @@ function ResourceCarousel() {
 
                 {/* Content */}
                 <div className="relative z-10 p-6">
-                  <p className="font-ui text-[0.58rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                     {item.label}
                   </p>
-                  <p className="mt-1.5 font-headline text-[1.2rem] font-normal leading-snug text-white">
+                  <p className="mt-1.5 font-headline text-heading-sm font-normal leading-snug text-white">
                     {item.title}
                   </p>
-                  <p className="mt-1.5 font-ui text-[0.76rem] leading-[1.6] text-white/60">
+                  <p className="mt-1.5 font-ui text-label leading-[1.6] text-white/60">
                     {item.desc}
                   </p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
+                  <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
                     {item.cta}
                     <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </span>
@@ -290,7 +290,7 @@ export default function ResourceSection() {
         {/* ── Section header ───────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-3 text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            <p className="mb-3 text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Latest Message
             </p>
             <h2
@@ -303,7 +303,7 @@ export default function ResourceSection() {
           </div>
           <Link
             href="/resources/sermons"
-            className="group inline-flex items-center gap-1.5 text-[0.78rem] font-semibold text-[var(--app-primary)] transition"
+            className="group inline-flex items-center gap-1.5 text-label font-semibold text-[var(--app-primary)] transition"
           >
             All sermons
             <span className="transition duration-200 group-hover:translate-x-1">
@@ -322,7 +322,7 @@ export default function ResourceSection() {
         >
           {/* Left — content */}
           <motion.div variants={staggerItem} className="flex flex-col">
-            <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/35">
+            <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/35">
               {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} ·{' '}
               {SERVICE_INFO.dailyPrayer.label} {SERVICE_INFO.dailyPrayer.time}
             </p>
@@ -341,12 +341,12 @@ export default function ResourceSection() {
                 >
                   {recentVideo.title}
                 </h3>
-                <p className="mt-2 text-[0.82rem] text-[var(--app-ink)]/50">
+                <p className="mt-2 text-body-sm text-[var(--app-ink)]/50">
                   The Wisdom Church
                 </p>
               </>
             ) : (
-              <h3 className="font-headline text-[1.5rem] font-normal text-[var(--app-ink)]/40">
+              <h3 className="font-headline text-heading-md font-normal text-[var(--app-ink)]/40">
                 Message coming soon
               </h3>
             )}
@@ -357,7 +357,7 @@ export default function ResourceSection() {
                   href={videoUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   <PlayCircle className="h-4 w-4" />
                   Watch now
@@ -365,7 +365,7 @@ export default function ResourceSection() {
               ) : null}
               <Link
                 href="/resources/sermons"
-                className="inline-flex h-12 items-center gap-2 border border-[var(--app-ink)]/20 px-7 text-[0.8rem] font-semibold text-[var(--app-ink)] transition hover:border-[var(--app-ink)]/40 active:scale-[0.98]"
+                className="inline-flex h-12 items-center gap-2 border border-[var(--app-ink)]/20 px-7 text-body-sm font-semibold text-[var(--app-ink)] transition hover:border-[var(--app-ink)]/40 active:scale-[0.98]"
               >
                 All sermons <ArrowRight className="h-4 w-4" />
               </Link>

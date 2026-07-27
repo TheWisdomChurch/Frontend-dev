@@ -73,7 +73,7 @@ const selectClass =
   'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 const fieldLabelClass =
-  'font-ui text-[0.66rem] font-bold uppercase tracking-[0.15em] text-white/45';
+  'font-ui text-caption font-bold uppercase tracking-[0.15em] text-white/45';
 
 /* ─────────────────────────────────────────────────────────
    Modal shell
@@ -260,16 +260,16 @@ export default function HeroHighlights() {
                   </div>
 
                   <div className="mt-6">
-                    <p className="font-headline text-[1.35rem] font-normal leading-snug text-[var(--app-ink)]">
+                    <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
                       {action.label}
                     </p>
-                    <p className="mt-1 font-ui text-[0.78rem] text-[var(--app-ink)]/50">
+                    <p className="mt-1 font-ui text-label text-[var(--app-ink)]/50">
                       {action.sub}
                     </p>
                   </div>
 
                   <span
-                    className="mt-5 inline-flex items-center gap-1.5 font-ui text-[0.72rem] font-semibold text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:opacity-100"
+                    className="mt-5 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:opacity-100"
                     aria-hidden="true"
                   >
                     {action.cta} <ArrowRight className="h-3.5 w-3.5" />
@@ -331,7 +331,7 @@ export default function HeroHighlights() {
             </select>
           </div>
           <div className="space-y-3 border border-white/10 bg-white/[0.03] p-4">
-            <div className="flex items-center gap-2 font-ui text-[0.72rem] font-bold uppercase tracking-[0.12em] text-white/60">
+            <div className="flex items-center gap-2 font-ui text-label font-bold uppercase tracking-[0.12em] text-white/60">
               <CalendarClock className="h-3.5 w-3.5 text-[var(--app-primary)]" />
               Appointment details
             </div>
@@ -361,7 +361,7 @@ export default function HeroHighlights() {
                 />
               </label>
             </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 pt-1 font-ui text-[0.72rem] text-white/45">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 pt-1 font-ui text-label text-white/45">
               <span className="inline-flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} (
@@ -382,7 +382,7 @@ export default function HeroHighlights() {
           <Button
             type="submit"
             variant="primary"
-            className="h-12 w-full font-ui text-[0.85rem] font-bold"
+            className="h-12 w-full font-ui text-body-sm font-bold"
             loading={submitting}
             disabled={submitting}
           >
@@ -407,10 +407,10 @@ export default function HeroHighlights() {
               <Headphones className="h-4 w-4" />
             </div>
             <div>
-              <p className="font-ui text-[0.82rem] font-semibold text-white">
+              <p className="font-ui text-body-sm font-semibold text-white">
                 Service reminder
               </p>
-              <p className="mt-1 font-ui text-[0.76rem] leading-[1.6] text-white/50">
+              <p className="mt-1 font-ui text-label leading-[1.6] text-white/50">
                 We'll notify you before live service and direct you to the
                 active stream.
               </p>
@@ -435,7 +435,7 @@ export default function HeroHighlights() {
           <Button
             type="submit"
             variant="primary"
-            className="h-12 w-full font-ui text-[0.85rem] font-bold"
+            className="h-12 w-full font-ui text-body-sm font-bold"
             loading={submitting}
             disabled={submitting}
           >
