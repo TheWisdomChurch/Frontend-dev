@@ -110,14 +110,6 @@ export default function ConfessionPopup({
       forceBottomSheet
     >
       <div className="relative">
-        {/* Ambient glow */}
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -top-16 h-52 w-52 rounded-full bg-[var(--app-primary)]/20 blur-3xl"
-          animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.1, 1] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
         <AnimatePresence mode="wait">
           {currentStep === 'complete' ? (
             <motion.div

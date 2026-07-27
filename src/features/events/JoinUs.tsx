@@ -649,28 +649,24 @@ export default function JoinWisdomHouse() {
                   Marital status
                 </BodySM>
                 <div className="grid grid-cols-2 gap-2">
-                  <label className="flex cursor-pointer items-center gap-2.5 border border-white/10 bg-black/20 px-3 py-2.5">
-                    <input
-                      {...register('married')}
-                      type="radio"
-                      value="no"
-                      className="accent-[var(--app-primary)]"
-                    />
-                    <span className="font-ui text-sm text-white/70">
-                      Not married
-                    </span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-2.5 border border-white/10 bg-black/20 px-3 py-2.5">
-                    <input
-                      {...register('married')}
-                      type="radio"
-                      value="yes"
-                      className="accent-[var(--app-primary)]"
-                    />
-                    <span className="font-ui text-sm text-white/70">
-                      Married
-                    </span>
-                  </label>
+                  {(['no', 'yes'] as const).map(value => (
+                    <label
+                      key={value}
+                      className={`flex cursor-pointer items-center justify-center border px-3 py-2.5 font-ui text-[0.82rem] font-semibold transition ${
+                        marriedValue === value
+                          ? 'border-[var(--app-primary)]/50 bg-[var(--app-primary)]/10 text-white'
+                          : 'border-white/10 bg-black/20 text-white/55 hover:border-white/20 hover:text-white/75'
+                      }`}
+                    >
+                      <input
+                        {...register('married')}
+                        type="radio"
+                        value={value}
+                        className="sr-only"
+                      />
+                      {value === 'yes' ? 'Married' : 'Not married'}
+                    </label>
+                  ))}
                 </div>
                 {marriedValue === 'yes' && (
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">

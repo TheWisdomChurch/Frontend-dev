@@ -16,7 +16,6 @@ import {
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { Container } from '@/shared/layout';
-import { Card } from '@/shared/ui/cards';
 import { Button } from '@/shared/utils/buttons';
 import { Caption } from '@/shared/text';
 import { apiClient } from '@/lib/api';
@@ -68,10 +67,13 @@ const ACTIONS = [
 ───────────────────────────────────────────────────────── */
 
 const inputClass =
-  'w-full rounded-input border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 const selectClass =
-  'w-full rounded-input border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+
+const fieldLabelClass =
+  'font-ui text-[0.66rem] font-bold uppercase tracking-[0.15em] text-white/45';
 
 /* ─────────────────────────────────────────────────────────
    Modal shell
@@ -328,16 +330,14 @@ export default function HeroHighlights() {
               <option value="5+">5+ people</option>
             </select>
           </div>
-          <Card padding="sm" className="space-y-3 rounded-xl bg-white/[0.045]">
-            <div className="flex items-center gap-2 text-sm font-semibold text-white/85">
-              <CalendarClock className="h-4 w-4 text-[var(--app-primary)]" />
+          <div className="space-y-3 border border-white/10 bg-white/[0.03] p-4">
+            <div className="flex items-center gap-2 font-ui text-[0.72rem] font-bold uppercase tracking-[0.12em] text-white/60">
+              <CalendarClock className="h-3.5 w-3.5 text-[var(--app-primary)]" />
               Appointment details
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="space-y-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/55">
-                  Date
-                </span>
+                <span className={fieldLabelClass}>Date</span>
                 <input
                   type="date"
                   className={inputClass}
@@ -349,9 +349,7 @@ export default function HeroHighlights() {
                 />
               </label>
               <label className="space-y-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/55">
-                  Time
-                </span>
+                <span className={fieldLabelClass}>Time</span>
                 <input
                   type="time"
                   className={inputClass}
@@ -363,18 +361,18 @@ export default function HeroHighlights() {
                 />
               </label>
             </div>
-            <div className="flex flex-wrap gap-2 text-xs text-white/70">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-                <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />{' '}
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 pt-1 font-ui text-[0.72rem] text-white/45">
+              <span className="inline-flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} (
                 {SERVICE_INFO.sunday.timezone})
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-                <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />{' '}
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 We'll email directions
               </span>
             </div>
-          </Card>
+          </div>
           <textarea
             placeholder="Notes (optional) — kids, first time, prayer request, accessibility needs…"
             className={`${inputClass} min-h-[110px] resize-none`}
@@ -384,13 +382,13 @@ export default function HeroHighlights() {
           <Button
             type="submit"
             variant="primary"
-            className="w-full"
+            className="h-12 w-full font-ui text-[0.85rem] font-bold"
             loading={submitting}
             disabled={submitting}
           >
             Confirm appointment <ArrowRight className="h-4 w-4" />
           </Button>
-          <Caption className="text-white/50">
+          <Caption className="text-center text-white/40">
             We confirm by email and send a reminder. No spam, ever.
           </Caption>
         </form>
@@ -404,22 +402,20 @@ export default function HeroHighlights() {
         subtitle="Drop your email and we'll remind you 30 minutes before we go live."
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
-          <Card padding="sm" className="rounded-xl bg-white/[0.045]">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)] text-black">
-                <Headphones className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">
-                  Service reminder
-                </p>
-                <p className="mt-1 text-xs text-white/55">
-                  We'll notify you before live service and direct you to the
-                  active stream.
-                </p>
-              </div>
+          <div className="flex items-start gap-3 border border-white/10 bg-white/[0.03] p-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+              <Headphones className="h-4 w-4" />
             </div>
-          </Card>
+            <div>
+              <p className="font-ui text-[0.82rem] font-semibold text-white">
+                Service reminder
+              </p>
+              <p className="mt-1 font-ui text-[0.76rem] leading-[1.6] text-white/50">
+                We'll notify you before live service and direct you to the
+                active stream.
+              </p>
+            </div>
+          </div>
           <input
             type="text"
             placeholder="Full name"
@@ -439,13 +435,13 @@ export default function HeroHighlights() {
           <Button
             type="submit"
             variant="primary"
-            className="w-full"
+            className="h-12 w-full font-ui text-[0.85rem] font-bold"
             loading={submitting}
             disabled={submitting}
           >
             Notify me <ArrowRight className="h-4 w-4" />
           </Button>
-          <Caption className="text-white/50">
+          <Caption className="text-center text-white/40">
             Service reminders only. No spam.
           </Caption>
         </form>
