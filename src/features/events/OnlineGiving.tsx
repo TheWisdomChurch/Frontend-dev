@@ -44,25 +44,23 @@ export default function OnlineGiving() {
     };
   }, []);
 
-  const handleGive = useCallback(async (option: GivingOption) => {
+  const handleGive = useCallback((option: GivingOption) => {
     setSelected(option);
     setModalOpen(true);
-    try {
-      await apiClient.submitGivingIntent({
-        title: option.title,
-        description: option.description,
-        sourceChannel: 'frontend:web:online-giving',
-        metadata: { page: 'home', component: 'OnlineGiving' },
-      });
-    } catch {
-      // non-blocking
-    }
+    // Giving-intent tracking is disabled until the backend endpoint is
+    // properly configured — re-enable once /giving/intents is ready.
+    // apiClient.submitGivingIntent({
+    //   title: option.title,
+    //   description: option.description,
+    //   sourceChannel: 'frontend:web:online-giving',
+    //   metadata: { page: 'home', component: 'OnlineGiving' },
+    // }).catch(() => {});
   }, []);
 
   return (
     <>
       <Section padding="none" className="relative bg-[var(--app-dark)]">
-        <SectionGlow variant="double" />
+        <SectionGlow />
         <Container size="xl" className="py-section-lg">
           <div className="mx-auto max-w-[720px]">
             {/* Gold rule */}

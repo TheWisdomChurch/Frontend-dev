@@ -33,25 +33,15 @@ const isEligibleTarget = (node: Element): node is HTMLElement => {
 const collectRevealTargets = (root: HTMLElement): HTMLElement[] => {
   const unique = new Set<HTMLElement>();
 
+  // Pure opt-in: only elements explicitly tagged with one of the reveal
+  // data-attributes get a GSAP reveal. A blanket fallback that swept up
+  // every <section>/<article> site-wide used to live here too — it caused
+  // a tagged section and its own direct child to both get queued into the
+  // same batch (double-animating one nested element), and it fired on
+  // pages that never opted into this system at all (they already have
+  // their own Framer Motion `whileInView` reveals).
   root.querySelectorAll(EXPLICIT_REVEAL_SELECTOR).forEach(node => {
     if (isEligibleTarget(node)) unique.add(node);
-  });
-
-  const sections = root.querySelectorAll<HTMLElement>(
-    'section, article, [data-scroll-block]'
-  );
-
-  sections.forEach(section => {
-    const directChildren = Array.from(section.children).filter(
-      isEligibleTarget
-    );
-
-    if (directChildren.length > 0) {
-      directChildren.forEach(child => unique.add(child));
-      return;
-    }
-
-    if (isEligibleTarget(section)) unique.add(section);
   });
 
   return Array.from(unique);

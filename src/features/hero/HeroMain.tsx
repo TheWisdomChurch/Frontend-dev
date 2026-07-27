@@ -5,7 +5,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image, { type StaticImageData } from 'next/image';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, CalendarDays, PlayCircle } from 'lucide-react';
 
 import { Section, Container } from '@/shared/layout';
@@ -15,13 +14,6 @@ import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import type { YouTubeVideo } from '@/lib/types';
 import { IMAGE_QUALITY } from '@/shared/constants';
-
-if (
-  typeof window !== 'undefined' &&
-  typeof gsap.registerPlugin === 'function'
-) {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
@@ -165,47 +157,11 @@ export default function HeroSection({
           { y: 14, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.55 },
           '-=0.4'
-        )
-        .call(() => {
-          // Gentle continuous float on eyebrow after entry
-          gsap.to(eyebrowRef.current, {
-            y: -4,
-            duration: 2.2,
-            yoyo: true,
-            repeat: -1,
-            ease: 'sine.inOut',
-          });
-        });
+        );
     }, heroRef);
 
     return () => ctx.revert();
   }, [currentSlide]);
-
-  // GSAP parallax on background
-  useEffect(() => {
-    if (!heroRef.current) return;
-    const prefersReduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-    if (prefersReduced) return;
-
-    const ctx = gsap.context(() => {
-      (gsap.utils.toArray('[data-parallax]') as HTMLElement[]).forEach(el => {
-        gsap.to(el, {
-          yPercent: Number(el.dataset.parallax ?? 0.14) * 16,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        });
-      });
-    }, heroRef);
-
-    return () => ctx.revert();
-  }, []);
 
   // Fetch latest sermon video
   useEffect(() => {
@@ -314,7 +270,10 @@ export default function HeroSection({
                 i === activeSlideIndex ? 'z-10 opacity-100' : 'z-0 opacity-0',
               ].join(' ')}
             >
-              <div className="relative h-full w-full" data-parallax="0.18">
+              <div
+                className="relative h-full w-full"
+                data-parallax-global="0.18"
+              >
                 {img.src ? (
                   <Image
                     src={img.src}

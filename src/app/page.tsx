@@ -179,77 +179,47 @@ export default function Home() {
       <div className="relative flex w-full flex-col">
         <HeroMain />
 
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
+        <section className="home-section perf-section" suppressHydrationWarning>
           <WhatWeDo />
         </section>
 
-        <section
-          className="home-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
+        <section className="home-section perf-section" suppressHydrationWarning>
           <HeroHighlights />
         </section>
 
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
+        <section className="home-section perf-section" suppressHydrationWarning>
           <EventsShowcase />
         </section>
 
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
+        <section className="home-section perf-section" suppressHydrationWarning>
           <SeniorPastor />
         </section>
 
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
+        <section className="home-section perf-section" suppressHydrationWarning>
           <HomeTestimonials />
         </section>
 
         <section
           id="join"
           className="home-section perf-section scroll-mt-24"
-          data-gsap="reveal"
           suppressHydrationWarning
         >
           <JoinUs />
         </section>
 
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
+        <section className="home-section perf-section" suppressHydrationWarning>
           <ConnectPortal />
         </section>
 
         <section
           id="giving"
           className="home-section perf-section scroll-mt-24"
-          data-gsap="reveal"
           suppressHydrationWarning
         >
           <OnlineGiving />
         </section>
 
-        <section
-          className="home-section perf-section"
-          data-gsap="reveal"
-          suppressHydrationWarning
-        >
+        <section className="home-section perf-section" suppressHydrationWarning>
           <ResourceSection />
         </section>
       </div>

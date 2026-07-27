@@ -344,7 +344,7 @@ export default function JoinWisdomHouse() {
       fullHeight={false}
       className="relative overflow-hidden bg-[var(--app-dark)]"
     >
-      <SectionGlow variant="double" />
+      <SectionGlow />
 
       {/* ── Photo banner ─────────────────────────────────────── */}
       <div className="relative overflow-hidden border-b border-white/8">
