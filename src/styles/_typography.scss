@@ -43,77 +43,11 @@ $font-weight-semibold: 600;
 $font-weight-bold: 700;
 $font-weight-extrabold: 800;
 
-// Display/Hero Text
-%text-display {
-  font-size: $text-display;
-  font-weight: $font-weight-bold;
-  line-height: $line-height-tight;
-  letter-spacing: $letter-spacing-tight;
-}
-
-// Heading 1
-%text-h1 {
-  font-size: $text-h1;
-  font-weight: $font-weight-bold;
-  line-height: $line-height-tight;
-  letter-spacing: $letter-spacing-tight;
-}
-
-// Heading 2
-%text-h2 {
-  font-size: $text-h2;
-  font-weight: $font-weight-bold;
-  line-height: $line-height-tight;
-  letter-spacing: $letter-spacing-tight;
-}
-
-// Heading 3
-%text-h3 {
-  font-size: $text-h3;
-  font-weight: $font-weight-semibold;
-  line-height: $line-height-normal;
-  letter-spacing: $letter-spacing-normal;
-}
-
-// Heading 4
-%text-h4 {
-  font-size: $text-h4;
-  font-weight: $font-weight-semibold;
-  line-height: $line-height-normal;
-  letter-spacing: $letter-spacing-normal;
-}
-
-// Body Large
-%text-body-lg {
-  font-size: $text-body-lg;
-  font-weight: $font-weight-normal;
-  line-height: $line-height-relaxed;
-  letter-spacing: $letter-spacing-normal;
-}
-
-// Body
-%text-body {
-  font-size: $text-body;
-  font-weight: $font-weight-normal;
-  line-height: $line-height-relaxed;
-  letter-spacing: $letter-spacing-normal;
-}
-
-// Body Small
-%text-body-sm {
-  font-size: $text-body-sm;
-  font-weight: $font-weight-normal;
-  line-height: $line-height-relaxed;
-  letter-spacing: $letter-spacing-normal;
-}
-
-// Caption
-%text-caption {
-  font-size: $text-caption;
-  font-weight: $font-weight-normal;
-  line-height: $line-height-normal;
-  letter-spacing: $letter-spacing-wide;
-}
+// Display/Hero/H1-H4/Body/Body-lg/Body-sm/Caption text presets used to live
+// here as fixed-pixel, non-fluid duplicates — all had zero real usage except
+// where their class names collided with the fluid `--type-*` scale now
+// registered in tailwind.config.ts (text-body-sm/body-lg/caption). Removed
+// rather than left to silently fight the real system over cascade order.
 
 // Extra Small
 %text-xs {
@@ -124,42 +58,6 @@ $font-weight-extrabold: 800;
 }
 
 // Utility Classes
-.text-display {
-  @extend %text-display;
-}
-
-.text-h1 {
-  @extend %text-h1;
-}
-
-.text-h2 {
-  @extend %text-h2;
-}
-
-.text-h3 {
-  @extend %text-h3;
-}
-
-.text-h4 {
-  @extend %text-h4;
-}
-
-.text-body-lg {
-  @extend %text-body-lg;
-}
-
-.text-body {
-  @extend %text-body;
-}
-
-.text-body-sm {
-  @extend %text-body-sm;
-}
-
-.text-caption {
-  @extend %text-caption;
-}
-
 .text-xs {
   @extend %text-xs;
 }
