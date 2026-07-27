@@ -505,7 +505,10 @@ export default function EventsShowcase() {
               >
                 {/* Featured */}
                 {featured && (
-                  <motion.div variants={staggerItem}>
+                  <motion.div
+                    variants={staggerItem}
+                    className="sm:col-span-2 lg:col-span-1"
+                  >
                     <FeaturedCard
                       slide={featured}
                       fullWidth={onlyFeatured}
