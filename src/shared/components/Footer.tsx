@@ -61,16 +61,16 @@ const CONNECT = [
 
 const SOCIALS = [
   {
-    href: 'https://www.instagram.com/wisdomchurchhq',
+    href: 'https://www.instagram.com/wisdomhousehq',
     label: 'Instagram',
     Icon: Ig,
   },
   {
-    href: 'https://www.youtube.com/@wisdomchurchhq',
+    href: 'https://www.youtube.com/@wisdomhousehq',
     label: 'YouTube',
     Icon: Yt,
   },
-  { href: 'https://facebook.com/wisdomchurchhq', label: 'Facebook', Icon: Fb },
+  { href: 'https://facebook.com/wisdomhousehq', label: 'Facebook', Icon: Fb },
 ];
 
 /* ── Column header ─────────────────────────────────────── */

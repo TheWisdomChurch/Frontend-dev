@@ -199,7 +199,7 @@ export default function HeroSection({
 
   const watchHref = latestVideo
     ? `https://www.youtube.com/watch?v=${(latestVideo as any).id || ''}`
-    : 'https://www.youtube.com/@wisdomchurchhq';
+    : 'https://www.youtube.com/@wisdomhousehq';
 
   const primaryCtaHref = content?.primaryCta?.href ?? '/events/weekly';
   const primaryCtaLabel = content?.primaryCta?.label ?? 'Plan a visit';

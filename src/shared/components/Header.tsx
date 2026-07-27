@@ -62,9 +62,9 @@ const DESKTOP_NAV: NavItem[] = [
 ];
 
 const SOCIALS = [
-  { label: 'Instagram', href: 'https://www.instagram.com/wisdomchurchhq' },
-  { label: 'YouTube', href: 'https://www.youtube.com/@wisdomchurchhq' },
-  { label: 'Facebook', href: 'https://facebook.com/wisdomchurchhq' },
+  { label: 'Instagram', href: 'https://www.instagram.com/wisdomhousehq' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@wisdomhousehq' },
+  { label: 'Facebook', href: 'https://facebook.com/wisdomhousehq' },
 ];
 
 export default function Header() {

@@ -60,22 +60,22 @@ const WaIcon = () => (
 const SOCIALS = [
   {
     label: 'YouTube',
-    href: 'https://www.youtube.com/@wisdomchurchhq',
+    href: 'https://www.youtube.com/@wisdomhousehq',
     Icon: YtIcon,
   },
   {
     label: 'Facebook',
-    href: 'https://www.facebook.com/wisdomchurchhq',
+    href: 'https://www.facebook.com/wisdomhousehq',
     Icon: FbIcon,
   },
   {
     label: 'Instagram',
-    href: 'https://www.instagram.com/wisdomchurchhq',
+    href: 'https://www.instagram.com/wisdomhousehq',
     Icon: IgIcon,
   },
   {
     label: 'X',
-    href: 'https://x.com/wisdomchurchhq',
+    href: 'https://x.com/wisdomhousehq',
     Icon: XIcon,
   },
 ];
@@ -170,7 +170,7 @@ export default function ConnectPortal() {
           >
             {/* Stream live */}
             <a
-              href="https://www.youtube.com/@wisdomchurchhq"
+              href="https://www.youtube.com/@wisdomhousehq"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-[0.78rem] font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"

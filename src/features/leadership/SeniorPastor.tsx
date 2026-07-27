@@ -72,10 +72,10 @@ const SOCIALS = [
   },
   {
     label: 'YouTube',
-    href: 'https://www.youtube.com/@wisdomchurchhq',
+    href: 'https://www.youtube.com/@wisdomhousehq',
     Icon: YtIcon,
   },
-  { label: 'X', href: 'https://x.com/wisdomchurchhq', Icon: XIcon },
+  { label: 'X', href: 'https://x.com/wisdomhousehq', Icon: XIcon },
 ];
 
 const BIO_PREVIEW_LENGTH = 220;

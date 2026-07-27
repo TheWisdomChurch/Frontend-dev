@@ -274,7 +274,7 @@ export const communityLinks = [
     iconFA: true,
     title: 'Follow Us on Instagram',
     description: 'Stay updated with our latest posts and stories',
-    url: 'https://www.instagram.com/wisdomchurchhq',
+    url: 'https://www.instagram.com/wisdomhousehq',
     bgColor: 'from-pink-500 to-pink-600',
     hoverColor: 'hover:from-pink-600 hover:to-pink-700',
   },

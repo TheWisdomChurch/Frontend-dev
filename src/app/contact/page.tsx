@@ -80,20 +80,20 @@ function ContactPageContent() {
     () => [
       {
         platform: 'Instagram',
-        handle: '@wisdomchurchhq',
-        href: 'https://instagram.com/wisdomchurchhq',
+        handle: '@wisdomhousehq',
+        href: 'https://instagram.com/wisdomhousehq',
         icon: Camera,
       },
       {
         platform: 'Facebook',
-        handle: '@wisdomchurchhq',
-        href: 'https://facebook.com/wisdomchurchhq',
+        handle: '@wisdomhousehq',
+        href: 'https://facebook.com/wisdomhousehq',
         icon: Users,
       },
       {
         platform: 'YouTube',
-        handle: 'Wisdom Church',
-        href: 'https://youtube.com/@wisdomchurchhq',
+        handle: '@wisdomhousehq',
+        href: 'https://youtube.com/@wisdomhousehq',
         icon: PlayCircle,
       },
     ],
