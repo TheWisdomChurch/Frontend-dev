@@ -176,13 +176,13 @@ export default async function AboutPage() {
           </ScrollFadeIn>
 
           {/* Photo column */}
-          <div className="relative h-72 order-1 lg:order-2 lg:h-auto">
+          <div className="relative order-1 aspect-[4/3] min-h-64 sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:h-auto">
             <Image
               quality={IMAGE_QUALITY}
               src={lader_1}
               alt="Wisdom Church congregation"
               fill
-              className="object-cover object-center"
+              className="object-cover object-[center_30%] sm:object-center"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
             {/* Gradient blends photo into the dark text column on desktop */}

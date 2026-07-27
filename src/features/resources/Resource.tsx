@@ -22,6 +22,7 @@ import type { YouTubeVideo } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import { Media } from '@/shared/ui/Media';
 import {
   staggerContainer,
   staggerItem,
@@ -384,11 +385,11 @@ export default function ResourceSection() {
             ) : recentVideo ? (
               <>
                 {thumb ? (
-                  <img
+                  <Media
                     src={thumb}
                     alt={recentVideo.title}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    loading="lazy"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-center"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-[var(--app-ink)]/8" />

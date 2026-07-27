@@ -197,7 +197,7 @@ export default function MinistriesPage() {
               <ScrollFadeIn key={ministry.title} delay={i * 0.07}>
                 <Link
                   href={ministry.href}
-                  className="group relative flex min-h-[480px] flex-col overflow-hidden lg:min-h-[520px]"
+                  className="group relative flex aspect-[4/5] min-h-[440px] w-full flex-col overflow-hidden sm:aspect-[3/4] lg:aspect-auto lg:min-h-[520px]"
                 >
                   {/* Background image */}
                   <Image
@@ -206,7 +206,7 @@ export default function MinistriesPage() {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     quality={IMAGE_QUALITY}
-                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                    className="object-cover object-[center_20%] sm:object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   />
 
                   {/* Atmospheric colour overlay */}

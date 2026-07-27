@@ -227,9 +227,7 @@ export default function HeroSection({
             priority
             sizes="100vw"
             quality={IMAGE_QUALITY}
-            className="object-cover animate-[kenburns_18s_ease-in-out_infinite_alternate]"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ objectPosition: 'center 30%' }}
+            className="object-cover object-[center_22%] sm:object-[center_28%] lg:object-[center_30%] animate-[kenburns_18s_ease-in-out_infinite_alternate]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/58 to-black/22" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/38 via-transparent to-black/68" />
@@ -246,9 +244,7 @@ export default function HeroSection({
             priority
             sizes="100vw"
             quality={IMAGE_QUALITY}
-            className="object-cover"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ objectPosition: 'center 28%' }}
+            className="object-cover object-[center_20%] sm:object-[center_25%] lg:object-[center_28%]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/55 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/65" />
@@ -282,10 +278,12 @@ export default function HeroSection({
                     priority={i === 0}
                     sizes="100vw"
                     quality={IMAGE_QUALITY}
-                    className="object-cover"
+                    className="object-cover object-[center_20%] sm:object-[center_25%] lg:object-[center_28%]"
                     // eslint-disable-next-line no-restricted-syntax
                     style={{
-                      objectPosition: img.objectPosition || 'center 28%',
+                      ...(img.objectPosition
+                        ? { objectPosition: img.objectPosition }
+                        : {}),
                     }}
                   />
                 ) : (

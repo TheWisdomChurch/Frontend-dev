@@ -61,7 +61,7 @@ export default function ChildrenGallery() {
   return (
     <div className="relative select-none">
       {/* Slides */}
-      <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/9] lg:aspect-[21/9]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[16/9] lg:aspect-[21/9]">
         {slides.map((slide, i) => (
           <div
             key={i}
@@ -73,7 +73,7 @@ export default function ChildrenGallery() {
               src={slide.src}
               alt={slide.alt}
               fill
-              className="object-cover object-center"
+              className="object-cover object-[center_25%] sm:object-center"
               priority={i === 0}
               sizes="100vw"
               quality={IMAGE_QUALITY}

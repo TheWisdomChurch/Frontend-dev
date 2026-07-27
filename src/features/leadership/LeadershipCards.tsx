@@ -24,12 +24,12 @@ export function CanvasCard({ leader }: { leader: LeadershipMember }) {
   return (
     <article className="group flex flex-col bg-[var(--app-canvas)]">
       {/* Image */}
-      <div className="relative h-[420px] overflow-hidden bg-[var(--app-canvas-2)] sm:h-[360px] lg:h-[480px]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--app-canvas-2)] sm:aspect-[3/4] lg:aspect-[4/5]">
         <Media
           src={leader.imageUrl}
           alt={name}
           sizes="(max-width: 640px) 100vw, 50vw"
-          className="object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
+          className="object-[center_12%] sm:object-[center_8%] transition duration-700 group-hover:scale-[1.025]"
           fallback={
             <span className="font-headline text-display-xl font-normal leading-none text-[var(--app-ink)]/8">
               {initials(leader.firstName, leader.lastName)}
@@ -62,7 +62,7 @@ export function CanvasCard({ leader }: { leader: LeadershipMember }) {
 export function DarkCard({ leader }: { leader: LeadershipMember }) {
   const name = `${leader.firstName} ${leader.lastName}`.trim();
   return (
-    <article className="group relative min-h-[520px] overflow-hidden bg-[var(--app-dark)] lg:min-h-[580px]">
+    <article className="group relative aspect-[4/5] min-h-[460px] overflow-hidden bg-[var(--app-dark)] sm:aspect-[3/4] lg:aspect-auto lg:min-h-[580px]">
       <Media
         src={leader.imageUrl}
         alt={name}

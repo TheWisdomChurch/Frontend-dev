@@ -7,6 +7,7 @@ import PageHero from '@/features/hero/PageHero';
 import YouTubePlayer from './YoutubePlayer';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import { Media } from '@/shared/ui/Media';
 import { useSermonUtil } from '@/shared/utils/hooks/useSermon';
 import type {
   YouTubeVideo,
@@ -153,12 +154,11 @@ function SermonCard({
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden bg-[var(--app-dark-2)]">
         {video.thumbnail ? (
-          <img
+          <Media
             src={video.thumbnail}
             alt={video.title}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-            loading="lazy"
-            decoding="async"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -216,12 +216,11 @@ function CategoryCard({
       {/* Thumbnail strip */}
       <div className="relative h-28 overflow-hidden bg-[var(--app-canvas-2)]">
         {group.latestThumbnail && (
-          <img
+          <Media
             src={group.latestThumbnail}
             alt={group.name}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-            loading="lazy"
-            decoding="async"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="transition duration-500 group-hover:scale-[1.04]"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-canvas)]/90 to-transparent" />
@@ -436,12 +435,11 @@ const SermonUtil = () => {
                             }
                           >
                             <div className="relative shrink-0">
-                              <img
+                              <Media
                                 src={video.thumbnail}
                                 alt={video.title}
-                                className="h-14 w-20 object-cover"
-                                loading="lazy"
-                                decoding="async"
+                                frameClassName="h-14 w-20"
+                                sizes="80px"
                               />
                               {isActive && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/55 pl-0.5 text-white">

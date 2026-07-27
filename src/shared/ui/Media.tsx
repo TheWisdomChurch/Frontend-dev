@@ -25,6 +25,8 @@ interface MediaProps {
   priority?: boolean;
   quality?: number;
   fallback?: ReactNode;
+  /** Use contain for artwork/logos that must remain fully visible. */
+  fit?: 'cover' | 'contain';
 }
 
 /**
@@ -43,9 +45,13 @@ export function Media({
   priority,
   quality = IMAGE_QUALITY,
   fallback,
+  fit = 'cover',
 }: MediaProps) {
-  const [failed, setFailed] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const sourceKey = typeof src === 'string' ? src : src?.src;
+  const [failedSource, setFailedSource] = useState<string>();
+  const [loadedSource, setLoadedSource] = useState<string>();
+  const failed = failedSource === sourceKey;
+  const loaded = loadedSource === sourceKey;
 
   if (!src || failed) {
     return (
@@ -83,9 +89,13 @@ export function Media({
         sizes={sizes}
         quality={quality}
         priority={priority}
-        onLoad={() => setLoaded(true)}
-        onError={() => setFailed(true)}
-        className={cn('object-cover', className)}
+        onLoad={() => setLoadedSource(sourceKey)}
+        onError={() => setFailedSource(sourceKey)}
+        className={cn(
+          'h-full w-full',
+          fit === 'contain' ? 'object-contain' : 'object-cover',
+          className
+        )}
       />
     </div>
   );
