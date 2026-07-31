@@ -114,7 +114,6 @@ export default function PromoAdModal({
                 alt={title}
                 frameClassName="bg-transparent"
                 sizes="(max-width: 480px) 100vw, 420px"
-                priority
               />
             ) : IconFallback ? (
               <div className="flex h-full w-full items-center justify-center">

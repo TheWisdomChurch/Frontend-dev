@@ -70,16 +70,23 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   async headers() {
-    // Third-party origins the app actually loads scripts/beacons/frames
-    // from — keep in sync with MetaPixel.tsx, ga.ts, the Ahrefs Script tag
-    // in layout.tsx, and next.config's images.remotePatterns.
+    // Static (not nonce-based) by deliberate choice: a nonce has to be
+    // baked into the HTML fresh per request, which forces every route
+    // through dynamic SSR instead of static generation — real cost for a
+    // mostly-static site. 'unsafe-inline' on script-src is the trade-off;
+    // the app has no dangerouslySetInnerHTML rendering anything but its
+    // own JSON-LD, so there's no current injection surface this protects
+    // against. Third-party origins kept in sync with MetaPixel.tsx,
+    // ga.ts, the Ahrefs Script tag in layout.tsx, and Cloudflare's
+    // auto-injected beacon (present whenever the site is proxied through
+    // Cloudflare, not something this app's code controls).
     const csp = [
       "default-src 'self'",
-      "script-src 'self' https://analytics.ahrefs.com https://connect.facebook.net https://www.googletagmanager.com",
+      "script-src 'self' 'unsafe-inline' https://analytics.ahrefs.com https://connect.facebook.net https://www.googletagmanager.com https://static.cloudflareinsights.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://*.ytimg.com https://*.supabase.co https://www.facebook.com",
       "font-src 'self' data:",
-      "connect-src 'self' https://analytics.ahrefs.com https://www.google-analytics.com https://www.facebook.com",
+      "connect-src 'self' https://analytics.ahrefs.com https://www.google-analytics.com https://www.facebook.com https://cloudflareinsights.com",
       "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
       "object-src 'none'",
       "base-uri 'self'",
