@@ -351,15 +351,15 @@ export default function PublicFormPage() {
   }, [submitted, returnDelayMs, returnPath, router]);
 
   useEffect(() => {
-    if (!formSlug) {
-      setLoading(false);
-      setError('Invalid form link.');
-      return;
-    }
-
     let mounted = true;
 
     const load = async () => {
+      if (!formSlug) {
+        setLoading(false);
+        setError('Invalid form link.');
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
@@ -467,25 +467,6 @@ export default function PublicFormPage() {
   const visibleFields = useMemo(() => {
     return sortedFields.filter(field => isFieldVisible(field, answers));
   }, [answers, sortedFields]);
-
-  useEffect(() => {
-    const visibleKeys = new Set(visibleFields.map(field => field.key));
-
-    setFieldErrors(current => {
-      const next: Record<string, string> = {};
-      let changed = false;
-
-      Object.entries(current).forEach(([key, message]) => {
-        if (visibleKeys.has(key)) {
-          next[key] = message;
-        } else {
-          changed = true;
-        }
-      });
-
-      return changed ? next : current;
-    });
-  }, [visibleFields]);
 
   const handleChange = (key: string, value: unknown) => {
     setAnswers(current => ({ ...current, [key]: value }));

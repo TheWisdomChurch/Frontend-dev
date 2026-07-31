@@ -89,7 +89,9 @@ export default function TestimoniesPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [shareUrl, setShareUrl] = useState(TESTIMONIAL_FORM_BASE_URL);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  // Derived directly from the URL — no local state needed; closing the
+  // modal strips the query param via router.replace, which flips this back.
+  const showSuccessModal = searchParams.get('testimonial_submitted') === '1';
 
   useEffect(() => {
     let mounted = true;
@@ -117,35 +119,39 @@ export default function TestimoniesPage() {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    // window.location is only available client-side — this can't be
+    // computed at render time without a server/client hydration mismatch,
+    // so it's resolved once after mount instead.
+    const resolveShareUrl = () => {
+      if (typeof window === 'undefined') return;
 
-    try {
-      const returnTo = `${window.location.origin}/testimonies?testimonial_submitted=1`;
-      const resolved = new URL(
-        TESTIMONIAL_FORM_BASE_URL,
-        window.location.origin
-      );
+      try {
+        const returnTo = `${window.location.origin}/testimonies?testimonial_submitted=1`;
+        const resolved = new URL(
+          TESTIMONIAL_FORM_BASE_URL,
+          window.location.origin
+        );
 
-      resolved.searchParams.set('return_to', returnTo);
-      resolved.searchParams.set('return_delay_ms', '1800');
-      setShareUrl(resolved.toString());
-    } catch {
-      setShareUrl(TESTIMONIAL_FORM_BASE_URL);
-    }
+        resolved.searchParams.set('return_to', returnTo);
+        resolved.searchParams.set('return_delay_ms', '1800');
+        setShareUrl(resolved.toString());
+      } catch {
+        setShareUrl(TESTIMONIAL_FORM_BASE_URL);
+      }
+    };
+
+    resolveShareUrl();
   }, []);
-
-  useEffect(() => {
-    if (searchParams.get('testimonial_submitted') === '1') {
-      setShowSuccessModal(true);
-    }
-  }, [searchParams]);
 
   const visibleTestimonies = useMemo(
     () => testimonies.slice(0, 12),
     [testimonies]
   );
 
-  const activeTestimony = visibleTestimonies[activeIndex];
+  // Clamped at read time instead of an effect — visibleTestimonies can
+  // shrink (e.g. after the initial fetch resolves) leaving a stale index.
+  const activeTestimony =
+    visibleTestimonies[activeIndex] ?? visibleTestimonies[0];
 
   const goNext = useCallback(() => {
     setActiveIndex(prev =>
@@ -168,12 +174,7 @@ export default function TestimoniesPage() {
     return () => window.clearInterval(timer);
   }, [goNext, visibleTestimonies.length]);
 
-  useEffect(() => {
-    if (activeIndex >= visibleTestimonies.length) setActiveIndex(0);
-  }, [activeIndex, visibleTestimonies.length]);
-
   const closeSuccessModal = () => {
-    setShowSuccessModal(false);
     router.replace('/testimonies');
   };
 

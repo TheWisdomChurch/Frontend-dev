@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/shared/utils/hooks/redux';
 import { clearCart } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
@@ -69,7 +69,7 @@ const CheckoutForm = () => {
     return `WH-${timestamp}-${randomStr}`;
   };
 
-  const [orderId] = useState(generateOrderId());
+  const [orderId] = useState(() => generateOrderId());
 
   const deliveryFee = Math.max(1000, total * 0.1);
   const grandTotal =
@@ -108,24 +108,6 @@ const CheckoutForm = () => {
     accountName: 'Wisdom Church Store',
     accountNumber: '1012879868',
   };
-
-  useEffect(() => {
-    if (formData.paymentMethod !== 'transfer') {
-      setFormData(prev => ({
-        ...prev,
-        paymentSlip: null,
-        customerAccountName: '',
-        customerBankName: '',
-      }));
-      setFormErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.paymentSlip;
-        delete newErrors.customerAccountName;
-        delete newErrors.customerBankName;
-        return newErrors;
-      });
-    }
-  }, [formData.paymentMethod]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -424,11 +406,31 @@ const CheckoutForm = () => {
                   onClick={() => {
                     if (method.id === 'online') {
                       setShowOnlinePaymentModal(true);
-                    } else {
-                      setFormData(prev => ({
-                        ...prev,
-                        paymentMethod: method.id as PaymentMethod,
-                      }));
+                      return;
+                    }
+
+                    const nextMethod = method.id as PaymentMethod;
+
+                    setFormData(prev => ({
+                      ...prev,
+                      paymentMethod: nextMethod,
+                      ...(nextMethod !== 'transfer'
+                        ? {
+                            paymentSlip: null,
+                            customerAccountName: '',
+                            customerBankName: '',
+                          }
+                        : {}),
+                    }));
+
+                    if (nextMethod !== 'transfer') {
+                      setFormErrors(prev => {
+                        const newErrors = { ...prev };
+                        delete newErrors.paymentSlip;
+                        delete newErrors.customerAccountName;
+                        delete newErrors.customerBankName;
+                        return newErrors;
+                      });
                     }
                   }}
                   className={`relative p-4 rounded-2xl !justify-start text-left text-white bg-white/[0.04] ${
