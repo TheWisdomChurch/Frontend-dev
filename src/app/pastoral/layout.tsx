@@ -1,30 +1,18 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-import { buildHreflangAlternates } from '@/lib/seo';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Pastoral Care & Counseling',
+// Single source of truth for /pastoral — page.tsx used to also export a
+// partial `metadata` (title+description only), which silently won the
+// <title> tag while this layout's openGraph/twitter kept showing a
+// different title. Consolidated here so every surface agrees.
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Pastoral Care',
   description:
-    'Access pastoral support, counseling, prayer, and care pathways at The Wisdom Church.',
-  openGraph: {
-    title: 'Pastoral Care & Counseling | The Wisdom Church',
-    description:
-      'Access pastoral support, counseling, prayer, and care pathways at The Wisdom Church.',
-    url: 'https://wisdomchurchhq.org/pastoral',
-    images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Pastoral Care & Counseling | The Wisdom Church',
-    description: 'Access pastoral support, counseling, prayer, and care.',
-    images: ['https://wisdomchurchhq.org/og-image.webp'],
-  },
-  alternates: {
-    canonical: '/pastoral',
-    languages: buildHreflangAlternates('/pastoral'),
-  },
-};
+    'Pastoral counseling and prayer support at The Wisdom Church. Confidential, caring, and always available.',
+  path: '/pastoral',
+});
 
 export default function PastoralLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;

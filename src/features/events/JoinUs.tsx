@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import * as ZodResolvers from '@hookform/resolvers/zod';
 import {
@@ -249,13 +249,17 @@ export default function JoinWisdomHouse() {
     handleSubmit: handleModalSubmit,
     formState: { errors },
     reset,
-    watch,
+    control,
   } = useForm<ModalValues>({
     resolver: zodResolver(modalSchema),
     defaultValues,
   });
 
-  const marriedValue = watch('married');
+  // useWatch (not form.watch()) — watch() returns a plain function that
+  // isn't a stable reactive subscription, so React Compiler can't safely
+  // memoize this component around it. useWatch is a proper hook that
+  // subscribes correctly and re-renders only when 'married' changes.
+  const marriedValue = useWatch({ control, name: 'married' });
 
   const openFor = useCallback(
     (dept: Department) => {

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -62,9 +63,9 @@ const DESKTOP_NAV: NavItem[] = [
 ];
 
 const SOCIALS = [
-  { label: 'Instagram', href: 'https://www.instagram.com/wisdomhousehq' },
-  { label: 'YouTube', href: 'https://www.youtube.com/@wisdomhousehq' },
-  { label: 'Facebook', href: 'https://facebook.com/wisdomhousehq' },
+  { label: 'Instagram', href: SOCIAL_LINKS.instagram },
+  { label: 'YouTube', href: SOCIAL_LINKS.youtube },
+  { label: 'Facebook', href: SOCIAL_LINKS.facebook },
 ];
 
 export default function Header() {

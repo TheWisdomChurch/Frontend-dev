@@ -1,30 +1,14 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-import { buildHreflangAlternates } from '@/lib/seo';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Testimonies — Lives Transformed',
   description:
     'Read faith-building testimonies of healing, restoration, and transformation from The Wisdom Church community.',
-  openGraph: {
-    title: 'Testimonies — Lives Transformed | The Wisdom Church',
-    description:
-      'Read faith-building testimonies of healing, restoration, and transformation from The Wisdom Church community.',
-    url: 'https://wisdomchurchhq.org/testimonies',
-    images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Testimonies | The Wisdom Church',
-    description: 'Testimonies of healing, restoration, and transformation.',
-    images: ['https://wisdomchurchhq.org/og-image.webp'],
-  },
-  alternates: {
-    canonical: '/testimonies',
-    languages: buildHreflangAlternates('/testimonies'),
-  },
-};
+  path: '/testimonies',
+});
 
 export default function TestimoniesLayout({
   children,

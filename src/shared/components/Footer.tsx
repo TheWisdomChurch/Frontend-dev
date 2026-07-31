@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { useState } from 'react';
 import { MapPin, Mail, Phone } from 'lucide-react';
 
@@ -61,16 +62,16 @@ const CONNECT = [
 
 const SOCIALS = [
   {
-    href: 'https://www.instagram.com/wisdomhousehq',
+    href: SOCIAL_LINKS.instagram,
     label: 'Instagram',
     Icon: Ig,
   },
   {
-    href: 'https://www.youtube.com/@wisdomhousehq',
+    href: SOCIAL_LINKS.youtube,
     label: 'YouTube',
     Icon: Yt,
   },
-  { href: 'https://facebook.com/wisdomhousehq', label: 'Facebook', Icon: Fb },
+  { href: SOCIAL_LINKS.facebook, label: 'Facebook', Icon: Fb },
 ];
 
 /* ── Column header ─────────────────────────────────────── */
@@ -192,11 +193,11 @@ export default function Footer() {
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
-                0706 999 5333
+                {CONTACT_INFO.phone}
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
-                wisdomhousehq@gmail.com
+                {CONTACT_INFO.email}
               </p>
             </div>
           </div>

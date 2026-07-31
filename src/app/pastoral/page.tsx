@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -10,11 +9,9 @@ import PastoralCareUnit from '@/shared/ui/forms/eventsForm/PastoralCare';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Pastoral Care',
-  description:
-    'Pastoral counseling and prayer support at The Wisdom Church. Confidential, caring, and always available.',
-};
+// Metadata for this route lives in pastoral/layout.tsx — a single source
+// of truth for title/description/canonical/OG/twitter instead of two
+// partially-overlapping exports.
 
 /* ── Care services ──────────────────────────────────────── */
 

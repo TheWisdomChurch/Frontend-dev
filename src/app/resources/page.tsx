@@ -27,15 +27,10 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import { resourceLinks } from '@/lib/data';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
 type Category =
-  | 'all'
-  | 'media'
-  | 'live'
-  | 'events'
-  | 'store'
-  | 'care'
-  | 'books';
+  'all' | 'media' | 'live' | 'events' | 'store' | 'care' | 'books';
 
 const categories: Array<{ key: Category; label: string }> = [
   { key: 'all', label: 'All' },
@@ -407,7 +402,7 @@ export default function ResourcesPage() {
                 variant="ghost"
                 onClick={() =>
                   window.open(
-                    'https://www.youtube.com/@wisdomhousehq',
+                    SOCIAL_LINKS.youtube,
                     '_blank',
                     'noopener,noreferrer'
                   )

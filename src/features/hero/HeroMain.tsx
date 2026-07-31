@@ -14,6 +14,7 @@ import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import type { YouTubeVideo } from '@/lib/types';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
@@ -199,7 +200,7 @@ export default function HeroSection({
 
   const watchHref = latestVideo
     ? `https://www.youtube.com/watch?v=${(latestVideo as any).id || ''}`
-    : 'https://www.youtube.com/@wisdomhousehq';
+    : SOCIAL_LINKS.youtube;
 
   const primaryCtaHref = content?.primaryCta?.href ?? '/events/weekly';
   const primaryCtaLabel = content?.primaryCta?.label ?? 'Plan a visit';

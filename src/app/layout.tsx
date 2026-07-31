@@ -10,11 +10,13 @@ import { bricolageGrotesque, playfair, worksans } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
-import { buildHreflangAlternates } from '@/lib/seo';
-
-const SITE_URL = 'https://wisdomchurchhq.org';
-const SITE_NAME = 'The Wisdom Church';
-const OG_IMAGE = `${SITE_URL}/og-image.webp`;
+import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
+import {
+  SITE_URL,
+  SITE_NAME,
+  DEFAULT_OG_IMAGE as OG_IMAGE,
+  buildHreflangAlternates,
+} from '@/lib/seo';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -56,8 +58,8 @@ export const metadata: Metadata = {
     title: SITE_NAME,
     description: 'Join us for powerful worship and life-changing messages.',
     images: [OG_IMAGE],
-    creator: '@wisdomhousehq',
-    site: '@wisdomhousehq',
+    creator: SOCIAL_LINKS.handle,
+    site: SOCIAL_LINKS.handle,
   },
   robots: {
     index: true,
@@ -100,15 +102,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     url: SITE_URL,
     logo: OG_IMAGE,
     sameAs: [
-      'https://www.facebook.com/wisdomhousehq',
-      'https://www.youtube.com/@wisdomhousehq',
-      'https://www.instagram.com/wisdomhousehq',
+      SOCIAL_LINKS.facebook,
+      SOCIAL_LINKS.youtube,
+      SOCIAL_LINKS.instagram,
     ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      telephone: '0706 999 5333',
-      email: 'wisdomhousehq@gmail.com',
+      telephone: CONTACT_INFO.phone,
+      email: CONTACT_INFO.email,
       availableLanguage: ['English'],
     },
     address: {

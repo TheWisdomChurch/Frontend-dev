@@ -9,7 +9,7 @@ import { H2, BodyMD } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildBreadcrumbSchema, buildHreflangAlternates } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
@@ -25,29 +25,12 @@ const SENIOR_ROLES: LeadershipRole[] = [
 ];
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'About Us & Our Mission',
   description:
     'Learn about The Wisdom Church — a Spirit-filled church in Lagos committed to raising complete believers.',
-  openGraph: {
-    title: 'About Us & Our Mission | The Wisdom Church',
-    description:
-      'Learn about The Wisdom Church vision, leadership, and culture.',
-    url: 'https://wisdomchurchhq.org/about',
-    images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'About Us & Our Mission | The Wisdom Church',
-    description:
-      'Learn about The Wisdom Church vision, leadership, and culture.',
-    images: ['https://wisdomchurchhq.org/og-image.webp'],
-  },
-  alternates: {
-    canonical: '/about',
-    languages: buildHreflangAlternates('/about'),
-  },
-};
+  path: '/about',
+});
 
 const serviceInfo = [
   {

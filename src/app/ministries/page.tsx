@@ -9,31 +9,14 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildBreadcrumbSchema, buildHreflangAlternates } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Ministries — Get Connected',
   description:
     'Discover ministries for men, women, youth, children, and outreach at The Wisdom Church. Find your place to serve and grow.',
-  openGraph: {
-    title: 'Ministries — Get Connected | The Wisdom Church',
-    description:
-      'Discover ministries for men, women, youth, children, and outreach.',
-    url: 'https://wisdomchurchhq.org/ministries',
-    images: [{ url: 'https://wisdomchurchhq.org/og-image.webp' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Ministries | The Wisdom Church',
-    description:
-      'Discover ministries for men, women, youth, children, and outreach.',
-    images: ['https://wisdomchurchhq.org/og-image.webp'],
-  },
-  alternates: {
-    canonical: '/ministries',
-    languages: buildHreflangAlternates('/ministries'),
-  },
-};
+  path: '/ministries',
+});
 
 /* ── Ministries ───────────────────────────────────────── */
 const ministries = [

@@ -8,6 +8,7 @@ import PageHero from '@/features/hero/PageHero';
 import { H2, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
 export const metadata: Metadata = {
   title: 'Blog & Devotionals',
@@ -50,7 +51,7 @@ export default function BlogPage() {
 
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <a
-                href="https://www.youtube.com/@wisdomhousehq"
+                href={SOCIAL_LINKS.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 active:scale-[0.98]"

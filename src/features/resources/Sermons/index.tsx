@@ -9,6 +9,7 @@ import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { Media } from '@/shared/ui/Media';
 import { useSermonUtil } from '@/shared/utils/hooks/useSermon';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import type {
   YouTubeVideo,
   GroupedSeriesData,
@@ -495,7 +496,7 @@ const SermonUtil = () => {
                   visit our YouTube channel.
                 </p>
                 <a
-                  href="https://www.youtube.com/@wisdomhousehq"
+                  href={SOCIAL_LINKS.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
@@ -768,7 +769,7 @@ const SermonUtil = () => {
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <a
-                  href="https://www.youtube.com/@wisdomhousehq"
+                  href={SOCIAL_LINKS.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"

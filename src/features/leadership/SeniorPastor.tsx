@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import { Bishop } from '@/shared/assets';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember } from '@/lib/types';
 import { Section } from '@/shared/layout';
@@ -62,20 +63,22 @@ const XIcon = () => (
 const SOCIALS = [
   {
     label: 'Instagram',
+    // Senior Pastor's personal account — intentionally not the church's
+    // shared @wisdomhousehq Instagram.
     href: 'https://www.instagram.com/gabrielayilara?igsh=MXZpMHhnNGloMnViZw==',
     Icon: IgIcon,
   },
   {
     label: 'Facebook',
-    href: 'https://www.facebook.com/wisdomhousehq',
+    href: SOCIAL_LINKS.facebook,
     Icon: FbIcon,
   },
   {
     label: 'YouTube',
-    href: 'https://www.youtube.com/@wisdomhousehq',
+    href: SOCIAL_LINKS.youtube,
     Icon: YtIcon,
   },
-  { label: 'X', href: 'https://x.com/wisdomhousehq', Icon: XIcon },
+  { label: 'X', href: SOCIAL_LINKS.x, Icon: XIcon },
 ];
 
 const BIO_PREVIEW_LENGTH = 220;

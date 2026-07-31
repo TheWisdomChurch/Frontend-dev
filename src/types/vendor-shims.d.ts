@@ -55,4 +55,6 @@ declare module 'react-hook-form' {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export function useForm<TFieldValues = any>(options?: any): any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  export function useWatch<TFieldValues = any>(options?: any): any;
 }

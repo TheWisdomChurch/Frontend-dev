@@ -22,6 +22,7 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import apiClient, { mapValidationErrors } from '@/lib/api';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
 type ContactFormData = {
   firstName: string;
@@ -80,20 +81,20 @@ function ContactPageContent() {
     () => [
       {
         platform: 'Instagram',
-        handle: '@wisdomhousehq',
-        href: 'https://instagram.com/wisdomhousehq',
+        handle: SOCIAL_LINKS.handle,
+        href: SOCIAL_LINKS.instagram,
         icon: Camera,
       },
       {
         platform: 'Facebook',
-        handle: '@wisdomhousehq',
-        href: 'https://facebook.com/wisdomhousehq',
+        handle: SOCIAL_LINKS.handle,
+        href: SOCIAL_LINKS.facebook,
         icon: Users,
       },
       {
         platform: 'YouTube',
-        handle: '@wisdomhousehq',
-        href: 'https://youtube.com/@wisdomhousehq',
+        handle: SOCIAL_LINKS.handle,
+        href: SOCIAL_LINKS.youtube,
         icon: PlayCircle,
       },
     ],
@@ -240,10 +241,10 @@ function ContactPageContent() {
                     </p>
                   </div>
                   <a
-                    href="mailto:wisdomhousehq@gmail.com"
+                    href={`mailto:${CONTACT_INFO.email}`}
                     className="group inline-flex items-center gap-2 font-ui text-body-md font-medium text-[var(--app-ink)] transition hover:text-[var(--app-primary)]"
                   >
-                    wisdomhousehq@gmail.com
+                    {CONTACT_INFO.email}
                     <ArrowUpRight className="h-3.5 w-3.5 opacity-40 transition group-hover:opacity-100" />
                   </a>
                 </div>

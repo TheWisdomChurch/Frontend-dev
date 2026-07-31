@@ -28,6 +28,7 @@ import {
   Deacon_2,
   Bishop,
 } from '@/shared/assets';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
 // What we do
 export const whatWeDoData: ServiceBox[] = [
@@ -273,7 +274,7 @@ export const communityLinks = [
     iconFA: true,
     title: 'Follow Us on Instagram',
     description: 'Stay updated with our latest posts and stories',
-    url: 'https://www.instagram.com/wisdomhousehq',
+    url: SOCIAL_LINKS.instagram,
     bgColor: 'from-pink-500 to-pink-600',
     hoverColor: 'hover:from-pink-600 hover:to-pink-700',
   },

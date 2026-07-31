@@ -6,6 +6,7 @@ import { Play } from 'lucide-react';
 
 import { WhatsappCommunity } from '@/shared/assets';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import {
   staggerContainer,
@@ -60,22 +61,22 @@ const WaIcon = () => (
 const SOCIALS = [
   {
     label: 'YouTube',
-    href: 'https://www.youtube.com/@wisdomhousehq',
+    href: SOCIAL_LINKS.youtube,
     Icon: YtIcon,
   },
   {
     label: 'Facebook',
-    href: 'https://www.facebook.com/wisdomhousehq',
+    href: SOCIAL_LINKS.facebook,
     Icon: FbIcon,
   },
   {
     label: 'Instagram',
-    href: 'https://www.instagram.com/wisdomhousehq',
+    href: SOCIAL_LINKS.instagram,
     Icon: IgIcon,
   },
   {
     label: 'X',
-    href: 'https://x.com/wisdomhousehq',
+    href: SOCIAL_LINKS.x,
     Icon: XIcon,
   },
 ];
@@ -170,7 +171,7 @@ export default function ConnectPortal() {
           >
             {/* Stream live */}
             <a
-              href="https://www.youtube.com/@wisdomhousehq"
+              href={SOCIAL_LINKS.youtube}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-11 items-center gap-2.5 bg-[var(--app-primary)] px-6 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
