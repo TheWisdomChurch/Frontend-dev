@@ -4,7 +4,7 @@ import type { JSX } from 'react';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Terms of Use — Wisdom Church',
+  title: 'Terms of Use',
   description:
     "Terms governing your access to Wisdom Church's website, livestreams, and digital services.",
   path: '/terms',

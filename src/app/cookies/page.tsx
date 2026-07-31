@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Cookies & Privacy — Wisdom Church',
+  title: 'Cookies & Privacy',
   description:
     'How The Wisdom Church uses cookies and handles your data on this website, and how to manage your preferences.',
   path: '/cookies',

@@ -11,7 +11,7 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Pastoral Care — Wisdom Church',
+  title: 'Pastoral Care',
   description:
     'Pastoral counseling and prayer support at The Wisdom Church. Confidential, caring, and always available.',
 };

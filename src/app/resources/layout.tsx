@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+// Next.js only carries a parent's title.template one level automatically —
+// once this layout sets its own plain-string title, descendants two levels
+// deep (sermons, blogs, publications, store) would silently lose the
+// site-wide "| The Wisdom Church" suffix unless this re-declares the
+// template explicitly for them to inherit.
 export const metadata: Metadata = {
-  title: 'Resources — Sermons, Media & Store',
+  title: {
+    template: '%s | The Wisdom Church',
+    default: 'Resources — Sermons, Media & Store',
+  },
   description:
     'Access sermons, live broadcasts, publications, and church resources designed for spiritual growth.',
   openGraph: {

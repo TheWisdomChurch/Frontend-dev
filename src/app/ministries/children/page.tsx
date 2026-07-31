@@ -9,7 +9,7 @@ import ChildrenGallery from './ChildrenGallery';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Children's Ministry — Wisdom Church",
+  title: "Children's Ministry",
   description:
     'A safe, joyful, and Bible-centered ministry for children from nursery through pre-teen years at The Wisdom Church.',
   path: '/ministries/children',

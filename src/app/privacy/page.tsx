@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Privacy Policy — Wisdom Church',
+  title: 'Privacy Policy',
   description:
     'How Wisdom Church collects, uses, and protects your personal information.',
   path: '/privacy',

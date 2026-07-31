@@ -8,7 +8,7 @@ import SectionGlow from '@/shared/ui/SectionGlow';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Men's Ministry — Wisdom Church",
+  title: "Men's Ministry",
   description:
     "A men's ministry built on integrity, biblical brotherhood, and leadership that serves. Part of The Wisdom Church, Lagos.",
   path: '/ministries/men',

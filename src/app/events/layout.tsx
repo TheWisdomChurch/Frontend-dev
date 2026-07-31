@@ -1,8 +1,14 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+// Re-declares the site-wide title template — see resources/layout.tsx for
+// why: without this, weekly/calendar/upcoming (two levels below root) would
+// silently lose the "| The Wisdom Church" suffix.
 export const metadata: Metadata = {
-  title: 'Events & Programs',
+  title: {
+    template: '%s | The Wisdom Church',
+    default: 'Events & Programs',
+  },
   description:
     'Explore upcoming church events, weekly programs, and special gatherings at The Wisdom Church.',
   openGraph: {

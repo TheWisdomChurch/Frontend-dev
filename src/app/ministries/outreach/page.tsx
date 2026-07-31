@@ -8,7 +8,7 @@ import SectionGlow from '@/shared/ui/SectionGlow';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Outreach & Missions — Wisdom Church',
+  title: 'Outreach & Missions',
   description:
     "Practical expressions of God's love through service, evangelism, and community development. Part of The Wisdom Church, Lagos.",
   path: '/ministries/outreach',

@@ -6,13 +6,19 @@ import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildRecurringEventSchema } from '@/lib/seo';
+import { buildRecurringEventSchema, buildPageMetadata } from '@/lib/seo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 
-export const metadata: Metadata = {
-  title: 'Weekly Services — Wisdom Church',
-  description: `Join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time} and for ${SERVICE_INFO.dailyPrayer.label}, ${SERVICE_INFO.dailyPrayer.days} at ${SERVICE_INFO.dailyPrayer.time}, at ${SERVICE_INFO.venue.full}.`,
-};
+// Metadata fields a route doesn't set are inherited from the parent layout,
+// not reset — without its own `alternates`, this page was silently
+// canonicalizing to /events (events/layout.tsx's canonical). buildPageMetadata
+// gives it a correct self-referencing canonical, hreflang, and OG/Twitter
+// block instead of a bare title+description.
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Weekly Services',
+  description: `Join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time} and for ${SERVICE_INFO.dailyPrayer.label}, ${SERVICE_INFO.dailyPrayer.days} at ${SERVICE_INFO.dailyPrayer.time}, at ${SERVICE_INFO.venue.short}.`,
+  path: '/events/weekly',
+});
 
 const services = [
   {
