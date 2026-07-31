@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { buildHreflangAlternates } from '@/lib/seo';
+
 // Re-declares the site-wide title template — see resources/layout.tsx for
 // why: without this, weekly/calendar/upcoming (two levels below root) would
 // silently lose the "| The Wisdom Church" suffix.
@@ -24,7 +26,10 @@ export const metadata: Metadata = {
     description: 'Explore upcoming church events and special gatherings.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/events' },
+  alternates: {
+    canonical: '/events',
+    languages: buildHreflangAlternates('/events'),
+  },
 };
 
 export default function EventsLayout({ children }: { children: ReactNode }) {

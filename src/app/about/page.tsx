@@ -9,7 +9,7 @@ import { H2, BodyMD } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildBreadcrumbSchema } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildHreflangAlternates } from '@/lib/seo';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type { LeadershipMember, LeadershipRole } from '@/lib/types';
@@ -43,7 +43,10 @@ export const metadata: Metadata = {
       'Learn about The Wisdom Church vision, leadership, and culture.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/about' },
+  alternates: {
+    canonical: '/about',
+    languages: buildHreflangAlternates('/about'),
+  },
 };
 
 const serviceInfo = [

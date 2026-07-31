@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { buildHreflangAlternates } from '@/lib/seo';
+
 export const metadata: Metadata = {
   title: 'Contact & Service Times',
   description:
@@ -18,7 +20,10 @@ export const metadata: Metadata = {
     description: 'Plan your visit to The Wisdom Church in Lagos.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/contact' },
+  alternates: {
+    canonical: '/contact',
+    languages: buildHreflangAlternates('/contact'),
+  },
 };
 
 export default function ContactLayout({ children }: { children: ReactNode }) {

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { buildHreflangAlternates } from '@/lib/seo';
+
 // Next.js only carries a parent's title.template one level automatically —
 // once this layout sets its own plain-string title, descendants two levels
 // deep (sermons, blogs, publications, store) would silently lose the
@@ -26,7 +28,10 @@ export const metadata: Metadata = {
     description: 'Sermons, media, publications and church resources.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/resources' },
+  alternates: {
+    canonical: '/resources',
+    languages: buildHreflangAlternates('/resources'),
+  },
 };
 
 export default function ResourcesLayout({ children }: { children: ReactNode }) {

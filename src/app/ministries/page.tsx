@@ -9,7 +9,7 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildBreadcrumbSchema } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildHreflangAlternates } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Ministries — Get Connected',
@@ -29,7 +29,10 @@ export const metadata: Metadata = {
       'Discover ministries for men, women, youth, children, and outreach.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/ministries' },
+  alternates: {
+    canonical: '/ministries',
+    languages: buildHreflangAlternates('/ministries'),
+  },
 };
 
 /* ── Ministries ───────────────────────────────────────── */

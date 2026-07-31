@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { buildHreflangAlternates } from '@/lib/seo';
+
 export const metadata: Metadata = {
   title: 'Sermons & Messages',
   description:
@@ -18,7 +20,10 @@ export const metadata: Metadata = {
     description: 'Watch and listen to recent sermons and biblical teachings.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/resources/sermons' },
+  alternates: {
+    canonical: '/resources/sermons',
+    languages: buildHreflangAlternates('/resources/sermons'),
+  },
 };
 
 export default function SermonsLayout({ children }: { children: ReactNode }) {

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { buildHreflangAlternates } from '@/lib/seo';
+
 export const metadata: Metadata = {
   title: 'Testimonies — Lives Transformed',
   description:
@@ -18,9 +20,16 @@ export const metadata: Metadata = {
     description: 'Testimonies of healing, restoration, and transformation.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/testimonies' },
+  alternates: {
+    canonical: '/testimonies',
+    languages: buildHreflangAlternates('/testimonies'),
+  },
 };
 
-export default function TestimoniesLayout({ children }: { children: ReactNode }) {
+export default function TestimoniesLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return <>{children}</>;
 }

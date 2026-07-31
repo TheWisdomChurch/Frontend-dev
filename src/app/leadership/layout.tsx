@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { buildHreflangAlternates } from '@/lib/seo';
+
 export const metadata: Metadata = {
   title: 'Leadership Team',
   description:
@@ -18,9 +20,16 @@ export const metadata: Metadata = {
     description: 'Meet the pastoral and ministry leadership team.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
   },
-  alternates: { canonical: '/leadership' },
+  alternates: {
+    canonical: '/leadership',
+    languages: buildHreflangAlternates('/leadership'),
+  },
 };
 
-export default function LeadershipLayout({ children }: { children: ReactNode }) {
+export default function LeadershipLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return <>{children}</>;
 }
