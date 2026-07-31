@@ -146,6 +146,10 @@ export const useHeroContent = () => {
   const mountedRef = useRef(false);
   const retryCountRef = useRef(0);
   const retryTimerRef = useRef<number | null>(null);
+  // Lets the retry timer call the latest fetchHeroData without the retry
+  // closure (built inside fetchHeroData itself) referencing that same
+  // const before its own declaration finishes.
+  const fetchHeroDataRef = useRef<(() => Promise<void>) | null>(null);
 
   const clearRetryTimer = () => {
     if (retryTimerRef.current) {
@@ -231,7 +235,7 @@ export const useHeroContent = () => {
 
         retryTimerRef.current = window.setTimeout(() => {
           if (mountedRef.current) {
-            void fetchHeroData();
+            void fetchHeroDataRef.current?.();
           }
         }, RETRY_DELAY_MS);
       }
@@ -243,14 +247,23 @@ export const useHeroContent = () => {
   }, []);
 
   useEffect(() => {
+    fetchHeroDataRef.current = fetchHeroData;
+  }, [fetchHeroData]);
+
+  useEffect(() => {
     mountedRef.current = true;
-    void fetchHeroData();
+
+    const run = async () => {
+      await fetchHeroDataRef.current?.();
+    };
+
+    void run();
 
     return () => {
       mountedRef.current = false;
       clearRetryTimer();
     };
-  }, [fetchHeroData]);
+  }, []);
 
   return {
     slides,

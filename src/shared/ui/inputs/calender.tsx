@@ -19,17 +19,24 @@ function Calendar({
   className,
   selected,
   onSelect,
-  month = new Date(),
+  month,
   onMonthChange,
   showOutsideDays = true,
   disabled,
   ...props
 }: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = React.useState(month);
+  const [currentMonth, setCurrentMonth] = React.useState(month ?? new Date());
+  // Tracks the last `month` prop value we've synced from, by value (not
+  // reference) — `month` has no stable identity across renders when the
+  // caller passes a fresh Date each time, so a reference/effect-based sync
+  // would re-fire every render. Adjusting here, during render, only touches
+  // state when the caller actually passes a different controlled value.
+  const [syncedMonth, setSyncedMonth] = React.useState(month);
 
-  React.useEffect(() => {
+  if (month && month.getTime() !== syncedMonth?.getTime()) {
+    setSyncedMonth(month);
     setCurrentMonth(month);
-  }, [month]);
+  }
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     const newMonth = new Date(currentMonth);
