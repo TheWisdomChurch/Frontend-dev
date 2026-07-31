@@ -35,7 +35,6 @@ import {
   Caption,
   Eyebrow,
 } from '@/shared/text';
-import { hero_bg_1 } from '@/shared/assets';
 import { Button } from '@/shared/utils/buttons';
 import { Section, Container } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
@@ -223,7 +222,6 @@ function StorePageContent() {
         title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
         description="Discover our exclusive collection of merchandise designed to inspire and uplift. Each item carries a message of faith, hope, and wisdom for your daily journey."
-        backgroundImage={hero_bg_1.src}
         // showButtons
         // primaryButtonText="Shop New Arrivals"
         // secondaryButtonText="View Categories"

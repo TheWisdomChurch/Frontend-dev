@@ -24,6 +24,7 @@
   },
   "include": [
     ".next-prepush/types/**/*.ts",
+    ".next-verify/types/**/*.ts",
     ".next/types/**/*.ts",
     "ANALYTICS_CONFIGURATION.ts",
     "ANALYTICS_EXAMPLES.tsx",
@@ -32,7 +33,7 @@
     "src/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next-verify/types/**/*.ts"
+    ".next-assetcheck/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

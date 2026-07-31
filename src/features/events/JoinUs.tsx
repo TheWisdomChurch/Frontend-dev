@@ -25,9 +25,7 @@ import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { BodySM, Caption } from '@/shared/text';
-import { Media } from '@/shared/ui/Media';
 import SectionGlow from '@/shared/ui/SectionGlow';
-import { Dept_1 } from '@/shared/assets';
 import { apiClient } from '@/lib/api';
 import {
   staggerContainer,
@@ -344,15 +342,11 @@ export default function JoinWisdomHouse() {
     >
       <SectionGlow />
 
-      {/* ── Photo banner ─────────────────────────────────────── */}
+      {/* ── Banner ───────────────────────────────────────────── */}
+      {/* TODO: was a photo banner (Dept_1) — source image is missing from
+          the repo; needs a real photo re-uploaded to shared/assets. */}
       <div className="relative overflow-hidden border-b border-white/8">
         <div className="absolute inset-0">
-          <Media
-            src={Dept_1}
-            alt=""
-            sizes="100vw"
-            className="object-[center_18%] opacity-[0.5] sm:object-[center_24%] lg:object-[center_28%]"
-          />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_25%,rgba(201,150,26,0.18),transparent_55%)]" />
         </div>

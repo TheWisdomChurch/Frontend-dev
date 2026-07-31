@@ -15,7 +15,6 @@ import {
   Associate_2,
   ProvidusBank,
   KeystoneBank,
-  // Dept_4,
   // What_to_expect_images
   WhatWedo_1,
   WhatWeDo_3,
@@ -23,7 +22,7 @@ import {
   WhatWedo_4,
   Img_1,
   Children_head,
-  PstKenny,
+  PstKenny_1,
   Min_Adura,
   Deacon_1,
   Deacon_2,
@@ -91,7 +90,7 @@ export const pastorsData: Leader[] = [
     id: 2,
     name: 'Pst. Mrs Kehinde Ayilara',
     role: 'Senior Pastor',
-    image: PstKenny,
+    image: PstKenny_1,
     description:
       'Assist in discipleship, mentorship, and faith-building activities',
   },
@@ -213,7 +212,7 @@ export const ministryLeadersData: MinistryLeader[] = [
     name: 'Pst. Mrs Kehinde Ayilara',
     role: "Women's Ministry Leader",
     department: "Women's Ministry",
-    image: PstKenny,
+    image: PstKenny_1,
     description:
       'Empowers women through Bible study and fellowship and also organizes outreaches and conferences',
   },
