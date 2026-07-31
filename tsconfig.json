@@ -24,6 +24,7 @@
   },
   "include": [
     ".next-assetcheck/types/**/*.ts",
+    ".next-finalcheck/types/**/*.ts",
     ".next-prepush/types/**/*.ts",
     ".next-verify/types/**/*.ts",
     ".next/types/**/*.ts",
@@ -34,7 +35,7 @@
     "src/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next-finalcheck/types/**/*.ts"
+    ".next-hardcodecheck/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
