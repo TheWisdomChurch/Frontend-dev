@@ -70,7 +70,43 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   async headers() {
+    // Third-party origins the app actually loads scripts/beacons/frames
+    // from — keep in sync with MetaPixel.tsx, ga.ts, the Ahrefs Script tag
+    // in layout.tsx, and next.config's images.remotePatterns.
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' https://analytics.ahrefs.com https://connect.facebook.net https://www.googletagmanager.com",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https://*.ytimg.com https://*.supabase.co https://www.facebook.com",
+      "font-src 'self' data:",
+      "connect-src 'self' https://analytics.ahrefs.com https://www.google-analytics.com https://www.facebook.com",
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+      'upgrade-insecure-requests',
+    ].join('; ');
+
+    const securityHeaders = [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+      {
+        key: 'Referrer-Policy',
+        value: 'strict-origin-when-cross-origin',
+      },
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=63072000; includeSubDomains; preload',
+      },
+      { key: 'Content-Security-Policy', value: csp },
+    ];
+
     return [
+      {
+        source: '/:path*',
+        headers: securityHeaders,
+      },
       {
         source: '/_next/static/media/:path*',
         headers: [

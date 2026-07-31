@@ -19,6 +19,18 @@ interface PageMetadataInput {
 // Standard OG/Twitter/canonical block for pages that only declared a bare
 // title+description — fills the gap without repeating the domain/OG image
 // inline in every page file.
+// Single-locale site (English, served to both US and NG audiences) with no
+// actual per-region content variants — hreflang is self-referencing for
+// both declared locales plus x-default, never pointing at a different URL.
+export function buildHreflangAlternates(path: string) {
+  const url = canonicalUrl(path);
+  return {
+    'en-US': url,
+    'en-NG': url,
+    'x-default': url,
+  };
+}
+
 export function buildPageMetadata({
   title,
   description,
@@ -27,7 +39,10 @@ export function buildPageMetadata({
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl(path) },
+    alternates: {
+      canonical: canonicalUrl(path),
+      languages: buildHreflangAlternates(path),
+    },
     openGraph: {
       title,
       description,

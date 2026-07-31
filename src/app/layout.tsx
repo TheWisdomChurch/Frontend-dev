@@ -1,5 +1,6 @@
 ﻿import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 
 import '@/app/globals.scss';
@@ -9,6 +10,7 @@ import { bricolageGrotesque, playfair, worksans } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import { buildHreflangAlternates } from '@/lib/seo';
 
 const SITE_URL = 'https://wisdomchurchhq.org';
 const SITE_NAME = 'The Wisdom Church';
@@ -18,10 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
-    languages: {
-      'en-US': '/',
-      'en-NG': '/',
-    },
+    languages: buildHreflangAlternates('/'),
   },
   title: {
     default: 'The Wisdom Church | Experience God’s Transforming Power',
@@ -157,6 +156,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         <MetaPixel />
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="XGrQDDaQUVZrI428swX0CA"
+          strategy="afterInteractive"
+        />
         <Providers>{children}</Providers>
         <Analytics />
       </body>
