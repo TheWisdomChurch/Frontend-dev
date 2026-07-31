@@ -8,7 +8,7 @@ import { ShoppingBag } from 'lucide-react';
 import { useAppSelector } from '@/shared/utils/hooks/redux';
 import CheckoutForm from '@/features/store/Store/checkoutForm';
 import PageHero from '@/features/hero/PageHero';
-import { H1, BodySM, Eyebrow } from '@/shared/text';
+import { H2, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
@@ -42,9 +42,9 @@ function CheckoutPageContent() {
                 <ShoppingBag className="h-8 w-8 text-[var(--app-primary)]" />
               </div>
 
-              <H1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              <H2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                 Your cart is empty
-              </H1>
+              </H2>
 
               <BodySM className="mt-3 max-w-md text-white/65 sm:text-base">
                 Add some resources from the store before proceeding to checkout.
@@ -80,9 +80,9 @@ function CheckoutPageContent() {
             <Eyebrow className="text-[var(--app-primary)]">
               Secure checkout
             </Eyebrow>
-            <H1 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            <H2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
               Complete your order with confidence
-            </H1>
+            </H2>
             <BodySM className="mt-3 text-white/65 sm:text-base">
               Confirm your details and complete your purchase securely.
             </BodySM>

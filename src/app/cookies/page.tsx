@@ -5,7 +5,7 @@ import { buildPageMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildPageMetadata({
   title: 'Cookies & Privacy — Wisdom Church',
   description:
-    'How Wisdom Church uses cookies and handles your data on this website.',
+    'How The Wisdom Church uses cookies and handles your data on this website, and how to manage your preferences.',
   path: '/cookies',
 });
 

@@ -15,6 +15,14 @@ import type {
   UngroupedSeriesData,
 } from '@/lib/types';
 
+// YouTube titles have no length limit and routinely run well past a
+// reasonable <h2>; cap the heading while keeping the full title available
+// via the `title` attribute for a11y/tooltips.
+function truncateHeading(text: string, max = 70): string {
+  if (text.length <= max) return text;
+  return `${text.slice(0, max - 1).trimEnd()}…`;
+}
+
 /* ── Arrow ───────────────────────────────────────────────── */
 
 function Arrow() {
@@ -376,8 +384,11 @@ const SermonUtil = () => {
                         {currentVideo.series}
                       </p>
                     )}
-                    <h2 className="font-headline text-heading-sm font-normal leading-snug text-white sm:text-heading-md">
-                      {currentVideo.title}
+                    <h2
+                      className="font-headline text-heading-sm font-normal leading-snug text-white sm:text-heading-md"
+                      title={currentVideo.title}
+                    >
+                      {truncateHeading(currentVideo.title)}
                     </h2>
                     <p className="mt-2 font-ui text-label text-white/38">
                       {currentVideo.preacher}

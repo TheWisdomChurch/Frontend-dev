@@ -26,6 +26,7 @@ import {
 
 import ProductModal from '@/features/store/modals/ProductModal';
 import {
+  H2,
   H3,
   H4,
   BodyLG,
@@ -268,12 +269,12 @@ function StorePageContent() {
                 </Caption>
               </div>
 
-              <H3
+              <H2
                 className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
                 useThemeColor={false}
               >
                 Shop faith-inspired essentials with a premium experience.
-              </H3>
+              </H2>
 
               <Caption
                 className="mt-4 block max-w-xl text-sm leading-7 text-white/62 sm:text-base"

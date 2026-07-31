@@ -26,11 +26,11 @@ const SENIOR_ROLES: LeadershipRole[] = [
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'About Us',
+  title: 'About Us & Our Mission',
   description:
     'Learn about The Wisdom Church — a Spirit-filled church in Lagos committed to raising complete believers.',
   openGraph: {
-    title: 'About Us | The Wisdom Church',
+    title: 'About Us & Our Mission | The Wisdom Church',
     description:
       'Learn about The Wisdom Church vision, leadership, and culture.',
     url: 'https://wisdomchurchhq.org/about',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About Us | The Wisdom Church',
+    title: 'About Us & Our Mission | The Wisdom Church',
     description:
       'Learn about The Wisdom Church vision, leadership, and culture.',
     images: ['https://wisdomchurchhq.org/og-image.webp'],
