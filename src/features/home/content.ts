@@ -1,13 +1,11 @@
 import type { StaticImageData } from 'next/image';
-import {
-  Bishop,
-  Img_1,
-  WhatsappCommunity,
-  lader,
-  lader_1,
-} from '@/shared/assets';
+import { Bishop, Img_1, lader, lader_1 } from '@/shared/assets';
 
-export type HomeImage = { src: StaticImageData; alt: string; position: string };
+export type HomeImage = {
+  src: StaticImageData | string;
+  alt: string;
+  position: string;
+};
 
 export const HOME_COPY = {
   hero: {
@@ -93,8 +91,8 @@ export const HOME_IMAGES = {
     position: 'object-bottom',
   },
   community: {
-    src: WhatsappCommunity,
-    alt: 'The Wisdom Church community worshipping together',
-    position: 'object-[center_36%]',
+    src: '/Picflow Images Jul 31 (2)/DSC00026 copy.webp',
+    alt: 'Women gathered at a Wisdom Church community event',
+    position: 'object-center',
   },
 } satisfies Record<string, HomeImage>;

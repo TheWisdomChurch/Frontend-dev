@@ -21,6 +21,7 @@ function CoverImage({
   priority?: boolean;
 }) {
   const image = HOME_IMAGES[name];
+  const isCommunityImage = name === 'community';
   const parallaxDepth =
     name === 'hero' ? '0.16' : name === 'service' ? '0.12' : '0.09';
   return (
@@ -31,8 +32,8 @@ function CoverImage({
       priority={priority}
       quality={IMAGE_QUALITY}
       sizes="100vw"
-      data-parallax-global={parallaxDepth}
-      className={`scale-[1.06] object-cover ${image.position}`}
+      data-parallax-global={isCommunityImage ? undefined : parallaxDepth}
+      className={`${isCommunityImage ? '' : 'scale-[1.06]'} object-cover ${image.position}`}
     />
   );
 }
@@ -227,30 +228,64 @@ export default function PremiumHome() {
         </div>
       </Section>
 
-      <Section id="community" padding="2xl" className="bg-white text-center">
-        <Container size="2xl">
-          <div data-gsap="reveal" className="mx-auto max-w-5xl">
-            <p className={`${eyebrowClass} text-[var(--app-primary-dark)]`}>
-              {HOME_COPY.community.eyebrow}
-            </p>
-            <h2
-              className={`${displayClass} mt-5 text-[clamp(2.8rem,5vw,5.6rem)]`}
+      <Section
+        id="community"
+        padding="none"
+        className="overflow-hidden bg-[#0b0b0b] text-white"
+      >
+        <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:gap-20">
+            <div data-gsap="reveal" className="max-w-xl">
+              <p className={`${eyebrowClass} text-[var(--app-primary)]`}>
+                {HOME_COPY.community.eyebrow}
+              </p>
+              <h2
+                className={`${displayClass} mt-5 text-[clamp(2.7rem,4.7vw,5.1rem)]`}
+              >
+                We don&apos;t do
+                <span className="block text-[var(--app-primary)]">
+                  life alone.
+                </span>
+              </h2>
+              <p className="mt-7 max-w-lg font-ui text-base leading-8 text-white/58 sm:text-lg">
+                {HOME_COPY.community.description}
+              </p>
+              <HomeActionLink href="/contact" className="mt-8">
+                <Users className="h-4 w-4" /> Connect with us
+              </HomeActionLink>
+
+              <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-white/12 pt-6 font-ui text-xs font-bold uppercase tracking-[0.16em] text-white/42 sm:grid-cols-4 lg:grid-cols-2">
+                <span>Prayer</span>
+                <span>Friendship</span>
+                <span>Growth</span>
+                <span>Belonging</span>
+              </div>
+            </div>
+
+            <div
+              data-gsap="reveal"
+              className="relative pb-0 sm:pb-10 sm:pl-10 lg:pb-12 lg:pl-12"
             >
-              {HOME_COPY.community.title}
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl font-ui text-base leading-8 text-black/60">
-              {HOME_COPY.community.description}
-            </p>
-            <HomeActionLink href="/contact" className="mt-8">
-              <Users className="h-4 w-4" /> Connect with us
-            </HomeActionLink>
-          </div>
-          <div
-            data-gsap="reveal"
-            className="relative mt-12 h-[400px] overflow-hidden sm:h-[540px]"
-          >
-            <CoverImage name="community" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+              <div className="relative h-[340px] overflow-hidden sm:h-[500px] lg:h-[610px]">
+                <CoverImage name="community" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/5" />
+              </div>
+
+              <div className="absolute bottom-0 left-0 hidden h-[250px] w-[190px] overflow-hidden border-[8px] border-[#0b0b0b] sm:block lg:h-[310px] lg:w-[230px]">
+                <Image
+                  src="/Picflow Images Jul 31 (2)/DSC00064 copy.webp"
+                  alt="Members praying together at The Wisdom Church"
+                  fill
+                  quality={IMAGE_QUALITY}
+                  sizes="230px"
+                  className="object-cover object-center"
+                />
+              </div>
+
+              <span className="absolute -right-2 top-7 hidden font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-white/38 [writing-mode:vertical-rl] sm:block">
+                Wisdom Church community
+              </span>
+            </div>
           </div>
         </Container>
       </Section>
