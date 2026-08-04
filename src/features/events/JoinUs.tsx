@@ -152,6 +152,17 @@ const departments = [
 
 type Department = (typeof departments)[number];
 
+// Repeating three-panel rhythm. Additional departments automatically continue
+// the mosaic instead of coupling the UI to today's number of teams.
+const departmentSpanPattern = [
+  'lg:col-span-5',
+  'lg:col-span-3',
+  'lg:col-span-4',
+  'lg:col-span-3',
+  'lg:col-span-5',
+  'lg:col-span-4',
+] as const;
+
 const countryCodes = [
   { code: '+234', label: 'NG' },
   { code: '+233', label: 'GH' },
@@ -240,7 +251,6 @@ export default function JoinWisdomHouse() {
   const [selectedDept, setSelectedDept] = useState<Department | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [activeCard, setActiveCard] = useState<number | null>(null);
 
   const departmentOptions = useMemo(() => departments.map(d => d.title), []);
 
@@ -355,7 +365,7 @@ export default function JoinWisdomHouse() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_25%,rgba(201,150,26,0.18),transparent_55%)]" />
         </div>
 
-        <Container size="xl" className="relative py-14 lg:py-[4.5rem]">
+        <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -383,9 +393,12 @@ export default function JoinWisdomHouse() {
           </div>
 
           {/* ── Why serve ─────────────────────────────────────── */}
-          <div className="mt-11 grid grid-cols-1 gap-6 border-t border-white/10 pt-9 sm:grid-cols-3 sm:gap-8">
+          <div className="-mx-5 mt-9 flex snap-x snap-mandatory gap-3 overflow-x-auto border-t border-white/10 px-5 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pt-9 sm:gap-8">
             {valuePillars.map(pillar => (
-              <div key={pillar.title} className="flex items-start gap-3.5">
+              <div
+                key={pillar.title}
+                className="flex min-w-[76vw] snap-center items-start gap-3.5 border border-white/10 bg-white/[0.035] p-4 sm:min-w-0 sm:border-0 sm:bg-transparent sm:p-0"
+              >
                 <pillar.icon className="mt-0.5 h-[1.15rem] w-[1.15rem] flex-none text-[var(--app-primary)]" />
                 <div>
                   <p className="font-ui text-body-sm font-bold text-white">
@@ -402,100 +415,73 @@ export default function JoinWisdomHouse() {
       </div>
 
       {/* ── Department index ──────────────────────────────────── */}
-      <Container size="xl" className="relative py-14 lg:py-[4.5rem]">
+      <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
+        <div className="mb-8 grid gap-5 border-b border-white/10 pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
+          <div>
+            <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+              Serve at Wisdom Church
+            </p>
+            <h3 className="mt-3 max-w-2xl font-sans text-[clamp(2rem,4vw,3.8rem)] font-black uppercase leading-[0.94] tracking-[-0.04em] text-white">
+              Bring your gift.
+              <span className="block text-[var(--app-primary)]">
+                Build with us.
+              </span>
+            </h3>
+          </div>
+          <p className="max-w-sm font-ui text-sm leading-6 text-white/45 sm:text-right">
+            Whatever your experience, there is room to grow, contribute and
+            serve alongside others.
+          </p>
+        </div>
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
           viewport={staggerViewport}
-          className="border-t border-white/10"
+          className="grid grid-cols-2 gap-px overflow-hidden border border-white/12 bg-white/12 lg:grid-cols-12"
         >
           {departments.map((dept, index) => {
             const Icon = dept.icon;
-            const isActive = activeCard === index;
             return (
               <motion.button
                 key={dept.title}
                 variants={staggerItem}
                 type="button"
                 onClick={() => openFor(dept)}
-                onMouseEnter={() => setActiveCard(index)}
-                onMouseLeave={() => setActiveCard(null)}
-                whileTap={{ scale: 0.995 }}
-                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                className="group relative flex w-full items-center gap-6 border-b border-white/10 py-7 text-left sm:gap-10 sm:py-8"
+                whileTap={{ scale: 0.985 }}
+                transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                className={`group relative flex min-h-[176px] flex-col justify-between overflow-hidden bg-[#0d0d0d] p-4 text-left transition-colors duration-300 hover:bg-[#16130d] sm:min-h-[220px] sm:p-6 lg:min-h-[245px] ${departmentSpanPattern[index % departmentSpanPattern.length]}`}
               >
-                {/* Hover wash — soft radial bloom centered on the row */}
                 <span
-                  className={`pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_100%_at_0%_50%,rgba(201,150,26,0.09),transparent_75%)] transition-opacity duration-500 ${
-                    isActive ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_35%,rgba(201,150,26,0.13))] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   aria-hidden="true"
                 />
-
-                {/* Index number */}
-                <span
-                  className={`relative w-10 shrink-0 font-headline text-3xl font-normal tabular-nums transition-all duration-500 sm:w-16 sm:text-4xl ${
-                    isActive
-                      ? 'text-[var(--app-primary)]'
-                      : 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.28)]'
-                  }`}
-                  aria-hidden="true"
-                >
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-
-                {/* Icon */}
-                <div
-                  className={`relative flex h-11 w-11 shrink-0 items-center justify-center transition-all duration-500 sm:h-14 sm:w-14 ${
-                    isActive
-                      ? 'rotate-0 scale-[1.06] bg-[var(--app-primary)]/16 ring-1 ring-[var(--app-primary)]/30'
-                      : '-rotate-3 bg-white/6 ring-1 ring-white/0'
-                  }`}
-                >
-                  <Icon
-                    className={`h-5 w-5 transition-colors duration-500 sm:h-[1.4rem] sm:w-[1.4rem] ${
-                      isActive ? 'text-[var(--app-primary)]' : 'text-white/45'
-                    }`}
-                  />
+                <div className="relative flex items-start justify-between gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center border border-white/12 bg-white/[0.035] transition duration-300 group-hover:border-[var(--app-primary)]/45 group-hover:bg-[var(--app-primary)]/10 sm:h-12 sm:w-12">
+                    <Icon className="h-[1.1rem] w-[1.1rem] text-[var(--app-primary)] sm:h-5 sm:w-5" />
+                  </div>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/12 text-white/35 transition duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black sm:h-10 sm:w-10">
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </span>
                 </div>
-
-                {/* Title + description */}
-                <div
-                  className={`relative min-w-0 flex-1 transition-transform duration-500 ${isActive ? 'translate-x-1.5' : ''}`}
-                >
-                  <p className="font-ui text-body-lg font-bold text-white sm:text-heading-sm">
+                <div className="relative mt-7 min-w-0 sm:mt-9">
+                  <p className="mb-2 font-ui text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]/75 sm:text-[10px]">
+                    {dept.section} ministry
+                  </p>
+                  <p className="max-w-[14rem] font-ui text-base font-bold leading-5 text-white sm:text-xl sm:leading-6">
                     {dept.title}
                   </p>
-                  <p className="mt-1 max-w-md truncate font-ui text-label leading-[1.6] text-white/48 sm:text-body-sm">
+                  <p className="mt-2 line-clamp-2 font-ui text-[11px] leading-[1.55] text-white/45 sm:max-w-sm sm:text-sm sm:leading-6">
                     {dept.description}
                   </p>
                 </div>
-
-                {/* CTA */}
-                <span
-                  className={`relative hidden shrink-0 items-center gap-1.5 font-ui text-label font-semibold transition-all duration-300 sm:inline-flex ${
-                    isActive
-                      ? 'gap-2.5 text-[var(--app-primary)]'
-                      : 'text-white/40'
-                  }`}
-                >
-                  View team
-                  <ArrowRight
-                    className={`h-3.5 w-3.5 transition-transform duration-300 ${isActive ? 'translate-x-1' : ''}`}
-                  />
-                </span>
-                <ArrowRight
-                  className={`relative h-4 w-4 shrink-0 text-white/40 transition-transform duration-300 sm:hidden ${isActive ? 'translate-x-1 text-[var(--app-primary)]' : ''}`}
-                  aria-hidden="true"
-                />
               </motion.button>
             );
           })}
         </motion.div>
 
         {/* ── General CTA ──────────────────────────────────────── */}
-        <div className="mt-9 flex flex-col items-center gap-3">
+        <div className="mt-7 flex flex-col items-center gap-3 sm:mt-9">
           <button
             type="button"
             onClick={openGeneric}

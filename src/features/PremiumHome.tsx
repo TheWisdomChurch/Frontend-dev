@@ -21,6 +21,8 @@ function CoverImage({
   priority?: boolean;
 }) {
   const image = HOME_IMAGES[name];
+  const parallaxDepth =
+    name === 'hero' ? '0.16' : name === 'service' ? '0.12' : '0.09';
   return (
     <Image
       src={image.src}
@@ -29,7 +31,8 @@ function CoverImage({
       priority={priority}
       quality={IMAGE_QUALITY}
       sizes="100vw"
-      className={`object-cover ${image.position}`}
+      data-parallax-global={parallaxDepth}
+      className={`scale-[1.06] object-cover ${image.position}`}
     />
   );
 }

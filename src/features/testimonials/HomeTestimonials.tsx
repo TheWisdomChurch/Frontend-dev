@@ -39,7 +39,7 @@ export default function HomeTestimonials() {
 
   useEffect(() => {
     let mounted = true;
-    const t = window.setTimeout(async () => {
+    const loadTestimonials = async () => {
       try {
         const data = await apiClient.listApprovedTestimonials?.();
         const arr: ApiTestimonial[] = Array.isArray(data) ? data : [];
@@ -50,10 +50,10 @@ export default function HomeTestimonials() {
       } catch {
         if (mounted) setLoading(false);
       }
-    }, 1200);
+    };
+    void loadTestimonials();
     return () => {
       mounted = false;
-      window.clearTimeout(t);
     };
   }, []);
 

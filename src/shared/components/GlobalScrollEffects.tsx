@@ -75,9 +75,9 @@ export default function GlobalScrollEffects() {
       ).matches;
 
       const revealDistance = isMobile ? 16 : isTablet ? 22 : 28;
-      const revealDuration = isMobile ? 0.58 : 0.85;
-      const revealStagger = isMobile ? 0.045 : 0.08;
-      const parallaxScale = isMobile ? 0.35 : isTablet ? 0.62 : 1;
+      const revealDuration = isMobile ? 0.42 : isTablet ? 0.55 : 0.68;
+      const revealStagger = isMobile ? 0.025 : 0.05;
+      const parallaxScale = isTablet ? 0.5 : 1;
 
       ctx = gsap.context(() => {
         const revealTargets = collectRevealTargets(root);
@@ -120,13 +120,14 @@ export default function GlobalScrollEffects() {
             const depth = clamp(rawDepth * parallaxScale, 0.02, 0.32);
 
             gsap.to(node, {
-              yPercent: depth * 30,
+              yPercent: depth * 38,
               ease: 'none',
+              force3D: true,
               scrollTrigger: {
                 trigger: node,
                 start: 'top bottom',
                 end: 'bottom top',
-                scrub: 1.1,
+                scrub: 0.65,
               },
             });
           });

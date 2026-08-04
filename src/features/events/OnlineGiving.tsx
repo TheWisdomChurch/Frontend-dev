@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Heart, Phone } from 'lucide-react';
+import { ArrowRight, Phone } from 'lucide-react';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import GivingModal from '@/shared/ui/modals/GivingModal';
@@ -61,37 +61,49 @@ export default function OnlineGiving() {
     <>
       <Section padding="none" className="relative bg-[var(--app-dark)]">
         <SectionGlow />
-        <Container size="xl" className="py-section-lg">
-          <div className="mx-auto max-w-[720px]">
-            {/* Gold rule */}
-            <span
-              className="mx-auto mb-10 block h-[2px] w-10 bg-[var(--app-primary)]"
-              aria-hidden="true"
-            />
+        <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
+          <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20">
+            <div data-gsap="reveal" className="max-w-xl lg:sticky lg:top-28">
+              <p className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                Give with purpose
+              </p>
+              <h2
+                className="mt-5 font-sans font-black uppercase leading-[0.92] tracking-[-0.045em] text-white"
+                // eslint-disable-next-line no-restricted-syntax
+                style={{ fontSize: 'var(--type-display-md)' }}
+              >
+                Your generosity
+                <br />
+                <span className="text-[var(--app-primary)]">builds</span> the
+                church.
+              </h2>
 
-            {/* Headline */}
-            <h2
-              className="text-center font-headline font-normal leading-[0.98] text-white"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ fontSize: 'var(--type-display-md)' }}
-            >
-              Your generosity
-              <br />
-              <em className="not-italic text-[var(--app-primary)]">
-                builds
-              </em>{' '}
-              the church.
-            </h2>
+              <blockquote className="mt-8 border-l border-[var(--app-primary)]/60 pl-5 font-ui text-base italic leading-8 text-white/62">
+                &ldquo;As each has purposed in his heart, so let him give… God
+                loves a cheerful giver.&rdquo;
+                <br />
+                <cite className="mt-2 block text-xs not-italic uppercase tracking-[0.16em] text-white/38">
+                  2 Corinthians 9:7
+                </cite>
+              </blockquote>
 
-            {/* Scripture */}
-            <p className="mx-auto mt-7 max-w-[460px] text-center text-body-md italic leading-[1.8] text-white/68">
-              &ldquo;As each has purposed in his heart, so let him give… God
-              loves a cheerful giver.&rdquo;
-              <br />
-              <span className="not-italic text-white/45">
-                2 Corinthians 9:7
-              </span>
-            </p>
+              <div className="mt-9 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleContactCall}
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/16 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  Other ways to give
+                </button>
+                <Link
+                  href="/contact"
+                  className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-white/48 transition hover:text-white"
+                >
+                  Contact us <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
 
             {/* Giving options */}
             {!loading && givingOptions.length > 0 ? (
@@ -100,56 +112,42 @@ export default function OnlineGiving() {
                 initial="hidden"
                 whileInView="show"
                 viewport={staggerViewport}
-                className={`mt-12 grid gap-4 ${
-                  givingOptions.length === 1
-                    ? 'max-w-sm mx-auto'
-                    : givingOptions.length === 2
-                      ? 'sm:grid-cols-2'
-                      : 'sm:grid-cols-2 lg:grid-cols-3'
-                }`}
+                className="border-t border-white/14"
               >
-                {givingOptions.slice(0, 3).map(opt => (
+                {givingOptions.slice(0, 3).map((opt, index) => (
                   <motion.button
                     key={opt.title}
                     variants={staggerItem}
                     type="button"
                     onClick={() => handleGive(opt)}
-                    whileHover={{ y: -3 }}
                     whileTap={{ scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                    className="group relative flex flex-col p-6 text-left border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.07] hover:shadow-[inset_0_1px_0_rgba(201,150,26,0.15)]"
+                    transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                    className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/14 py-7 text-left transition-colors duration-200 hover:bg-white/[0.035] sm:gap-7 sm:px-5 sm:py-9"
                   >
-                    {/* Gold top accent */}
-                    <span
-                      className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-[var(--app-primary)] transition-transform duration-300 [border-radius:var(--radius-card)_var(--radius-card)_0_0] group-hover:scale-x-100"
-                      aria-hidden="true"
-                    />
-
-                    {/* Icon */}
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center bg-[var(--app-primary)]/10 transition duration-300 group-hover:bg-[var(--app-primary)]/18">
-                      <Heart className="h-4 w-4 text-[var(--app-primary)]" />
-                    </div>
-
-                    <p className="font-ui text-body-sm font-bold text-white">
-                      {opt.title}
-                    </p>
-                    {opt.description ? (
-                      <p className="mt-1.5 font-ui text-label leading-[1.65] text-white/45">
-                        {opt.description}
-                      </p>
-                    ) : null}
-
-                    <span className="mt-auto flex items-center justify-between pt-5">
-                      <span className="font-ui text-label font-semibold text-[var(--app-primary)]/70 transition group-hover:text-[var(--app-primary)]">
-                        Give now
+                    <span className="pt-1 font-ui text-xs tabular-nums text-[var(--app-primary)]">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span>
+                      <span className="block font-ui text-lg font-bold leading-6 text-white sm:text-xl">
+                        {opt.title}
                       </span>
-                      <ArrowRight className="h-3.5 w-3.5 text-white/45 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--app-primary)]" />
+                      {opt.description ? (
+                        <span className="mt-2 block max-w-lg font-ui text-sm leading-6 text-white/45">
+                          {opt.description}
+                        </span>
+                      ) : null}
+                      <span className="mt-4 inline-flex items-center gap-2 font-ui text-xs font-bold uppercase tracking-[0.12em] text-[var(--app-primary)] sm:hidden">
+                        Give now <ArrowRight className="h-3.5 w-3.5" />
+                      </span>
+                    </span>
+                    <span className="mt-1 hidden h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/55 transition duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black sm:flex">
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </motion.button>
                 ))}
               </motion.div>
             ) : !loading ? (
-              <div className="mt-12 text-center">
+              <div className="border-t border-white/14 pt-9 lg:text-left">
                 <button
                   type="button"
                   onClick={() =>
@@ -166,29 +164,6 @@ export default function OnlineGiving() {
                 </button>
               </div>
             ) : null}
-
-            {/* Secondary actions */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={handleContactCall}
-                className="inline-flex h-10 items-center gap-2 border border-white/12 px-5 font-ui text-label font-semibold text-white/50 transition hover:border-white/22 hover:text-white/80 active:scale-[0.98]"
-              >
-                <Phone className="h-3.5 w-3.5" />
-                Other ways to give
-              </button>
-              <Link
-                href="/contact"
-                className="inline-flex h-10 items-center px-5 font-ui text-label text-white/45 transition hover:text-white/65"
-              >
-                Contact us
-              </Link>
-            </div>
-
-            {/* Trust line */}
-            <p className="mt-10 text-center font-ui text-caption uppercase tracking-[0.18em] text-white/45">
-              100% Secured · Instant Receipt · Tax Deductible
-            </p>
           </div>
         </Container>
       </Section>
