@@ -80,9 +80,22 @@ const nextConfig: NextConfig = {
     // ga.ts, the Ahrefs Script tag in layout.tsx, and Cloudflare's
     // auto-injected beacon (present whenever the site is proxied through
     // Cloudflare, not something this app's code controls).
+    // Next's development runtime (webpack + React Refresh) evaluates the
+    // generated module strings. Allow that only for `next dev`; production
+    // keeps the stricter policy below.
+    const scriptSrc = [
+      "'self'",
+      "'unsafe-inline'",
+      ...(process.env.NODE_ENV === 'development' ? ["'unsafe-eval'"] : []),
+      'https://analytics.ahrefs.com',
+      'https://connect.facebook.net',
+      'https://www.googletagmanager.com',
+      'https://static.cloudflareinsights.com',
+    ].join(' ');
+
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://analytics.ahrefs.com https://connect.facebook.net https://www.googletagmanager.com https://static.cloudflareinsights.com",
+      `script-src ${scriptSrc}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://*.ytimg.com https://*.supabase.co https://www.facebook.com",
       "font-src 'self' data:",

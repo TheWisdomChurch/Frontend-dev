@@ -140,7 +140,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         bricolageGrotesque.variable,
         worksans.variable,
         playfair.variable,
-        'scroll-smooth antialiased'
+        'antialiased'
       )}
       suppressHydrationWarning
     >

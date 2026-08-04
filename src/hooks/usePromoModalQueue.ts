@@ -4,12 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type PromoModalKey = 'event' | 'dailyPrayer' | 'confession';
 
-const TRIGGER_DELAY_MS = 1200;
-const ADVANCE_GRACE_MS = 900;
-// A brand-new visitor (nothing in localStorage yet) can be eligible for all
-// three modals at once — give them a longer breather between each one so
-// the first visit doesn't feel like three stacked interrupts.
-const FIRST_VISIT_ADVANCE_GRACE_MS = 4000;
+// Give visitors time to understand and interact with the page before a
+// campaign interrupts them. Only one campaign may appear per tab session.
+const TRIGGER_DELAY_MS = 12000;
+const SESSION_SHOWN_KEY = 'wisdom_home_promo_shown';
 
 const DAILY_PRAYER_STORAGE_KEY = 'wisdom_daily_prayer_last_shown';
 const CONFESSION_STORAGE_KEY = 'wisdom_confession_last_shown';
@@ -71,16 +69,7 @@ export function usePromoModalQueue({
   const [active, setActive] = useState<PromoModalKey | null>(null);
   const eventCooldownUntilRef = useRef(0);
   const triggerTimerRef = useRef<number | null>(null);
-  const advanceTimerRef = useRef<number | null>(null);
-  // Captured once, before this session can mark anything as seen — true
-  // only for a visitor whose browser has never shown either
-  // localStorage-gated modal before. Lazily computed on first render only.
-  const isFirstVisitRef = useRef<boolean | null>(null);
-  if (isFirstVisitRef.current === null) {
-    isFirstVisitRef.current =
-      readStorage(DAILY_PRAYER_STORAGE_KEY) === null &&
-      readStorage(CONFESSION_STORAGE_KEY) === null;
-  }
+  const hasShownRef = useRef(false);
 
   const eligible = useCallback(
     (key: PromoModalKey): boolean => {
@@ -99,10 +88,25 @@ export function usePromoModalQueue({
   }, [eligible]);
 
   useEffect(() => {
-    if (active) return;
+    try {
+      hasShownRef.current = sessionStorage.getItem(SESSION_SHOWN_KEY) === '1';
+    } catch {
+      // Session storage may be unavailable in privacy-restricted browsers.
+    }
+
+    if (active || hasShownRef.current) return;
 
     triggerTimerRef.current = window.setTimeout(() => {
-      setActive(current => current ?? nextEligible());
+      const next = nextEligible();
+      if (!next) return;
+
+      hasShownRef.current = true;
+      try {
+        sessionStorage.setItem(SESSION_SHOWN_KEY, '1');
+      } catch {
+        // The in-memory guard still prevents another modal this page view.
+      }
+      setActive(current => current ?? next);
     }, TRIGGER_DELAY_MS);
 
     return () => {
@@ -111,14 +115,6 @@ export function usePromoModalQueue({
       }
     };
   }, [active, nextEligible]);
-
-  useEffect(() => {
-    return () => {
-      if (advanceTimerRef.current !== null) {
-        window.clearTimeout(advanceTimerRef.current);
-      }
-    };
-  }, []);
 
   const closeActive = useCallback(
     (remindLater = false) => {
@@ -133,14 +129,8 @@ export function usePromoModalQueue({
       }
 
       setActive(null);
-      const graceMs = isFirstVisitRef.current
-        ? FIRST_VISIT_ADVANCE_GRACE_MS
-        : ADVANCE_GRACE_MS;
-      advanceTimerRef.current = window.setTimeout(() => {
-        setActive(nextEligible());
-      }, graceMs);
     },
-    [active, nextEligible]
+    [active]
   );
 
   return { active, closeActive };

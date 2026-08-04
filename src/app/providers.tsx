@@ -5,7 +5,6 @@ import { AnalyticsProvider } from '@/shared/providers/AnalyticsProvider';
 import { NotificationProvider } from '@/shared/contexts/NotificationContext';
 import { ServiceUnavailableProvider } from '@/shared/contexts/ServiceUnavailableContext';
 import { HeaderProvider } from '@/shared/providers/NavProviders';
-import AppStartupLoader from '@/shared/providers/AppStartupLoader';
 import ErrorBoundary from '@/shared/components/ErrorBoundary';
 import ClientHeader from '@/shared/components/ClientHeader';
 import ClientFooter from '@/shared/components/ClientFooter';
@@ -26,7 +25,6 @@ export function Providers({ children }: { children: ReactNode }) {
         <ServiceUnavailableProvider>
           <HeaderProvider>
             <ErrorBoundary>
-              <AppStartupLoader />
               <ScrollHandler />
               <GlobalScrollEffects />
 

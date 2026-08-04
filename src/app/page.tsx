@@ -34,6 +34,11 @@ const SeniorPastor = nextDynamic(
   { ssr: true, loading: () => <SectionFallback /> }
 );
 
+const Conversations = nextDynamic(() => import('@/features/Conversations'), {
+  ssr: true,
+  loading: () => <SectionFallback />,
+});
+
 const JoinUs = nextDynamic(() => import('@/features/events/JoinUs'), {
   ssr: true,
   loading: () => <SectionFallback />,
@@ -193,6 +198,10 @@ export default function Home() {
 
         <section className="home-section perf-section" suppressHydrationWarning>
           <SeniorPastor />
+        </section>
+
+        <section className="home-section perf-section" suppressHydrationWarning>
+          <Conversations />
         </section>
 
         <section className="home-section perf-section" suppressHydrationWarning>

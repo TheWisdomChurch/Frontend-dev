@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { motion, AnimatePresence } from '@/lib/safe-motion';
 import {
   ArrowRight,
   CheckCircle2,
@@ -17,6 +18,12 @@ import { Button } from '@/shared/utils/buttons';
 import { H2, BodyLG, BodyMD, BodySM, SmallText } from '@/shared/text';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { ActionBanner } from '@/shared/components/site/PublicPageBlocks';
+import { ScrollFadeIn } from '@/shared/ui/motion';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
@@ -26,6 +33,13 @@ type UiTestimony = {
   title: string;
   quote: string;
 };
+
+function initialsOf(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  const first = parts[0]?.[0] ?? '';
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? '') : '';
+  return `${first}${last}`.toUpperCase() || '—';
+}
 
 const TESTIMONIAL_FORM_BASE_URL =
   process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/share-testimony';
@@ -58,24 +72,45 @@ function TestimonyPreview({
       type="button"
       variant="ghost"
       onClick={onClick}
-      className={`group w-full rounded-2xl border p-4 !justify-start text-left transition duration-300 ${
+      className={`group relative w-full overflow-hidden rounded-2xl border p-4 !justify-start text-left transition-all duration-300 ${
         active
           ? 'border-[var(--app-primary)]/45 bg-[var(--app-primary)]/12'
           : 'border-white/10 bg-white/[0.045] hover:border-white/18 hover:bg-white/[0.07]'
       }`}
     >
-      <BodySM className="line-clamp-2 text-white/72">{testimony.quote}</BodySM>
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <span className="truncate text-sm font-semibold text-white">
-          {testimony.name}
-        </span>
-        <ArrowRight
-          className={`h-4 w-4 shrink-0 transition ${
+      <span
+        className={`absolute inset-y-0 left-0 w-[2px] bg-[var(--app-primary)] transition-transform duration-300 ${
+          active ? 'scale-y-100' : 'scale-y-0'
+        }`}
+        aria-hidden="true"
+      />
+      <div className="flex items-start gap-3">
+        <span
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-ui text-[11px] font-bold transition-colors duration-300 ${
             active
-              ? 'text-[var(--app-primary)]'
-              : 'text-white/45 group-hover:translate-x-1 group-hover:text-white/70'
+              ? 'bg-[var(--app-primary)] text-black'
+              : 'bg-white/10 text-white/60'
           }`}
-        />
+        >
+          {initialsOf(testimony.name)}
+        </span>
+        <div className="min-w-0 flex-1">
+          <BodySM className="line-clamp-2 text-white/72">
+            {testimony.quote}
+          </BodySM>
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <span className="truncate text-sm font-semibold text-white">
+              {testimony.name}
+            </span>
+            <ArrowRight
+              className={`h-4 w-4 shrink-0 transition ${
+                active
+                  ? 'text-[var(--app-primary)]'
+                  : 'text-white/45 group-hover:translate-x-1 group-hover:text-white/70'
+              }`}
+            />
+          </div>
+        </div>
       </div>
     </Button>
   );
@@ -187,9 +222,17 @@ export default function TestimoniesPage() {
         chips={['Faith', 'Healing', 'Family', 'Breakthroughs']}
       />
 
-      <Section padding="none" className="bg-[var(--app-dark)]">
-        <Container size="xl" className="py-14 sm:py-16 lg:py-20">
-          <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <Section
+        padding="none"
+        className="relative overflow-hidden bg-[var(--app-dark)]"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_85%_0%,rgba(201,150,26,0.08),transparent_60%)]"
+          aria-hidden="true"
+        />
+
+        <Container size="xl" className="relative py-14 sm:py-16 lg:py-20">
+          <ScrollFadeIn className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="mb-3 text-label font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
                 Testimony stories
@@ -202,12 +245,12 @@ export default function TestimoniesPage() {
               href={shareUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border border-[var(--app-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-black"
+              className="group inline-flex items-center gap-2 border border-[var(--app-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--app-primary)] transition-all duration-300 hover:bg-[var(--app-primary)] hover:text-black"
             >
               Share your story
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </a>
-          </div>
+          </ScrollFadeIn>
 
           <div>
             {loading ? (
@@ -236,51 +279,99 @@ export default function TestimoniesPage() {
                 </div>
               </div>
             ) : (
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
-                <article className="flex min-h-[360px] flex-col justify-between border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-                  <div>
-                    <Quote className="h-8 w-8 text-[var(--app-primary)]" />
-                    <BodyLG className="mt-6 line-clamp-4 text-white/80">
-                      &ldquo;{activeTestimony.quote}&rdquo;
-                    </BodyLG>
-                  </div>
+              <ScrollFadeIn
+                delay={0.1}
+                className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]"
+              >
+                <article className="relative flex min-h-[360px] flex-col justify-between overflow-hidden border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+                  {/* Decorative oversized quote mark — echoes the homepage widget */}
+                  <span
+                    className="pointer-events-none absolute -right-2 -top-10 select-none font-headline text-[10rem] leading-none text-white/[0.04]"
+                    aria-hidden="true"
+                  >
+                    &rdquo;
+                  </span>
 
-                  <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <BodyMD className="font-semibold text-white">
-                        {activeTestimony.name}
-                      </BodyMD>
-                      <SmallText className="mt-1 text-white/45">
-                        {activeTestimony.title}
-                      </SmallText>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeTestimony.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      className="relative"
+                    >
+                      <Quote className="h-8 w-8 text-[var(--app-primary)]" />
+                      <BodyLG className="mt-6 line-clamp-4 text-white/80">
+                        &ldquo;{activeTestimony.quote}&rdquo;
+                      </BodyLG>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  <div className="relative mt-8 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/16 font-ui text-sm font-bold text-[var(--app-primary)] ring-1 ring-[var(--app-primary)]/30">
+                        {initialsOf(activeTestimony.name)}
+                      </span>
+                      <div>
+                        <BodyMD className="font-semibold text-white">
+                          {activeTestimony.name}
+                        </BodyMD>
+                        <SmallText className="mt-1 text-white/45">
+                          {activeTestimony.title}
+                        </SmallText>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={goPrev}
-                        aria-label="Previous testimony"
-                        className="h-9 w-9 border border-white/12 text-white/60 hover:text-white"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={goNext}
-                        aria-label="Next testimony"
-                        className="h-9 w-9 border border-white/12 text-white/60 hover:text-white"
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
+
+                    <div className="flex items-center gap-4">
+                      {/* Progress dots — mirrors HomeTestimonials' carousel language */}
+                      <div className="hidden items-center gap-1.5 sm:flex">
+                        {visibleTestimonies.map((testimony, index) => (
+                          <span
+                            key={testimony.id}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                              index === activeIndex
+                                ? 'w-5 bg-[var(--app-primary)]'
+                                : 'w-1.5 bg-white/20'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={goPrev}
+                          aria-label="Previous testimony"
+                          className="h-9 w-9 border border-white/12 text-white/60 transition-colors duration-200 hover:border-[var(--app-primary)]/40 hover:text-[var(--app-primary)]"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={goNext}
+                          aria-label="Next testimony"
+                          className="h-9 w-9 border border-white/12 text-white/60 transition-colors duration-200 hover:border-[var(--app-primary)]/40 hover:text-[var(--app-primary)]"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </article>
 
-                <aside className="flex gap-2 overflow-x-auto pb-1 lg:max-h-[360px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden">
+                <motion.aside
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={staggerViewport}
+                  className="flex gap-2 overflow-x-auto pb-1 lg:max-h-[360px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden"
+                >
                   {visibleTestimonies.map((testimony, index) => (
-                    <div
+                    <motion.div
                       key={testimony.id}
+                      variants={staggerItem}
                       className="min-w-[240px] lg:min-w-0"
                     >
                       <TestimonyPreview
@@ -288,10 +379,10 @@ export default function TestimoniesPage() {
                         active={index === activeIndex}
                         onClick={() => setActiveIndex(index)}
                       />
-                    </div>
+                    </motion.div>
                   ))}
-                </aside>
-              </div>
+                </motion.aside>
+              </ScrollFadeIn>
             )}
           </div>
         </Container>

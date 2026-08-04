@@ -2,46 +2,27 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 
 import { whatWeDoData } from '@/lib/data';
-import { Section } from '@/shared/layout';
 import { IMAGE_QUALITY } from '@/shared/constants';
-import {
-  staggerContainer,
-  staggerItem,
-  staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+import { Container, Section } from '@/shared/layout';
 
-const SLIDES = whatWeDoData.slice(0, 4).map((item, i) => ({
+const PILLARS = whatWeDoData.slice(0, 4).map((item, index) => ({
   ...item,
+  number: String(index + 1).padStart(2, '0'),
   headline:
     [
-      'We raise\nbelievers,\nnot just members.',
-      'We gather as\na people\nof prayer.',
-      'We worship\nwith our\nwhole heart.',
-      'We are shaped\nby the\nliving Word.',
-    ][i] ?? item.title,
+      'Believers, not just members.',
+      'A people of prayer.',
+      'Wholehearted worship.',
+      'Shaped by the living Word.',
+    ][index] ?? item.title,
 }));
 
-const AUTO_MS = 6000;
-
 export default function WhatWeDo() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  const goTo = useCallback(
-    (i: number) => setActive((i + SLIDES.length) % SLIDES.length),
-    []
-  );
-
-  useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => goTo(active + 1), AUTO_MS);
-    return () => clearInterval(t);
-  }, [active, paused, goTo]);
+  const reduceMotion = useReducedMotion();
 
   return (
     <Section
@@ -49,203 +30,106 @@ export default function WhatWeDo() {
       padding="none"
       fullHeight={false}
       perf="none"
-      className="bg-[var(--app-dark)]"
+      className="relative bg-[var(--app-dark)] text-white"
     >
       <div
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        className="contents"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_12%,rgba(201,150,26,0.12),transparent_30%)]"
+      />
+
+      <Container
+        size="xl"
+        className="relative px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-32"
       >
-        <div className="grid min-h-[600px] grid-cols-1 lg:grid-cols-2 lg:min-h-[680px]">
-          {/* ── Left — content ──────────────────────────────────── */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
-            className="flex flex-col justify-between px-6 py-section-md sm:px-10 lg:px-14 xl:px-20"
-          >
-            <div className="flex flex-col">
-              <motion.p
-                variants={staggerItem}
-                className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+        <motion.header
+          initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.45 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-14 flex flex-col gap-8 border-b border-white/15 pb-12 md:mb-0 md:grid md:grid-cols-12 md:items-end md:gap-6 md:pb-16"
+        >
+          <div className="md:col-span-3">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.24em] text-[var(--app-primary)]">
+              Who we are
+            </p>
+          </div>
+
+          <div className="md:col-span-7">
+            <h2 className="max-w-4xl font-headline text-[clamp(2.65rem,6vw,6.5rem)] font-normal leading-[0.94] tracking-[-0.045em] text-white">
+              Faith made visible
+              <span className="block text-white/38">in everyday life.</span>
+            </h2>
+          </div>
+
+          <div className="md:col-span-2 md:flex md:justify-end">
+            <Link
+              href="/about"
+              className="group inline-flex items-center gap-3 border-b border-[var(--app-primary)] pb-2 font-ui text-sm font-semibold text-white transition-colors duration-300 hover:text-[var(--app-primary-light)]"
+            >
+              Our story
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+        </motion.header>
+
+        <div className="divide-y divide-white/15 border-b border-white/15 md:divide-y-0 md:border-b-0">
+          {PILLARS.map((pillar, index) => {
+            const src =
+              typeof pillar.image === 'string'
+                ? pillar.image
+                : (pillar.image as { src: string }).src;
+
+            return (
+              <motion.article
+                key={pillar.id}
+                initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+                whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{
+                  duration: 0.65,
+                  delay: reduceMotion ? 0 : index * 0.06,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="group relative flex flex-col gap-7 py-10 md:grid md:min-h-[270px] md:grid-cols-12 md:items-center md:gap-6 md:border-b md:border-white/15 md:py-9"
               >
-                Who We Are
-              </motion.p>
-
-              {/* Headline — cross-fades between slides */}
-              <motion.div
-                variants={staggerItem}
-                className="relative"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ minHeight: 'clamp(7rem, 14vw, 11rem)' }}
-              >
-                {SLIDES.map((s, i) => (
-                  <h2
-                    key={i}
-                    className="absolute font-headline font-normal leading-[1.05] text-white"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      fontSize: 'var(--type-display-md)',
-                      opacity: i === active ? 1 : 0,
-                      transform:
-                        i === active
-                          ? 'translateY(0)'
-                          : i < active
-                            ? 'translateY(-6%)'
-                            : 'translateY(6%)',
-                      transition: 'opacity 0.55s ease, transform 0.55s ease',
-                      pointerEvents: i === active ? 'auto' : 'none',
-                    }}
-                  >
-                    {s.headline.split('\n').map((line, li) => (
-                      <span key={li} className="block">
-                        {line}
-                      </span>
-                    ))}
-                  </h2>
-                ))}
-              </motion.div>
-
-              {/* Gold rule */}
-              <motion.span
-                variants={staggerItem}
-                className="mt-8 block h-[2px] w-12 bg-[var(--app-primary)]"
-                aria-hidden="true"
-              />
-
-              {/* Description */}
-              <motion.div
-                variants={staggerItem}
-                className="relative mt-6"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ minHeight: '9rem' }}
-              >
-                {SLIDES.map((s, i) => (
-                  <p
-                    key={i}
-                    className="absolute max-w-[380px] font-ui text-body-md leading-[1.9] text-white/60"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{
-                      opacity: i === active ? 1 : 0,
-                      transform:
-                        i === active ? 'translateY(0)' : 'translateY(6px)',
-                      transition:
-                        'opacity 0.55s ease 0.1s, transform 0.55s ease 0.1s',
-                      pointerEvents: i === active ? 'auto' : 'none',
-                    }}
-                  >
-                    {s.description}
-                  </p>
-                ))}
-              </motion.div>
-
-              {/* Manual navigation */}
-              <motion.div
-                variants={staggerItem}
-                className="mt-8 flex items-center gap-4"
-              >
-                <button
-                  type="button"
-                  onClick={() => goTo(active - 1)}
-                  aria-label="Previous"
-                  className="grid h-9 w-9 flex-none place-items-center rounded-full border border-white/15 text-white/50 transition hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                </button>
-
-                <div
-                  className="flex items-center gap-2"
-                  role="tablist"
-                  aria-label="What we do slides"
-                >
-                  {SLIDES.map((s, i) => (
-                    <button
-                      key={s.title}
-                      type="button"
-                      role="tab"
-                      aria-selected={i === active}
-                      aria-label={`Go to slide ${i + 1}`}
-                      onClick={() => goTo(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        i === active
-                          ? 'w-6 bg-[var(--app-primary)]'
-                          : 'w-1.5 bg-white/20 hover:bg-white/35'
-                      }`}
-                    />
-                  ))}
+                <div className="flex items-center justify-between md:col-span-1 md:block md:self-start md:pt-2">
+                  <span className="font-ui text-xs font-semibold tracking-[0.2em] text-white/35">
+                    {pillar.number}
+                  </span>
+                  <span className="h-px w-12 bg-[var(--app-primary)]/60 md:hidden" />
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => goTo(active + 1)}
-                  aria-label="Next"
-                  className="grid h-9 w-9 flex-none place-items-center rounded-full border border-white/15 text-white/50 transition hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
-                >
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </motion.div>
-            </div>
+                <div className="md:col-span-4">
+                  <p className="mb-3 font-ui text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]/85">
+                    {pillar.title}
+                  </p>
+                  <h3 className="max-w-md font-headline text-[clamp(1.9rem,3vw,3.3rem)] font-normal leading-[1.02] tracking-[-0.035em] text-white transition-colors duration-500 group-hover:text-[var(--app-primary-light)]">
+                    {pillar.headline}
+                  </h3>
+                </div>
 
-            {/* CTA */}
-            <motion.div variants={staggerItem} className="mt-10">
-              <Link
-                href="/about"
-                className="group inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-body-sm font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
-              >
-                Our Story
-                <ArrowRight className="h-3.5 w-3.5 transition duration-200 group-hover:translate-x-1" />
-              </Link>
-            </motion.div>
-          </motion.div>
+                <div className="md:col-span-4">
+                  <p className="max-w-xl font-ui text-sm leading-7 text-white/58 sm:text-[0.95rem] sm:leading-8">
+                    {pillar.description}
+                  </p>
+                </div>
 
-          {/* ── Right — sliding editorial photos ────────────────── */}
-          <motion.div
-            variants={staggerItem}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
-            className="relative min-h-[360px] overflow-hidden border-l border-white/[0.05] lg:min-h-0"
-          >
-            {SLIDES.map((s, i) => {
-              const src =
-                typeof s.image === 'string'
-                  ? s.image
-                  : (s.image as { src: string }).src;
-              return (
-                <div
-                  key={i}
-                  className="absolute inset-0 transition-opacity duration-700"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    opacity: i === active ? 1 : 0,
-                    zIndex: i === active ? 1 : 0,
-                  }}
-                  aria-hidden={i !== active}
-                >
+                <div className="relative aspect-[16/10] overflow-hidden bg-white/5 md:col-span-3 md:aspect-[5/3]">
                   <Image
                     src={src}
-                    alt={s.imageAlt || 'The Wisdom Church'}
+                    alt={pillar.imageAlt || pillar.title}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    sizes="(max-width: 767px) 100vw, 25vw"
                     quality={IMAGE_QUALITY}
-                    priority={i === 0}
-                    className="object-cover object-[center_14%] sm:object-[center_18%] lg:object-[center_20%]"
+                    className="object-cover grayscale-[35%] transition-[transform,filter] duration-700 ease-out group-hover:scale-[1.045] group-hover:grayscale-0"
                   />
-                  {/* Heavy dark base — image is visible but dramatically darkened */}
-                  <div className="absolute inset-0 bg-black/65" />
-                  {/* Left-to-right blend into content column */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--app-dark)]/95 via-[var(--app-dark)]/55 to-[var(--app-dark)]/25" />
-                  {/* Bottom vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)]/90 via-transparent to-transparent" />
-                  {/* Top vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-[var(--app-dark)]/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-black/45 via-transparent to-[var(--app-primary)]/10 transition-opacity duration-500 group-hover:opacity-60" />
                 </div>
-              );
-            })}
-          </motion.div>
+              </motion.article>
+            );
+          })}
         </div>
-      </div>
+      </Container>
     </Section>
   );
 }

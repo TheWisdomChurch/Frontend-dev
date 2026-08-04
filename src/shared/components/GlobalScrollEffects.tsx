@@ -111,7 +111,10 @@ export default function GlobalScrollEffects() {
           gsap.set(revealTargets, { clearProps: 'all' });
         }
 
-        if (!reduceMotion && parallaxTargets.length > 0) {
+        // Scrubbed transforms are intentionally desktop-only. On touch
+        // devices they compete with scrolling and can make the page feel as
+        // though it is moving behind the user's finger.
+        if (!reduceMotion && !isMobile && parallaxTargets.length > 0) {
           parallaxTargets.forEach(node => {
             const rawDepth = Number(node.dataset.parallaxGlobal ?? 0.14);
             const depth = clamp(rawDepth * parallaxScale, 0.02, 0.32);

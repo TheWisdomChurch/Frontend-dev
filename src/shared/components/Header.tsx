@@ -137,7 +137,6 @@ export default function Header() {
               alt=""
               width={36}
               height={36}
-              priority
               className="site-header__logo"
             />
             <span className="site-header__wordmark" aria-hidden="true">

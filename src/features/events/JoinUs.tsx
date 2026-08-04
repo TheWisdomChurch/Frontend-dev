@@ -240,7 +240,7 @@ export default function JoinWisdomHouse() {
   const [selectedDept, setSelectedDept] = useState<Department | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [activeCard, setActiveCard] = useState<number>(0);
+  const [activeCard, setActiveCard] = useState<number | null>(null);
 
   const departmentOptions = useMemo(() => departments.map(d => d.title), []);
 
@@ -401,14 +401,14 @@ export default function JoinWisdomHouse() {
         </Container>
       </div>
 
-      {/* ── Department grid ───────────────────────────────────── */}
+      {/* ── Department index ──────────────────────────────────── */}
       <Container size="xl" className="relative py-14 lg:py-[4.5rem]">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
           viewport={staggerViewport}
-          className="grid grid-cols-1 gap-px overflow-hidden rounded-card bg-white/8 sm:grid-cols-2 lg:grid-cols-3"
+          className="border-t border-white/10"
         >
           {departments.map((dept, index) => {
             const Icon = dept.icon;
@@ -420,54 +420,75 @@ export default function JoinWisdomHouse() {
                 type="button"
                 onClick={() => openFor(dept)}
                 onMouseEnter={() => setActiveCard(index)}
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                className={`group relative flex flex-col overflow-hidden p-6 text-left transition-colors duration-300 sm:p-7 ${
-                  isActive
-                    ? 'bg-white/[0.045] shadow-[inset_0_0_0_1px_rgba(201,150,26,0.28)]'
-                    : 'bg-white/[0.02] hover:bg-white/[0.045] hover:shadow-[inset_0_0_0_1px_rgba(201,150,26,0.28)]'
-                }`}
+                onMouseLeave={() => setActiveCard(null)}
+                whileTap={{ scale: 0.995 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                className="group relative flex w-full items-center gap-6 border-b border-white/10 py-7 text-left sm:gap-10 sm:py-8"
               >
+                {/* Hover wash — soft radial bloom centered on the row */}
                 <span
-                  className={`absolute inset-x-0 top-0 h-[2px] origin-left bg-[var(--app-primary)] transition-transform duration-300 ${
-                    isActive
-                      ? 'scale-x-100'
-                      : 'scale-x-0 group-hover:scale-x-100'
+                  className={`pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_100%_at_0%_50%,rgba(201,150,26,0.09),transparent_75%)] transition-opacity duration-500 ${
+                    isActive ? 'opacity-100' : 'opacity-0'
                   }`}
                   aria-hidden="true"
                 />
-                <div
-                  className={`mb-5 flex h-12 w-12 items-center justify-center transition-all duration-300 group-hover:scale-[1.08] ${
+
+                {/* Index number */}
+                <span
+                  className={`relative w-10 shrink-0 font-headline text-3xl font-normal tabular-nums transition-all duration-500 sm:w-16 sm:text-4xl ${
                     isActive
-                      ? 'scale-[1.08] bg-[var(--app-primary)]/16 ring-1 ring-[var(--app-primary)]/30'
-                      : 'bg-white/6 ring-1 ring-white/0 group-hover:bg-[var(--app-primary)]/16 group-hover:ring-[var(--app-primary)]/30'
+                      ? 'text-[var(--app-primary)]'
+                      : 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.28)]'
+                  }`}
+                  aria-hidden="true"
+                >
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+
+                {/* Icon */}
+                <div
+                  className={`relative flex h-11 w-11 shrink-0 items-center justify-center transition-all duration-500 sm:h-14 sm:w-14 ${
+                    isActive
+                      ? 'rotate-0 scale-[1.06] bg-[var(--app-primary)]/16 ring-1 ring-[var(--app-primary)]/30'
+                      : '-rotate-3 bg-white/6 ring-1 ring-white/0'
                   }`}
                 >
                   <Icon
-                    className={`h-[1.15rem] w-[1.15rem] transition duration-300 group-hover:text-[var(--app-primary)] ${
+                    className={`h-5 w-5 transition-colors duration-500 sm:h-[1.4rem] sm:w-[1.4rem] ${
                       isActive ? 'text-[var(--app-primary)]' : 'text-white/45'
                     }`}
                   />
                 </div>
-                <p className="font-ui text-body-md font-bold text-white">
-                  {dept.title}
-                </p>
-                <p className="mt-1.5 font-ui text-label leading-[1.65] text-white/48">
-                  {dept.description}
-                </p>
+
+                {/* Title + description */}
+                <div
+                  className={`relative min-w-0 flex-1 transition-transform duration-500 ${isActive ? 'translate-x-1.5' : ''}`}
+                >
+                  <p className="font-ui text-body-lg font-bold text-white sm:text-heading-sm">
+                    {dept.title}
+                  </p>
+                  <p className="mt-1 max-w-md truncate font-ui text-label leading-[1.6] text-white/48 sm:text-body-sm">
+                    {dept.description}
+                  </p>
+                </div>
+
+                {/* CTA */}
                 <span
-                  className={`mt-5 inline-flex items-center gap-1.5 font-ui text-label font-semibold transition-all duration-200 group-hover:gap-2.5 group-hover:text-[var(--app-primary)] ${
+                  className={`relative hidden shrink-0 items-center gap-1.5 font-ui text-label font-semibold transition-all duration-300 sm:inline-flex ${
                     isActive
                       ? 'gap-2.5 text-[var(--app-primary)]'
-                      : 'text-white/45'
+                      : 'text-white/40'
                   }`}
                 >
-                  View team{' '}
+                  View team
                   <ArrowRight
-                    className={`h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 ${isActive ? 'translate-x-0.5' : ''}`}
+                    className={`h-3.5 w-3.5 transition-transform duration-300 ${isActive ? 'translate-x-1' : ''}`}
                   />
                 </span>
+                <ArrowRight
+                  className={`relative h-4 w-4 shrink-0 text-white/40 transition-transform duration-300 sm:hidden ${isActive ? 'translate-x-1 text-[var(--app-primary)]' : ''}`}
+                  aria-hidden="true"
+                />
               </motion.button>
             );
           })}
