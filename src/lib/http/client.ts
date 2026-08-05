@@ -1,5 +1,10 @@
 import { trackApiRequestEnd, trackApiRequestStart } from '@/lib/apiActivity';
-import { HttpError, getErrorMessage, isHttpError } from './errors';
+import {
+  HttpError,
+  getErrorMessage,
+  isHttpError,
+  notifyServiceUnavailable,
+} from './errors';
 import {
   extractValidationErrors,
   getPayloadMessage,
@@ -121,7 +126,10 @@ export function createHttpClient(config: HttpClientConfig) {
         }
         if (isHttpError(error) && error.statusCode < 500) throw error;
         if (!isIdempotent || attempt === maxAttempts - 1) {
-          if (isHttpError(error)) throw error;
+          if (isHttpError(error)) {
+            notifyServiceUnavailable(error);
+            throw error;
+          }
           throw new HttpError(getErrorMessage(error), {
             statusCode: 0,
             details: error,

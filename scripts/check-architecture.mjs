@@ -40,6 +40,10 @@ const sourceFiles = filesBelow(join(root, 'src')).filter(file =>
 for (const file of sourceFiles) {
   const source = readFileSync(file, 'utf8');
   const displayPath = relative(root, file);
+  const normalizedSource = source.replace(/^\uFEFF/, '').trimStart();
+  const isClientComponent = /['"]use client['"]/.test(
+    normalizedSource.slice(0, 512)
+  );
 
   if (source.trim().length === 0) {
     violations.push(`${displayPath}: empty source files are not allowed`);
@@ -63,6 +67,44 @@ for (const file of sourceFiles) {
   if (/\bfetch\s*\(/.test(source) && !directFetchAllowed.has(displayPath)) {
     violations.push(
       `${displayPath}: backend calls must use the shared HTTP transport or a domain API adapter`
+    );
+  }
+
+  if (displayPath.startsWith('src/app/') && /\.tsx$/.test(displayPath)) {
+    const usesClientRuntime =
+      /\b(useState|useEffect|useReducer|useContext|useRef|useRouter|usePathname|useSearchParams)\s*\(|\b(window|document)\./.test(
+        source
+      );
+    if (usesClientRuntime && !isClientComponent) {
+      violations.push(
+        `${displayPath}: client runtime APIs require a top-level 'use client' directive`
+      );
+    }
+    if (
+      isClientComponent &&
+      /\b(export\s+const\s+metadata|generateMetadata\s*\()/.test(source)
+    ) {
+      violations.push(
+        `${displayPath}: metadata exports belong in a server component or route layout`
+      );
+    }
+  }
+}
+
+for (const boundary of ['src/app/error.tsx', 'src/app/global-error.tsx']) {
+  const boundaryPath = join(root, boundary);
+  if (!existsSync(boundaryPath)) {
+    violations.push(
+      `${boundary}: required application error boundary is missing`
+    );
+    continue;
+  }
+  const source = readFileSync(boundaryPath, 'utf8')
+    .replace(/^\uFEFF/, '')
+    .trimStart();
+  if (!/['"]use client['"]/.test(source.slice(0, 512))) {
+    violations.push(
+      `${boundary}: Next.js error boundaries must be client components`
     );
   }
 }

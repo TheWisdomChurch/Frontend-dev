@@ -4,6 +4,8 @@ export interface ValidationFieldError {
   message: string;
 }
 
+export const SERVICE_UNAVAILABLE_EVENT = 'wc:service-unavailable';
+
 export class HttpError extends Error {
   readonly statusCode: number;
   readonly details?: unknown;
@@ -33,4 +35,18 @@ export function isHttpError(error: unknown): error is HttpError {
 export function getErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message) return error.message;
   return 'Network request failed';
+}
+
+export function notifyServiceUnavailable(error: HttpError): void {
+  if (
+    typeof window === 'undefined' ||
+    ![502, 503, 504].includes(error.statusCode)
+  ) {
+    return;
+  }
+  window.dispatchEvent(
+    new CustomEvent(SERVICE_UNAVAILABLE_EVENT, {
+      detail: { statusCode: error.statusCode },
+    })
+  );
 }
