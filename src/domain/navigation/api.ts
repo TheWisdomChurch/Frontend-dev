@@ -7,10 +7,11 @@ export function getRoutePreview(
   input: RoutePreviewRequest,
   signal?: AbortSignal
 ) {
-  return http.request<RoutePreview>('/api/navigation/route', {
+  return http.request<RoutePreview>('/api/v1/navigation/routes/preview', {
     method: 'POST',
     body: JSON.stringify(input),
     signal,
     skipCache: true,
+    unwrap: true,
   });
 }
