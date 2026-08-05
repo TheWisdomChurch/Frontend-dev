@@ -45,6 +45,9 @@ import { Media } from '@/shared/ui/Media';
 import { storeClient } from '@/lib/api/storeClient';
 import PageHero from '@/features/hero/PageHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
+import { useApiQuery } from '@/hooks/useApiQuery';
+
+const fetchProducts = (signal: AbortSignal) => storeClient.listProducts(signal);
 
 const categoryLabels: Record<string, string> = {
   all: 'All Products',
@@ -67,7 +70,8 @@ function StorePageContent() {
   const [email, setEmail] = useState('');
   const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [loadingProducts, setLoadingProducts] = useState(true);
+  const productsQuery = useApiQuery<Product[]>(fetchProducts);
+  const loadingProducts = productsQuery.isLoading;
 
   const productsRef = useRef<HTMLDivElement>(null);
 
@@ -97,29 +101,8 @@ function StorePageContent() {
     categoryLabels[filters.selectedCategory] || 'Products';
 
   useEffect(() => {
-    let isMounted = true;
-
-    const loadProducts = async () => {
-      try {
-        setLoadingProducts(true);
-        const data = await storeClient.listProducts();
-
-        if (isMounted && Array.isArray(data)) {
-          dispatch(setProducts(data));
-        }
-      } catch {
-        if (isMounted) dispatch(setProducts([]));
-      } finally {
-        if (isMounted) setLoadingProducts(false);
-      }
-    };
-
-    loadProducts();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [dispatch]);
+    if (productsQuery.data) dispatch(setProducts(productsQuery.data));
+  }, [dispatch, productsQuery.data]);
 
   useEffect(() => {
     dispatch(filterProducts());

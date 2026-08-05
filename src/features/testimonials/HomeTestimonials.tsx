@@ -41,7 +41,7 @@ export default function HomeTestimonials() {
     let mounted = true;
     const loadTestimonials = async () => {
       try {
-        const data = await apiClient.listApprovedTestimonials?.();
+        const data = await apiClient.listApprovedTestimonials();
         const arr: ApiTestimonial[] = Array.isArray(data) ? data : [];
         if (mounted) {
           setQuotes(arr.slice(0, 8).map(mapToQuote));

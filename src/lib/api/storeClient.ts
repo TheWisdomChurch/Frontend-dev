@@ -1,5 +1,6 @@
 import type { Product } from '@/domain/store/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
+import { createHttpClient, HttpError, isHttpError, isRecord } from '@/lib/http';
 
 type OrderStatus =
   'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
@@ -46,39 +47,13 @@ export interface StoreOrder extends StoreOrderPayload {
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
+const storeHttp = createHttpClient({ baseUrl: API_V1_BASE_URL });
 
 const inMemoryFallback: { lastOrder: StoreOrder | null } = {
   lastOrder: null,
 };
 
-type JsonRecord = Record<string, unknown>;
-
-function isRecord(value: unknown): value is JsonRecord {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-async function readJson(response: Response): Promise<unknown> {
-  return response.json().catch(() => null);
-}
-
-function getResponseMessage(value: unknown, fallback: string): string {
-  if (!isRecord(value)) return fallback;
-  if (typeof value.message === 'string') return value.message;
-  if (typeof value.error === 'string') return value.error;
-  return fallback;
-}
-
-function unwrapPayload(value: unknown): unknown {
-  return isRecord(value) && 'data' in value ? value.data : value;
-}
-
-export class StoreApiError extends Error {
-  status: number;
-  constructor(message: string, status: number) {
-    super(message);
-    this.status = status;
-  }
-}
+export { HttpError as StoreApiError };
 
 export function normalizeProducts(value: unknown): Product[] {
   return (Array.isArray(value) ? value : []).filter(isRecord).map(item => ({
@@ -99,28 +74,6 @@ export function normalizeProducts(value: unknown): Product[] {
   }));
 }
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${API_V1_BASE_URL}${path}`, {
-    ...options,
-    credentials: 'include',
-    cache: 'no-store',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-    },
-  });
-
-  const json = await readJson(res);
-  if (!res.ok) {
-    throw new StoreApiError(
-      getResponseMessage(json, 'Request failed'),
-      res.status
-    );
-  }
-
-  return unwrapPayload(json) as T;
-}
-
 export const storeClient = {
   async uploadPaymentSlip(file: File): Promise<string> {
     const form = new FormData();
@@ -128,39 +81,37 @@ export const storeClient = {
     form.append('kind', 'document');
     form.append('module', 'store-orders');
 
-    const res = await fetch(`${API_V1_BASE_URL}/uploads/files`, {
+    const data = await storeHttp.request<unknown>('/uploads/files', {
       method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
       body: form,
+      unwrap: true,
     });
 
-    const json = await readJson(res);
-    if (!res.ok) {
-      throw new StoreApiError(
-        getResponseMessage(json, 'Upload failed'),
-        res.status
-      );
-    }
-
-    const data = isRecord(json) && isRecord(json.data) ? json.data : null;
-    const url = data?.url ?? data?.publicUrl;
+    const url = isRecord(data) ? (data.url ?? data.publicUrl) : undefined;
     if (typeof url !== 'string' || !url) {
-      throw new StoreApiError('Upload succeeded but returned no file URL', 502);
+      throw new HttpError('Upload succeeded but returned no file URL', {
+        statusCode: 502,
+        details: data,
+      });
     }
     return url;
   },
 
-  async listProducts(): Promise<Product[]> {
-    const data = await request<unknown>('/store/products', { method: 'GET' });
+  async listProducts(signal?: AbortSignal): Promise<Product[]> {
+    const data = await storeHttp.request<unknown>('/store/products', {
+      method: 'GET',
+      signal,
+      unwrap: true,
+    });
 
     return normalizeProducts(data);
   },
 
   async createOrder(payload: StoreOrderPayload): Promise<StoreOrder> {
-    const order = await request<StoreOrder>('/store/orders', {
+    const order = await storeHttp.request<StoreOrder>('/store/orders', {
       method: 'POST',
       body: JSON.stringify(payload),
+      unwrap: true,
     });
     inMemoryFallback.lastOrder = order;
     return order;
@@ -169,14 +120,14 @@ export const storeClient = {
   async getOrder(orderId: string): Promise<StoreOrder | null> {
     if (!orderId) return null;
     try {
-      const order = await request<StoreOrder>(
+      const order = await storeHttp.request<StoreOrder>(
         `/store/orders/${encodeURIComponent(orderId)}`,
-        { method: 'GET' }
+        { method: 'GET', unwrap: true }
       );
       inMemoryFallback.lastOrder = order;
       return order;
     } catch (error) {
-      if (error instanceof StoreApiError && error.status === 404) return null;
+      if (isHttpError(error) && error.statusCode === 404) return null;
       throw error;
     }
   },

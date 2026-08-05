@@ -37,7 +37,8 @@
     "src/**/*.tsx",
     "tests/**/*.ts",
     ".next-finalcsp/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".next-prepush/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

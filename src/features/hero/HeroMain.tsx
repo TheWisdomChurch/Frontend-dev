@@ -10,13 +10,14 @@ import { Section, Container } from '@/shared/layout';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { lader as laderImg } from '@/shared/assets';
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
-import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import type { YouTubeVideo } from '@/domain/media/types';
+import { mediaApi } from '@/domain/media/api';
+import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
-const API_ORIGIN = resolveConfiguredApiOrigin();
-const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
+const fetchLatestSermons = (signal: AbortSignal) =>
+  mediaApi.listSermons({ sort: 'newest', signal });
 
 /* ── Page content override (for inner pages) ─────────── */
 export interface HeroPageContent {
@@ -80,7 +81,8 @@ export default function HeroSection({
   // setCurrentSlide is reserved for future slide-navigation controls (dots/arrows).
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
+  const latestSermons = useApiQuery<YouTubeVideo[]>(fetchLatestSermons);
+  const latestVideo = latestSermons.data?.[0] ?? null;
 
   const safeSlides = useMemo<HeroSlide[]>(() => {
     const source = externalSlides || backendSlides;
@@ -162,27 +164,6 @@ export default function HeroSection({
 
     return () => ctx.revert();
   }, [currentSlide]);
-
-  // Fetch latest sermon video
-  useEffect(() => {
-    let mounted = true;
-    fetch(SERMONS_ENDPOINT, {
-      method: 'GET',
-      cache: 'no-store',
-      credentials: 'omit',
-      headers: { Accept: 'application/json' },
-    })
-      .then(r => (r.ok ? r.json() : null))
-      .then(payload => {
-        const data: YouTubeVideo[] = payload?.data ?? payload;
-        if (mounted && Array.isArray(data) && data.length > 0)
-          setLatestVideo(data[0]);
-      })
-      .catch(() => null);
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   // Resolve display content (content prop overrides dynamic slide)
   const eyebrow = content?.eyebrow ?? 'Welcome Home';

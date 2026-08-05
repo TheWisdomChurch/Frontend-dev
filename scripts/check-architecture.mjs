@@ -55,6 +55,16 @@ for (const file of sourceFiles) {
       `${displayPath}: domain models must be imported from src/domain, not the legacy catch-all types module`
     );
   }
+
+  const directFetchAllowed = new Set([
+    'src/lib/http/client.ts',
+    'src/app/api/v1/[...path]/route.ts',
+  ]);
+  if (/\bfetch\s*\(/.test(source) && !directFetchAllowed.has(displayPath)) {
+    violations.push(
+      `${displayPath}: backend calls must use the shared HTTP transport or a domain API adapter`
+    );
+  }
 }
 
 const tsconfig = readFileSync(join(root, 'tsconfig.json'), 'utf8');

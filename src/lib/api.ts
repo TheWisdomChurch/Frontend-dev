@@ -26,15 +26,21 @@ import type {
   LeadershipMember,
   LeadershipRole,
 } from '@/domain/leadership/types';
-import { trackApiRequestStart, trackApiRequestEnd } from './apiActivity';
 import { resolveConfiguredApiOrigin } from './apiOrigin';
+import {
+  createHttpClient,
+  extractArrayData,
+  HttpError,
+  isHttpError,
+  isRecord,
+  toQueryString,
+  unwrapData,
+  type ValidationFieldError,
+} from './http';
 
 /* ============================================================================
    API CONFIG
 ============================================================================ */
-
-// const API_ORIGIN = resolveConfiguredApiOrigin();
-// const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
 
 const API_ORIGIN = resolveConfiguredApiOrigin();
 const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
@@ -43,43 +49,29 @@ const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
    CACHE & RETRY CONFIG
 ============================================================================ */
 
-const REQUEST_CACHE = new Map<string, { data: unknown; timestamp: number }>();
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-const MAX_RETRIES = 3;
-const RETRY_DELAY_MS = 1000; // Start with 1s, exponential backoff
+const http = createHttpClient({ baseUrl: API_V1_BASE_URL });
 
 /* ============================================================================
    Error Utilities
 ============================================================================ */
 
-export type ValidationFieldError = {
-  field: string;
-  code?: string;
-  message: string;
-};
-
-export interface ApiError extends Error {
-  statusCode?: number;
-  details?: unknown;
-  validationErrors?: ValidationFieldError[];
-}
+export type ApiError = HttpError;
+export type { ValidationFieldError };
 
 export function createApiError(
   message: string,
   statusCode?: number,
   details?: unknown,
   validationErrors?: ValidationFieldError[]
-): ApiError {
-  const err = new Error(message) as ApiError;
-  err.statusCode = statusCode;
-  err.details = details;
-  if (validationErrors?.length) err.validationErrors = validationErrors;
-  return err;
+): HttpError {
+  return new HttpError(message, {
+    statusCode: statusCode ?? 0,
+    details,
+    validationErrors,
+  });
 }
 
-export function isApiError(err: unknown): err is ApiError {
-  return typeof err === 'object' && err !== null && 'statusCode' in err;
-}
+export const isApiError = isHttpError;
 
 export function mapValidationErrors(
   err: unknown
@@ -112,243 +104,15 @@ export function mapValidationErrors(
   return Object.keys(mapped).length ? mapped : null;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function getMessageFromPayload(payload: unknown): string | undefined {
-  if (!isRecord(payload)) return undefined;
-  const error = payload.error;
-  if (typeof error === 'string' && error.trim()) return error;
-  const message = payload.message;
-  if (typeof message === 'string' && message.trim()) return message;
-  return undefined;
-}
-
-/**
- * Expects backend payload like:
- * { errors: [{ field: "firstName", message: "...", code: "required" }, ...] }
- */
-function extractValidationErrors(
-  payload: unknown
-): ValidationFieldError[] | undefined {
-  if (!isRecord(payload)) return undefined;
-
-  const raw = (payload as Record<string, unknown>).errors;
-  if (!Array.isArray(raw)) return undefined;
-
-  const normalized: ValidationFieldError[] = [];
-  for (const item of raw) {
-    if (!isRecord(item)) continue;
-
-    const field = typeof item.field === 'string' ? item.field.trim() : '';
-    const message =
-      typeof item.message === 'string' && item.message.trim()
-        ? item.message.trim()
-        : 'Invalid value';
-    const code =
-      typeof item.code === 'string' && item.code.trim()
-        ? item.code.trim()
-        : undefined;
-
-    if (field) normalized.push({ field, code, message });
-  }
-
-  return normalized.length ? normalized : undefined;
-}
-
-function getErrorMessage(err: unknown): string {
-  if (err instanceof Error && err.message) return err.message;
-  if (isRecord(err)) {
-    const message = getMessageFromPayload(err);
-    if (message) return message;
-  }
-  return 'Network error';
-}
-
-/* ============================================================================
-   Fetch Utilities
-============================================================================ */
-
-async function safeParseJson(res: Response): Promise<unknown> {
-  const ct = res.headers.get('content-type') || '';
-  if (!ct.includes('application/json')) return null;
-  try {
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
-function unwrapData<T>(res: unknown): T {
-  if (!res || typeof res !== 'object') return res as T;
-  if ('data' in res) {
-    const d = (res as Record<string, unknown>).data;
-    if (d && typeof d === 'object' && 'data' in d)
-      return (d as Record<string, unknown>).data as T;
-    return d as T;
-  }
-  return res as T;
-}
-
-function toQueryString(params: Record<string, unknown>): string {
-  const qp = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value === undefined || value === null || value === '') return;
-    qp.set(key, String(value));
-  });
-
-  const query = qp.toString();
-  return query ? `?${query}` : '';
-}
-
-function extractArrayData<T>(res: unknown): T[] {
-  const data = unwrapData<unknown>(res);
-
-  if (Array.isArray(data)) {
-    return data as T[];
-  }
-
-  if (isRecord(data)) {
-    const candidates = [data.items, data.results, data.rows];
-    for (const candidate of candidates) {
-      if (Array.isArray(candidate)) {
-        return candidate as T[];
-      }
-    }
-  }
-
-  return [];
-}
-
 async function request<T>(
   path: string,
   options: RequestInit = {},
   config?: { skipCache?: boolean }
 ): Promise<T> {
-  const url = `${API_V1_BASE_URL}${path}`;
-  const cacheKey = `${options.method || 'GET'}:${path}`;
-  const method = (options.method || 'GET').toUpperCase();
-  const isIdempotent = method === 'GET' || method === 'HEAD';
-
-  const skipCache = Boolean(config?.skipCache);
-
-  // Check cache for cacheable GET requests
-  if (
-    !skipCache &&
-    method !== 'POST' &&
-    method !== 'PUT' &&
-    method !== 'PATCH' &&
-    method !== 'DELETE'
-  ) {
-    const cached = REQUEST_CACHE.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-      return cached.data as T;
-    }
-  }
-
-  const isFormData =
-    typeof FormData !== 'undefined' && options.body instanceof FormData;
-
-  const headers: HeadersInit = {
-    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-    ...(options.headers || {}),
-  };
-
-  let lastError: unknown = null;
-
-  // Retry logic with exponential backoff
-  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-    if (attempt > 0) {
-      const delay = RETRY_DELAY_MS * Math.pow(2, attempt - 1);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-
-    trackApiRequestStart();
-    try {
-      const res = await fetch(url, {
-        ...options,
-        headers,
-        credentials: 'include',
-        cache: 'no-store',
-        signal: AbortSignal.timeout(30000), // 30 second timeout
-      });
-
-      const json = await safeParseJson(res);
-      const payload =
-        json ??
-        ({ message: await res.text().catch(() => '') } as Record<
-          string,
-          unknown
-        >);
-
-      if (!res.ok) {
-        // Don't retry on client errors (4xx)
-        if (res.status >= 400 && res.status < 500) {
-          const validationErrors = extractValidationErrors(payload);
-          throw createApiError(
-            getMessageFromPayload(payload) || 'Request failed',
-            res.status,
-            payload,
-            validationErrors
-          );
-        }
-
-        // Retry on server errors (5xx)
-        if (res.status >= 500 && isIdempotent && attempt < MAX_RETRIES - 1) {
-          lastError = createApiError(
-            getMessageFromPayload(payload) || 'Server error',
-            res.status,
-            payload
-          );
-          continue;
-        }
-
-        throw createApiError(
-          getMessageFromPayload(payload) || 'Request failed',
-          res.status,
-          payload
-        );
-      }
-
-      // Cache successful cacheable GET requests
-      if (
-        !skipCache &&
-        method !== 'POST' &&
-        method !== 'PUT' &&
-        method !== 'PATCH' &&
-        method !== 'DELETE'
-      ) {
-        REQUEST_CACHE.set(cacheKey, { data: payload, timestamp: Date.now() });
-      }
-
-      return payload as T;
-    } catch (err: unknown) {
-      lastError = err;
-
-      // Don't retry on API errors (already processed)
-      if (isApiError(err) && err.statusCode && err.statusCode < 500) {
-        throw err;
-      }
-
-      // Retry on network errors or timeouts only for idempotent requests.
-      if (!isIdempotent || attempt === MAX_RETRIES - 1) {
-        if (isApiError(err)) throw err;
-        throw createApiError(getErrorMessage(err), 0, err);
-      }
-    } finally {
-      trackApiRequestEnd();
-    }
-  }
-
-  // If all retries failed, throw the last error
-  if (lastError !== null) {
-    if (isApiError(lastError)) throw lastError;
-    throw createApiError(getErrorMessage(lastError), 0, lastError);
-  }
-
-  throw createApiError('Request failed after retries', 0, null);
+  return http.request<T>(path, {
+    ...options,
+    skipCache: config?.skipCache,
+  });
 }
 
 /* ============================================================================
@@ -878,9 +642,12 @@ function normalizeTestimonial(raw: unknown): Testimonial {
 ============================================================================ */
 
 export const apiClient = {
-  async listEvents(): Promise<EventPublic[]> {
+  async listEvents(signal?: AbortSignal): Promise<EventPublic[]> {
     const qs = toQueryString({ page: 1, limit: 100 });
-    const res = await request<unknown>(`/events${qs}`, { method: 'GET' });
+    const res = await request<unknown>(`/events${qs}`, {
+      method: 'GET',
+      signal,
+    });
     return extractArrayData<unknown>(res)
       .map(mapBackendEvent)
       .filter((item): item is EventPublic => item !== null);
@@ -903,9 +670,12 @@ export const apiClient = {
        GET /api/v1/reels
      ----------------------------- */
 
-  async listReels(): Promise<ReelPublic[]> {
+  async listReels(signal?: AbortSignal): Promise<ReelPublic[]> {
     const qs = toQueryString({ page: 1, limit: 30 });
-    const res = await request<unknown>(`/reels${qs}`, { method: 'GET' });
+    const res = await request<unknown>(`/reels${qs}`, {
+      method: 'GET',
+      signal,
+    });
     return extractArrayData<unknown>(res)
       .map(mapBackendReel)
       .filter((item): item is ReelPublic => item !== null);
