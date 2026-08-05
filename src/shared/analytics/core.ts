@@ -1,8 +1,11 @@
-export interface ConsentSettings {
-  analytics: boolean;
-  marketing: boolean;
-  functional: boolean;
-}
+import {
+  DEFAULT_CONSENT,
+  readStoredConsent,
+  writeStoredConsent,
+  type ConsentSettings,
+} from './consent';
+
+export type { ConsentSettings } from './consent';
 
 export interface UserIdentity {
   userId?: string;
@@ -23,14 +26,10 @@ export interface EventData {
 }
 
 export interface AnalyticsProvider {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pageView: (...args: any[]) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  trackEvent: (...args: any[]) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  identify: (...args: any[]) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  updateConsent: (...args: any[]) => void;
+  pageView: (data: PageViewData) => void;
+  trackEvent: (data: EventData) => void;
+  identify: (user: UserIdentity) => void;
+  updateConsent: (consent: Partial<ConsentSettings>) => void;
 }
 
 export interface AnalyticsCoreConfig {
@@ -38,37 +37,13 @@ export interface AnalyticsCoreConfig {
   defaultConsent?: Partial<ConsentSettings>;
 }
 
-const CONSENT_COOKIE = '_ana_consent';
-
-function readConsentCookie(): Partial<ConsentSettings> {
-  if (typeof document === 'undefined') return {};
-  try {
-    const match = document.cookie.match(new RegExp(`${CONSENT_COOKIE}=([^;]+)`));
-    if (match) return JSON.parse(decodeURIComponent(match[1]));
-  } catch {
-    // ignore
-  }
-  return {};
-}
-
-function writeConsentCookie(consent: ConsentSettings): void {
-  if (typeof document === 'undefined') return;
-  const value = encodeURIComponent(JSON.stringify(consent));
-  const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
-  document.cookie = `${CONSENT_COOKIE}=${value}; expires=${expires}; path=/; SameSite=Lax`;
-}
-
 class AnalyticsCore {
   private providers: Map<string, AnalyticsProvider> = new Map();
-  private consent: ConsentSettings = {
-    analytics: false,
-    marketing: false,
-    functional: true,
-  };
+  private consent: ConsentSettings = DEFAULT_CONSENT;
 
   constructor() {
-    const saved = readConsentCookie();
-    this.consent = { ...this.consent, ...saved };
+    const saved = readStoredConsent();
+    if (saved) this.consent = saved;
   }
 
   registerProvider(name: string, provider: AnalyticsProvider): void {
@@ -81,7 +56,7 @@ class AnalyticsCore {
 
   setConsent(partial: Partial<ConsentSettings>): void {
     this.consent = { ...this.consent, ...partial };
-    writeConsentCookie(this.consent);
+    writeStoredConsent(this.consent);
     this.providers.forEach(p => p.updateConsent(partial));
   }
 

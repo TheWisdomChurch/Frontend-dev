@@ -30,8 +30,6 @@
     ".next-prepush/types/**/*.ts",
     ".next-verify/types/**/*.ts",
     ".next/types/**/*.ts",
-    "ANALYTICS_CONFIGURATION.ts",
-    "ANALYTICS_EXAMPLES.tsx",
     "next-env.d.ts",
     "next.config.ts",
     "src/**/*.d.ts",

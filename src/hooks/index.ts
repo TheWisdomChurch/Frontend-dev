@@ -7,9 +7,6 @@
 // Content Hooks
 export * from './useHeroContent';
 
-// Analytics Hooks (V2 - Professional)
-export * from './useAnalyticsV2';
-
 // Responsive Design Hooks
 export * from './useResponsive';
 
