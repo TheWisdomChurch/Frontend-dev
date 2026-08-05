@@ -63,6 +63,7 @@ for (const file of sourceFiles) {
   const directFetchAllowed = new Set([
     'src/lib/http/client.ts',
     'src/app/api/v1/[...path]/route.ts',
+    'src/app/api/navigation/route/route.ts',
   ]);
   if (/\bfetch\s*\(/.test(source) && !directFetchAllowed.has(displayPath)) {
     violations.push(
