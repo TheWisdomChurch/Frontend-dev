@@ -7,6 +7,7 @@ import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { Container, Section } from '@/shared/layout';
 import HomeActionLink from '@/features/home/HomeActionLink';
+import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
 import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
 
 const eyebrowClass = 'font-ui text-xs font-bold uppercase tracking-[0.22em]';
@@ -181,13 +182,12 @@ export default function PremiumHome() {
                   <strong>{SERVICE_INFO.venue.full}</strong>
                 </div>
               </div>
-              <HomeActionLink
-                href="/events/weekly"
-                variant="dark"
-                className="mt-8"
-              >
-                Plan your first visit
-              </HomeActionLink>
+              <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                <TakeMeToChurchButton />
+                <HomeActionLink href="/events/weekly" variant="dark">
+                  Plan your first visit
+                </HomeActionLink>
+              </div>
             </div>
           </div>
         </div>
