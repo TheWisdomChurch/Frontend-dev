@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 const GOOGLE_ROUTES_URL =
   'https://routes.googleapis.com/directions/v2:computeRoutes';
 const FIELD_MASK =
-  'routes.distanceMeters,routes.duration,routes.localizedValues.distance.text,routes.localizedValues.duration.text';
+  'routes.distanceMeters,routes.duration,routes.localizedValues.distance.text,routes.localizedValues.duration.text,routes.polyline.encodedPolyline';
 
 type GoogleRoutesResponse = {
   routes?: Array<{
@@ -20,6 +20,7 @@ type GoogleRoutesResponse = {
       distance?: { text?: string };
       duration?: { text?: string };
     };
+    polyline?: { encodedPolyline?: string };
   }>;
   error?: { message?: string };
 };
@@ -38,8 +39,15 @@ function errorResponse(message: string, status: number) {
 
 export async function POST(request: NextRequest) {
   const apiKey = process.env.GOOGLE_MAPS_ROUTES_API_KEY?.trim();
+  const destinationPlaceId = SERVICE_INFO.venue.googlePlaceId?.trim();
   if (!apiKey) {
     return errorResponse('Traffic-aware routing is not configured.', 503);
+  }
+  if (!destinationPlaceId) {
+    return errorResponse(
+      'The verified church destination is not configured.',
+      503
+    );
   }
 
   let body: unknown;
@@ -72,7 +80,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         origin: { location: { latLng: coordinates } },
-        destination: { address: SERVICE_INFO.venue.full },
+        destination: { placeId: destinationPlaceId },
         travelMode: 'DRIVE',
         routingPreference: 'TRAFFIC_AWARE',
         computeAlternativeRoutes: false,
@@ -94,6 +102,7 @@ export async function POST(request: NextRequest) {
       durationSeconds: secondsFromGoogleDuration(route.duration),
       distanceLabel: route.localizedValues?.distance?.text ?? 'Route available',
       durationLabel: route.localizedValues?.duration?.text ?? 'ETA available',
+      encodedPolyline: route.polyline?.encodedPolyline ?? '',
     };
 
     return NextResponse.json(result, {

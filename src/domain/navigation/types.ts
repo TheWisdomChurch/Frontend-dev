@@ -7,4 +7,5 @@ export type RoutePreview = Readonly<{
   durationSeconds: number;
   distanceLabel: string;
   durationLabel: string;
+  encodedPolyline: string;
 }>;
