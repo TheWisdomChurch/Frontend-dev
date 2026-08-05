@@ -20,8 +20,5 @@ export * from './modal-responsive';
 // Safe motion utilities
 export { motion, AnimatePresence } from './safe-motion';
 
-// Analytics
-export * from './analytics';
-
 // Types
 export type * from './types';

@@ -57,7 +57,7 @@ if [[ "${SKIP_PREPUSH_BUILD:-0}" == "1" ]]; then
 fi
 
 echo "[pre-push] 3/3  Next.js production build …"
-NEXT_DIST_DIR=.next-prepush node ./node_modules/next/dist/bin/next build --no-lint
+NEXT_DIST_DIR=.next-prepush node ./node_modules/next/dist/bin/next build --webpack
 echo "[pre-push] ✔  Build passed."
 
 echo ""

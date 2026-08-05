@@ -6,9 +6,7 @@
 
 // Content Hooks
 export * from './useHeroContent';
-
-// Analytics Hooks (V2 - Professional)
-export * from './useAnalyticsV2';
+export * from './useApiQuery';
 
 // Responsive Design Hooks
 export * from './useResponsive';

@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
+import { useApiQuery } from './useApiQuery';
 
 export interface HeroSlide {
   id: string;
@@ -26,10 +27,6 @@ export interface HeroSlide {
   };
   type: 'event' | 'reel' | 'highlight';
 }
-
-const FETCH_TIMEOUT_MS = 12000;
-const RETRY_DELAY_MS = 2500;
-const MAX_RETRIES = 1;
 
 function formatEventDate(startAt?: string, endAt?: string): string {
   if (!startAt) return 'Upcoming';
@@ -120,155 +117,44 @@ function mapReelToHeroSlide(reel: ReelPublic): HeroSlide {
   };
 }
 
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = window.setTimeout(() => {
-      reject(new Error('Hero content request timed out'));
-    }, timeoutMs);
-
-    promise
-      .then(value => {
-        window.clearTimeout(timer);
-        resolve(value);
-      })
-      .catch(error => {
-        window.clearTimeout(timer);
-        reject(error);
-      });
-  });
-}
-
 export const useHeroContent = () => {
-  const [slides, setSlides] = useState<HeroSlide[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const query = useCallback(async (signal: AbortSignal) => {
+    const results = await Promise.allSettled([
+      apiClient.listEvents(signal),
+      apiClient.listReels(signal),
+    ]);
+    if (signal.aborted)
+      throw new DOMException('Request cancelled', 'AbortError');
 
-  const mountedRef = useRef(false);
-  const retryCountRef = useRef(0);
-  const retryTimerRef = useRef<number | null>(null);
-  // Lets the retry timer call the latest fetchHeroData without the retry
-  // closure (built inside fetchHeroData itself) referencing that same
-  // const before its own declaration finishes.
-  const fetchHeroDataRef = useRef<(() => Promise<void>) | null>(null);
-
-  const clearRetryTimer = () => {
-    if (retryTimerRef.current) {
-      window.clearTimeout(retryTimerRef.current);
-      retryTimerRef.current = null;
+    const events = results[0].status === 'fulfilled' ? results[0].value : [];
+    const reels = results[1].status === 'fulfilled' ? results[1].value : [];
+    if (results.every(result => result.status === 'rejected')) {
+      throw results[0].status === 'rejected'
+        ? results[0].reason
+        : new Error('Failed to load hero content');
     }
-  };
-
-  const fetchHeroData = useCallback(async () => {
-    clearRetryTimer();
-
-    if (!mountedRef.current) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const heroDataPromise = Promise.all([
-        apiClient.listEvents().catch(err => {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Hero events fetch failed, using empty list:', err);
-          }
-          return [] as EventPublic[];
-        }),
-        apiClient.listReels?.().catch(err => {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Hero reels fetch failed, using empty list:', err);
-          }
-          return [] as ReelPublic[];
-        }) ?? Promise.resolve([] as ReelPublic[]),
-      ]);
-
-      const [events, reels] = await withTimeout(
-        heroDataPromise,
-        FETCH_TIMEOUT_MS
-      );
-
-      if (!mountedRef.current) return;
-
-      const upcomingEvents = Array.isArray(events)
-        ? events
-            .filter(event => {
-              if (!event?.startAt) return false;
-              const date = new Date(event.startAt);
-              return !Number.isNaN(date.getTime()) && date > new Date();
-            })
-            .slice(0, 3)
-            .map(mapEventToHeroSlide)
-        : [];
-
-      const reelSlides = Array.isArray(reels)
-        ? reels.slice(0, 2).map(mapReelToHeroSlide)
-        : [];
-
-      setSlides([...upcomingEvents, ...reelSlides]);
-      setError(null);
-      retryCountRef.current = 0;
-    } catch (err) {
-      if (!mountedRef.current) return;
-
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to load hero content';
-
-      const isSoftTimeout = /timed out|timeout/i.test(errorMessage);
-      const isRetriable = /timed out|timeout|network|fetch/i.test(errorMessage);
-
-      if (process.env.NODE_ENV !== 'production' && !isSoftTimeout) {
-        console.error('Error fetching hero content:', errorMessage, err);
-      } else if (process.env.NODE_ENV !== 'production' && isSoftTimeout) {
-        console.warn('Hero content fetch timed out.');
-      }
-
-      setSlides([]);
-
-      if (isSoftTimeout) {
-        setError(null);
-      } else {
-        setError(errorMessage);
-      }
-
-      if (isRetriable && retryCountRef.current < MAX_RETRIES) {
-        retryCountRef.current += 1;
-
-        retryTimerRef.current = window.setTimeout(() => {
-          if (mountedRef.current) {
-            void fetchHeroDataRef.current?.();
-          }
-        }, RETRY_DELAY_MS);
-      }
-    } finally {
-      if (mountedRef.current) {
-        setLoading(false);
-      }
-    }
+    return { events, reels };
   }, []);
 
-  useEffect(() => {
-    fetchHeroDataRef.current = fetchHeroData;
-  }, [fetchHeroData]);
-
-  useEffect(() => {
-    mountedRef.current = true;
-
-    const run = async () => {
-      await fetchHeroDataRef.current?.();
-    };
-
-    void run();
-
-    return () => {
-      mountedRef.current = false;
-      clearRetryTimer();
-    };
-  }, []);
+  const result = useApiQuery(query);
+  const slides = useMemo(() => {
+    const events: EventPublic[] = result.data?.events ?? [];
+    const reels: ReelPublic[] = result.data?.reels ?? [];
+    const upcomingEvents = events
+      .filter(event => {
+        if (!event.startAt) return false;
+        const date = new Date(event.startAt);
+        return !Number.isNaN(date.getTime()) && date > new Date();
+      })
+      .slice(0, 3)
+      .map(mapEventToHeroSlide);
+    return [...upcomingEvents, ...reels.slice(0, 2).map(mapReelToHeroSlide)];
+  }, [result.data]);
 
   return {
     slides,
-    loading,
-    error,
-    refetch: fetchHeroData,
+    loading: result.isLoading,
+    error: result.error?.message ?? null,
+    refetch: result.refetch,
   };
 };

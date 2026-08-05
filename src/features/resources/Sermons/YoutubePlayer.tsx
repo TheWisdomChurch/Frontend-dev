@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -6,12 +5,18 @@ import { Play, Pause, PictureInPicture, X } from 'lucide-react';
 import { Caption } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 
+export interface YouTubePlayerController {
+  playVideo: () => void;
+  pauseVideo: () => void;
+  seekTo: (seconds: number) => void;
+}
+
 interface YouTubePlayerProps {
   videoId: string;
   title: string;
   width?: string;
   height?: string;
-  onPlayerReady?: (player: any) => void;
+  onPlayerReady?: (player: YouTubePlayerController) => void;
   className?: string;
   autoPlay?: boolean;
   playsInline?: boolean;
@@ -195,13 +200,13 @@ export const YouTubePlayerWithBackground = ({
 }: {
   videoId: string;
   title: string;
-  onPlayerReady?: (player: any) => void;
+  onPlayerReady?: (player: YouTubePlayerController) => void;
   className?: string;
 }) => {
   const [isDetached, setIsDetached] = useState(false);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<YouTubePlayerController | null>(null);
 
-  const handlePlayerReady = (player: any) => {
+  const handlePlayerReady = (player: YouTubePlayerController) => {
     playerRef.current = player;
     if (onPlayerReady) {
       onPlayerReady(player);

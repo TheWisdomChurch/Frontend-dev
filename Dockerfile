@@ -22,6 +22,23 @@ RUN npm pkg delete scripts.prepare || true
 
 RUN npm ci --no-audit --no-fund
 
+# ---- development ----
+FROM node:20-alpine AS development
+WORKDIR /app
+
+RUN apk add --no-cache ca-certificates libc6-compat ffmpeg \
+ && update-ca-certificates
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=2000
+EXPOSE 2000
+
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "2000"]
+
 # ---- builder ----
 FROM node:20-alpine AS builder
 WORKDIR /app
@@ -57,10 +74,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=2000
 EXPOSE 2000
 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.ts ./next.config.ts
+# Next's standalone output contains only production runtime dependencies.
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/public ./public
 
-CMD ["npm", "start"]
+USER node
+CMD ["node", "server.js"]

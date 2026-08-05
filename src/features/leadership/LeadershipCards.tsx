@@ -1,4 +1,7 @@
-import type { LeadershipMember, LeadershipRole } from '@/lib/types';
+import type {
+  LeadershipMember,
+  LeadershipRole,
+} from '@/domain/leadership/types';
 import { Media } from '@/shared/ui/Media';
 
 // Shared between /leadership (the full directory) and About's leadership

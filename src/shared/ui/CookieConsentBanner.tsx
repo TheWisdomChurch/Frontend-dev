@@ -6,49 +6,32 @@ import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Button } from '@/shared/utils/buttons';
 import { useIsClient } from '@/hooks';
+import {
+  DEFAULT_CONSENT,
+  readStoredConsent,
+  writeStoredConsent,
+  type StoredConsent,
+} from '@/shared/analytics/consent';
+import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 
 /* ── Storage ─────────────────────────────────────────────── */
 
-type CookiePreferences = {
-  essential: true;
-  analytics: boolean;
-  marketing: boolean;
-  updatedAt: string;
-  version: number;
-};
-
-const PREFS_KEY = 'wc_cookie_preferences_data';
-const CONSENT_KEY = 'wc_cookie_preferences_v1';
-const MAX_AGE = 60 * 60 * 24 * 180;
+type CookiePreferences = StoredConsent;
 
 const basePrefs: CookiePreferences = {
-  essential: true,
-  analytics: false,
-  marketing: false,
+  ...DEFAULT_CONSENT,
   updatedAt: '',
   version: 1,
 };
 
 function readRawSaved(): string | null {
-  if (typeof window === 'undefined') return null;
-  const match = document.cookie.match(
-    new RegExp(
-      `(?:^|; )${PREFS_KEY.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')}=([^;]*)`
-    )
-  );
-  return match ? decodeURIComponent(match[1]) : null;
+  const saved = readStoredConsent();
+  return saved ? JSON.stringify(saved) : null;
 }
 
 function parseSaved(raw: string): CookiePreferences | null {
   try {
-    const parsed = JSON.parse(raw) as Partial<CookiePreferences>;
-    return {
-      ...basePrefs,
-      ...parsed,
-      essential: true,
-      version: 1,
-      updatedAt: parsed.updatedAt || '',
-    };
+    return JSON.parse(raw) as CookiePreferences;
   } catch {
     return null;
   }
@@ -77,15 +60,6 @@ function subscribeNever() {
 }
 function getSavedPrefsServerSnapshot() {
   return null;
-}
-
-function writeCookies(prefs: CookiePreferences) {
-  const opts = `Max-Age=${MAX_AGE}; Path=/; SameSite=Lax`;
-  document.cookie = `wc_cookie_consent=1; ${opts}`;
-  document.cookie = `wc_cookie_analytics=${prefs.analytics ? '1' : '0'}; ${opts}`;
-  document.cookie = `wc_cookie_marketing=${prefs.marketing ? '1' : '0'}; ${opts}`;
-  document.cookie = `${PREFS_KEY}=${encodeURIComponent(JSON.stringify(prefs))}; ${opts}`;
-  document.cookie = `${CONSENT_KEY}=1; ${opts}`;
 }
 
 /* ── Toggle switch ──────────────────────────────────────── */
@@ -130,6 +104,7 @@ function Toggle({
 /* ── Component ─────────────────────────────────────────── */
 
 export default function CookieConsentBanner() {
+  const { setConsent } = useAnalytics();
   const mounted = useIsClient();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -153,18 +128,13 @@ export default function CookieConsentBanner() {
     return () => clearTimeout(t);
   }, [savedPrefs]);
 
-  const apply = (next: Omit<CookiePreferences, 'updatedAt' | 'version'>) => {
-    const payload: CookiePreferences = {
+  const apply = (next: Pick<CookiePreferences, 'analytics' | 'marketing'>) => {
+    const payload = writeStoredConsent({
       ...next,
-      essential: true,
-      updatedAt: new Date().toISOString(),
-      version: 1,
-    };
+      functional: true,
+    });
     setOverridePrefs(payload);
-    writeCookies(payload);
-    window.dispatchEvent(
-      new CustomEvent('wc:cookie-consent-updated', { detail: payload })
-    );
+    setConsent(payload);
     setVisible(false);
     setSettingsOpen(false);
   };
@@ -254,9 +224,7 @@ export default function CookieConsentBanner() {
 
               <button
                 type="button"
-                onClick={() =>
-                  apply({ essential: true, analytics: false, marketing: false })
-                }
+                onClick={() => apply({ analytics: false, marketing: false })}
                 className="inline-flex h-9 items-center rounded-lg border border-white/12 px-3.5 font-ui text-label font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
               >
                 Essential only
@@ -264,9 +232,7 @@ export default function CookieConsentBanner() {
 
               <button
                 type="button"
-                onClick={() =>
-                  apply({ essential: true, analytics: true, marketing: true })
-                }
+                onClick={() => apply({ analytics: true, marketing: true })}
                 className="inline-flex h-9 items-center rounded-lg bg-[var(--app-primary)] px-4 font-ui text-label font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
               >
                 Accept all
@@ -319,9 +285,7 @@ export default function CookieConsentBanner() {
               size="sm"
               curvature="md"
               className="h-11 border border-white/12 font-ui text-sm text-white/70"
-              onClick={() =>
-                apply({ essential: true, analytics: false, marketing: false })
-              }
+              onClick={() => apply({ analytics: false, marketing: false })}
             >
               Essential only
             </Button>
@@ -332,7 +296,6 @@ export default function CookieConsentBanner() {
               className="h-11 font-ui text-sm font-bold"
               onClick={() =>
                 apply({
-                  essential: true,
                   analytics: prefs.analytics,
                   marketing: prefs.marketing,
                 })

@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StaticImageData } from 'next/image';
 import { LucideIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 export interface NavLink {
   href: string;
@@ -43,7 +43,7 @@ export interface Sermon {
 export interface Ministry {
   name: string;
   description: string;
-  imageId: any;
+  imageId: string | StaticImageData;
 }
 
 export interface ServiceBox {
@@ -91,39 +91,6 @@ export interface Slide {
   };
 }
 
-export interface YouTubeVideo {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  publishedAt: string;
-  duration: string;
-  viewCount: string;
-  likeCount?: string;
-  commentCount?: string;
-  tags?: string[];
-  url: string;
-  embedUrl: string;
-  series: string; // Make sure these are properly defined
-  preacher: string;
-}
-
-export interface YouTubeChannel {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  subscriberCount?: string;
-  videoCount?: string;
-  viewCount?: string;
-}
-
-export interface VideoFilters {
-  searchTerm: string;
-  sortBy: 'newest' | 'oldest' | 'popular';
-  category?: string;
-}
-
 export interface EventItem {
   id: string;
   title: string;
@@ -137,43 +104,6 @@ export interface EventItem {
   ctaTarget?: string;
 }
 
-// export interface YouTubeVideo {
-//   id: string;
-//   title: string;
-//   description: string;
-//   thumbnail: string;
-//   publishedAt: string;
-//   viewCount: string;
-//   series: string;
-//   preacher: string;
-//   duration: string;
-// }
-
-// Define types for grouped series
-export interface SeriesGroup {
-  name: string;
-  searchTerms: string[];
-  description: string;
-  color: string;
-}
-
-export interface GroupedSeriesData {
-  name: string;
-  description: string;
-  count: number;
-  latestThumbnail?: string;
-  color: string;
-  uniqueSeries: string[];
-  videos: YouTubeVideo[];
-  searchTerms: string[];
-}
-
-export interface UngroupedSeriesData {
-  name: string;
-  count: number;
-  latestThumbnail?: string;
-  isUngrouped: boolean;
-}
 // types/events.ts
 export interface CalendarEvent {
   id: string;
@@ -272,57 +202,10 @@ export interface PrayerRequestData {
   isAnonymous?: boolean;
 }
 
-export type LeadershipRole =
-  | 'senior_pastor'
-  | 'associate_pastor'
-  | 'deacon'
-  | 'deaconess'
-  | 'reverend';
-
-export type LeadershipStatus = 'pending' | 'approved' | 'declined';
-
-export interface LeadershipMember {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email?: string;
-  phone?: string;
-  role: LeadershipRole;
-  status: LeadershipStatus;
-  bio?: string | null;
-  imageUrl?: string | null;
-  birthday?: string;
-  anniversary?: string;
-  birthdayMonth?: number;
-  birthdayDay?: number;
-  anniversaryMonth?: number;
-  anniversaryDay?: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface LeadershipApplicationRequest {
-  firstName: string;
-  lastName: string;
-  email?: string;
-  phone?: string;
-  role: LeadershipRole;
-  bio?: string;
-  imageUrl?: string;
-  birthday?: string; // DD/MM
-  anniversary?: string; // DD/MM/YYYY
-}
-
 export interface GivingModalProps {
   isOpen: boolean;
   onClose: () => void;
   givingOption: GivingOption | null;
-}
-
-export interface ProductModalProps {
-  product: Product | null;
-  isOpen: boolean;
-  onClose: () => void;
 }
 
 export interface SuccessModalProps {
@@ -346,33 +229,17 @@ export interface WisdomPowerAdModalProps {
   onClose: () => void;
 }
 
-// store section
-export interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: string;
-  originalPrice?: string;
-  image: string;
-  description: string;
-  sizes: string[];
-  colors: string[];
-  tags: string[];
-  stock: number;
-}
-export type mainResourceLink = {
+export type MainResourceLink = {
   title: string;
   subtitle?: string;
   description?: string;
   path: string;
-  icon?: any;
+  icon?: ReactNode;
   gradient?: string;
   glow?: string;
   actionText?: string;
   isLiveService?: boolean;
 };
-
-// lib/types.ts (or wherever your Testimonial interface lives)
 
 export interface Testimonial {
   id: number;
@@ -383,44 +250,4 @@ export interface Testimonial {
   testimony: string;
   date: string; // ISO string e.g. "2024-01-15"
   anonymous: boolean;
-}
-
-export interface CartItem {
-  id: string;
-  productId: number;
-  name: string;
-  price: string;
-  image: string;
-  quantity: number;
-  size: string;
-  color: string;
-  selectedColor: string;
-  selectedSize: string;
-}
-
-export interface Order {
-  id: string;
-  items: CartItem[];
-  total: number;
-  customerInfo: CustomerInfo;
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered';
-  createdAt: string;
-  estimatedDelivery?: string;
-}
-
-export interface CustomerInfo {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  deliveryInstructions?: string;
-}
-
-export interface FiltersState {
-  searchTerm: string;
-  selectedCategory: string;
-  sortBy: 'name' | 'price-low' | 'price-high' | 'newest';
 }

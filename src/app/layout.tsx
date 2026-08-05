@@ -5,7 +5,6 @@ import { Analytics } from '@vercel/analytics/next';
 
 import '@/app/globals.scss';
 
-import MetaPixel from '@/shared/analytics/MetaPixel';
 import { bricolageGrotesque, playfair, worksans } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
@@ -157,7 +156,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        <MetaPixel />
         <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="XGrQDDaQUVZrI428swX0CA"

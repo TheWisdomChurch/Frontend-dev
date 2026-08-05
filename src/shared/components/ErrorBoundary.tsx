@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { H2, BodySM } from '@/shared/text';
+import { ErrorView } from './errors/ErrorView';
 
 type ErrorBoundaryState = {
   hasError: boolean;
@@ -24,28 +24,19 @@ class ErrorBoundary extends React.Component<
     this.setState({ errorInfo: info });
   }
 
+  private reset = () => {
+    this.setState({ hasError: false, error: undefined, errorInfo: null });
+  };
+
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-[50vh] items-center justify-center px-6 text-center">
-          <div className="max-w-md">
-            <H2 className="text-xl font-semibold text-white">
-              Something went wrong
-            </H2>
-            <BodySM className="mt-2 text-slate-400">
-              Please refresh the page or try again later.
-            </BodySM>
-            {/* Show component stack in development only */}
-            {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
-              <details className="mt-4 text-left text-xs text-red-400">
-                <summary>Component Stack</summary>
-                <pre className="mt-2 whitespace-pre-wrap">
-                  {this.state.errorInfo.componentStack}
-                </pre>
-              </details>
-            )}
-          </div>
-        </div>
+        <ErrorView
+          error={this.state.error}
+          onRetry={this.reset}
+          title="A section of this page stopped working."
+          message="The failure has been contained. You can retry without losing access to the rest of the website."
+        />
       );
     }
     return this.props.children;

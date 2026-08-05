@@ -14,7 +14,7 @@ import type {
   YouTubeVideo,
   GroupedSeriesData,
   UngroupedSeriesData,
-} from '@/lib/types';
+} from '@/domain/media/types';
 
 // YouTube titles have no length limit and routinely run well past a
 // reasonable <h2>; cap the heading while keeping the full title available

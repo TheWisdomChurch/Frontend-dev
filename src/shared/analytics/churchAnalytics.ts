@@ -36,13 +36,7 @@ export interface EventEngagementEvent {
 export interface VolunteerEvent {
   ministryName: string;
   ministryType?:
-    | 'youth'
-    | 'women'
-    | 'men'
-    | 'children'
-    | 'outreach'
-    | 'ushering'
-    | 'media';
+    'youth' | 'women' | 'men' | 'children' | 'outreach' | 'ushering' | 'media';
   action: 'express_interest' | 'register' | 'complete_training' | 'serve';
   hoursCommitted?: number;
   frequency?: 'weekly' | 'monthly' | 'occasional' | 'seasonal';

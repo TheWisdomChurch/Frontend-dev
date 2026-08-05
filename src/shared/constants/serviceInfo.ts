@@ -26,5 +26,10 @@ export const SERVICE_INFO = {
     streetAddress: 'Opposite Dominion City, Alasia, Lekki-Epe Expressway',
     locality: 'Lagos',
     country: 'NG',
+    // A Maps place ID is the most precise destination identifier. Configure it
+    // in production after verifying the church's Google Business Profile. The
+    // full postal address remains a safe fallback and avoids guessing at GPS
+    // coordinates in application code.
+    googlePlaceId: process.env.NEXT_PUBLIC_CHURCH_GOOGLE_PLACE_ID || undefined,
   },
 } as const;

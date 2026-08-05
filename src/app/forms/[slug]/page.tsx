@@ -9,8 +9,12 @@ import { H1, H2, H3, H4, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
-import apiClient from '@/lib/api';
-import type { EventPublic, PublicFormField, PublicFormPayload } from '@/lib';
+import apiClient, { isApiError } from '@/lib/api';
+import type {
+  EventPublic,
+  PublicFormField,
+  PublicFormPayload,
+} from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -397,18 +401,21 @@ export default function PublicFormPage() {
 
         setAnswers(current => ({ ...defaults, ...current }));
         setFieldErrors({});
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!mounted) return;
 
-        if (err?.statusCode === 404) {
+        if (isApiError(err) && err.statusCode === 404) {
           setError(
             'This form link is invalid, unpublished, or no longer available. Please contact support for the active link.'
           );
-        } else if (err?.statusCode === 410) {
+        } else if (isApiError(err) && err.statusCode === 410) {
           setError('This form is closed and no longer accepting responses.');
         } else {
-          setError(err?.message || 'Unable to load form. Please try again.');
+          setError(
+            err instanceof Error
+              ? err.message
+              : 'Unable to load form. Please try again.'
+          );
         }
       } finally {
         if (mounted) setLoading(false);
@@ -630,9 +637,12 @@ export default function PublicFormPage() {
 
       await apiClient.submitPublicForm(formSlug, { values: payloadValues });
       setSubmitted(true);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err?.message || 'Submission failed. Please try again.');
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Submission failed. Please try again.'
+      );
     } finally {
       setSubmitting(false);
     }

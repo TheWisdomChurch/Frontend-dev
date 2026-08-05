@@ -1,1 +1,2 @@
-export { default as MetaPixel } from './MetaPixel';
+export * from './churchAnalytics';
+export * from './consent';

@@ -104,10 +104,10 @@ export function AnalyticsProvider({
     const initialize = async () => {
       if (debug) console.log('[AnalyticsProvider] Initializing...');
 
-      const currentConsent = analyticsCore.getConsent();
       const hasConsentCookie =
         typeof document !== 'undefined' &&
-        document.cookie.includes('_ana_consent');
+        document.cookie.includes('wc_cookie_preferences_data=');
+      const currentConsent = analyticsCore.getConsent();
 
       if (!hasConsentCookie && defaultConsent) {
         analyticsCore.setConsent(defaultConsent);
@@ -132,9 +132,13 @@ export function AnalyticsProvider({
 
         analyticsCore.registerProvider('meta', {
           pageView: metaProvider.pageView,
-          trackEvent: metaProvider.trackEvent,
+          trackEvent: event =>
+            metaProvider.trackEvent(event.name, event.params ?? {}),
           identify: metaProvider.identify,
-          updateConsent: metaProvider.updateConsent,
+          updateConsent: consent =>
+            metaProvider.updateConsent({
+              marketing: consent.marketing ?? false,
+            }),
         });
 
         metaProvider.updateConsent({ marketing: currentConsent.marketing });
@@ -150,9 +154,14 @@ export function AnalyticsProvider({
 
         analyticsCore.registerProvider('ga', {
           pageView: gaProvider.pageView,
-          trackEvent: gaProvider.trackEvent,
+          trackEvent: event =>
+            gaProvider.trackEvent(event.name, event.params ?? {}),
           identify: gaProvider.identify,
-          updateConsent: gaProvider.updateConsent,
+          updateConsent: consent =>
+            gaProvider.updateConsent({
+              analytics: consent.analytics ?? false,
+              marketing: consent.marketing ?? false,
+            }),
         });
 
         gaProvider.updateConsent({
@@ -204,7 +213,7 @@ export function AnalyticsProvider({
 
       analyticsCore.trackEvent({ name, params });
     },
-    [debug]
+    []
   );
 
   const identify = useCallback(

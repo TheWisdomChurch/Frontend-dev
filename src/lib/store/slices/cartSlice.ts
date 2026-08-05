@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { CartItem } from '@/lib/types';
+import type { CartItem } from '@/domain/store/types';
 
 type AddToCartPayload = {
   productId: number;
@@ -95,8 +95,6 @@ const cartSlice = createSlice({
         image,
         selectedSize: safeSize,
         selectedColor: safeColor,
-        size: safeSize,
-        color: safeColor,
         quantity: safeQuantity,
       };
 

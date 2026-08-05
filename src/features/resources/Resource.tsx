@@ -18,8 +18,9 @@ import {
 
 import { Container, Section } from '@/shared/layout';
 import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
-import type { YouTubeVideo } from '@/lib/types';
-import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
+import type { YouTubeVideo } from '@/domain/media/types';
+import { mediaApi } from '@/domain/media/api';
+import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
@@ -29,8 +30,8 @@ import {
   staggerViewport,
 } from '@/shared/ui/motion/staggerReveal';
 
-const API_ORIGIN = resolveConfiguredApiOrigin();
-const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
+const fetchLatestSermons = (signal: AbortSignal) =>
+  mediaApi.listSermons({ sort: 'newest', signal });
 
 const ALL_RESOURCES = [
   {
@@ -211,11 +212,13 @@ function ResourceCarousel() {
 }
 
 export default function ResourceSection() {
-  const [recentVideo, setRecentVideo] = useState<YouTubeVideo | null>(null);
-  const [loading, setLoading] = useState(true);
   const [shouldFetch, setShouldFetch] = useState(false);
 
-  const fetchedOnce = useRef(false);
+  const sermonsQuery = useApiQuery<YouTubeVideo[]>(fetchLatestSermons, {
+    enabled: shouldFetch,
+  });
+  const recentVideo = sermonsQuery.data?.[0] ?? null;
+  const loading = !shouldFetch || sermonsQuery.isLoading;
   const sectionRef = useRef<HTMLElement | null>(null);
 
   // Lazy-load only when in viewport
@@ -239,43 +242,8 @@ export default function ResourceSection() {
     return () => window.clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    if (!shouldFetch || fetchedOnce.current) return;
-    let mounted = true;
-
-    const fetchRecent = async () => {
-      try {
-        const res = await fetch(SERMONS_ENDPOINT, {
-          method: 'GET',
-          cache: 'no-store',
-          credentials: 'omit',
-          headers: { Accept: 'application/json' },
-        });
-        if (!res.ok) return;
-        const payload = await res.json();
-        const data: YouTubeVideo[] = payload?.data ?? payload;
-        if (mounted) {
-          setRecentVideo(Array.isArray(data) ? (data[0] ?? null) : null);
-          fetchedOnce.current = true;
-        }
-      } catch {
-        if (mounted) setRecentVideo(null);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    fetchRecent();
-    return () => {
-      mounted = false;
-    };
-  }, [shouldFetch]);
-
   const thumb =
-    recentVideo?.thumbnail ||
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (recentVideo as any)?.thumbnails?.medium?.url ||
-    null;
+    recentVideo?.thumbnail || recentVideo?.thumbnails?.medium?.url || null;
   const videoUrl = recentVideo?.id
     ? `https://www.youtube.com/watch?v=${recentVideo.id}`
     : null;

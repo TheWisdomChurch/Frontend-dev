@@ -1,5 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+﻿'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -11,13 +10,14 @@ import { Section, Container } from '@/shared/layout';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { lader as laderImg } from '@/shared/assets';
 import { useHeroContent, type HeroSlide } from '@/hooks/useHeroContent';
-import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
-import type { YouTubeVideo } from '@/lib/types';
+import type { YouTubeVideo } from '@/domain/media/types';
+import { mediaApi } from '@/domain/media/api';
+import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
-const API_ORIGIN = resolveConfiguredApiOrigin();
-const SERMONS_ENDPOINT = `${API_ORIGIN}/api/v1/sermons?sort=newest`;
+const fetchLatestSermons = (signal: AbortSignal) =>
+  mediaApi.listSermons({ sort: 'newest', signal });
 
 /* ── Page content override (for inner pages) ─────────── */
 export interface HeroPageContent {
@@ -81,7 +81,8 @@ export default function HeroSection({
   // setCurrentSlide is reserved for future slide-navigation controls (dots/arrows).
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [latestVideo, setLatestVideo] = useState<YouTubeVideo | null>(null);
+  const latestSermons = useApiQuery<YouTubeVideo[]>(fetchLatestSermons);
+  const latestVideo = latestSermons.data?.[0] ?? null;
 
   const safeSlides = useMemo<HeroSlide[]>(() => {
     const source = externalSlides || backendSlides;
@@ -164,42 +165,19 @@ export default function HeroSection({
     return () => ctx.revert();
   }, [currentSlide]);
 
-  // Fetch latest sermon video
-  useEffect(() => {
-    let mounted = true;
-    fetch(SERMONS_ENDPOINT, {
-      method: 'GET',
-      cache: 'no-store',
-      credentials: 'omit',
-      headers: { Accept: 'application/json' },
-    })
-      .then(r => (r.ok ? r.json() : null))
-      .then(payload => {
-        const data: YouTubeVideo[] = payload?.data ?? payload;
-        if (mounted && Array.isArray(data) && data.length > 0)
-          setLatestVideo(data[0]);
-      })
-      .catch(() => null);
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   // Resolve display content (content prop overrides dynamic slide)
   const eyebrow = content?.eyebrow ?? 'Welcome Home';
-  const titleLines = (
-    content?.title ?? String((slide as any)?.title || 'The Wisdom Church')
-  )
+  const titleLines = (content?.title ?? slide?.title ?? 'The Wisdom Church')
     .split('\n')
     .map(l => l.trim())
     .filter(Boolean);
   const description =
     content?.description ??
-    ((slide as any)?.description ||
+    (slide?.description ||
       'A Spirit-filled community equipped and empowered for greatness.');
 
   const watchHref = latestVideo
-    ? `https://www.youtube.com/watch?v=${(latestVideo as any).id || ''}`
+    ? `https://www.youtube.com/watch?v=${latestVideo.id}`
     : SOCIAL_LINKS.youtube;
 
   const primaryCtaHref = content?.primaryCta?.href ?? '/events/weekly';
@@ -255,13 +233,10 @@ export default function HeroSection({
       {/* ── API slide images (homepage only) ──────────────────── */}
       {!content &&
         safeSlides.map((s, i) => {
-          const img = normalizeImage(
-            (s as any).image,
-            (s as any)?.title || `Slide ${i + 1}`
-          );
+          const img = normalizeImage(s.image, s.title || `Slide ${i + 1}`);
           return (
             <div
-              key={(s as any)?.id || i}
+              key={s.id || i}
               className={[
                 'absolute inset-0 transition-all duration-700 ease-out',
                 i === activeSlideIndex ? 'z-10 opacity-100' : 'z-0 opacity-0',

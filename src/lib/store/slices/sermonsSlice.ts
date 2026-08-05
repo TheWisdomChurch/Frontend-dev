@@ -4,9 +4,9 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
-import type { YouTubeVideo } from '@/lib/types';
+import type { YouTubeVideo } from '@/domain/media/types';
+import { mediaApi } from '@/domain/media/api';
 import { seriesGroups } from '@/lib/data';
-import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 type SermonSort = 'newest' | 'oldest' | 'popular';
 
@@ -213,31 +213,12 @@ export const fetchSermons = createAsyncThunk<
   YouTubeVideo[],
   void,
   { rejectValue: string }
->('sermons/fetchSermons', async (_, { rejectWithValue }) => {
+>('sermons/fetchSermons', async (_, { rejectWithValue, signal }) => {
   try {
-    const endpoint = `${resolveConfiguredApiOrigin()}/api/v1/sermons?sort=newest`;
-
-    const response = await fetch(endpoint, {
-      method: 'GET',
-      credentials: 'omit',
-      cache: 'no-store',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      return rejectWithValue(`Failed to fetch sermons (${response.status})`);
-    }
-
-    const payload = await response.json();
-    const data = payload?.data ?? payload;
-
-    if (!isYouTubeVideoArray(data)) {
-      return rejectWithValue('Invalid sermons response format');
-    }
-
-    return data;
+    const data = await mediaApi.listSermons({ sort: 'newest', signal });
+    return isYouTubeVideoArray(data)
+      ? data
+      : rejectWithValue('Invalid sermons response format');
   } catch (error) {
     return rejectWithValue(
       error instanceof Error ? error.message : 'Failed to fetch sermons'

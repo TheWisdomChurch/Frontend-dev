@@ -1,18 +1,18 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { FiltersState, Product } from '@/lib/types';
+import type { Product, ProductFilters } from '@/domain/store/types';
 
 interface ProductsState {
   products: Product[];
   filteredProducts: Product[];
-  filters: FiltersState;
+  filters: ProductFilters;
   loading: boolean;
   error: string | null;
 }
 
 type SortBy = 'name' | 'price-low' | 'price-high' | 'newest';
 
-const defaultFilters: FiltersState = {
+const defaultFilters: ProductFilters = {
   searchTerm: '',
   selectedCategory: 'all',
   sortBy: 'name',
@@ -104,7 +104,7 @@ const sortProducts = (products: Product[], sortBy: SortBy): Product[] => {
 
 const applyProductFilters = (
   products: Product[],
-  filters: FiltersState
+  filters: ProductFilters
 ): Product[] => {
   const sortBy = (filters.sortBy || 'name') as SortBy;
 
@@ -164,7 +164,7 @@ const productsSlice = createSlice({
       );
     },
 
-    setFilters: (state, action: PayloadAction<Partial<FiltersState>>) => {
+    setFilters: (state, action: PayloadAction<Partial<ProductFilters>>) => {
       state.filters = {
         ...state.filters,
         ...action.payload,
