@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Product } from '@/lib/types';
+import type { Product } from '@/domain/store/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 type OrderStatus =
@@ -52,12 +51,52 @@ const inMemoryFallback: { lastOrder: StoreOrder | null } = {
   lastOrder: null,
 };
 
+type JsonRecord = Record<string, unknown>;
+
+function isRecord(value: unknown): value is JsonRecord {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+async function readJson(response: Response): Promise<unknown> {
+  return response.json().catch(() => null);
+}
+
+function getResponseMessage(value: unknown, fallback: string): string {
+  if (!isRecord(value)) return fallback;
+  if (typeof value.message === 'string') return value.message;
+  if (typeof value.error === 'string') return value.error;
+  return fallback;
+}
+
+function unwrapPayload(value: unknown): unknown {
+  return isRecord(value) && 'data' in value ? value.data : value;
+}
+
 export class StoreApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
     super(message);
     this.status = status;
   }
+}
+
+export function normalizeProducts(value: unknown): Product[] {
+  return (Array.isArray(value) ? value : []).filter(isRecord).map(item => ({
+    id: Number(item.id),
+    name: String(item.name || ''),
+    category: String(item.category || 'general'),
+    price: String(item.price || 'N0'),
+    originalPrice:
+      typeof item.originalPrice === 'string' ? item.originalPrice : undefined,
+    image: String(item.image || ''),
+    description: String(item.description || ''),
+    sizes: Array.isArray(item.sizes) ? item.sizes.map(String) : [],
+    colors: Array.isArray(item.colors) ? item.colors.map(String) : [],
+    tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+    stock: Number(item.stock || 0),
+    createdAt: typeof item.createdAt === 'string' ? item.createdAt : undefined,
+    updatedAt: typeof item.updatedAt === 'string' ? item.updatedAt : undefined,
+  }));
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -71,14 +110,15 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     },
   });
 
-  const json = (await res.json().catch(() => null)) as any;
+  const json = await readJson(res);
   if (!res.ok) {
-    const message = json?.message || json?.error || 'Request failed';
-    throw new StoreApiError(message, res.status);
+    throw new StoreApiError(
+      getResponseMessage(json, 'Request failed'),
+      res.status
+    );
   }
 
-  const payload = json?.data ?? json;
-  return payload as T;
+  return unwrapPayload(json) as T;
 }
 
 export const storeClient = {
@@ -95,15 +135,16 @@ export const storeClient = {
       body: form,
     });
 
-    const json = (await res.json().catch(() => null)) as any;
+    const json = await readJson(res);
     if (!res.ok) {
       throw new StoreApiError(
-        json?.message || json?.error || 'Upload failed',
+        getResponseMessage(json, 'Upload failed'),
         res.status
       );
     }
 
-    const url = json?.data?.url || json?.data?.publicUrl;
+    const data = isRecord(json) && isRecord(json.data) ? json.data : null;
+    const url = data?.url ?? data?.publicUrl;
     if (typeof url !== 'string' || !url) {
       throw new StoreApiError('Upload succeeded but returned no file URL', 502);
     }
@@ -111,22 +152,9 @@ export const storeClient = {
   },
 
   async listProducts(): Promise<Product[]> {
-    const data = await request<any[]>('/store/products', { method: 'GET' });
+    const data = await request<unknown>('/store/products', { method: 'GET' });
 
-    return (Array.isArray(data) ? data : []).map(item => ({
-      id: Number(item.id),
-      name: String(item.name || ''),
-      category: String(item.category || 'general'),
-      price: String(item.price || 'N0'),
-      originalPrice:
-        typeof item.originalPrice === 'string' ? item.originalPrice : undefined,
-      image: String(item.image || ''),
-      description: String(item.description || ''),
-      sizes: Array.isArray(item.sizes) ? item.sizes.map(String) : [],
-      colors: Array.isArray(item.colors) ? item.colors.map(String) : [],
-      tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
-      stock: Number(item.stock || 0),
-    }));
+    return normalizeProducts(data);
   },
 
   async createOrder(payload: StoreOrderPayload): Promise<StoreOrder> {

@@ -191,10 +191,9 @@ const OrderConfirmation = () => {
 
       await navigator.clipboard.writeText(window.location.href);
       toast.success('Order link copied to clipboard.');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sharing:', error);
-      if (error?.name !== 'AbortError') {
+      if (!(error instanceof DOMException && error.name === 'AbortError')) {
         toast.error('Unable to share this order.');
       }
     } finally {

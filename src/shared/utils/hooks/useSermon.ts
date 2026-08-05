@@ -20,7 +20,7 @@ import {
   SeriesGroup,
   GroupedSeriesData,
   UngroupedSeriesData,
-} from '@/lib/types';
+} from '@/domain/media/types';
 import { useIsClient } from '@/hooks';
 
 if (

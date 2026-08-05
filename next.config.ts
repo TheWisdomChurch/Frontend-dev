@@ -1,5 +1,4 @@
 import type { NextConfig } from 'next';
-import withPWA from 'next-pwa';
 
 function normalizeApiProxyTarget(raw?: string): string {
   if (!raw || !raw.trim()) return '';
@@ -76,7 +75,7 @@ const nextConfig: NextConfig = {
     // mostly-static site. 'unsafe-inline' on script-src is the trade-off;
     // the app has no dangerouslySetInnerHTML rendering anything but its
     // own JSON-LD, so there's no current injection surface this protects
-    // against. Third-party origins kept in sync with MetaPixel.tsx,
+    // against. Third-party origins are kept in sync with the analytics providers,
     // ga.ts, the Ahrefs Script tag in layout.tsx, and Cloudflare's
     // auto-injected beacon (present whenever the site is proxied through
     // Cloudflare, not something this app's code controls).
@@ -122,21 +121,7 @@ const nextConfig: NextConfig = {
       { key: 'Content-Security-Policy', value: csp },
     ];
 
-    return [
-      {
-        source: '/:path*',
-        headers: securityHeaders,
-      },
-      {
-        source: '/_next/static/media/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-    ];
+    return [{ source: '/:path*', headers: securityHeaders }];
   },
 
   async redirects() {
@@ -186,14 +171,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const enablePwa = false;
-
-const withPwaConfig = withPWA({
-  dest: 'public',
-  register: false,
-  skipWaiting: false,
-  disable: !enablePwa,
-});
-
-// @ts-expect-error @types/next-pwa lags behind next's I18NConfig type
-export default withPwaConfig(nextConfig);
+export default nextConfig;

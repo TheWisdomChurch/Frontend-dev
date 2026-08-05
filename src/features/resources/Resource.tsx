@@ -18,7 +18,7 @@ import {
 
 import { Container, Section } from '@/shared/layout';
 import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
-import type { YouTubeVideo } from '@/lib/types';
+import type { YouTubeVideo } from '@/domain/media/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
@@ -272,10 +272,7 @@ export default function ResourceSection() {
   }, [shouldFetch]);
 
   const thumb =
-    recentVideo?.thumbnail ||
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (recentVideo as any)?.thumbnails?.medium?.url ||
-    null;
+    recentVideo?.thumbnail || recentVideo?.thumbnails?.medium?.url || null;
   const videoUrl = recentVideo?.id
     ? `https://www.youtube.com/watch?v=${recentVideo.id}`
     : null;

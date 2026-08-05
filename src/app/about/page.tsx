@@ -12,7 +12,10 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
-import type { LeadershipMember, LeadershipRole } from '@/lib/types';
+import type {
+  LeadershipMember,
+  LeadershipRole,
+} from '@/domain/leadership/types';
 import { CanvasCard, DarkCard } from '@/features/leadership/LeadershipCards';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 

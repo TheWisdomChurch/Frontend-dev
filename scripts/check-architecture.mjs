@@ -33,6 +33,30 @@ for (const file of legacyAnalytics) {
   );
 }
 
+const sourceFiles = filesBelow(join(root, 'src')).filter(file =>
+  /\.(?:ts|tsx)$/.test(file)
+);
+
+for (const file of sourceFiles) {
+  const source = readFileSync(file, 'utf8');
+  const displayPath = relative(root, file);
+
+  if (source.trim().length === 0) {
+    violations.push(`${displayPath}: empty source files are not allowed`);
+  }
+
+  if (
+    /from\s+['"]@\/lib\/types['"]/.test(source) &&
+    /\b(Product|CartItem|CustomerInfo|Order|YouTubeVideo|LeadershipMember|LeadershipRole)\b/.test(
+      source
+    )
+  ) {
+    violations.push(
+      `${displayPath}: domain models must be imported from src/domain, not the legacy catch-all types module`
+    );
+  }
+}
+
 const tsconfig = readFileSync(join(root, 'tsconfig.json'), 'utf8');
 if (/ANALYTICS_(CONFIGURATION|EXAMPLES)/.test(tsconfig)) {
   violations.push(

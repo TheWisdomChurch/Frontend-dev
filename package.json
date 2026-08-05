@@ -2,10 +2,14 @@
   "name": "wisdomhousehq-webapplication",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0",
+    "npm": ">=10"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "prebuild": "npm run media:optimize",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start -p 2000",
     "media:optimize": "node scripts/media-pipeline.mjs",
     "media:optimize:dry": "node scripts/media-pipeline.mjs --dry-run",
@@ -13,9 +17,12 @@
     "lint:fix": "node --max-old-space-size=4096 ./node_modules/eslint/bin/eslint.js . --ext .ts,.tsx,.js,.jsx --cache --cache-location .cache/eslint/ --fix --no-warn-ignored",
     "type-check": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc --noEmit",
     "architecture:check": "node scripts/check-architecture.mjs",
+    "security:check": "npm audit --omit=dev --audit-level=high",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "validate": "npm run architecture:check && npm run type-check && npm run lint && npm run prettier",
+    "validate": "npm run architecture:check && npm run type-check && npm run lint && npm run prettier && npm test",
     "prepare": "node -e \"const fs = require('fs'); if (fs.existsSync('.githooks/setup-hooks')) require('child_process').execSync('chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks', { stdio: 'inherit' })\"",
     "postinstall": "npm run hooks:setup || echo 'Note: Run npm run hooks:setup to configure Git hooks'",
     "hooks:setup": "./.githooks/setup-hooks || (echo 'Making setup executable...' && chmod +x .githooks/setup-hooks && ./.githooks/setup-hooks)",
@@ -30,33 +37,24 @@
     "docker:build:dev": "docker build --target development -t wisdom-house-dev .",
     "docker:run": "docker run --rm -p 2000:2000 wisdom-house",
     "docker:down": "docker compose --profile dev --profile prod down",
-    "lint:strict": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings 0 --no-warn-ignored"
+    "lint:strict": "eslint src tests --ext .ts,.tsx,.js,.jsx --max-warnings 0 --no-warn-ignored"
   },
   "dependencies": {
-    "@emotion/is-prop-valid": "^1.4.0",
     "@hookform/resolvers": "^5.2.2",
-    "@radix-ui/react-dialog": "^1.1.15",
     "@reduxjs/toolkit": "^2.10.1",
-    "@tanstack/react-query": "^5.90.12",
-    "@tanstack/react-query-devtools": "^5.91.1",
     "@types/gsap": "^1.20.2",
     "@vercel/analytics": "^1.6.1",
-    "axios": "^1.13.2",
     "clsx": "^2.1.1",
-    "cmdk": "^1.1.1",
-    "date-fns": "^4.1.0",
     "framer-motion": "^12.23.24",
     "gsap": "^3.13.0",
     "lucide-react": "^1.8.0",
-    "next": "^15.5.7",
-    "next-pwa": "^5.6.0",
+    "next": "16.3.0",
     "react": "^19.2.1",
-    "react-day-picker": "^9.11.1",
     "react-dom": "^19.2.1",
     "react-hook-form": "^7.69.0",
     "react-hot-toast": "^2.6.0",
     "react-redux": "^9.2.0",
-    "sharp": "^0.34.5",
+    "sharp": "0.35.3",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.2.1"
@@ -64,7 +62,6 @@
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
-    "@types/next-pwa": "^5.6.9",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19",
@@ -72,7 +69,7 @@
     "@typescript-eslint/parser": "^8.48.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.37.0",
-    "eslint-config-next": "^16.0.7",
+    "eslint-config-next": "16.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -85,6 +82,7 @@
     "prettier": "^3.6.2",
     "sass": "^1.99.0",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }

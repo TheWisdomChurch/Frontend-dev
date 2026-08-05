@@ -9,7 +9,13 @@ import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
 import { FlexboxLayout } from '@/shared/layout';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Media } from '@/shared/ui/Media';
-import type { ProductModalProps } from '@/lib/types';
+import type { Product } from '@/domain/store/types';
+
+interface ProductModalProps {
+  product: Product | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
 
 const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const dispatch = useAppDispatch();

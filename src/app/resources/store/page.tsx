@@ -40,7 +40,7 @@ import { Section, Container } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import CartSidebar from '@/features/store/Store/CartSidebar';
-import type { Product } from '@/lib/types';
+import type { Product } from '@/domain/store/types';
 import { Media } from '@/shared/ui/Media';
 import { storeClient } from '@/lib/api/storeClient';
 import PageHero from '@/features/hero/PageHero';

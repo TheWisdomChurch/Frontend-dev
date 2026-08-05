@@ -3,7 +3,10 @@ import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
-import type { LeadershipMember, LeadershipRole } from '@/lib/types';
+import type {
+  LeadershipMember,
+  LeadershipRole,
+} from '@/domain/leadership/types';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
 import {

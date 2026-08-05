@@ -4,7 +4,7 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
-import type { YouTubeVideo } from '@/lib/types';
+import type { YouTubeVideo } from '@/domain/media/types';
 import { seriesGroups } from '@/lib/data';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 

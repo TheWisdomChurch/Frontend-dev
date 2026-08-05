@@ -8,7 +8,7 @@ import { ChevronDown } from 'lucide-react';
 import { Bishop } from '@/shared/assets';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { apiClient } from '@/lib/api';
-import type { LeadershipMember } from '@/lib/types';
+import type { LeadershipMember } from '@/domain/leadership/types';
 import { Section } from '@/shared/layout';
 import { Media } from '@/shared/ui/Media';
 import SectionGlow from '@/shared/ui/SectionGlow';

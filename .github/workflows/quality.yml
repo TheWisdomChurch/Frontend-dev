@@ -33,6 +33,9 @@ jobs:
       - name: Validate architecture
         run: npm run architecture:check
 
+      - name: Audit production dependencies
+        run: npm run security:check
+
       - name: Type-check
         run: npm run type-check
 
@@ -41,6 +44,9 @@ jobs:
 
       - name: Check formatting
         run: npm run prettier
+
+      - name: Run automated tests
+        run: npm test
 
       - name: Build production application
         run: npm run build

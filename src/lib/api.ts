@@ -14,16 +14,18 @@ import type {
 } from './apiTypes';
 
 import type {
-  LeadershipApplicationRequest,
   GivingOption,
   GivingIntentData,
-  LeadershipMember,
   PastoralCareRequestData,
-  LeadershipRole,
   WorkforceRegistrationData,
   ContactMessageData,
   PrayerRequestData,
 } from './types';
+import type {
+  LeadershipApplicationRequest,
+  LeadershipMember,
+  LeadershipRole,
+} from '@/domain/leadership/types';
 import { trackApiRequestStart, trackApiRequestEnd } from './apiActivity';
 import { resolveConfiguredApiOrigin } from './apiOrigin';
 
@@ -1095,20 +1097,18 @@ export const apiClient = {
 
   async listLeadership(role?: LeadershipRole): Promise<LeadershipMember[]> {
     const qs = toQueryString({ role });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = await request<any>(`/leadership${qs}`, { method: 'GET' });
+    const res = await request<unknown>(`/leadership${qs}`, { method: 'GET' });
     return unwrapData<LeadershipMember[]>(res);
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async applyLeadership(payload: LeadershipApplicationRequest): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = await request<any>('/leadership/apply', {
+  async applyLeadership(
+    payload: LeadershipApplicationRequest
+  ): Promise<unknown> {
+    const res = await request<unknown>('/leadership/apply', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return unwrapData<any>(res);
+    return unwrapData<unknown>(res);
   },
 
   async uploadLeadershipImage(
@@ -1118,16 +1118,14 @@ export const apiClient = {
     form.append('file', file);
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res = await request<any>('/leadership/upload-image', {
+      const res = await request<unknown>('/leadership/upload-image', {
         method: 'POST',
         body: form,
       });
       return unwrapData<{ url: string; key?: string }>(res);
     } catch (error) {
       if (isApiError(error) && error.statusCode === 404) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const fallbackRes = await request<any>('/leadership/upload', {
+        const fallbackRes = await request<unknown>('/leadership/upload', {
           method: 'POST',
           body: form,
         });
