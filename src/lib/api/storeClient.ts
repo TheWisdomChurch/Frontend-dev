@@ -3,11 +3,7 @@ import type { Product } from '@/lib/types';
 import { resolveConfiguredApiOrigin } from '@/lib/apiOrigin';
 
 type OrderStatus =
-  | 'pending'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled';
+  'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 type PaymentMethod = 'transfer' | 'online' | 'delivery';
 
 export interface StoreOrderItem {

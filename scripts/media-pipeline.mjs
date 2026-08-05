@@ -105,7 +105,10 @@ async function processImage(inputPath, sourceBuffer, manifestFiles) {
   });
 
   for (const width of targetWidths) {
-    const resizedOutput = path.join(outputBaseDir, `${baseName}@w${width}.webp`);
+    const resizedOutput = path.join(
+      outputBaseDir,
+      `${baseName}@w${width}.webp`
+    );
     outputs.push({
       path: resizedOutput,
       width,
@@ -121,7 +124,10 @@ async function processImage(inputPath, sourceBuffer, manifestFiles) {
   });
 
   if (!isDryRun) {
-    await sharp(sourceBuffer).rotate().webp({ quality: WEBP_QUALITY }).toFile(originalOutput);
+    await sharp(sourceBuffer)
+      .rotate()
+      .webp({ quality: WEBP_QUALITY })
+      .toFile(originalOutput);
     for (const width of targetWidths) {
       await sharp(sourceBuffer)
         .rotate()
@@ -147,7 +153,12 @@ async function processImage(inputPath, sourceBuffer, manifestFiles) {
   };
 }
 
-async function processVideo(inputPath, sourceBuffer, manifestFiles, ffmpegAvailable) {
+async function processVideo(
+  inputPath,
+  sourceBuffer,
+  manifestFiles,
+  ffmpegAvailable
+) {
   const rel = path.relative(SOURCE_DIR, inputPath);
   const relDir = path.dirname(rel);
   const extension = path.extname(rel).toLowerCase();
@@ -256,12 +267,21 @@ async function main() {
 
   for (const videoFile of videoFiles) {
     const sourceBuffer = await fs.readFile(videoFile);
-    await processVideo(videoFile, sourceBuffer, manifest.files, ffmpegAvailable);
+    await processVideo(
+      videoFile,
+      sourceBuffer,
+      manifest.files,
+      ffmpegAvailable
+    );
   }
 
   if (!isDryRun) {
     await ensureDir(path.dirname(MANIFEST_PATH));
-    await fs.writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+    await fs.writeFile(
+      MANIFEST_PATH,
+      `${JSON.stringify(manifest, null, 2)}\n`,
+      'utf8'
+    );
   }
 
   const elapsedMs = Date.now() - startedAt;

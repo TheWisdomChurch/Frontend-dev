@@ -14,7 +14,7 @@ ENV_FILE ?= .env.local
 
 export NEXT_TELEMETRY_DISABLED := 1
 
-.PHONY: help setup install dev build start preview typecheck lint lint-fix format format-fix \
+.PHONY: help setup install dev build start preview architecture typecheck lint lint-fix format format-fix \
 	check ci media media-dry clean doctor env docker-dev docker-prod docker-build \
 	docker-down docker-logs docker-ps
 
@@ -45,6 +45,9 @@ start: ## Run an existing production build
 
 preview: build start ## Build and run locally in production mode
 
+architecture: ## Enforce repository structure and module boundaries
+	npm run architecture:check
+
 typecheck: ## Run the TypeScript compiler without emitting files
 	npm run type-check
 
@@ -60,7 +63,7 @@ format: ## Check formatting without changing files
 format-fix: ## Format project files
 	npm run prettier:fix
 
-check: typecheck lint format ## Run fast local quality checks
+check: architecture typecheck lint format ## Run fast local quality checks
 
 ci: install check build ## Reproduce the full clean CI validation locally
 

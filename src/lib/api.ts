@@ -842,14 +842,11 @@ function normalizeTestimonial(raw: unknown): Testimonial {
 
   const isAnonymous = r.isAnonymous ?? r.is_anonymous ?? r.anonymous ?? false;
   const isApproved = (r.isApproved ?? r.is_approved ?? r.approved) as
-    | boolean
-    | undefined;
+    boolean | undefined;
 
   const imageUrl =
     ((r.imageUrl ?? r.image_url ?? r.image ?? r.imageURL) as
-      | string
-      | null
-      | undefined) ?? null;
+      string | null | undefined) ?? null;
 
   const createdAt = (r.createdAt ?? r.created_at) as string | undefined;
   const updatedAt = (r.updatedAt ?? r.updated_at) as string | undefined;

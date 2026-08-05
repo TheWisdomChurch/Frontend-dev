@@ -5,13 +5,7 @@ import { cn } from '@/lib/cn';
 import { bricolageGrotesque, playfair, worksans } from '../fonts/fonts';
 
 export type FontWeight =
-  | 'light'
-  | 'regular'
-  | 'medium'
-  | 'semibold'
-  | 'bold'
-  | 'extrabold'
-  | 'black';
+  'light' | 'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
 
 export type FontFamily = 'bricolage' | 'worksans' | 'playfair';
 

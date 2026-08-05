@@ -27,11 +27,7 @@ import {
 } from 'lucide-react';
 
 type OrderStatus =
-  | 'pending'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled';
+  'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 type PaymentMethod = 'transfer' | 'online' | 'delivery';
 type PaymentStatus = 'pending' | 'processing' | 'completed' | 'failed';
 

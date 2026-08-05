@@ -42,9 +42,7 @@ export const trackApiRequestEnd = () => {
   emitPendingChange(nextCount);
 };
 
-export const subscribeToApiPending = (
-  listener: (pending: number) => void
-) => {
+export const subscribeToApiPending = (listener: (pending: number) => void) => {
   const browserWindow = getBrowserWindow();
   if (!browserWindow) return () => {};
 
@@ -67,4 +65,3 @@ export const subscribeToApiPending = (
     );
   };
 };
-

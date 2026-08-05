@@ -273,11 +273,7 @@ export interface PrayerRequestData {
 }
 
 export type LeadershipRole =
-  | 'senior_pastor'
-  | 'associate_pastor'
-  | 'deacon'
-  | 'deaconess'
-  | 'reverend';
+  'senior_pastor' | 'associate_pastor' | 'deacon' | 'deaconess' | 'reverend';
 
 export type LeadershipStatus = 'pending' | 'approved' | 'declined';
 
