@@ -78,11 +78,11 @@ export default function OnlineGiving() {
                 church.
               </h2>
 
-              <blockquote className="mt-8 border-l border-[var(--app-primary)]/60 pl-5 font-ui text-base italic leading-8 text-white/62">
+              <blockquote className="mt-8 border-l border-[var(--app-primary)]/60 pl-5 font-ui text-base italic leading-8 text-white/70">
                 &ldquo;As each has purposed in his heart, so let him give… God
                 loves a cheerful giver.&rdquo;
                 <br />
-                <cite className="mt-2 block text-xs not-italic uppercase tracking-[0.16em] text-white/38">
+                <cite className="mt-2 block text-xs not-italic uppercase tracking-[0.16em] text-white/55">
                   2 Corinthians 9:7
                 </cite>
               </blockquote>
@@ -91,14 +91,14 @@ export default function OnlineGiving() {
                 <button
                   type="button"
                   onClick={handleContactCall}
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/16 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
                   <Phone className="h-3.5 w-3.5" />
                   Other ways to give
                 </button>
                 <Link
                   href="/contact"
-                  className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-white/48 transition hover:text-white"
+                  className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-white/50 transition hover:text-white"
                 >
                   Contact us <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
@@ -106,13 +106,29 @@ export default function OnlineGiving() {
             </div>
 
             {/* Giving options */}
-            {!loading && givingOptions.length > 0 ? (
+            {loading ? (
+              <div className="border-t border-white/15" aria-hidden="true">
+                {[0, 1, 2].map(i => (
+                  <div
+                    key={i}
+                    className="grid grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/15 py-7 sm:gap-7 sm:px-5 sm:py-9"
+                  >
+                    <span className="h-3 w-4 animate-pulse rounded bg-white/10" />
+                    <span className="flex flex-col gap-3">
+                      <span className="h-5 w-2/3 max-w-[220px] animate-pulse rounded bg-white/10" />
+                      <span className="h-4 w-4/5 max-w-sm animate-pulse rounded bg-white/[0.06]" />
+                    </span>
+                    <span className="mt-1 hidden h-11 w-11 animate-pulse rounded-full bg-white/[0.06] sm:block" />
+                  </div>
+                ))}
+              </div>
+            ) : givingOptions.length > 0 ? (
               <motion.div
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="show"
                 viewport={staggerViewport}
-                className="border-t border-white/14"
+                className="border-t border-white/15"
               >
                 {givingOptions.slice(0, 3).map((opt, index) => (
                   <motion.button
@@ -122,7 +138,7 @@ export default function OnlineGiving() {
                     onClick={() => handleGive(opt)}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-                    className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/14 py-7 text-left transition-colors duration-200 hover:bg-white/[0.035] sm:gap-7 sm:px-5 sm:py-9"
+                    className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/15 py-7 text-left transition-colors duration-200 hover:bg-white/[0.035] sm:gap-7 sm:px-5 sm:py-9"
                   >
                     <span className="pt-1 font-ui text-xs tabular-nums text-[var(--app-primary)]">
                       {String(index + 1).padStart(2, '0')}
@@ -146,8 +162,8 @@ export default function OnlineGiving() {
                   </motion.button>
                 ))}
               </motion.div>
-            ) : !loading ? (
-              <div className="border-t border-white/14 pt-9 lg:text-left">
+            ) : (
+              <div className="border-t border-white/15 pt-9 lg:text-left">
                 <button
                   type="button"
                   onClick={() =>
@@ -163,7 +179,7 @@ export default function OnlineGiving() {
                   Give Online
                 </button>
               </div>
-            ) : null}
+            )}
           </div>
         </Container>
       </Section>
