@@ -7,7 +7,7 @@ import Bishop from './bishopp.png';
 // WhatWedo
 import WhatWedo_1 from './Worship_service.svg';
 import WhatWedo_2 from './Community_service.svg';
-import WhatWeDo_3 from './Youth_gathering.svg';
+import WhatWeDo_3 from './teaching.svg';
 import WhatWedo_4 from './prayer_gathering.svg';
 
 // Logo
