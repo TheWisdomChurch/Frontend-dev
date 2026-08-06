@@ -6,6 +6,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 
 import { Container, Section } from '@/shared/layout';
+import { SectionHeading } from '@/shared/ui/SectionHeading';
 import {
   staggerContainer,
   staggerItem,
@@ -58,8 +59,8 @@ function TestimonyThumb({
       onClick={onClick}
       className={`group relative w-full overflow-hidden border p-4 text-left transition-all duration-300 ${
         active
-          ? 'border-[var(--app-primary)]/45 bg-[var(--app-primary)]/10'
-          : 'border-[var(--app-ink)]/10 bg-[var(--app-ink)]/[0.02] hover:border-[var(--app-ink)]/20 hover:bg-[var(--app-ink)]/[0.04]'
+          ? 'border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]'
+          : 'border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[color-mix(in_srgb,var(--app-ink)_2%,transparent)] hover:border-[color-mix(in_srgb,var(--app-ink)_20%,transparent)] hover:bg-[color-mix(in_srgb,var(--app-ink)_4%,transparent)]'
       }`}
     >
       <span
@@ -73,13 +74,13 @@ function TestimonyThumb({
           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-ui text-[11px] font-bold transition-colors duration-300 ${
             active
               ? 'bg-[var(--app-primary)] text-black'
-              : 'bg-[var(--app-ink)]/10 text-[var(--app-ink)]/55'
+              : 'bg-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] text-[color-mix(in_srgb,var(--app-ink)_55%,transparent)]'
           }`}
         >
           {initialsOf(quote.name)}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="line-clamp-2 font-ui text-sm leading-6 text-[var(--app-ink)]/70">
+          <p className="line-clamp-2 font-ui text-sm leading-6 text-[color-mix(in_srgb,var(--app-ink)_70%,transparent)]">
             {quote.text}
           </p>
           <div className="mt-3 flex items-center justify-between gap-3">
@@ -90,7 +91,7 @@ function TestimonyThumb({
               className={`h-4 w-4 shrink-0 transition ${
                 active
                   ? 'text-[var(--app-primary)]'
-                  : 'text-[var(--app-ink)]/35 group-hover:translate-x-1 group-hover:text-[var(--app-ink)]/60'
+                  : 'text-[color-mix(in_srgb,var(--app-ink)_35%,transparent)] group-hover:translate-x-1 group-hover:text-[color-mix(in_srgb,var(--app-ink)_60%,transparent)]'
               }`}
             />
           </div>
@@ -157,41 +158,52 @@ export default function HomeTestimonials() {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Intro column */}
-          <div data-gsap="reveal" className="max-w-xl lg:sticky lg:top-28">
-            <p className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Testimonies
-            </p>
-            <h2
-              className="mt-5 font-sans font-black uppercase leading-[0.92] tracking-[-0.045em] text-[var(--app-ink)]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ fontSize: 'var(--type-display-md)' }}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="max-w-xl lg:sticky lg:top-28"
+          >
+            <motion.p
+              variants={staggerItem}
+              className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
             >
+              Testimonies
+            </motion.p>
+            <SectionHeading tone="dark" size="md" className="mt-5">
               Real stories,
               <br />
               <span className="text-[var(--app-primary)]">real</span>{' '}
               breakthroughs.
-            </h2>
+            </SectionHeading>
 
-            <p className="mt-8 max-w-md font-ui text-base leading-7 text-[var(--app-ink)]/60">
+            <motion.p
+              variants={staggerItem}
+              className="mt-8 max-w-md font-ui text-base leading-7 text-[color-mix(in_srgb,var(--app-ink)_60%,transparent)]"
+            >
               Hear how God is moving through worship, healing, and everyday
               faithfulness in the Wisdom Church community.
-            </p>
+            </motion.p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <motion.div
+              variants={staggerItem}
+              className="mt-9 flex flex-wrap items-center gap-3"
+            >
               <Link
                 href="/forms/share-testimony"
-                className="inline-flex h-11 items-center gap-2 rounded-full border border-[var(--app-ink)]/15 px-5 font-ui text-xs font-bold text-[var(--app-ink)]/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 Share your story
               </Link>
               <Link
                 href="/testimonies"
-                className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-[var(--app-ink)]/50 transition hover:text-[var(--app-ink)]"
+                className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)] transition hover:text-[var(--app-ink)]"
               >
                 View all stories <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Testimony content */}
           {loading ? (
@@ -199,26 +211,26 @@ export default function HomeTestimonials() {
               className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px]"
               aria-hidden="true"
             >
-              <div className="min-h-[340px] animate-pulse border border-[var(--app-ink)]/10 bg-[var(--app-ink)]/[0.03]" />
+              <div className="min-h-[340px] animate-pulse border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[color-mix(in_srgb,var(--app-ink)_3%,transparent)]" />
               <div className="hidden flex-col gap-3 md:flex">
                 {[0, 1, 2].map(i => (
                   <div
                     key={i}
-                    className="h-24 animate-pulse border border-[var(--app-ink)]/10 bg-[var(--app-ink)]/[0.03]"
+                    className="h-24 animate-pulse border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[color-mix(in_srgb,var(--app-ink)_3%,transparent)]"
                   />
                 ))}
               </div>
             </div>
           ) : !q ? (
-            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 border border-[var(--app-ink)]/10 px-6 text-center">
+            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] px-6 text-center">
               <p
-                className="font-headline font-normal italic text-[var(--app-ink)]/70"
+                className="font-headline font-normal italic text-[color-mix(in_srgb,var(--app-ink)_70%,transparent)]"
                 // eslint-disable-next-line no-restricted-syntax
                 style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}
               >
                 Testimonies coming soon.
               </p>
-              <p className="font-ui text-sm text-[var(--app-ink)]/50">
+              <p className="font-ui text-sm text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)]">
                 Be the first to share your story.
               </p>
               <Link
@@ -230,7 +242,7 @@ export default function HomeTestimonials() {
             </div>
           ) : (
             <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px]">
-              <article className="relative flex min-h-[340px] flex-col justify-between overflow-hidden border border-[var(--app-ink)]/10 bg-white p-6 sm:p-8">
+              <article className="relative flex min-h-[340px] flex-col justify-between overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
                 <span
                   className="pointer-events-none absolute -right-2 -top-10 select-none font-headline text-[9rem] leading-none text-[var(--app-primary)] opacity-[0.08]"
                   aria-hidden="true"
@@ -259,16 +271,16 @@ export default function HomeTestimonials() {
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="relative mt-8 flex flex-col gap-4 border-t border-[var(--app-ink)]/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="relative mt-8 flex flex-col gap-4 border-t border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] pt-5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/15 font-ui text-sm font-bold text-[var(--app-primary)] ring-1 ring-[var(--app-primary)]/25">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] font-ui text-sm font-bold text-[var(--app-primary)] ring-1 ring-[color-mix(in_srgb,var(--app-primary)_25%,transparent)]">
                       {initialsOf(q.name)}
                     </span>
                     <div>
                       <p className="font-ui text-sm font-semibold text-[var(--app-ink)]">
                         {q.name}
                       </p>
-                      <p className="mt-0.5 font-ui text-xs text-[var(--app-ink)]/45">
+                      <p className="mt-0.5 font-ui text-xs text-[color-mix(in_srgb,var(--app-ink)_45%,transparent)]">
                         {q.role}
                       </p>
                     </div>
@@ -300,7 +312,7 @@ export default function HomeTestimonials() {
                           type="button"
                           onClick={prev}
                           aria-label="Previous testimony"
-                          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/10 text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)]/40 hover:text-[var(--app-primary)]"
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] text-[color-mix(in_srgb,var(--app-ink)_55%,transparent)] transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] hover:text-[var(--app-primary)]"
                         >
                           <ChevronLeft className="h-4 w-4" />
                         </button>
@@ -308,7 +320,7 @@ export default function HomeTestimonials() {
                           type="button"
                           onClick={next}
                           aria-label="Next testimony"
-                          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/10 text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)]/40 hover:text-[var(--app-primary)]"
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] text-[color-mix(in_srgb,var(--app-ink)_55%,transparent)] transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] hover:text-[var(--app-primary)]"
                         >
                           <ChevronRight className="h-4 w-4" />
                         </button>

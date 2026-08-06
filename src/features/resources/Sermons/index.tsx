@@ -10,6 +10,7 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import { Media } from '@/shared/ui/Media';
 import { useSermonUtil } from '@/shared/utils/hooks/useSermon';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
+import Arrow from '@/shared/ui/icons/Arrow';
 import type {
   YouTubeVideo,
   GroupedSeriesData,
@@ -22,28 +23,6 @@ import type {
 function truncateHeading(text: string, max = 70): string {
   if (text.length <= max) return text;
   return `${text.slice(0, max - 1).trimEnd()}…`;
-}
-
-/* ── Arrow ───────────────────────────────────────────────── */
-
-function Arrow() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 6h10M6 1l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 /* ── Play icon ───────────────────────────────────────────── */

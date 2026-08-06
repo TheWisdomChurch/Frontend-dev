@@ -208,7 +208,6 @@ function StorePageContent() {
         // showButtons
         // primaryButtonText="Shop New Arrivals"
         // secondaryButtonText="View Categories"
-        showScrollIndicator
       />
 
       <Button

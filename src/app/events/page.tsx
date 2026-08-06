@@ -10,6 +10,7 @@ import type { EventPublic } from '@/lib/apiTypes';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildEventSchema, buildBreadcrumbSchema } from '@/lib/seo';
+import Arrow from '@/shared/ui/icons/Arrow';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -86,28 +87,6 @@ const WEEKLY = [
     description: 'Start the day in prayer, declaration, and the Word.',
   },
 ] as const;
-
-/* ── Arrow ──────────────────────────────────────────────── */
-
-function Arrow() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 6h10M6 1l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 /* ── Event card ─────────────────────────────────────────── */
 

@@ -13,6 +13,7 @@ import { BaseModal } from '@/shared/ui/modals/Base';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { Media } from '@/shared/ui/Media';
+import Arrow from '@/shared/ui/icons/Arrow';
 import {
   staggerContainer,
   staggerItem,
@@ -73,26 +74,6 @@ function statusBadge(startAt?: string, endAt?: string): string {
   if (now >= start && now <= end) return 'Live now';
   if (now < start) return 'Upcoming';
   return 'Recent';
-}
-
-function Arrow() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 6h10M6 1l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 /* ── Featured card — stacked (image top, content below) through tablet,

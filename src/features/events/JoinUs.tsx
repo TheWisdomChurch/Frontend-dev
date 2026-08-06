@@ -371,11 +371,7 @@ export default function JoinWisdomHouse() {
               <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Join the workforce
               </p>
-              <h2
-                className="font-headline font-normal text-white"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ fontSize: 'var(--type-display-md)' }}
-              >
+              <h2 className="font-headline text-display-md font-normal text-white">
                 Serve with excellence.
               </h2>
               <p className="mt-3 max-w-[460px] font-ui text-body-md leading-[1.8] text-white/62">
@@ -421,7 +417,7 @@ export default function JoinWisdomHouse() {
             <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
               Serve at Wisdom Church
             </p>
-            <h3 className="mt-3 max-w-2xl font-sans text-[clamp(2rem,4vw,3.8rem)] font-black uppercase leading-[0.94] tracking-[-0.04em] text-white">
+            <h3 className="mt-3 max-w-2xl font-sans text-display-md font-black uppercase leading-[0.94] tracking-[-0.04em] text-white">
               Bring your gift.
               <span className="block text-[var(--app-primary)]">
                 Build with us.

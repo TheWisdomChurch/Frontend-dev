@@ -12,6 +12,7 @@ import apiClient from '@/lib/api';
 import type { GivingOption } from '@/lib/types';
 import { Section, Container } from '@/shared/layout';
 import SectionGlow from '@/shared/ui/SectionGlow';
+import { SectionHeading } from '@/shared/ui/SectionHeading';
 import {
   staggerContainer,
   staggerItem,
@@ -63,31 +64,42 @@ export default function OnlineGiving() {
         <SectionGlow />
         <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
           <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20">
-            <div data-gsap="reveal" className="max-w-xl lg:sticky lg:top-28">
-              <p className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Give with purpose
-              </p>
-              <h2
-                className="mt-5 font-sans font-black uppercase leading-[0.92] tracking-[-0.045em] text-white"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ fontSize: 'var(--type-display-md)' }}
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="max-w-xl lg:sticky lg:top-28"
+            >
+              <motion.p
+                variants={staggerItem}
+                className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
               >
+                Give with purpose
+              </motion.p>
+              <SectionHeading tone="light" size="md" className="mt-5">
                 Your generosity
                 <br />
                 <span className="text-[var(--app-primary)]">builds</span> the
                 church.
-              </h2>
+              </SectionHeading>
 
-              <blockquote className="mt-8 border-l border-[var(--app-primary)]/60 pl-5 font-ui text-base italic leading-8 text-white/70">
+              <motion.blockquote
+                variants={staggerItem}
+                className="mt-8 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-5 font-ui text-base italic leading-8 text-white/70"
+              >
                 &ldquo;As each has purposed in his heart, so let him give… God
                 loves a cheerful giver.&rdquo;
                 <br />
                 <cite className="mt-2 block text-xs not-italic uppercase tracking-[0.16em] text-white/55">
                   2 Corinthians 9:7
                 </cite>
-              </blockquote>
+              </motion.blockquote>
 
-              <div className="mt-9 flex flex-wrap items-center gap-3">
+              <motion.div
+                variants={staggerItem}
+                className="mt-9 flex flex-wrap items-center gap-3"
+              >
                 <button
                   type="button"
                   onClick={handleContactCall}
@@ -102,8 +114,8 @@ export default function OnlineGiving() {
                 >
                   Contact us <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* Giving options */}
             {loading ? (

@@ -51,21 +51,29 @@ export const HOME_BELIEFS = [
     number: '01',
     title: 'The Word',
     body: "We receive and apply God's Word until it becomes visible in how we live.",
+    image: '/Picflow Images Jul 31 (2)/DSC06877 copy.webp',
+    imageAlt: 'Members studying scripture together at The Wisdom Church',
   },
   {
     number: '02',
     title: 'Prayer',
     body: 'We are a praying people, deeply connected to the power and presence of God.',
+    image: '/Picflow Images Jul 31 (2)/DSC06712 copy.webp',
+    imageAlt: 'A member deep in prayer at The Wisdom Church',
   },
   {
     number: '03',
     title: 'Worship',
     body: 'We worship wholeheartedly and make room for lives to be renewed.',
+    image: '/Picflow Images Jul 31 (2)/DSC00019 copy.webp',
+    imageAlt: 'Worship on stage at The Wisdom Church',
   },
   {
     number: '04',
     title: 'Community',
     body: 'We grow together, serve one another, and carry our faith into everyday life.',
+    image: '/Picflow Images Jul 31 (2)/DSC06902 copy.webp',
+    imageAlt: 'Members embracing in fellowship at The Wisdom Church',
   },
 ] as const;
 

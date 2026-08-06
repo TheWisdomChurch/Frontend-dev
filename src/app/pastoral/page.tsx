@@ -8,6 +8,7 @@ import SectionGlow from '@/shared/ui/SectionGlow';
 import PastoralCareUnit from '@/shared/ui/forms/eventsForm/PastoralCare';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
+import Arrow from '@/shared/ui/icons/Arrow';
 
 // Metadata for this route lives in pastoral/layout.tsx — a single source
 // of truth for title/description/canonical/OG/twitter instead of two
@@ -45,28 +46,6 @@ const services = [
     dark: true,
   },
 ] as const;
-
-/* ── Arrow ──────────────────────────────────────────────── */
-
-function Arrow() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 6h10M6 1l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 /* ── Page ───────────────────────────────────────────────── */
 
