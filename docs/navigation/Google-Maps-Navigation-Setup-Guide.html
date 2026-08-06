@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wisdom Church — Google Maps Navigation Setup Guide</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 18mm 17mm 20mm;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        background: #ffffff;
+      }
+      body {
+        margin: 0;
+        color: #191712;
+        font:
+          10.5pt/1.55 -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.15;
+      }
+      h1 {
+        max-width: 165mm;
+        font-size: 31pt;
+        letter-spacing: -1.2px;
+      }
+      h2 {
+        margin: 8mm 0 3mm;
+        padding-bottom: 2mm;
+        border-bottom: 1px solid #d9cfb5;
+        font-size: 18pt;
+      }
+      h3 {
+        margin: 5mm 0 2mm;
+        font-size: 12.5pt;
+      }
+      p {
+        margin: 2mm 0 3mm;
+      }
+      a {
+        color: #765609;
+        text-decoration: none;
+      }
+      code {
+        font:
+          9pt/1.45 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      pre {
+        margin: 3mm 0 5mm;
+        padding: 4mm;
+        overflow-wrap: anywhere;
+        border: 1px solid #d9cfb5;
+        border-radius: 3mm;
+        background: #f7f3e9;
+        white-space: pre-wrap;
+      }
+      ol,
+      ul {
+        margin: 2mm 0 4mm 6mm;
+        padding-left: 5mm;
+      }
+      li {
+        margin: 1.2mm 0;
+      }
+      .cover {
+        min-height: 245mm;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 8mm 0;
+        page-break-after: always;
+      }
+      .brand {
+        color: #9a7114;
+        font-size: 10pt;
+        font-weight: 800;
+        letter-spacing: 2.2px;
+        text-transform: uppercase;
+      }
+      .subtitle {
+        max-width: 145mm;
+        margin-top: 7mm;
+        color: #5d584d;
+        font-size: 15pt;
+        line-height: 1.45;
+      }
+      .gold-rule {
+        width: 34mm;
+        height: 2mm;
+        margin: 8mm 0;
+        background: #c9961a;
+      }
+      .meta {
+        border-top: 1px solid #d9cfb5;
+        padding-top: 5mm;
+        color: #6d675b;
+      }
+      .callout {
+        margin: 4mm 0;
+        padding: 4mm 5mm;
+        border-left: 3px solid #c9961a;
+        background: #faf7ef;
+        page-break-inside: avoid;
+      }
+      .warning {
+        border-left-color: #a83232;
+        background: #fff3f1;
+      }
+      .success {
+        border-left-color: #287a4b;
+        background: #f0faf4;
+      }
+      .checklist {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+      .checklist li::before {
+        content: '□';
+        display: inline-block;
+        width: 6mm;
+        font-size: 13pt;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      .avoid-break {
+        page-break-inside: avoid;
+      }
+      .small {
+        color: #6d675b;
+        font-size: 9pt;
+      }
+      table {
+        width: 100%;
+        margin: 3mm 0 5mm;
+        border-collapse: collapse;
+        page-break-inside: avoid;
+      }
+      th,
+      td {
+        padding: 2.8mm;
+        border: 1px solid #ddd5c1;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #f4eedf;
+        font-size: 9pt;
+      }
+      footer {
+        margin-top: 8mm;
+        color: #777064;
+        font-size: 8.5pt;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="cover">
+      <div>
+        <div class="brand">The Wisdom Church · Engineering</div>
+        <div class="gold-rule"></div>
+        <h1>Google Maps Navigation Setup Guide</h1>
+        <p class="subtitle">
+          Production setup for the integrated “Take me to church” route planner,
+          traffic-aware backend, and secure embedded map.
+        </p>
+      </div>
+      <div class="meta">
+        <strong>Audience:</strong> Engineering and deployment administrators<br />
+        <strong>Systems:</strong> Wisdom Church Go backend and Next.js
+        frontend<br />
+        <strong>Document version:</strong> 1.0 · 5 August 2026
+      </div>
+    </section>
+
+    <h2>1. What this setup activates</h2>
+    <p>
+      The visitor grants location access in the browser. The frontend sends the
+      coordinates through the existing same-origin API proxy to the Wisdom
+      Church backend. The backend uses a private Google Routes API key and the
+      verified church Place ID to calculate a traffic-aware route. The frontend
+      renders the route using a separately restricted Maps JavaScript API key.
+    </p>
+    <div class="callout">
+      <strong>Privacy:</strong> Visitor coordinates are processed transiently.
+      They must not be stored in a database, application logs, analytics
+      payloads, or error-reporting metadata.
+    </div>
+
+    <h3>Required values</h3>
+    <table>
+      <tr>
+        <th>Variable</th>
+        <th>Location</th>
+        <th>Purpose</th>
+      </tr>
+      <tr>
+        <td><code>GOOGLE_MAPS_ROUTES_API_KEY</code></td>
+        <td>Backend only</td>
+        <td>Private credential for traffic-aware route calculation.</td>
+      </tr>
+      <tr>
+        <td><code>GOOGLE_CHURCH_PLACE_ID</code></td>
+        <td>Backend</td>
+        <td>Verified, unambiguous destination used by Google Routes.</td>
+      </tr>
+      <tr>
+        <td><code>NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_API_KEY</code></td>
+        <td>Frontend</td>
+        <td>Domain-restricted key used to render the embedded map.</td>
+      </tr>
+      <tr>
+        <td><code>NEXT_PUBLIC_CHURCH_GOOGLE_PLACE_ID</code></td>
+        <td>Frontend</td>
+        <td>
+          Verified destination for the optional native navigation handoff.
+        </td>
+      </tr>
+    </table>
+
+    <h2>2. Create or select the Google Cloud project</h2>
+    <ol>
+      <li>
+        Open
+        <a href="https://console.cloud.google.com/">console.cloud.google.com</a>
+        and sign in with the organisation account.
+      </li>
+      <li>
+        Select an existing project or create
+        <strong>Wisdom Church Navigation</strong>.
+      </li>
+      <li>
+        Open <strong>Billing</strong> and attach an active billing account.
+        Google Maps Platform requires billing even when usage remains inside an
+        applicable free allowance.
+      </li>
+      <li>
+        Create a budget and billing alerts before enabling production traffic.
+      </li>
+    </ol>
+    <div class="warning callout">
+      <strong>Do not use a developer’s personal Google Cloud project.</strong>
+      Use an organisation-owned project with at least two administrators and
+      documented recovery access.
+    </div>
+
+    <h2>3. Enable the correct Google APIs</h2>
+    <ol>
+      <li>Open <strong>APIs &amp; Services → Library</strong>.</li>
+      <li>
+        Search for <strong>Routes API</strong> and select
+        <strong>Enable</strong>.
+      </li>
+      <li>
+        Search for <strong>Maps JavaScript API</strong> and select
+        <strong>Enable</strong>.
+      </li>
+    </ol>
+    <p>
+      Do not enable unrelated APIs “just in case.” Each credential will be
+      restricted to the single API it needs.
+    </p>
+
+    <div class="page-break"></div>
+    <h2>4. Create the private backend Routes key</h2>
+    <ol>
+      <li>Open <strong>APIs &amp; Services → Credentials</strong>.</li>
+      <li>Select <strong>Create credentials → API key</strong>.</li>
+      <li>
+        Edit the new key and name it
+        <strong>Wisdom Church Routes Backend</strong>.
+      </li>
+      <li>
+        Under <strong>API restrictions</strong>, choose
+        <strong>Restrict key</strong> and select only
+        <strong>Routes API</strong>.
+      </li>
+      <li>
+        If the backend has fixed outbound IP addresses, add them under
+        <strong>Application restrictions → IP addresses</strong>. If the
+        deployment platform has no fixed outbound IP, keep the credential
+        exclusively in its encrypted server environment and retain the
+        Routes-only API restriction.
+      </li>
+      <li>
+        Copy the key into the backend’s secret manager. Never send it in chat,
+        commit it, or place it in frontend configuration.
+      </li>
+    </ol>
+    <pre>GOOGLE_MAPS_ROUTES_API_KEY=replace_with_private_server_key</pre>
+    <div class="warning callout">
+      <strong>Critical:</strong> Never prefix this variable with
+      <code>NEXT_PUBLIC_</code>. Doing so would expose the private server key in
+      browser JavaScript.
+    </div>
+
+    <h2>5. Create the browser Maps key</h2>
+    <ol>
+      <li>
+        Create a second API key and name it
+        <strong>Wisdom Church Maps Browser</strong>.
+      </li>
+      <li>
+        Under <strong>Application restrictions</strong>, select
+        <strong>Websites</strong>.
+      </li>
+      <li>
+        Add the authorised referrers below, adjusting local ports if required.
+      </li>
+      <li>
+        Under <strong>API restrictions</strong>, select only
+        <strong>Maps JavaScript API</strong>.
+      </li>
+    </ol>
+    <pre>
+https://wisdomchurchhq.org/*
+https://www.wisdomchurchhq.org/*
+http://localhost:3000/*
+http://localhost:2000/*</pre>
+    <pre>NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_API_KEY=replace_with_browser_key</pre>
+    <p class="small">
+      A browser key is visible by design. Its safety comes from strict
+      HTTP-referrer and API restrictions.
+    </p>
+
+    <h2>6. Obtain and verify the church Place ID</h2>
+    <ol>
+      <li>
+        Open Google’s Place ID documentation and finder:
+        <a
+          href="https://developers.google.com/maps/documentation/places/web-service/place-id"
+          >developers.google.com/maps/documentation/places/web-service/place-id</a
+        >.
+      </li>
+      <li>
+        Search for the exact church listing or the verified Honor Gardens
+        destination.
+      </li>
+      <li>
+        Select the result and copy the Place ID. It commonly begins with
+        <code>ChIJ</code>, but the exact format is controlled by Google.
+      </li>
+      <li>
+        Open the result in Google Maps and confirm the entrance, road, venue
+        name, and surrounding landmarks.
+      </li>
+      <li>
+        Have a second team member independently verify it before production
+        deployment.
+      </li>
+    </ol>
+    <pre>
+GOOGLE_CHURCH_PLACE_ID=replace_with_verified_place_id
+NEXT_PUBLIC_CHURCH_GOOGLE_PLACE_ID=replace_with_the_same_verified_place_id</pre>
+    <div class="callout">
+      <strong>No guesswork:</strong> The backend will refuse to calculate routes
+      when the verified Place ID is missing. It does not silently guess from a
+      postal-address string.
+    </div>
+
+    <div class="page-break"></div>
+    <h2>7. Configure the backend</h2>
+    <p>
+      Add these values to <code>Backend-dev/.env</code> for local development
+      and to the backend deployment platform’s encrypted environment for
+      production:
+    </p>
+    <pre>
+NAVIGATION_ENABLED=true
+GOOGLE_MAPS_ROUTES_API_KEY=replace_with_private_server_key
+GOOGLE_CHURCH_PLACE_ID=replace_with_verified_place_id
+NAVIGATION_PROVIDER_TIMEOUT=12s
+NAVIGATION_RATE_LIMIT_RPM=10
+NAVIGATION_RATE_LIMIT_BURST=3</pre>
+    <table>
+      <tr>
+        <th>Setting</th>
+        <th>Meaning</th>
+      </tr>
+      <tr>
+        <td><code>NAVIGATION_ENABLED</code></td>
+        <td>
+          Explicit feature switch. Set to <code>false</code> for an emergency
+          shutdown.
+        </td>
+      </tr>
+      <tr>
+        <td><code>NAVIGATION_PROVIDER_TIMEOUT</code></td>
+        <td>
+          Maximum time the backend waits for Google before returning a safe
+          error.
+        </td>
+      </tr>
+      <tr>
+        <td><code>NAVIGATION_RATE_LIMIT_RPM</code></td>
+        <td>Maximum route calculations per visitor IP during each minute.</td>
+      </tr>
+      <tr>
+        <td><code>NAVIGATION_RATE_LIMIT_BURST</code></td>
+        <td>Short burst allowance before throttling begins.</td>
+      </tr>
+    </table>
+
+    <h2>8. Configure the frontend</h2>
+    <p>
+      Add these values to <code>Frontend-dev/.env.local</code> and the frontend
+      hosting environment:
+    </p>
+    <pre>
+NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_API_KEY=replace_with_browser_key
+NEXT_PUBLIC_CHURCH_GOOGLE_PLACE_ID=replace_with_verified_place_id</pre>
+    <p>
+      The frontend continues using its existing backend proxy configuration.
+      Ensure the production backend origin remains correct:
+    </p>
+    <pre>API_PROXY_TARGET=https://api.wisdomchurchhq.org</pre>
+
+    <h2>9. Local validation</h2>
+    <h3>Backend</h3>
+    <pre>
+cd Backend-dev
+make test
+go vet ./...
+make run</pre>
+    <h3>Frontend</h3>
+    <pre>
+cd Frontend-dev
+make check
+make dev</pre>
+    <ol>
+      <li>Open the local website over <code>localhost</code>.</li>
+      <li>Select <strong>Take me to church</strong>.</li>
+      <li>Allow location access.</li>
+      <li>Confirm the embedded map remains inside the website.</li>
+      <li>Verify the displayed destination, route line, ETA, and distance.</li>
+      <li>
+        Test permission denial and confirm the fallback message is
+        understandable.
+      </li>
+    </ol>
+
+    <div class="page-break"></div>
+    <h2>10. Production deployment order</h2>
+    <ol>
+      <li>
+        Configure backend secrets and keep
+        <code>NAVIGATION_ENABLED=false</code>.
+      </li>
+      <li>
+        Deploy the backend and confirm <code>/healthz</code> and
+        <code>/readyz</code>.
+      </li>
+      <li>Configure and deploy the frontend browser key and Place ID.</li>
+      <li>
+        Set <code>NAVIGATION_ENABLED=true</code> and redeploy or restart the
+        backend.
+      </li>
+      <li>
+        Run a real route test from a safe location and verify the exact church
+        destination.
+      </li>
+      <li>
+        Review Google Cloud metrics, backend latency, errors, and rate-limit
+        responses.
+      </li>
+    </ol>
+
+    <h2>11. Troubleshooting</h2>
+    <table>
+      <tr>
+        <th>Symptom</th>
+        <th>Likely cause</th>
+        <th>Resolution</th>
+      </tr>
+      <tr>
+        <td>“For development purposes only” watermark</td>
+        <td>Billing, key, or Maps JavaScript API configuration</td>
+        <td>
+          Confirm billing, enable the API, and check browser-key restrictions.
+        </td>
+      </tr>
+      <tr>
+        <td>Map does not load</td>
+        <td>Current domain is not an authorised referrer</td>
+        <td>Add the exact HTTPS domain pattern to the browser key.</td>
+      </tr>
+      <tr>
+        <td>Route preview returns 503</td>
+        <td>
+          Feature disabled, missing server key/Place ID, or provider unavailable
+        </td>
+        <td>
+          Check backend configuration and server logs without logging
+          coordinates.
+        </td>
+      </tr>
+      <tr>
+        <td>Route preview returns 429</td>
+        <td>Per-IP limit reached</td>
+        <td>
+          Wait for the indicated retry period; investigate unusual repeated
+          traffic.
+        </td>
+      </tr>
+      <tr>
+        <td>Wrong destination</td>
+        <td>Incorrect Place ID</td>
+        <td>
+          Disable navigation immediately and re-verify the Place ID with two
+          people.
+        </td>
+      </tr>
+      <tr>
+        <td>Location permission denied</td>
+        <td>User or browser privacy setting</td>
+        <td>
+          Explain how to enable permission; never attempt to bypass the browser
+          decision.
+        </td>
+      </tr>
+    </table>
+
+    <h2>12. Cost and security controls</h2>
+    <ul class="checklist">
+      <li>Billing budget and alert recipients configured.</li>
+      <li>Routes key restricted to Routes API.</li>
+      <li>
+        Browser key restricted to Maps JavaScript API and approved referrers.
+      </li>
+      <li>Redis is available in production for distributed rate limiting.</li>
+      <li>
+        Coordinates are absent from logs, analytics, traces, and databases.
+      </li>
+      <li>
+        Google Cloud quotas are reviewed and set to an acceptable ceiling.
+      </li>
+      <li>Production Place ID has been independently verified.</li>
+      <li>
+        Emergency disable procedure is documented:
+        <code>NAVIGATION_ENABLED=false</code>.
+      </li>
+    </ul>
+
+    <h2>13. Final activation checklist</h2>
+    <ul class="checklist">
+      <li>Organisation-owned Google Cloud project selected.</li>
+      <li>Billing and budget alerts enabled.</li>
+      <li>Routes API enabled.</li>
+      <li>Maps JavaScript API enabled.</li>
+      <li>Private backend key created and restricted.</li>
+      <li>Browser key created and domain-restricted.</li>
+      <li>Verified Place ID configured in both deployment environments.</li>
+      <li>Backend and frontend validation commands pass.</li>
+      <li>Permission-granted and permission-denied flows tested.</li>
+      <li>Production route reaches the exact church entrance.</li>
+    </ul>
+
+    <footer>
+      Official references:
+      <a
+        href="https://developers.google.com/maps/documentation/routes/cloud-setup"
+        >Routes API setup</a
+      >
+      ·
+      <a
+        href="https://developers.google.com/maps/documentation/javascript/cloud-setup"
+        >Maps JavaScript API setup</a
+      >
+      ·
+      <a href="https://developers.google.com/maps/billing-and-pricing/pricing"
+        >Google Maps Platform pricing</a
+      >
+    </footer>
+  </body>
+</html>
