@@ -43,8 +43,10 @@ function openDirections(origin?: Coordinates) {
 
 export default function TakeMeToChurchButton({
   className,
+  fullWidth = false,
 }: {
   className?: string;
+  fullWidth?: boolean;
 }) {
   const [state, setState] = useState<NavigationState>('idle');
   const [origin, setOrigin] = useState<Coordinates>();
@@ -144,7 +146,13 @@ export default function TakeMeToChurchButton({
   }, [origin, trackEvent]);
 
   return (
-    <div className={cn('flex flex-col items-center sm:items-start', className)}>
+    <div
+      className={cn(
+        'flex flex-col items-center sm:items-start',
+        fullWidth && 'w-full',
+        className
+      )}
+    >
       <button
         type="button"
         onClick={startNavigation}
@@ -152,7 +160,10 @@ export default function TakeMeToChurchButton({
         aria-describedby={
           state === 'error' ? 'church-directions-status' : undefined
         }
-        className="group inline-flex min-h-12 items-center gap-3 rounded-full border border-black bg-black px-5 font-ui text-sm font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75"
+        className={cn(
+          'group inline-flex min-h-12 items-center gap-2 rounded-full border border-black bg-black px-4 font-ui text-xs font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75 sm:gap-3 sm:px-5 sm:text-sm',
+          fullWidth && 'w-full justify-center'
+        )}
       >
         {state === 'locating' ? (
           <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

@@ -188,9 +188,14 @@ function FeaturedCard({
 function PortraitCard({
   slide,
   onClick,
+  wide,
 }: {
   slide: Slide;
   onClick?: () => void;
+  /** True when this card spans the tablet row's full width (odd trailing
+   * card) instead of sharing it — the image switches to a wider ratio so
+   * it doesn't render as an oversized, oddly-tall portrait. */
+  wide?: boolean;
 }) {
   const isReel = slide.category === 'reel';
 
@@ -209,17 +214,29 @@ function PortraitCard({
     <div
       {...interactiveProps}
       className={[
-        'group flex h-full flex-col overflow-hidden border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
+        'group flex h-full overflow-hidden border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
+        wide ? 'flex-col sm:flex-row lg:flex-col' : 'flex-col',
         onClick ? 'cursor-pointer' : '',
       ].join(' ')}
     >
       {/* Image */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--app-ink)]/8">
+      <div
+        className={[
+          'relative shrink-0 overflow-hidden bg-[var(--app-ink)]/8',
+          wide
+            ? 'aspect-[16/10] sm:aspect-auto sm:w-2/5 lg:aspect-[4/5] lg:w-full'
+            : 'aspect-[4/5]',
+        ].join(' ')}
+      >
         <Media
           src={slide.imageUrl}
           alt={slide.title}
           frameClassName="bg-[var(--app-ink)]/8"
-          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 22vw"
+          sizes={
+            wide
+              ? '(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 22vw'
+              : '(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 22vw'
+          }
           className="object-[center_18%] sm:object-center transition duration-500 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
@@ -253,15 +270,15 @@ function PortraitCard({
         {slide.href && !isReel && (
           <Link
             href={slide.href}
-            className="mt-auto pt-3 font-ui text-label font-semibold text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
+            className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-ink)]/14 px-4 py-2 pt-2 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
-            {slide.cta} →
+            {slide.cta} <Arrow />
           </Link>
         )}
         {isReel && (
-          <span className="mt-auto pt-3 font-ui text-label font-semibold text-[var(--app-ink)]/45">
-            {slide.cta} →
+          <span className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/55">
+            {slide.cta} <Arrow />
           </span>
         )}
       </div>
@@ -427,12 +444,12 @@ export default function EventsShowcase() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center justify-end gap-5">
             {/* Category tabs */}
             <div
               role="tablist"
               aria-label="Event content category"
-              className="flex gap-0 overflow-x-auto border border-[var(--app-ink)]/10"
+              className="flex shrink-0 gap-0 overflow-x-auto border border-[var(--app-ink)]/10"
             >
               {(Object.keys(CATEGORY_LABELS) as Category[]).map(cat => (
                 <button
@@ -500,19 +517,32 @@ export default function EventsShowcase() {
                   </motion.div>
                 )}
 
-                {/* Portrait cards */}
-                {rest.map(slide => (
-                  <motion.div key={slide.id} variants={staggerItem}>
-                    <PortraitCard
-                      slide={slide}
-                      onClick={
-                        slide.category === 'reel'
-                          ? () => setReelModal(slide)
-                          : undefined
+                {/* Portrait cards — the last card spans the tablet row's
+                    remaining width when the count is odd, instead of
+                    leaving an empty cell beside it. */}
+                {rest.map((slide, index) => {
+                  const isTrailingOdd =
+                    rest.length % 2 === 1 && index === rest.length - 1;
+                  return (
+                    <motion.div
+                      key={slide.id}
+                      variants={staggerItem}
+                      className={
+                        isTrailingOdd ? 'sm:col-span-2 lg:col-span-1' : ''
                       }
-                    />
-                  </motion.div>
-                ))}
+                    >
+                      <PortraitCard
+                        slide={slide}
+                        wide={isTrailingOdd}
+                        onClick={
+                          slide.category === 'reel'
+                            ? () => setReelModal(slide)
+                            : undefined
+                        }
+                      />
+                    </motion.div>
+                  );
+                })}
               </motion.div>
             </motion.div>
           </AnimatePresence>

@@ -153,7 +153,7 @@ export default function HomeTestimonials() {
     <Section padding="none" className="bg-[var(--app-canvas-2)]">
       <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
         <div
-          className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20"
+          className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
@@ -163,7 +163,7 @@ export default function HomeTestimonials() {
             initial="hidden"
             whileInView="show"
             viewport={staggerViewport}
-            className="max-w-xl lg:sticky lg:top-28"
+            className="max-w-xl lg:sticky lg:top-28 lg:col-start-1 lg:row-start-1"
           >
             <motion.p
               variants={staggerItem}
@@ -185,30 +185,12 @@ export default function HomeTestimonials() {
               Hear how God is moving through worship, healing, and everyday
               faithfulness in the Wisdom Church community.
             </motion.p>
-
-            <motion.div
-              variants={staggerItem}
-              className="mt-9 flex flex-wrap items-center gap-3"
-            >
-              <Link
-                href="/forms/share-testimony"
-                className="inline-flex h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              >
-                Share your story
-              </Link>
-              <Link
-                href="/testimonies"
-                className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)] transition hover:text-[var(--app-ink)]"
-              >
-                View all stories <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </motion.div>
           </motion.div>
 
           {/* Testimony content */}
           {loading ? (
             <div
-              className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px]"
+              className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px] lg:col-start-2 lg:row-start-1 lg:row-span-2"
               aria-hidden="true"
             >
               <div className="min-h-[340px] animate-pulse border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[color-mix(in_srgb,var(--app-ink)_3%,transparent)]" />
@@ -222,7 +204,7 @@ export default function HomeTestimonials() {
               </div>
             </div>
           ) : !q ? (
-            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] px-6 text-center">
+            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] px-6 text-center lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <p
                 className="font-headline font-normal italic text-[color-mix(in_srgb,var(--app-ink)_70%,transparent)]"
                 // eslint-disable-next-line no-restricted-syntax
@@ -241,7 +223,7 @@ export default function HomeTestimonials() {
               </Link>
             </div>
           ) : (
-            <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px]">
+            <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px] lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <article className="relative flex min-h-[340px] flex-col justify-between overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
                 <span
                   className="pointer-events-none absolute -right-2 -top-10 select-none font-headline text-[9rem] leading-none text-[var(--app-primary)] opacity-[0.08]"
@@ -355,6 +337,27 @@ export default function HomeTestimonials() {
               )}
             </div>
           )}
+
+          <motion.div
+            variants={staggerItem}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="flex flex-wrap items-center gap-3 lg:col-start-1 lg:row-start-2 lg:self-end"
+          >
+            <Link
+              href="/forms/share-testimony"
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+            >
+              Share your story
+            </Link>
+            <Link
+              href="/testimonies"
+              className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)] transition hover:text-[var(--app-ink)]"
+            >
+              View all stories <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </motion.div>
         </div>
       </Container>
     </Section>

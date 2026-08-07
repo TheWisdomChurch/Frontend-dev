@@ -24,6 +24,7 @@ import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
+import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import {
   staggerContainer,
   staggerItem,
@@ -214,6 +215,9 @@ export default function ResourceSection() {
     enabled: shouldFetch,
   });
   const recentVideo = sermonsQuery.data?.[0] ?? null;
+  const recentVideoTitle = recentVideo
+    ? decodeHtmlEntities(recentVideo.title)
+    : '';
   const loading = !shouldFetch || sermonsQuery.isLoading;
   const sectionRef = useRef<HTMLElement | null>(null);
 
@@ -253,24 +257,13 @@ export default function ResourceSection() {
     >
       <Container size="xl" className="py-section-md">
         {/* ── Section header ───────────────────────────────── */}
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="mb-3 text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Latest Message
-            </p>
-            <h2 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
-              Fresh from the church
-            </h2>
-          </div>
-          <Link
-            href="/resources/sermons"
-            className="group inline-flex items-center gap-1.5 text-label font-semibold text-[var(--app-primary)] transition"
-          >
-            All sermons
-            <span className="transition duration-200 group-hover:translate-x-1">
-              →
-            </span>
-          </Link>
+        <div className="mb-10">
+          <p className="mb-3 text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+            Latest Message
+          </p>
+          <h2 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
+            Hear the Word.
+          </h2>
         </div>
 
         {/* ── Layout ───────────────────────────────────────── */}
@@ -279,10 +272,13 @@ export default function ResourceSection() {
           initial="hidden"
           whileInView="show"
           viewport={staggerViewport}
-          className="grid gap-8 lg:grid-cols-2 lg:items-center"
+          className="grid gap-8 lg:grid-cols-2 lg:items-start"
         >
           {/* Left — content */}
-          <motion.div variants={staggerItem} className="flex flex-col">
+          <motion.div
+            variants={staggerItem}
+            className="order-1 flex flex-col lg:col-start-1 lg:row-start-1"
+          >
             <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/60">
               {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} ·{' '}
               {SERVICE_INFO.dailyPrayer.label} {SERVICE_INFO.dailyPrayer.time}
@@ -295,8 +291,8 @@ export default function ResourceSection() {
               </div>
             ) : recentVideo ? (
               <>
-                <h3 className="font-headline text-heading-lg font-normal leading-snug text-[var(--app-ink)]">
-                  {recentVideo.title}
+                <h3 className="line-clamp-3 font-headline text-heading-lg font-normal leading-snug text-[var(--app-ink)]">
+                  {recentVideoTitle}
                 </h3>
                 <p className="mt-2 text-body-sm text-[var(--app-ink)]/50">
                   The Wisdom Church
@@ -307,32 +303,13 @@ export default function ResourceSection() {
                 Message coming soon
               </h3>
             )}
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              {videoUrl ? (
-                <a
-                  href={videoUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
-                >
-                  <PlayCircle className="h-4 w-4" />
-                  Watch now
-                </a>
-              ) : null}
-              <Link
-                href="/resources/sermons"
-                className="inline-flex h-12 items-center gap-2 border border-[var(--app-ink)]/20 px-7 text-body-sm font-semibold text-[var(--app-ink)] transition hover:border-[var(--app-ink)]/40 active:scale-[0.98]"
-              >
-                All sermons <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
           </motion.div>
 
-          {/* Right — video thumbnail */}
+          {/* Right — video thumbnail (spans both rows so the button below
+              the left column lines up level with its bottom edge) */}
           <motion.div
             variants={staggerItem}
-            className="relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl"
+            className="order-2 relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl lg:col-start-2 lg:row-start-1 lg:row-span-2"
           >
             {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -343,7 +320,7 @@ export default function ResourceSection() {
                 {thumb ? (
                   <Media
                     src={thumb}
-                    alt={recentVideo.title}
+                    alt={recentVideoTitle}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-center"
                   />
@@ -357,7 +334,7 @@ export default function ResourceSection() {
                     target="_blank"
                     rel="noreferrer"
                     className="absolute inset-0 flex items-center justify-center"
-                    aria-label={`Watch ${recentVideo.title}`}
+                    aria-label={`Watch ${recentVideoTitle}`}
                   >
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-2xl transition duration-300 hover:scale-[1.06] hover:bg-white">
                       <PlayCircle className="h-7 w-7 text-[var(--app-ink)]" />
@@ -373,6 +350,20 @@ export default function ResourceSection() {
                 </p>
               </div>
             )}
+          </motion.div>
+
+          {/* Button — after the video on mobile/tablet, under the text
+              column on desktop */}
+          <motion.div
+            variants={staggerItem}
+            className="order-3 mt-2 lg:col-start-1 lg:row-start-2 lg:mt-0"
+          >
+            <Link
+              href="/resources/sermons"
+              className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+            >
+              All sermons <ArrowRight className="h-4 w-4" />
+            </Link>
           </motion.div>
         </motion.div>
 
