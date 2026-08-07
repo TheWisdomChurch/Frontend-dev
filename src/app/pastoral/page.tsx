@@ -245,7 +245,7 @@ export default function PastoralPage() {
                   href="/events/weekly"
                   className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/50 transition hover:border-white/35 hover:text-white"
                 >
-                  View service times
+                  View service times <Arrow />
                 </Link>
               </div>
             </div>
