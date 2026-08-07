@@ -113,11 +113,7 @@ function ResourceCarousel() {
           <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
             Explore
           </p>
-          <h3
-            className="font-headline font-normal text-[var(--app-ink)]"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ fontSize: 'var(--type-display-sm)' }}
-          >
+          <h3 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
             You can do more
           </h3>
         </div>
@@ -262,11 +258,7 @@ export default function ResourceSection() {
             <p className="mb-3 text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Latest Message
             </p>
-            <h2
-              className="font-headline font-normal text-[var(--app-ink)]"
-              // eslint-disable-next-line no-restricted-syntax
-              style={{ fontSize: 'var(--type-display-sm)' }}
-            >
+            <h2 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
               Fresh from the church
             </h2>
           </div>
@@ -303,11 +295,7 @@ export default function ResourceSection() {
               </div>
             ) : recentVideo ? (
               <>
-                <h3
-                  className="font-headline font-normal leading-snug text-[var(--app-ink)]"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)' }}
-                >
+                <h3 className="font-headline text-heading-lg font-normal leading-snug text-[var(--app-ink)]">
                   {recentVideo.title}
                 </h3>
                 <p className="mt-2 text-body-sm text-[var(--app-ink)]/50">

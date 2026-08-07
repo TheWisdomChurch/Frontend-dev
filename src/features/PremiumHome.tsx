@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { CalendarDays, MapPin, Play, Users } from 'lucide-react';
@@ -9,6 +11,13 @@ import { Container, Section } from '@/shared/layout';
 import HomeActionLink from '@/features/home/HomeActionLink';
 import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
 import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
+import { SectionHeading, HeadingAccent } from '@/shared/ui/SectionHeading';
+import { motion } from '@/lib/safe-motion';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 const eyebrowClass = 'font-ui text-xs font-bold uppercase tracking-[0.22em]';
 const displayClass =
@@ -56,18 +65,31 @@ export default function PremiumHome() {
               {HOME_COPY.hero.eyebrow}
             </p>
             <h1
-              className={`${displayClass} mx-auto max-w-[1050px] text-[clamp(3rem,6.4vw,6.2rem)] text-white`}
+              className={`${displayClass} mx-auto max-w-[1050px] text-[clamp(2rem,8vw,6.2rem)] text-white`}
             >
-              {HOME_COPY.hero.title}
+              {HOME_COPY.hero.titleLead}
+              <em className="italic">{HOME_COPY.hero.titleAccent}</em>
+              {HOME_COPY.hero.titleTail}
             </h1>
             <p className="mx-auto mt-6 max-w-2xl font-ui text-base leading-7 text-white/80 sm:text-lg">
               {HOME_COPY.hero.description}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <HomeActionLink href={SOCIAL_LINKS.youtube} external>
-                <Play className="h-4 w-4 fill-current" /> Watch live
+              <HomeActionLink
+                href={SOCIAL_LINKS.youtube}
+                external
+                icon={Play}
+                iconClassName="fill-current"
+                hideArrow
+              >
+                Watch live
               </HomeActionLink>
-              <HomeActionLink href="/events/weekly" variant="light">
+              <HomeActionLink
+                href="/events/weekly"
+                variant="light"
+                icon={CalendarDays}
+                hideArrow
+              >
                 Plan your visit
               </HomeActionLink>
             </div>
@@ -78,22 +100,35 @@ export default function PremiumHome() {
       <Section padding="none" className="bg-white">
         <div className="grid lg:min-h-[660px] lg:grid-cols-2">
           <div className="flex items-center px-6 py-20 sm:px-10 lg:px-16 xl:px-24">
-            <div data-gsap="reveal" className="max-w-xl">
-              <p className={`${eyebrowClass} text-[var(--app-primary-dark)]`}>
-                {HOME_COPY.welcome.eyebrow}
-              </p>
-              <h2
-                className={`${displayClass} mt-5 text-[clamp(2.8rem,4.8vw,5.25rem)]`}
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="max-w-xl"
+            >
+              <motion.p
+                variants={staggerItem}
+                className={`${eyebrowClass} text-[var(--app-primary-dark)]`}
               >
+                {HOME_COPY.welcome.eyebrow}
+              </motion.p>
+              <SectionHeading tone="dark" className="mt-5">
                 {HOME_COPY.welcome.title}
                 <span className="block text-[var(--app-primary-dark)]">
                   {HOME_COPY.welcome.accent}
                 </span>
-              </h2>
-              <p className="mt-7 font-ui text-base leading-8 text-black/60 sm:text-lg">
+              </SectionHeading>
+              <motion.p
+                variants={staggerItem}
+                className="mt-7 font-ui text-base leading-8 text-black/60 sm:text-lg"
+              >
                 {HOME_COPY.welcome.description}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              </motion.p>
+              <motion.div
+                variants={staggerItem}
+                className="mt-8 flex flex-wrap gap-3"
+              >
                 <HomeActionLink href="/about">
                   Discover our story
                 </HomeActionLink>
@@ -103,8 +138,8 @@ export default function PremiumHome() {
                 >
                   Join our community
                 </Link>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
           <div className="group relative min-h-[460px] overflow-hidden lg:min-h-full">
             <CoverImage name="welcome" />
@@ -115,43 +150,65 @@ export default function PremiumHome() {
 
       <Section padding="2xl" className="bg-[#0a0a0a] text-white">
         <Container size="2xl">
-          <div data-gsap="reveal" className="mx-auto max-w-5xl text-center">
-            <p className={`${eyebrowClass} text-[var(--app-primary)]`}>
-              {HOME_COPY.identity.eyebrow}
-            </p>
-            <h2
-              className={`${displayClass} mt-5 text-[clamp(2.8rem,5vw,5.6rem)]`}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="mx-auto max-w-5xl text-center"
+          >
+            <motion.p
+              variants={staggerItem}
+              className={`${eyebrowClass} text-[var(--app-primary)]`}
             >
+              {HOME_COPY.identity.eyebrow}
+            </motion.p>
+            <SectionHeading tone="light" className="mx-auto mt-5">
               {HOME_COPY.identity.title}
-              <span className="block text-[var(--app-primary)]">
-                {HOME_COPY.identity.accent}
-              </span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl font-ui text-base leading-8 text-white/60">
+              <HeadingAccent>{HOME_COPY.identity.accent}</HeadingAccent>
+            </SectionHeading>
+            <motion.p
+              variants={staggerItem}
+              className="mx-auto mt-6 max-w-2xl font-ui text-base leading-8 text-white/60"
+            >
               {HOME_COPY.identity.description}
-            </p>
-          </div>
-          <div className="mt-14 grid border-y border-white/20 sm:grid-cols-2 lg:grid-cols-4">
-            {HOME_BELIEFS.map((belief, index) => (
-              <div
-                data-gsap="reveal"
+            </motion.p>
+          </motion.div>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
+          >
+            {HOME_BELIEFS.map(belief => (
+              <motion.div
+                variants={staggerItem}
                 key={belief.title}
-                className={`group flex min-h-[270px] flex-col justify-between border-white/20 px-2 py-8 sm:px-7 ${index > 0 ? 'lg:border-l' : ''} ${index % 2 === 1 ? 'sm:border-l' : ''} ${index > 1 ? 'sm:border-t lg:border-t-0' : ''}`}
+                className="group relative isolate flex min-h-[320px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black sm:min-h-[400px]"
               >
-                <span className="font-ui text-xs font-bold tracking-[0.2em] text-white/40">
-                  {belief.number}
-                </span>
-                <div>
-                  <h3 className="font-sans text-3xl font-black uppercase tracking-[-0.035em] transition-colors group-hover:text-[var(--app-primary-light)]">
+                <Image
+                  src={belief.image}
+                  alt={belief.imageAlt}
+                  fill
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                  quality={IMAGE_QUALITY}
+                  className={`object-cover ${belief.imagePosition} transition-[transform,filter] duration-700 ease-out will-change-transform group-hover:scale-[1.06]`}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/45 to-black/10 transition-opacity duration-500 group-hover:from-black/95" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-transparent" />
+
+                <div className="relative z-10 mt-auto p-6 pt-0 sm:p-7 sm:pt-0">
+                  <h3 className="break-words font-sans text-2xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-white transition-colors duration-300 group-hover:text-[var(--app-primary-light)] sm:text-[1.7rem] lg:text-2xl xl:text-[1.85rem]">
                     {belief.title}
                   </h3>
-                  <p className="mt-4 font-ui text-sm leading-7 text-white/60">
+                  <p className="mt-3 font-ui text-sm leading-6 text-white/65">
                     {belief.body}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </Container>
       </Section>
 
@@ -162,14 +219,23 @@ export default function PremiumHome() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
           </div>
           <div className="flex items-center px-6 py-20 sm:px-10 lg:px-16 xl:px-24">
-            <div data-gsap="reveal" className="max-w-xl">
-              <p className={eyebrowClass}>{HOME_COPY.service.eyebrow}</p>
-              <h2
-                className={`${displayClass} mt-5 text-[clamp(3rem,5vw,5.6rem)]`}
-              >
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="max-w-xl"
+            >
+              <motion.p variants={staggerItem} className={eyebrowClass}>
+                {HOME_COPY.service.eyebrow}
+              </motion.p>
+              <SectionHeading tone="dark" className="mt-5">
                 {HOME_COPY.service.title}
-              </h2>
-              <div className="mt-8 space-y-4 border-y border-black/25 py-6 font-ui">
+              </SectionHeading>
+              <motion.div
+                variants={staggerItem}
+                className="mt-8 space-y-4 border-y border-black/25 py-6 font-ui"
+              >
                 <div className="flex items-center gap-4">
                   <CalendarDays className="h-5 w-5" />
                   <strong>
@@ -181,14 +247,17 @@ export default function PremiumHome() {
                   <MapPin className="mt-0.5 h-5 w-5 shrink-0" />
                   <strong>{SERVICE_INFO.venue.full}</strong>
                 </div>
-              </div>
-              <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+              </motion.div>
+              <motion.div
+                variants={staggerItem}
+                className="mt-8 flex flex-wrap items-center gap-3"
+              >
                 <TakeMeToChurchButton />
                 <HomeActionLink href="/events/weekly" variant="dark">
                   Plan your first visit
                 </HomeActionLink>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </Section>
@@ -208,22 +277,34 @@ export default function PremiumHome() {
             />
           </div>
           <div className="flex items-center px-6 py-20 sm:px-10 lg:px-16 xl:px-24">
-            <div data-gsap="reveal" className="max-w-xl">
-              <p className={`${eyebrowClass} text-[var(--app-primary)]`}>
-                {HOME_COPY.pastor.eyebrow}
-              </p>
-              <h2
-                className={`${displayClass} mt-5 text-[clamp(2.8rem,4.6vw,5.2rem)]`}
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="max-w-xl"
+            >
+              <motion.p
+                variants={staggerItem}
+                className={`${eyebrowClass} text-[var(--app-primary)]`}
               >
+                {HOME_COPY.pastor.eyebrow}
+              </motion.p>
+              <SectionHeading tone="light" className="mt-5">
                 {HOME_COPY.pastor.title}
-              </h2>
-              <p className="mt-7 font-ui text-base leading-8 text-white/60 sm:text-lg">
+              </SectionHeading>
+              <motion.p
+                variants={staggerItem}
+                className="mt-7 font-ui text-base leading-8 text-white/60 sm:text-lg"
+              >
                 {HOME_COPY.pastor.description}
-              </p>
-              <HomeActionLink href="/leadership" className="mt-8">
-                Meet our leadership
-              </HomeActionLink>
-            </div>
+              </motion.p>
+              <motion.div variants={staggerItem}>
+                <HomeActionLink href="/leadership" className="mt-8">
+                  Meet our leadership
+                </HomeActionLink>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </Section>
@@ -235,35 +316,51 @@ export default function PremiumHome() {
       >
         <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
           <div className="grid items-center gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:gap-20">
-            <div data-gsap="reveal" className="max-w-xl">
-              <p className={`${eyebrowClass} text-[var(--app-primary)]`}>
-                {HOME_COPY.community.eyebrow}
-              </p>
-              <h2
-                className={`${displayClass} mt-5 text-[clamp(2.7rem,4.7vw,5.1rem)]`}
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="max-w-xl"
+            >
+              <motion.p
+                variants={staggerItem}
+                className={`${eyebrowClass} text-[var(--app-primary)]`}
               >
+                {HOME_COPY.community.eyebrow}
+              </motion.p>
+              <SectionHeading tone="light" className="mt-5">
                 We don&apos;t do
-                <span className="block text-[var(--app-primary)]">
-                  life alone.
-                </span>
-              </h2>
-              <p className="mt-7 max-w-lg font-ui text-base leading-8 text-white/58 sm:text-lg">
+                <HeadingAccent>life alone.</HeadingAccent>
+              </SectionHeading>
+              <motion.p
+                variants={staggerItem}
+                className="mt-7 max-w-lg font-ui text-base leading-8 text-white/58 sm:text-lg"
+              >
                 {HOME_COPY.community.description}
-              </p>
-              <HomeActionLink href="/contact" className="mt-8">
-                <Users className="h-4 w-4" /> Connect with us
-              </HomeActionLink>
+              </motion.p>
+              <motion.div variants={staggerItem}>
+                <HomeActionLink href="/contact" className="mt-8">
+                  <Users className="h-4 w-4" /> Connect with us
+                </HomeActionLink>
+              </motion.div>
 
-              <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-white/12 pt-6 font-ui text-xs font-bold uppercase tracking-[0.16em] text-white/42 sm:grid-cols-4 lg:grid-cols-2">
+              <motion.div
+                variants={staggerItem}
+                className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-white/12 pt-6 font-ui text-xs font-bold uppercase tracking-[0.16em] text-white/42 sm:grid-cols-4 lg:grid-cols-2"
+              >
                 <span>Prayer</span>
                 <span>Friendship</span>
                 <span>Growth</span>
                 <span>Belonging</span>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <div
-              data-gsap="reveal"
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={staggerViewport}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="relative pb-0 sm:pb-10 sm:pl-10 lg:pb-12 lg:pl-12"
             >
               <div className="relative h-[340px] overflow-hidden sm:h-[500px] lg:h-[610px]">
@@ -285,7 +382,7 @@ export default function PremiumHome() {
               <span className="absolute -right-2 top-7 hidden font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-white/38 [writing-mode:vertical-rl] sm:block">
                 Wisdom Church community
               </span>
-            </div>
+            </motion.div>
           </div>
         </Container>
       </Section>

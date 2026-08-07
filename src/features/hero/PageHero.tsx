@@ -18,17 +18,28 @@ export type PageHeroProps = {
   showButtons?: boolean;
   primaryButtonText?: string;
   secondaryButtonText?: string;
-  /** @deprecated no longer rendered */
+  /** Supporting paragraph rendered below the subtitle. */
   description?: string;
-  /** @deprecated no longer rendered */
+  /** Supporting paragraph rendered below the subtitle (compact hero). */
   note?: string;
-  /** @deprecated no longer rendered */
+  /** Small pill tags rendered below the note/description. */
   chips?: string[];
-  /** @deprecated no longer used */
-  variant?: string;
-  /** @deprecated no longer used */
-  showScrollIndicator?: boolean;
 };
+
+function HeroChips({ chips }: { chips: string[] }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {chips.map(chip => (
+        <span
+          key={chip}
+          className="rounded-badge border border-white/15 bg-white/[0.04] px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70"
+        >
+          {chip}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export default function PageHero({
   title,
@@ -39,6 +50,9 @@ export default function PageHero({
   showButtons = false,
   primaryButtonText = 'Plan your visit',
   secondaryButtonText = 'Learn more',
+  description,
+  note,
+  chips,
 }: PageHeroProps) {
   const bgSrc = backgroundImage ?? lader;
 
@@ -95,6 +109,17 @@ export default function PageHero({
                 {subtitle}
               </BodyMD>
             ) : null}
+            {description ? (
+              <BodyMD className="max-w-lg leading-[1.85] text-white/55">
+                {description}
+              </BodyMD>
+            ) : null}
+            {note ? (
+              <BodyMD className="max-w-lg leading-[1.85] text-white/55">
+                {note}
+              </BodyMD>
+            ) : null}
+            {chips && chips.length > 0 ? <HeroChips chips={chips} /> : null}
           </div>
         ) : (
           /* ── Full hero: centered, tall ── */
@@ -114,6 +139,21 @@ export default function PageHero({
               <BodyLG className="max-w-2xl leading-[1.85] text-white/70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
                 {subtitle}
               </BodyLG>
+            ) : null}
+            {description ? (
+              <BodyMD className="max-w-xl leading-[1.85] text-white/58 drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+                {description}
+              </BodyMD>
+            ) : null}
+            {note ? (
+              <BodyMD className="max-w-xl leading-[1.85] text-white/58 drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+                {note}
+              </BodyMD>
+            ) : null}
+            {chips && chips.length > 0 ? (
+              <div className="flex justify-center">
+                <HeroChips chips={chips} />
+              </div>
             ) : null}
 
             {showButtons ? (

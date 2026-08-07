@@ -8,6 +8,7 @@ import SectionGlow from '@/shared/ui/SectionGlow';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildRecurringEventSchema, buildPageMetadata } from '@/lib/seo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import Arrow from '@/shared/ui/icons/Arrow';
 
 // Metadata fields a route doesn't set are inherited from the parent layout,
 // not reset — without its own `alternates`, this page was silently
@@ -46,26 +47,6 @@ const services = [
     ],
   },
 ] as const;
-
-function Arrow() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 6h10M6 1l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 const RECURRING_SCHEMAS = [
   buildRecurringEventSchema({

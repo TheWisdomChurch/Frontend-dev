@@ -7,6 +7,12 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container, Section } from '@/shared/layout';
+import { SectionHeading, HeadingAccent } from '@/shared/ui/SectionHeading';
+import {
+  staggerContainer,
+  staggerItem,
+  staggerViewport,
+} from '@/shared/ui/motion/staggerReveal';
 
 const slides = [
   {
@@ -53,23 +59,36 @@ export default function Conversations() {
     >
       <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
-          <div data-gsap="reveal" className="max-w-lg">
-            <p className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="max-w-lg"
+          >
+            <motion.p
+              variants={staggerItem}
+              className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+            >
               Conversations
-            </p>
-            <h2 className="mt-5 font-sans text-[clamp(2.7rem,5vw,5.4rem)] font-black uppercase leading-[0.92] tracking-[-0.045em]">
+            </motion.p>
+            <SectionHeading tone="light" className="mt-5">
               Real people.
-              <span className="block text-[var(--app-primary)]">
-                Real faith.
-              </span>
+              <HeadingAccent>Real faith.</HeadingAccent>
               Real stories.
-            </h2>
-            <p className="mt-6 max-w-md font-ui text-base leading-7 text-white/58">
+            </SectionHeading>
+            <motion.p
+              variants={staggerItem}
+              className="mt-6 max-w-md font-ui text-base leading-7 text-white/58"
+            >
               Honest conversations about life, faith and becoming — shared by
               people walking the journey together.
-            </p>
+            </motion.p>
 
-            <div className="mt-8 flex items-center gap-3">
+            <motion.div
+              variants={staggerItem}
+              className="mt-8 flex items-center gap-3"
+            >
               <button
                 type="button"
                 onClick={() => move(-1)}
@@ -90,11 +109,14 @@ export default function Conversations() {
                 {String(active + 1).padStart(2, '0')} /{' '}
                 {String(slides.length).padStart(2, '0')}
               </span>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div
-            data-gsap="reveal"
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={staggerViewport}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative mx-auto w-full max-w-4xl pb-5 pr-4 sm:pb-7 sm:pr-7"
           >
             <div className="absolute inset-x-8 bottom-0 top-8 translate-x-4 border border-white/8 bg-white/[0.035] sm:translate-x-7" />
@@ -139,7 +161,7 @@ export default function Conversations() {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </Container>
     </Section>

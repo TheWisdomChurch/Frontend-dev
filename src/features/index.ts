@@ -10,6 +10,5 @@ export { default as WhatWeDo } from './WhatWeDo';
 export * from './hero';
 export * from './events';
 export * from './leadership';
-export * from './testimonials';
 export * from './resources';
 export * from './store';

@@ -8,6 +8,7 @@ import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
+import Arrow from '@/shared/ui/icons/Arrow';
 
 function getTimestamp(event: EventPublic): number {
   if (event.startAt) {
@@ -19,26 +20,6 @@ function getTimestamp(event: EventPublic): number {
     if (!Number.isNaN(t)) return t;
   }
   return Number.MAX_SAFE_INTEGER;
-}
-
-function Arrow() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 6h10M6 1l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

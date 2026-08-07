@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 type Props = {
@@ -9,6 +9,11 @@ type Props = {
   variant?: 'primary' | 'light' | 'dark';
   external?: boolean;
   className?: string;
+  /** Leading icon shown before the label — replaces the default trailing arrow-only look. */
+  icon?: LucideIcon;
+  iconClassName?: string;
+  /** Suppress the default trailing arrow, e.g. when a leading `icon` already conveys the action. */
+  hideArrow?: boolean;
 };
 
 export default function HomeActionLink({
@@ -17,6 +22,9 @@ export default function HomeActionLink({
   variant = 'primary',
   external = false,
   className,
+  icon: Icon,
+  iconClassName,
+  hideArrow = false,
 }: Props) {
   return (
     <Link
@@ -34,8 +42,11 @@ export default function HomeActionLink({
         className
       )}
     >
+      {Icon && <Icon className={cn('h-4 w-4 shrink-0', iconClassName)} />}
       {children}
-      <ArrowUpRight className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      {!hideArrow && (
+        <ArrowUpRight className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      )}
     </Link>
   );
 }

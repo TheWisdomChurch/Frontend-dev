@@ -2,20 +2,27 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 
 import { Container, Section } from '@/shared/layout';
+import { SectionHeading } from '@/shared/ui/SectionHeading';
 import {
   staggerContainer,
   staggerItem,
+  staggerViewport,
 } from '@/shared/ui/motion/staggerReveal';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
-type Quote = { id: string | number; text: string; name: string; role: string };
+type TestimonyQuote = {
+  id: string | number;
+  text: string;
+  name: string;
+  role: string;
+};
 
-function mapToQuote(t: ApiTestimonial): Quote {
+function mapToQuote(t: ApiTestimonial): TestimonyQuote {
   const name =
     t.fullName ||
     [t.firstName, t.lastName].filter(Boolean).join(' ').trim() ||
@@ -28,10 +35,74 @@ function mapToQuote(t: ApiTestimonial): Quote {
   };
 }
 
-const AUTO_ADVANCE_MS = 6000;
+function initialsOf(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  const first = parts[0]?.[0] ?? '';
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? '') : '';
+  return `${first}${last}`.toUpperCase() || '—';
+}
+
+const AUTO_ADVANCE_MS = 7000;
+
+function TestimonyThumb({
+  quote,
+  active,
+  onClick,
+}: {
+  quote: TestimonyQuote;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group relative w-full overflow-hidden border p-4 text-left transition-all duration-300 ${
+        active
+          ? 'border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]'
+          : 'border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[color-mix(in_srgb,var(--app-ink)_2%,transparent)] hover:border-[color-mix(in_srgb,var(--app-ink)_20%,transparent)] hover:bg-[color-mix(in_srgb,var(--app-ink)_4%,transparent)]'
+      }`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute inset-y-0 left-0 w-[2px] bg-[var(--app-primary)] transition-transform duration-300 ${
+          active ? 'scale-y-100' : 'scale-y-0'
+        }`}
+      />
+      <div className="flex items-start gap-3">
+        <span
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-ui text-[11px] font-bold transition-colors duration-300 ${
+            active
+              ? 'bg-[var(--app-primary)] text-black'
+              : 'bg-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] text-[color-mix(in_srgb,var(--app-ink)_55%,transparent)]'
+          }`}
+        >
+          {initialsOf(quote.name)}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="line-clamp-2 font-ui text-sm leading-6 text-[color-mix(in_srgb,var(--app-ink)_70%,transparent)]">
+            {quote.text}
+          </p>
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <span className="truncate font-ui text-sm font-semibold text-[var(--app-ink)]">
+              {quote.name}
+            </span>
+            <ArrowRight
+              className={`h-4 w-4 shrink-0 transition ${
+                active
+                  ? 'text-[var(--app-primary)]'
+                  : 'text-[color-mix(in_srgb,var(--app-ink)_35%,transparent)] group-hover:translate-x-1 group-hover:text-[color-mix(in_srgb,var(--app-ink)_60%,transparent)]'
+              }`}
+            />
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
 
 export default function HomeTestimonials() {
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [quotes, setQuotes] = useState<TestimonyQuote[]>([]);
   const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -80,146 +151,210 @@ export default function HomeTestimonials() {
 
   return (
     <Section padding="none" className="bg-[var(--app-canvas-2)]">
-      <Container size="xl" className="py-section-md">
+      <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
         <div
-          className="mx-auto max-w-[760px]"
+          className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {/* Eyebrow */}
-          <p className="mb-10 text-center text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Testimonies
-          </p>
+          {/* Intro column */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="max-w-xl lg:sticky lg:top-28"
+          >
+            <motion.p
+              variants={staggerItem}
+              className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
+            >
+              Testimonies
+            </motion.p>
+            <SectionHeading tone="dark" size="md" className="mt-5">
+              Real stories,
+              <br />
+              <span className="text-[var(--app-primary)]">real</span>{' '}
+              breakthroughs.
+            </SectionHeading>
 
-          {/* Quote area */}
-          <div className="relative min-h-[220px]">
-            {/* Loading state */}
-            {loading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <span className="block h-2 w-2 animate-ping rounded-full bg-[var(--app-primary)]" />
-                <p className="font-ui text-label uppercase tracking-[0.18em] text-[var(--app-ink)]/60">
-                  Loading testimonies…
-                </p>
-              </div>
-            )}
+            <motion.p
+              variants={staggerItem}
+              className="mt-8 max-w-md font-ui text-base leading-7 text-[color-mix(in_srgb,var(--app-ink)_60%,transparent)]"
+            >
+              Hear how God is moving through worship, healing, and everyday
+              faithfulness in the Wisdom Church community.
+            </motion.p>
 
-            {/* Empty state — API returned nothing */}
-            {!loading && quotes.length === 0 && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
-                <p
-                  className="font-headline font-normal italic text-[var(--app-ink)]/60"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}
-                >
-                  Testimonies coming soon.
-                </p>
-                <p className="font-ui text-label text-[var(--app-ink)]/60">
-                  Be the first to share your story.
-                </p>
-              </div>
-            )}
-
-            {/* Decorative " */}
-            {!loading && quotes.length > 0 && (
-              <span
-                className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 select-none font-headline text-[13rem] leading-none text-[var(--app-primary)] opacity-[0.1]"
-                aria-hidden="true"
+            <motion.div
+              variants={staggerItem}
+              className="mt-9 flex flex-wrap items-center gap-3"
+            >
+              <Link
+                href="/forms/share-testimony"
+                className="inline-flex h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
-                &ldquo;
-              </span>
-            )}
+                Share your story
+              </Link>
+              <Link
+                href="/testimonies"
+                className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)] transition hover:text-[var(--app-ink)]"
+              >
+                View all stories <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </motion.div>
+          </motion.div>
 
-            <AnimatePresence mode="wait">
-              {!loading && q ? (
-                <motion.div
-                  key={q.id}
-                  variants={staggerContainer}
-                  initial="hidden"
-                  animate="show"
-                  exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }}
-                  className="relative text-center"
+          {/* Testimony content */}
+          {loading ? (
+            <div
+              className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px]"
+              aria-hidden="true"
+            >
+              <div className="min-h-[340px] animate-pulse border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[color-mix(in_srgb,var(--app-ink)_3%,transparent)]" />
+              <div className="hidden flex-col gap-3 md:flex">
+                {[0, 1, 2].map(i => (
+                  <div
+                    key={i}
+                    className="h-24 animate-pulse border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[color-mix(in_srgb,var(--app-ink)_3%,transparent)]"
+                  />
+                ))}
+              </div>
+            </div>
+          ) : !q ? (
+            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] px-6 text-center">
+              <p
+                className="font-headline font-normal italic text-[color-mix(in_srgb,var(--app-ink)_70%,transparent)]"
+                // eslint-disable-next-line no-restricted-syntax
+                style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}
+              >
+                Testimonies coming soon.
+              </p>
+              <p className="font-ui text-sm text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)]">
+                Be the first to share your story.
+              </p>
+              <Link
+                href="/forms/share-testimony"
+                className="mt-2 inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-xs font-bold uppercase tracking-[0.1em] text-black transition hover:bg-[var(--app-primary-light)]"
+              >
+                Share your story
+              </Link>
+            </div>
+          ) : (
+            <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px]">
+              <article className="relative flex min-h-[340px] flex-col justify-between overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
+                <span
+                  className="pointer-events-none absolute -right-2 -top-10 select-none font-headline text-[9rem] leading-none text-[var(--app-primary)] opacity-[0.08]"
+                  aria-hidden="true"
                 >
-                  <motion.blockquote
-                    variants={staggerItem}
-                    className="font-headline font-normal italic leading-[1.55] text-[var(--app-ink)]"
-                    // eslint-disable-next-line no-restricted-syntax
-                    style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.75rem)' }}
-                  >
-                    &ldquo;{q.text}&rdquo;
-                  </motion.blockquote>
+                  &rdquo;
+                </span>
 
+                <AnimatePresence mode="wait">
                   <motion.div
-                    variants={staggerItem}
-                    className="mt-7 flex items-center justify-center gap-3"
+                    key={q.id}
+                    variants={staggerContainer}
+                    initial="hidden"
+                    animate="show"
+                    exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }}
+                    className="relative"
                   >
-                    <span className="block h-[1.5px] w-8 bg-[var(--app-ink)]/20" />
-                    <div className="text-center">
-                      <p className="text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]">
+                    <motion.div variants={staggerItem}>
+                      <Quote className="h-7 w-7 text-[var(--app-primary)]" />
+                    </motion.div>
+                    <motion.blockquote
+                      variants={staggerItem}
+                      className="mt-6 line-clamp-5 font-headline text-xl font-normal italic leading-[1.5] text-[var(--app-ink)] sm:text-2xl"
+                    >
+                      &ldquo;{q.text}&rdquo;
+                    </motion.blockquote>
+                  </motion.div>
+                </AnimatePresence>
+
+                <div className="relative mt-8 flex flex-col gap-4 border-t border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] pt-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] font-ui text-sm font-bold text-[var(--app-primary)] ring-1 ring-[color-mix(in_srgb,var(--app-primary)_25%,transparent)]">
+                      {initialsOf(q.name)}
+                    </span>
+                    <div>
+                      <p className="font-ui text-sm font-semibold text-[var(--app-ink)]">
                         {q.name}
                       </p>
-                      <p className="mt-0.5 text-label text-[var(--app-ink)]/45">
+                      <p className="mt-0.5 font-ui text-xs text-[color-mix(in_srgb,var(--app-ink)_45%,transparent)]">
                         {q.role}
                       </p>
                     </div>
-                    <span className="block h-[1.5px] w-8 bg-[var(--app-ink)]/20" />
-                  </motion.div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    {quotes.length > 1 && (
+                      <div className="hidden items-center gap-1.5 sm:flex">
+                        {quotes.map((quote, i) => (
+                          <span
+                            key={quote.id}
+                            className="h-1.5 rounded-full transition-all duration-300"
+                            // eslint-disable-next-line no-restricted-syntax
+                            style={{
+                              width: i === current ? '20px' : '6px',
+                              backgroundColor:
+                                i === current
+                                  ? 'var(--app-primary)'
+                                  : 'var(--app-ink)',
+                              opacity: i === current ? 1 : 0.18,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    {quotes.length > 1 && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={prev}
+                          aria-label="Previous testimony"
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] text-[color-mix(in_srgb,var(--app-ink)_55%,transparent)] transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] hover:text-[var(--app-primary)]"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={next}
+                          aria-label="Next testimony"
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] text-[color-mix(in_srgb,var(--app-ink)_55%,transparent)] transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] hover:text-[var(--app-primary)]"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </article>
+
+              {quotes.length > 1 && (
+                <motion.div
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={staggerViewport}
+                  className="flex gap-2 overflow-x-auto pb-1 md:max-h-[340px] md:flex-col md:overflow-y-auto md:overflow-x-hidden"
+                >
+                  {quotes.map((quote, i) => (
+                    <motion.div
+                      key={quote.id}
+                      variants={staggerItem}
+                      className="min-w-[220px] md:min-w-0"
+                    >
+                      <TestimonyThumb
+                        quote={quote}
+                        active={i === current}
+                        onClick={() => goTo(i)}
+                      />
+                    </motion.div>
+                  ))}
                 </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </div>
-
-          {/* Controls */}
-          <div
-            className={`mt-10 flex items-center justify-center gap-6 transition-opacity duration-300 ${loading || quotes.length === 0 ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
-          >
-            <button
-              type="button"
-              onClick={prev}
-              aria-label="Previous testimonial"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-
-            {/* Dots */}
-            <div className="flex items-center gap-2">
-              {quotes.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  aria-label={`Go to testimonial ${i + 1}`}
-                  className="h-1.5 rounded-full transition-all duration-300"
-                  // eslint-disable-next-line no-restricted-syntax
-                  style={{
-                    width: i === current ? '20px' : '6px',
-                    backgroundColor:
-                      i === current ? 'var(--app-primary)' : 'var(--app-ink)',
-                    opacity: i === current ? 1 : 0.18,
-                  }}
-                />
-              ))}
+              )}
             </div>
-
-            <button
-              type="button"
-              onClick={next}
-              aria-label="Next testimonial"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Share link */}
-          <div className="mt-8 text-center">
-            <Link
-              href="/forms/share-testimony"
-              className="inline-flex items-center gap-1.5 text-label font-semibold text-[var(--app-primary)] transition hover:gap-2.5"
-            >
-              Share your story →
-            </Link>
-          </div>
+          )}
         </div>
       </Container>
     </Section>
