@@ -22,6 +22,9 @@ import {
 const eyebrowClass = 'font-ui text-xs font-bold uppercase tracking-[0.22em]';
 const displayClass =
   'font-sans font-black uppercase leading-[0.92] tracking-[-0.045em]';
+// Shared horizontal rhythm for every split text/image panel below, so the
+// left-column inset can't quietly drift out of sync between sections.
+const panelPaddingX = 'px-6 sm:px-10 lg:px-16 xl:px-24';
 
 // Matches each section's actual rendered column width so the browser
 // fetches an image sized for what's on screen, not a full viewport-wide
@@ -84,13 +87,14 @@ export default function PremiumHome() {
             <p className="mx-auto mt-6 max-w-2xl font-ui text-base leading-7 text-white/80 sm:text-lg">
               {HOME_COPY.hero.description}
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-8 flex w-full max-w-sm flex-nowrap items-stretch justify-center gap-2 sm:max-w-none sm:gap-3">
               <HomeActionLink
                 href={SOCIAL_LINKS.youtube}
                 external
                 icon={Play}
                 iconClassName="fill-current"
                 hideArrow
+                className="flex-1 min-w-0 justify-center px-4 text-xs sm:flex-none sm:px-6 sm:text-sm"
               >
                 Watch live
               </HomeActionLink>
@@ -99,6 +103,7 @@ export default function PremiumHome() {
                 variant="light"
                 icon={CalendarDays}
                 hideArrow
+                className="flex-1 min-w-0 justify-center px-4 text-xs sm:flex-none sm:px-6 sm:text-sm"
               >
                 Plan your visit
               </HomeActionLink>
@@ -108,8 +113,10 @@ export default function PremiumHome() {
       </Section>
 
       <Section padding="none" className="bg-white">
-        <div className="grid lg:min-h-[660px] lg:grid-cols-2">
-          <div className="flex items-center px-6 py-20 sm:px-10 lg:px-16 xl:px-24">
+        <div className="grid lg:min-h-[660px] lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
+          <div
+            className={`flex items-center ${panelPaddingX} pb-8 pt-16 sm:pb-10 sm:pt-20 lg:col-start-1 lg:row-start-1 lg:pb-0 lg:pt-0`}
+          >
             <motion.div
               variants={staggerContainer}
               initial="hidden"
@@ -135,26 +142,36 @@ export default function PremiumHome() {
               >
                 {HOME_COPY.welcome.description}
               </motion.p>
-              <motion.div
-                variants={staggerItem}
-                className="mt-8 flex flex-wrap gap-3"
-              >
-                <HomeActionLink href="/about">
-                  Discover our story
-                </HomeActionLink>
-                <Link
-                  href="/#community"
-                  className="inline-flex min-h-12 items-center rounded-full border border-black/25 px-6 font-ui text-sm font-bold transition hover:bg-black hover:text-white"
-                >
-                  Join our community
-                </Link>
-              </motion.div>
             </motion.div>
           </div>
-          <div className="group relative min-h-[460px] overflow-hidden lg:min-h-full">
+
+          <div className="group relative min-h-[460px] overflow-hidden lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-full">
             <CoverImage name="welcome" />
             <div className="absolute inset-0 bg-black/0 transition duration-700 group-hover:bg-black/10" />
           </div>
+
+          <motion.div
+            variants={staggerItem}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className={`border-t border-black/10 ${panelPaddingX} pb-16 pt-8 sm:pb-20 lg:col-start-1 lg:row-start-2 lg:self-end lg:border-t-0 lg:pb-20`}
+          >
+            <div className="flex max-w-xl flex-nowrap items-stretch gap-2 sm:gap-3">
+              <HomeActionLink
+                href="/about"
+                className="flex-1 min-w-0 justify-center px-4 text-xs sm:px-6 sm:text-sm"
+              >
+                Discover our story
+              </HomeActionLink>
+              <Link
+                href="/#community"
+                className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full border border-black/25 px-4 font-ui text-xs font-bold transition hover:bg-black hover:text-white sm:px-6 sm:text-sm"
+              >
+                Join our community
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </Section>
 
@@ -228,7 +245,7 @@ export default function PremiumHome() {
             <CoverImage name="service" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
           </div>
-          <div className="flex items-center px-6 py-20 sm:px-10 lg:px-16 xl:px-24">
+          <div className={`flex items-center ${panelPaddingX} py-20`}>
             <motion.div
               variants={staggerContainer}
               initial="hidden"
@@ -260,6 +277,9 @@ export default function PremiumHome() {
               </motion.div>
               <motion.div
                 variants={staggerItem}
+                initial="hidden"
+                whileInView="show"
+                viewport={staggerViewport}
                 className="mt-8 flex flex-nowrap items-stretch gap-2 sm:gap-3"
               >
                 <TakeMeToChurchButton fullWidth className="flex-1" />
@@ -290,7 +310,7 @@ export default function PremiumHome() {
               className="relative z-10 max-h-[650px] w-auto object-contain object-bottom transition duration-700 hover:scale-[1.02]"
             />
           </div>
-          <div className="flex items-center px-6 py-20 sm:px-10 lg:px-16 xl:px-24">
+          <div className={`flex items-center ${panelPaddingX} py-20`}>
             <motion.div
               variants={staggerContainer}
               initial="hidden"
@@ -329,13 +349,13 @@ export default function PremiumHome() {
         className="overflow-hidden bg-[#0b0b0b] text-white"
       >
         <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
-          <div className="grid items-center gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:gap-20">
+          <div className="grid items-start gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6">
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="show"
               viewport={staggerViewport}
-              className="max-w-xl"
+              className="max-w-xl lg:col-start-1 lg:row-start-1"
             >
               <motion.p
                 variants={staggerItem}
@@ -353,21 +373,6 @@ export default function PremiumHome() {
               >
                 {HOME_COPY.community.description}
               </motion.p>
-              <motion.div variants={staggerItem}>
-                <HomeActionLink href="/contact" className="mt-8">
-                  <Users className="h-4 w-4" /> Connect with us
-                </HomeActionLink>
-              </motion.div>
-
-              <motion.div
-                variants={staggerItem}
-                className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-white/12 pt-6 font-ui text-xs font-bold uppercase tracking-[0.16em] text-white/42 sm:grid-cols-4 lg:grid-cols-2"
-              >
-                <span>Prayer</span>
-                <span>Friendship</span>
-                <span>Growth</span>
-                <span>Belonging</span>
-              </motion.div>
             </motion.div>
 
             <motion.div
@@ -375,7 +380,7 @@ export default function PremiumHome() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={staggerViewport}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="relative pb-0 sm:pb-10 sm:pl-10 lg:pb-12 lg:pl-12"
+              className="relative pb-0 sm:pb-10 sm:pl-10 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:pb-12 lg:pl-12"
             >
               <div className="relative h-[340px] overflow-hidden sm:h-[500px] lg:h-[610px]">
                 <CoverImage name="community" />
@@ -396,6 +401,38 @@ export default function PremiumHome() {
               <span className="absolute -right-2 top-7 hidden font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-white/38 [writing-mode:vertical-rl] sm:block">
                 Wisdom Church community
               </span>
+            </motion.div>
+
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="mt-8 lg:col-start-1 lg:row-start-2 lg:mt-0 lg:self-end"
+            >
+              <motion.div variants={staggerItem}>
+                <HomeActionLink href="/contact">
+                  <Users className="h-4 w-4" /> Connect with us
+                </HomeActionLink>
+              </motion.div>
+
+              <motion.div
+                variants={staggerItem}
+                className="mt-10 border-t border-white/12 pt-6"
+              >
+                <div className="flex snap-x snap-proximity items-center gap-2.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [mask-image:linear-gradient(to_right,black_88%,transparent_100%)] [scrollbar-width:none] [-webkit-mask-image:linear-gradient(to_right,black_88%,transparent_100%)] [&::-webkit-scrollbar]:hidden">
+                  {['Prayer', 'Friendship', 'Growth', 'Belonging'].map(
+                    label => (
+                      <span
+                        key={label}
+                        className="shrink-0 snap-start rounded-full border border-white/14 px-4 py-2 font-ui text-xs font-bold uppercase tracking-[0.14em] text-white/55"
+                      >
+                        {label}
+                      </span>
+                    )
+                  )}
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </Container>

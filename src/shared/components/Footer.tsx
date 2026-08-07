@@ -6,11 +6,12 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { useState } from 'react';
-import { MapPin, Mail, Phone } from 'lucide-react';
+import { ArrowRight, Check, Loader2, MapPin, Mail, Phone } from 'lucide-react';
 
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/layout';
 import { apiClient } from '@/lib/api';
+import { cn } from '@/lib/cn';
 
 /* ── Social icons ──────────────────────────────────────── */
 
@@ -93,7 +94,7 @@ function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
         <li key={l.href}>
           <Link
             href={l.href}
-            className="group inline-flex items-center gap-1.5 font-ui text-body-sm text-white/60 transition hover:text-white"
+            className="group inline-flex items-center gap-1.5 rounded font-ui text-body-sm text-white/60 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
           >
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
               {l.label}
@@ -142,13 +143,15 @@ export default function Footer() {
       />
 
       <Container size="xl" className="py-20 sm:py-24 lg:py-28">
-        {/* ── 4-column grid ────────────────────────────────── */}
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-14 xl:gap-20">
-          {/* Col 1 — Brand ───────────────────────────────── */}
-          <div className="sm:col-span-2 lg:col-span-1">
+        {/* Brand + link columns share one grid so column count always
+            divides evenly (1 → 3 → 4), instead of a leftover half-empty
+            column at tablet widths. */}
+        <div className="grid gap-x-10 gap-y-14 sm:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr] lg:gap-14 xl:gap-20">
+          {/* Brand ───────────────────────────────────────── */}
+          <div className="sm:col-span-3 lg:col-span-1">
             <Link
               href="/"
-              className="mb-6 flex items-center gap-3"
+              className="mb-6 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
               aria-label="The Wisdom Church — home"
             >
               <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.05]">
@@ -171,7 +174,7 @@ export default function Footer() {
               </div>
             </Link>
 
-            <p className="font-ui text-body-sm leading-[1.85] text-white/60">
+            <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/60">
               A Spirit-filled community raised to carry God's glory — equipping
               every believer with the Word, prayer, and purpose.
             </p>
@@ -186,72 +189,97 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="mt-5 space-y-2 font-body text-body-sm text-white/52">
+            <div className="mt-5 space-y-2 font-body text-body-sm text-[color-mix(in_srgb,white_52%,transparent)]">
               <p className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
                 {SERVICE_INFO.venue.full}
               </p>
-              <p className="flex items-center gap-2">
+              <a
+                href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`}
+                className="flex items-center gap-2 transition hover:text-white/80"
+              >
                 <Phone className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
                 {CONTACT_INFO.phone}
-              </p>
-              <p className="flex items-center gap-2">
+              </a>
+              <a
+                href={`mailto:${CONTACT_INFO.email}`}
+                className="flex items-center gap-2 transition hover:text-white/80"
+              >
                 <Mail className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
                 {CONTACT_INFO.email}
-              </p>
+              </a>
             </div>
           </div>
 
-          {/* Col 2 — Explore ─────────────────────────────── */}
+          {/* Explore ─────────────────────────────────────── */}
           <div>
             <ColHead>Explore</ColHead>
             <FooterLinks links={EXPLORE} />
           </div>
 
-          {/* Col 3 — Connect ─────────────────────────────── */}
+          {/* Connect ─────────────────────────────────────── */}
           <div>
             <ColHead>Connect</ColHead>
             <FooterLinks links={CONNECT} />
           </div>
 
-          {/* Col 4 — Newsletter + Socials ────────────────── */}
+          {/* Newsletter + Socials ────────────────────────── */}
           <div>
             <ColHead>Stay Connected</ColHead>
 
             <form onSubmit={handleSubscribe} className="mb-8">
-              <p className="mb-3 font-body text-label text-white/40">
+              <p className="mb-3 font-body text-label text-white/50">
                 Get weekly reminders and updates.
               </p>
-              <div className="flex flex-col gap-2">
+              <div
+                className={cn(
+                  'flex items-center gap-1 rounded-full border bg-white/[0.04] py-1 pl-4 pr-1 transition',
+                  subState === 'err'
+                    ? 'border-red-400/40'
+                    : 'border-[color-mix(in_srgb,white_12%,transparent)] focus-within:border-[var(--app-primary)]/50 focus-within:bg-white/[0.06]'
+                )}
+              >
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="Your email"
-                  className="h-10 w-full border border-white/10 bg-white/[0.05] px-3.5 font-body text-body-sm text-white outline-none placeholder:text-white/45 transition focus:border-[var(--app-primary)]/50 focus:bg-white/[0.08]"
+                  aria-label="Email address"
+                  disabled={subState === 'loading'}
+                  className="h-9 min-w-0 flex-1 bg-transparent font-body text-body-sm text-white outline-none placeholder:text-white/40"
                 />
                 <button
                   type="submit"
                   disabled={subState === 'loading'}
-                  className="h-10 bg-[var(--app-primary)] px-4 font-ui text-label font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60"
+                  aria-label="Subscribe"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
                 >
-                  {subState === 'loading'
-                    ? 'Sending…'
-                    : subState === 'done'
-                      ? '✓ Subscribed'
-                      : subState === 'err'
-                        ? 'Try again'
-                        : 'Subscribe'}
+                  {subState === 'loading' ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : subState === 'done' ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4" />
+                  )}
                 </button>
               </div>
+              {subState === 'done' ? (
+                <p className="mt-2 font-body text-caption text-[var(--app-primary)]">
+                  Subscribed — thank you!
+                </p>
+              ) : subState === 'err' ? (
+                <p className="mt-2 font-body text-caption text-red-400">
+                  Something went wrong — please try again.
+                </p>
+              ) : null}
             </form>
 
             <div>
               <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/45">
                 Follow
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 {SOCIALS.map(s => (
                   <a
                     key={s.label}
@@ -259,7 +287,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={s.label}
-                    className="flex h-9 w-9 items-center justify-center border border-white/10 bg-white/[0.04] text-white/45 transition hover:border-white/20 hover:text-white/80"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/55 transition hover:border-[var(--app-primary)]/40 hover:text-[var(--app-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
                   >
                     <s.Icon />
                   </a>
@@ -270,29 +298,24 @@ export default function Footer() {
         </div>
 
         {/* ── Bottom bar ────────────────────────────────────── */}
-        <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/[0.07] pt-7 sm:flex-row sm:items-center">
+        <div className="mt-16 flex flex-col gap-4 border-t border-white/[0.07] pt-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-body text-label text-white/45">
             © {new Date().getFullYear()} The Wisdom Church · Lagos, Nigeria
           </p>
 
-          <div className="flex items-center gap-5">
-            <span className="font-ui text-caption uppercase tracking-[0.2em] text-white/38">
-              Worship · Word · Community
-            </span>
-            <div className="flex gap-4">
-              <Link
-                href="/privacy"
-                className="font-body text-label text-white/45 transition hover:text-white/75"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/cookies"
-                className="font-body text-label text-white/45 transition hover:text-white/75"
-              >
-                Cookies
-              </Link>
-            </div>
+          <div className="flex gap-5">
+            <Link
+              href="/privacy"
+              className="font-body text-label text-white/45 transition hover:text-white/75"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/cookies"
+              className="font-body text-label text-white/45 transition hover:text-white/75"
+            >
+              Cookies
+            </Link>
           </div>
         </div>
       </Container>

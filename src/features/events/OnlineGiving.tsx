@@ -63,13 +63,13 @@ export default function OnlineGiving() {
       <Section padding="none" className="relative bg-[var(--app-dark)]">
         <SectionGlow />
         <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
-          <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20">
+          <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6">
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="show"
               viewport={staggerViewport}
-              className="max-w-xl lg:sticky lg:top-28"
+              className="max-w-xl lg:sticky lg:top-28 lg:col-start-1 lg:row-start-1"
             >
               <motion.p
                 variants={staggerItem}
@@ -95,31 +95,14 @@ export default function OnlineGiving() {
                   2 Corinthians 9:7
                 </cite>
               </motion.blockquote>
-
-              <motion.div
-                variants={staggerItem}
-                className="mt-9 flex flex-wrap items-center gap-3"
-              >
-                <button
-                  type="button"
-                  onClick={handleContactCall}
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                >
-                  <Phone className="h-3.5 w-3.5" />
-                  Other ways to give
-                </button>
-                <Link
-                  href="/contact"
-                  className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-white/50 transition hover:text-white"
-                >
-                  Contact us <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </motion.div>
             </motion.div>
 
             {/* Giving options */}
             {loading ? (
-              <div className="border-t border-white/15" aria-hidden="true">
+              <div
+                className="border-t border-white/15 lg:col-start-2 lg:row-start-1 lg:row-span-2"
+                aria-hidden="true"
+              >
                 {[0, 1, 2].map(i => (
                   <div
                     key={i}
@@ -140,7 +123,7 @@ export default function OnlineGiving() {
                 initial="hidden"
                 whileInView="show"
                 viewport={staggerViewport}
-                className="border-t border-white/15"
+                className="border-t border-white/15 lg:col-start-2 lg:row-start-1 lg:row-span-2"
               >
                 {givingOptions.slice(0, 3).map((opt, index) => (
                   <motion.button
@@ -175,7 +158,7 @@ export default function OnlineGiving() {
                 ))}
               </motion.div>
             ) : (
-              <div className="border-t border-white/15 pt-9 lg:text-left">
+              <div className="border-t border-white/15 pt-9 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:text-left">
                 <button
                   type="button"
                   onClick={() =>
@@ -192,6 +175,29 @@ export default function OnlineGiving() {
                 </button>
               </div>
             )}
+
+            <motion.div
+              variants={staggerItem}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="flex flex-wrap items-center gap-3 lg:col-start-1 lg:row-start-2 lg:self-end"
+            >
+              <button
+                type="button"
+                onClick={handleContactCall}
+                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              >
+                <Phone className="h-3.5 w-3.5" />
+                Other ways to give
+              </button>
+              <Link
+                href="/contact"
+                className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-white/50 transition hover:text-white"
+              >
+                Contact us <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </motion.div>
           </div>
         </Container>
       </Section>
