@@ -148,9 +148,9 @@ export default async function AboutPage() {
         className="relative overflow-hidden bg-[var(--app-dark)]"
       >
         <SectionGlow />
-        <div className="grid lg:grid-cols-[1fr_1fr] lg:min-h-[580px]">
+        <div className="grid lg:grid-cols-[1.2fr_1fr] lg:min-h-[480px]">
           {/* Text column */}
-          <ScrollFadeIn className="flex flex-col justify-center gap-7 px-6 py-16 sm:px-10 lg:px-14 xl:px-18 order-2 lg:order-1">
+          <ScrollFadeIn className="order-2 flex flex-col justify-center gap-7 px-6 pb-16 pt-20 sm:px-10 sm:pt-24 lg:order-1 lg:px-14 lg:py-20 xl:px-18">
             <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Who we are
             </p>

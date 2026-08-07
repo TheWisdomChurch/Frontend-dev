@@ -17,7 +17,7 @@ export const HOME_COPY = {
       'A Spirit-filled family where the Word works, prayer is a lifestyle, and every believer is equipped for greatness.',
   },
   welcome: {
-    eyebrow: 'Welcome home',
+    // eyebrow: 'Welcome home',
     title: 'More than a church.',
     accent: 'We are family.',
     description:
