@@ -67,16 +67,29 @@ export default function PremiumHome() {
             <h1
               className={`${displayClass} mx-auto max-w-[1050px] text-[clamp(2rem,8vw,6.2rem)] text-white`}
             >
-              {HOME_COPY.hero.title}
+              {HOME_COPY.hero.titleLead}
+              <em className="italic">{HOME_COPY.hero.titleAccent}</em>
+              {HOME_COPY.hero.titleTail}
             </h1>
             <p className="mx-auto mt-6 max-w-2xl font-ui text-base leading-7 text-white/80 sm:text-lg">
               {HOME_COPY.hero.description}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <HomeActionLink href={SOCIAL_LINKS.youtube} external>
-                <Play className="h-4 w-4 fill-current" /> Watch live
+              <HomeActionLink
+                href={SOCIAL_LINKS.youtube}
+                external
+                icon={Play}
+                iconClassName="fill-current"
+                hideArrow
+              >
+                Watch live
               </HomeActionLink>
-              <HomeActionLink href="/events/weekly" variant="light">
+              <HomeActionLink
+                href="/events/weekly"
+                variant="light"
+                icon={CalendarDays}
+                hideArrow
+              >
                 Plan your visit
               </HomeActionLink>
             </div>

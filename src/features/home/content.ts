@@ -1,5 +1,5 @@
 import type { StaticImageData } from 'next/image';
-import { Bishop, Img_1, lader, lader_1, WhatWeDo_3 } from '@/shared/assets';
+import { Bishop, Deacon_2, Img_1, lader, WhatWeDo_3 } from '@/shared/assets';
 
 export type HomeImage = {
   src: StaticImageData | string;
@@ -9,8 +9,10 @@ export type HomeImage = {
 
 export const HOME_COPY = {
   hero: {
-    eyebrow: 'Welcome to The Wisdom Church',
-    title: 'Raising complete believers for a life of impact',
+    eyebrow: 'Welcome home to The Wisdom Church',
+    titleLead: 'Raising ',
+    titleAccent: 'Believers',
+    titleTail: ' for a life of Impact',
     description:
       'A Spirit-filled family where the Word works, prayer is a lifestyle, and every believer is equipped for greatness.',
   },
@@ -95,9 +97,9 @@ export const HOME_IMAGES = {
     position: 'object-[center_28%]',
   },
   service: {
-    src: lader_1,
-    alt: 'Worship at The Wisdom Church',
-    position: 'object-[center_24%]',
+    src: Deacon_2,
+    alt: 'A member in prayer at The Wisdom Church',
+    position: 'object-[40%_20%]',
   },
   pastor: {
     src: Bishop,
@@ -107,6 +109,6 @@ export const HOME_IMAGES = {
   community: {
     src: '/Picflow Images Jul 31 (2)/DSC00026 copy.webp',
     alt: 'Women gathered at a Wisdom Church community event',
-    position: 'object-center',
+    position: 'object-[center_38%]',
   },
 } satisfies Record<string, HomeImage>;
