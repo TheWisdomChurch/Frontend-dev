@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
 
+import Arrow from '@/shared/ui/icons/Arrow';
 import PageHero from '@/features/hero/PageHero';
 import { H2, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
@@ -442,23 +443,7 @@ function ContactPageContent() {
                       className="inline-flex items-center justify-center gap-2.5 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)] disabled:opacity-50"
                     >
                       {submitting ? 'Sending...' : 'Send message'}
-                      {!submitting && (
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M1 6h10M6 1l5 5-5 5"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      )}
+                      {!submitting && <Arrow />}
                     </button>
                     <Caption className="text-[var(--app-ink)]/60">
                       For pastoral care, visit our{' '}
@@ -507,9 +492,9 @@ function ContactPageContent() {
             </p>
             <Link
               href="/events/weekly"
-              className="font-ui text-label font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-ink)]"
+              className="inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-ink)]"
             >
-              See service times →
+              See service times <Arrow />
             </Link>
           </div>
         </Container>

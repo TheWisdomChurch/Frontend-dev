@@ -218,32 +218,51 @@ export default function TestimoniesPage() {
             {/* Testimony cards */}
             {!loading && rest.length > 0 && (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {rest.map((testimony, i) => (
-                  <ScrollFadeIn key={testimony.id} delay={i * 0.04}>
-                    <article
-                      className={`flex flex-col p-6 lg:p-7 ${i % 3 === 1 ? 'bg-[var(--app-canvas-2)]' : 'border border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'}`}
+                {rest.map((testimony, i) => {
+                  // Fills the dangling grid cell(s) a partial trailing row
+                  // would otherwise leave empty at the sm (2-col) and lg
+                  // (3-col) breakpoints.
+                  const isLast = i === rest.length - 1;
+                  const lgRemainder = rest.length % 3;
+                  const spanClass = [
+                    isLast && rest.length % 2 === 1 ? 'sm:col-span-2' : '',
+                    isLast && lgRemainder === 1 ? 'lg:col-span-3' : '',
+                    isLast && lgRemainder === 2 ? 'lg:col-span-2' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ');
+
+                  return (
+                    <ScrollFadeIn
+                      key={testimony.id}
+                      delay={i * 0.04}
+                      className={spanClass}
                     >
-                      {/* Quote mark */}
-                      <OpenQuote className="mb-1 text-heading-lg text-[var(--app-primary)]/35" />
-                      {/* Quote text */}
-                      <p className="font-headline text-body-lg font-normal leading-[1.7] text-[var(--app-ink)] line-clamp-6">
-                        {testimony.quote}
-                      </p>
-                      {/* Attribution */}
-                      <div className="mt-5 border-t border-[var(--app-ink)]/8 pt-4">
-                        <div className="h-[1.5px] w-5 bg-[var(--app-primary)]/45" />
-                        <p className="mt-3 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/55">
-                          {testimony.isAnonymous
-                            ? 'Anonymous member'
-                            : testimony.name}
+                      <article
+                        className={`flex flex-col p-6 lg:p-7 ${i % 3 === 1 ? 'bg-[var(--app-canvas-2)]' : 'border border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'}`}
+                      >
+                        {/* Quote mark */}
+                        <OpenQuote className="mb-1 text-heading-lg text-[var(--app-primary)]/35" />
+                        {/* Quote text */}
+                        <p className="font-headline text-body-lg font-normal leading-[1.7] text-[var(--app-ink)] line-clamp-6">
+                          {testimony.quote}
                         </p>
-                        <p className="mt-0.5 font-ui text-caption text-[var(--app-ink)]/60">
-                          Wisdom Church
-                        </p>
-                      </div>
-                    </article>
-                  </ScrollFadeIn>
-                ))}
+                        {/* Attribution */}
+                        <div className="mt-5 border-t border-[var(--app-ink)]/8 pt-4">
+                          <div className="h-[1.5px] w-5 bg-[var(--app-primary)]/45" />
+                          <p className="mt-3 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/55">
+                            {testimony.isAnonymous
+                              ? 'Anonymous member'
+                              : testimony.name}
+                          </p>
+                          <p className="mt-0.5 font-ui text-caption text-[var(--app-ink)]/60">
+                            Wisdom Church
+                          </p>
+                        </div>
+                      </article>
+                    </ScrollFadeIn>
+                  );
+                })}
               </div>
             )}
           </Container>

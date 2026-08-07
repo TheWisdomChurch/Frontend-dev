@@ -116,15 +116,30 @@ export default async function LeadershipPage() {
         </div>
       ) : (
         <div className="grid sm:grid-cols-2">
-          {seniorTeam.map((leader, i) => (
-            <ScrollFadeIn key={leader.id} delay={i * 0.07}>
-              {i % 2 === 0 ? (
-                <CanvasCard leader={leader} />
-              ) : (
-                <DarkCard leader={leader} />
-              )}
-            </ScrollFadeIn>
-          ))}
+          {seniorTeam.map((leader, i) => {
+            // A lone trailing card (odd total) is centered at its normal
+            // half-width instead of stretched full-width — these cards use
+            // a fixed aspect ratio sized for a half column, so stretching
+            // would distort the portrait rather than just filling space.
+            const isTrailingOdd =
+              seniorTeam.length % 2 === 1 && i === seniorTeam.length - 1;
+
+            return (
+              <ScrollFadeIn
+                key={leader.id}
+                delay={i * 0.07}
+                className={isTrailingOdd ? 'sm:col-span-2' : ''}
+              >
+                <div className={isTrailingOdd ? 'sm:mx-auto sm:w-1/2' : ''}>
+                  {i % 2 === 0 ? (
+                    <CanvasCard leader={leader} />
+                  ) : (
+                    <DarkCard leader={leader} />
+                  )}
+                </div>
+              </ScrollFadeIn>
+            );
+          })}
         </div>
       )}
 

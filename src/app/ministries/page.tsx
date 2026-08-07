@@ -180,7 +180,15 @@ export default function MinistriesPage() {
         <Container size="xl">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ministries.map((ministry, i) => (
-              <ScrollFadeIn key={ministry.title} delay={i * 0.07}>
+              <ScrollFadeIn
+                key={ministry.title}
+                delay={i * 0.07}
+                className={
+                  i === ministries.length - 1
+                    ? 'sm:col-span-2 lg:col-span-2'
+                    : ''
+                }
+              >
                 <Link
                   href={ministry.href}
                   className="group relative flex aspect-[4/5] min-h-[440px] w-full flex-col overflow-hidden sm:aspect-[3/4] lg:aspect-auto lg:min-h-[520px]"
@@ -355,7 +363,7 @@ export default function MinistriesPage() {
                   href="/events"
                   className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/55 transition duration-150 hover:border-white/35 hover:text-white"
                 >
-                  See church rhythm
+                  See church rhythm <Arrow />
                 </Link>
               </div>
             </div>

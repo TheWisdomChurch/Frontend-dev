@@ -227,8 +227,8 @@ function CategoryCard({
               </p>
             )}
           </div>
-          <span className="shrink-0 translate-x-0 font-ui text-label text-[var(--app-ink)]/60 transition duration-200 group-hover:translate-x-1 group-hover:text-[var(--app-primary)]">
-            →
+          <span className="shrink-0 translate-x-0 text-[var(--app-ink)]/60 transition duration-200 group-hover:translate-x-1 group-hover:text-[var(--app-primary)]">
+            <Arrow />
           </span>
         </div>
 
@@ -759,7 +759,7 @@ const SermonUtil = () => {
                   href="/events/weekly"
                   className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                 >
-                  View service times
+                  View service times <Arrow />
                 </Link>
               </div>
             </div>
