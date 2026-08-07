@@ -65,7 +65,7 @@ export default function PremiumHome() {
               {HOME_COPY.hero.eyebrow}
             </p>
             <h1
-              className={`${displayClass} mx-auto max-w-[1050px] text-[clamp(3rem,6.4vw,6.2rem)] text-white`}
+              className={`${displayClass} mx-auto max-w-[1050px] text-[clamp(2rem,8vw,6.2rem)] text-white`}
             >
               {HOME_COPY.hero.title}
             </h1>
@@ -161,12 +161,18 @@ export default function PremiumHome() {
               {HOME_COPY.identity.description}
             </motion.p>
           </motion.div>
-          <div className="mt-14 grid gap-px overflow-hidden border border-white/15 bg-white/15 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
+          >
             {HOME_BELIEFS.map(belief => (
-              <div
-                data-gsap="reveal"
+              <motion.div
+                variants={staggerItem}
                 key={belief.title}
-                className="group relative isolate flex min-h-[320px] flex-col overflow-hidden bg-black sm:min-h-[400px]"
+                className="group relative isolate flex min-h-[320px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black sm:min-h-[400px]"
               >
                 <Image
                   src={belief.image}
@@ -174,14 +180,10 @@ export default function PremiumHome() {
                   fill
                   sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
                   quality={IMAGE_QUALITY}
-                  className="object-cover object-center transition-[transform,filter] duration-700 ease-out will-change-transform group-hover:scale-[1.06]"
+                  className={`object-cover ${belief.imagePosition} transition-[transform,filter] duration-700 ease-out will-change-transform group-hover:scale-[1.06]`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/45 to-black/10 transition-opacity duration-500 group-hover:from-black/95" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-transparent" />
-
-                <span className="relative z-10 p-6 font-ui text-xs font-bold tracking-[0.2em] text-white/55 sm:p-7">
-                  {belief.number}
-                </span>
 
                 <div className="relative z-10 mt-auto p-6 pt-0 sm:p-7 sm:pt-0">
                   <h3 className="break-words font-sans text-2xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-white transition-colors duration-300 group-hover:text-[var(--app-primary-light)] sm:text-[1.7rem] lg:text-2xl xl:text-[1.85rem]">
@@ -191,9 +193,9 @@ export default function PremiumHome() {
                     {belief.body}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </Container>
       </Section>
 
@@ -235,7 +237,7 @@ export default function PremiumHome() {
               </motion.div>
               <motion.div
                 variants={staggerItem}
-                className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+                className="mt-8 flex flex-wrap items-center gap-3"
               >
                 <TakeMeToChurchButton />
                 <HomeActionLink href="/events/weekly" variant="dark">
@@ -341,8 +343,11 @@ export default function PremiumHome() {
               </motion.div>
             </motion.div>
 
-            <div
-              data-gsap="reveal"
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={staggerViewport}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="relative pb-0 sm:pb-10 sm:pl-10 lg:pb-12 lg:pl-12"
             >
               <div className="relative h-[340px] overflow-hidden sm:h-[500px] lg:h-[610px]">
@@ -364,7 +369,7 @@ export default function PremiumHome() {
               <span className="absolute -right-2 top-7 hidden font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-white/38 [writing-mode:vertical-rl] sm:block">
                 Wisdom Church community
               </span>
-            </div>
+            </motion.div>
           </div>
         </Container>
       </Section>

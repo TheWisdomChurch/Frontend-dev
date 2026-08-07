@@ -112,8 +112,11 @@ export default function Conversations() {
             </motion.div>
           </motion.div>
 
-          <div
-            data-gsap="reveal"
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={staggerViewport}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative mx-auto w-full max-w-4xl pb-5 pr-4 sm:pb-7 sm:pr-7"
           >
             <div className="absolute inset-x-8 bottom-0 top-8 translate-x-4 border border-white/8 bg-white/[0.035] sm:translate-x-7" />
@@ -158,7 +161,7 @@ export default function Conversations() {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </Container>
     </Section>
