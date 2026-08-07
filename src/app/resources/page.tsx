@@ -198,8 +198,20 @@ export default function ResourcesPage() {
             {quickActions.map((item, index) => {
               const Icon = item.icon;
 
+              // Fills the dangling grid cell a lone trailing card would
+              // otherwise leave at 2- and 3-column breakpoints. Recompute
+              // the span if quickActions' length ever changes.
+              const isTrailingGap =
+                index === quickActions.length - 1 &&
+                quickActions.length % 2 === 1 &&
+                quickActions.length % 3 === 1;
+
               return (
-                <ScrollFadeIn key={item.title} delay={index * 0.04}>
+                <ScrollFadeIn
+                  key={item.title}
+                  delay={index * 0.04}
+                  className={isTrailingGap ? 'sm:col-span-2 lg:col-span-3' : ''}
+                >
                   <Link
                     href={item.href}
                     className="group relative block h-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
@@ -300,8 +312,16 @@ export default function ResourcesPage() {
                     index % fallbackIcons.length
                   ]) as typeof Sparkles;
 
+                const isTrailingOdd =
+                  filteredResources.length % 2 === 1 &&
+                  index === filteredResources.length - 1;
+
                 return (
-                  <ScrollFadeIn key={resource.title} delay={index * 0.035}>
+                  <ScrollFadeIn
+                    key={resource.title}
+                    delay={index * 0.035}
+                    className={isTrailingOdd ? 'sm:col-span-2' : ''}
+                  >
                     <Link
                       href={resource.path}
                       onClick={(

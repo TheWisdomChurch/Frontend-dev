@@ -113,9 +113,9 @@ export default function PremiumHome() {
       </Section>
 
       <Section padding="none" className="bg-white">
-        <div className="grid lg:min-h-[660px] lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
+        <div className="grid lg:min-h-[520px] lg:grid-cols-[1.15fr_1fr] lg:grid-rows-[1fr_auto]">
           <div
-            className={`flex items-center ${panelPaddingX} pb-8 pt-16 sm:pb-10 sm:pt-20 lg:col-start-1 lg:row-start-1 lg:pb-0 lg:pt-0`}
+            className={`flex items-center ${panelPaddingX} pb-8 pt-20 sm:pb-10 sm:pt-24 lg:col-start-1 lg:row-start-1 lg:items-end lg:pb-10 lg:pt-0`}
           >
             <motion.div
               variants={staggerContainer}
@@ -124,12 +124,12 @@ export default function PremiumHome() {
               viewport={staggerViewport}
               className="max-w-xl"
             >
-              <motion.p
+              {/* <motion.p
                 variants={staggerItem}
                 className={`${eyebrowClass} text-[var(--app-primary-dark)]`}
               >
                 {HOME_COPY.welcome.eyebrow}
-              </motion.p>
+              </motion.p> */}
               <SectionHeading tone="dark" className="mt-5">
                 {HOME_COPY.welcome.title}
                 <span className="block text-[var(--app-primary-dark)]">
@@ -155,7 +155,7 @@ export default function PremiumHome() {
             initial="hidden"
             whileInView="show"
             viewport={staggerViewport}
-            className={`border-t border-black/10 ${panelPaddingX} pb-16 pt-8 sm:pb-20 lg:col-start-1 lg:row-start-2 lg:self-end lg:border-t-0 lg:pb-20`}
+            className={`border-t border-black/10 ${panelPaddingX} pb-16 pt-8 sm:pb-20 lg:col-start-1 lg:row-start-2 lg:border-t-0 lg:pb-20`}
           >
             <div className="flex max-w-xl flex-nowrap items-stretch gap-2 sm:gap-3">
               <HomeActionLink

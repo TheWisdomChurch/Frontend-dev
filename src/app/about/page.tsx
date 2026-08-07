@@ -28,6 +28,27 @@ const SENIOR_ROLES: LeadershipRole[] = [
 ];
 export const dynamic = 'force-dynamic';
 
+function Arrow({ className }: { className?: string }) {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 12 12"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M1 6h10M6 1l5 5-5 5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export const metadata: Metadata = buildPageMetadata({
   title: 'About Us & Our Mission',
   description:
@@ -127,9 +148,9 @@ export default async function AboutPage() {
         className="relative overflow-hidden bg-[var(--app-dark)]"
       >
         <SectionGlow />
-        <div className="grid lg:grid-cols-[1fr_1fr] lg:min-h-[580px]">
+        <div className="grid lg:grid-cols-[1.2fr_1fr] lg:min-h-[480px]">
           {/* Text column */}
-          <ScrollFadeIn className="flex flex-col justify-center gap-7 px-6 py-16 sm:px-10 lg:px-14 xl:px-18 order-2 lg:order-1">
+          <ScrollFadeIn className="order-2 flex flex-col justify-center gap-7 px-6 pb-16 pt-20 sm:px-10 sm:pt-24 lg:order-1 lg:px-14 lg:py-20 xl:px-18">
             <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               Who we are
             </p>
@@ -148,18 +169,18 @@ export default async function AboutPage() {
               committed to forming complete believers through sound teaching,
               worshipful community, and faithful pastoral care.
             </BodyMD>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+            <div className="flex flex-nowrap items-stretch gap-2 sm:gap-3">
               <Link
                 href="/contact"
-                className="inline-flex w-fit items-center gap-2 rounded-button bg-[var(--app-primary)] px-6 py-2.5 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105"
+                className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-4 py-2.5 font-ui text-xs font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 sm:flex-none sm:px-6 sm:text-label"
               >
                 Plan your visit
               </Link>
               <Link
                 href="/ministries"
-                className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)]"
+                className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 border border-white/18 px-4 py-2.5 font-ui text-xs font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)] sm:flex-none sm:px-5 sm:text-label"
               >
-                Explore ministries →
+                Explore ministries <Arrow />
               </Link>
             </div>
           </ScrollFadeIn>
@@ -198,7 +219,7 @@ export default async function AboutPage() {
                 href="/ministries"
                 className="hidden items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)] sm:inline-flex"
               >
-                Explore ministries →
+                Explore ministries <Arrow />
               </Link>
             </ScrollFadeIn>
           </Container>
@@ -268,7 +289,7 @@ export default async function AboutPage() {
                   href="/leadership"
                   className="hidden items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)] lg:inline-flex"
                 >
-                  Meet the full team →
+                  Meet the full team <Arrow />
                 </Link>
               </div>
             </Container>
@@ -298,7 +319,7 @@ export default async function AboutPage() {
               href="/leadership"
               className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)]"
             >
-              Meet the full team →
+              Meet the full team <Arrow />
             </Link>
           </Container>
         </div>
@@ -337,28 +358,13 @@ export default async function AboutPage() {
                   href="/contact"
                   className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                 >
-                  Plan your visit
-                  <svg
-                    width="11"
-                    height="11"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M1 6h10M6 1l5 5-5 5"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  Plan your visit <Arrow />
                 </Link>
                 <Link
                   href="/ministries"
                   className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-ink)]/35 hover:text-[var(--app-ink)]"
                 >
-                  Explore ministries
+                  Explore ministries <Arrow />
                 </Link>
               </div>
 

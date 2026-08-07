@@ -122,8 +122,8 @@ export default function PublicationPage() {
                         {item.detail}
                       </p>
                     </div>
-                    <span className="mt-auto inline-flex items-center gap-1 font-ui text-label font-semibold text-[var(--app-primary)] transition group-hover:translate-x-0.5">
-                      {item.action} →
+                    <span className="mt-auto inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition group-hover:translate-x-0.5">
+                      {item.action} <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </a>
                 ))}
