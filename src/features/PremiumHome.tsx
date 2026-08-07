@@ -23,6 +23,17 @@ const eyebrowClass = 'font-ui text-xs font-bold uppercase tracking-[0.22em]';
 const displayClass =
   'font-sans font-black uppercase leading-[0.92] tracking-[-0.045em]';
 
+// Matches each section's actual rendered column width so the browser
+// fetches an image sized for what's on screen, not a full viewport-wide
+// image for a half-width column.
+const COVER_IMAGE_SIZES: Record<keyof typeof HOME_IMAGES, string> = {
+  hero: '100vw',
+  welcome: '(min-width: 1024px) 50vw, 100vw',
+  service: '(min-width: 1024px) 50vw, 100vw',
+  pastor: '(min-width: 1024px) 50vw, 100vw',
+  community: '(min-width: 1024px) 62vw, 100vw',
+};
+
 function CoverImage({
   name,
   priority = false,
@@ -41,7 +52,7 @@ function CoverImage({
       fill
       priority={priority}
       quality={IMAGE_QUALITY}
-      sizes="100vw"
+      sizes={COVER_IMAGE_SIZES[name]}
       data-parallax-global={isCommunityImage ? undefined : parallaxDepth}
       className={`${isCommunityImage ? '' : 'scale-[1.06]'} object-cover ${image.position}`}
     />
@@ -58,12 +69,11 @@ export default function PremiumHome() {
           size="2xl"
           className="relative flex min-h-[100svh] flex-col items-center justify-center pb-12 pt-40 text-center sm:pt-44 lg:pt-48"
         >
-          <div data-gsap="reveal">
-            <p
-              className={`${eyebrowClass} mb-6 text-[var(--app-primary-light)]`}
-            >
+          <div data-gsap="reveal" className="flex flex-col items-center">
+            <p className="mb-4 font-ui text-sm font-bold uppercase tracking-[0.28em] text-[var(--app-primary-light)] sm:text-base">
               {HOME_COPY.hero.eyebrow}
             </p>
+            <div className="mb-6 h-px w-14 bg-[var(--app-primary-light)]/60" />
             <h1
               className={`${displayClass} mx-auto max-w-[1050px] text-[clamp(2rem,8vw,6.2rem)] text-white`}
             >
@@ -213,7 +223,7 @@ export default function PremiumHome() {
       </Section>
 
       <Section padding="none" className="bg-[var(--app-primary)]">
-        <div className="grid lg:min-h-[620px] lg:grid-cols-2">
+        <div className="grid lg:min-h-[620px] lg:grid-cols-2 xl:min-h-[720px] 2xl:min-h-[820px]">
           <div className="group relative min-h-[430px] overflow-hidden lg:order-2 lg:min-h-full">
             <CoverImage name="service" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
@@ -250,10 +260,14 @@ export default function PremiumHome() {
               </motion.div>
               <motion.div
                 variants={staggerItem}
-                className="mt-8 flex flex-wrap items-center gap-3"
+                className="mt-8 flex flex-nowrap items-stretch gap-2 sm:gap-3"
               >
-                <TakeMeToChurchButton />
-                <HomeActionLink href="/events/weekly" variant="dark">
+                <TakeMeToChurchButton fullWidth className="flex-1" />
+                <HomeActionLink
+                  href="/events/weekly"
+                  variant="dark"
+                  className="flex-1 min-w-0 justify-center gap-2 px-4 text-xs sm:gap-3 sm:px-5 sm:text-sm"
+                >
                   Plan your first visit
                 </HomeActionLink>
               </motion.div>

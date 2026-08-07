@@ -91,48 +91,58 @@ export default function Conversations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={staggerViewport}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mx-auto w-full max-w-4xl lg:pb-7 lg:pr-7"
+            className="relative mx-auto w-full max-w-4xl"
           >
-            <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-white/8 bg-white/[0.035] lg:block" />
-            <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-white/10 bg-[#151515] lg:block" />
+            {/* Shadow-card decoration is scoped to its own wrapper (sized
+                to just the image) so it can't stretch to cover the nav
+                buttons below it on large screens. */}
+            <div className="relative lg:pb-7 lg:pr-7">
+              <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-white/8 bg-white/[0.035] lg:block" />
+              <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-white/10 bg-[#151515] lg:block" />
 
-            <div className="relative h-[300px] overflow-hidden bg-[#181818] sm:h-[390px] lg:h-[450px]">
-              <AnimatePresence initial={false} mode="popLayout">
-                <motion.div
-                  key={slides[active].src}
-                  initial={
-                    reduceMotion ? false : { opacity: 0, x: 28, scale: 0.985 }
-                  }
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={
-                    reduceMotion
-                      ? undefined
-                      : { opacity: 0, x: -20, scale: 0.99 }
-                  }
-                  transition={{
-                    duration: reduceMotion ? 0 : 0.45,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="absolute inset-0"
-                >
-                  <Image
-                    src={slides[active].src}
-                    alt={slides[active].alt}
-                    fill
-                    quality={IMAGE_QUALITY}
-                    sizes="(max-width: 1024px) 100vw, 65vw"
-                    className={`object-cover ${slides[active].position}`}
+              <div className="relative h-[300px] overflow-hidden bg-[#181818] sm:h-[390px] lg:h-[450px]">
+                <AnimatePresence initial={false} mode="popLayout">
+                  <motion.div
+                    key={slides[active].src}
+                    initial={
+                      reduceMotion ? false : { opacity: 0, x: 28, scale: 0.985 }
+                    }
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={
+                      reduceMotion
+                        ? undefined
+                        : { opacity: 0, x: -20, scale: 0.99 }
+                    }
+                    transition={{
+                      duration: reduceMotion ? 0 : 0.45,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={slides[active].src}
+                      alt={slides[active].alt}
+                      fill
+                      quality={IMAGE_QUALITY}
+                      sizes="(max-width: 1024px) 100vw, 65vw"
+                      className={`object-cover ${slides[active].position}`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/5" />
+                  </motion.div>
+                </AnimatePresence>
+
+                <span className="absolute bottom-3 right-3 z-10 rounded-full bg-black/55 px-2.5 py-1 font-ui text-xs tabular-nums text-white/85 backdrop-blur-sm">
+                  {String(active + 1).padStart(2, '0')} /{' '}
+                  {String(slides.length).padStart(2, '0')}
+                </span>
+
+                <div className="absolute bottom-0 left-0 z-10 h-1 w-full bg-white/15">
+                  <motion.span
+                    className="block h-full origin-left bg-[var(--app-primary)]"
+                    animate={{ scaleX: (active + 1) / slides.length }}
+                    transition={{ duration: 0.35, ease: 'easeOut' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/5" />
-                </motion.div>
-              </AnimatePresence>
-
-              <div className="absolute bottom-0 left-0 z-10 h-1 w-full bg-white/15">
-                <motion.span
-                  className="block h-full origin-left bg-[var(--app-primary)]"
-                  animate={{ scaleX: (active + 1) / slides.length }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
-                />
+                </div>
               </div>
             </div>
 
@@ -153,10 +163,6 @@ export default function Conversations() {
               >
                 <ArrowRight className="h-4 w-4" />
               </button>
-              <span className="ml-2 font-ui text-xs tabular-nums text-white/42">
-                {String(active + 1).padStart(2, '0')} /{' '}
-                {String(slides.length).padStart(2, '0')}
-              </span>
             </div>
           </motion.div>
         </div>

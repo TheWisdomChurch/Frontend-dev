@@ -99,7 +99,7 @@ export const HOME_IMAGES = {
   service: {
     src: Deacon_2,
     alt: 'A member in prayer at The Wisdom Church',
-    position: 'object-[40%_20%]',
+    position: 'object-[40%_45%]',
   },
   pastor: {
     src: Bishop,
