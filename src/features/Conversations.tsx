@@ -84,32 +84,6 @@ export default function Conversations() {
               Honest conversations about life, faith and becoming — shared by
               people walking the journey together.
             </motion.p>
-
-            <motion.div
-              variants={staggerItem}
-              className="mt-8 flex items-center gap-3"
-            >
-              <button
-                type="button"
-                onClick={() => move(-1)}
-                aria-label="Previous conversation image"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/18 text-white transition duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => move(1)}
-                aria-label="Next conversation image"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--app-primary)] text-black transition duration-200 hover:bg-[var(--app-primary-light)]"
-              >
-                <ArrowRight className="h-4 w-4" />
-              </button>
-              <span className="ml-2 font-ui text-xs tabular-nums text-white/42">
-                {String(active + 1).padStart(2, '0')} /{' '}
-                {String(slides.length).padStart(2, '0')}
-              </span>
-            </motion.div>
           </motion.div>
 
           <motion.div
@@ -117,10 +91,10 @@ export default function Conversations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={staggerViewport}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mx-auto w-full max-w-4xl pb-5 pr-4 sm:pb-7 sm:pr-7"
+            className="relative mx-auto w-full max-w-4xl lg:pb-7 lg:pr-7"
           >
-            <div className="absolute inset-x-8 bottom-0 top-8 translate-x-4 border border-white/8 bg-white/[0.035] sm:translate-x-7" />
-            <div className="absolute inset-x-4 bottom-3 top-4 translate-x-2 border border-white/10 bg-[#151515] sm:bottom-4 sm:translate-x-4" />
+            <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-white/8 bg-white/[0.035] lg:block" />
+            <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-white/10 bg-[#151515] lg:block" />
 
             <div className="relative h-[300px] overflow-hidden bg-[#181818] sm:h-[390px] lg:h-[450px]">
               <AnimatePresence initial={false} mode="popLayout">
@@ -160,6 +134,29 @@ export default function Conversations() {
                   transition={{ duration: 0.35, ease: 'easeOut' }}
                 />
               </div>
+            </div>
+
+            <div className="mt-5 flex items-center gap-3 sm:mt-6">
+              <button
+                type="button"
+                onClick={() => move(-1)}
+                aria-label="Previous conversation image"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/18 text-white transition duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => move(1)}
+                aria-label="Next conversation image"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--app-primary)] text-black transition duration-200 hover:bg-[var(--app-primary-light)]"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <span className="ml-2 font-ui text-xs tabular-nums text-white/42">
+                {String(active + 1).padStart(2, '0')} /{' '}
+                {String(slides.length).padStart(2, '0')}
+              </span>
             </div>
           </motion.div>
         </div>

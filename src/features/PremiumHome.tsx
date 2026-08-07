@@ -56,7 +56,7 @@ export default function PremiumHome() {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.52)_0%,rgba(0,0,0,.16)_35%,rgba(0,0,0,.84)_100%)]" />
         <Container
           size="2xl"
-          className="relative flex min-h-[100svh] flex-col items-center justify-center pb-16 pt-28 text-center"
+          className="relative flex min-h-[100svh] flex-col items-center justify-center pb-12 pt-40 text-center sm:pt-44 lg:pt-48"
         >
           <div data-gsap="reveal">
             <p
