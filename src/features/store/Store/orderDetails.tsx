@@ -314,7 +314,7 @@ const OrderConfirmation = () => {
       {/* Header with Success Message */}
       <div className="text-center mb-8 print-section">
         <FlexboxLayout direction="column" align="center" gap="sm">
-          <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
+          <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-900/30">
             <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
           <H2 fontFamily="bricolage" className="text-green-500" weight="bold">
@@ -731,7 +731,7 @@ const OrderConfirmation = () => {
             <div className="space-y-4">
               {orderDetails.paymentMethod === 'transfer' && (
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-900/30">
                     <Building className="w-3 h-3 text-blue-500" />
                   </div>
                   <div>
@@ -750,7 +750,7 @@ const OrderConfirmation = () => {
               )}
 
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-900/30">
                   <Mail className="w-3 h-3 text-green-500" />
                 </div>
                 <div>
@@ -768,7 +768,7 @@ const OrderConfirmation = () => {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-yellow-900/30">
                   <Clock className="w-3 h-3 text-yellow-500" />
                 </div>
                 <div>
@@ -786,7 +786,7 @@ const OrderConfirmation = () => {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-purple-900/30">
                   <Phone className="w-3 h-3 text-purple-500" />
                 </div>
                 <div>

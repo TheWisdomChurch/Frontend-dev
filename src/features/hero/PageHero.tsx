@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { lader } from '@/shared/assets';
 import { H1, BodyLG, BodyMD } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
+import { cn } from '@/lib/cn';
 
 export type PageHeroProps = {
   title: string;
@@ -15,6 +16,8 @@ export type PageHeroProps = {
   /** compact — short left-aligned editorial header */
   compact?: boolean;
   backgroundImage?: string | StaticImageData;
+  /** Responsive Tailwind object-position classes for this hero image. */
+  imagePositionClassName?: string;
   showButtons?: boolean;
   primaryButtonText?: string;
   secondaryButtonText?: string;
@@ -47,6 +50,7 @@ export default function PageHero({
   eyebrow,
   compact = false,
   backgroundImage,
+  imagePositionClassName,
   showButtons = false,
   primaryButtonText = 'Plan your visit',
   secondaryButtonText = 'Learn more',
@@ -69,7 +73,10 @@ export default function PageHero({
           alt=""
           fill
           priority
-          className="object-cover object-[center_24%] sm:object-[center_30%] lg:object-center"
+          className={cn(
+            'object-cover object-[center_24%] sm:object-[center_30%] lg:object-center',
+            imagePositionClassName
+          )}
           sizes="100vw"
         />
 

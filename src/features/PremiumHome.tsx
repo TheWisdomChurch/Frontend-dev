@@ -63,6 +63,32 @@ function CoverImage({
   );
 }
 
+function ServiceImage() {
+  const image = HOME_IMAGES.service;
+
+  return (
+    <>
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        quality={IMAGE_QUALITY}
+        sizes="(min-width: 640px) 1px, 100vw"
+        className={`object-cover sm:hidden ${image.position}`}
+      />
+      <Image
+        src={image.desktopSrc}
+        alt={image.alt}
+        fill
+        quality={IMAGE_QUALITY}
+        sizes={COVER_IMAGE_SIZES.service}
+        data-parallax-global="0.08"
+        className="hidden object-cover object-[58%_center] sm:block"
+      />
+    </>
+  );
+}
+
 export default function PremiumHome() {
   return (
     <div className="premium-home bg-white text-[var(--app-ink)]">
@@ -200,7 +226,7 @@ export default function PremiumHome() {
               <motion.div
                 variants={staggerItem}
                 key={belief.title}
-                className="group relative isolate flex min-h-[320px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black sm:min-h-[400px]"
+                className="group relative isolate flex min-h-[480px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black sm:min-h-[400px]"
               >
                 <Image
                   src={belief.image}
@@ -217,7 +243,7 @@ export default function PremiumHome() {
                   <h3 className="break-words font-sans text-2xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-white transition-colors duration-300 group-hover:text-[var(--app-primary-light)] sm:text-[1.7rem] lg:text-2xl xl:text-[1.85rem]">
                     {belief.title}
                   </h3>
-                  <p className="mt-3 font-ui text-sm leading-6 text-white/65">
+                  <p className="mt-3 min-h-12 font-ui text-sm leading-6 text-white/65">
                     {belief.body}
                   </p>
                 </div>
@@ -229,9 +255,8 @@ export default function PremiumHome() {
 
       <Section padding="none" className="bg-[var(--app-primary)]">
         <div className="grid lg:min-h-[620px] lg:grid-cols-2 xl:min-h-[720px] 2xl:min-h-[820px]">
-          <div className="group relative min-h-[430px] overflow-hidden lg:order-2 lg:min-h-full">
-            <CoverImage name="service" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          <div className="group relative min-h-[min(135vw,640px)] overflow-hidden bg-black lg:order-2 lg:min-h-full">
+            <ServiceImage />
           </div>
           <div className={`flex items-center ${panelPaddingX} py-20`}>
             <motion.div

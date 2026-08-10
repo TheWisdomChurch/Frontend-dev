@@ -25,6 +25,13 @@ import {
   staggerViewport,
 } from '@/shared/ui/motion/staggerReveal';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import { PhoneNumberField } from '@/shared/ui/forms';
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidNationalPhone,
+  toE164,
+} from '@/lib/validation/phone';
+import type { CountryCode } from 'libphonenumber-js';
 
 function splitFullName(value: string): { firstName: string; lastName: string } {
   const parts = value.trim().split(/\s+/);
@@ -145,6 +152,9 @@ export default function HeroHighlights() {
   } | null>(null);
 
   const [visit, setVisit] = useState<VisitState>(initialVisit);
+  const [visitPhoneCountry, setVisitPhoneCountry] = useState<CountryCode>(
+    DEFAULT_PHONE_COUNTRY
+  );
   const [watch, setWatch] = useState<WatchState>(initialWatch);
 
   const openModal = useCallback((key: ModalKey) => setModal(key), []);
@@ -153,6 +163,13 @@ export default function HeroHighlights() {
   const onSubmitVisit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    if (
+      visit.phone.trim() &&
+      !isValidNationalPhone(visit.phone, visitPhoneCountry)
+    ) {
+      toast.error('Enter a valid phone number for the selected country.');
+      return;
+    }
     setSubmitting(true);
     try {
       const { firstName, lastName } = splitFullName(visit.name);
@@ -160,7 +177,9 @@ export default function HeroHighlights() {
         firstName,
         lastName,
         email: visit.email,
-        phone: visit.phone || undefined,
+        phone: visit.phone
+          ? toE164(visit.phone, visitPhoneCountry) || undefined
+          : undefined,
         topic: 'visit',
         message:
           visit.notes.trim() ||
@@ -174,6 +193,7 @@ export default function HeroHighlights() {
       });
       closeModal();
       setVisit(initialVisit);
+      setVisitPhoneCountry(DEFAULT_PHONE_COUNTRY);
       setSuccess({
         title: 'Visit request received',
         message:
@@ -308,12 +328,15 @@ export default function HeroHighlights() {
             />
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <input
-              type="tel"
+            <PhoneNumberField
+              id="visit-phone"
+              country={visitPhoneCountry}
+              number={visit.phone}
+              onCountryChange={setVisitPhoneCountry}
+              onNumberChange={phone => setVisit(p => ({ ...p, phone }))}
+              inputClassName={inputClass}
+              selectClassName={selectClass}
               placeholder="Phone (optional)"
-              className={inputClass}
-              value={visit.phone}
-              onChange={e => setVisit(p => ({ ...p, phone: e.target.value }))}
             />
             <select
               className={selectClass}

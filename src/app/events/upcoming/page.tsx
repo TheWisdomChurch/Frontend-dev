@@ -10,35 +10,10 @@ import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import Arrow from '@/shared/ui/icons/Arrow';
-
-function getTimestamp(event: EventPublic): number {
-  if (event.startAt) {
-    const t = new Date(event.startAt).getTime();
-    if (!Number.isNaN(t)) return t;
-  }
-  if (event.date) {
-    const t = new Date(`${event.date}T${event.time ?? '00:00'}`).getTime();
-    if (!Number.isNaN(t)) return t;
-  }
-  return Number.MAX_SAFE_INTEGER;
-}
-
-function formatDate(event: EventPublic) {
-  const t = getTimestamp(event);
-  if (t === Number.MAX_SAFE_INTEGER)
-    return { month: '—', day: '—', full: 'TBA' };
-  const d = new Date(t);
-  return {
-    month: d.toLocaleString('en', { month: 'short' }).toUpperCase(),
-    day: String(d.getDate()),
-    full: d.toLocaleString('en', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }),
-  };
-}
+import {
+  formatEventDateParts as formatDate,
+  getEventTimestamp as getTimestamp,
+} from '@/shared/utils/eventDate';
 
 export default function UpcomingPage() {
   const [events, setEvents] = useState<EventPublic[]>([]);

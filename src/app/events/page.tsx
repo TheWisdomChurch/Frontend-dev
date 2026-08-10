@@ -11,59 +11,17 @@ import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildEventSchema, buildBreadcrumbSchema } from '@/lib/seo';
 import Arrow from '@/shared/ui/icons/Arrow';
+import {
+  formatEventDateParts as formatDate,
+  formatEventTime as formatTime,
+  getEventTimestamp as getTimestamp,
+  isUpcomingEvent as isUpcoming,
+} from '@/shared/utils/eventDate';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
 // Kept outside the component body so the impure Date.now() read happens at
 // call time (each request), not as a value captured during render.
-function isUpcoming(event: EventPublic): boolean {
-  return getTimestamp(event) >= Date.now();
-}
-
-function getTimestamp(event: EventPublic): number {
-  if (event.startAt) {
-    const t = new Date(event.startAt).getTime();
-    if (!Number.isNaN(t)) return t;
-  }
-  if (event.date) {
-    const t = new Date(`${event.date}T${event.time ?? '00:00'}`).getTime();
-    if (!Number.isNaN(t)) return t;
-  }
-  return Number.MAX_SAFE_INTEGER;
-}
-
-function formatDate(event: EventPublic): {
-  month: string;
-  day: string;
-  full: string;
-} {
-  const t = getTimestamp(event);
-  if (t === Number.MAX_SAFE_INTEGER || (!event.startAt && !event.date)) {
-    return { month: '—', day: '—', full: 'Date to be announced' };
-  }
-  const d = new Date(t);
-  return {
-    month: d.toLocaleString('en', { month: 'short' }).toUpperCase(),
-    day: String(d.getDate()),
-    full: d.toLocaleString('en', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }),
-  };
-}
-
-function formatTime(event: EventPublic): string {
-  if (event.startAt) {
-    const d = new Date(event.startAt);
-    if (!Number.isNaN(d.getTime())) {
-      return d.toLocaleString('en', { hour: '2-digit', minute: '2-digit' });
-    }
-  }
-  return event.time ?? '';
-}
-
 function registerHref(event: EventPublic): string | null {
   if (event.registerLink) return event.registerLink;
   if (event.formSlug) return `/forms/${event.formSlug}`;

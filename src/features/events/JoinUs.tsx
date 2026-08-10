@@ -27,6 +27,9 @@ import { BaseModal } from '@/shared/ui/modals/Base';
 import { BodySM, Caption } from '@/shared/text';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
+import { PhoneNumberField } from '@/shared/ui/forms';
+import { isValidNationalPhone, PHONE_COUNTRIES } from '@/lib/validation/phone';
+import type { CountryCode } from 'libphonenumber-js';
 import {
   staggerContainer,
   staggerItem,
@@ -163,13 +166,6 @@ const departmentSpanPattern = [
   'lg:col-span-4',
 ] as const;
 
-const countryCodes = [
-  { code: '+234', label: 'NG' },
-  { code: '+233', label: 'GH' },
-  { code: '+44', label: 'UK' },
-  { code: '+1', label: 'US/CA' },
-];
-
 /* ─── Validation ──────────────────────────────────────────────────── */
 
 const modalSchema = z
@@ -182,7 +178,7 @@ const modalSchema = z
         'Enter first and last name'
       ),
     phoneCode: z.string().min(2),
-    phone: z.string().min(7, 'Phone number is required'),
+    phone: z.string().min(1, 'Phone number is required'),
     email: z.string().email('Enter a valid email'),
     birthday: z
       .string()
@@ -195,6 +191,13 @@ const modalSchema = z
     about: z.string().max(800).optional(),
   })
   .superRefine((val, ctx) => {
+    if (!isValidNationalPhone(val.phone, val.phoneCode)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['phone'],
+        message: 'Enter a valid phone number for the selected country',
+      });
+    }
     if (val.married === 'yes') {
       if (!val.spouse)
         ctx.addIssue({
@@ -227,7 +230,7 @@ function FieldError({ message }: { message?: string }) {
 
 const defaultValues: ModalValues = {
   fullName: '',
-  phoneCode: '+234',
+  phoneCode: 'NG',
   phone: '',
   email: '',
   birthday: '',
@@ -260,6 +263,7 @@ export default function JoinWisdomHouse() {
     formState: { errors },
     reset,
     control,
+    setValue,
   } = useForm<ModalValues>({
     resolver: zodResolver(modalSchema),
     defaultValues,
@@ -270,6 +274,8 @@ export default function JoinWisdomHouse() {
   // memoize this component around it. useWatch is a proper hook that
   // subscribes correctly and re-renders only when 'married' changes.
   const marriedValue = useWatch({ control, name: 'married' });
+  const phoneValue = useWatch({ control, name: 'phone' });
+  const phoneCountryValue = useWatch({ control, name: 'phoneCode' });
 
   const openFor = useCallback(
     (dept: Department) => {
@@ -314,12 +320,15 @@ export default function JoinWisdomHouse() {
       setSubmitting(true);
       const { firstName, lastName } = splitName(values.fullName);
       const dept = getDeptMeta(values.department);
+      const dial =
+        PHONE_COUNTRIES.find(country => country.iso === values.phoneCode)
+          ?.dial ?? '+234';
 
       await apiClient.applyWorkforceNew({
         firstName,
         lastName,
         email: values.email,
-        phoneCode: values.phoneCode,
+        phoneCode: dial,
         phone: values.phone,
         birthday: values.birthday,
         occupation: values.occupation || '',
@@ -591,26 +600,24 @@ export default function JoinWisdomHouse() {
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-[0.38fr_1fr]">
-                <div>
-                  <select {...register('phoneCode')} className={mSelect}>
-                    {countryCodes.map(c => (
-                      <option key={c.code} value={c.code}>
-                        {c.code} · {c.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <input
-                    {...register('phone')}
-                    className={mInput}
-                    placeholder="Phone number"
-                    type="tel"
-                  />
-                  <FieldError message={errors.phone?.message} />
-                </div>
-              </div>
+              <PhoneNumberField
+                id="workforce-phone"
+                country={phoneCountryValue as CountryCode}
+                number={phoneValue || ''}
+                onCountryChange={country =>
+                  setValue('phoneCode', country, { shouldValidate: true })
+                }
+                onNumberChange={phone =>
+                  setValue('phone', phone, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
+                }
+                inputClassName={mInput}
+                selectClassName={mSelect}
+                error={errors.phone?.message}
+                required
+              />
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>

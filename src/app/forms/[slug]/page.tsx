@@ -16,21 +16,16 @@ import type {
   PublicFormPayload,
 } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { PhoneNumberField } from '@/shared/ui/forms';
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidNationalPhone,
+  PHONE_COUNTRIES,
+} from '@/lib/validation/phone';
+import type { CountryCode } from 'libphonenumber-js';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-const e164Re = /^\+[1-9]\d{7,14}$/;
-
-const COUNTRY_PHONE_CODES = [
-  { iso: 'NG', name: 'Nigeria', dial: '+234' },
-  { iso: 'GH', name: 'Ghana', dial: '+233' },
-  { iso: 'KE', name: 'Kenya', dial: '+254' },
-  { iso: 'ZA', name: 'South Africa', dial: '+27' },
-  { iso: 'US', name: 'United States', dial: '+1' },
-  { iso: 'CA', name: 'Canada', dial: '+1' },
-  { iso: 'GB', name: 'United Kingdom', dial: '+44' },
-] as const;
-
 const MONTH_OPTIONS = [
   { value: '01', label: 'January' },
   { value: '02', label: 'February' },
@@ -58,25 +53,23 @@ const fieldSelectClass =
 const labelClass =
   'block text-label font-bold uppercase tracking-[0.16em] text-white/60';
 
-function onlyDigits(value: string): string {
-  return value.replace(/\D/g, '');
-}
-
-function splitE164(value: string): { dial: string; national: string } | null {
+function splitE164(
+  value: string
+): { country: CountryCode; dial: string; national: string } | null {
   if (!value || typeof value !== 'string') return null;
 
   const trimmed = value.trim();
   if (!trimmed.startsWith('+')) return null;
 
-  const dial = COUNTRY_PHONE_CODES.map(country => country.dial)
-    .sort((a, b) => b.length - a.length)
-    .find(candidate => trimmed.startsWith(candidate));
-
-  if (!dial) return null;
+  const match = PHONE_COUNTRIES.slice()
+    .sort((a, b) => b.dial.length - a.dial.length)
+    .find(country => trimmed.startsWith(country.dial));
+  if (!match) return null;
 
   return {
-    dial,
-    national: trimmed.slice(dial.length).replace(/\D/g, ''),
+    country: match.iso,
+    dial: match.dial,
+    national: trimmed.slice(match.dial.length).replace(/\D/g, ''),
   };
 }
 
@@ -608,7 +601,12 @@ export default function PublicFormPage() {
           }
         }
 
-        if (isPhoneLikeField(field) && !e164Re.test(value)) {
+        const parsedPhone = isPhoneLikeField(field) ? splitE164(value) : null;
+        if (
+          isPhoneLikeField(field) &&
+          (!parsedPhone ||
+            !isValidNationalPhone(parsedPhone.national, parsedPhone.country))
+        ) {
           nextFieldErrors[field.key] =
             'Enter a valid phone number with country code, e.g. +2348012345678';
           continue;
@@ -881,7 +879,11 @@ export default function PublicFormPage() {
 
     if (isPhoneLikeField(field)) {
       const parsed = splitE164(typeof value === 'string' ? value : '');
-      const currentDial = parsed?.dial ?? COUNTRY_PHONE_CODES[0].dial;
+      const currentCountry = parsed?.country ?? DEFAULT_PHONE_COUNTRY;
+      const currentDial =
+        parsed?.dial ??
+        PHONE_COUNTRIES.find(item => item.iso === currentCountry)?.dial ??
+        '+234';
       const currentNational = parsed?.national ?? '';
 
       return (
@@ -889,47 +891,35 @@ export default function PublicFormPage() {
           <label className="space-y-2">
             <Label />
 
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[170px_1fr]">
-              <select
-                className={fieldSelectClass}
-                value={currentDial}
-                onChange={event => {
-                  const nextDial = event.target.value;
-                  handleChange(
-                    field.key,
-                    `${nextDial}${onlyDigits(currentNational)}`
-                  );
-                }}
-              >
-                {COUNTRY_PHONE_CODES.map(country => (
-                  <option
-                    key={country.iso}
-                    value={country.dial}
-                    className="bg-[var(--app-dark-2)] text-white"
-                  >
-                    {country.iso} {country.dial}
-                  </option>
-                ))}
-              </select>
-
-              <input
-                type="tel"
-                className={fieldBaseClass}
-                placeholder={field.placeholder || '8012345678'}
-                value={currentNational}
-                onChange={event =>
-                  handleChange(
-                    field.key,
-                    `${currentDial}${onlyDigits(event.target.value)}`
-                  )
-                }
-              />
-            </div>
+            <PhoneNumberField
+              id={`dynamic-phone-${field.key}`}
+              country={currentCountry}
+              number={currentNational}
+              onCountryChange={country => {
+                const dial =
+                  PHONE_COUNTRIES.find(item => item.iso === country)?.dial ??
+                  currentDial;
+                handleChange(
+                  field.key,
+                  `${dial}${currentNational.replace(/\D/g, '')}`
+                );
+              }}
+              onNumberChange={number =>
+                handleChange(
+                  field.key,
+                  `${currentDial}${number.replace(/\D/g, '')}`
+                )
+              }
+              inputClassName={fieldBaseClass}
+              selectClassName={fieldSelectClass}
+              placeholder={field.placeholder || '8012345678'}
+              error={fieldErrors[field.key]}
+              required={field.required}
+            />
 
             <Caption className="text-white/45">
               Use your country code and active phone number.
             </Caption>
-            <Error />
           </label>
         </div>
       );

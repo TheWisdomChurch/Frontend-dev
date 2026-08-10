@@ -15,6 +15,13 @@ import { Button } from '@/shared/utils/buttons';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
+import { PhoneNumberField } from '@/shared/ui/forms';
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidNationalPhone,
+  toE164,
+} from '@/lib/validation/phone';
+import type { CountryCode } from 'libphonenumber-js';
 
 // Pastoral care covers three genuinely different requests, each hitting its
 // own backend shape — a dedicated prayer-requests endpoint, and a
@@ -203,6 +210,9 @@ const PastoralCareForm = () => {
   const [prayerForm, setPrayerForm] =
     useState<PrayerFormState>(initialPrayerForm);
   const [careForm, setCareForm] = useState<CareFormState>(initialCareForm);
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>(
+    DEFAULT_PHONE_COUNTRY
+  );
   const [showCustomRole, setShowCustomRole] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -330,6 +340,13 @@ const PastoralCareForm = () => {
       if (showCustomRole && !careForm.customRole.trim()) {
         nextErrors.customRole = 'Please provide your custom role.';
       }
+      if (
+        careForm.contactNumber &&
+        !isValidNationalPhone(careForm.contactNumber, phoneCountry)
+      ) {
+        nextErrors.contactNumber =
+          'Enter a valid phone number for the selected country.';
+      }
 
       if (Object.keys(nextErrors).length > 0) {
         setCareErrors(nextErrors);
@@ -346,7 +363,9 @@ const PastoralCareForm = () => {
           title: careForm.title,
           firstName: careForm.firstName,
           lastName: careForm.lastName,
-          contactNumber: careForm.contactNumber,
+          contactNumber:
+            toE164(careForm.contactNumber, phoneCountry) ||
+            careForm.contactNumber,
           email: careForm.email,
           contactAddress: careForm.contactAddress,
           eventDate: careForm.eventDate,
@@ -359,6 +378,7 @@ const PastoralCareForm = () => {
             : 'frontend:web:pastoral-care:event',
         });
         setCareForm(initialCareForm);
+        setPhoneCountry(DEFAULT_PHONE_COUNTRY);
         setShowCustomRole(false);
         setShowSuccess(true);
       } catch (error: unknown) {
@@ -371,7 +391,7 @@ const PastoralCareForm = () => {
         setIsSubmitting(false);
       }
     },
-    [careForm, intent, showCustomRole]
+    [careForm, intent, phoneCountry, showCustomRole]
   );
 
   const isCounseling = intent === 'counseling';
@@ -633,18 +653,29 @@ const PastoralCareForm = () => {
                     />
                     <FieldError message={careErrors.lastName} />
                   </div>
-                  <div>
-                    <label className={fieldLabel}>Contact number *</label>
-                    <input
-                      type="tel"
-                      name="contactNumber"
-                      value={careForm.contactNumber}
-                      onChange={updateCareField}
-                      placeholder="Enter your phone number"
-                      className={`mt-2 ${careErrors.contactNumber ? fieldInputError : fieldInput}`}
-                    />
-                    <FieldError message={careErrors.contactNumber} />
-                  </div>
+                  <PhoneNumberField
+                    id="pastoral-phone"
+                    label="Contact number"
+                    required
+                    country={phoneCountry}
+                    number={careForm.contactNumber}
+                    onCountryChange={setPhoneCountry}
+                    onNumberChange={contactNumber => {
+                      setCareForm(prev => ({ ...prev, contactNumber }));
+                      setCareErrors(prev => ({
+                        ...prev,
+                        contactNumber: undefined,
+                      }));
+                    }}
+                    inputClassName={
+                      careErrors.contactNumber ? fieldInputError : fieldInput
+                    }
+                    labelClassName={fieldLabel}
+                    selectClassName={
+                      careErrors.contactNumber ? fieldSelectError : fieldSelect
+                    }
+                    error={careErrors.contactNumber}
+                  />
                   <div>
                     <label className={fieldLabel}>Email address *</label>
                     <input
