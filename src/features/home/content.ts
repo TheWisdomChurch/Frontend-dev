@@ -5,6 +5,9 @@ export type HomeImage = {
   src: StaticImageData | string;
   alt: string;
   position: string;
+  /** 'contain' for graphics whose own text/edges must never be cropped
+   * (e.g. a finished promotional collage) — defaults to 'cover'. */
+  fit?: 'cover' | 'contain';
 };
 
 export const HOME_COPY = {

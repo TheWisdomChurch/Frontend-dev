@@ -31,7 +31,7 @@ const panelPaddingX = 'px-6 sm:px-10 lg:px-16 xl:px-24';
 // image for a half-width column.
 const COVER_IMAGE_SIZES: Record<keyof typeof HOME_IMAGES, string> = {
   hero: '100vw',
-  welcome: '(min-width: 1024px) 50vw, 100vw',
+  welcome: '(min-width: 1024px) 55vw, 100vw',
   service: '(min-width: 1024px) 50vw, 100vw',
   pastor: '(min-width: 1024px) 50vw, 100vw',
   community: '(min-width: 1024px) 62vw, 100vw',
@@ -46,6 +46,7 @@ function CoverImage({
 }) {
   const image = HOME_IMAGES[name];
   const isCommunityImage = name === 'community';
+  const isContain = 'fit' in image && image.fit === 'contain';
   const parallaxDepth =
     name === 'hero' ? '0.16' : name === 'service' ? '0.12' : '0.09';
   return (
@@ -57,7 +58,7 @@ function CoverImage({
       quality={IMAGE_QUALITY}
       sizes={COVER_IMAGE_SIZES[name]}
       data-parallax-global={isCommunityImage ? undefined : parallaxDepth}
-      className={`${isCommunityImage ? '' : 'scale-[1.06]'} object-cover ${image.position}`}
+      className={`${isCommunityImage || isContain ? '' : 'scale-[1.06]'} ${isContain ? 'object-contain' : 'object-cover'} ${image.position}`}
     />
   );
 }
@@ -113,23 +114,15 @@ export default function PremiumHome() {
       </Section>
 
       <Section padding="none" className="bg-white">
-        <div className="grid lg:min-h-[520px] lg:grid-cols-[1.15fr_1fr] lg:grid-rows-[1fr_auto]">
-          <div
-            className={`flex items-center ${panelPaddingX} pb-8 pt-20 sm:pb-10 sm:pt-24 lg:col-start-1 lg:row-start-1 lg:items-end lg:pb-10 lg:pt-0`}
+        <div className="grid lg:min-h-[560px] lg:grid-cols-[1fr_1.2fr]">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className={`flex flex-col justify-center ${panelPaddingX} py-16 sm:py-20 lg:py-24`}
           >
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={staggerViewport}
-              className="max-w-xl"
-            >
-              {/* <motion.p
-                variants={staggerItem}
-                className={`${eyebrowClass} text-[var(--app-primary-dark)]`}
-              >
-                {HOME_COPY.welcome.eyebrow}
-              </motion.p> */}
+            <div className="max-w-xl">
               <SectionHeading tone="dark" className="mt-5">
                 {HOME_COPY.welcome.title}
                 <span className="block text-[var(--app-primary-dark)]">
@@ -142,36 +135,31 @@ export default function PremiumHome() {
               >
                 {HOME_COPY.welcome.description}
               </motion.p>
-            </motion.div>
-          </div>
+            </div>
 
-          <div className="group relative min-h-[460px] overflow-hidden lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-full">
-            <CoverImage name="welcome" />
-            <div className="absolute inset-0 bg-black/0 transition duration-700 group-hover:bg-black/10" />
-          </div>
-
-          <motion.div
-            variants={staggerItem}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
-            className={`border-t border-black/10 ${panelPaddingX} pb-16 pt-8 sm:pb-20 lg:col-start-1 lg:row-start-2 lg:border-t-0 lg:pb-20`}
-          >
-            <div className="flex max-w-xl flex-nowrap items-stretch gap-2 sm:gap-3">
+            <motion.div
+              variants={staggerItem}
+              className="mt-8 flex max-w-xl flex-wrap items-stretch gap-2 border-t border-black/10 pt-8 sm:gap-3"
+            >
               <HomeActionLink
                 href="/about"
-                className="flex-1 min-w-0 justify-center px-4 text-xs sm:px-6 sm:text-sm"
+                className="flex-1 justify-center whitespace-nowrap px-4 text-xs sm:px-6 sm:text-sm"
               >
                 Discover our story
               </HomeActionLink>
               <Link
                 href="/#community"
-                className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full border border-black/25 px-4 font-ui text-xs font-bold transition hover:bg-black hover:text-white sm:px-6 sm:text-sm"
+                className="inline-flex min-h-12 flex-1 items-center justify-center whitespace-nowrap rounded-full border border-black/25 px-4 font-ui text-xs font-bold transition hover:bg-black hover:text-white sm:px-6 sm:text-sm"
               >
                 Join our community
               </Link>
-            </div>
+            </motion.div>
           </motion.div>
+
+          <div className="group relative min-h-[460px] overflow-hidden lg:min-h-full">
+            <CoverImage name="welcome" />
+            <div className="absolute inset-0 bg-black/0 transition duration-700 group-hover:bg-black/10" />
+          </div>
         </div>
       </Section>
 
@@ -286,7 +274,7 @@ export default function PremiumHome() {
                 <HomeActionLink
                   href="/events/weekly"
                   variant="dark"
-                  className="flex-1 min-w-0 justify-center gap-2 px-4 text-xs sm:gap-3 sm:px-5 sm:text-sm"
+                  className="flex-1 justify-center whitespace-nowrap gap-2 px-4 text-xs sm:gap-3 sm:px-5 sm:text-sm"
                 >
                   Plan your first visit
                 </HomeActionLink>

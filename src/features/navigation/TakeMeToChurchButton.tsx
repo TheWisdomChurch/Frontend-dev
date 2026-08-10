@@ -161,7 +161,7 @@ export default function TakeMeToChurchButton({
           state === 'error' ? 'church-directions-status' : undefined
         }
         className={cn(
-          'group inline-flex min-h-12 items-center gap-2 rounded-full border border-black bg-black px-4 font-ui text-xs font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75 sm:gap-3 sm:px-5 sm:text-sm',
+          'group inline-flex min-h-12 items-center gap-2 whitespace-nowrap rounded-full border border-black bg-black px-4 font-ui text-xs font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75 sm:gap-3 sm:px-5 sm:text-sm',
           fullWidth && 'w-full justify-center'
         )}
       >
