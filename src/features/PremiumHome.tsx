@@ -89,28 +89,49 @@ function ServiceImage() {
   );
 }
 
-function CommunityImage() {
-  const image = HOME_IMAGES.community;
+const COMMUNITY_COLLAGE = [
+  {
+    src: '/Picflow Images Jul 31 (2)/Conv_4.webp',
+    alt: 'Members sharing ideas during a Wisdom Church conversation',
+    position: 'object-center',
+    className: 'col-span-2 h-[240px] sm:col-span-7 sm:row-span-2 sm:h-auto',
+    sizes: '(min-width: 1024px) 38vw, (min-width: 640px) 58vw, 100vw',
+  },
+  {
+    src: '/Picflow Images Jul 31 (2)/Conv_3.webp',
+    alt: 'Two members listening and speaking together at church',
+    position: 'object-center',
+    className: 'h-[210px] sm:col-span-5 sm:h-auto',
+    sizes: '(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw',
+  },
+  {
+    src: '/Picflow Images Jul 31 (2)/DSC00258 copy.webp',
+    alt: 'Women connecting through a shared community discussion',
+    position: 'object-center',
+    className: 'h-[210px] sm:col-span-5 sm:h-auto',
+    sizes: '(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw',
+  },
+] as const;
 
+function CommunityCollage() {
   return (
-    <>
-      <Image
-        src={image.src}
-        alt={image.alt}
-        fill
-        quality={IMAGE_QUALITY}
-        sizes="(min-width: 640px) 1px, 100vw"
-        className={`object-cover sm:hidden ${image.position}`}
-      />
-      <Image
-        src={image.desktopSrc}
-        alt={image.alt}
-        fill
-        quality={IMAGE_QUALITY}
-        sizes={COVER_IMAGE_SIZES.community}
-        className="hidden object-cover object-center sm:block"
-      />
-    </>
+    <div className="grid grid-cols-2 gap-2 sm:h-[500px] sm:grid-cols-12 sm:grid-rows-2 sm:gap-3 lg:h-[610px]">
+      {COMMUNITY_COLLAGE.map(image => (
+        <div
+          key={image.src}
+          className={`relative overflow-hidden bg-white/5 ${image.className}`}
+        >
+          <Image
+            src={image.src}
+            alt={image.alt}
+            fill
+            quality={IMAGE_QUALITY}
+            sizes={image.sizes}
+            className={`object-cover transition-transform duration-700 hover:scale-[1.025] ${image.position}`}
+          />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -418,23 +439,9 @@ export default function PremiumHome() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={staggerViewport}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="relative pb-0 sm:pb-10 sm:pl-10 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:pb-12 lg:pl-12"
+              className="relative lg:col-start-2 lg:row-start-1 lg:row-span-2"
             >
-              <div className="relative h-[420px] overflow-hidden sm:h-[500px] lg:h-[610px]">
-                <CommunityImage />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/5" />
-              </div>
-
-              <div className="absolute bottom-0 left-0 hidden h-[250px] w-[190px] overflow-hidden border-[8px] border-[#0b0b0b] sm:block lg:h-[310px] lg:w-[230px]">
-                <Image
-                  src="/Picflow Images Jul 31 (2)/DSC00064 copy.webp"
-                  alt="Members praying together at The Wisdom Church"
-                  fill
-                  quality={IMAGE_QUALITY}
-                  sizes="230px"
-                  className="object-cover object-center"
-                />
-              </div>
+              <CommunityCollage />
 
               <span className="absolute -right-2 top-7 hidden font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-white/38 [writing-mode:vertical-rl] sm:block">
                 Wisdom Church community

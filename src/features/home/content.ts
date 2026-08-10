@@ -119,9 +119,8 @@ export const HOME_IMAGES = {
     position: 'object-bottom',
   },
   community: {
-    src: '/Picflow Images Jul 31 (2)/DSC06902 copy.webp',
-    desktopSrc: '/images/community-life-wide.png',
-    alt: 'Friends sharing a joyful moment at The Wisdom Church',
-    position: 'object-[center_34%]',
+    src: '/Picflow Images Jul 31 (2)/Conv_4.webp',
+    alt: 'Members sharing ideas during a Wisdom Church conversation',
+    position: 'object-center',
   },
 } satisfies Record<string, HomeImage>;
