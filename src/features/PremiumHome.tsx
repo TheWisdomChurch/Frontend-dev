@@ -91,23 +91,23 @@ function ServiceImage() {
 
 const COMMUNITY_COLLAGE = [
   {
-    src: '/Picflow Images Jul 31 (2)/Conv_4.webp',
-    alt: 'Members sharing ideas during a Wisdom Church conversation',
-    position: 'object-center',
+    src: '/Picflow Images Jul 31 (2)/DSC00054 copy.webp',
+    alt: 'A mother and child sharing life at The Wisdom Church',
+    position: 'object-[center_32%]',
     className: 'col-span-2 h-[240px] sm:col-span-7 sm:row-span-2 sm:h-auto',
     sizes: '(min-width: 1024px) 38vw, (min-width: 640px) 58vw, 100vw',
   },
   {
-    src: '/Picflow Images Jul 31 (2)/Conv_3.webp',
-    alt: 'Two members listening and speaking together at church',
-    position: 'object-center',
+    src: '/Picflow Images Jul 31 (2)/DSC00058 copy.webp',
+    alt: 'A team serving and singing together at The Wisdom Church',
+    position: 'object-[42%_center]',
     className: 'h-[210px] sm:col-span-5 sm:h-auto',
     sizes: '(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw',
   },
   {
-    src: '/Picflow Images Jul 31 (2)/DSC00258 copy.webp',
-    alt: 'Women connecting through a shared community discussion',
-    position: 'object-center',
+    src: '/Picflow Images Jul 31 (2)/DSC06877 copy.webp',
+    alt: 'Members sharing a gathering around the same table',
+    position: 'object-[48%_center]',
     className: 'h-[210px] sm:col-span-5 sm:h-auto',
     sizes: '(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw',
   },
