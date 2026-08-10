@@ -89,6 +89,31 @@ function ServiceImage() {
   );
 }
 
+function CommunityImage() {
+  const image = HOME_IMAGES.community;
+
+  return (
+    <>
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        quality={IMAGE_QUALITY}
+        sizes="(min-width: 640px) 1px, 100vw"
+        className={`object-cover sm:hidden ${image.position}`}
+      />
+      <Image
+        src={image.desktopSrc}
+        alt={image.alt}
+        fill
+        quality={IMAGE_QUALITY}
+        sizes={COVER_IMAGE_SIZES.community}
+        className="hidden object-cover object-center sm:block"
+      />
+    </>
+  );
+}
+
 export default function PremiumHome() {
   return (
     <div className="premium-home bg-white text-[var(--app-ink)]">
@@ -395,8 +420,8 @@ export default function PremiumHome() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="relative pb-0 sm:pb-10 sm:pl-10 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:pb-12 lg:pl-12"
             >
-              <div className="relative h-[340px] overflow-hidden sm:h-[500px] lg:h-[610px]">
-                <CoverImage name="community" />
+              <div className="relative h-[420px] overflow-hidden sm:h-[500px] lg:h-[610px]">
+                <CommunityImage />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/5" />
               </div>
 
