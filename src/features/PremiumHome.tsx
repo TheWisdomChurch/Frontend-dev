@@ -6,7 +6,6 @@ import { CalendarDays, MapPin, Play, Users } from 'lucide-react';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
-import { WhatWedo_1 } from '@/shared/assets';
 import { Container, Section } from '@/shared/layout';
 import HomeActionLink from '@/features/home/HomeActionLink';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
@@ -15,6 +14,7 @@ import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
 import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
 import { SectionHeading, HeadingAccent } from '@/shared/ui/SectionHeading';
 import { motion } from '@/lib/safe-motion';
+import { useReducedMotion } from 'framer-motion';
 import {
   staggerContainer,
   staggerItem,
@@ -92,37 +92,66 @@ function ServiceImage() {
 }
 
 function CommunityCollage() {
+  const reduceMotion = useReducedMotion();
+  const reveal = (delay: number, x = 0) => ({
+    initial: reduceMotion ? false : { opacity: 0, y: 24, x, scale: 0.975 },
+    whileInView: { opacity: 1, y: 0, x: 0, scale: 1 },
+    viewport: { once: true, amount: 0.2 },
+    transition: {
+      delay: reduceMotion ? 0 : delay,
+      duration: reduceMotion ? 0 : 0.8,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+    whileHover: reduceMotion ? undefined : { y: -5, scale: 1.008 },
+  });
+
   return (
-    <div className="grid gap-2 sm:h-[500px] sm:grid-rows-[3fr_2fr] sm:gap-3 lg:h-[610px]">
-      <div className="relative h-[360px] overflow-hidden bg-black sm:h-auto">
+    <div className="grid grid-cols-2 items-stretch gap-2 sm:grid-cols-12 sm:grid-rows-2 sm:gap-3">
+      <motion.div
+        {...reveal(0)}
+        className="group relative col-span-2 min-h-[260px] overflow-hidden bg-white/5 shadow-[0_24px_70px_rgba(0,0,0,.28)] sm:col-span-7 sm:row-span-2 sm:h-full sm:min-h-0"
+      >
         <Image
-          src={WhatWedo_1}
-          alt="Three Wisdom Church leaders ministering together"
-          fill
-          unoptimized
-          sizes="(min-width: 640px) 1px, 100vw"
-          className="object-cover object-center sm:hidden"
-        />
-        <Image
-          src="/images/worship-service-community-wide.png"
-          alt="Three Wisdom Church leaders ministering together"
+          src="/Picflow Images Jul 31 (2)/DSC00054 copy.webp"
+          alt="A mother and child sharing life at The Wisdom Church"
           fill
           quality={IMAGE_QUALITY}
-          sizes={COVER_IMAGE_SIZES.community}
-          className="hidden object-cover object-center sm:block"
+          sizes="(min-width: 1024px) 38vw, (min-width: 640px) 58vw, 100vw"
+          className="object-cover object-[center_32%] transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
         />
-      </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/[0.035]" />
+      </motion.div>
 
-      <div className="relative h-[220px] overflow-hidden bg-black sm:h-auto">
+      <motion.div
+        {...reveal(0.1, 18)}
+        className="group relative aspect-[5/4] w-full overflow-hidden bg-[#11100e] shadow-[0_20px_55px_rgba(0,0,0,.3)] sm:col-span-5"
+      >
+        <Image
+          src="/images/worship-service-community-generated-v2.png"
+          alt="Worshippers sharing a service at The Wisdom Church"
+          fill
+          quality={IMAGE_QUALITY}
+          sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
+          className="object-cover object-center transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.035]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/18 via-transparent to-[var(--app-primary)]/[0.08]" />
+        <div className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent opacity-0 transition-all duration-1000 motion-reduce:hidden group-hover:left-[120%] group-hover:opacity-100" />
+      </motion.div>
+
+      <motion.div
+        {...reveal(0.18, 18)}
+        className="group relative aspect-[5/4] w-full overflow-hidden bg-white/5 shadow-[0_20px_55px_rgba(0,0,0,.3)] sm:col-span-5"
+      >
         <Image
           src="/Picflow Images Jul 31 (2)/DSC00268 copy.webp"
           alt="A Wisdom House volunteer serving during worship"
           fill
           quality={IMAGE_QUALITY}
-          sizes={COVER_IMAGE_SIZES.community}
-          className="object-cover object-[52%_center]"
+          sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
+          className="object-cover object-[52%_center] transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.035]"
         />
-      </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/[0.035]" />
+      </motion.div>
     </div>
   );
 }
@@ -441,12 +470,9 @@ export default function PremiumHome() {
               className="mt-8 lg:col-start-1 lg:row-start-2 lg:mt-0 lg:self-end"
             >
               <motion.div variants={staggerItem}>
-                <CommunityJoinTrigger
-                  icon={false}
-                  className="border-[var(--app-primary)] bg-[var(--app-primary)] text-black hover:border-white hover:bg-white"
-                >
+                <HomeActionLink href="/contact">
                   <Users className="h-4 w-4" /> Connect with us
-                </CommunityJoinTrigger>
+                </HomeActionLink>
               </motion.div>
 
               <motion.div

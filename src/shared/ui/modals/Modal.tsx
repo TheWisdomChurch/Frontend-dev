@@ -292,7 +292,7 @@ function ModalPanel({
 
         <div
           className={cn(
-            'min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 sm:px-7 sm:py-7',
+            'min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] pt-4 sm:px-7 sm:pb-8 sm:pt-7',
             contentClassName
           )}
         >

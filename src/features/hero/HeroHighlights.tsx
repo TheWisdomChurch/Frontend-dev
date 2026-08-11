@@ -387,7 +387,7 @@ export default function HeroHighlights({
         title="Plan your visit"
         subtitle="Tell us you're coming and our welcome team will take care of the details."
       >
-        <form className="min-w-0 space-y-5" onSubmit={onSubmitVisit}>
+        <form className="min-w-0 space-y-5 pb-1" onSubmit={onSubmitVisit}>
           <div className="relative min-w-0 overflow-hidden rounded-2xl border border-[var(--app-primary)]/20 bg-[linear-gradient(135deg,rgba(201,150,26,.16),rgba(255,255,255,.035))] p-4 sm:rounded-3xl sm:p-5">
             <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
             <div className="relative flex min-w-0 items-start gap-3 sm:gap-4">
@@ -539,7 +539,7 @@ export default function HeroHighlights({
             </span>
           </label>
 
-          <div className="min-w-0 rounded-2xl border border-white/8 bg-white/[0.025] p-3.5 sm:flex sm:items-center sm:justify-between sm:gap-4">
+          <div className="min-w-0 rounded-2xl border border-white/8 bg-white/[0.025] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5 sm:p-5">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
               <p className="min-w-0 break-words font-ui text-xs leading-5 text-white/45">
@@ -550,7 +550,8 @@ export default function HeroHighlights({
             <Button
               type="submit"
               variant="primary"
-              className="mt-3 min-h-12 w-full shrink-0 whitespace-normal rounded-full px-5 py-3 text-center font-ui text-sm font-bold leading-5 sm:mt-0 sm:w-auto sm:px-6"
+              rightIcon={<ArrowRight aria-hidden="true" />}
+              className="mt-4 min-h-12 w-full shrink-0 whitespace-nowrap rounded-full px-5 py-3 text-center font-ui text-sm font-bold leading-5 sm:mt-0 sm:w-auto sm:min-w-48 sm:px-6"
               loading={submitting}
               disabled={
                 submitting ||
@@ -559,7 +560,7 @@ export default function HeroHighlights({
                 !visit.date
               }
             >
-              Reserve my welcome <ArrowRight className="h-4 w-4" />
+              Reserve my welcome
             </Button>
           </div>
         </form>

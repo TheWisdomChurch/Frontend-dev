@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import {
+  ArrowRight,
   CheckCircle2,
   HeartHandshake,
   MessageCircle,
@@ -171,7 +172,7 @@ export default function CommunityJoinModal() {
           </div>
         </div>
       ) : (
-        <form className="min-w-0 space-y-5" onSubmit={submit}>
+        <form className="min-w-0 space-y-5 pb-1" onSubmit={submit}>
           <div className="relative overflow-hidden rounded-2xl border border-[var(--app-primary)]/20 bg-[linear-gradient(135deg,rgba(201,150,26,.15),rgba(255,255,255,.03))] p-4 sm:p-5">
             <div className="relative flex min-w-0 items-start gap-3">
               <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[var(--app-primary)]/12 text-[var(--app-primary)]">
@@ -307,7 +308,7 @@ export default function CommunityJoinModal() {
             </span>
           </label>
 
-          <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-center">
+          <div className="grid gap-4 rounded-2xl border border-white/8 bg-white/[0.025] p-4 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-5 sm:p-5">
             <div className="flex min-w-0 items-start gap-2 text-white/45">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
               <p className="break-words font-ui text-xs leading-5">
@@ -317,7 +318,8 @@ export default function CommunityJoinModal() {
             <Button
               type="submit"
               variant="primary"
-              className="min-h-12 w-full whitespace-normal rounded-full px-6 py-3 font-ui text-sm font-bold sm:w-auto"
+              rightIcon={<ArrowRight aria-hidden="true" />}
+              className="min-h-12 w-full whitespace-nowrap rounded-full px-6 py-3 font-ui text-sm font-bold sm:w-auto sm:min-w-36"
               loading={submitting}
             >
               Connect me
