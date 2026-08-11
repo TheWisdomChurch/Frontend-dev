@@ -17,6 +17,7 @@ import {
   buildHreflangAlternates,
 } from '@/lib/seo';
 import HeroHighlights from '@/features/hero/HeroHighlights';
+import CommunityJoinModal from '@/features/community/CommunityJoinModal';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -165,6 +166,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           {children}
           <HeroHighlights modalOnly />
+          <CommunityJoinModal />
         </Providers>
         <Analytics />
       </body>

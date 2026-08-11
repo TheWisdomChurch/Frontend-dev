@@ -14,6 +14,7 @@ export const SOCIAL_LINKS = {
   instagram: 'https://www.instagram.com/wisdomhousehq',
   youtube: 'https://www.youtube.com/@wisdomhousehq',
   x: 'https://x.com/wisdomhousehq',
+  whatsapp: 'https://wa.me/2347069995333',
   // Twitter/X handle used for openGraph/twitter meta tags, not a profile link.
   handle: '@wisdomhousehq',
 } as const;

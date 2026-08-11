@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { CalendarDays, MapPin, Play, Users } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
@@ -11,6 +10,7 @@ import { WhatWedo_1 } from '@/shared/assets';
 import { Container, Section } from '@/shared/layout';
 import HomeActionLink from '@/features/home/HomeActionLink';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
+import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
 import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
 import { SectionHeading, HeadingAccent } from '@/shared/ui/SectionHeading';
@@ -205,12 +205,12 @@ export default function PremiumHome() {
               >
                 Discover our story
               </HomeActionLink>
-              <Link
-                href="/#community"
-                className="inline-flex min-h-12 flex-1 items-center justify-center whitespace-nowrap rounded-full border border-black/25 px-4 font-ui text-xs font-bold transition hover:bg-black hover:text-white sm:px-6 sm:text-sm"
+              <CommunityJoinTrigger
+                icon={false}
+                className="flex-1 whitespace-normal px-4 text-xs sm:px-6 sm:text-sm"
               >
                 Join our community
-              </Link>
+              </CommunityJoinTrigger>
             </motion.div>
           </motion.div>
 
@@ -441,9 +441,12 @@ export default function PremiumHome() {
               className="mt-8 lg:col-start-1 lg:row-start-2 lg:mt-0 lg:self-end"
             >
               <motion.div variants={staggerItem}>
-                <HomeActionLink href="/contact">
+                <CommunityJoinTrigger
+                  icon={false}
+                  className="border-[var(--app-primary)] bg-[var(--app-primary)] text-black hover:border-white hover:bg-white"
+                >
                   <Users className="h-4 w-4" /> Connect with us
-                </HomeActionLink>
+                </CommunityJoinTrigger>
               </motion.div>
 
               <motion.div
