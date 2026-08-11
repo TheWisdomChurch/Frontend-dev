@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight,
   CalendarClock,
-  Check,
   CheckCircle2,
   Headphones,
   MapPin,
@@ -42,6 +41,7 @@ import {
 import type { VisitRequestConfirmation } from '@/lib/types';
 import { buildDrivingDirectionsUrl } from '@/domain/navigation/directions';
 import { PLAN_VISIT_EVENT } from './planVisitEvent';
+import VisitServiceCalendar from './VisitServiceCalendar';
 
 function splitFullName(value: string): { firstName: string; lastName: string } {
   const parts = value.trim().split(/\s+/);
@@ -417,47 +417,14 @@ export default function HeroHighlights({
                 ? 'Verifying Sunday schedule…'
                 : 'Choose your Sunday'}
             </legend>
-            <div className="mt-2 grid min-w-0 grid-cols-1 gap-2 min-[390px]:grid-cols-2 md:grid-cols-4">
-              {visitDates.map(option => {
-                const selected = visit.date === option.value;
-                return (
-                  <label
-                    key={option.value}
-                    className={`relative min-w-0 cursor-pointer rounded-2xl border px-3 py-3 transition ${
-                      selected
-                        ? 'border-[var(--app-primary)]/65 bg-[var(--app-primary)]/12 text-white'
-                        : 'border-white/10 bg-white/[0.035] text-white/55 hover:border-white/20 hover:bg-white/[0.06]'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="visit-date"
-                      value={option.value}
-                      checked={selected}
-                      onChange={() =>
-                        setVisit(current => ({
-                          ...current,
-                          date: option.value,
-                        }))
-                      }
-                      className="sr-only"
-                    />
-                    <span className="block font-ui text-[10px] font-bold uppercase tracking-[0.14em] opacity-65">
-                      {option.day}
-                    </span>
-                    <span className="mt-1 flex min-w-0 items-center justify-between gap-2 font-ui text-sm font-bold">
-                      {option.date}
-                      {selected ? (
-                        <Check className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                      ) : null}
-                    </span>
-                    <span className="mt-1.5 block break-words font-ui text-[10px] leading-4 opacity-60">
-                      {option.serviceType}
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
+            <VisitServiceCalendar
+              services={visitDates}
+              value={visit.date}
+              loading={scheduleLoading}
+              onChange={option =>
+                setVisit(current => ({ ...current, date: option.value }))
+              }
+            />
             {!scheduleLoading && !scheduleVerified ? (
               <div className="mt-3 flex min-w-0 flex-col items-start gap-2 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] px-4 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
                 <p className="font-ui text-xs leading-5 text-amber-100/70">
