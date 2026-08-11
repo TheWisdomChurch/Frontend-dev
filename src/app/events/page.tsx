@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
@@ -147,12 +148,12 @@ function EmptyState() {
           Nothing is scheduled right now. In the meantime, join us for Sunday
           Worship and Daily Prayer, Monday through Friday.
         </p>
-        <Link
-          href="/contact?topic=visit"
+        <PlanVisitTrigger
+          icon={false}
           className="inline-flex items-center gap-2 border border-white/18 px-6 py-2.5 font-ui text-label font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
         >
           Plan a visit <Arrow />
-        </Link>
+        </PlanVisitTrigger>
       </div>
     </ScrollFadeIn>
   );
@@ -264,12 +265,12 @@ export default async function EventsPage() {
                   </div>
 
                   {/* CTA */}
-                  <Link
-                    href="/contact?topic=visit"
+                  <PlanVisitTrigger
+                    icon={false}
                     className="mt-1 inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                   >
                     Plan a visit <Arrow />
-                  </Link>
+                  </PlanVisitTrigger>
                 </div>
               </ScrollFadeIn>
             ))}

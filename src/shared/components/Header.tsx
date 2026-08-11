@@ -7,6 +7,7 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
 type NavChild = {
   label: string;
@@ -315,14 +316,14 @@ export default function Header() {
                   {SERVICE_INFO.sunday.time} · {SERVICE_INFO.sunday.timezone}
                 </p>
                 <p className="nav-panel__detail">{SERVICE_INFO.venue.short}</p>
-                <Link
-                  href="/contact?topic=visit"
+                <PlanVisitTrigger
+                  icon={false}
                   className="nav-panel__cta"
                   onClick={close}
                   tabIndex={navOpen ? 0 : -1}
                 >
                   Plan a visit →
-                </Link>
+                </PlanVisitTrigger>
 
                 <div className="nav-panel__divider" aria-hidden="true" />
 
@@ -363,14 +364,14 @@ export default function Header() {
                 {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}
               </p>
               <p className="nav-footer__venue">{SERVICE_INFO.venue.short}</p>
-              <Link
-                href="/contact?topic=visit"
+              <PlanVisitTrigger
+                icon={false}
                 className="nav-footer__cta"
                 onClick={close}
                 tabIndex={navOpen ? 0 : -1}
               >
                 Plan a visit →
-              </Link>
+              </PlanVisitTrigger>
             </div>
             <div className="nav-footer__socials">
               {SOCIALS.map(s => (

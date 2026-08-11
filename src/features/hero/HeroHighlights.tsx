@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import {
@@ -41,6 +41,7 @@ import {
 } from '@/lib/serviceCalendar';
 import type { VisitRequestConfirmation } from '@/lib/types';
 import { buildDrivingDirectionsUrl } from '@/domain/navigation/directions';
+import { PLAN_VISIT_EVENT } from './planVisitEvent';
 
 function splitFullName(value: string): { firstName: string; lastName: string } {
   const parts = value.trim().split(/\s+/);
@@ -154,7 +155,11 @@ const initialVisit: VisitState = {
 };
 const initialWatch: WatchState = { name: '', email: '' };
 
-export default function HeroHighlights() {
+export default function HeroHighlights({
+  modalOnly = false,
+}: {
+  modalOnly?: boolean;
+}) {
   const [modal, setModal] = useState<ModalKey>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{
@@ -197,12 +202,20 @@ export default function HeroHighlights() {
           : options[0]?.value || '',
       }));
       setScheduleVerified(options.length > 0);
-    } catch (error) {
-      console.error(
-        'Failed to load the authoritative service calendar:',
-        error
-      );
-      toast.error('We could not verify the live service calendar. Try again.');
+    } catch {
+      // The backend uses the same deterministic Sunday classification rules.
+      // Keep the visitor moving during a rolling backend deployment or a
+      // temporary schedule-read outage; submission is still validated by the
+      // backend before a visit is accepted.
+      const fallback = getUpcomingSundayServices(new Date(), 8);
+      setVisitDates(fallback);
+      setVisit(current => ({
+        ...current,
+        date: fallback.some(option => option.value === current.date)
+          ? current.date
+          : fallback[0]?.value || '',
+      }));
+      setScheduleVerified(fallback.length > 0);
     } finally {
       setScheduleLoading(false);
     }
@@ -225,6 +238,12 @@ export default function HeroHighlights() {
     [loadVisitSchedule]
   );
   const closeModal = useCallback(() => setModal(null), []);
+
+  useEffect(() => {
+    const handlePlanVisit = () => openModal('visit');
+    window.addEventListener(PLAN_VISIT_EVENT, handlePlanVisit);
+    return () => window.removeEventListener(PLAN_VISIT_EVENT, handlePlanVisit);
+  }, [openModal]);
 
   const onSubmitVisit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -294,70 +313,72 @@ export default function HeroHighlights() {
   return (
     <>
       {/* ── Editorial belief strip ────────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-        <Container size="xl">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
-            className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
-          >
-            {ACTIONS.map(action => {
-              const Icon = action.icon;
-              return (
-                <motion.button
-                  key={action.key}
-                  variants={staggerItem}
-                  type="button"
-                  onClick={() =>
-                    action.key === 'join'
-                      ? goToJoinSection()
-                      : openModal(action.key)
-                  }
-                  whileHover={{ y: -3 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                  className="group relative flex flex-col justify-between px-6 py-7 text-left transition-colors duration-200 hover:bg-[var(--app-canvas-2)] sm:px-8 sm:py-8"
-                >
-                  <div className="flex items-start justify-between">
-                    <span className="relative">
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[var(--app-primary)]/0 blur-lg transition-colors duration-300 group-hover:bg-[var(--app-primary)]/20"
-                      />
-                      <Icon
-                        className="h-4 w-4 text-[var(--app-ink)]/60 transition duration-200 group-hover:text-[var(--app-primary)]"
-                        aria-hidden="true"
-                      />
-                    </span>
-                    <ArrowRight
-                      className="h-3.5 w-3.5 text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-                      aria-hidden="true"
-                    />
-                  </div>
-
-                  <div className="mt-6">
-                    <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
-                      {action.label}
-                    </p>
-                    <p className="mt-1 font-ui text-label text-[var(--app-ink)]/50">
-                      {action.sub}
-                    </p>
-                  </div>
-
-                  <span
-                    className="mt-5 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:opacity-100"
-                    aria-hidden="true"
+      {!modalOnly ? (
+        <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+          <Container size="xl">
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+            >
+              {ACTIONS.map(action => {
+                const Icon = action.icon;
+                return (
+                  <motion.button
+                    key={action.key}
+                    variants={staggerItem}
+                    type="button"
+                    onClick={() =>
+                      action.key === 'join'
+                        ? goToJoinSection()
+                        : openModal(action.key)
+                    }
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                    className="group relative flex flex-col justify-between px-6 py-7 text-left transition-colors duration-200 hover:bg-[var(--app-canvas-2)] sm:px-8 sm:py-8"
                   >
-                    {action.cta} <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </motion.button>
-              );
-            })}
-          </motion.div>
-        </Container>
-      </section>
+                    <div className="flex items-start justify-between">
+                      <span className="relative">
+                        <span
+                          aria-hidden="true"
+                          className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[var(--app-primary)]/0 blur-lg transition-colors duration-300 group-hover:bg-[var(--app-primary)]/20"
+                        />
+                        <Icon
+                          className="h-4 w-4 text-[var(--app-ink)]/60 transition duration-200 group-hover:text-[var(--app-primary)]"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <ArrowRight
+                        className="h-3.5 w-3.5 text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+
+                    <div className="mt-6">
+                      <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
+                        {action.label}
+                      </p>
+                      <p className="mt-1 font-ui text-label text-[var(--app-ink)]/50">
+                        {action.sub}
+                      </p>
+                    </div>
+
+                    <span
+                      className="mt-5 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] opacity-0 transition duration-200 group-hover:opacity-100"
+                      aria-hidden="true"
+                    >
+                      {action.cta} <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+          </Container>
+        </section>
+      ) : null}
 
       {/* ── Plan a Visit modal ────────────────────────────────── */}
       <ModalShell
@@ -366,24 +387,24 @@ export default function HeroHighlights() {
         title="Plan your visit"
         subtitle="Tell us you're coming and our welcome team will take care of the details."
       >
-        <form className="space-y-5" onSubmit={onSubmitVisit}>
-          <div className="relative overflow-hidden rounded-3xl border border-[var(--app-primary)]/20 bg-[linear-gradient(135deg,rgba(201,150,26,.16),rgba(255,255,255,.035))] p-5">
+        <form className="min-w-0 space-y-5" onSubmit={onSubmitVisit}>
+          <div className="relative min-w-0 overflow-hidden rounded-2xl border border-[var(--app-primary)]/20 bg-[linear-gradient(135deg,rgba(201,150,26,.16),rgba(255,255,255,.035))] p-4 sm:rounded-3xl sm:p-5">
             <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
-            <div className="relative flex items-start gap-4">
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[var(--app-primary)]/25 bg-black/25 text-[var(--app-primary)]">
+            <div className="relative flex min-w-0 items-start gap-3 sm:gap-4">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[var(--app-primary)]/25 bg-black/25 text-[var(--app-primary)] sm:h-11 sm:w-11 sm:rounded-2xl">
                 <CalendarClock className="h-5 w-5" />
               </div>
-              <div>
-                <p className="font-ui text-xs font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+              <div className="min-w-0 break-words">
+                <p className="font-ui text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--app-primary)] sm:text-xs sm:tracking-[0.18em]">
                   Sunday worship
                 </p>
-                <p className="mt-1 font-headline text-xl text-white">
+                <p className="mt-1 break-words font-headline text-lg leading-tight text-white sm:text-xl">
                   {SERVICE_INFO.sunday.time}{' '}
-                  <span className="font-ui text-sm text-white/45">
+                  <span className="font-ui text-xs text-white/45 sm:text-sm">
                     {SERVICE_INFO.sunday.timezone}
                   </span>
                 </p>
-                <p className="mt-1.5 max-w-lg font-ui text-xs leading-5 text-white/55">
+                <p className="mt-1.5 max-w-lg break-words font-ui text-xs leading-5 text-white/55">
                   {SERVICE_INFO.venue.full}
                 </p>
               </div>
@@ -396,13 +417,13 @@ export default function HeroHighlights() {
                 ? 'Verifying Sunday schedule…'
                 : 'Choose your Sunday'}
             </legend>
-            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <div className="mt-2 grid min-w-0 grid-cols-1 gap-2 min-[390px]:grid-cols-2 md:grid-cols-4">
               {visitDates.map(option => {
                 const selected = visit.date === option.value;
                 return (
                   <label
                     key={option.value}
-                    className={`relative cursor-pointer rounded-2xl border px-3 py-3 transition ${
+                    className={`relative min-w-0 cursor-pointer rounded-2xl border px-3 py-3 transition ${
                       selected
                         ? 'border-[var(--app-primary)]/65 bg-[var(--app-primary)]/12 text-white'
                         : 'border-white/10 bg-white/[0.035] text-white/55 hover:border-white/20 hover:bg-white/[0.06]'
@@ -424,13 +445,13 @@ export default function HeroHighlights() {
                     <span className="block font-ui text-[10px] font-bold uppercase tracking-[0.14em] opacity-65">
                       {option.day}
                     </span>
-                    <span className="mt-1 flex items-center justify-between font-ui text-sm font-bold">
+                    <span className="mt-1 flex min-w-0 items-center justify-between gap-2 font-ui text-sm font-bold">
                       {option.date}
                       {selected ? (
                         <Check className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                       ) : null}
                     </span>
-                    <span className="mt-1.5 block font-ui text-[9px] leading-4 opacity-55">
+                    <span className="mt-1.5 block break-words font-ui text-[10px] leading-4 opacity-60">
                       {option.serviceType}
                     </span>
                   </label>
@@ -438,7 +459,7 @@ export default function HeroHighlights() {
               })}
             </div>
             {!scheduleLoading && !scheduleVerified ? (
-              <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] px-4 py-3">
+              <div className="mt-3 flex min-w-0 flex-col items-start gap-2 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] px-4 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
                 <p className="font-ui text-xs leading-5 text-amber-100/70">
                   Booking is paused until the live service calendar is verified.
                 </p>
@@ -551,10 +572,10 @@ export default function HeroHighlights() {
             </span>
           </label>
 
-          <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-3.5 sm:flex sm:items-center sm:justify-between sm:gap-4">
+          <div className="min-w-0 rounded-2xl border border-white/8 bg-white/[0.025] p-3.5 sm:flex sm:items-center sm:justify-between sm:gap-4">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
-              <p className="font-ui text-xs leading-5 text-white/45">
+              <p className="min-w-0 break-words font-ui text-xs leading-5 text-white/45">
                 We’ll email your confirmation, directions, and a reminder before
                 service.
               </p>
@@ -562,7 +583,7 @@ export default function HeroHighlights() {
             <Button
               type="submit"
               variant="primary"
-              className="mt-3 h-12 w-full shrink-0 rounded-full px-6 font-ui text-body-sm font-bold sm:mt-0 sm:w-auto"
+              className="mt-3 min-h-12 w-full shrink-0 whitespace-normal rounded-full px-5 py-3 text-center font-ui text-sm font-bold leading-5 sm:mt-0 sm:w-auto sm:px-6"
               loading={submitting}
               disabled={
                 submitting ||
@@ -652,7 +673,7 @@ export default function HeroHighlights() {
             <p className="mt-5 font-ui text-xs font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
               Visit confirmed
             </p>
-            <h2 className="mt-2 font-headline text-3xl text-white">
+            <h2 className="mt-2 break-words font-headline text-2xl leading-tight text-white sm:text-3xl">
               We’re expecting you.
             </h2>
             <p className="mx-auto mt-3 max-w-sm font-ui text-sm leading-6 text-white/55">
@@ -660,11 +681,11 @@ export default function HeroHighlights() {
                 ? 'Your confirmation is saved, the welcome team has been notified, and your reminder is scheduled.'
                 : 'Your confirmation is saved and the welcome team has been notified.'}
             </p>
-            <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-left">
-              <p className="font-ui text-xs font-bold uppercase tracking-[0.16em] text-white/40">
+            <div className="mt-6 min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left sm:rounded-3xl sm:p-5">
+              <p className="break-words font-ui text-xs font-bold uppercase tracking-[0.12em] text-white/40 sm:tracking-[0.16em]">
                 {visitConfirmation.serviceType}
               </p>
-              <p className="mt-2 font-headline text-xl text-white">
+              <p className="mt-2 break-words font-headline text-lg leading-snug text-white sm:text-xl">
                 {new Intl.DateTimeFormat('en-NG', {
                   weekday: 'long',
                   month: 'long',
@@ -678,7 +699,7 @@ export default function HeroHighlights() {
                 {visitConfirmation.attendance}{' '}
                 {visitConfirmation.attendance === 1 ? 'guest' : 'guests'}
               </p>
-              <p className="mt-4 border-t border-white/8 pt-4 font-mono text-[10px] uppercase tracking-[0.12em] text-white/35">
+              <p className="mt-4 break-all border-t border-white/8 pt-4 font-mono text-[10px] uppercase tracking-[0.08em] text-white/35 sm:tracking-[0.12em]">
                 Reference {visitConfirmation.id}
               </p>
             </div>

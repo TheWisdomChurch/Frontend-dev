@@ -10,6 +10,7 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { WhatWedo_1 } from '@/shared/assets';
 import { Container, Section } from '@/shared/layout';
 import HomeActionLink from '@/features/home/HomeActionLink';
+import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
 import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
 import { SectionHeading, HeadingAccent } from '@/shared/ui/SectionHeading';
@@ -162,15 +163,9 @@ export default function PremiumHome() {
               >
                 Watch live
               </HomeActionLink>
-              <HomeActionLink
-                href="/events/weekly"
-                variant="light"
-                icon={CalendarDays}
-                hideArrow
-                className="flex-1 min-w-0 justify-center px-4 text-xs sm:flex-none sm:px-6 sm:text-sm"
-              >
+              <PlanVisitTrigger className="min-w-0 flex-1 border-white/70 bg-transparent px-4 text-xs text-white hover:bg-white hover:text-black sm:flex-none sm:px-6 sm:text-sm">
                 Plan your visit
-              </HomeActionLink>
+              </PlanVisitTrigger>
             </div>
           </div>
         </Container>
@@ -330,16 +325,15 @@ export default function PremiumHome() {
                 initial="hidden"
                 whileInView="show"
                 viewport={staggerViewport}
-                className="mt-8 flex flex-nowrap items-stretch gap-2 sm:gap-3"
+                className="mt-8 grid grid-cols-1 items-stretch gap-3 min-[420px]:grid-cols-2"
               >
-                <TakeMeToChurchButton fullWidth className="flex-1" />
-                <HomeActionLink
-                  href="/events/weekly"
-                  variant="dark"
-                  className="flex-1 justify-center whitespace-nowrap gap-2 px-4 text-xs sm:gap-3 sm:px-5 sm:text-sm"
+                <TakeMeToChurchButton fullWidth />
+                <PlanVisitTrigger
+                  icon={false}
+                  className="h-full min-w-0 whitespace-normal border-black bg-black px-4 py-3 text-center text-xs leading-5 text-white hover:border-white hover:bg-white hover:text-black sm:px-5 sm:text-sm"
                 >
                   Plan your first visit
-                </HomeActionLink>
+                </PlanVisitTrigger>
               </motion.div>
             </motion.div>
           </div>

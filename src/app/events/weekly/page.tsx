@@ -9,6 +9,7 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildRecurringEventSchema, buildPageMetadata } from '@/lib/seo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import Arrow from '@/shared/ui/icons/Arrow';
+import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
 // Metadata fields a route doesn't set are inherited from the parent layout,
 // not reset — without its own `alternates`, this page was silently
@@ -131,12 +132,12 @@ export default function WeeklyPage() {
                       ,<br />
                       {SERVICE_INFO.venue.locality}
                     </p>
-                    <Link
-                      href="/contact?topic=visit"
-                      className="inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                    <PlanVisitTrigger
+                      icon={false}
+                      className="self-start rounded-none border-[var(--app-ink)]/18 bg-transparent px-5 py-2.5 text-[var(--app-ink)]/60 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
                     >
                       Plan your visit <Arrow />
-                    </Link>
+                    </PlanVisitTrigger>
                   </div>
                 </div>
               </ScrollFadeIn>
@@ -163,12 +164,12 @@ export default function WeeklyPage() {
                 community. Our welcome team will be right there when you arrive.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
+                <PlanVisitTrigger
+                  icon={false}
+                  className="rounded-none px-8 py-3.5 text-label uppercase tracking-[0.14em]"
                 >
                   Let us know you're coming <Arrow />
-                </Link>
+                </PlanVisitTrigger>
                 <Link
                   href="/events"
                   className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/55 transition hover:border-white/35 hover:text-white"

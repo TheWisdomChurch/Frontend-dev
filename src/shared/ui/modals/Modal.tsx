@@ -154,19 +154,19 @@ function ModalPanel({
       };
 
   const modalClassName = cn(
-    'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/[0.07] bg-[#0d0b09] text-white shadow-2xl shadow-black/65 backdrop-blur-2xl',
+    'relative flex w-full min-w-0 flex-col overflow-hidden border border-white/[0.08] bg-[linear-gradient(160deg,#15110d_0%,#0c0a08_58%,#090807_100%)] text-white shadow-[0_32px_100px_rgba(0,0,0,.72)] backdrop-blur-2xl',
     dragEnabled
-      ? 'max-h-[90svh] rounded-t-[1.25rem] rounded-b-none'
-      : 'max-h-[88svh] rounded-[0.875rem] sm:max-h-[90vh]',
+      ? 'max-h-[calc(100svh-0.75rem)] rounded-t-[1.5rem] rounded-b-none'
+      : 'max-h-[calc(100svh-1rem)] rounded-[1.25rem] sm:max-h-[90vh] sm:rounded-[1.5rem]',
     maxWidth
   );
 
   return (
     <motion.div
       className={cn(
-        'fixed inset-0 z-[9999] flex px-3 py-4 backdrop-blur-md',
+        'fixed inset-0 z-[9999] flex min-w-0 px-2 py-2 backdrop-blur-md sm:px-4 sm:py-4',
         isSheet
-          ? 'items-end justify-center sm:items-center'
+          ? 'items-end justify-center px-0 pb-0 sm:items-center sm:px-4 sm:pb-4'
           : 'items-center justify-center'
       )}
       // eslint-disable-next-line no-restricted-syntax -- opacity tracks the drag motion value, genuinely dynamic
@@ -225,15 +225,15 @@ function ModalPanel({
           <header
             onPointerDown={startDrag}
             className={cn(
-              'flex items-start justify-between gap-4 border-b border-white/[0.07] px-5 py-4 sm:px-6 sm:py-5',
+              'flex min-w-0 items-start justify-between gap-3 border-b border-white/[0.08] bg-white/[0.018] px-4 py-4 sm:gap-5 sm:px-7 sm:py-6',
               dragEnabled && 'touch-none sm:touch-auto'
             )}
           >
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1 break-words">
               {title ? (
                 <h2
                   id={titleId}
-                  className="font-headline text-heading-sm font-normal leading-snug text-white sm:text-heading-sm"
+                  className="break-words font-headline text-[clamp(1.35rem,6vw,1.85rem)] font-normal leading-[1.15] text-white"
                 >
                   {title}
                 </h2>
@@ -242,7 +242,7 @@ function ModalPanel({
               {subtitle ? (
                 <p
                   id={subtitleId}
-                  className="mt-1.5 font-ui text-label leading-[1.7] text-white/45"
+                  className="mt-2 max-w-xl break-words font-ui text-xs leading-5 text-white/52 sm:text-sm sm:leading-6"
                 >
                   {subtitle}
                 </p>
@@ -263,7 +263,7 @@ function ModalPanel({
           </header>
         ) : null}
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6 sm:py-6">
+        <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 sm:px-7 sm:py-7">
           {children}
         </div>
       </motion.div>

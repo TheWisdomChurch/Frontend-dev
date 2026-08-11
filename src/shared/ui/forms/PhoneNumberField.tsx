@@ -51,7 +51,7 @@ export function PhoneNumberField({
           {required ? ' *' : ''}
         </label>
       ) : null}
-      <div className="grid grid-cols-[minmax(7.5rem,0.42fr)_1fr] gap-2">
+      <div className="grid min-w-0 grid-cols-1 gap-2 min-[420px]:grid-cols-[minmax(7.5rem,0.42fr)_minmax(0,1fr)]">
         <select
           aria-label="Phone country code"
           value={country}

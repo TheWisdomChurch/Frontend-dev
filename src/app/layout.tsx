@@ -16,6 +16,7 @@ import {
   DEFAULT_OG_IMAGE as OG_IMAGE,
   buildHreflangAlternates,
 } from '@/lib/seo';
+import HeroHighlights from '@/features/hero/HeroHighlights';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -161,7 +162,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           data-key="XGrQDDaQUVZrI428swX0CA"
           strategy="afterInteractive"
         />
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <HeroHighlights modalOnly />
+        </Providers>
         <Analytics />
       </body>
     </html>
