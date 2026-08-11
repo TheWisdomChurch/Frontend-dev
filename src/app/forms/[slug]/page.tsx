@@ -23,6 +23,7 @@ import {
   PHONE_COUNTRIES,
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
+import { BaseModal } from '@/shared/ui/modals/Base';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -1248,50 +1249,43 @@ export default function PublicFormPage() {
               </div>
             ) : null}
 
-            {!loading && submitted ? (
-              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-6 backdrop-blur-sm">
-                <div className="w-full max-w-lg overflow-hidden rounded-[1.5rem] border border-emerald-400/25 bg-[#07140d] shadow-2xl shadow-black/50">
-                  <div className="border-b border-emerald-400/15 px-6 py-5">
-                    <H3 className="text-xl text-emerald-100">
-                      {presentation.successTitle}
-                    </H3>
-                    {presentation.successSubtitle ? (
-                      <BodySM className="mt-1 text-emerald-100/70">
-                        {presentation.successSubtitle}
-                      </BodySM>
-                    ) : null}
-                  </div>
+            <BaseModal
+              isOpen={!loading && submitted}
+              onClose={() => router.push(returnPath)}
+              title={presentation.successTitle}
+              subtitle={presentation.successSubtitle}
+              showCloseButton={false}
+              forceBottomSheet
+              maxWidth="max-w-lg"
+            >
+              <div className="min-w-0 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.055] p-4 sm:p-5">
+                <BodySM className="text-emerald-100/82">
+                  {presentation.successMessage}
+                </BodySM>
+                <BodySM className="mt-4 text-emerald-100/65">
+                  You can now return to the previous page.
+                </BodySM>
 
-                  <div className="px-6 py-5">
-                    <BodySM className="text-emerald-100/82">
-                      {presentation.successMessage}
-                    </BodySM>
-                    <BodySM className="mt-4 text-emerald-100/65">
-                      You can now return to the previous page.
-                    </BodySM>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    curvature="full"
+                    onClick={() => router.push(returnPath)}
+                    className="w-full sm:w-auto"
+                  >
+                    {returnLabel}
+                  </Button>
 
-                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                      <Button
-                        type="button"
-                        variant="primary"
-                        curvature="full"
-                        onClick={() => router.push(returnPath)}
-                        className="w-full sm:w-auto"
-                      >
-                        {returnLabel}
-                      </Button>
-
-                      <Link
-                        href={returnPath}
-                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-emerald-100/20 px-6 text-sm font-bold text-emerald-100 transition hover:bg-emerald-100/10 sm:w-auto"
-                      >
-                        {returnPath}
-                      </Link>
-                    </div>
-                  </div>
+                  <Link
+                    href={returnPath}
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-emerald-100/20 px-6 text-sm font-bold text-emerald-100 transition hover:bg-emerald-100/10 sm:w-auto"
+                  >
+                    {returnPath}
+                  </Link>
                 </div>
               </div>
-            ) : null}
+            </BaseModal>
           </div>
         </Container>
       </Section>

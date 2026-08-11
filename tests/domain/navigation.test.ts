@@ -4,6 +4,7 @@ import {
   buildDrivingDirectionsUrl,
   isValidCoordinates,
 } from '../../src/domain/navigation/directions';
+import { normalizeRoutePreview } from '../../src/domain/navigation/api';
 
 describe('driving directions', () => {
   it('builds turn-by-turn driving directions from a live origin', () => {
@@ -40,5 +41,25 @@ describe('driving directions', () => {
     expect(isValidCoordinates({ latitude: 6.5, longitude: 3.4 })).toBe(true);
     expect(isValidCoordinates({ latitude: 91, longitude: 3.4 })).toBe(false);
     expect(isValidCoordinates({ latitude: 6.5, longitude: -181 })).toBe(false);
+  });
+});
+
+describe('route preview validation', () => {
+  it('normalizes a complete route and supplies missing display labels', () => {
+    expect(
+      normalizeRoutePreview({
+        distanceMeters: 12500,
+        durationSeconds: 1800,
+        distanceLabel: '',
+        durationLabel: '',
+        encodedPolyline: 'encoded',
+      })
+    ).toMatchObject({ distanceLabel: '12.5 km', durationLabel: '30 min' });
+  });
+
+  it('rejects an incomplete provider response', () => {
+    expect(() =>
+      normalizeRoutePreview({ distanceMeters: 0, durationSeconds: 0 })
+    ).toThrow('incomplete');
   });
 });

@@ -279,7 +279,7 @@ export default function CookieConsentBanner() {
             </div>
           ))}
 
-          <div className="mt-2 grid grid-cols-2 gap-3 pt-1">
+          <div className="mt-2 grid grid-cols-1 gap-3 pt-1 min-[390px]:grid-cols-2">
             <Button
               variant="ghost"
               size="sm"

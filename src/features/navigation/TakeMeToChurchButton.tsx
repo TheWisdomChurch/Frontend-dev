@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useId, useRef, useState } from 'react';
 import {
   Clock3,
   LoaderCircle,
@@ -18,12 +18,14 @@ import { cn } from '@/lib/cn';
 import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import ChurchRouteMap from './ChurchRouteMap';
+import { BaseModal } from '@/shared/ui/modals/Base';
 
-type NavigationState = 'idle' | 'locating' | 'preview' | 'error';
+type NavigationState = 'idle' | 'locating' | 'preview' | 'recovery';
+type LocationFailure = 'permission_denied' | 'timeout' | 'position_unavailable';
 
 const GEOLOCATION_OPTIONS: PositionOptions = {
   enableHighAccuracy: true,
-  timeout: 12_000,
+  timeout: 8_000,
   maximumAge: 60_000,
 };
 
@@ -51,22 +53,13 @@ export default function TakeMeToChurchButton({
   const [state, setState] = useState<NavigationState>('idle');
   const [origin, setOrigin] = useState<Coordinates>();
   const [preview, setPreview] = useState<RoutePreview>();
+  const [failure, setFailure] = useState<LocationFailure>(
+    'position_unavailable'
+  );
   const requestInFlight = useRef(false);
+  const requestSequence = useRef(0);
+  const statusId = useId();
   const { trackEvent } = useAnalytics();
-
-  useEffect(() => {
-    if (state !== 'preview') return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setState('idle');
-    };
-    document.addEventListener('keydown', closeOnEscape);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', closeOnEscape);
-    };
-  }, [state]);
 
   const startNavigation = useCallback(() => {
     if (requestInFlight.current) return;
@@ -85,10 +78,12 @@ export default function TakeMeToChurchButton({
     }
 
     requestInFlight.current = true;
+    const requestId = ++requestSequence.current;
     setState('locating');
 
     navigator.geolocation.getCurrentPosition(
       async position => {
+        if (requestId !== requestSequence.current) return;
         requestInFlight.current = false;
         const currentOrigin = {
           latitude: position.coords.latitude,
@@ -98,6 +93,7 @@ export default function TakeMeToChurchButton({
 
         try {
           const route = await getRoutePreview({ origin: currentOrigin });
+          if (requestId !== requestSequence.current) return;
           setPreview(route);
           setState('preview');
           trackEvent('church_route_previewed', {
@@ -105,6 +101,7 @@ export default function TakeMeToChurchButton({
             duration_seconds: route.durationSeconds,
           });
         } catch {
+          if (requestId !== requestSequence.current) return;
           // Maps can still calculate the route even if our traffic preview API
           // is unavailable or has not yet been configured.
           trackEvent('church_directions_opened', {
@@ -115,15 +112,18 @@ export default function TakeMeToChurchButton({
         }
       },
       error => {
+        if (requestId !== requestSequence.current) return;
         requestInFlight.current = false;
-        setState('error');
+        const reason =
+          error.code === error.PERMISSION_DENIED
+            ? 'permission_denied'
+            : error.code === error.TIMEOUT
+              ? 'timeout'
+              : 'position_unavailable';
+        setFailure(reason);
+        setState('recovery');
         trackEvent('church_directions_location_unavailable', {
-          reason:
-            error.code === error.PERMISSION_DENIED
-              ? 'permission_denied'
-              : error.code === error.TIMEOUT
-                ? 'timeout'
-                : 'position_unavailable',
+          reason,
         });
       },
       GEOLOCATION_OPTIONS
@@ -131,11 +131,19 @@ export default function TakeMeToChurchButton({
   }, [trackEvent]);
 
   const useMapsFallback = useCallback(() => {
+    requestSequence.current += 1;
+    requestInFlight.current = false;
     trackEvent('church_directions_opened', {
       location_source: 'maps_fallback',
     });
     openDirections();
   }, [trackEvent]);
+
+  const closeFlow = useCallback(() => {
+    requestSequence.current += 1;
+    requestInFlight.current = false;
+    setState('idle');
+  }, []);
 
   const beginTurnByTurnNavigation = useCallback(() => {
     trackEvent('church_directions_opened', {
@@ -157,11 +165,9 @@ export default function TakeMeToChurchButton({
         type="button"
         onClick={startNavigation}
         disabled={state === 'locating'}
-        aria-describedby={
-          state === 'error' ? 'church-directions-status' : undefined
-        }
+        aria-describedby={state === 'locating' ? statusId : undefined}
         className={cn(
-          'group inline-flex min-h-12 items-center gap-2 whitespace-nowrap rounded-full border border-black bg-black px-4 font-ui text-xs font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75 sm:gap-3 sm:px-5 sm:text-sm',
+          'group inline-flex min-h-12 min-w-0 items-center justify-center gap-2 whitespace-normal rounded-full border border-black bg-black px-4 py-3 text-center font-ui text-xs font-bold leading-5 text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75 sm:gap-3 sm:px-5 sm:text-sm',
           fullWidth && 'w-full justify-center'
         )}
       >
@@ -173,33 +179,33 @@ export default function TakeMeToChurchButton({
         {state === 'locating' ? 'Finding your location…' : 'Take me to church'}
       </button>
 
-      {state === 'error' && (
+      {state === 'locating' ? (
         <p
-          id="church-directions-status"
+          id={statusId}
           role="status"
-          className="mt-3 max-w-sm font-ui text-sm leading-6 text-black/70"
+          className="mt-2 text-center font-ui text-xs leading-5 text-black/60 sm:text-left"
         >
-          We couldn&apos;t access your location. Enable location permission, or{' '}
+          Checking the fastest route.{' '}
           <button
             type="button"
             onClick={useMapsFallback}
-            className="inline-flex items-center gap-1 font-bold underline decoration-2 underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
+            className="font-bold underline decoration-2 underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
           >
-            <LocateFixed className="h-3.5 w-3.5" aria-hidden="true" />
-            open Maps anyway
+            Open Maps now
           </button>
-          .
         </p>
-      )}
+      ) : null}
 
-      {state === 'preview' && preview && origin && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="church-route-title"
-          className="fixed inset-0 z-[10000] flex bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6"
-        >
-          <div className="grid h-full w-full overflow-hidden bg-white shadow-2xl sm:h-[min(780px,90vh)] sm:max-w-6xl sm:rounded-3xl lg:grid-cols-[minmax(0,1fr)_360px]">
+      <BaseModal
+        isOpen={state === 'preview' && Boolean(preview && origin)}
+        onClose={closeFlow}
+        maxWidth="max-w-6xl"
+        tone="light"
+        contentClassName="!p-0"
+        ariaLabel="Route to The Wisdom Church"
+      >
+        {preview && origin ? (
+          <div className="grid min-h-0 w-full overflow-hidden bg-white lg:h-[min(760px,88svh)] lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="relative min-h-[45vh] lg:min-h-0">
               <ChurchRouteMap
                 origin={origin}
@@ -207,7 +213,7 @@ export default function TakeMeToChurchButton({
               />
               <button
                 type="button"
-                onClick={() => setState('idle')}
+                onClick={closeFlow}
                 aria-label="Close route planner"
                 className="absolute left-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-lg transition hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 lg:hidden"
               >
@@ -230,7 +236,7 @@ export default function TakeMeToChurchButton({
                 </div>
                 <button
                   type="button"
-                  onClick={() => setState('idle')}
+                  onClick={closeFlow}
                   aria-label="Close route planner"
                   className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/15 text-black transition hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 lg:inline-flex"
                 >
@@ -243,7 +249,7 @@ export default function TakeMeToChurchButton({
                 calculated using current traffic.
               </p>
 
-              <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="mt-6 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
                 <div className="rounded-2xl bg-[#f4f1e9] p-4">
                   <Clock3
                     className="h-5 w-5 text-[var(--app-primary-dark)]"
@@ -297,8 +303,52 @@ export default function TakeMeToChurchButton({
               </button>
             </div>
           </div>
+        ) : null}
+      </BaseModal>
+
+      <BaseModal
+        isOpen={state === 'recovery'}
+        onClose={closeFlow}
+        title="Let’s still get you there"
+        subtitle="Location access is optional. You can open the church directly in Maps without sharing your position with this website."
+        maxWidth="max-w-md"
+        forceBottomSheet
+      >
+        <div className="min-w-0">
+          <div className="flex items-start gap-3 rounded-2xl border border-amber-300/15 bg-amber-300/[0.06] p-4">
+            <LocateFixed className="mt-0.5 h-5 w-5 shrink-0 text-[var(--app-primary)]" />
+            <p className="font-ui text-sm leading-6 text-white/62">
+              {failure === 'permission_denied'
+                ? 'Location permission was not granted. You can change it in your browser settings or continue without it.'
+                : failure === 'timeout'
+                  ? 'Your location took too long to respond. This can happen indoors or on a slow connection.'
+                  : 'Your device could not determine its current location.'}
+            </p>
+          </div>
+          <div className="mt-5 grid gap-2">
+            <button
+              type="button"
+              onClick={useMapsFallback}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 font-ui text-sm font-extrabold text-black transition hover:brightness-110"
+            >
+              <Navigation className="h-4 w-4 fill-current" /> Open directions in
+              Maps
+            </button>
+            {failure !== 'permission_denied' ? (
+              <button
+                type="button"
+                onClick={startNavigation}
+                className="min-h-12 rounded-full border border-white/12 px-5 py-3 font-ui text-sm font-bold text-white transition hover:bg-white/[0.06]"
+              >
+                Try location again
+              </button>
+            ) : null}
+          </div>
+          <p className="mt-4 break-words text-center font-ui text-xs leading-5 text-white/40">
+            Destination: {SERVICE_INFO.venue.full}
+          </p>
         </div>
-      )}
+      </BaseModal>
     </div>
   );
 }

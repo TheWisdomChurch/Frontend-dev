@@ -14,7 +14,6 @@ import {
   Sparkles,
   Store,
   Video,
-  X,
 } from 'lucide-react';
 
 import { Button } from '@/shared/utils/buttons';
@@ -28,6 +27,7 @@ import { resourceLinks } from '@/lib/data';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
+import { BaseModal } from '@/shared/ui/modals/Base';
 
 type Category =
   'all' | 'media' | 'live' | 'events' | 'store' | 'care' | 'books';
@@ -383,86 +383,65 @@ export default function ResourcesPage() {
         </Container>
       </Section>
 
-      {showLiveModal && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/75 p-0 backdrop-blur-sm sm:items-center sm:p-6">
-          <div className="relative w-full max-w-md overflow-hidden rounded-t-[2rem] border border-white/10 bg-[#101010] shadow-[0_30px_90px_rgba(0,0,0,0.7)] sm:rounded-[2rem]">
-            <div className="flex justify-center pb-1.5 pt-3 sm:hidden">
-              <span className="h-1.5 w-12 rounded-full bg-white/18" />
+      <BaseModal
+        isOpen={showLiveModal}
+        onClose={() => setShowLiveModal(false)}
+        title="Never miss a live service"
+        subtitle="Choose YouTube or receive a reminder before each stream."
+        maxWidth="max-w-md"
+        forceBottomSheet
+      >
+        <div className="min-w-0 space-y-5">
+          <div className="text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
+              <Radio className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
+
+            <BodyMD className="mt-2 text-sm leading-7 text-white/62">
+              Get alerts for every stream and access the full video library.
+            </BodyMD>
+          </div>
+
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() =>
+              window.open(SOCIAL_LINKS.youtube, '_blank', 'noopener,noreferrer')
+            }
+            className="h-12 w-full gap-2 rounded-radius-sm bg-[#CC0000] text-sm font-bold text-white hover:scale-[1.01] hover:bg-[#AA0000]"
+          >
+            <Video className="h-4 w-4" />
+            Subscribe on YouTube
+          </Button>
+
+          <form onSubmit={handleEmailSubmit} className="space-y-3">
+            <label className="block text-sm font-semibold text-white/80">
+              Or get email reminders
+            </label>
+
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+              className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+            />
 
             <Button
-              variant="ghost"
-              size="icon"
-              curvature="full"
-              onClick={() => setShowLiveModal(false)}
-              aria-label="Close"
-              type="button"
-              className="absolute right-4 top-4 z-10 bg-white/10 text-white hover:bg-white/[0.18]"
+              type="submit"
+              variant="primary"
+              className="h-12 w-full rounded-2xl text-sm font-bold hover:scale-[1.01]"
             >
-              <X className="h-5 w-5" />
+              Notify me
             </Button>
+          </form>
 
-            <div className="space-y-5 p-6 sm:p-7">
-              <div className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
-                  <Radio className="h-7 w-7 text-[var(--app-primary)]" />
-                </div>
-
-                <H2 className="mt-4 text-xl font-semibold leading-tight text-white">
-                  Never miss a live service
-                </H2>
-
-                <BodyMD className="mt-2 text-sm leading-7 text-white/62">
-                  Get alerts for every stream and access the full video library.
-                </BodyMD>
-              </div>
-
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() =>
-                  window.open(
-                    SOCIAL_LINKS.youtube,
-                    '_blank',
-                    'noopener,noreferrer'
-                  )
-                }
-                className="h-12 w-full gap-2 rounded-radius-sm bg-[#CC0000] text-sm font-bold text-white hover:scale-[1.01] hover:bg-[#AA0000]"
-              >
-                <Video className="h-4 w-4" />
-                Subscribe on YouTube
-              </Button>
-
-              <form onSubmit={handleEmailSubmit} className="space-y-3">
-                <label className="block text-sm font-semibold text-white/80">
-                  Or get email reminders
-                </label>
-
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
-                />
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  className="h-12 w-full rounded-2xl text-sm font-bold hover:scale-[1.01]"
-                >
-                  Notify me
-                </Button>
-              </form>
-
-              <Caption className="block text-center text-white/45">
-                We’ll email you before each live service starts.
-              </Caption>
-            </div>
-          </div>
+          <Caption className="block text-center text-white/45">
+            We’ll email you before each live service starts.
+          </Caption>
         </div>
-      )}
+      </BaseModal>
     </div>
   );
 }
