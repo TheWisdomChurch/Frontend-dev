@@ -7,6 +7,7 @@ import { CalendarDays, MapPin, Play, Users } from 'lucide-react';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
+import { WhatWedo_1 } from '@/shared/assets';
 import { Container, Section } from '@/shared/layout';
 import HomeActionLink from '@/features/home/HomeActionLink';
 import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
@@ -89,48 +90,38 @@ function ServiceImage() {
   );
 }
 
-const COMMUNITY_COLLAGE = [
-  {
-    src: '/Picflow Images Jul 31 (2)/DSC00054 copy.webp',
-    alt: 'A mother and child sharing life at The Wisdom Church',
-    position: 'object-[center_32%]',
-    className: 'col-span-2 h-[240px] sm:col-span-7 sm:row-span-2 sm:h-auto',
-    sizes: '(min-width: 1024px) 38vw, (min-width: 640px) 58vw, 100vw',
-  },
-  {
-    src: '/Picflow Images Jul 31 (2)/DSC00058 copy.webp',
-    alt: 'A team serving and singing together at The Wisdom Church',
-    position: 'object-[42%_center]',
-    className: 'h-[210px] sm:col-span-5 sm:h-auto',
-    sizes: '(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw',
-  },
-  {
-    src: '/Picflow Images Jul 31 (2)/DSC06877 copy.webp',
-    alt: 'Members sharing a gathering around the same table',
-    position: 'object-[48%_center]',
-    className: 'h-[210px] sm:col-span-5 sm:h-auto',
-    sizes: '(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw',
-  },
-] as const;
-
 function CommunityCollage() {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:h-[500px] sm:grid-cols-12 sm:grid-rows-2 sm:gap-3 lg:h-[610px]">
-      {COMMUNITY_COLLAGE.map(image => (
-        <div
-          key={image.src}
-          className={`relative overflow-hidden bg-white/5 ${image.className}`}
-        >
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            quality={IMAGE_QUALITY}
-            sizes={image.sizes}
-            className={`object-cover transition-transform duration-700 hover:scale-[1.025] ${image.position}`}
-          />
-        </div>
-      ))}
+    <div className="grid gap-2 sm:h-[500px] sm:grid-rows-[3fr_2fr] sm:gap-3 lg:h-[610px]">
+      <div className="relative h-[360px] overflow-hidden bg-black sm:h-auto">
+        <Image
+          src={WhatWedo_1}
+          alt="Three Wisdom Church leaders ministering together"
+          fill
+          unoptimized
+          sizes="(min-width: 640px) 1px, 100vw"
+          className="object-cover object-center sm:hidden"
+        />
+        <Image
+          src="/images/worship-service-community-wide.png"
+          alt="Three Wisdom Church leaders ministering together"
+          fill
+          quality={IMAGE_QUALITY}
+          sizes={COVER_IMAGE_SIZES.community}
+          className="hidden object-cover object-center sm:block"
+        />
+      </div>
+
+      <div className="relative h-[220px] overflow-hidden bg-black sm:h-auto">
+        <Image
+          src="/Picflow Images Jul 31 (2)/DSC00268 copy.webp"
+          alt="A Wisdom House volunteer serving during worship"
+          fill
+          quality={IMAGE_QUALITY}
+          sizes={COVER_IMAGE_SIZES.community}
+          className="object-cover object-[52%_center]"
+        />
+      </div>
     </div>
   );
 }

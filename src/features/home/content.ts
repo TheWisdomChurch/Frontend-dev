@@ -119,8 +119,8 @@ export const HOME_IMAGES = {
     position: 'object-bottom',
   },
   community: {
-    src: '/Picflow Images Jul 31 (2)/DSC00054 copy.webp',
-    alt: 'A mother and child sharing life at The Wisdom Church',
-    position: 'object-[center_32%]',
+    src: '/images/worship-service-community-wide.png',
+    alt: 'Wisdom Church leaders ministering together',
+    position: 'object-center',
   },
 } satisfies Record<string, HomeImage>;
