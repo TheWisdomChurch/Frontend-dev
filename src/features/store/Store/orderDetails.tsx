@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useAppSelector } from '@/shared/utils/hooks/redux';
 import { FlexboxLayout } from '@/shared/layout';
 import { H2, H3, H4, BaseText, Caption } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
@@ -68,8 +67,6 @@ interface OrderDetails {
 const OrderConfirmation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const cartItems = useAppSelector(state => state.cart.items);
-  const cartTotal = useAppSelector(state => state.cart.total);
 
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +76,6 @@ const OrderConfirmation = () => {
   const [isDownloading, setIsDownloading] = useState(false);
 
   const orderId = searchParams.get('orderId');
-  const amount = searchParams.get('amount');
 
   const statusSteps = [
     { id: 'pending', label: 'Order Placed', icon: Clock, active: true },
@@ -101,7 +97,13 @@ const OrderConfirmation = () => {
         }
 
         const resolvedPaymentStatus: PaymentStatus =
-          storedOrder.paymentMethod === 'delivery' ? 'pending' : 'processing';
+          storedOrder.paymentStatus === 'paid'
+            ? 'completed'
+            : storedOrder.paymentStatus === 'failed'
+              ? 'failed'
+              : storedOrder.paymentStatus === 'proof_submitted'
+                ? 'processing'
+                : 'pending';
 
         const mappedOrder: OrderDetails = {
           orderId: storedOrder.orderId,
@@ -127,7 +129,7 @@ const OrderConfirmation = () => {
     };
 
     fetchOrderDetails();
-  }, [orderId, amount, cartItems, cartTotal]);
+  }, [orderId]);
 
   const paymentMethodConfig = {
     transfer: {

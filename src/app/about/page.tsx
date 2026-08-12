@@ -1,16 +1,13 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import Link from 'next/link';
+import { Church, HeartHandshake, MapPin, Play } from 'lucide-react';
 
-import PageHero from '@/features/hero/PageHero';
-import { lader_1 } from '@/shared/assets';
-import { H2, BodyMD } from '@/shared/text';
-import { Container, Section } from '@/shared/layout';
+import { IMAGE_QUALITY } from '@/shared/constants';
+import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type {
   LeadershipMember,
@@ -18,10 +15,10 @@ import type {
 } from '@/domain/leadership/types';
 import { CanvasCard, DarkCard } from '@/features/leadership/LeadershipCards';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
+import PageHero from '@/features/hero/PageHero';
 
-// Same senior-role definition /leadership uses — kept in sync so About's
-// leadership spotlight and the full directory always agree on titles.
 const SENIOR_ROLES: LeadershipRole[] = [
   'senior_pastor',
   'associate_pastor',
@@ -29,81 +26,42 @@ const SENIOR_ROLES: LeadershipRole[] = [
 ];
 export const dynamic = 'force-dynamic';
 
-function Arrow({ className }: { className?: string }) {
-  return (
-    <svg
-      width="11"
-      height="11"
-      viewBox="0 0 12 12"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-    >
-      <path
-        d="M1 6h10M6 1l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export const metadata: Metadata = buildPageMetadata({
-  title: 'About Us & Our Mission',
+  title: 'About The Wisdom Church',
   description:
-    'Learn about The Wisdom Church — a Spirit-filled church in Lagos committed to raising complete believers.',
+    'Meet The Wisdom Church — a Spirit-filled church in Lagos raising complete believers through the Word, prayer, worship, and fellowship.',
   path: '/about',
 });
 
-const serviceInfo = [
-  {
-    label: SERVICE_INFO.sunday.label,
-    value: `Every ${SERVICE_INFO.sunday.day}`,
-    detail: `${SERVICE_INFO.sunday.time} ${SERVICE_INFO.sunday.timezone}`,
-  },
-  {
-    label: SERVICE_INFO.dailyPrayer.label,
-    value: SERVICE_INFO.dailyPrayer.days,
-    detail: `${SERVICE_INFO.dailyPrayer.time} ${SERVICE_INFO.dailyPrayer.timezone}`,
-  },
-  {
-    label: 'Location',
-    value: SERVICE_INFO.venue.name,
-    detail: `${SERVICE_INFO.venue.area}, ${SERVICE_INFO.venue.locality}`,
-  },
-] as const;
-
 const defaultPillars: Array<{ title: string; body: string }> = [
   {
-    title: 'Presence-driven worship',
-    body: 'We gather to host the presence of God with reverence, expectation, and joy.',
+    title: 'The Word of God',
+    body: 'We receive sound biblical teaching that builds faith, renews the mind, and equips every believer to live for Christ.',
   },
   {
-    title: 'Word-shaped discipleship',
-    body: 'Teaching is practical and biblical, aimed at forming complete believers.',
+    title: 'Prayer',
+    body: 'We pray with faith and expectation, growing in communion with God and standing together for His will to be established.',
   },
   {
-    title: 'People-first community',
-    body: 'Hospitality, accountability, and care are central to how we build family.',
+    title: 'Worship',
+    body: 'We honour Jesus with joyful, reverent worship and make room for the Holy Spirit to transform lives.',
   },
   {
-    title: 'Excellence with integrity',
-    body: 'We steward people and service moments with clarity, order, and consistency.',
+    title: 'Fellowship',
+    body: 'We walk as one church family, caring for one another, serving together, and helping every person find their place.',
   },
 ];
 
 const defaultAboutContent = {
-  eyebrow: 'About Wisdom Church',
-  title: 'Raising complete believers.',
+  eyebrow: 'Welcome to The Wisdom Church',
+  title: 'A church where lives are transformed.',
   subtitle:
-    'A Spirit-filled community built on Word, worship, and intentional discipleship.',
-  storyTitle: 'A church where people grow in Christ.',
+    'We are a Spirit-filled family in Lagos, raising complete believers through the Word of God, prayer, worship, and genuine fellowship.',
+  storyTitle: 'Raising complete believers in Christ.',
   storyBody:
-    'The Wisdom Church is a trans-generational community in Lagos — committed to forming complete believers through sound teaching, worshipful community, and faithful pastoral care.',
+    'The Wisdom Church is a family of believers committed to knowing Jesus, growing in His Word, and living by the power of the Holy Spirit. We gather so that people can encounter God, be established in faith, discover their place in the body of Christ, and carry His light into everyday life.',
   storyImage: '',
-  cultureTitle: 'What shapes everything we do.',
+  cultureTitle: 'How we grow together as a church.',
   pillars: defaultPillars.map(item => ({ ...item })),
 };
 
@@ -147,6 +105,30 @@ function normalizeAboutContent(
   };
 }
 
+const churchLife = [
+  {
+    label: 'Worship',
+    title: 'We gather in God’s presence.',
+    body: 'Our services are filled with heartfelt worship, prayer, and the preaching of God’s Word.',
+    image: '/Picflow/DSC06877 copy.webp',
+    position: 'object-center',
+  },
+  {
+    label: 'Discipleship',
+    title: 'We are formed as disciples.',
+    body: 'From Sunday teaching to daily prayer and ministry life, every gathering helps believers mature in Christ.',
+    image: '/Picflow/DSC00268 copy.webp',
+    position: 'object-[52%_center]',
+  },
+  {
+    label: 'Fellowship',
+    title: 'No one follows Jesus alone.',
+    body: 'We build real relationships, carry one another’s burdens, celebrate testimonies, and serve as one family.',
+    image: '/Picflow/DSC00054 copy.webp',
+    position: 'object-[center_32%]',
+  },
+] as const;
+
 export default async function AboutPage() {
   const [leadershipResult, contentResult] = await Promise.allSettled([
     apiClient.listLeadership(),
@@ -160,11 +142,11 @@ export default async function AboutPage() {
     contentResult.status === 'fulfilled' ? contentResult.value : null
   );
   const leaders = allLeaders
-    .filter(l => SENIOR_ROLES.includes(l.role))
+    .filter(leader => SENIOR_ROLES.includes(leader.role))
     .slice(0, 2);
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-hidden bg-white">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -172,261 +154,277 @@ export default async function AboutPage() {
         ])}
       />
 
-      {/* ── 1. Page hero ─────────────────────────────────────── */}
       <PageHero
         eyebrow={content.eyebrow}
         title={content.title}
         subtitle={content.subtitle}
         compact
+        actions={
+          <>
+            <PlanVisitTrigger className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--app-primary)] px-6 font-ui text-xs font-bold uppercase tracking-[.13em] text-black transition hover:brightness-110">
+              Worship with us this Sunday
+            </PlanVisitTrigger>
+            <a
+              href={SOCIAL_LINKS.youtube}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/35 bg-black/20 px-6 font-ui text-xs font-bold uppercase tracking-[.13em] text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-white/10"
+            >
+              <Play className="h-4 w-4 fill-current" /> Watch a service
+            </a>
+          </>
+        }
       />
 
-      {/* ── 2. Service info strip — canvas ───────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+      <section className="border-b border-black/8 bg-[var(--app-canvas)]">
         <Container size="xl">
-          <div className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            {serviceInfo.map(item => (
-              <div
-                key={item.label}
-                className="flex flex-col gap-1 px-6 py-7 sm:px-8 sm:py-8"
-              >
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                  {item.label}
+          <div className="grid divide-y divide-black/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div className="flex items-center gap-4 py-6 sm:px-6 lg:px-8">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/12 text-[var(--app-primary-dark)]">
+                <Church className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-ui text-[10px] font-bold uppercase tracking-[.18em] text-black/65">
+                  Sunday worship
                 </p>
-                <p className="mt-0.5 font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
-                  {item.value}
-                </p>
-                <p className="mt-0.5 font-ui text-label text-[var(--app-ink)]/48">
-                  {item.detail}
+                <p className="mt-1 font-headline text-lg">
+                  {SERVICE_INFO.sunday.time} {SERVICE_INFO.sunday.timezone}
                 </p>
               </div>
+            </div>
+            <div className="flex items-center gap-4 py-6 sm:px-6 lg:px-8">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/12 text-[var(--app-primary-dark)]">
+                <HeartHandshake className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-ui text-[10px] font-bold uppercase tracking-[.18em] text-black/65">
+                  Daily prayer
+                </p>
+                <p className="mt-1 font-headline text-lg">
+                  {SERVICE_INFO.dailyPrayer.daysShort} ·{' '}
+                  {SERVICE_INFO.dailyPrayer.time}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 py-6 sm:px-6 lg:px-8">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/12 text-[var(--app-primary-dark)]">
+                <MapPin className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-ui text-[10px] font-bold uppercase tracking-[.18em] text-black/65">
+                  Our church home
+                </p>
+                <p className="mt-1 font-headline text-lg">
+                  {SERVICE_INFO.venue.short}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="bg-white py-20 sm:py-24 lg:py-32">
+        <Container size="xl">
+          <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:gap-20">
+            <ScrollFadeIn>
+              <p className="font-ui text-xs font-bold uppercase tracking-[.23em] text-[var(--app-primary-dark)]">
+                Our God-given mandate
+              </p>
+              <h2 className="mt-5 max-w-xl font-headline text-4xl leading-[1.03] tracking-[-.035em] text-[var(--app-ink)] sm:text-5xl lg:text-6xl">
+                {content.storyTitle}
+              </h2>
+            </ScrollFadeIn>
+            <ScrollFadeIn delay={0.08} className="lg:pt-10">
+              <p className="max-w-2xl font-ui text-lg leading-9 text-black/75">
+                {content.storyBody}
+              </p>
+              <div className="mt-9 border-l-2 border-[var(--app-primary)] pl-6">
+                <p className="font-headline text-2xl leading-snug text-[var(--app-ink)]">
+                  Jesus is at the centre. His Word is our foundation. His Spirit
+                  empowers our lives.
+                </p>
+              </div>
+            </ScrollFadeIn>
+          </div>
+        </Container>
+      </section>
+
+      <section className="relative bg-[#0a0a0c] py-20 text-white sm:py-24 lg:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(201,150,26,.12),transparent_28%)]" />
+        <Container size="xl" className="relative">
+          <ScrollFadeIn className="max-w-3xl">
+            <p className="font-ui text-xs font-bold uppercase tracking-[.23em] text-[var(--app-primary)]">
+              Built up in Christ
+            </p>
+            <h2 className="mt-4 font-headline text-4xl leading-tight sm:text-5xl">
+              {content.cultureTitle}
+            </h2>
+            <p className="mt-5 max-w-xl font-ui text-base leading-8 text-white/75">
+              Church is more than a meeting. It is where believers are rooted in
+              truth, strengthened in prayer, renewed in worship, and joined in
+              fellowship.
+            </p>
+          </ScrollFadeIn>
+          <div className="mt-12 border-y border-white/15">
+            {content.pillars.map((pillar, index) => (
+              <ScrollFadeIn key={pillar.title} delay={index * 0.04}>
+                <article className="group grid gap-5 border-b border-white/12 py-8 last:border-b-0 sm:grid-cols-[72px_minmax(180px,.75fr)_minmax(0,1.25fr)] sm:items-start sm:gap-8 sm:py-10 lg:grid-cols-[90px_minmax(240px,.7fr)_minmax(0,1.3fr)] lg:gap-12 lg:py-12">
+                  <p
+                    aria-hidden="true"
+                    className="font-headline text-3xl leading-none text-[var(--app-primary)] sm:pt-1 sm:text-4xl"
+                  >
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <h3 className="font-headline text-2xl leading-tight text-white sm:text-3xl">
+                    {pillar.title}
+                  </h3>
+                  <p className="max-w-2xl font-ui text-base leading-8 text-white/82">
+                    {pillar.body}
+                  </p>
+                </article>
+              </ScrollFadeIn>
             ))}
           </div>
         </Container>
       </section>
 
-      {/* ── 3. Editorial identity split — dark ───────────────── */}
-      <Section
-        padding="none"
-        className="relative overflow-hidden bg-[var(--app-dark)]"
-      >
-        <SectionGlow />
-        <div className="grid lg:grid-cols-[1.2fr_1fr] lg:min-h-[480px]">
-          {/* Text column */}
-          <ScrollFadeIn className="order-2 flex flex-col justify-center gap-7 px-6 pb-16 pt-20 sm:px-10 sm:pt-24 lg:order-1 lg:px-14 lg:py-20 xl:px-18">
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Who we are
-            </p>
-            <h2 className="font-headline text-heading-lg font-normal leading-[1.18] text-white sm:text-heading-lg lg:text-display-sm">
-              {content.storyTitle}
-            </h2>
-            <div className="h-px w-10 bg-[var(--app-primary)]/45" />
-            <BodyMD className="max-w-sm leading-[1.85] text-white/60">
-              {content.storyBody}
-            </BodyMD>
-            <div className="flex flex-nowrap items-stretch gap-2 sm:gap-3">
-              <PlanVisitTrigger className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-4 py-2.5 font-ui text-xs font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 sm:flex-none sm:px-6 sm:text-label">
-                Plan your visit
-              </PlanVisitTrigger>
-              <Link
-                href="/ministries"
-                className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 border border-white/18 px-4 py-2.5 font-ui text-xs font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)] sm:flex-none sm:px-5 sm:text-label"
-              >
-                Explore ministries <Arrow />
-              </Link>
+      <section className="bg-[var(--app-canvas)] py-20 sm:py-24 lg:py-28">
+        <Container size="xl">
+          <ScrollFadeIn className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-ui text-xs font-bold uppercase tracking-[.23em] text-[var(--app-primary-dark)]">
+                Life in our church
+              </p>
+              <h2 className="mt-4 max-w-2xl font-headline text-4xl leading-tight sm:text-5xl">
+                A place to encounter God, grow, and belong.
+              </h2>
             </div>
+            <Link
+              href="/ministries"
+              className="inline-flex items-center gap-2 font-ui text-xs font-bold uppercase tracking-[.14em] text-[var(--app-primary-dark)]"
+            >
+              Find your place <span aria-hidden>→</span>
+            </Link>
           </ScrollFadeIn>
-
-          {/* Photo column */}
-          <div className="relative order-1 aspect-[4/3] min-h-64 sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:h-auto">
-            <Image
-              quality={IMAGE_QUALITY}
-              src={content.storyImage || lader_1}
-              alt="Wisdom Church congregation"
-              fill
-              className="object-cover object-[center_30%] sm:object-center"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-            {/* Gradient blends photo into the dark text column on desktop */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[var(--app-dark)]/50 via-transparent to-[var(--app-dark)]/60 lg:bg-gradient-to-r lg:from-[var(--app-dark)] lg:via-[var(--app-dark)]/20 lg:to-transparent" />
-          </div>
-        </div>
-      </Section>
-
-      {/* ── 4. Culture pillars — editorial rows ──────────────── */}
-      <section className="overflow-hidden min-w-0 border-y border-[var(--app-ink)]/8">
-        {/* Section header */}
-        <div className="bg-[var(--app-canvas)] px-6 py-10 lg:px-10">
-          <Container size="xl">
-            <ScrollFadeIn className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                  Our culture
-                </p>
-                <H2 className="mt-2 max-w-sm font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-md">
-                  {content.cultureTitle}
-                </H2>
-              </div>
-              <Link
-                href="/ministries"
-                className="hidden items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)] sm:inline-flex"
+          <div className="mt-10 grid items-stretch gap-5 sm:mt-12 md:grid-cols-2 lg:grid-cols-3">
+            {churchLife.map((item, index) => (
+              <ScrollFadeIn
+                key={item.title}
+                delay={index * 0.07}
+                className="h-full"
               >
-                Explore ministries <Arrow />
-              </Link>
-            </ScrollFadeIn>
-          </Container>
-        </div>
-
-        {/* Pillar rows — title left, body right, alternating warm bg */}
-        <div className="divide-y divide-[var(--app-ink)]/8">
-          {content.pillars.map((pillar, i) => (
-            <ScrollFadeIn key={pillar.title} delay={i * 0.05}>
-              <div
-                className={
-                  i % 2 === 0
-                    ? 'bg-[var(--app-canvas)]'
-                    : 'bg-[var(--app-canvas-2)]'
-                }
-              >
-                <Container size="xl">
-                  <div className="grid items-center gap-6 py-9 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:py-11">
-                    {/* Title */}
-                    <div className="flex items-start gap-5">
-                      <div className="mt-[0.6rem] h-[1.5px] w-6 shrink-0 bg-[var(--app-primary)]/55" />
-                      <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)] lg:text-heading-md">
-                        {pillar.title}
-                      </p>
-                    </div>
-
-                    {/* Body */}
-                    <p className="pl-11 font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/70 lg:max-w-lg lg:pl-0">
-                      {pillar.body}
+                <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-black/8 bg-white shadow-[0_18px_55px_rgba(20,15,8,.08)]">
+                  <div className="relative aspect-[4/3] min-h-[240px] w-full overflow-hidden bg-black sm:aspect-[16/11] lg:aspect-[4/3]">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      quality={IMAGE_QUALITY}
+                      sizes="(max-width:767px) 100vw, (max-width:1023px) 50vw, 33vw"
+                      className={`object-cover ${item.position} transition duration-1000 group-hover:scale-[1.035]`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/5" />
+                    <span className="absolute bottom-4 left-4 rounded-full border border-white/30 bg-black/45 px-3 py-1.5 font-ui text-[10px] font-bold uppercase tracking-[.18em] text-white backdrop-blur-md sm:bottom-5 sm:left-5">
+                      {item.label}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6 text-[var(--app-ink)] sm:p-7 lg:p-8">
+                    <h3 className="font-headline text-[clamp(1.65rem,2.3vw,2.15rem)] leading-[1.12] tracking-[-.025em]">
+                      {item.title}
+                    </h3>
+                    <div className="mt-4 h-px w-10 bg-[var(--app-primary)]" />
+                    <p className="mt-4 font-ui text-sm leading-7 text-black/75 sm:text-[.95rem] sm:leading-7">
+                      {item.body}
                     </p>
                   </div>
-                </Container>
-              </div>
-            </ScrollFadeIn>
-          ))}
-        </div>
+                </article>
+              </ScrollFadeIn>
+            ))}
+          </div>
+        </Container>
       </section>
 
-      {/* ── 5. Leadership ───────────────────────────────────── */}
-      <section className="overflow-hidden min-w-0">
-        {/* Leadership intro header — dark */}
-        <ScrollFadeIn>
-          <div className="relative bg-[var(--app-dark)] px-6 py-14 lg:py-18">
-            <SectionGlow />
-            <Container size="xl">
-              <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-                <div className="max-w-lg">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                    Leadership
-                  </p>
-                  <h2 className="mt-3 font-headline text-heading-md font-normal leading-[1.18] text-white sm:text-heading-lg lg:text-display-sm">
-                    The people who shepherd
-                    <br className="hidden sm:block" />
-                    <em className="italic text-[var(--app-primary)]/80">
-                      {' '}
-                      this church.
-                    </em>
-                  </h2>
-                  <div className="mt-5 h-px w-10 bg-[var(--app-primary)]/40" />
-                  <p className="mt-4 font-ui text-body-sm leading-[1.85] text-white/50 max-w-sm">
-                    Wisdom Church is led by pastors who believe that sound
-                    teaching, faithful prayer, and genuine care build lasting
-                    community.
-                  </p>
-                </div>
+      <section className="bg-white">
+        <div className="relative overflow-hidden bg-[var(--app-dark)] text-white">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(201,150,26,.14),transparent_32%)]" />
+          <Container size="xl" className="relative py-20 sm:py-24 lg:py-28">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(260px,.36fr)] lg:items-end lg:gap-16">
+              <ScrollFadeIn className="max-w-3xl">
+                <p className="font-ui text-xs font-bold uppercase tracking-[.23em] text-[var(--app-primary-light)]">
+                  Pastoral leadership
+                </p>
+                <h2 className="mt-5 font-headline text-4xl leading-[1.08] text-white sm:text-5xl lg:text-6xl">
+                  Shepherding God’s people with the Word, prayer, and love.
+                </h2>
+                <p className="mt-6 max-w-2xl font-ui text-base leading-8 text-white/78">
+                  Our pastors serve the church by teaching Scripture, praying
+                  faithfully, caring for people, and helping every believer grow
+                  in Christ.
+                </p>
+              </ScrollFadeIn>
+
+              <ScrollFadeIn delay={0.08} className="lg:justify-self-end">
                 <Link
                   href="/leadership"
-                  className="hidden items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)] lg:inline-flex"
+                  className="group inline-flex min-h-12 w-full items-center justify-between gap-5 rounded-full border border-white/25 bg-white/[.06] px-6 font-ui text-xs font-bold uppercase tracking-[.13em] text-white transition hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)] hover:text-black sm:w-auto lg:min-w-[250px]"
                 >
-                  Meet the full team <Arrow />
+                  Meet our church leaders
+                  <span
+                    aria-hidden
+                    className="text-lg transition-transform group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
                 </Link>
-              </div>
-            </Container>
-          </div>
-        </ScrollFadeIn>
-
-        {/* 2-panel grid — canvas left, dark right. Same CanvasCard/DarkCard
-            components /leadership uses, so this spotlight can never drift
-            from the full directory. */}
-        {leaders.length > 0 && (
-          <div className="grid lg:grid-cols-2">
-            <ScrollFadeIn>
-              <CanvasCard leader={leaders[0]} />
-            </ScrollFadeIn>
-            {leaders[1] && (
-              <ScrollFadeIn delay={0.08}>
-                <DarkCard leader={leaders[1]} />
               </ScrollFadeIn>
-            )}
-          </div>
-        )}
-
-        {/* Mobile link — hidden on lg where header shows it */}
-        <div className="border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)] px-6 py-5 lg:hidden">
-          <Container size="xl">
-            <Link
-              href="/leadership"
-              className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-primary)]/50 hover:text-[var(--app-primary)]"
-            >
-              Meet the full team <Arrow />
-            </Link>
-          </Container>
-        </div>
-      </section>
-
-      {/* ── 6. CTA ──────────────────────────────────────────── */}
-      <ScrollFadeIn>
-        <section className="relative overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)] py-20 lg:py-28">
-          {/* Faint gold radial — warm glow, not visible, just warmth */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_100%,rgba(201,150,26,0.06),transparent)]" />
-
-          <Container size="lg" className="relative">
-            <div className="flex flex-col items-center gap-8 text-center">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Visit Wisdom Church
-              </p>
-
-              <h2 className="font-headline text-heading-lg font-normal leading-[1.2] text-[var(--app-ink)] sm:text-display-sm lg:text-display-sm">
-                Come and find your place
-                <br className="hidden sm:block" /> in{' '}
-                <em className="italic text-[var(--app-primary)]/75">
-                  this community.
-                </em>
-              </h2>
-
-              <div className="h-px w-12 bg-[var(--app-primary)]/40" />
-
-              <p className="max-w-md font-ui text-body-md leading-[1.85] text-[var(--app-ink)]/52">
-                Whether you are exploring faith for the first time or looking
-                for a church home in Lagos — you are welcome here, exactly as
-                you are.
-              </p>
-
-              <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
-                <PlanVisitTrigger className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]">
-                  Plan your visit <Arrow />
-                </PlanVisitTrigger>
-                <Link
-                  href="/ministries"
-                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-ink)]/35 hover:text-[var(--app-ink)]"
-                >
-                  Explore ministries <Arrow />
-                </Link>
-              </div>
-
-              {/* Service times */}
-              <p className="font-ui text-label tracking-[0.04em] text-[var(--app-ink)]/60">
-                {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time}{' '}
-                &nbsp;·&nbsp; {SERVICE_INFO.dailyPrayer.label}{' '}
-                {SERVICE_INFO.dailyPrayer.time} &nbsp;·&nbsp;{' '}
-                {SERVICE_INFO.venue.short}
-              </p>
             </div>
           </Container>
-        </section>
-      </ScrollFadeIn>
+        </div>
+        {leaders.length > 0 ? (
+          <div className="grid lg:grid-cols-2">
+            <CanvasCard leader={leaders[0]} />
+            {leaders[1] && <DarkCard leader={leaders[1]} />}
+          </div>
+        ) : (
+          <Container size="xl" className="py-12">
+            <p className="font-ui text-sm text-black/70">
+              Leadership profiles are being updated. Meet the pastoral team when
+              you worship with us.
+            </p>
+          </Container>
+        )}
+      </section>
+
+      <section className="relative overflow-hidden bg-[var(--app-primary)] py-20 sm:py-24 lg:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,.22),transparent_28%)]" />
+        <Container size="lg" className="relative text-center">
+          <p className="font-ui text-xs font-bold uppercase tracking-[.23em] text-black/70">
+            There is a place for you here
+          </p>
+          <h2 className="mx-auto mt-5 max-w-4xl font-headline text-4xl leading-[1.03] tracking-[-.035em] text-black sm:text-5xl lg:text-6xl">
+            Come worship Jesus with us this Sunday.
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl font-ui text-base leading-8 text-black/75">
+            Whether you are beginning your walk with God, returning to church,
+            or looking for a church family, we will be glad to welcome you.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-full bg-black px-7 font-ui text-xs font-bold uppercase tracking-[.14em] text-white">
+              Plan your first visit
+            </PlanVisitTrigger>
+            <Link
+              href="/ministries"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-black/25 px-7 font-ui text-xs font-bold uppercase tracking-[.14em] text-black"
+            >
+              Explore church ministries
+            </Link>
+          </div>
+          <p className="mt-7 font-ui text-xs font-semibold text-black/70">
+            {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}{' '}
+            {SERVICE_INFO.sunday.timezone} · {SERVICE_INFO.venue.short}
+          </p>
+        </Container>
+      </section>
     </main>
   );
 }

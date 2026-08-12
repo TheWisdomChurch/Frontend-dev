@@ -17,7 +17,8 @@ export interface StoreOrderItem {
 }
 
 export interface StoreOrderPayload {
-  orderId: string;
+  idempotencyKey: string;
+  checkoutToken: string;
   items: StoreOrderItem[];
   subtotal: number;
   deliveryFee: number;
@@ -40,8 +41,13 @@ export interface StoreOrderPayload {
   paymentSlipUrl?: string;
 }
 
-export interface StoreOrder extends StoreOrderPayload {
+export interface StoreOrder extends Omit<
+  StoreOrderPayload,
+  'idempotencyKey' | 'checkoutToken'
+> {
+  orderId: string;
   status: OrderStatus;
+  paymentStatus: 'unpaid' | 'proof_submitted' | 'paid' | 'failed' | 'refunded';
   orderDate: string;
 }
 
@@ -52,6 +58,18 @@ const storeHttp = createHttpClient({ baseUrl: API_V1_BASE_URL });
 const inMemoryFallback: { lastOrder: StoreOrder | null } = {
   lastOrder: null,
 };
+
+const orderCredentialKey = (orderId: string) => `wisdom-store-order:${orderId}`;
+
+function rememberOrderCredential(orderId: string, token: string) {
+  if (typeof window !== 'undefined')
+    localStorage.setItem(orderCredentialKey(orderId), token);
+}
+
+function readOrderCredential(orderId: string): string {
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem(orderCredentialKey(orderId)) || '';
+}
 
 export { HttpError as StoreApiError };
 
@@ -113,6 +131,7 @@ export const storeClient = {
       body: JSON.stringify(payload),
       unwrap: true,
     });
+    rememberOrderCredential(order.orderId, payload.checkoutToken);
     inMemoryFallback.lastOrder = order;
     return order;
   },
@@ -122,7 +141,11 @@ export const storeClient = {
     try {
       const order = await storeHttp.request<StoreOrder>(
         `/store/orders/${encodeURIComponent(orderId)}`,
-        { method: 'GET', unwrap: true }
+        {
+          method: 'GET',
+          unwrap: true,
+          headers: { 'X-Order-Access-Token': readOrderCredential(orderId) },
+        }
       );
       inMemoryFallback.lastOrder = order;
       return order;
@@ -130,6 +153,23 @@ export const storeClient = {
       if (isHttpError(error) && error.statusCode === 404) return null;
       throw error;
     }
+  },
+
+  async submitPaymentProof(
+    orderId: string,
+    paymentSlipUrl: string
+  ): Promise<StoreOrder> {
+    const order = await storeHttp.request<StoreOrder>(
+      `/store/orders/${encodeURIComponent(orderId)}/payment-proof`,
+      {
+        method: 'POST',
+        unwrap: true,
+        headers: { 'X-Order-Access-Token': readOrderCredential(orderId) },
+        body: JSON.stringify({ paymentSlipUrl }),
+      }
+    );
+    inMemoryFallback.lastOrder = order;
+    return order;
   },
 
   async getLastOrder(): Promise<StoreOrder | null> {

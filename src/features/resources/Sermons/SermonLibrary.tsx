@@ -21,7 +21,17 @@ import { Media } from '@/shared/ui/Media';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { useChurchAnalytics } from '@/shared/analytics/churchAnalytics';
+import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
+import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 import YouTubePlayer from './YoutubePlayer';
+
+/** Sermon titles arrive as uploaded to YouTube — entity-encoded and often
+ * "{Title} | {Church Name} | {Date}". Every user-facing heading in this
+ * file should go through this so the same message reads identically
+ * whether it's a card, the "now playing" heading, or the homepage. */
+function displayTitle(rawTitle: string): string {
+  return cleanSermonTitle(decodeHtmlEntities(rawTitle));
+}
 
 type Sort = 'recommended' | 'newest' | 'popular';
 type HistoryItem = { id: string; watchedAt: number };
@@ -91,7 +101,7 @@ function SermonCard({
           {sermon.series || 'Wisdom teaching'}
         </p>
         <h3 className="mt-2 line-clamp-2 font-headline text-xl leading-[1.18] text-[var(--app-ink)] transition group-hover:text-[var(--app-primary-dark)]">
-          {sermon.title}
+          {displayTitle(sermon.title)}
         </h3>
         <p className="mt-2 truncate font-ui text-xs text-black/48">
           {sermon.preacher} · {date(sermon.publishedAt)}

@@ -75,13 +75,10 @@ const CheckoutForm = () => {
     DEFAULT_PHONE_COUNTRY
   );
 
-  const generateOrderId = () => {
-    const timestamp = Date.now().toString(36);
-    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-    return `WH-${timestamp}-${randomStr}`;
-  };
-
-  const [orderId] = useState(() => generateOrderId());
+  const [checkoutAttempt] = useState(() => ({
+    idempotencyKey: crypto.randomUUID(),
+    checkoutToken: crypto.randomUUID(),
+  }));
 
   const deliveryFee = Math.max(1000, total * 0.1);
   const grandTotal =
@@ -246,24 +243,8 @@ const CheckoutForm = () => {
     setIsSubmitting(true);
 
     try {
-      let paymentSlipUrl: string | undefined;
-      if (formData.paymentMethod === 'transfer' && formData.paymentSlip) {
-        try {
-          paymentSlipUrl = await storeClient.uploadPaymentSlip(
-            formData.paymentSlip
-          );
-        } catch {
-          setFormErrors(prev => ({
-            ...prev,
-            paymentSlip: 'Failed to upload payment slip. Please try again.',
-          }));
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
       const orderPayload = {
-        orderId,
+        ...checkoutAttempt,
         items,
         subtotal: total,
         total: grandTotal,
@@ -286,14 +267,35 @@ const CheckoutForm = () => {
                 customerBankName: formData.customerBankName,
               }
             : undefined,
-        paymentSlipUrl,
       };
 
-      await storeClient.createOrder(orderPayload);
+      let order = await storeClient.createOrder(orderPayload);
+      if (
+        formData.paymentMethod === 'transfer' &&
+        formData.paymentSlip &&
+        order.paymentStatus !== 'proof_submitted'
+      ) {
+        try {
+          const paymentSlipUrl = await storeClient.uploadPaymentSlip(
+            formData.paymentSlip
+          );
+          order = await storeClient.submitPaymentProof(
+            order.orderId,
+            paymentSlipUrl
+          );
+        } catch {
+          setFormErrors(prev => ({
+            ...prev,
+            submit: `Order ${order.orderId} was saved, but payment proof could not be attached. Retry to continue safely.`,
+          }));
+          setIsSubmitting(false);
+          return;
+        }
+      }
 
       dispatch(clearCart());
       router.push(
-        `/order-confirmation?orderId=${orderId}&amount=${grandTotal}`
+        `/order-confirmation?orderId=${encodeURIComponent(order.orderId)}`
       );
     } catch (error) {
       console.error('Order submission failed:', error);
@@ -323,7 +325,7 @@ const CheckoutForm = () => {
               Order Reference
             </Caption>
             <BaseText weight="bold" className="text-white">
-              {orderId}
+              Assigned securely after checkout
             </BaseText>
           </div>
           <div className="text-right">
@@ -828,7 +830,7 @@ const CheckoutForm = () => {
                 Order ID
               </Caption>
               <BaseText weight="bold" className="text-white">
-                {orderId}
+                Assigned by the store when your order is saved
               </BaseText>
               <Caption className="text-xs mt-1 text-white/60">
                 Please save this reference for future inquiries
