@@ -32,7 +32,7 @@ import {
 } from '@/shared/ui/motion/staggerReveal';
 
 const fetchLatestSermons = (signal: AbortSignal) =>
-  mediaApi.listSermons({ sort: 'newest', signal });
+  mediaApi.listSermons({ sort: 'newest', limit: 1, signal });
 
 const ALL_RESOURCES = [
   {

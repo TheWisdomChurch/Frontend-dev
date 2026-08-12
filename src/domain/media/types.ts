@@ -18,6 +18,22 @@ export interface YouTubeVideo {
   preacher: string;
 }
 
+export interface SermonCollection {
+  id: string;
+  title: string;
+  description: string;
+  items: YouTubeVideo[];
+}
+
+export interface SermonDiscovery {
+  featured?: YouTubeVideo;
+  recommended: YouTubeVideo[];
+  latest: YouTubeVideo[];
+  collections: SermonCollection[];
+  topics: string[];
+  generatedAt: string;
+}
+
 export interface YouTubeChannel {
   id: string;
   title: string;

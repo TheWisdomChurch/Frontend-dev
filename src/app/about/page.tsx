@@ -18,6 +18,7 @@ import type {
 } from '@/domain/leadership/types';
 import { CanvasCard, DarkCard } from '@/features/leadership/LeadershipCards';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
+import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
 // Same senior-role definition /leadership uses — kept in sync so About's
 // leadership spotlight and the full directory always agree on titles.
@@ -74,7 +75,7 @@ const serviceInfo = [
   },
 ] as const;
 
-const pillars = [
+const defaultPillars: Array<{ title: string; body: string }> = [
   {
     title: 'Presence-driven worship',
     body: 'We gather to host the presence of God with reverence, expectation, and joy.',
@@ -91,12 +92,73 @@ const pillars = [
     title: 'Excellence with integrity',
     body: 'We steward people and service moments with clarity, order, and consistency.',
   },
-] as const;
+];
+
+const defaultAboutContent = {
+  eyebrow: 'About Wisdom Church',
+  title: 'Raising complete believers.',
+  subtitle:
+    'A Spirit-filled community built on Word, worship, and intentional discipleship.',
+  storyTitle: 'A church where people grow in Christ.',
+  storyBody:
+    'The Wisdom Church is a trans-generational community in Lagos — committed to forming complete believers through sound teaching, worshipful community, and faithful pastoral care.',
+  storyImage: '',
+  cultureTitle: 'What shapes everything we do.',
+  pillars: defaultPillars.map(item => ({ ...item })),
+};
+
+type AboutContent = typeof defaultAboutContent;
+
+function normalizeAboutContent(
+  value: Record<string, unknown> | null
+): AboutContent {
+  if (!value) return defaultAboutContent;
+  const text = (key: keyof Omit<AboutContent, 'pillars'>) =>
+    typeof value[key] === 'string' && value[key].trim()
+      ? value[key].trim()
+      : defaultAboutContent[key];
+  const suppliedPillars = Array.isArray(value.pillars)
+    ? value.pillars
+        .filter(item => item && typeof item === 'object')
+        .map(item => item as Record<string, unknown>)
+        .filter(
+          item =>
+            typeof item.title === 'string' && typeof item.body === 'string'
+        )
+        .map(item => ({
+          title: String(item.title).trim(),
+          body: String(item.body).trim(),
+        }))
+        .filter(item => item.title && item.body)
+        .slice(0, 8)
+    : [];
+  return {
+    eyebrow: text('eyebrow'),
+    title: text('title'),
+    subtitle: text('subtitle'),
+    storyTitle: text('storyTitle'),
+    storyBody: text('storyBody'),
+    storyImage:
+      typeof value.storyImage === 'string' ? value.storyImage.trim() : '',
+    cultureTitle: text('cultureTitle'),
+    pillars: suppliedPillars.length
+      ? suppliedPillars
+      : defaultAboutContent.pillars,
+  };
+}
 
 export default async function AboutPage() {
-  const allLeaders = await apiClient
-    .listLeadership()
-    .catch(() => [] as LeadershipMember[]);
+  const [leadershipResult, contentResult] = await Promise.allSettled([
+    apiClient.listLeadership(),
+    apiClient.getAboutContent(),
+  ]);
+  const allLeaders =
+    leadershipResult.status === 'fulfilled'
+      ? leadershipResult.value
+      : ([] as LeadershipMember[]);
+  const content = normalizeAboutContent(
+    contentResult.status === 'fulfilled' ? contentResult.value : null
+  );
   const leaders = allLeaders
     .filter(l => SENIOR_ROLES.includes(l.role))
     .slice(0, 2);
@@ -112,9 +174,9 @@ export default async function AboutPage() {
 
       {/* ── 1. Page hero ─────────────────────────────────────── */}
       <PageHero
-        eyebrow="About Wisdom Church"
-        title="Raising complete believers."
-        subtitle="A Spirit-filled community built on Word, worship, and intentional discipleship."
+        eyebrow={content.eyebrow}
+        title={content.title}
+        subtitle={content.subtitle}
         compact
       />
 
@@ -155,27 +217,16 @@ export default async function AboutPage() {
               Who we are
             </p>
             <h2 className="font-headline text-heading-lg font-normal leading-[1.18] text-white sm:text-heading-lg lg:text-display-sm">
-              Building a church
-              <br className="hidden sm:block" />
-              where people
-              <br className="hidden sm:block" />
-              <em className="italic text-[var(--app-primary)]/90">
-                grow in Christ.
-              </em>
+              {content.storyTitle}
             </h2>
             <div className="h-px w-10 bg-[var(--app-primary)]/45" />
             <BodyMD className="max-w-sm leading-[1.85] text-white/60">
-              The Wisdom Church is a trans-generational community in Lagos —
-              committed to forming complete believers through sound teaching,
-              worshipful community, and faithful pastoral care.
+              {content.storyBody}
             </BodyMD>
             <div className="flex flex-nowrap items-stretch gap-2 sm:gap-3">
-              <Link
-                href="/contact"
-                className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-4 py-2.5 font-ui text-xs font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 sm:flex-none sm:px-6 sm:text-label"
-              >
+              <PlanVisitTrigger className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 rounded-button bg-[var(--app-primary)] px-4 py-2.5 font-ui text-xs font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:brightness-105 sm:flex-none sm:px-6 sm:text-label">
                 Plan your visit
-              </Link>
+              </PlanVisitTrigger>
               <Link
                 href="/ministries"
                 className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 border border-white/18 px-4 py-2.5 font-ui text-xs font-semibold text-white/65 transition duration-150 hover:border-[var(--app-primary)]/60 hover:text-[var(--app-primary)] sm:flex-none sm:px-5 sm:text-label"
@@ -189,7 +240,7 @@ export default async function AboutPage() {
           <div className="relative order-1 aspect-[4/3] min-h-64 sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:h-auto">
             <Image
               quality={IMAGE_QUALITY}
-              src={lader_1}
+              src={content.storyImage || lader_1}
               alt="Wisdom Church congregation"
               fill
               className="object-cover object-[center_30%] sm:object-center"
@@ -212,7 +263,7 @@ export default async function AboutPage() {
                   Our culture
                 </p>
                 <H2 className="mt-2 max-w-sm font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-md">
-                  What shapes everything we do.
+                  {content.cultureTitle}
                 </H2>
               </div>
               <Link
@@ -227,7 +278,7 @@ export default async function AboutPage() {
 
         {/* Pillar rows — title left, body right, alternating warm bg */}
         <div className="divide-y divide-[var(--app-ink)]/8">
-          {pillars.map((pillar, i) => (
+          {content.pillars.map((pillar, i) => (
             <ScrollFadeIn key={pillar.title} delay={i * 0.05}>
               <div
                 className={
@@ -354,12 +405,9 @@ export default async function AboutPage() {
               </p>
 
               <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
-                >
+                <PlanVisitTrigger className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]">
                   Plan your visit <Arrow />
-                </Link>
+                </PlanVisitTrigger>
                 <Link
                   href="/ministries"
                   className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/60 transition duration-150 hover:border-[var(--app-ink)]/35 hover:text-[var(--app-ink)]"

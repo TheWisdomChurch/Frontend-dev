@@ -773,6 +773,14 @@ export const apiClient = {
       : null;
   },
 
+  async getAboutContent(): Promise<Record<string, unknown> | null> {
+    const res = await request<unknown>('/content/about', { method: 'GET' });
+    const data = unwrapData<unknown>(res);
+    return data && typeof data === 'object'
+      ? (data as Record<string, unknown>)
+      : null;
+  },
+
   async submitPastoralCareRequest(
     payload: PastoralCareRequestData
   ): Promise<unknown> {
