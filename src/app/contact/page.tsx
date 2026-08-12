@@ -44,7 +44,12 @@ type ContactFormData = {
 
 const PRAYER_TOPIC_VALUE = 'prayer';
 const VISIT_TOPIC_VALUE = 'visit';
-const PREFILLABLE_TOPICS = [PRAYER_TOPIC_VALUE, VISIT_TOPIC_VALUE];
+const CONNECT_TOPIC_VALUE = 'connect';
+const PREFILLABLE_TOPICS = [
+  PRAYER_TOPIC_VALUE,
+  VISIT_TOPIC_VALUE,
+  CONNECT_TOPIC_VALUE,
+];
 
 type SocialLink = {
   platform: string;
