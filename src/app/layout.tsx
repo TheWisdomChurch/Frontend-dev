@@ -95,6 +95,14 @@ export const viewport: Viewport = {
   themeColor: 'var(--app-surface)',
 };
 
+// Production analytics must never initialize while developing locally. Apart
+// from polluting production data, both Ahrefs and Vercel Analytics deliberately
+// reject localhost events and emit noisy diagnostics. Vercel provides this
+// value at build time; self-hosted production deployments can opt in explicitly.
+const productionAnalyticsEnabled =
+  process.env.VERCEL_ENV === 'production' ||
+  process.env.ANALYTICS_ENABLED === 'true';
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   const orgSchema = {
     '@context': 'https://schema.org',
@@ -158,17 +166,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        <Script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="XGrQDDaQUVZrI428swX0CA"
-          strategy="afterInteractive"
-        />
+        {productionAnalyticsEnabled ? (
+          <Script
+            src="https://analytics.ahrefs.com/analytics.js"
+            data-key="XGrQDDaQUVZrI428swX0CA"
+            strategy="afterInteractive"
+          />
+        ) : null}
         <Providers>
           {children}
           <HeroHighlights modalOnly />
           <CommunityJoinModal />
         </Providers>
-        <Analytics />
+        {productionAnalyticsEnabled ? (
+          <Analytics mode="production" debug={false} />
+        ) : null}
       </body>
     </html>
   );

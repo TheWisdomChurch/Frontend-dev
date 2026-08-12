@@ -36,6 +36,10 @@ export const bricolageGrotesque = localFont({
   ],
   variable: '--font-bricolage',
   display: 'swap',
+  // This family declares six separate files. Preloading the family causes all
+  // six to be fetched on every route, even when a weight is not used above the
+  // fold. Let the browser request only the faces selected by CSS instead.
+  preload: false,
   fallback: ['Inter', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
 });
 
@@ -61,5 +65,6 @@ export const playfair = localFont({
   ],
   variable: '--font-playfair',
   display: 'swap',
+  preload: false,
   fallback: ['Georgia', 'Times New Roman', 'serif'],
 });

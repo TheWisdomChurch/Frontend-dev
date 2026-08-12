@@ -445,6 +445,8 @@ export default function HeroHighlights({
             <label className="space-y-2">
               <span className={fieldLabelClass}>Full name</span>
               <input
+                id="visit-name"
+                name="name"
                 type="text"
                 autoComplete="name"
                 placeholder="How should we welcome you?"
@@ -459,6 +461,8 @@ export default function HeroHighlights({
             <label className="space-y-2">
               <span className={fieldLabelClass}>Email address</span>
               <input
+                id="visit-email"
+                name="email"
                 type="email"
                 autoComplete="email"
                 placeholder="you@example.com"
@@ -491,6 +495,8 @@ export default function HeroHighlights({
             <label className="space-y-2">
               <span className={fieldLabelClass}>Your party</span>
               <select
+                id="visit-attendance"
+                name="attendance"
                 className={`${selectClass} rounded-2xl`}
                 value={visit.attendance}
                 onChange={e =>
@@ -512,6 +518,8 @@ export default function HeroHighlights({
           <label className="block space-y-2">
             <span className={fieldLabelClass}>Anything we should know?</span>
             <textarea
+              id="visit-notes"
+              name="notes"
               placeholder="Children joining you, accessibility needs, a prayer request…"
               className={`${inputClass} min-h-[100px] resize-none rounded-2xl leading-6`}
               value={visit.notes}
@@ -523,6 +531,8 @@ export default function HeroHighlights({
 
           <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/8 bg-white/[0.025] p-3.5">
             <input
+              id="visit-reminder-opt-in"
+              name="reminderOptIn"
               type="checkbox"
               checked={visit.reminderOptIn}
               onChange={event =>
@@ -589,6 +599,8 @@ export default function HeroHighlights({
             </div>
           </div>
           <input
+            id="watch-name"
+            name="name"
             type="text"
             placeholder="Full name"
             className={inputClass}
@@ -597,6 +609,8 @@ export default function HeroHighlights({
             required
           />
           <input
+            id="watch-email"
+            name="email"
             type="email"
             placeholder="Email address"
             className={inputClass}

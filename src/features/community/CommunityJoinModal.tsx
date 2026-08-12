@@ -194,6 +194,8 @@ export default function CommunityJoinModal() {
             <label className="min-w-0 space-y-2">
               <span className={labelClass}>Full name</span>
               <input
+                id="community-name"
+                name="name"
                 required
                 autoComplete="name"
                 className={inputClass}
@@ -207,6 +209,8 @@ export default function CommunityJoinModal() {
             <label className="min-w-0 space-y-2">
               <span className={labelClass}>Email address</span>
               <input
+                id="community-email"
+                name="email"
                 required
                 type="email"
                 autoComplete="email"
@@ -243,6 +247,8 @@ export default function CommunityJoinModal() {
             <label className="min-w-0 space-y-2">
               <span className={labelClass}>I’m interested in</span>
               <select
+                id="community-interest"
+                name="interest"
                 className={inputClass}
                 value={form.interest}
                 onChange={event =>
@@ -262,6 +268,8 @@ export default function CommunityJoinModal() {
             <label className="min-w-0 space-y-2">
               <span className={labelClass}>Contact me through</span>
               <select
+                id="community-preferred-contact"
+                name="preferredContact"
                 className={inputClass}
                 value={form.preferredContact}
                 onChange={event =>
@@ -281,6 +289,8 @@ export default function CommunityJoinModal() {
           <label className="block min-w-0 space-y-2">
             <span className={labelClass}>Anything else? (optional)</span>
             <textarea
+              id="community-notes"
+              name="notes"
               className={`${inputClass} min-h-24 resize-none`}
               placeholder="Tell us what would help you feel connected…"
               value={form.notes}
@@ -292,6 +302,8 @@ export default function CommunityJoinModal() {
 
           <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/8 bg-white/[0.025] p-3.5">
             <input
+              id="community-follow-up-consent"
+              name="followUpConsent"
               type="checkbox"
               checked={form.consent}
               onChange={event =>

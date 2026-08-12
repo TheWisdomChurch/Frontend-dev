@@ -42,9 +42,11 @@ const COVER_IMAGE_SIZES: Record<keyof typeof HOME_IMAGES, string> = {
 function CoverImage({
   name,
   priority = false,
+  loading,
 }: {
   name: keyof typeof HOME_IMAGES;
   priority?: boolean;
+  loading?: 'eager' | 'lazy';
 }) {
   const image = HOME_IMAGES[name];
   const isCommunityImage = name === 'community';
@@ -57,6 +59,7 @@ function CoverImage({
       alt={image.alt}
       fill
       priority={priority}
+      loading={priority ? undefined : loading}
       quality={IMAGE_QUALITY}
       sizes={COVER_IMAGE_SIZES[name]}
       data-parallax-global={isCommunityImage ? undefined : parallaxDepth}
@@ -127,25 +130,15 @@ function CommunityCollage() {
         className="group relative aspect-[5/4] w-full overflow-hidden bg-[#15121b] shadow-[0_20px_55px_rgba(0,0,0,.3)] sm:col-span-5"
       >
         <Image
-          src="/images/worship-service-original-full.jpg"
-          alt=""
-          aria-hidden="true"
-          fill
-          quality={70}
-          sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
-          className="scale-110 object-cover object-center opacity-55 blur-xl saturate-125"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-black/12 backdrop-blur-[2px]" />
-        <Image
-          src="/images/worship-service-original-full.jpg"
+          src="/images/worship-service-community-generated-v3.png"
           alt="Worshippers sharing a service at The Wisdom Church"
           fill
           quality={IMAGE_QUALITY}
           sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
-          className="z-10 object-contain object-center"
+          className="object-cover object-center transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
         />
-        <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-tr from-black/12 via-transparent to-[var(--app-primary)]/[0.06]" />
-        <div className="pointer-events-none absolute inset-y-0 -left-1/2 z-30 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent opacity-0 transition-all duration-1000 motion-reduce:hidden group-hover:left-[120%] group-hover:opacity-100" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/12 via-transparent to-[var(--app-primary)]/[0.06]" />
+        <div className="pointer-events-none absolute inset-y-0 -left-1/2 z-10 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent opacity-0 transition-all duration-1000 motion-reduce:hidden group-hover:left-[120%] group-hover:opacity-100" />
       </motion.div>
 
       <motion.div
@@ -254,7 +247,7 @@ export default function PremiumHome() {
           </motion.div>
 
           <div className="group relative min-h-[460px] overflow-hidden lg:min-h-full">
-            <CoverImage name="welcome" />
+            <CoverImage name="welcome" loading="eager" />
             <div className="absolute inset-0 bg-black/0 transition duration-700 group-hover:bg-black/10" />
           </div>
         </div>

@@ -53,6 +53,8 @@ export function PhoneNumberField({
       ) : null}
       <div className="grid min-w-0 grid-cols-1 gap-2 min-[420px]:grid-cols-[minmax(7.5rem,0.42fr)_minmax(0,1fr)]">
         <select
+          id={`${id}-country`}
+          name={`${id}-country`}
           aria-label="Phone country code"
           value={country}
           disabled={disabled}
@@ -67,6 +69,7 @@ export function PhoneNumberField({
         </select>
         <input
           id={id}
+          name={id}
           type="tel"
           inputMode="tel"
           autoComplete="tel-national"
