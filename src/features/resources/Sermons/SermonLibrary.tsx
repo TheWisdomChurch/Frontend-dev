@@ -315,7 +315,7 @@ export default function SermonLibrary({
                   Now playing · {selected.series}
                 </p>
                 <h1 className="mt-4 font-headline text-3xl leading-[1.08] text-white sm:text-4xl">
-                  {selected.title}
+                  {displayTitle(selected.title)}
                 </h1>
                 <p className="mt-4 font-ui text-sm text-white/50">
                   {selected.preacher} · {date(selected.publishedAt)} ·{' '}

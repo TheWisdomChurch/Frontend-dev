@@ -10,6 +10,7 @@ import Arrow from '@/shared/ui/icons/Arrow';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
+import styles from './ministries.module.css';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Ministries — Find Your Place',
@@ -61,8 +62,8 @@ const ministries = [
     description:
       'Serving our neighbours, sharing the gospel, and expressing the love of Christ through practical care.',
     href: '/ministries/outreach',
-    image: '/Picflow/DSC00132 copy.webp',
-    position: 'object-center',
+    image: '/Picflow/DSC00258 copy.webp',
+    position: 'object-[center_42%]',
   },
 ] as const;
 
@@ -174,9 +175,9 @@ export default function MinistriesPage() {
                   <Link
                     href={ministry.href}
                     aria-label={`Explore ${ministry.title}`}
-                    className="group grid min-h-[440px] overflow-hidden bg-[var(--app-dark)] shadow-[0_18px_50px_rgba(20,16,8,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 md:min-h-[400px] md:grid-cols-[1.08fr_0.92fr] lg:min-h-[430px] lg:grid-cols-1"
+                    className="group relative block min-h-[470px] overflow-hidden rounded-[2px] bg-[var(--app-dark)] shadow-[0_18px_50px_rgba(20,16,8,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[500px] lg:min-h-[540px]"
                   >
-                    <div className="relative min-h-[250px] overflow-hidden lg:min-h-0">
+                    <div className="absolute inset-0 overflow-hidden">
                       <Image
                         src={ministry.image}
                         alt=""
@@ -185,9 +186,11 @@ export default function MinistriesPage() {
                         sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 58vw"
                         className={`object-cover ${ministry.position} transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.035]`}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)]/75 via-transparent to-transparent lg:from-[var(--app-dark)]/95 lg:via-[var(--app-dark)]/20" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-black/10 transition-colors duration-500 group-hover:from-black/45" />
                     </div>
-                    <div className="relative flex flex-col justify-between border-t border-white/10 p-6 sm:p-7 lg:-mt-44 lg:min-h-[240px] lg:border-t-0 lg:bg-gradient-to-t lg:from-[var(--app-dark)] lg:via-[var(--app-dark)]/90 lg:to-transparent lg:pt-20">
+                    <div
+                      className={`${styles.cardContent} absolute inset-x-4 bottom-4 flex flex-col justify-end overflow-hidden rounded-[2px] border border-white/20 bg-[rgba(12,12,14,0.58)] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl backdrop-saturate-150 sm:inset-x-5 sm:bottom-5 sm:p-6`}
+                    >
                       <div>
                         <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                           {ministry.label}
@@ -195,14 +198,18 @@ export default function MinistriesPage() {
                         <h3 className="mt-3 font-headline text-heading-md font-normal leading-tight text-white sm:text-heading-lg">
                           {ministry.title}
                         </h3>
-                        <p className="mt-3 max-w-lg font-ui text-body-sm leading-[1.75] text-white/78">
-                          {ministry.description}
-                        </p>
+                        <div className={styles.cardReveal}>
+                          <div>
+                            <p className="mt-3 max-w-lg font-ui text-body-sm leading-[1.75] text-white/78">
+                              {ministry.description}
+                            </p>
+                            <span className="mt-6 inline-flex items-center gap-2 self-start font-ui text-label font-bold uppercase tracking-[0.12em] text-white">
+                              Learn more
+                              <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <span className="mt-6 inline-flex items-center gap-2 self-start font-ui text-label font-bold uppercase tracking-[0.12em] text-white">
-                        Learn more
-                        <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
-                      </span>
                     </div>
                   </Link>
                 </ScrollFadeIn>
