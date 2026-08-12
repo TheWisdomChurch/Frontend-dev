@@ -163,19 +163,14 @@ export default function MinistriesPage() {
             </p>
           </ScrollFadeIn>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-12">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {ministries.map((ministry, index) => {
-              const featured = index === 0 || index === 3;
               return (
-                <ScrollFadeIn
-                  key={ministry.title}
-                  delay={index * 0.06}
-                  className={featured ? 'lg:col-span-7' : 'lg:col-span-5'}
-                >
+                <ScrollFadeIn key={ministry.title} delay={index * 0.06}>
                   <Link
                     href={ministry.href}
                     aria-label={`Explore ${ministry.title}`}
-                    className="group relative block min-h-[470px] overflow-hidden rounded-[2px] bg-[var(--app-dark)] shadow-[0_18px_50px_rgba(20,16,8,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[500px] lg:min-h-[540px]"
+                    className="group relative block min-h-[470px] overflow-hidden rounded-[2px] bg-[var(--app-dark)] shadow-[0_18px_50px_rgba(20,16,8,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[500px] lg:min-h-[520px]"
                   >
                     <div className="absolute inset-0 overflow-hidden">
                       <Image
@@ -183,7 +178,7 @@ export default function MinistriesPage() {
                         alt=""
                         fill
                         quality={IMAGE_QUALITY}
-                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 58vw"
+                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
                         className={`object-cover ${ministry.position} transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.035]`}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-black/10 transition-colors duration-500 group-hover:from-black/45" />
