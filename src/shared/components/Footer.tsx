@@ -94,6 +94,7 @@ function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
         <li key={l.href}>
           <Link
             href={l.href}
+            prefetch={false}
             className="group inline-flex items-center gap-1.5 rounded font-ui text-body-sm text-white/60 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
           >
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
@@ -151,6 +152,7 @@ export default function Footer() {
           <div className="sm:col-span-3 lg:col-span-1">
             <Link
               href="/"
+              prefetch={false}
               className="mb-6 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
               aria-label="The Wisdom Church — home"
             >
@@ -306,12 +308,14 @@ export default function Footer() {
           <div className="flex gap-5">
             <Link
               href="/privacy"
+              prefetch={false}
               className="font-body text-label text-white/45 transition hover:text-white/75"
             >
               Privacy
             </Link>
             <Link
               href="/cookies"
+              prefetch={false}
               className="font-body text-label text-white/45 transition hover:text-white/75"
             >
               Cookies

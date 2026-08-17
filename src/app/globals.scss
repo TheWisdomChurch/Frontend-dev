@@ -112,6 +112,28 @@
   text-wrap: balance;
 }
 
+/* Modal content needs a visible, restrained scroll affordance even though the
+   editorial page chrome intentionally hides scrollbars elsewhere. */
+.modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--app-primary) 55%, transparent)
+    transparent;
+}
+
+.modal-scrollbar::-webkit-scrollbar {
+  display: block;
+  width: 5px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-primary) 45%, transparent);
+}
+
 /* =========================
    KEYFRAMES
 ========================= */
@@ -538,9 +560,26 @@ body[data-scrolled='true'] .site-header {
   color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
   border-radius: 4px;
+  gap: 0.3rem;
   transition:
     color 180ms ease,
     background 180ms ease;
+}
+
+.site-header__nav-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0;
+  transform: translate(-3px, 3px);
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header__nav-link:hover .site-header__nav-icon,
+.site-header__nav-link.is-active .site-header__nav-icon {
+  opacity: 0.8;
+  transform: translate(0, 0);
 }
 
 .site-header__nav-link::after {
@@ -616,6 +655,7 @@ body[data-scrolled='true'] .site-header {
 .site-header__give {
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
   height: 36px;
   padding: 0 1rem;
   border: 1px solid var(--app-primary);
@@ -628,6 +668,16 @@ body[data-scrolled='true'] .site-header {
   transition:
     background 200ms ease,
     color 200ms ease;
+}
+
+.site-header__give svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header__give:hover svg {
+  transform: scale(1.12) rotate(-6deg);
 }
 
 .site-header__give:hover {
@@ -967,10 +1017,29 @@ body.nav-open {
   line-height: 1;
   color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   transition:
     color 180ms ease,
     transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item__arrow {
+  width: 0.7em;
+  height: 0.7em;
+  color: var(--app-primary, #c9961a);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item__link:hover .nav-item__arrow,
+.nav-item__link.is-active .nav-item__arrow {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .nav-item__link:hover {

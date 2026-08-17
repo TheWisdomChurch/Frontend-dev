@@ -52,7 +52,10 @@ const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
    CACHE & RETRY CONFIG
 ============================================================================ */
 
-const http = createHttpClient({ baseUrl: API_V1_BASE_URL });
+const http = createHttpClient({
+  baseUrl: API_V1_BASE_URL,
+  maxConcurrentRequests: 2,
+});
 
 /* ============================================================================
    Error Utilities

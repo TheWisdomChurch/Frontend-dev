@@ -128,6 +128,7 @@ export default function CommunityJoinModal() {
           ? 'Your request is safely recorded for our connection team.'
           : 'Tell us how you would like to connect. We’ll route your request to the right team.'
       }
+      headerIcon={submitted ? <CheckCircle2 /> : <HeartHandshake />}
       maxWidth="max-w-xl"
       forceBottomSheet
       preventClose={submitting}

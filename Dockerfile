@@ -52,9 +52,10 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# ✅ Build-time env (needed because your pages prerender at build time)
-ARG NEXT_PUBLIC_BACKEND_URL=https://api.wisdomchurchhq.org/api/v1
-ARG NEXT_PUBLIC_API_URL=https://api.wisdomchurchhq.org/api/v1
+# Browser requests stay same-origin and are handled by the audited
+# /api/v1 route handler. Do not bake the private upstream into client bundles.
+ARG NEXT_PUBLIC_BACKEND_URL=
+ARG NEXT_PUBLIC_API_URL=
 
 # ✅ Stable defaults, overridable with --build-arg
 ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL

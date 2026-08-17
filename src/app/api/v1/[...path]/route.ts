@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 const DEFAULT_LOCAL_API_UPSTREAM = 'http://localhost:8080';
 const DEFAULT_PRODUCTION_API_UPSTREAM = 'https://api.wisdomchurchhq.org';
 const API_BASE_PATH = '/api/v1';
+const UPSTREAM_TIMEOUT_MS = 15_000;
 const SIGNING_HEADER_PREFIX = 'x-wc-proxy';
 
 type ProxySigning = {
@@ -273,6 +274,7 @@ async function proxyRequest(
       body,
       redirect: 'manual',
       cache: 'no-store',
+      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
 
     return new Response(upstreamResponse.body, {

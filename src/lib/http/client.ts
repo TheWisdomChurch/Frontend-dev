@@ -18,6 +18,7 @@ export interface HttpClientConfig {
   retries?: number;
   retryDelayMs?: number;
   cacheTtlMs?: number;
+  maxConcurrentRequests?: number;
 }
 
 export interface HttpRequestOptions extends RequestInit {
@@ -38,14 +39,46 @@ function requestSignal(
   return signal ? AbortSignal.any([signal, timeout]) : timeout;
 }
 
+function retryDelayFromResponse(response: Response, fallbackMs: number) {
+  const raw = response.headers.get('retry-after');
+  if (!raw) return fallbackMs;
+
+  const seconds = Number(raw);
+  if (Number.isFinite(seconds)) {
+    return Math.min(Math.max(seconds * 1_000, fallbackMs), 10_000);
+  }
+
+  const retryAt = Date.parse(raw);
+  if (Number.isNaN(retryAt)) return fallbackMs;
+  return Math.min(Math.max(retryAt - Date.now(), fallbackMs), 10_000);
+}
+
 export function createHttpClient(config: HttpClientConfig) {
   const cache = new Map<string, CacheEntry>();
+  const inFlight = new Map<string, Promise<unknown>>();
   const timeoutMs = config.timeoutMs ?? 30_000;
   const maxAttempts = Math.max(1, config.retries ?? 3);
   const retryDelayMs = config.retryDelayMs ?? 1_000;
   const cacheTtlMs = config.cacheTtlMs ?? 5 * 60_000;
+  const maxConcurrentRequests = Math.max(1, config.maxConcurrentRequests ?? 4);
+  const requestQueue: Array<() => void> = [];
+  let activeRequests = 0;
 
-  async function request<T>(
+  async function withRequestSlot<T>(task: () => Promise<T>): Promise<T> {
+    if (activeRequests >= maxConcurrentRequests) {
+      await new Promise<void>(resolve => requestQueue.push(resolve));
+    }
+
+    activeRequests += 1;
+    try {
+      return await task();
+    } finally {
+      activeRequests -= 1;
+      requestQueue.shift()?.();
+    }
+  }
+
+  async function performRequest<T>(
     path: string,
     options: HttpRequestOptions = {}
   ): Promise<T> {
@@ -75,19 +108,25 @@ export function createHttpClient(config: HttpClientConfig) {
     if (!headers.has('Accept')) headers.set('Accept', 'application/json');
 
     let lastError: unknown;
+    let nextRetryDelayMs: number | null = null;
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-      if (attempt > 0) await delay(retryDelayMs * 2 ** (attempt - 1));
+      if (attempt > 0) {
+        await delay(nextRetryDelayMs ?? retryDelayMs * 2 ** (attempt - 1));
+        nextRetryDelayMs = null;
+      }
 
       trackApiRequestStart();
       try {
-        const response = await fetch(`${config.baseUrl}${path}`, {
-          ...fetchOptions,
-          method,
-          headers,
-          credentials: options.credentials ?? 'include',
-          cache: options.cache ?? 'no-store',
-          signal: requestSignal(signal, timeoutMs),
-        });
+        const response = await withRequestSlot(() =>
+          fetch(`${config.baseUrl}${path}`, {
+            ...fetchOptions,
+            method,
+            headers,
+            credentials: options.credentials ?? 'include',
+            cache: options.cache ?? 'no-store',
+            signal: requestSignal(signal, timeoutMs),
+          })
+        );
         const payload = await parseResponseBody(response);
 
         if (!response.ok) {
@@ -101,10 +140,14 @@ export function createHttpClient(config: HttpClientConfig) {
           );
           if (
             isIdempotent &&
-            response.status >= 500 &&
+            (response.status === 429 || response.status >= 500) &&
             attempt < maxAttempts - 1
           ) {
             lastError = error;
+            nextRetryDelayMs = retryDelayFromResponse(
+              response,
+              retryDelayMs * 2 ** attempt
+            );
             continue;
           }
           throw error;
@@ -146,8 +189,32 @@ export function createHttpClient(config: HttpClientConfig) {
       : new HttpError('Request failed after retries', { statusCode: 0 });
   }
 
+  function request<T>(
+    path: string,
+    options: HttpRequestOptions = {}
+  ): Promise<T> {
+    const method = (options.method || 'GET').toUpperCase();
+    const isIdempotent = method === 'GET' || method === 'HEAD';
+
+    if (!isIdempotent) return performRequest<T>(path, options);
+
+    const requestKey = `${method}:${path}`;
+    const existing = inFlight.get(requestKey);
+    if (existing) return existing as Promise<T>;
+
+    const pending = performRequest<T>(path, options).finally(() => {
+      if (inFlight.get(requestKey) === pending) inFlight.delete(requestKey);
+    });
+
+    inFlight.set(requestKey, pending);
+    return pending;
+  }
+
   return {
     request,
-    clearCache: () => cache.clear(),
+    clearCache: () => {
+      cache.clear();
+      inFlight.clear();
+    },
   };
 }

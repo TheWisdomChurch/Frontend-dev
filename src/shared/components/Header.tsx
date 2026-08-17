@@ -7,6 +7,7 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { ArrowUpRight, ChevronRight, Heart } from 'lucide-react';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
 type NavChild = {
@@ -129,6 +130,7 @@ export default function Header() {
         <div className="site-header__inner">
           <Link
             href="/"
+            prefetch={false}
             className="site-header__brand"
             aria-label="The Wisdom Church — home"
           >
@@ -152,15 +154,25 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 className={`site-header__nav-link${isActive(item.href) ? ' is-active' : ''}`}
               >
                 {item.label}
+                <ArrowUpRight
+                  className="site-header__nav-icon"
+                  aria-hidden="true"
+                />
               </Link>
             ))}
           </nav>
 
           <div className="site-header__actions">
-            <Link href="/#giving" className="site-header__give">
+            <Link
+              href="/#giving"
+              prefetch={false}
+              className="site-header__give"
+            >
+              <Heart aria-hidden="true" />
               Give
             </Link>
 
@@ -207,6 +219,7 @@ export default function Header() {
           <div className="nav-overlay__topbar">
             <Link
               href="/"
+              prefetch={false}
               className="nav-overlay__brand"
               onClick={close}
               tabIndex={navOpen ? 0 : -1}
@@ -268,12 +281,17 @@ export default function Header() {
 
                   <Link
                     href={item.href}
+                    prefetch={false}
                     ref={i === 0 ? firstLinkRef : undefined}
                     className={`nav-item__link${isActive(item.href) ? ' is-active' : ''}`}
                     onClick={close}
                     tabIndex={navOpen ? 0 : -1}
                   >
                     {item.label}
+                    <ChevronRight
+                      className="nav-item__arrow"
+                      aria-hidden="true"
+                    />
                   </Link>
 
                   {item.children ? (
@@ -282,6 +300,7 @@ export default function Header() {
                         <span key={child.href}>
                           <Link
                             href={child.href}
+                            prefetch={false}
                             className="nav-item__sub-link"
                             onClick={close}
                             tabIndex={navOpen ? 0 : -1}

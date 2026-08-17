@@ -131,6 +131,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       onClose={onClose}
       title={product.name}
       subtitle={product.category}
+      headerIcon={<ShoppingBag />}
       maxWidth="max-w-3xl"
       forceBottomSheet
     >
