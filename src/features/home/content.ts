@@ -44,6 +44,8 @@ export const HOME_COPY = {
   service: {
     eyebrow: 'Worship with us',
     title: 'Sundays are better together.',
+    description:
+      'Expect heartfelt worship, practical biblical teaching, a welcoming community, and a safe place for your family to grow.',
   },
   pastor: {
     eyebrow: 'Our senior pastor',
@@ -67,29 +69,29 @@ export const HOME_BELIEFS: {
   imagePosition: string;
 }[] = [
   {
-    title: 'The Word',
-    body: "We live by God's Word and put our faith into action.",
+    title: 'Rooted in the Word',
+    body: "We apply God's Word to everyday life and grow as complete believers.",
     image: WhatWeDo_3,
     imageAlt: 'A pastor teaching from the pulpit at The Wisdom Church',
     imagePosition: 'object-[30%_center]',
   },
   {
-    title: 'Prayer',
-    body: "We seek God's presence and power through faithful prayer.",
+    title: 'Alive in Prayer',
+    body: "We seek God's presence with faith, expectation, and consistency.",
     image: '/Picflow/DSC06712 copy.webp',
     imageAlt: 'A member deep in prayer at The Wisdom Church',
     imagePosition: 'object-center',
   },
   {
-    title: 'Worship',
-    body: 'We worship wholeheartedly and make room for renewed lives.',
+    title: 'Growing Together',
+    body: 'We build genuine relationships where no one has to follow Jesus alone.',
     image: '/Picflow/DSC00019 copy.webp',
     imageAlt: 'Worship on stage at The Wisdom Church',
     imagePosition: 'object-[center_18%]',
   },
   {
-    title: 'Community',
-    body: 'We grow together, serve one another, and share life.',
+    title: 'Living with Purpose',
+    body: 'We use our gifts to serve people and make a meaningful impact.',
     image: '/Picflow/DSC06902 copy.webp',
     imageAlt: 'Members embracing in fellowship at The Wisdom Church',
     imagePosition: 'object-center',

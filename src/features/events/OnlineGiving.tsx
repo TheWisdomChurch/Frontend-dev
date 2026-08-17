@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone } from 'lucide-react';
 
-import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import GivingModal from '@/shared/ui/modals/GivingModal';
 import { handleContactCall } from '@/shared/utils/functionUtils/contactUtils';
 import apiClient from '@/lib/api';
@@ -20,8 +19,6 @@ import {
 } from '@/shared/ui/motion/staggerReveal';
 
 export default function OnlineGiving() {
-  const { open } = useServiceUnavailable();
-
   const [givingOptions, setGivingOptions] = useState<GivingOption[]>([]);
   const [selected, setSelected] = useState<GivingOption | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -60,7 +57,11 @@ export default function OnlineGiving() {
 
   return (
     <>
-      <Section padding="none" className="relative bg-[var(--app-dark)]">
+      <Section
+        id="giving"
+        padding="none"
+        className="relative bg-[var(--app-dark)] scroll-mt-20"
+      >
         <SectionGlow />
         <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
           <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6">
@@ -159,19 +160,17 @@ export default function OnlineGiving() {
               </motion.div>
             ) : (
               <div className="border-t border-white/15 pt-9 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:text-left">
+                <p className="max-w-lg font-ui text-sm leading-7 text-white/55">
+                  Online giving details are being updated. Speak directly with
+                  our team for verified account information and other ways to
+                  give.
+                </p>
                 <button
                   type="button"
-                  onClick={() =>
-                    open({
-                      title: 'Coming soon',
-                      message:
-                        'Our online giving portal is being set up. Please check back.',
-                      actionLabel: 'Got it',
-                    })
-                  }
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  onClick={handleContactCall}
+                  className="mt-6 inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
-                  Give Online
+                  <Phone className="h-4 w-4" /> Contact the giving team
                 </button>
               </div>
             )}

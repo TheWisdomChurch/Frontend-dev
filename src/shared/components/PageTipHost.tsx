@@ -10,10 +10,13 @@ const STORAGE_PREFIX = 'wisdom_tip_seen:';
 const PAGE_TIPS: Record<string, string> = {
   '/about': 'A quick look at who we are, our story, and our leadership.',
   '/leadership': 'Meet the people leading The Wisdom Church.',
-  '/ministries': 'Find a ministry team that fits how you want to serve.',
+  '/ministries': 'Find a community for your season of life and faith.',
   '/events': 'Everything coming up — services, programs, and special events.',
   '/resources': 'Sermons, articles, and ways to grow between Sundays.',
+  '/resources/sermons': 'Watch recent messages or browse teaching by series.',
   '/pastoral': 'Reach our pastoral team directly for prayer or care.',
+  '/serve': 'Explore each team and choose where your gifts can make an impact.',
+  '/giving': 'Choose a verified giving option or contact the giving team.',
   '/contact': 'The fastest ways to reach us, and where to find us.',
   '/testimonies': 'Real stories from people in our community.',
 };

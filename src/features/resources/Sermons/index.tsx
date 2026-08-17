@@ -11,6 +11,7 @@ import { Media } from '@/shared/ui/Media';
 import { useSermonUtil } from '@/shared/utils/hooks/useSermon';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import Arrow from '@/shared/ui/icons/Arrow';
+import { BaseModal } from '@/shared/ui/modals/Base';
 import type {
   YouTubeVideo,
   GroupedSeriesData,
@@ -58,37 +59,16 @@ function VideoModal({
     });
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
-      onClick={onClose}
+    <BaseModal
+      isOpen
+      onClose={onClose}
+      title={truncateHeading(video.title)}
+      subtitle={[video.series, video.preacher].filter(Boolean).join(' · ')}
+      maxWidth="max-w-5xl"
+      contentClassName="!p-0"
+      ariaLabel="Sermon video player"
     >
-      <div
-        className="flex w-full max-w-5xl flex-col overflow-hidden border border-white/10 bg-[var(--app-dark)]"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-          <div className="min-w-0 flex-1 pr-4">
-            {video.series && (
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                {video.series}
-              </p>
-            )}
-            <p className="mt-0.5 font-headline text-body-lg font-normal text-white line-clamp-1">
-              {video.title}
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/15 text-white/50 transition hover:border-white/30 hover:text-white"
-            aria-label="Close"
-          >
-            <span className="text-xl leading-none">×</span>
-          </button>
-        </div>
-
-        {/* Player */}
+      <div className="flex flex-col overflow-hidden bg-[var(--app-dark)]">
         <div className="aspect-video w-full bg-black">
           <YouTubePlayer
             videoId={video.id}
@@ -97,7 +77,6 @@ function VideoModal({
           />
         </div>
 
-        {/* Meta */}
         <div className="border-t border-white/10 px-6 py-4">
           <p className="font-ui text-label text-white/40">
             {video.preacher}
@@ -111,7 +90,7 @@ function VideoModal({
           )}
         </div>
       </div>
-    </div>
+    </BaseModal>
   );
 }
 
@@ -468,7 +447,7 @@ const SermonUtil = () => {
               <div className="flex flex-col items-center gap-5 py-20 text-center">
                 <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
                 <h2 className="font-headline text-heading-md font-normal text-white">
-                  Sermons loading soon.
+                  Watch our messages on YouTube.
                 </h2>
                 <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/40">
                   Our full sermon library will appear here. In the meantime,
@@ -558,172 +537,177 @@ const SermonUtil = () => {
       )}
 
       {/* ── 4. Filter + Sermon grid — dark ────────────────────── */}
-      <section
-        id="sermons-grid"
-        className="bg-[var(--app-dark)] py-16 lg:py-20"
-      >
-        <Container size="xl">
-          {/* Filters */}
-          <ScrollFadeIn className="mb-10">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_auto]">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={e => handleSearchChange(e.target.value)}
-                placeholder="Search sermons..."
-                className="border border-white/10 bg-white/[0.05] px-4 py-2.5 font-ui text-body-sm text-white placeholder-white/28 focus:border-[var(--app-primary)] focus:outline-none transition"
-              />
-              <select
-                aria-label="Filter by series"
-                value={selectedSeries}
-                onChange={e => handleSeriesFilterChange(e.target.value)}
-                className={darkSelectCls}
-              >
-                {seriesOptions.map(s => (
-                  <option key={s} value={s} className="bg-[var(--app-dark)]">
-                    {s === 'all'
-                      ? 'All series'
-                      : s.startsWith('group:')
-                        ? `Group: ${s.replace('group:', '').trim()}`
-                        : s}
-                  </option>
-                ))}
-              </select>
-              <select
-                aria-label="Filter by preacher"
-                value={selectedPreacher}
-                onChange={e => handlePreacherChange(e.target.value)}
-                className={darkSelectCls}
-              >
-                {preacherOptions.map(p => (
-                  <option key={p} value={p} className="bg-[var(--app-dark)]">
-                    {p === 'all' ? 'All preachers' : p}
-                  </option>
-                ))}
-              </select>
-              <select
-                aria-label="Filter by year"
-                value={selectedYear}
-                onChange={e => handleYearChange(e.target.value)}
-                className={darkSelectCls}
-              >
-                {yearOptions.map(y => (
-                  <option key={y} value={y} className="bg-[var(--app-dark)]">
-                    {y === 'all' ? 'All years' : y}
-                  </option>
-                ))}
-              </select>
-              <select
-                aria-label="Sort sermons"
-                value={sortBy}
-                onChange={e =>
-                  handleSortChange(
-                    e.target.value as 'newest' | 'oldest' | 'popular'
-                  )
-                }
-                className={darkSelectCls}
-              >
-                <option value="newest" className="bg-[var(--app-dark)]">
-                  Newest
-                </option>
-                <option value="oldest" className="bg-[var(--app-dark)]">
-                  Oldest
-                </option>
-                <option value="popular" className="bg-[var(--app-dark)]">
-                  Popular
-                </option>
-              </select>
-            </div>
-
-            <div className="mt-4 flex items-center justify-between">
-              <p className="font-ui text-label text-white/35">
-                {filteredVideos.length}{' '}
-                {filteredVideos.length === 1 ? 'message' : 'messages'}
-                {hasActiveFilters && ' found'}
-              </p>
-              {hasActiveFilters && (
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className="font-ui text-label text-[var(--app-primary)] transition hover:underline"
+      {(loading || videos.length > 0) && (
+        <section
+          id="sermons-grid"
+          className="bg-[var(--app-dark)] py-16 lg:py-20"
+        >
+          <Container size="xl">
+            {/* Filters */}
+            <ScrollFadeIn className="mb-10">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_auto]">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={e => handleSearchChange(e.target.value)}
+                  placeholder="Search sermons..."
+                  className="border border-white/10 bg-white/[0.05] px-4 py-2.5 font-ui text-body-sm text-white placeholder-white/28 focus:border-[var(--app-primary)] focus:outline-none transition"
+                />
+                <select
+                  aria-label="Filter by series"
+                  value={selectedSeries}
+                  onChange={e => handleSeriesFilterChange(e.target.value)}
+                  className={darkSelectCls}
                 >
-                  Clear filters
-                </button>
-              )}
-            </div>
-          </ScrollFadeIn>
+                  {seriesOptions.map(s => (
+                    <option key={s} value={s} className="bg-[var(--app-dark)]">
+                      {s === 'all'
+                        ? 'All series'
+                        : s.startsWith('group:')
+                          ? `Group: ${s.replace('group:', '').trim()}`
+                          : s}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  aria-label="Filter by preacher"
+                  value={selectedPreacher}
+                  onChange={e => handlePreacherChange(e.target.value)}
+                  className={darkSelectCls}
+                >
+                  {preacherOptions.map(p => (
+                    <option key={p} value={p} className="bg-[var(--app-dark)]">
+                      {p === 'all' ? 'All preachers' : p}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  aria-label="Filter by year"
+                  value={selectedYear}
+                  onChange={e => handleYearChange(e.target.value)}
+                  className={darkSelectCls}
+                >
+                  {yearOptions.map(y => (
+                    <option key={y} value={y} className="bg-[var(--app-dark)]">
+                      {y === 'all' ? 'All years' : y}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  aria-label="Sort sermons"
+                  value={sortBy}
+                  onChange={e =>
+                    handleSortChange(
+                      e.target.value as 'newest' | 'oldest' | 'popular'
+                    )
+                  }
+                  className={darkSelectCls}
+                >
+                  <option value="newest" className="bg-[var(--app-dark)]">
+                    Newest
+                  </option>
+                  <option value="oldest" className="bg-[var(--app-dark)]">
+                    Oldest
+                  </option>
+                  <option value="popular" className="bg-[var(--app-dark)]">
+                    Popular
+                  </option>
+                </select>
+              </div>
 
-          {/* Loading skeleton */}
-          {loading && displayedVideos.length === 0 && (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-video bg-white/[0.05]" />
-                  <div className="mt-3 h-4 w-3/4 bg-white/[0.05]" />
-                  <div className="mt-2 h-3 w-1/2 bg-white/[0.03]" />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Empty state */}
-          {!loading && filteredVideos.length === 0 && (
-            <ScrollFadeIn>
-              <div className="flex flex-col items-center gap-5 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
-                <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                <h3 className="font-headline text-heading-sm font-normal text-white">
-                  No sermons match your search.
-                </h3>
-                <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/40">
-                  Try adjusting your filters or searching with different
-                  keywords.
+              <div className="mt-4 flex items-center justify-between">
+                <p className="font-ui text-label text-white/35">
+                  {filteredVideos.length}{' '}
+                  {filteredVideos.length === 1 ? 'message' : 'messages'}
+                  {hasActiveFilters && ' found'}
                 </p>
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                >
-                  Clear all filters <Arrow />
-                </button>
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="font-ui text-label text-[var(--app-primary)] transition hover:underline"
+                  >
+                    Clear filters
+                  </button>
+                )}
               </div>
             </ScrollFadeIn>
-          )}
 
-          {/* Sermon grid */}
-          {!loading && displayedVideos.length > 0 && (
-            <div
-              ref={gridRef}
-              className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-            >
-              {displayedVideos.map(video => (
-                <div key={video.id} className="sermon-card">
-                  <SermonCard video={video} onClick={() => openModal(video)} />
+            {/* Loading skeleton */}
+            {loading && displayedVideos.length === 0 && (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                  <div key={i} className="animate-pulse">
+                    <div className="aspect-video bg-white/[0.05]" />
+                    <div className="mt-3 h-4 w-3/4 bg-white/[0.05]" />
+                    <div className="mt-2 h-3 w-1/2 bg-white/[0.03]" />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!loading && filteredVideos.length === 0 && (
+              <ScrollFadeIn>
+                <div className="flex flex-col items-center gap-5 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
+                  <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
+                  <h3 className="font-headline text-heading-sm font-normal text-white">
+                    No sermons match your search.
+                  </h3>
+                  <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/40">
+                    Try adjusting your filters or searching with different
+                    keywords.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  >
+                    Clear all filters <Arrow />
+                  </button>
                 </div>
-              ))}
-            </div>
-          )}
+              </ScrollFadeIn>
+            )}
 
-          {/* Loading more */}
-          {loading && displayedVideos.length > 0 && (
-            <div className="mt-8 flex justify-center">
-              <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-[var(--app-primary)]" />
-            </div>
-          )}
-
-          {/* Load more */}
-          {hasMoreVideos && !loading && filteredVideos.length > 0 && (
-            <ScrollFadeIn className="mt-12 text-center">
-              <button
-                type="button"
-                onClick={handleLoadMore}
-                className="inline-flex items-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+            {/* Sermon grid */}
+            {!loading && displayedVideos.length > 0 && (
+              <div
+                ref={gridRef}
+                className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               >
-                Load more sermons
-              </button>
-            </ScrollFadeIn>
-          )}
-        </Container>
-      </section>
+                {displayedVideos.map(video => (
+                  <div key={video.id} className="sermon-card">
+                    <SermonCard
+                      video={video}
+                      onClick={() => openModal(video)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Loading more */}
+            {loading && displayedVideos.length > 0 && (
+              <div className="mt-8 flex justify-center">
+                <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-[var(--app-primary)]" />
+              </div>
+            )}
+
+            {/* Load more */}
+            {hasMoreVideos && !loading && filteredVideos.length > 0 && (
+              <ScrollFadeIn className="mt-12 text-center">
+                <button
+                  type="button"
+                  onClick={handleLoadMore}
+                  className="inline-flex items-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                >
+                  Load more sermons
+                </button>
+              </ScrollFadeIn>
+            )}
+          </Container>
+        </section>
+      )}
 
       {/* ── 5. CTA — canvas ───────────────────────────────────── */}
       <ScrollFadeIn>

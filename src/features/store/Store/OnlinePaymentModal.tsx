@@ -25,6 +25,7 @@ const OnlinePaymentModal = ({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
+      ariaLabel="Online payment options"
       showHandle
       showCloseButton={false}
       forceBottomSheet

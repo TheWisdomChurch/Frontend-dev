@@ -78,6 +78,7 @@ export default function PromoAdModal({
     <BaseModal
       isOpen={open}
       onClose={onClose}
+      ariaLabel={headline}
       maxWidth="max-w-md"
       forceBottomSheet
     >

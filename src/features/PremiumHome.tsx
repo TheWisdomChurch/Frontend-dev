@@ -120,7 +120,7 @@ function CommunityCollage() {
           fill
           quality={IMAGE_QUALITY}
           sizes="(min-width: 1024px) 38vw, (min-width: 640px) 58vw, 100vw"
-          className="object-cover object-[center_32%] transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
+          className="object-cover object-[center_32%] transition-transform duration-1000 ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/[0.035]" />
       </motion.div>
@@ -135,7 +135,7 @@ function CommunityCollage() {
           fill
           quality={IMAGE_QUALITY}
           sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
-          className="object-cover object-center transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
+          className="object-cover object-center transition-transform duration-1000 ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/12 via-transparent to-[var(--app-primary)]/[0.06]" />
         <div className="pointer-events-none absolute inset-y-0 -left-1/2 z-10 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent opacity-0 transition-all duration-1000 motion-reduce:hidden group-hover:left-[120%] group-hover:opacity-100" />
@@ -147,15 +147,117 @@ function CommunityCollage() {
       >
         <Image
           src="/Picflow/DSC00268 copy.webp"
-          alt="A Wisdom House volunteer serving during worship"
+          alt="A Wisdom Church volunteer serving during worship"
           fill
           quality={IMAGE_QUALITY}
           sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
-          className="object-cover object-[52%_center] transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.035]"
+          className="object-cover object-[52%_center] transition-transform duration-1000 ease-out motion-reduce:transition-none group-hover:scale-[1.035]"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/[0.035]" />
       </motion.div>
     </div>
+  );
+}
+
+function SundayExperienceSection() {
+  const expectations = [
+    {
+      title: 'A warm welcome',
+      body: 'Our welcome team will help you settle in and answer questions when you arrive.',
+    },
+    {
+      title: 'Worship and the Word',
+      body: 'Expect heartfelt worship and practical biblical teaching for everyday life.',
+    },
+    {
+      title: 'Room for your family',
+      body: 'Bringing children? Our team will guide your family to the right place on arrival.',
+    },
+  ] as const;
+
+  return (
+    <Section
+      id="visit"
+      padding="none"
+      className="bg-[var(--app-primary)] scroll-mt-20"
+    >
+      <div className="grid lg:min-h-[620px] lg:grid-cols-2 xl:min-h-[720px]">
+        <div className="group relative min-h-[min(125vw,600px)] overflow-hidden bg-black lg:order-2 lg:min-h-full">
+          <ServiceImage />
+        </div>
+        <div className={`flex items-center ${panelPaddingX} py-16 sm:py-20`}>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className="max-w-xl"
+          >
+            <motion.p variants={staggerItem} className={eyebrowClass}>
+              Your first Sunday
+            </motion.p>
+            <SectionHeading tone="dark" className="mt-5">
+              {HOME_COPY.service.title}
+            </SectionHeading>
+            <motion.p
+              variants={staggerItem}
+              className="mt-6 font-ui text-base leading-8 text-black/65 sm:text-lg"
+            >
+              {HOME_COPY.service.description}
+            </motion.p>
+
+            <motion.div
+              variants={staggerContainer}
+              className="mt-7 grid gap-2 sm:grid-cols-3"
+            >
+              {expectations.map(item => (
+                <motion.div
+                  key={item.title}
+                  variants={staggerItem}
+                  className="border border-black/15 bg-black/[0.045] p-4"
+                >
+                  <strong className="font-ui text-sm text-black">
+                    {item.title}
+                  </strong>
+                  <p className="mt-2 font-ui text-xs leading-5 text-black/60">
+                    {item.body}
+                  </p>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <motion.div
+              variants={staggerItem}
+              className="mt-7 space-y-4 border-y border-black/25 py-5 font-ui"
+            >
+              <div className="flex items-center gap-4">
+                <CalendarDays className="h-5 w-5" />
+                <strong>
+                  {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}{' '}
+                  {SERVICE_INFO.sunday.timezone}
+                </strong>
+              </div>
+              <div className="flex items-start gap-4">
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0" />
+                <strong>{SERVICE_INFO.venue.full}</strong>
+              </div>
+            </motion.div>
+            <motion.div
+              variants={staggerItem}
+              className="mt-7 grid grid-cols-1 items-stretch gap-3 min-[420px]:grid-cols-2"
+            >
+              <PlanVisitTrigger
+                icon={false}
+                className="h-full min-w-0 whitespace-normal border-black bg-black px-4 py-3 text-center text-xs leading-5 text-white hover:border-white hover:bg-white hover:text-black sm:px-5 sm:text-sm"
+              >
+                Plan your first visit
+              </PlanVisitTrigger>
+              <TakeMeToChurchButton fullWidth />
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    </Section>
   );
 }
 
@@ -185,23 +287,37 @@ export default function PremiumHome() {
               {HOME_COPY.hero.description}
             </p>
             <div className="mt-8 flex w-full max-w-sm flex-nowrap items-stretch justify-center gap-2 sm:max-w-none sm:gap-3">
+              <PlanVisitTrigger className="min-w-0 flex-1 px-4 text-xs sm:flex-none sm:px-6 sm:text-sm">
+                Plan your visit
+              </PlanVisitTrigger>
               <HomeActionLink
                 href={SOCIAL_LINKS.youtube}
                 external
+                variant="light"
                 icon={Play}
                 iconClassName="fill-current"
                 hideArrow
                 className="flex-1 min-w-0 justify-center px-4 text-xs sm:flex-none sm:px-6 sm:text-sm"
               >
-                Watch live
+                Watch online
               </HomeActionLink>
-              <PlanVisitTrigger className="min-w-0 flex-1 border-white/70 bg-transparent px-4 text-xs text-white hover:bg-white hover:text-black sm:flex-none sm:px-6 sm:text-sm">
-                Plan your visit
-              </PlanVisitTrigger>
+            </div>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/18 pt-5 font-ui text-xs font-semibold uppercase tracking-[0.12em] text-white/72 sm:text-sm">
+              <span>
+                {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}{' '}
+                {SERVICE_INFO.sunday.timezone}
+              </span>
+              <span
+                className="hidden h-1 w-1 rounded-full bg-[var(--app-primary)] sm:block"
+                aria-hidden="true"
+              />
+              <span>{SERVICE_INFO.venue.short}</span>
             </div>
           </div>
         </Container>
       </Section>
+
+      <SundayExperienceSection />
 
       <Section padding="none" className="bg-white">
         <div className="grid lg:min-h-[560px] lg:grid-cols-[1fr_1.2fr]">
@@ -247,7 +363,7 @@ export default function PremiumHome() {
           </motion.div>
 
           <div className="group relative min-h-[460px] overflow-hidden lg:min-h-full">
-            <CoverImage name="welcome" loading="eager" />
+            <CoverImage name="welcome" loading="lazy" />
             <div className="absolute inset-0 bg-black/0 transition duration-700 group-hover:bg-black/10" />
           </div>
         </div>
@@ -315,61 +431,6 @@ export default function PremiumHome() {
             ))}
           </motion.div>
         </Container>
-      </Section>
-
-      <Section padding="none" className="bg-[var(--app-primary)]">
-        <div className="grid lg:min-h-[620px] lg:grid-cols-2 xl:min-h-[720px] 2xl:min-h-[820px]">
-          <div className="group relative min-h-[min(135vw,640px)] overflow-hidden bg-black lg:order-2 lg:min-h-full">
-            <ServiceImage />
-          </div>
-          <div className={`flex items-center ${panelPaddingX} py-20`}>
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={staggerViewport}
-              className="max-w-xl"
-            >
-              <motion.p variants={staggerItem} className={eyebrowClass}>
-                {HOME_COPY.service.eyebrow}
-              </motion.p>
-              <SectionHeading tone="dark" className="mt-5">
-                {HOME_COPY.service.title}
-              </SectionHeading>
-              <motion.div
-                variants={staggerItem}
-                className="mt-8 space-y-4 border-y border-black/25 py-6 font-ui"
-              >
-                <div className="flex items-center gap-4">
-                  <CalendarDays className="h-5 w-5" />
-                  <strong>
-                    {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}{' '}
-                    {SERVICE_INFO.sunday.timezone}
-                  </strong>
-                </div>
-                <div className="flex items-start gap-4">
-                  <MapPin className="mt-0.5 h-5 w-5 shrink-0" />
-                  <strong>{SERVICE_INFO.venue.full}</strong>
-                </div>
-              </motion.div>
-              <motion.div
-                variants={staggerItem}
-                initial="hidden"
-                whileInView="show"
-                viewport={staggerViewport}
-                className="mt-8 grid grid-cols-1 items-stretch gap-3 min-[420px]:grid-cols-2"
-              >
-                <TakeMeToChurchButton fullWidth />
-                <PlanVisitTrigger
-                  icon={false}
-                  className="h-full min-w-0 whitespace-normal border-black bg-black px-4 py-3 text-center text-xs leading-5 text-white hover:border-white hover:bg-white hover:text-black sm:px-5 sm:text-sm"
-                >
-                  Plan your first visit
-                </PlanVisitTrigger>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
       </Section>
 
       <Section padding="none" className="bg-black text-white">

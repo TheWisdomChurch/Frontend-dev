@@ -34,6 +34,7 @@ const NAV_ITEMS: NavItem[] = [
       { label: "Men's", href: '/ministries/men' },
       { label: "Women's", href: '/ministries/women' },
       { label: 'Outreach', href: '/ministries/outreach' },
+      { label: 'Serve', href: '/serve' },
     ],
   },
   {
@@ -50,7 +51,7 @@ const NAV_ITEMS: NavItem[] = [
       { label: 'Testimonies', href: '/testimonies' },
     ],
   },
-  { label: 'Give', href: '/#giving' },
+  { label: 'Give', href: '/giving' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -61,6 +62,7 @@ const DESKTOP_NAV: NavItem[] = [
   { label: 'Events', href: '/events' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
+  { label: 'Give', href: '/giving' },
 ];
 
 const SOCIALS = [
@@ -74,10 +76,12 @@ export default function Header() {
   const [navOpen, setNavOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
-    if (href.startsWith('/#')) return pathname === '/';
+    if (href.startsWith('/#')) return false;
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
@@ -104,22 +108,48 @@ export default function Header() {
   useEffect(() => {
     document.body.classList.toggle('nav-open', navOpen);
     document.documentElement.classList.toggle('nav-open', navOpen);
-    if (navOpen) {
-      setTimeout(() => firstLinkRef.current?.focus(), 380);
-    }
+    if (!navOpen) return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const focusTimer = window.setTimeout(
+      () => firstLinkRef.current?.focus(),
+      380
+    );
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setNavOpen(false);
+        return;
+      }
+
+      if (event.key !== 'Tab' || !overlayRef.current) return;
+      const focusable = Array.from(
+        overlayRef.current.querySelectorAll<HTMLElement>(
+          'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter(element => element.offsetParent !== null);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKey);
     return () => {
+      window.clearTimeout(focusTimer);
+      document.removeEventListener('keydown', onKey);
       document.body.classList.remove('nav-open');
       document.documentElement.classList.remove('nav-open');
+      (previouslyFocused ?? toggleRef.current)?.focus?.();
     };
-  }, [navOpen]);
-
-  // ESC to close
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && navOpen) close();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
   }, [navOpen]);
 
   return (
@@ -160,11 +190,15 @@ export default function Header() {
           </nav>
 
           <div className="site-header__actions">
-            <Link href="/#giving" className="site-header__give">
-              Give
-            </Link>
+            <PlanVisitTrigger
+              icon={false}
+              className="site-header__give !min-h-0 !rounded-[4px] !bg-transparent !px-4 !text-[var(--app-primary)] hover:!bg-[var(--app-primary)] hover:!text-[#07060a]"
+            >
+              Plan a visit
+            </PlanVisitTrigger>
 
             <button
+              ref={toggleRef}
               type="button"
               className={`site-header__toggle${navOpen ? ' is-open' : ''}`}
               aria-label={navOpen ? 'Close navigation' : 'Open navigation'}
@@ -186,6 +220,7 @@ export default function Header() {
 
       {/* ── Full-screen nav overlay ──────────────────────────── */}
       <div
+        ref={overlayRef}
         id="nav-overlay"
         className={`nav-overlay${navOpen ? ' is-open' : ''}`}
         aria-hidden={!navOpen}

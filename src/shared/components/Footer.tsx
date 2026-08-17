@@ -57,8 +57,9 @@ const CONNECT = [
   { href: '/contact', label: 'Contact' },
   { href: '/pastoral', label: 'Pastoral Care' },
   { href: '/testimonies', label: 'Testimonies' },
-  { href: '/#giving', label: 'Give Online' },
-  { href: '/forms/join', label: 'New Here?' },
+  { href: '/serve', label: 'Join a Serve Team' },
+  { href: '/giving', label: 'Give Online' },
+  { href: '/#visit', label: 'Plan Your Visit' },
 ];
 
 const SOCIALS = [
