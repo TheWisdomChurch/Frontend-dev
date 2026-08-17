@@ -341,26 +341,28 @@ export default function HomeTestimonials() {
             </div>
           )}
 
-          <motion.div
-            variants={staggerItem}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
-            className="flex flex-wrap items-center gap-3 lg:col-start-1 lg:row-start-2 lg:self-end"
-          >
-            <Link
-              href="/forms/share-testimony"
-              className="inline-flex h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+          {q ? (
+            <motion.div
+              variants={staggerItem}
+              initial="hidden"
+              whileInView="show"
+              viewport={staggerViewport}
+              className="flex flex-wrap items-center gap-3 lg:col-start-1 lg:row-start-2 lg:self-end"
             >
-              Share your story
-            </Link>
-            <Link
-              href="/testimonies"
-              className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)] transition hover:text-[var(--app-ink)]"
-            >
-              View all stories <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </motion.div>
+              <Link
+                href="/forms/share-testimony"
+                className="inline-flex h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              >
+                Share your story
+              </Link>
+              <Link
+                href="/testimonies"
+                className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)] transition hover:text-[var(--app-ink)]"
+              >
+                View all stories <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </motion.div>
+          ) : null}
         </div>
       </Container>
     </Section>

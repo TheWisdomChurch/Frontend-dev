@@ -162,6 +162,7 @@ export default function HeroHighlights({
 }) {
   const [modal, setModal] = useState<ModalKey>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{
     title: string;
     message: string;
@@ -223,6 +224,7 @@ export default function HeroHighlights({
 
   const openModal = useCallback(
     (key: ModalKey) => {
+      setSubmissionError(null);
       if (key === 'visit') {
         const upcoming = getUpcomingSundayServices();
         setVisitDates(upcoming);
@@ -237,7 +239,10 @@ export default function HeroHighlights({
     },
     [loadVisitSchedule]
   );
-  const closeModal = useCallback(() => setModal(null), []);
+  const closeModal = useCallback(() => {
+    setSubmissionError(null);
+    setModal(null);
+  }, []);
 
   useEffect(() => {
     const handlePlanVisit = () => openModal('visit');
@@ -248,6 +253,7 @@ export default function HeroHighlights({
   const onSubmitVisit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    setSubmissionError(null);
     if (
       visit.phone.trim() &&
       !isValidNationalPhone(visit.phone, visitPhoneCountry)
@@ -278,7 +284,9 @@ export default function HeroHighlights({
       setVisitConfirmation(confirmation);
     } catch (error) {
       console.error('Failed to submit visit request:', error);
-      toast.error('We could not submit your visit request. Please try again.');
+      setSubmissionError(
+        'We could not save your visit yet. Your details are still here—please try again.'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -287,6 +295,7 @@ export default function HeroHighlights({
   const onSubmitWatch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    setSubmissionError(null);
     setSubmitting(true);
     try {
       await apiClient.subscribe({ name: watch.name, email: watch.email });
@@ -298,7 +307,9 @@ export default function HeroHighlights({
       });
     } catch (error) {
       console.error('Failed to subscribe to service reminders:', error);
-      toast.error('We could not save your reminder. Please try again.');
+      setSubmissionError(
+        'We could not save your reminder yet. Your details are still here—please try again.'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -549,6 +560,15 @@ export default function HeroHighlights({
             </span>
           </label>
 
+          {submissionError ? (
+            <p
+              role="alert"
+              className="rounded-2xl border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 font-ui text-xs leading-5 text-rose-100"
+            >
+              {submissionError}
+            </p>
+          ) : null}
+
           <div className="min-w-0 rounded-2xl border border-white/8 bg-white/[0.025] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5 sm:p-5">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
@@ -627,6 +647,14 @@ export default function HeroHighlights({
           >
             Notify me <ArrowRight className="h-4 w-4" />
           </Button>
+          {submissionError ? (
+            <p
+              role="alert"
+              className="border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 font-ui text-xs leading-5 text-rose-100"
+            >
+              {submissionError}
+            </p>
+          ) : null}
           <Caption className="text-center text-white/40">
             Service reminders only. No spam.
           </Caption>

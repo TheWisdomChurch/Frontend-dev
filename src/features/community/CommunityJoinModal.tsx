@@ -48,6 +48,7 @@ export default function CommunityJoinModal() {
   const [open, setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [country, setCountry] = useState<CountryCode>(DEFAULT_PHONE_COUNTRY);
   const [form, setForm] = useState(initialForm);
 
@@ -56,6 +57,7 @@ export default function CommunityJoinModal() {
   useEffect(() => {
     const handleOpen = () => {
       setSubmitted(false);
+      setSubmissionError(null);
       setOpen(true);
     };
     window.addEventListener(COMMUNITY_JOIN_EVENT, handleOpen);
@@ -80,6 +82,7 @@ export default function CommunityJoinModal() {
     }
 
     setSubmitting(true);
+    setSubmissionError(null);
     try {
       const { firstName, lastName } = splitName(form.name);
       await apiClient.submitContactMessage({
@@ -107,8 +110,8 @@ export default function CommunityJoinModal() {
       });
       setSubmitted(true);
     } catch {
-      toast.error(
-        'We could not save your request. Please try again or continue on WhatsApp.'
+      setSubmissionError(
+        'We could not save your request yet. Your details are still here—please try again or continue on WhatsApp.'
       );
     } finally {
       setSubmitting(false);
@@ -337,6 +340,22 @@ export default function CommunityJoinModal() {
               Connect me
             </Button>
           </div>
+          {submissionError ? (
+            <div
+              role="alert"
+              className="rounded-2xl border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 font-ui text-xs leading-5 text-rose-100"
+            >
+              <p>{submissionError}</p>
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-flex font-bold text-white underline underline-offset-4"
+              >
+                Continue on WhatsApp
+              </a>
+            </div>
+          ) : null}
         </form>
       )}
     </BaseModal>
