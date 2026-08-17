@@ -515,6 +515,13 @@ export default function JoinWisdomHouse() {
             ? selectedDept.description
             : 'Complete your details and our team will follow up with your next step.'
         }
+        headerIcon={
+          modalStep === 'detail' && selectedDept ? (
+            <selectedDept.icon />
+          ) : (
+            <Users />
+          )
+        }
         maxWidth="max-w-2xl"
         preventClose={submitting}
         forceBottomSheet

@@ -52,6 +52,58 @@ describe('HTTP client', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
+  it('honours rate-limit responses for safe reads', async () => {
+    const rateLimited = new Response(
+      JSON.stringify({ message: 'Too many requests' }),
+      {
+        status: 429,
+        headers: {
+          'content-type': 'application/json',
+          'retry-after': '0',
+        },
+      }
+    );
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(rateLimited)
+      .mockResolvedValueOnce(jsonResponse({ data: ['ready'] }));
+    vi.stubGlobal('fetch', fetchMock);
+    const client = createHttpClient({
+      baseUrl: 'https://api.example.test',
+      retries: 2,
+      retryDelayMs: 0,
+    });
+
+    await expect(client.request('/events', { unwrap: true })).resolves.toEqual([
+      'ready',
+    ]);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('deduplicates identical GET requests while the first is in flight', async () => {
+    let resolveFetch: ((value: Response) => void) | undefined;
+    const fetchMock = vi.fn().mockImplementation(
+      () =>
+        new Promise<Response>(resolve => {
+          resolveFetch = resolve;
+        })
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const client = createHttpClient({ baseUrl: 'https://api.example.test' });
+
+    const first = client.request('/events?page=1');
+    const second = client.request('/events?page=1');
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    resolveFetch?.(jsonResponse({ data: ['event'] }));
+
+    await expect(Promise.all([first, second])).resolves.toEqual([
+      { data: ['event'] },
+      { data: ['event'] },
+    ]);
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
   it('never retries non-idempotent writes', async () => {
     const fetchMock = vi
       .fn()

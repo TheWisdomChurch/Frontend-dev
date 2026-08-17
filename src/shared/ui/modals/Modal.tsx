@@ -20,26 +20,66 @@ import { useIsClient, useMediaQuery } from '@/hooks';
 const DRAG_CLOSE_OFFSET = 120;
 const DRAG_CLOSE_VELOCITY = 500;
 
+// Portalled dialogs share one document body. Coordinating them here prevents
+// one modal from unlocking page scroll or handling Escape while another modal
+// is still open above it.
+const openModalStack: string[] = [];
+let bodyOverflowBeforeModal = '';
+let bodyPaddingRightBeforeModal = '';
+
+function registerOpenModal(id: string) {
+  const existingIndex = openModalStack.indexOf(id);
+  if (existingIndex >= 0) openModalStack.splice(existingIndex, 1);
+
+  if (openModalStack.length === 0) {
+    const body = document.body;
+    bodyOverflowBeforeModal = body.style.overflow;
+    bodyPaddingRightBeforeModal = body.style.paddingRight;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`;
+  }
+
+  openModalStack.push(id);
+}
+
+function unregisterOpenModal(id: string) {
+  const index = openModalStack.lastIndexOf(id);
+  if (index >= 0) openModalStack.splice(index, 1);
+
+  if (openModalStack.length === 0) {
+    document.body.style.overflow = bodyOverflowBeforeModal;
+    document.body.style.paddingRight = bodyPaddingRightBeforeModal;
+  }
+}
+
+function isTopModal(id: string) {
+  return openModalStack.at(-1) === id;
+}
+
 // ---------------------------------------------------------------------------
 // Style tokens shared across all modal content
 // ---------------------------------------------------------------------------
 
 export const modalStyles = {
   sectionTitle:
-    'text-xs font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]',
+    'text-[0.6875rem] font-extrabold uppercase tracking-[0.2em] text-[var(--app-primary)]',
   label:
-    'mb-2 block text-label font-bold uppercase tracking-[0.16em] text-white/60',
+    'mb-2 block text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white/58',
   input:
-    'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:bg-white/[0.075] focus:ring-4 focus:ring-[var(--app-primary)]/10',
   select:
-    'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-dark-2)] px-4 py-3 text-sm text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-xl border border-white/10 bg-[#15120f] px-4 py-3 text-sm text-white outline-none transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   textarea:
-    'min-h-[130px] w-full resize-y rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10',
-  errorText: 'mt-2 text-xs leading-5 text-rose-300',
+    'min-h-[130px] w-full resize-y rounded-xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:bg-white/[0.075] focus:ring-4 focus:ring-[var(--app-primary)]/10',
+  errorText:
+    'mt-2 rounded-lg border border-rose-300/15 bg-rose-300/[0.07] px-3 py-2 text-xs leading-5 text-rose-200',
   primaryButton:
-    'inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-lg shadow-[var(--app-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[var(--app-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60',
+    'inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-[0_12px_30px_rgba(201,150,26,.2)] transition duration-200 hover:-translate-y-0.5 hover:bg-[var(--app-primary-hover)] hover:shadow-[0_16px_36px_rgba(201,150,26,.28)] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none',
   ghostButton:
-    'inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 text-sm font-bold text-white/82 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-60',
+    'inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.045] px-6 text-sm font-bold text-white/82 transition duration-200 hover:border-white/20 hover:bg-white/[0.085] hover:text-white disabled:cursor-not-allowed disabled:opacity-60',
 };
 
 // ---------------------------------------------------------------------------
@@ -64,6 +104,7 @@ export interface BaseModalProps {
   tone?: 'dark' | 'light';
   contentClassName?: string;
   ariaLabel?: string;
+  headerIcon?: ReactNode;
 }
 
 function getFocusableElements(element: HTMLElement): HTMLElement[] {
@@ -99,6 +140,7 @@ interface ModalPanelProps {
   tone: 'dark' | 'light';
   contentClassName?: string;
   ariaLabel?: string;
+  headerIcon?: ReactNode;
 }
 
 function ModalPanel({
@@ -120,6 +162,7 @@ function ModalPanel({
   tone,
   contentClassName,
   ariaLabel,
+  headerIcon,
 }: ModalPanelProps) {
   const dragControls = useDragControls();
   const y = useMotionValue(0);
@@ -163,31 +206,34 @@ function ModalPanel({
       };
 
   const modalClassName = cn(
-    'relative flex w-full min-w-0 flex-col overflow-hidden border shadow-[0_32px_100px_rgba(0,0,0,.72)] backdrop-blur-2xl',
+    'relative isolate flex w-full min-w-0 flex-col overflow-hidden border shadow-[0_32px_110px_rgba(0,0,0,.68)]',
     tone === 'light'
-      ? 'border-black/10 bg-white text-black'
-      : 'border-white/[0.08] bg-[linear-gradient(160deg,#15110d_0%,#0c0a08_58%,#090807_100%)] text-white',
+      ? 'border-black/10 bg-[linear-gradient(155deg,#ffffff_0%,#fbfaf7_100%)] text-black'
+      : 'border-white/[0.11] bg-[linear-gradient(155deg,#1b1712_0%,#100d0a_48%,#090806_100%)] text-white ring-1 ring-black/30',
     dragEnabled
-      ? 'max-h-[calc(100svh-0.75rem)] rounded-t-[1.5rem] rounded-b-none'
-      : 'max-h-[calc(100svh-1rem)] rounded-[1.25rem] sm:max-h-[90vh] sm:rounded-[1.5rem]',
+      ? 'max-h-[calc(100svh-0.5rem)] rounded-t-[1.75rem] rounded-b-none'
+      : 'max-h-[calc(100svh-1rem)] rounded-[1.5rem] sm:max-h-[min(90vh,880px)] sm:rounded-[2rem]',
     maxWidth
   );
 
   return (
     <motion.div
       className={cn(
-        'fixed inset-0 z-[9999] flex min-w-0 px-2 py-2 backdrop-blur-md sm:px-4 sm:py-4',
+        'fixed inset-0 z-[11000] flex min-w-0 px-2 py-2 backdrop-blur-[10px] sm:px-5 sm:py-5',
         isSheet
           ? 'items-end justify-center px-0 pb-0 sm:items-center sm:px-4 sm:pb-4'
           : 'items-center justify-center'
       )}
       // eslint-disable-next-line no-restricted-syntax -- opacity tracks the drag motion value, genuinely dynamic
-      style={{ backgroundColor: 'rgba(0,0,0,0.72)', opacity: backdropOpacity }}
+      style={{
+        backgroundColor: 'rgba(7, 5, 3, 0.76)',
+        opacity: backdropOpacity,
+      }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       role="presentation"
-      onMouseDown={event => {
+      onPointerDown={event => {
         if (event.target === event.currentTarget) close();
       }}
     >
@@ -213,10 +259,20 @@ function ModalPanel({
         aria-describedby={subtitle ? subtitleId : undefined}
         aria-busy={isLoading}
       >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-12 top-0 z-20 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/80 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-24 -top-28 -z-10 h-64 w-64 rounded-full bg-[var(--app-primary)]/[0.09] blur-3xl"
+        />
         {isLoading ? (
-          <div className="absolute inset-0 z-30 grid place-items-center bg-black/65 backdrop-blur-sm">
-            <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/45 px-5 py-4">
-              <Loader2 className="h-6 w-6 animate-spin text-[var(--app-primary)]" />
+          <div className="absolute inset-0 z-30 grid place-items-center bg-black/72 px-6 backdrop-blur-md">
+            <div className="flex min-w-52 flex-col items-center gap-3 rounded-2xl border border-white/12 bg-[#15110d]/95 px-6 py-5 text-center shadow-2xl">
+              <span className="grid h-11 w-11 place-items-center rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10">
+                <Loader2 className="h-5 w-5 animate-spin text-[var(--app-primary)]" />
+              </span>
               <BodySM className="text-white/75">{loadingText}</BodySM>
             </div>
           </div>
@@ -226,11 +282,11 @@ function ModalPanel({
           <div
             onPointerDown={startDrag}
             className={cn(
-              'flex justify-center px-4 pt-3 sm:hidden',
+              'flex justify-center px-4 pb-1 pt-3.5 sm:hidden',
               dragEnabled && 'cursor-grab touch-none active:cursor-grabbing'
             )}
           >
-            <div className="h-1.5 w-12 rounded-full bg-white/22" />
+            <div className="h-1 w-11 rounded-full bg-white/25" />
           </div>
         ) : null}
 
@@ -238,53 +294,69 @@ function ModalPanel({
           <header
             onPointerDown={startDrag}
             className={cn(
-              'flex min-w-0 items-start justify-between gap-3 border-b px-4 py-4 sm:gap-5 sm:px-7 sm:py-6',
+              'relative flex min-w-0 items-start justify-between gap-4 border-b px-5 pb-5 pt-4 sm:gap-6 sm:px-8 sm:pb-6 sm:pt-7',
               tone === 'light'
-                ? 'border-black/10 bg-black/[0.015]'
-                : 'border-white/[0.08] bg-white/[0.018]',
+                ? 'border-black/[0.07] bg-black/[0.012]'
+                : 'border-white/[0.08] bg-white/[0.022]',
               dragEnabled && 'touch-none sm:touch-auto'
             )}
           >
-            <div className="min-w-0 flex-1 break-words">
+            <div className="flex min-w-0 flex-1 items-start gap-3.5 break-words sm:gap-4">
               {title ? (
-                <h2
-                  id={titleId}
+                <span
+                  aria-hidden="true"
                   className={cn(
-                    'break-words font-headline text-[clamp(1.35rem,6vw,1.85rem)] font-normal leading-[1.15]',
-                    tone === 'light' ? 'text-black' : 'text-white'
+                    'mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border shadow-inner sm:h-11 sm:w-11 sm:rounded-2xl [&_svg]:h-[1.125rem] [&_svg]:w-[1.125rem]',
+                    tone === 'light'
+                      ? 'border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-dark)]'
+                      : 'border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-light)]'
                   )}
                 >
-                  {title}
-                </h2>
+                  {headerIcon || <Sparkles />}
+                </span>
               ) : null}
+              <div className="min-w-0 flex-1">
+                {title ? (
+                  <h2
+                    id={titleId}
+                    className={cn(
+                      'break-words font-headline text-[clamp(1.4rem,6vw,2rem)] font-normal leading-[1.12] tracking-[-0.02em]',
+                      tone === 'light' ? 'text-black' : 'text-white'
+                    )}
+                  >
+                    {title}
+                  </h2>
+                ) : null}
 
-              {subtitle ? (
-                <p
-                  id={subtitleId}
-                  className={cn(
-                    'mt-2 max-w-xl break-words font-ui text-xs leading-5 sm:text-sm sm:leading-6',
-                    tone === 'light' ? 'text-black/55' : 'text-white/52'
-                  )}
-                >
-                  {subtitle}
-                </p>
-              ) : null}
+                {subtitle ? (
+                  <p
+                    id={subtitleId}
+                    className={cn(
+                      'mt-2.5 max-w-xl break-words font-ui text-xs leading-5 sm:text-sm sm:leading-6',
+                      tone === 'light' ? 'text-black/55' : 'text-white/52'
+                    )}
+                  >
+                    {subtitle}
+                  </p>
+                ) : null}
+              </div>
             </div>
 
             {showCloseButton ? (
               <button
                 type="button"
                 onClick={close}
+                onPointerDown={event => event.stopPropagation()}
                 disabled={!canClose}
                 aria-label="Close modal"
                 className={cn(
-                  'grid h-9 w-9 flex-none place-items-center rounded-full border transition disabled:cursor-not-allowed disabled:opacity-50',
+                  'grid h-10 w-10 flex-none place-items-center rounded-full border transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/15 disabled:cursor-not-allowed disabled:opacity-50',
                   tone === 'light'
-                    ? 'border-black/10 bg-black/[0.03] text-black/55 hover:bg-black hover:text-white'
-                    : 'border-white/10 bg-white/[0.04] text-white/50 hover:bg-white/[0.09] hover:text-white'
+                    ? 'border-black/10 bg-black/[0.025] text-black/55 hover:rotate-3 hover:bg-black hover:text-white'
+                    : 'border-white/10 bg-white/[0.045] text-white/55 hover:rotate-3 hover:border-white/18 hover:bg-white/[0.1] hover:text-white'
                 )}
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             ) : null}
           </header>
@@ -292,7 +364,7 @@ function ModalPanel({
 
         <div
           className={cn(
-            'min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] pt-4 sm:px-7 sm:pb-8 sm:pt-7',
+            'modal-scrollbar min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-5 pb-[max(1.75rem,env(safe-area-inset-bottom))] pt-5 sm:px-8 sm:pb-8 sm:pt-7',
             contentClassName
           )}
         >
@@ -321,12 +393,14 @@ export const BaseModal = memo(function BaseModal({
   tone = 'dark',
   contentClassName,
   ariaLabel,
+  headerIcon,
 }: BaseModalProps) {
   const mounted = useIsClient();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
   const subtitleId = useId();
+  const modalId = useId();
   const isMobile = useMediaQuery('(max-width: 639px)');
 
   const isSheet = forceBottomSheet;
@@ -334,30 +408,16 @@ export const BaseModal = memo(function BaseModal({
   const canClose = !preventClose && !isLoading;
 
   const close = useCallback(() => {
-    if (!canClose) return;
+    if (!canClose || !isTopModal(modalId)) return;
     onClose();
-  }, [canClose, onClose]);
+  }, [canClose, modalId, onClose]);
 
   useEffect(() => {
     if (!isOpen || !mounted) return;
 
-    const body = document.body;
-    const previousOverflow = body.style.overflow;
-    const previousPaddingRight = body.style.paddingRight;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-
-    body.style.overflow = 'hidden';
-
-    if (scrollbarWidth > 0) {
-      body.style.paddingRight = `${scrollbarWidth}px`;
-    }
-
-    return () => {
-      body.style.overflow = previousOverflow;
-      body.style.paddingRight = previousPaddingRight;
-    };
-  }, [isOpen, mounted]);
+    registerOpenModal(modalId);
+    return () => unregisterOpenModal(modalId);
+  }, [isOpen, modalId, mounted]);
 
   useEffect(() => {
     if (!isOpen || !mounted) return;
@@ -388,6 +448,8 @@ export const BaseModal = memo(function BaseModal({
     if (!isOpen || !mounted) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isTopModal(modalId)) return;
+
       if (event.key === 'Escape' && onEscapeClose && canClose) {
         event.preventDefault();
         close();
@@ -417,7 +479,7 @@ export const BaseModal = memo(function BaseModal({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, mounted, onEscapeClose, canClose, close]);
+  }, [isOpen, mounted, onEscapeClose, canClose, close, modalId]);
 
   if (!mounted) return null;
 
@@ -443,6 +505,7 @@ export const BaseModal = memo(function BaseModal({
           tone={tone}
           contentClassName={contentClassName}
           ariaLabel={ariaLabel}
+          headerIcon={headerIcon}
         >
           {children}
         </ModalPanel>

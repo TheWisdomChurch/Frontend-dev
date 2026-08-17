@@ -101,12 +101,14 @@ function ModalShell({
   onClose,
   title,
   subtitle,
+  icon,
   children,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   subtitle?: string;
+  icon?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -115,6 +117,7 @@ function ModalShell({
       onClose={onClose}
       title={title}
       subtitle={subtitle}
+      headerIcon={icon}
       maxWidth="max-w-2xl"
       forceBottomSheet
     >
@@ -397,6 +400,7 @@ export default function HeroHighlights({
         onClose={closeModal}
         title="Plan your visit"
         subtitle="Tell us you're coming and our welcome team will take care of the details."
+        icon={<CalendarClock />}
       >
         <form className="min-w-0 space-y-5 pb-1" onSubmit={onSubmitVisit}>
           <div className="relative min-w-0 overflow-hidden rounded-2xl border border-[var(--app-primary)]/20 bg-[linear-gradient(135deg,rgba(201,150,26,.16),rgba(255,255,255,.035))] p-4 sm:rounded-3xl sm:p-5">
@@ -602,6 +606,7 @@ export default function HeroHighlights({
         onClose={closeModal}
         title="Watch live or on-demand"
         subtitle="Drop your email and we'll remind you 30 minutes before we go live."
+        icon={<Headphones />}
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
           <div className="flex items-start gap-3 border border-white/10 bg-white/[0.03] p-4">

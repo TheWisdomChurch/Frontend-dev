@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import React, { forwardRef } from 'react';
-import { Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 export type ButtonVariant =
@@ -118,6 +118,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const isDisabled = disabled || loading;
+    const defaultRightIcon =
+      size !== 'icon' && children && !leftIcon && !rightIcon ? (
+        <ArrowRight />
+      ) : null;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (isDisabled) return;
@@ -166,12 +170,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             </span>
           ) : null}
 
-          {!loading && rightIcon ? (
+          {!loading && (rightIcon || defaultRightIcon) ? (
             <span
-              className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+              className="shrink-0 transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transition-none"
               aria-hidden="true"
             >
-              {rightIcon}
+              {rightIcon || defaultRightIcon}
             </span>
           ) : null}
         </span>
