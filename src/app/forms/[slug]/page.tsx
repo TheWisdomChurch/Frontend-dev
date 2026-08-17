@@ -2,20 +2,17 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { H1, H2, H3, H4, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
-import { EventBannerDesktop, EventBannerMobile } from '@/shared/assets';
 import apiClient, { isApiError } from '@/lib/api';
 import type {
   EventPublic,
   PublicFormField,
   PublicFormPayload,
 } from '@/lib/apiTypes';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import {
   DEFAULT_PHONE_COUNTRY,
@@ -43,16 +40,16 @@ const MONTH_OPTIONS = [
 ] as const;
 
 const fieldShellClass =
-  'rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5';
+  'rounded-2xl border border-stone-200 bg-white p-4 sm:p-5';
 
 const fieldBaseClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-body-md text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]/70 focus:bg-black/45 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-body-md text-stone-950 outline-none transition placeholder:text-stone-400 focus:border-[var(--app-primary)]/70 focus:bg-white focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const fieldSelectClass =
-  'min-h-12 w-full rounded-2xl border border-white/10 bg-[var(--app-dark-2)] px-4 py-3 text-body-md text-white outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-body-md text-stone-950 outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
 
 const labelClass =
-  'block text-label font-bold uppercase tracking-[0.16em] text-white/60';
+  'block text-label font-bold uppercase tracking-[0.16em] text-stone-600';
 
 function splitE164(
   value: string
@@ -291,6 +288,8 @@ export default function PublicFormPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [consentAccepted, setConsentAccepted] = useState(false);
+  const [consentError, setConsentError] = useState('');
 
   const isStructuredPublicForm = useMemo(() => {
     const slug = (formSlug || '').toLowerCase();
@@ -459,6 +458,38 @@ export default function PublicFormPage() {
     };
   }, [event, form, isTestimonialForm]);
 
+  const consent = {
+    title:
+      form?.settings?.consent?.title ||
+      'Consent, privacy and responsible use of your information',
+    introduction:
+      form?.settings?.consent?.introduction ||
+      'The Wisdom Church collects the information you provide to administer this submission, communicate with you, provide appropriate support, and maintain accurate church records.',
+    purposes: form?.settings?.consent?.purposes?.length
+      ? form.settings.consent.purposes
+      : [
+          'Process and manage this submission.',
+          'Contact you about relevant updates and actions you requested.',
+          'Maintain proportionate church administration and safeguarding records where applicable.',
+        ],
+    dataUse:
+      form?.settings?.consent?.dataUse ||
+      'Access is limited to authorised church personnel who need the information for these purposes. Personal information is not sold.',
+    retention:
+      form?.settings?.consent?.retention ||
+      'Information is retained only while reasonably needed for its stated purpose and applicable legal, safeguarding, or administrative obligations.',
+    rights:
+      form?.settings?.consent?.rights ||
+      'You may request access or correction and, where applicable, deletion, restriction, or withdrawal of consent.',
+    contact:
+      form?.settings?.consent?.contact ||
+      'Contact the church administration team through the official church contact details for privacy questions or corrections.',
+    acknowledgementLabel:
+      form?.settings?.consent?.acknowledgementLabel ||
+      'I have read and understood this notice, confirm that my information is accurate, and consent to its use for the purposes described above.',
+    version: form?.settings?.consent?.version || '2026.1',
+  };
+
   const showHeroCopy = isStructuredPublicForm;
 
   const sortedFields = useMemo(() => {
@@ -519,6 +550,14 @@ export default function PublicFormPage() {
     try {
       const nextFieldErrors: Record<string, string> = {};
       const payloadValues: Record<string, unknown> = {};
+
+      if (!consentAccepted) {
+        setConsentError(
+          'Review and accept the privacy notice before submitting.'
+        );
+        setSubmitting(false);
+        return;
+      }
 
       for (const field of visibleFields) {
         const rawValue = answers[field.key];
@@ -634,6 +673,9 @@ export default function PublicFormPage() {
         return;
       }
 
+      payloadValues._consentAccepted = true;
+      payloadValues._consentVersion = consent.version;
+
       await apiClient.submitPublicForm(formSlug, { values: payloadValues });
       setSubmitted(true);
     } catch (err: unknown) {
@@ -697,7 +739,7 @@ export default function PublicFormPage() {
             />
             <div className="flex flex-wrap items-center justify-between gap-2">
               {typeof maxWords === 'number' ? (
-                <Caption className="text-white/45">
+                <Caption className="text-stone-500">
                   {wordCount}/{maxWords} words
                 </Caption>
               ) : (
@@ -730,7 +772,7 @@ export default function PublicFormPage() {
                 <option
                   key={option.value}
                   value={option.value}
-                  className="bg-[var(--app-dark-2)] text-white"
+                  className="bg-white text-stone-950"
                 >
                   {option.label}
                 </option>
@@ -757,7 +799,7 @@ export default function PublicFormPage() {
               {field.options?.map(option => (
                 <label
                   key={option.value}
-                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-3 py-2 text-sm text-white/78 transition hover:bg-white/[0.045]"
+                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-700 transition hover:bg-white"
                 >
                   <input
                     type="radio"
@@ -798,7 +840,7 @@ export default function PublicFormPage() {
               {field.options.map(option => (
                 <label
                   key={option.value}
-                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-3 py-2 text-sm text-white/78 transition hover:bg-white/[0.045]"
+                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-700 transition hover:bg-white"
                 >
                   <input
                     type="checkbox"
@@ -826,7 +868,7 @@ export default function PublicFormPage() {
     if (field.type === 'checkbox') {
       return (
         <div key={field.key} className={wrapperClass}>
-          <label className="flex items-start gap-3 text-sm leading-6 text-white/78">
+          <label className="flex items-start gap-3 text-sm leading-6 text-stone-700">
             <input
               type="checkbox"
               checked={Boolean(value)}
@@ -864,11 +906,11 @@ export default function PublicFormPage() {
                 handleChange(field.key, event.target.files?.[0] || null)
               }
             />
-            <Caption className="text-white/45">
+            <Caption className="text-stone-500">
               JPEG, PNG, or WebP. Maximum file size is 5MB.
             </Caption>
             {selectedFile ? (
-              <Caption className="text-white/65">
+              <Caption className="text-stone-600">
                 Selected: {selectedFile.name}
               </Caption>
             ) : null}
@@ -918,7 +960,7 @@ export default function PublicFormPage() {
               required={field.required}
             />
 
-            <Caption className="text-white/45">
+            <Caption className="text-stone-500">
               Use your country code and active phone number.
             </Caption>
           </label>
@@ -954,11 +996,7 @@ export default function PublicFormPage() {
               >
                 <option value="">Day</option>
                 {availableDays.map(day => (
-                  <option
-                    key={day}
-                    value={day}
-                    className="bg-[var(--app-dark-2)]"
-                  >
+                  <option key={day} value={day} className="bg-white">
                     {day}
                   </option>
                 ))}
@@ -979,7 +1017,7 @@ export default function PublicFormPage() {
                   <option
                     key={month.value}
                     value={month.value}
-                    className="bg-[var(--app-dark-2)]"
+                    className="bg-white"
                   >
                     {month.label}
                   </option>
@@ -987,7 +1025,9 @@ export default function PublicFormPage() {
               </select>
             </div>
 
-            <Caption className="text-white/45">Stored as DD-MM format.</Caption>
+            <Caption className="text-stone-500">
+              Stored as DD-MM format.
+            </Caption>
             <Error />
           </label>
         </div>
@@ -1012,31 +1052,13 @@ export default function PublicFormPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--app-dark)] text-white">
-      <Section padding="none" className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-20">
-          <Image
-            src={EventBannerMobile}
-            alt={event?.title || form?.title || 'Event banner'}
-            fill
-            priority
-            quality={IMAGE_QUALITY}
-            sizes="(max-width: 768px) 100vw, 0px"
-            className="object-cover object-top md:hidden"
-          />
-          <Image
-            src={EventBannerDesktop}
-            alt={event?.title || form?.title || 'Event banner'}
-            fill
-            priority={false}
-            quality={IMAGE_QUALITY}
-            sizes="(max-width: 1024px) 100vw, 100vw"
-            className="hidden object-cover object-center md:block"
-          />
-        </div>
-
-        <div className="absolute inset-0 -z-10 bg-black/72" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(201,150,26,0.13),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.2),#050505_92%)]" />
+    <main className="min-h-screen bg-[#faf9f6] text-stone-950">
+      <Section
+        padding="none"
+        className="relative isolate overflow-hidden border-b border-stone-200 bg-white"
+      >
+        <div className="absolute inset-x-0 top-0 -z-10 h-1 bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700" />
+        <div className="absolute -right-32 -top-32 -z-10 h-80 w-80 rounded-full bg-amber-100/70 blur-3xl" />
 
         <Container
           size="xl"
@@ -1051,10 +1073,10 @@ export default function PublicFormPage() {
               <Eyebrow className="text-[var(--app-primary)]">
                 Public form
               </Eyebrow>
-              <H1 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <H1 className="mt-3 text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl lg:text-5xl">
                 {presentation.title}
               </H1>
-              <BodySM className="mt-4 max-w-2xl text-white/72">
+              <BodySM className="mt-4 max-w-2xl text-stone-600">
                 {presentation.subtitle}
               </BodySM>
             </div>
@@ -1064,16 +1086,13 @@ export default function PublicFormPage() {
         </Container>
       </Section>
 
-      <Section
-        padding="none"
-        className="relative overflow-hidden bg-[var(--app-dark)]"
-      >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(201,150,26,0.09),transparent_30%),linear-gradient(180deg,#050505_0%,#080808_52%,#050505_100%)]" />
+      <Section padding="none" className="relative overflow-hidden bg-[#faf9f6]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(217,160,31,0.07),transparent_30%)]" />
 
         <Container size="xl" className="relative z-10">
           <div className="py-8 sm:py-10 lg:py-14">
             {loading ? (
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6 text-sm text-white/70 shadow-2xl shadow-black/25">
+              <div className="rounded-[1.5rem] border border-stone-200 bg-white p-6 text-sm text-stone-600 shadow-sm">
                 Loading form...
               </div>
             ) : null}
@@ -1086,17 +1105,17 @@ export default function PublicFormPage() {
 
             {!loading && form && !submitted ? (
               <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
-                <aside className="h-fit rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/25 backdrop-blur-xl xl:sticky xl:top-24">
+                <aside className="h-fit rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-sm xl:sticky xl:top-24">
                   {!showHeroCopy ? (
                     <div>
                       <Eyebrow className="text-[var(--app-primary)]">
                         Public form
                       </Eyebrow>
-                      <H2 className="mt-3 text-2xl font-semibold tracking-tight text-white">
+                      <H2 className="mt-3 text-2xl font-semibold tracking-tight text-stone-950">
                         {form.title}
                       </H2>
                       {form.description ? (
-                        <BodySM className="mt-3 text-white/62">
+                        <BodySM className="mt-3 text-stone-600">
                           {form.description}
                         </BodySM>
                       ) : null}
@@ -1106,17 +1125,17 @@ export default function PublicFormPage() {
                       <Eyebrow className="text-[var(--app-primary)]">
                         Form details
                       </Eyebrow>
-                      <H3 className="mt-3 text-xl text-white">
+                      <H3 className="mt-3 text-xl text-stone-950">
                         Complete your response
                       </H3>
-                      <BodySM className="mt-2 text-white/58">
+                      <BodySM className="mt-2 text-stone-600">
                         Please provide accurate details before submitting.
                       </BodySM>
                     </div>
                   )}
 
                   {presentation.headerNote ? (
-                    <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-white/68">
+                    <div className="mt-5 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm leading-6 text-stone-600">
                       {presentation.headerNote}
                     </div>
                   ) : null}
@@ -1125,7 +1144,7 @@ export default function PublicFormPage() {
                     <Eyebrow className="text-[var(--app-primary)]">
                       Form overview
                     </Eyebrow>
-                    <BodySM className="mt-2 text-white/78">
+                    <BodySM className="mt-2 text-stone-700">
                       {visibleFields.length} visible field
                       {visibleFields.length === 1 ? '' : 's'} to complete.
                     </BodySM>
@@ -1134,27 +1153,27 @@ export default function PublicFormPage() {
 
                 <form
                   onSubmit={handleSubmit}
-                  className="rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6 lg:p-8"
+                  className="rounded-[1.5rem] border border-stone-200 bg-white p-4 shadow-xl shadow-stone-900/5 sm:p-6 lg:p-8"
                 >
                   {presentation.detailItems.length > 0 ||
                   presentation.sections.length > 0 ? (
-                    <div className="mb-6 space-y-4 rounded-[1.25rem] border border-white/10 bg-black/25 p-4 sm:p-5">
+                    <div className="mb-6 space-y-4 rounded-[1.25rem] border border-stone-200 bg-stone-50 p-4 sm:p-5">
                       {presentation.detailItems.length > 0 ? (
                         <div className="grid gap-3 sm:grid-cols-2">
                           {presentation.detailItems.map(
                             (item: string, index: number) => (
                               <div
                                 key={`${item}-${index}`}
-                                className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                                className="rounded-2xl border border-stone-200 bg-white p-4"
                               >
                                 <BodySM
                                   weight="semibold"
-                                  className="text-white"
+                                  className="text-stone-950"
                                 >
                                   {item}
                                 </BodySM>
                                 {presentation.detailSubtexts[index] ? (
-                                  <BodySM className="mt-2 text-white/58">
+                                  <BodySM className="mt-2 text-stone-600">
                                     {presentation.detailSubtexts[index]}
                                   </BodySM>
                                 ) : null}
@@ -1167,11 +1186,11 @@ export default function PublicFormPage() {
                       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       {presentation.sections.map((section: any) => (
                         <section key={section.id || section.title}>
-                          <H4 className="text-base text-white">
+                          <H4 className="text-base text-stone-950">
                             {section.title}
                           </H4>
                           {section.subtitle ? (
-                            <BodySM className="mt-1 text-white/60">
+                            <BodySM className="mt-1 text-stone-600">
                               {section.subtitle}
                             </BodySM>
                           ) : null}
@@ -1183,7 +1202,7 @@ export default function PublicFormPage() {
                               {section.items.map((item: any, index: number) => (
                                 <div
                                   key={`${section.title}-${item.title}-${index}`}
-                                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                                  className="rounded-2xl border border-stone-200 bg-white p-4"
                                 >
                                   {item.eyebrow ? (
                                     <Eyebrow className="text-[var(--app-primary)]">
@@ -1192,12 +1211,12 @@ export default function PublicFormPage() {
                                   ) : null}
                                   <BodySM
                                     weight="semibold"
-                                    className="mt-1 text-white"
+                                    className="mt-1 text-stone-950"
                                   >
                                     {item.title}
                                   </BodySM>
                                   {item.body ? (
-                                    <BodySM className="mt-2 text-white/58">
+                                    <BodySM className="mt-2 text-stone-600">
                                       {item.body}
                                     </BodySM>
                                   ) : null}
@@ -1224,13 +1243,95 @@ export default function PublicFormPage() {
                     {visibleFields.map(renderField)}
                   </div>
 
+                  <section
+                    className="mt-7 rounded-2xl border border-stone-200 bg-stone-50 p-5 sm:p-6"
+                    aria-labelledby="privacy-consent-title"
+                  >
+                    <Eyebrow className="text-emerald-700">
+                      Privacy and consent
+                    </Eyebrow>
+                    <H3
+                      id="privacy-consent-title"
+                      className="mt-2 text-lg text-stone-950"
+                    >
+                      {consent.title}
+                    </H3>
+                    <BodySM className="mt-3 leading-6 text-stone-700">
+                      {consent.introduction}
+                    </BodySM>
+                    <ul className="mt-4 space-y-2 text-sm leading-6 text-stone-700">
+                      {consent.purposes.map(purpose => (
+                        <li key={purpose} className="flex gap-2">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" />
+                          {purpose}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-4 grid gap-4 text-sm leading-6 text-stone-600 sm:grid-cols-2">
+                      <div>
+                        <strong className="block text-stone-900">
+                          Responsible access
+                        </strong>
+                        {consent.dataUse}
+                      </div>
+                      <div>
+                        <strong className="block text-stone-900">
+                          Retention
+                        </strong>
+                        {consent.retention}
+                      </div>
+                      <div>
+                        <strong className="block text-stone-900">
+                          Your rights
+                        </strong>
+                        {consent.rights}
+                      </div>
+                      <div>
+                        <strong className="block text-stone-900">
+                          Questions and corrections
+                        </strong>
+                        {consent.contact}
+                      </div>
+                    </div>
+                    <label
+                      className={`mt-5 flex cursor-pointer items-start gap-3 rounded-xl border bg-white p-4 text-sm leading-6 text-stone-700 ${consentError ? 'border-rose-400 ring-2 ring-rose-100' : 'border-stone-300'}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={consentAccepted}
+                        onChange={event => {
+                          setConsentAccepted(event.target.checked);
+                          if (event.target.checked) setConsentError('');
+                        }}
+                        className="mt-1 h-4 w-4 accent-emerald-700"
+                      />
+                      <span>
+                        <strong className="block text-stone-950">
+                          Required acknowledgement
+                        </strong>
+                        {consent.acknowledgementLabel}
+                      </span>
+                    </label>
+                    {consentError ? (
+                      <p
+                        className="mt-2 text-sm font-semibold text-rose-700"
+                        role="alert"
+                      >
+                        {consentError}
+                      </p>
+                    ) : null}
+                    <p className="mt-3 text-xs text-stone-500">
+                      Privacy notice version {consent.version}
+                    </p>
+                  </section>
+
                   {error ? (
                     <div className="mt-6 rounded-2xl border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm leading-6 text-rose-100">
                       {error}
                     </div>
                   ) : null}
 
-                  <div className="mt-7 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mt-7 flex flex-col gap-4 border-t border-stone-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
                     <Button
                       type="submit"
                       variant="primary"
@@ -1241,7 +1342,7 @@ export default function PublicFormPage() {
                       {submitting ? 'Submitting...' : 'Submit form'}
                     </Button>
 
-                    <BodySM className="text-white/50">
+                    <BodySM className="text-stone-500">
                       We will follow up using the details you provide.
                     </BodySM>
                   </div>

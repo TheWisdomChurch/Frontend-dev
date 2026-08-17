@@ -357,6 +357,24 @@ function normalizePublicFormSettings(
   const sections = rawSections
     .map(normalizePublicFormSection)
     .filter((section): section is PublicFormContentSection => section !== null);
+  const rawConsent = isRecord(pick('consent'))
+    ? (pick('consent') as Record<string, unknown>)
+    : null;
+  const consent = rawConsent
+    ? {
+        enabled: rawConsent.enabled !== false,
+        required: rawConsent.required !== false,
+        title: asNonEmptyString(rawConsent.title),
+        introduction: asNonEmptyString(rawConsent.introduction),
+        purposes: parseStringArray(rawConsent.purposes),
+        dataUse: asNonEmptyString(rawConsent.dataUse),
+        retention: asNonEmptyString(rawConsent.retention),
+        rights: asNonEmptyString(rawConsent.rights),
+        contact: asNonEmptyString(rawConsent.contact),
+        acknowledgementLabel: asNonEmptyString(rawConsent.acknowledgementLabel),
+        version: asNonEmptyString(rawConsent.version),
+      }
+    : undefined;
 
   const settings: PublicFormSettings = {
     formType: asNonEmptyString(pick('formType')),
@@ -374,6 +392,7 @@ function normalizePublicFormSettings(
     layoutMode: asNonEmptyString(pick('layoutMode')),
     dateFormat: asNonEmptyString(pick('dateFormat')),
     sections: sections.length ? sections : undefined,
+    consent,
   };
 
   const hasAnyValue = Object.values(settings).some(value =>
