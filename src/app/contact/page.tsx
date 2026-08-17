@@ -170,7 +170,7 @@ function ContactPageContent() {
         fields
           ? (Object.values(fields)[0] ??
               'Please check your details and try again.')
-          : 'Unable to send your message right now. Please try again.'
+          : 'Unable to send your message right now. Your details are still here—please try again.'
       );
     } finally {
       setSubmitting(false);
