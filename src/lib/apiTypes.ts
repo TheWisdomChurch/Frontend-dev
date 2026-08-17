@@ -87,6 +87,19 @@ export type PublicFormSettings = {
   layoutMode?: string;
   dateFormat?: string;
   sections?: PublicFormContentSection[];
+  consent?: {
+    enabled?: boolean;
+    required?: boolean;
+    title?: string;
+    introduction?: string;
+    purposes?: string[];
+    dataUse?: string;
+    retention?: string;
+    rights?: string;
+    contact?: string;
+    acknowledgementLabel?: string;
+    version?: string;
+  };
 };
 
 export type PublicFormPayload = {
