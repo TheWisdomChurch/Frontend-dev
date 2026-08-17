@@ -15,7 +15,6 @@ export * from './data';
 
 // Responsive utilities
 export * from './responsive';
-export * from './modal-responsive';
 
 // Safe motion utilities
 export { motion, AnimatePresence } from './safe-motion';

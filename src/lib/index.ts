@@ -34,7 +34,6 @@ export * from './data';
 // ============================================
 export { motion, AnimatePresence } from './safe-motion';
 export * from './responsive';
-export * from './modal-responsive';
 
 // ============================================
 // Types
