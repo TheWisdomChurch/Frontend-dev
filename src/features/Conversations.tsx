@@ -16,22 +16,22 @@ import {
 
 const slides = [
   {
-    src: '/Picflow Images Jul 31 (2)/conv_1.webp',
+    src: '/Picflow/conv_1.webp',
     alt: 'A guest sharing her story during a Wisdom Church conversation',
     position: 'object-center',
   },
   {
-    src: '/Picflow Images Jul 31 (2)/Conv_2.webp',
+    src: '/Picflow/Conv_2.webp',
     alt: 'Two women in conversation at Wisdom Church',
     position: 'object-center',
   },
   {
-    src: '/Picflow Images Jul 31 (2)/Conv_3.webp',
+    src: '/Picflow/Conv_3.webp',
     alt: 'A guest speaking during a live church conversation',
     position: 'object-center',
   },
   {
-    src: '/Picflow Images Jul 31 (2)/Conv_4.webp',
+    src: '/Picflow/Conv_4.webp',
     alt: 'A panel conversation at Wisdom Church',
     position: 'object-center',
   },

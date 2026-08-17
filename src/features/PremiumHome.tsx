@@ -115,7 +115,7 @@ function CommunityCollage() {
         className="group relative col-span-2 min-h-[260px] overflow-hidden bg-white/5 shadow-[0_24px_70px_rgba(0,0,0,.28)] sm:col-span-7 sm:row-span-2 sm:h-full sm:min-h-0"
       >
         <Image
-          src="/Picflow Images Jul 31 (2)/DSC00054 copy.webp"
+          src="/Picflow/DSC00054 copy.webp"
           alt="A mother and child sharing life at The Wisdom Church"
           fill
           quality={IMAGE_QUALITY}
@@ -146,7 +146,7 @@ function CommunityCollage() {
         className="group relative aspect-[5/4] w-full overflow-hidden bg-white/5 shadow-[0_20px_55px_rgba(0,0,0,.3)] sm:col-span-5"
       >
         <Image
-          src="/Picflow Images Jul 31 (2)/DSC00268 copy.webp"
+          src="/Picflow/DSC00268 copy.webp"
           alt="A Wisdom House volunteer serving during worship"
           fill
           quality={IMAGE_QUALITY}
