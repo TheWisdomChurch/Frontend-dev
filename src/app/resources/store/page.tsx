@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { gsap } from 'gsap';
 import {
@@ -29,23 +29,14 @@ const ProductModal = dynamic(
   () => import('@/features/store/modals/ProductModal'),
   { ssr: false }
 );
-import {
-  H2,
-  H3,
-  H4,
-  BodyLG,
-  BodySM,
-  SmallText,
-  Caption,
-  Eyebrow,
-} from '@/shared/text';
+import { H2, H3, H4, BodyLG, SmallText, Caption, Eyebrow } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import { Section, Container } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
 import SectionGlow from '@/shared/ui/SectionGlow';
 import CartSidebar from '@/features/store/Store/CartSidebar';
+import ProductCard from '@/features/store/Store/ProductCard';
 import type { Product } from '@/domain/store/types';
-import { Media } from '@/shared/ui/Media';
 import { storeClient } from '@/lib/api/storeClient';
 import PageHero from '@/features/hero/PageHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
@@ -178,10 +169,10 @@ function StorePageContent() {
     }
   };
 
-  const handleQuickView = (product: Product) => {
+  const handleQuickView = useCallback((product: Product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
-  };
+  }, []);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -465,142 +456,13 @@ function StorePageContent() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filteredProducts.map(product => {
-                  const soldOut = product.stock <= 0;
-                  const sizes = Array.isArray(product.sizes)
-                    ? product.sizes.length
-                    : 0;
-                  const colors = Array.isArray(product.colors)
-                    ? product.colors.length
-                    : 0;
-
-                  return (
-                    <article
-                      key={product.id}
-                      className="product-card group overflow-hidden rounded-[1.75rem] border border-white/[0.12] bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
-                    >
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => handleQuickView(product)}
-                        className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[#0d0d0d] rounded-none"
-                      >
-                        <Media
-                          src={product.image}
-                          alt={product.name}
-                          fit="contain"
-                          className="p-4 transition duration-500 group-hover:scale-105 sm:p-5"
-                          frameClassName="bg-[#0d0d0d]"
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          fallback={
-                            <ShoppingBag className="h-12 w-12 text-white/35" />
-                          }
-                        />
-
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/10 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
-
-                        <div className="absolute left-4 top-4 flex flex-col gap-2">
-                          {product.originalPrice && (
-                            <span className="rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
-                              SALE
-                            </span>
-                          )}
-
-                          {soldOut && (
-                            <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-black shadow-lg">
-                              OUT OF STOCK
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="absolute inset-x-4 bottom-4 translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                          <span className="flex h-11 w-full items-center justify-center rounded-full text-sm font-bold text-black bg-[var(--app-primary)]">
-                            {soldOut ? 'View Product' : 'Quick View'}
-                          </span>
-                        </div>
-                      </Button>
-
-                      <div className="p-5">
-                        <div className="mb-3 flex items-start justify-between gap-3">
-                          <SmallText
-                            weight="bold"
-                            className="line-clamp-2 text-base leading-snug text-white"
-                            useThemeColor={false}
-                          >
-                            {product.name}
-                          </SmallText>
-                        </div>
-
-                        <Caption
-                          className="line-clamp-2 text-sm leading-6 text-white/58"
-                          useThemeColor={false}
-                        >
-                          {product.description}
-                        </Caption>
-
-                        <div className="mt-4 flex items-end gap-2">
-                          <BodyLG
-                            weight="bold"
-                            className="text-2xl text-[var(--app-primary)]"
-                            useThemeColor={false}
-                          >
-                            {product.price}
-                          </BodyLG>
-
-                          {product.originalPrice && (
-                            <Caption
-                              className="pb-1 text-sm line-through text-white/38"
-                              useThemeColor={false}
-                            >
-                              {product.originalPrice}
-                            </Caption>
-                          )}
-                        </div>
-
-                        <div className="mt-4 grid grid-cols-3 gap-2">
-                          {[
-                            [`${sizes}`, 'Sizes'],
-                            [`${colors}`, 'Colors'],
-                            [soldOut ? '0' : `${product.stock}`, 'Stock'],
-                          ].map(([value, label]) => (
-                            <div
-                              key={label}
-                              className="rounded-2xl border border-white/8 bg-black/25 px-2 py-2 text-center"
-                            >
-                              <BodySM weight="bold" className="text-white">
-                                {value}
-                              </BodySM>
-                              <Eyebrow className="mt-0.5 text-white/38">
-                                {label}
-                              </Eyebrow>
-                            </div>
-                          ))}
-                        </div>
-
-                        <Button
-                          variant="primary"
-                          size="md"
-                          curvature="full"
-                          elevated
-                          leftIcon={<ShoppingBag className="h-4 w-4" />}
-                          onClick={() => handleQuickView(product)}
-                          disabled={soldOut}
-                          className="mt-5 h-11 w-full font-bold transition hover:scale-[1.01]"
-                          onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                            e.currentTarget.style.backgroundColor =
-                              'var(--app-primary-dark)';
-                          }}
-                          onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-                            e.currentTarget.style.backgroundColor =
-                              'var(--app-primary)';
-                          }}
-                        >
-                          {soldOut ? 'Out of Stock' : 'Add to Cart'}
-                        </Button>
-                      </div>
-                    </article>
-                  );
-                })}
+                {filteredProducts.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onQuickView={handleQuickView}
+                  />
+                ))}
               </div>
             )}
           </div>
