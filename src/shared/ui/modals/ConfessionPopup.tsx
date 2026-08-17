@@ -105,13 +105,6 @@ export default function ConfessionPopup({
     <BaseModal
       isOpen={open}
       onClose={onClose}
-      ariaLabel={
-        currentStep === 'welcome'
-          ? welcomeTitle
-          : currentStep === 'confession'
-            ? 'Faith confession'
-            : 'Confession complete'
-      }
       maxWidth="max-w-lg"
       showCloseButton={false}
       forceBottomSheet

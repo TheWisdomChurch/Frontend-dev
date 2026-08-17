@@ -107,30 +107,11 @@ export default function PageHero({
         {compact ? (
           /* ── Compact: left-aligned, clears fixed 72px header ── */
           <div className="flex min-h-[380px] max-w-2xl flex-col justify-center gap-5 pb-20 pt-[calc(var(--app-header-height)+3rem)] sm:min-h-[420px] sm:pb-24 sm:pt-[calc(var(--app-header-height)+3.5rem)] lg:pb-28">
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center gap-2 font-ui text-eyebrow font-bold uppercase tracking-[0.18em]"
-            >
-              <Link
-                href="/"
-                className="text-white/55 transition hover:text-white"
-              >
-                Home
-              </Link>
-              {eyebrow ? (
-                <>
-                  <span className="text-white/25" aria-hidden="true">
-                    /
-                  </span>
-                  <span
-                    className="text-[var(--app-primary)]"
-                    aria-current="page"
-                  >
-                    {eyebrow}
-                  </span>
-                </>
-              ) : null}
-            </nav>
+            {eyebrow ? (
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                {eyebrow}
+              </p>
+            ) : null}
             <H1 className="font-headline text-heading-lg font-semibold leading-[1.16] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.6)] sm:text-heading-lg lg:text-display-sm">
               {title}
             </H1>
@@ -159,30 +140,11 @@ export default function PageHero({
         ) : (
           /* ── Full hero: centered, tall ── */
           <div className="mx-auto flex min-h-[480px] max-w-3xl flex-col items-center justify-center gap-5 pb-24 pt-[calc(var(--app-header-height)+4rem)] text-center sm:min-h-[540px] sm:pb-28 sm:pt-[calc(var(--app-header-height)+5rem)]">
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center justify-center gap-2 font-ui text-eyebrow font-bold uppercase tracking-[0.18em]"
-            >
-              <Link
-                href="/"
-                className="text-white/55 transition hover:text-white"
-              >
-                Home
-              </Link>
-              {eyebrow ? (
-                <>
-                  <span className="text-white/25" aria-hidden="true">
-                    /
-                  </span>
-                  <span
-                    className="text-[var(--app-primary)]"
-                    aria-current="page"
-                  >
-                    {eyebrow}
-                  </span>
-                </>
-              ) : null}
-            </nav>
+            {eyebrow ? (
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                {eyebrow}
+              </p>
+            ) : null}
 
             <div className="h-px w-12 bg-[var(--app-primary)]/55" />
 

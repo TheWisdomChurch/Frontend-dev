@@ -4,7 +4,6 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { Users } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
-import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 import { requestCommunityJoin } from './communityJoinEvent';
 
 type Props = {
@@ -20,18 +19,13 @@ export default function CommunityJoinTrigger({
   onClick,
   ...buttonProps
 }: Props) {
-  const { trackEvent } = useAnalytics();
-
   return (
     <button
       {...buttonProps}
       type="button"
       onClick={event => {
         onClick?.(event);
-        if (!event.defaultPrevented) {
-          trackEvent('community_connection_opened');
-          requestCommunityJoin();
-        }
+        if (!event.defaultPrevented) requestCommunityJoin();
       }}
       className={cn(
         'inline-flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-full border border-black/25 px-5 py-3 text-center font-ui text-sm font-bold leading-5 transition hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/25',

@@ -21,7 +21,6 @@ import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Button } from '@/shared/utils/buttons';
-import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 import { COMMUNITY_JOIN_EVENT } from './communityJoinEvent';
 
 const inputClass =
@@ -46,7 +45,6 @@ function splitName(value: string) {
 }
 
 export default function CommunityJoinModal() {
-  const { trackEvent } = useAnalytics();
   const [open, setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -106,10 +104,6 @@ export default function CommunityJoinModal() {
           interest: form.interest,
           followUpConsent: true,
         },
-      });
-      trackEvent('community_connection_submitted', {
-        interest: form.interest,
-        preferred_contact: form.preferredContact.toLowerCase(),
       });
       setSubmitted(true);
     } catch {

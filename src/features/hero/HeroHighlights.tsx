@@ -1,7 +1,6 @@
 ﻿'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import {
@@ -43,7 +42,6 @@ import type { VisitRequestConfirmation } from '@/lib/types';
 import { buildDrivingDirectionsUrl } from '@/domain/navigation/directions';
 import { PLAN_VISIT_EVENT } from './planVisitEvent';
 import VisitServiceCalendar from './VisitServiceCalendar';
-import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 
 function splitFullName(value: string): { firstName: string; lastName: string } {
   const parts = value.trim().split(/\s+/);
@@ -162,8 +160,6 @@ export default function HeroHighlights({
 }: {
   modalOnly?: boolean;
 }) {
-  const { trackEvent } = useAnalytics();
-  const router = useRouter();
   const [modal, setModal] = useState<ModalKey>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{
@@ -276,10 +272,6 @@ export default function HeroHighlights({
         sourceChannel: 'frontend:web:hero:plan-visit',
         idempotencyKey: `visit:${visit.email.trim().toLowerCase()}:${visit.date}`,
       });
-      trackEvent('plan_visit_submitted', {
-        attendance: confirmation.attendance,
-        reminder_opt_in: confirmation.reminderOptIn,
-      });
       closeModal();
       setVisit(initialVisit);
       setVisitPhoneCountry(DEFAULT_PHONE_COUNTRY);
@@ -313,8 +305,10 @@ export default function HeroHighlights({
   };
 
   const goToJoinSection = useCallback(() => {
-    router.push('/serve');
-  }, [router]);
+    document
+      .getElementById('join')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   return (
     <>
@@ -649,7 +643,6 @@ export default function HeroHighlights({
       <BaseModal
         isOpen={visitConfirmation !== null}
         onClose={() => setVisitConfirmation(null)}
-        ariaLabel="Visit confirmed"
         maxWidth="max-w-lg"
         showCloseButton={false}
         forceBottomSheet

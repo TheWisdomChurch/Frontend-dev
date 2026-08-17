@@ -7,7 +7,6 @@ import {
   motion,
   useDragControls,
   useMotionValue,
-  useReducedMotion,
   useTransform,
   type PanInfo,
 } from 'framer-motion';
@@ -122,7 +121,6 @@ function ModalPanel({
   contentClassName,
   ariaLabel,
 }: ModalPanelProps) {
-  const reduceMotion = useReducedMotion();
   const dragControls = useDragControls();
   const y = useMotionValue(0);
   const backdropOpacity = useTransform(y, [0, 300], [1, 0.55]);
@@ -152,23 +150,17 @@ function ModalPanel({
   // (isSheet && isMobile, i.e. dragEnabled) — desktop always gets a clean
   // centered dialog with rounded corners and a fade+scale entrance, even
   // for sheet-enabled modals.
-  const panelVariants = reduceMotion
+  const panelVariants = dragEnabled
     ? {
-        initial: { opacity: 1 },
-        animate: { opacity: 1 },
-        exit: { opacity: 1 },
+        initial: { opacity: 0, y: '100%' },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: '100%' },
       }
-    : dragEnabled
-      ? {
-          initial: { opacity: 0, y: '100%' },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: '100%' },
-        }
-      : {
-          initial: { opacity: 0, y: 12, scale: 0.98 },
-          animate: { opacity: 1, y: 0, scale: 1 },
-          exit: { opacity: 0, y: 12, scale: 0.98 },
-        };
+    : {
+        initial: { opacity: 0, y: 12, scale: 0.98 },
+        animate: { opacity: 1, y: 0, scale: 1 },
+        exit: { opacity: 0, y: 12, scale: 0.98 },
+      };
 
   const modalClassName = cn(
     'relative flex w-full min-w-0 flex-col overflow-hidden border shadow-[0_32px_100px_rgba(0,0,0,.72)] backdrop-blur-2xl',
@@ -207,11 +199,7 @@ function ModalPanel({
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={
-          reduceMotion
-            ? { duration: 0 }
-            : { type: 'spring', damping: 32, stiffness: 340 }
-        }
+        transition={{ type: 'spring', damping: 32, stiffness: 340 }}
         drag={dragEnabled ? 'y' : false}
         dragListener={false}
         dragControls={dragControls}
@@ -221,17 +209,12 @@ function ModalPanel({
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
-        aria-label={!title ? ariaLabel || 'Dialog' : undefined}
+        aria-label={!title ? ariaLabel : undefined}
         aria-describedby={subtitle ? subtitleId : undefined}
         aria-busy={isLoading}
-        tabIndex={-1}
       >
         {isLoading ? (
-          <div
-            className="absolute inset-0 z-30 grid place-items-center bg-black/65 backdrop-blur-sm"
-            role="status"
-            aria-live="polite"
-          >
+          <div className="absolute inset-0 z-30 grid place-items-center bg-black/65 backdrop-blur-sm">
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/45 px-5 py-4">
               <Loader2 className="h-6 w-6 animate-spin text-[var(--app-primary)]" />
               <BodySM className="text-white/75">{loadingText}</BodySM>
@@ -247,10 +230,7 @@ function ModalPanel({
               dragEnabled && 'cursor-grab touch-none active:cursor-grabbing'
             )}
           >
-            <div
-              className="h-1.5 w-12 rounded-full bg-white/22"
-              aria-hidden="true"
-            />
+            <div className="h-1.5 w-12 rounded-full bg-white/22" />
           </div>
         ) : null}
 
@@ -394,7 +374,7 @@ export const BaseModal = memo(function BaseModal({
       if (!modal) return;
 
       const focusables = getFocusableElements(modal);
-      (focusables[0] ?? modal).focus();
+      focusables[0]?.focus();
     }, 40);
 
     return () => {
@@ -497,7 +477,6 @@ export function SuccessModal({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      ariaLabel={title}
       maxWidth="max-w-md"
       showCloseButton={false}
       forceBottomSheet
@@ -542,7 +521,6 @@ export function ServiceUnavailableSheet({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      ariaLabel={title}
       showHandle
       showCloseButton={false}
       forceBottomSheet

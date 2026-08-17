@@ -7,11 +7,8 @@ import {
   useContext,
   useMemo,
   useState,
-  useEffect,
 } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import { ServiceUnavailableSheet } from '@/shared/ui/modals/ServiceUnavailableSheet';
-import { SERVICE_UNAVAILABLE_EVENT } from '@/lib/http';
 
 type ServiceUnavailableOptions = {
   title?: string;
@@ -31,8 +28,6 @@ export function ServiceUnavailableProvider({
 }: {
   children: ReactNode;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<ServiceUnavailableOptions | undefined>(
     undefined
@@ -48,15 +43,6 @@ export function ServiceUnavailableProvider({
   }, []);
 
   const value = useMemo(() => ({ open }), [open]);
-
-  useEffect(() => {
-    const handleOutage = () => {
-      if (pathname !== '/unavailable') router.replace('/unavailable');
-    };
-    window.addEventListener(SERVICE_UNAVAILABLE_EVENT, handleOutage);
-    return () =>
-      window.removeEventListener(SERVICE_UNAVAILABLE_EVENT, handleOutage);
-  }, [pathname, router]);
 
   return (
     <ServiceUnavailableContext.Provider value={value}>
