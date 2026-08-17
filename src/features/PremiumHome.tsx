@@ -77,6 +77,7 @@ function ServiceImage() {
         src={image.src}
         alt={image.alt}
         fill
+        unoptimized
         quality={IMAGE_QUALITY}
         sizes="(min-width: 640px) 1px, 100vw"
         className={`object-cover sm:hidden ${image.position}`}
@@ -85,6 +86,7 @@ function ServiceImage() {
         src={image.desktopSrc}
         alt={image.alt}
         fill
+        unoptimized
         quality={IMAGE_QUALITY}
         sizes={COVER_IMAGE_SIZES.service}
         data-parallax-global="0.08"
@@ -118,6 +120,7 @@ function CommunityCollage() {
           src="/Picflow/DSC00054 copy.webp"
           alt="A mother and child sharing life at The Wisdom Church"
           fill
+          unoptimized
           quality={IMAGE_QUALITY}
           sizes="(min-width: 1024px) 38vw, (min-width: 640px) 58vw, 100vw"
           className="object-cover object-[center_32%] transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
@@ -296,6 +299,7 @@ export default function PremiumHome() {
                   src={belief.image}
                   alt={belief.imageAlt}
                   fill
+                  unoptimized={belief.image === '/Picflow/DSC06902 copy.webp'}
                   sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
                   quality={IMAGE_QUALITY}
                   className={`object-cover ${belief.imagePosition} transition-[transform,filter] duration-700 ease-out will-change-transform group-hover:scale-[1.06]`}
