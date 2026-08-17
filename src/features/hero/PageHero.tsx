@@ -1,12 +1,14 @@
 import Image from 'next/image';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import type { StaticImageData } from 'next/image';
+import type { ReactNode } from 'react';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 import { lader } from '@/shared/assets';
 import { H1, BodyLG, BodyMD } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
+import { cn } from '@/lib/cn';
 
 export type PageHeroProps = {
   title: string;
@@ -15,6 +17,8 @@ export type PageHeroProps = {
   /** compact — short left-aligned editorial header */
   compact?: boolean;
   backgroundImage?: string | StaticImageData;
+  /** Responsive Tailwind object-position classes for this hero image. */
+  imagePositionClassName?: string;
   showButtons?: boolean;
   primaryButtonText?: string;
   secondaryButtonText?: string;
@@ -24,6 +28,8 @@ export type PageHeroProps = {
   note?: string;
   /** Small pill tags rendered below the note/description. */
   chips?: string[];
+  /** Page-specific interactive actions rendered within the hero content. */
+  actions?: ReactNode;
 };
 
 function HeroChips({ chips }: { chips: string[] }) {
@@ -47,12 +53,14 @@ export default function PageHero({
   eyebrow,
   compact = false,
   backgroundImage,
+  imagePositionClassName,
   showButtons = false,
   primaryButtonText = 'Plan your visit',
   secondaryButtonText = 'Learn more',
   description,
   note,
   chips,
+  actions,
 }: PageHeroProps) {
   const bgSrc = backgroundImage ?? lader;
 
@@ -69,7 +77,10 @@ export default function PageHero({
           alt=""
           fill
           priority
-          className="object-cover object-[center_24%] sm:object-[center_30%] lg:object-center"
+          className={cn(
+            'object-cover object-[center_24%] sm:object-[center_30%] lg:object-center',
+            imagePositionClassName
+          )}
           sizes="100vw"
         />
 
@@ -95,7 +106,7 @@ export default function PageHero({
       <Container size="xl">
         {compact ? (
           /* ── Compact: left-aligned, clears fixed 72px header ── */
-          <div className="flex min-h-[360px] max-w-2xl flex-col justify-center gap-5 pb-14 pt-[calc(var(--app-header-height)+2.5rem)] sm:min-h-[400px] sm:pb-16">
+          <div className="flex min-h-[380px] max-w-2xl flex-col justify-center gap-5 pb-20 pt-[calc(var(--app-header-height)+3rem)] sm:min-h-[420px] sm:pb-24 sm:pt-[calc(var(--app-header-height)+3.5rem)] lg:pb-28">
             {eyebrow ? (
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 {eyebrow}
@@ -105,21 +116,26 @@ export default function PageHero({
               {title}
             </H1>
             {subtitle ? (
-              <BodyMD className="max-w-lg leading-[1.85] text-white/65">
+              <BodyMD className="max-w-lg leading-[1.85] text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.65)]">
                 {subtitle}
               </BodyMD>
             ) : null}
             {description ? (
-              <BodyMD className="max-w-lg leading-[1.85] text-white/55">
+              <BodyMD className="max-w-lg leading-[1.85] text-white/78 drop-shadow-[0_1px_8px_rgba(0,0,0,0.65)]">
                 {description}
               </BodyMD>
             ) : null}
             {note ? (
-              <BodyMD className="max-w-lg leading-[1.85] text-white/55">
+              <BodyMD className="max-w-lg leading-[1.85] text-white/78 drop-shadow-[0_1px_8px_rgba(0,0,0,0.65)]">
                 {note}
               </BodyMD>
             ) : null}
             {chips && chips.length > 0 ? <HeroChips chips={chips} /> : null}
+            {actions ? (
+              <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
+                {actions}
+              </div>
+            ) : null}
           </div>
         ) : (
           /* ── Full hero: centered, tall ── */
@@ -153,6 +169,11 @@ export default function PageHero({
             {chips && chips.length > 0 ? (
               <div className="flex justify-center">
                 <HeroChips chips={chips} />
+              </div>
+            ) : null}
+            {actions ? (
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap sm:justify-center">
+                {actions}
               </div>
             ) : null}
 

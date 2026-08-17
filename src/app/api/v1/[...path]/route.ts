@@ -4,7 +4,8 @@ import { createHash, createHmac, randomUUID } from 'node:crypto';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const DEFAULT_API_UPSTREAM = 'https://api.wisdomchurchhq.org';
+const DEFAULT_LOCAL_API_UPSTREAM = 'http://localhost:8080';
+const DEFAULT_PRODUCTION_API_UPSTREAM = 'https://api.wisdomchurchhq.org';
 const API_BASE_PATH = '/api/v1';
 const SIGNING_HEADER_PREFIX = 'x-wc-proxy';
 
@@ -72,7 +73,9 @@ function resolveUpstreamOrigin(): string {
       process.env.NEXT_PUBLIC_API_URL ||
       process.env.NEXT_PUBLIC_BACKEND_URL ||
       process.env.BACKEND_URL ||
-      DEFAULT_API_UPSTREAM
+      (process.env.NODE_ENV === 'production'
+        ? DEFAULT_PRODUCTION_API_UPSTREAM
+        : DEFAULT_LOCAL_API_UPSTREAM)
   );
 }
 

@@ -9,18 +9,7 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import Arrow from '@/shared/ui/icons/Arrow';
-
-function getTimestamp(event: EventPublic): number {
-  if (event.startAt) {
-    const t = new Date(event.startAt).getTime();
-    if (!Number.isNaN(t)) return t;
-  }
-  if (event.date) {
-    const t = new Date(`${event.date}T${event.time ?? '00:00'}`).getTime();
-    if (!Number.isNaN(t)) return t;
-  }
-  return Number.MAX_SAFE_INTEGER;
-}
+import { getEventTimestamp as getTimestamp } from '@/shared/utils/eventDate';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = [

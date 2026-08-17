@@ -213,7 +213,7 @@ export function AnalyticsProvider({
 
       analyticsCore.trackEvent({ name, params });
     },
-    []
+    [debug]
   );
 
   const identify = useCallback(
@@ -230,12 +230,9 @@ export function AnalyticsProvider({
     [debug]
   );
 
-  const setConsent = useCallback(
-    (consent: Partial<ConsentSettings>) => {
-      analyticsCore.setConsent(consent);
-    },
-    [debug]
-  );
+  const setConsent = useCallback((consent: Partial<ConsentSettings>) => {
+    analyticsCore.setConsent(consent);
+  }, []);
 
   const getConsent = useCallback(() => analyticsCore.getConsent(), []);
 

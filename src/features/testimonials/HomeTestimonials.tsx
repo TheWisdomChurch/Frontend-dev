@@ -224,7 +224,7 @@ export default function HomeTestimonials() {
             </div>
           ) : (
             <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px] lg:col-start-2 lg:row-start-1 lg:row-span-2">
-              <article className="relative flex min-h-[340px] flex-col justify-between overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
+              <article className="relative flex min-h-[340px] flex-col overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
                 <span
                   className="pointer-events-none absolute -right-2 -top-10 select-none font-headline text-[9rem] leading-none text-[var(--app-primary)] opacity-[0.08]"
                   aria-hidden="true"
@@ -232,6 +232,9 @@ export default function HomeTestimonials() {
                   &rdquo;
                 </span>
 
+                {/* flex-1 + justify-center: a short quote centers in the
+                    available space instead of pinning to the top and
+                    leaving a dead gap above the footer. */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={q.id}
@@ -239,7 +242,7 @@ export default function HomeTestimonials() {
                     initial="hidden"
                     animate="show"
                     exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }}
-                    className="relative"
+                    className="relative flex flex-1 flex-col justify-center"
                   >
                     <motion.div variants={staggerItem}>
                       <Quote className="h-7 w-7 text-[var(--app-primary)]" />

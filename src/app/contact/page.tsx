@@ -24,6 +24,13 @@ import { buildBreadcrumbSchema } from '@/lib/seo';
 import apiClient, { mapValidationErrors } from '@/lib/api';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
+import { PhoneNumberField } from '@/shared/ui/forms';
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidNationalPhone,
+  toE164,
+} from '@/lib/validation/phone';
+import type { CountryCode } from 'libphonenumber-js';
 
 type ContactFormData = {
   firstName: string;
@@ -37,7 +44,12 @@ type ContactFormData = {
 
 const PRAYER_TOPIC_VALUE = 'prayer';
 const VISIT_TOPIC_VALUE = 'visit';
-const PREFILLABLE_TOPICS = [PRAYER_TOPIC_VALUE, VISIT_TOPIC_VALUE];
+const CONNECT_TOPIC_VALUE = 'connect';
+const PREFILLABLE_TOPICS = [
+  PRAYER_TOPIC_VALUE,
+  VISIT_TOPIC_VALUE,
+  CONNECT_TOPIC_VALUE,
+];
 
 type SocialLink = {
   platform: string;
@@ -74,6 +86,9 @@ function ContactPageContent() {
     };
   });
   const [submitted, setSubmitted] = useState(false);
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>(
+    DEFAULT_PHONE_COUNTRY
+  );
   const [submittedPrayerRequest, setSubmittedPrayerRequest] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -120,6 +135,16 @@ function ContactPageContent() {
     setSubmitted(false);
     setError(null);
     try {
+      if (
+        formData.phone.trim() &&
+        !isValidNationalPhone(formData.phone, phoneCountry)
+      ) {
+        setError('Enter a valid phone number for the selected country.');
+        return;
+      }
+      const phone = formData.phone.trim()
+        ? toE164(formData.phone, phoneCountry) || undefined
+        : undefined;
       if (isPrayerRequest) {
         await apiClient.submitPrayerRequest({
           firstName: formData.firstName,
@@ -131,12 +156,14 @@ function ContactPageContent() {
       } else {
         await apiClient.submitContactMessage({
           ...formData,
+          phone,
           sourceChannel: 'frontend:web:contact-page',
         });
       }
       setSubmitted(true);
       setSubmittedPrayerRequest(isPrayerRequest);
       setFormData(initialFormData);
+      setPhoneCountry(DEFAULT_PHONE_COUNTRY);
     } catch (err) {
       const fields = mapValidationErrors(err);
       setError(
@@ -351,23 +378,27 @@ function ContactPageContent() {
                         placeholder="you@example.com"
                       />
                     </label>
-                    <label className="block px-7 py-5 sm:px-8">
+                    <div className="block px-7 py-5 sm:px-8">
                       <span className={labelCls}>
                         Phone{' '}
                         <span className="normal-case font-normal tracking-normal text-[var(--app-ink)]/60">
                           (optional)
                         </span>
                       </span>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={updateField('phone')}
-                        autoComplete="tel"
-                        className={`${inputCls} mt-2`}
-                        placeholder="+234 706 999 5333"
+                      <PhoneNumberField
+                        id="contact-phone"
+                        country={phoneCountry}
+                        number={formData.phone}
+                        onCountryChange={setPhoneCountry}
+                        onNumberChange={phone =>
+                          setFormData(current => ({ ...current, phone }))
+                        }
+                        inputClassName={inputCls}
+                        selectClassName={`${inputCls} cursor-pointer px-2`}
+                        className="mt-2"
+                        placeholder="706 999 5333"
                       />
-                    </label>
+                    </div>
                   </div>
 
                   {/* Topic */}

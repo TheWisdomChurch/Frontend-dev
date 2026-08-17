@@ -15,6 +15,7 @@ import { mediaApi } from '@/domain/media/api';
 import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
+import { cn } from '@/lib/cn';
 
 const fetchLatestSermons = (signal: AbortSignal) =>
   mediaApi.listSermons({ sort: 'newest', signal });
@@ -27,6 +28,8 @@ export interface HeroPageContent {
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string; external?: boolean };
   bgImage?: string;
+  /** Responsive Tailwind object-position classes for the background image. */
+  bgImagePositionClassName?: string;
 }
 
 function isStaticImageData(value: unknown): value is StaticImageData {
@@ -223,7 +226,10 @@ export default function HeroSection({
             priority
             sizes="100vw"
             quality={IMAGE_QUALITY}
-            className="object-cover object-[center_20%] sm:object-[center_25%] lg:object-[center_28%]"
+            className={cn(
+              'object-cover object-[center_20%] sm:object-[center_25%] lg:object-[center_28%]',
+              content.bgImagePositionClassName
+            )}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/55 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/65" />

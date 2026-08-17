@@ -19,6 +19,9 @@ import type {
   PastoralCareRequestData,
   WorkforceRegistrationData,
   ContactMessageData,
+  VisitRequestData,
+  VisitRequestConfirmation,
+  VisitServiceOption,
   PrayerRequestData,
 } from './types';
 import type {
@@ -770,6 +773,14 @@ export const apiClient = {
       : null;
   },
 
+  async getAboutContent(): Promise<Record<string, unknown> | null> {
+    const res = await request<unknown>('/content/about', { method: 'GET' });
+    const data = unwrapData<unknown>(res);
+    return data && typeof data === 'object'
+      ? (data as Record<string, unknown>)
+      : null;
+  },
+
   async submitPastoralCareRequest(
     payload: PastoralCareRequestData
   ): Promise<unknown> {
@@ -846,6 +857,27 @@ export const apiClient = {
       body: JSON.stringify(body),
     });
     return unwrapData<unknown>(res);
+  },
+
+  async submitVisitRequest(
+    payload: VisitRequestData
+  ): Promise<VisitRequestConfirmation> {
+    const res = await request<unknown>('/visits', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return unwrapData<VisitRequestConfirmation>(res);
+  },
+
+  async listVisitServices(count = 8): Promise<VisitServiceOption[]> {
+    const res = await request<unknown>(
+      `/visits/services?count=${count}`,
+      {
+        method: 'GET',
+      },
+      { skipCache: true }
+    );
+    return unwrapData<VisitServiceOption[]>(res);
   },
 
   async applyWorkforceNew(

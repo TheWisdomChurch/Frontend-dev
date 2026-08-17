@@ -1,10 +1,21 @@
 import type { StaticImageData } from 'next/image';
-import { Bishop, Deacon_2, Img_1, lader, WhatWeDo_3 } from '@/shared/assets';
+import {
+  Bishop,
+  Deacon_2,
+  Deacon_2_wide,
+  Img_1,
+  lader,
+  WhatWeDo_3,
+} from '@/shared/assets';
 
 export type HomeImage = {
   src: StaticImageData | string;
   alt: string;
   position: string;
+  desktopSrc?: StaticImageData | string;
+  /** 'contain' for graphics whose own text/edges must never be cropped
+   * (e.g. a finished promotional collage) — defaults to 'cover'. */
+  fit?: 'cover' | 'contain';
 };
 
 export const HOME_COPY = {
@@ -57,28 +68,28 @@ export const HOME_BELIEFS: {
 }[] = [
   {
     title: 'The Word',
-    body: "We receive and apply God's Word until it becomes visible in how we live.",
+    body: "We live by God's Word and put our faith into action.",
     image: WhatWeDo_3,
     imageAlt: 'A pastor teaching from the pulpit at The Wisdom Church',
     imagePosition: 'object-[30%_center]',
   },
   {
     title: 'Prayer',
-    body: 'We are a praying people, deeply connected to the power and presence of God.',
+    body: "We seek God's presence and power through faithful prayer.",
     image: '/Picflow Images Jul 31 (2)/DSC06712 copy.webp',
     imageAlt: 'A member deep in prayer at The Wisdom Church',
     imagePosition: 'object-center',
   },
   {
     title: 'Worship',
-    body: 'We worship wholeheartedly and make room for lives to be renewed.',
+    body: 'We worship wholeheartedly and make room for renewed lives.',
     image: '/Picflow Images Jul 31 (2)/DSC00019 copy.webp',
     imageAlt: 'Worship on stage at The Wisdom Church',
     imagePosition: 'object-[center_18%]',
   },
   {
     title: 'Community',
-    body: 'We grow together, serve one another, and carry our faith into everyday life.',
+    body: 'We grow together, serve one another, and share life.',
     image: '/Picflow Images Jul 31 (2)/DSC06902 copy.webp',
     imageAlt: 'Members embracing in fellowship at The Wisdom Church',
     imagePosition: 'object-center',
@@ -98,6 +109,7 @@ export const HOME_IMAGES = {
   },
   service: {
     src: Deacon_2,
+    desktopSrc: Deacon_2_wide,
     alt: 'A member in prayer at The Wisdom Church',
     position: 'object-[40%_45%]',
   },
@@ -107,8 +119,8 @@ export const HOME_IMAGES = {
     position: 'object-bottom',
   },
   community: {
-    src: '/Picflow Images Jul 31 (2)/DSC00026 copy.webp',
-    alt: 'Women gathered at a Wisdom Church community event',
-    position: 'object-[center_38%]',
+    src: '/images/worship-service-community-wide.png',
+    alt: 'Wisdom Church leaders ministering together',
+    position: 'object-center',
   },
 } satisfies Record<string, HomeImage>;

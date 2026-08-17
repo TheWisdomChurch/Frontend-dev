@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { CalendarDays, MapPin, Play, Users } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
@@ -9,10 +8,13 @@ import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { Container, Section } from '@/shared/layout';
 import HomeActionLink from '@/features/home/HomeActionLink';
+import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
+import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
 import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
 import { SectionHeading, HeadingAccent } from '@/shared/ui/SectionHeading';
 import { motion } from '@/lib/safe-motion';
+import { useReducedMotion } from 'framer-motion';
 import {
   staggerContainer,
   staggerItem,
@@ -31,7 +33,7 @@ const panelPaddingX = 'px-6 sm:px-10 lg:px-16 xl:px-24';
 // image for a half-width column.
 const COVER_IMAGE_SIZES: Record<keyof typeof HOME_IMAGES, string> = {
   hero: '100vw',
-  welcome: '(min-width: 1024px) 50vw, 100vw',
+  welcome: '(min-width: 1024px) 55vw, 100vw',
   service: '(min-width: 1024px) 50vw, 100vw',
   pastor: '(min-width: 1024px) 50vw, 100vw',
   community: '(min-width: 1024px) 62vw, 100vw',
@@ -40,12 +42,15 @@ const COVER_IMAGE_SIZES: Record<keyof typeof HOME_IMAGES, string> = {
 function CoverImage({
   name,
   priority = false,
+  loading,
 }: {
   name: keyof typeof HOME_IMAGES;
   priority?: boolean;
+  loading?: 'eager' | 'lazy';
 }) {
   const image = HOME_IMAGES[name];
   const isCommunityImage = name === 'community';
+  const isContain = 'fit' in image && image.fit === 'contain';
   const parallaxDepth =
     name === 'hero' ? '0.16' : name === 'service' ? '0.12' : '0.09';
   return (
@@ -54,11 +59,103 @@ function CoverImage({
       alt={image.alt}
       fill
       priority={priority}
+      loading={priority ? undefined : loading}
       quality={IMAGE_QUALITY}
       sizes={COVER_IMAGE_SIZES[name]}
       data-parallax-global={isCommunityImage ? undefined : parallaxDepth}
-      className={`${isCommunityImage ? '' : 'scale-[1.06]'} object-cover ${image.position}`}
+      className={`${isCommunityImage || isContain ? '' : 'scale-[1.06]'} ${isContain ? 'object-contain' : 'object-cover'} ${image.position}`}
     />
+  );
+}
+
+function ServiceImage() {
+  const image = HOME_IMAGES.service;
+
+  return (
+    <>
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        quality={IMAGE_QUALITY}
+        sizes="(min-width: 640px) 1px, 100vw"
+        className={`object-cover sm:hidden ${image.position}`}
+      />
+      <Image
+        src={image.desktopSrc}
+        alt={image.alt}
+        fill
+        quality={IMAGE_QUALITY}
+        sizes={COVER_IMAGE_SIZES.service}
+        data-parallax-global="0.08"
+        className="hidden object-cover object-[58%_center] sm:block"
+      />
+    </>
+  );
+}
+
+function CommunityCollage() {
+  const reduceMotion = useReducedMotion();
+  const reveal = (delay: number, x = 0) => ({
+    initial: reduceMotion ? false : { opacity: 0, y: 24, x, scale: 0.975 },
+    whileInView: { opacity: 1, y: 0, x: 0, scale: 1 },
+    viewport: { once: true, amount: 0.2 },
+    transition: {
+      delay: reduceMotion ? 0 : delay,
+      duration: reduceMotion ? 0 : 0.8,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+    whileHover: reduceMotion ? undefined : { y: -5, scale: 1.008 },
+  });
+
+  return (
+    <div className="grid grid-cols-2 items-stretch gap-2 sm:grid-cols-12 sm:grid-rows-2 sm:gap-3">
+      <motion.div
+        {...reveal(0)}
+        className="group relative col-span-2 min-h-[260px] overflow-hidden bg-white/5 shadow-[0_24px_70px_rgba(0,0,0,.28)] sm:col-span-7 sm:row-span-2 sm:h-full sm:min-h-0"
+      >
+        <Image
+          src="/Picflow Images Jul 31 (2)/DSC00054 copy.webp"
+          alt="A mother and child sharing life at The Wisdom Church"
+          fill
+          quality={IMAGE_QUALITY}
+          sizes="(min-width: 1024px) 38vw, (min-width: 640px) 58vw, 100vw"
+          className="object-cover object-[center_32%] transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/[0.035]" />
+      </motion.div>
+
+      <motion.div
+        {...reveal(0.1, 18)}
+        className="group relative aspect-[5/4] w-full overflow-hidden bg-[#15121b] shadow-[0_20px_55px_rgba(0,0,0,.3)] sm:col-span-5"
+      >
+        <Image
+          src="/images/worship-service-community-generated-v3.png"
+          alt="Worshippers sharing a service at The Wisdom Church"
+          fill
+          quality={IMAGE_QUALITY}
+          sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
+          className="object-cover object-center transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.025]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/12 via-transparent to-[var(--app-primary)]/[0.06]" />
+        <div className="pointer-events-none absolute inset-y-0 -left-1/2 z-10 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent opacity-0 transition-all duration-1000 motion-reduce:hidden group-hover:left-[120%] group-hover:opacity-100" />
+      </motion.div>
+
+      <motion.div
+        {...reveal(0.18, 18)}
+        className="group relative aspect-[5/4] w-full overflow-hidden bg-white/5 shadow-[0_20px_55px_rgba(0,0,0,.3)] sm:col-span-5"
+      >
+        <Image
+          src="/Picflow Images Jul 31 (2)/DSC00268 copy.webp"
+          alt="A Wisdom House volunteer serving during worship"
+          fill
+          quality={IMAGE_QUALITY}
+          sizes="(min-width: 1024px) 24vw, (min-width: 640px) 42vw, 50vw"
+          className="object-cover object-[52%_center] transition-transform duration-[1200ms] ease-out motion-reduce:transition-none group-hover:scale-[1.035]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/[0.035]" />
+      </motion.div>
+    </div>
   );
 }
 
@@ -98,38 +195,24 @@ export default function PremiumHome() {
               >
                 Watch live
               </HomeActionLink>
-              <HomeActionLink
-                href="/events/weekly"
-                variant="light"
-                icon={CalendarDays}
-                hideArrow
-                className="flex-1 min-w-0 justify-center px-4 text-xs sm:flex-none sm:px-6 sm:text-sm"
-              >
+              <PlanVisitTrigger className="min-w-0 flex-1 border-white/70 bg-transparent px-4 text-xs text-white hover:bg-white hover:text-black sm:flex-none sm:px-6 sm:text-sm">
                 Plan your visit
-              </HomeActionLink>
+              </PlanVisitTrigger>
             </div>
           </div>
         </Container>
       </Section>
 
       <Section padding="none" className="bg-white">
-        <div className="grid lg:min-h-[520px] lg:grid-cols-[1.15fr_1fr] lg:grid-rows-[1fr_auto]">
-          <div
-            className={`flex items-center ${panelPaddingX} pb-8 pt-20 sm:pb-10 sm:pt-24 lg:col-start-1 lg:row-start-1 lg:items-end lg:pb-10 lg:pt-0`}
+        <div className="grid lg:min-h-[560px] lg:grid-cols-[1fr_1.2fr]">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={staggerViewport}
+            className={`flex flex-col justify-center ${panelPaddingX} py-16 sm:py-20 lg:py-24`}
           >
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={staggerViewport}
-              className="max-w-xl"
-            >
-              {/* <motion.p
-                variants={staggerItem}
-                className={`${eyebrowClass} text-[var(--app-primary-dark)]`}
-              >
-                {HOME_COPY.welcome.eyebrow}
-              </motion.p> */}
+            <div className="max-w-xl">
               <SectionHeading tone="dark" className="mt-5">
                 {HOME_COPY.welcome.title}
                 <span className="block text-[var(--app-primary-dark)]">
@@ -142,36 +225,31 @@ export default function PremiumHome() {
               >
                 {HOME_COPY.welcome.description}
               </motion.p>
-            </motion.div>
-          </div>
+            </div>
 
-          <div className="group relative min-h-[460px] overflow-hidden lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-full">
-            <CoverImage name="welcome" />
-            <div className="absolute inset-0 bg-black/0 transition duration-700 group-hover:bg-black/10" />
-          </div>
-
-          <motion.div
-            variants={staggerItem}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
-            className={`border-t border-black/10 ${panelPaddingX} pb-16 pt-8 sm:pb-20 lg:col-start-1 lg:row-start-2 lg:border-t-0 lg:pb-20`}
-          >
-            <div className="flex max-w-xl flex-nowrap items-stretch gap-2 sm:gap-3">
+            <motion.div
+              variants={staggerItem}
+              className="mt-8 flex max-w-xl flex-wrap items-stretch gap-2 border-t border-black/10 pt-8 sm:gap-3"
+            >
               <HomeActionLink
                 href="/about"
-                className="flex-1 min-w-0 justify-center px-4 text-xs sm:px-6 sm:text-sm"
+                className="flex-1 justify-center whitespace-nowrap px-4 text-xs sm:px-6 sm:text-sm"
               >
                 Discover our story
               </HomeActionLink>
-              <Link
-                href="/#community"
-                className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full border border-black/25 px-4 font-ui text-xs font-bold transition hover:bg-black hover:text-white sm:px-6 sm:text-sm"
+              <CommunityJoinTrigger
+                icon={false}
+                className="flex-1 whitespace-normal px-4 text-xs sm:px-6 sm:text-sm"
               >
                 Join our community
-              </Link>
-            </div>
+              </CommunityJoinTrigger>
+            </motion.div>
           </motion.div>
+
+          <div className="group relative min-h-[460px] overflow-hidden lg:min-h-full">
+            <CoverImage name="welcome" loading="eager" />
+            <div className="absolute inset-0 bg-black/0 transition duration-700 group-hover:bg-black/10" />
+          </div>
         </div>
       </Section>
 
@@ -212,7 +290,7 @@ export default function PremiumHome() {
               <motion.div
                 variants={staggerItem}
                 key={belief.title}
-                className="group relative isolate flex min-h-[320px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black sm:min-h-[400px]"
+                className="group relative isolate flex min-h-[480px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black sm:min-h-[400px]"
               >
                 <Image
                   src={belief.image}
@@ -229,7 +307,7 @@ export default function PremiumHome() {
                   <h3 className="break-words font-sans text-2xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-white transition-colors duration-300 group-hover:text-[var(--app-primary-light)] sm:text-[1.7rem] lg:text-2xl xl:text-[1.85rem]">
                     {belief.title}
                   </h3>
-                  <p className="mt-3 font-ui text-sm leading-6 text-white/65">
+                  <p className="mt-3 min-h-12 font-ui text-sm leading-6 text-white/65">
                     {belief.body}
                   </p>
                 </div>
@@ -241,9 +319,8 @@ export default function PremiumHome() {
 
       <Section padding="none" className="bg-[var(--app-primary)]">
         <div className="grid lg:min-h-[620px] lg:grid-cols-2 xl:min-h-[720px] 2xl:min-h-[820px]">
-          <div className="group relative min-h-[430px] overflow-hidden lg:order-2 lg:min-h-full">
-            <CoverImage name="service" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          <div className="group relative min-h-[min(135vw,640px)] overflow-hidden bg-black lg:order-2 lg:min-h-full">
+            <ServiceImage />
           </div>
           <div className={`flex items-center ${panelPaddingX} py-20`}>
             <motion.div
@@ -280,16 +357,15 @@ export default function PremiumHome() {
                 initial="hidden"
                 whileInView="show"
                 viewport={staggerViewport}
-                className="mt-8 flex flex-nowrap items-stretch gap-2 sm:gap-3"
+                className="mt-8 grid grid-cols-1 items-stretch gap-3 min-[420px]:grid-cols-2"
               >
-                <TakeMeToChurchButton fullWidth className="flex-1" />
-                <HomeActionLink
-                  href="/events/weekly"
-                  variant="dark"
-                  className="flex-1 min-w-0 justify-center gap-2 px-4 text-xs sm:gap-3 sm:px-5 sm:text-sm"
+                <TakeMeToChurchButton fullWidth />
+                <PlanVisitTrigger
+                  icon={false}
+                  className="h-full min-w-0 whitespace-normal border-black bg-black px-4 py-3 text-center text-xs leading-5 text-white hover:border-white hover:bg-white hover:text-black sm:px-5 sm:text-sm"
                 >
                   Plan your first visit
-                </HomeActionLink>
+                </PlanVisitTrigger>
               </motion.div>
             </motion.div>
           </div>
@@ -380,23 +456,9 @@ export default function PremiumHome() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={staggerViewport}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="relative pb-0 sm:pb-10 sm:pl-10 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:pb-12 lg:pl-12"
+              className="relative lg:col-start-2 lg:row-start-1 lg:row-span-2"
             >
-              <div className="relative h-[340px] overflow-hidden sm:h-[500px] lg:h-[610px]">
-                <CoverImage name="community" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/5" />
-              </div>
-
-              <div className="absolute bottom-0 left-0 hidden h-[250px] w-[190px] overflow-hidden border-[8px] border-[#0b0b0b] sm:block lg:h-[310px] lg:w-[230px]">
-                <Image
-                  src="/Picflow Images Jul 31 (2)/DSC00064 copy.webp"
-                  alt="Members praying together at The Wisdom Church"
-                  fill
-                  quality={IMAGE_QUALITY}
-                  sizes="230px"
-                  className="object-cover object-center"
-                />
-              </div>
+              <CommunityCollage />
 
               <span className="absolute -right-2 top-7 hidden font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-white/38 [writing-mode:vertical-rl] sm:block">
                 Wisdom Church community
@@ -418,19 +480,41 @@ export default function PremiumHome() {
 
               <motion.div
                 variants={staggerItem}
-                className="mt-10 border-t border-white/12 pt-6"
+                className="mt-10 overflow-hidden border-y border-white/12 py-4"
               >
-                <div className="flex snap-x snap-proximity items-center gap-2.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [mask-image:linear-gradient(to_right,black_88%,transparent_100%)] [scrollbar-width:none] [-webkit-mask-image:linear-gradient(to_right,black_88%,transparent_100%)] [&::-webkit-scrollbar]:hidden">
-                  {['Prayer', 'Friendship', 'Growth', 'Belonging'].map(
-                    label => (
-                      <span
-                        key={label}
-                        className="shrink-0 snap-start rounded-full border border-white/14 px-4 py-2 font-ui text-xs font-bold uppercase tracking-[0.14em] text-white/55"
+                <div
+                  className="community-ticker"
+                  role="region"
+                  aria-label="Wisdom Church community values"
+                >
+                  <div className="community-ticker__track">
+                    {[0, 1].map(copy => (
+                      <div
+                        key={copy}
+                        className="community-ticker__group"
+                        aria-hidden={copy === 1 ? true : undefined}
                       >
-                        {label}
-                      </span>
-                    )
-                  )}
+                        {[
+                          'Prayer',
+                          'Worship',
+                          'Friendship',
+                          'Growth',
+                          'Belonging',
+                        ].map(label => (
+                          <span
+                            key={`${copy}-${label}`}
+                            className="inline-flex shrink-0 items-center gap-3 font-ui text-xs font-bold uppercase tracking-[0.18em] text-white/62 sm:text-sm"
+                          >
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)] shadow-[0_0_12px_var(--app-primary)]"
+                              aria-hidden="true"
+                            />
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             </motion.div>

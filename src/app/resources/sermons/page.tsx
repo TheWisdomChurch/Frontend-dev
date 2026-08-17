@@ -1,27 +1,61 @@
-'use client';
+import type { Metadata } from 'next';
 
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { buildSermonDiscovery, mediaApi } from '@/domain/media/api';
+import SermonLibrary from '@/features/resources/Sermons/SermonLibrary';
+import JsonLd from '@/shared/seo/JsonLd';
+import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 
-import SermonUtil from '@/features/resources/Sermons';
-import { AppDispatch } from '@/lib/store';
-import { fetchSermons } from '@/lib/store/slices/sermonsSlice';
-import ReduxProvider from '@/shared/providers/ReduxProvider';
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Sermons & Teachings',
+  description:
+    'Watch the latest sermons and teaching series from The Wisdom Church.',
+  path: '/resources/sermons',
+});
 
-function SermonPageContent() {
-  const dispatch = useDispatch<AppDispatch>();
+export const revalidate = 300;
 
-  useEffect(() => {
-    dispatch(fetchSermons());
-  }, [dispatch]);
+export default async function SermonsPage() {
+  const result = await mediaApi
+    .getSermonDiscovery()
+    .then(discovery => ({
+      discovery,
+      unavailable: false as const,
+      source: 'discovery' as const,
+    }))
+    .catch(async () => {
+      try {
+        const sermons = await mediaApi.listSermons({
+          sort: 'newest',
+          limit: 50,
+        });
+        return {
+          discovery: buildSermonDiscovery(sermons),
+          unavailable: sermons.length === 0,
+          source: 'legacy' as const,
+        };
+      } catch {
+        return {
+          discovery: buildSermonDiscovery([]),
+          unavailable: true as const,
+          source: 'offline' as const,
+        };
+      }
+    });
 
-  return <SermonUtil />;
-}
-
-export default function SermonPage() {
   return (
-    <ReduxProvider>
-      <SermonPageContent />
-    </ReduxProvider>
+    <main className="min-h-screen bg-[var(--app-dark)]">
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Resources', path: '/resources' },
+          { name: 'Sermons', path: '/resources/sermons' },
+        ])}
+      />
+      <SermonLibrary
+        discovery={result.discovery}
+        unavailable={result.unavailable}
+        source={result.source}
+      />
+    </main>
   );
 }

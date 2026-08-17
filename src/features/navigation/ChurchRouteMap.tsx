@@ -28,12 +28,15 @@ export default function ChurchRouteMap({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loadError, setLoadError] = useState(false);
+  const [ready, setReady] = useState(false);
   const browserKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_API_KEY;
 
   useEffect(() => {
     if (!browserKey || !containerRef.current || !encodedPolyline) return;
     let active = true;
-    let map: google.maps.Map | undefined;
+    const overlays: Array<google.maps.Polyline | google.maps.Marker> = [];
+    setLoadError(false);
+    setReady(false);
 
     configureMaps(browserKey);
 
@@ -47,7 +50,7 @@ export default function ChurchRouteMap({
           lng: origin.longitude,
         };
 
-        map = new Map(containerRef.current, {
+        const map = new Map(containerRef.current, {
           center: originPosition,
           zoom: 13,
           disableDefaultUI: true,
@@ -57,30 +60,37 @@ export default function ChurchRouteMap({
           clickableIcons: false,
         });
 
-        new google.maps.Polyline({
-          map,
-          path,
-          strokeColor: '#c9961a',
-          strokeOpacity: 1,
-          strokeWeight: 6,
-        });
+        overlays.push(
+          new google.maps.Polyline({
+            map,
+            path,
+            strokeColor: '#c9961a',
+            strokeOpacity: 1,
+            strokeWeight: 6,
+          })
+        );
 
-        new google.maps.Marker({
-          map,
-          position: originPosition,
-          title: 'Your location',
-          label: { text: 'A', color: '#ffffff', fontWeight: '700' },
-        });
-        new google.maps.Marker({
-          map,
-          position: path[path.length - 1]!,
-          title: 'The Wisdom Church',
-          label: { text: 'W', color: '#ffffff', fontWeight: '700' },
-        });
+        overlays.push(
+          new google.maps.Marker({
+            map,
+            position: originPosition,
+            title: 'Your location',
+            label: { text: 'A', color: '#ffffff', fontWeight: '700' },
+          })
+        );
+        overlays.push(
+          new google.maps.Marker({
+            map,
+            position: path[path.length - 1]!,
+            title: 'The Wisdom Church',
+            label: { text: 'W', color: '#ffffff', fontWeight: '700' },
+          })
+        );
 
         const bounds = new google.maps.LatLngBounds();
         path.forEach(point => bounds.extend(point));
         map.fitBounds(bounds, 52);
+        setReady(true);
       })
       .catch(() => {
         if (active) setLoadError(true);
@@ -88,7 +98,7 @@ export default function ChurchRouteMap({
 
     return () => {
       active = false;
-      map = undefined;
+      overlays.forEach(overlay => overlay.setMap(null));
     };
   }, [browserKey, encodedPolyline, origin]);
 
@@ -111,10 +121,18 @@ export default function ChurchRouteMap({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="h-full min-h-[320px] w-full bg-[#ede9df]"
-      aria-label="Driving route from your location to The Wisdom Church"
-    />
+    <div className="relative h-full min-h-[320px] w-full bg-[#ede9df]">
+      <div
+        ref={containerRef}
+        className="absolute inset-0"
+        role="img"
+        aria-label="Driving route from your location to The Wisdom Church"
+      />
+      {!ready ? (
+        <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[#ede9df] font-ui text-sm text-black/60">
+          Loading your route map…
+        </div>
+      ) : null}
+    </div>
   );
 }

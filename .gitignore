@@ -19,6 +19,7 @@ husky/
 /.next/
 /.next-prepush/
 /.next-verify/
+/.next-audit/
 /out/
 /public/_optimized/
 lintstagedrc.json

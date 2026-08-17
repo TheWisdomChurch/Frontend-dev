@@ -193,6 +193,36 @@ export interface ContactMessageData {
   metadata?: Record<string, unknown>;
 }
 
+export interface VisitRequestData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  serviceDate: string;
+  attendance: number;
+  notes?: string;
+  reminderOptIn: boolean;
+  sourceChannel?: string;
+  idempotencyKey: string;
+}
+
+export interface VisitRequestConfirmation {
+  id: string;
+  serviceDate: string;
+  serviceAt: string;
+  serviceType: string;
+  attendance: number;
+  status: string;
+  reminderOptIn: boolean;
+  confirmationQueued: boolean;
+}
+
+export interface VisitServiceOption {
+  date: string;
+  serviceAt: string;
+  serviceType: string;
+}
+
 export interface PrayerRequestData {
   firstName: string;
   lastName: string;

@@ -23,6 +23,7 @@ import PstKenny_1 from './PstKenny2.jpeg';
 // Deacons
 import Deacon_1 from './Deacon1.jpg';
 import Deacon_2 from './Deacon2.jpg';
+import Deacon_2_wide from './Deacon2-wide.png';
 
 // Bank_logo
 import KeystoneBank from './Keystone.webp';
@@ -45,6 +46,7 @@ export {
   Img_1,
   Deacon_1,
   Deacon_2,
+  Deacon_2_wide,
   Children_head,
   Min_Adura,
   WisdomeHouseLogo,

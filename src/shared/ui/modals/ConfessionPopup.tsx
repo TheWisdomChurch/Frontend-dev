@@ -195,7 +195,7 @@ export default function ConfessionPopup({
               </div>
 
               {/* Actions */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
                 <button
                   type="button"
                   onClick={() => setCurrentStep('confession')}
@@ -261,7 +261,7 @@ export default function ConfessionPopup({
               </motion.div>
 
               {/* Actions */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
                 <button
                   type="button"
                   onClick={() => setCurrentStep('welcome')}

@@ -25,6 +25,7 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
+import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 import {
   staggerContainer,
   staggerItem,
@@ -32,7 +33,7 @@ import {
 } from '@/shared/ui/motion/staggerReveal';
 
 const fetchLatestSermons = (signal: AbortSignal) =>
-  mediaApi.listSermons({ sort: 'newest', signal });
+  mediaApi.listSermons({ sort: 'newest', limit: 1, signal });
 
 const ALL_RESOURCES = [
   {
@@ -216,7 +217,7 @@ export default function ResourceSection() {
   });
   const recentVideo = sermonsQuery.data?.[0] ?? null;
   const recentVideoTitle = recentVideo
-    ? decodeHtmlEntities(recentVideo.title)
+    ? cleanSermonTitle(decodeHtmlEntities(recentVideo.title))
     : '';
   const loading = !shouldFetch || sermonsQuery.isLoading;
   const sectionRef = useRef<HTMLElement | null>(null);

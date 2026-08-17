@@ -16,21 +16,17 @@ import type {
   PublicFormPayload,
 } from '@/lib/apiTypes';
 import { IMAGE_QUALITY } from '@/shared/constants';
+import { PhoneNumberField } from '@/shared/ui/forms';
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidNationalPhone,
+  PHONE_COUNTRIES,
+} from '@/lib/validation/phone';
+import type { CountryCode } from 'libphonenumber-js';
+import { BaseModal } from '@/shared/ui/modals/Base';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-const e164Re = /^\+[1-9]\d{7,14}$/;
-
-const COUNTRY_PHONE_CODES = [
-  { iso: 'NG', name: 'Nigeria', dial: '+234' },
-  { iso: 'GH', name: 'Ghana', dial: '+233' },
-  { iso: 'KE', name: 'Kenya', dial: '+254' },
-  { iso: 'ZA', name: 'South Africa', dial: '+27' },
-  { iso: 'US', name: 'United States', dial: '+1' },
-  { iso: 'CA', name: 'Canada', dial: '+1' },
-  { iso: 'GB', name: 'United Kingdom', dial: '+44' },
-] as const;
-
 const MONTH_OPTIONS = [
   { value: '01', label: 'January' },
   { value: '02', label: 'February' },
@@ -58,25 +54,23 @@ const fieldSelectClass =
 const labelClass =
   'block text-label font-bold uppercase tracking-[0.16em] text-white/60';
 
-function onlyDigits(value: string): string {
-  return value.replace(/\D/g, '');
-}
-
-function splitE164(value: string): { dial: string; national: string } | null {
+function splitE164(
+  value: string
+): { country: CountryCode; dial: string; national: string } | null {
   if (!value || typeof value !== 'string') return null;
 
   const trimmed = value.trim();
   if (!trimmed.startsWith('+')) return null;
 
-  const dial = COUNTRY_PHONE_CODES.map(country => country.dial)
-    .sort((a, b) => b.length - a.length)
-    .find(candidate => trimmed.startsWith(candidate));
-
-  if (!dial) return null;
+  const match = PHONE_COUNTRIES.slice()
+    .sort((a, b) => b.dial.length - a.dial.length)
+    .find(country => trimmed.startsWith(country.dial));
+  if (!match) return null;
 
   return {
-    dial,
-    national: trimmed.slice(dial.length).replace(/\D/g, ''),
+    country: match.iso,
+    dial: match.dial,
+    national: trimmed.slice(match.dial.length).replace(/\D/g, ''),
   };
 }
 
@@ -608,7 +602,12 @@ export default function PublicFormPage() {
           }
         }
 
-        if (isPhoneLikeField(field) && !e164Re.test(value)) {
+        const parsedPhone = isPhoneLikeField(field) ? splitE164(value) : null;
+        if (
+          isPhoneLikeField(field) &&
+          (!parsedPhone ||
+            !isValidNationalPhone(parsedPhone.national, parsedPhone.country))
+        ) {
           nextFieldErrors[field.key] =
             'Enter a valid phone number with country code, e.g. +2348012345678';
           continue;
@@ -881,7 +880,11 @@ export default function PublicFormPage() {
 
     if (isPhoneLikeField(field)) {
       const parsed = splitE164(typeof value === 'string' ? value : '');
-      const currentDial = parsed?.dial ?? COUNTRY_PHONE_CODES[0].dial;
+      const currentCountry = parsed?.country ?? DEFAULT_PHONE_COUNTRY;
+      const currentDial =
+        parsed?.dial ??
+        PHONE_COUNTRIES.find(item => item.iso === currentCountry)?.dial ??
+        '+234';
       const currentNational = parsed?.national ?? '';
 
       return (
@@ -889,47 +892,35 @@ export default function PublicFormPage() {
           <label className="space-y-2">
             <Label />
 
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[170px_1fr]">
-              <select
-                className={fieldSelectClass}
-                value={currentDial}
-                onChange={event => {
-                  const nextDial = event.target.value;
-                  handleChange(
-                    field.key,
-                    `${nextDial}${onlyDigits(currentNational)}`
-                  );
-                }}
-              >
-                {COUNTRY_PHONE_CODES.map(country => (
-                  <option
-                    key={country.iso}
-                    value={country.dial}
-                    className="bg-[var(--app-dark-2)] text-white"
-                  >
-                    {country.iso} {country.dial}
-                  </option>
-                ))}
-              </select>
-
-              <input
-                type="tel"
-                className={fieldBaseClass}
-                placeholder={field.placeholder || '8012345678'}
-                value={currentNational}
-                onChange={event =>
-                  handleChange(
-                    field.key,
-                    `${currentDial}${onlyDigits(event.target.value)}`
-                  )
-                }
-              />
-            </div>
+            <PhoneNumberField
+              id={`dynamic-phone-${field.key}`}
+              country={currentCountry}
+              number={currentNational}
+              onCountryChange={country => {
+                const dial =
+                  PHONE_COUNTRIES.find(item => item.iso === country)?.dial ??
+                  currentDial;
+                handleChange(
+                  field.key,
+                  `${dial}${currentNational.replace(/\D/g, '')}`
+                );
+              }}
+              onNumberChange={number =>
+                handleChange(
+                  field.key,
+                  `${currentDial}${number.replace(/\D/g, '')}`
+                )
+              }
+              inputClassName={fieldBaseClass}
+              selectClassName={fieldSelectClass}
+              placeholder={field.placeholder || '8012345678'}
+              error={fieldErrors[field.key]}
+              required={field.required}
+            />
 
             <Caption className="text-white/45">
               Use your country code and active phone number.
             </Caption>
-            <Error />
           </label>
         </div>
       );
@@ -1258,50 +1249,43 @@ export default function PublicFormPage() {
               </div>
             ) : null}
 
-            {!loading && submitted ? (
-              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-6 backdrop-blur-sm">
-                <div className="w-full max-w-lg overflow-hidden rounded-[1.5rem] border border-emerald-400/25 bg-[#07140d] shadow-2xl shadow-black/50">
-                  <div className="border-b border-emerald-400/15 px-6 py-5">
-                    <H3 className="text-xl text-emerald-100">
-                      {presentation.successTitle}
-                    </H3>
-                    {presentation.successSubtitle ? (
-                      <BodySM className="mt-1 text-emerald-100/70">
-                        {presentation.successSubtitle}
-                      </BodySM>
-                    ) : null}
-                  </div>
+            <BaseModal
+              isOpen={!loading && submitted}
+              onClose={() => router.push(returnPath)}
+              title={presentation.successTitle}
+              subtitle={presentation.successSubtitle}
+              showCloseButton={false}
+              forceBottomSheet
+              maxWidth="max-w-lg"
+            >
+              <div className="min-w-0 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.055] p-4 sm:p-5">
+                <BodySM className="text-emerald-100/82">
+                  {presentation.successMessage}
+                </BodySM>
+                <BodySM className="mt-4 text-emerald-100/65">
+                  You can now return to the previous page.
+                </BodySM>
 
-                  <div className="px-6 py-5">
-                    <BodySM className="text-emerald-100/82">
-                      {presentation.successMessage}
-                    </BodySM>
-                    <BodySM className="mt-4 text-emerald-100/65">
-                      You can now return to the previous page.
-                    </BodySM>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    curvature="full"
+                    onClick={() => router.push(returnPath)}
+                    className="w-full sm:w-auto"
+                  >
+                    {returnLabel}
+                  </Button>
 
-                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                      <Button
-                        type="button"
-                        variant="primary"
-                        curvature="full"
-                        onClick={() => router.push(returnPath)}
-                        className="w-full sm:w-auto"
-                      >
-                        {returnLabel}
-                      </Button>
-
-                      <Link
-                        href={returnPath}
-                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-emerald-100/20 px-6 text-sm font-bold text-emerald-100 transition hover:bg-emerald-100/10 sm:w-auto"
-                      >
-                        {returnPath}
-                      </Link>
-                    </div>
-                  </div>
+                  <Link
+                    href={returnPath}
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-emerald-100/20 px-6 text-sm font-bold text-emerald-100 transition hover:bg-emerald-100/10 sm:w-auto"
+                  >
+                    {returnPath}
+                  </Link>
                 </div>
               </div>
-            ) : null}
+            </BaseModal>
           </div>
         </Container>
       </Section>

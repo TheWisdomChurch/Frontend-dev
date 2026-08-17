@@ -20,6 +20,13 @@ import {
   Banknote,
 } from 'lucide-react';
 import OnlinePaymentModal from './OnlinePaymentModal';
+import { LocationFields, PhoneNumberField } from '@/shared/ui/forms';
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidNationalPhone,
+  toE164,
+} from '@/lib/validation/phone';
+import type { CountryCode } from 'libphonenumber-js';
 
 type PaymentMethod = 'transfer' | 'online' | 'delivery';
 
@@ -29,6 +36,7 @@ interface FormData {
   email: string;
   phone: string;
   address: string;
+  country: string;
   city: string;
   state: string;
   zipCode: string;
@@ -49,6 +57,7 @@ const CheckoutForm = () => {
     email: '',
     phone: '',
     address: '',
+    country: DEFAULT_PHONE_COUNTRY,
     city: '',
     state: '',
     zipCode: '',
@@ -62,14 +71,14 @@ const CheckoutForm = () => {
   const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>(
+    DEFAULT_PHONE_COUNTRY
+  );
 
-  const generateOrderId = () => {
-    const timestamp = Date.now().toString(36);
-    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-    return `WH-${timestamp}-${randomStr}`;
-  };
-
-  const [orderId] = useState(() => generateOrderId());
+  const [checkoutAttempt] = useState(() => ({
+    idempotencyKey: crypto.randomUUID(),
+    checkoutToken: crypto.randomUUID(),
+  }));
 
   const deliveryFee = Math.max(1000, total * 0.1);
   const grandTotal =
@@ -187,16 +196,14 @@ const CheckoutForm = () => {
       errors.email = 'Please enter a valid email address';
     }
 
-    if (
-      formData.phone &&
-      !/^(\+234|0)[789]\d{9}$/.test(formData.phone.replace(/\s/g, ''))
-    ) {
-      errors.phone = 'Please enter a valid Nigerian phone number';
+    if (formData.phone && !isValidNationalPhone(formData.phone, phoneCountry)) {
+      errors.phone = 'Enter a valid phone number for the selected country';
     }
 
     if (formData.paymentMethod === 'delivery') {
       const shippingFields: (keyof FormData)[] = [
         'address',
+        'country',
         'city',
         'state',
         'zipCode',
@@ -236,24 +243,8 @@ const CheckoutForm = () => {
     setIsSubmitting(true);
 
     try {
-      let paymentSlipUrl: string | undefined;
-      if (formData.paymentMethod === 'transfer' && formData.paymentSlip) {
-        try {
-          paymentSlipUrl = await storeClient.uploadPaymentSlip(
-            formData.paymentSlip
-          );
-        } catch {
-          setFormErrors(prev => ({
-            ...prev,
-            paymentSlip: 'Failed to upload payment slip. Please try again.',
-          }));
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
       const orderPayload = {
-        orderId,
+        ...checkoutAttempt,
         items,
         subtotal: total,
         total: grandTotal,
@@ -263,7 +254,7 @@ const CheckoutForm = () => {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          phone: formData.phone,
+          phone: toE164(formData.phone, phoneCountry) || formData.phone,
           address: formData.address,
           city: formData.city,
           state: formData.state,
@@ -276,14 +267,35 @@ const CheckoutForm = () => {
                 customerBankName: formData.customerBankName,
               }
             : undefined,
-        paymentSlipUrl,
       };
 
-      await storeClient.createOrder(orderPayload);
+      let order = await storeClient.createOrder(orderPayload);
+      if (
+        formData.paymentMethod === 'transfer' &&
+        formData.paymentSlip &&
+        order.paymentStatus !== 'proof_submitted'
+      ) {
+        try {
+          const paymentSlipUrl = await storeClient.uploadPaymentSlip(
+            formData.paymentSlip
+          );
+          order = await storeClient.submitPaymentProof(
+            order.orderId,
+            paymentSlipUrl
+          );
+        } catch {
+          setFormErrors(prev => ({
+            ...prev,
+            submit: `Order ${order.orderId} was saved, but payment proof could not be attached. Retry to continue safely.`,
+          }));
+          setIsSubmitting(false);
+          return;
+        }
+      }
 
       dispatch(clearCart());
       router.push(
-        `/order-confirmation?orderId=${orderId}&amount=${grandTotal}`
+        `/order-confirmation?orderId=${encodeURIComponent(order.orderId)}`
       );
     } catch (error) {
       console.error('Order submission failed:', error);
@@ -313,7 +325,7 @@ const CheckoutForm = () => {
               Order Reference
             </Caption>
             <BaseText weight="bold" className="text-white">
-              {orderId}
+              Assigned securely after checkout
             </BaseText>
           </div>
           <div className="text-right">
@@ -348,7 +360,7 @@ const CheckoutForm = () => {
           </H3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {['firstName', 'lastName', 'email', 'phone'].map(field => (
+            {['firstName', 'lastName', 'email'].map(field => (
               <div key={field}>
                 <label className="block text-sm font-medium mb-2 text-white/60">
                   {field === 'firstName'
@@ -360,23 +372,13 @@ const CheckoutForm = () => {
                         : 'Phone *'}
                 </label>
                 <input
-                  type={
-                    field === 'email'
-                      ? 'email'
-                      : field === 'phone'
-                        ? 'tel'
-                        : 'text'
-                  }
+                  type={field === 'email' ? 'email' : 'text'}
                   name={field}
                   required
                   value={formData[field as keyof FormData] as string}
                   onChange={handleInputChange}
                   className={inputClass(field)}
-                  placeholder={
-                    field === 'phone'
-                      ? 'e.g., 08012345678 or +2348012345678'
-                      : ''
-                  }
+                  placeholder=""
                 />
                 {formErrors[field] && (
                   <Caption className="text-red-500 text-xs mt-1">
@@ -385,6 +387,22 @@ const CheckoutForm = () => {
                 )}
               </div>
             ))}
+            <PhoneNumberField
+              id="checkout-phone"
+              label="Phone"
+              required
+              country={phoneCountry}
+              number={formData.phone}
+              onCountryChange={setPhoneCountry}
+              onNumberChange={phone => {
+                setFormData(prev => ({ ...prev, phone }));
+                setFormErrors(prev => ({ ...prev, phone: '' }));
+              }}
+              inputClassName={inputClass('phone')}
+              selectClassName={inputClass('phoneCountry')}
+              labelClassName="text-sm font-medium text-white/60"
+              error={formErrors.phone}
+            />
           </div>
         </div>
 
@@ -642,7 +660,7 @@ const CheckoutForm = () => {
                               {formData.paymentSlip.name}
                             </BaseText>
                             {uploadProgress > 0 && uploadProgress < 100 && (
-                              <div className="w-48 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+                              <div className="mt-2 h-2 w-48 rounded-full bg-gray-700">
                                 <div
                                   className="bg-green-500 h-2 rounded-full transition-all duration-300"
                                   // eslint-disable-next-line no-restricted-syntax
@@ -718,7 +736,7 @@ const CheckoutForm = () => {
                   </Caption>
                 </FlexboxLayout>
 
-                <div className="mt-4 p-4 rounded-xl bg-yellow-50 dark:bg-yellow-900/20">
+                <div className="mt-4 rounded-xl bg-yellow-900/20 p-4">
                   <FlexboxLayout align="center" gap="sm">
                     <Banknote className="w-4 h-4 text-yellow-500" />
                     <Caption weight="semibold" className="text-yellow-500">
@@ -764,42 +782,39 @@ const CheckoutForm = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {['city', 'state', 'zipCode'].map(field => (
-                  <div key={field}>
-                    <label
-                      htmlFor={field}
-                      className="block text-sm font-medium mb-2 text-white/60"
-                    >
-                      {field === 'city'
-                        ? 'City *'
-                        : field === 'state'
-                          ? 'State *'
-                          : 'ZIP Code *'}
-                    </label>
-                    <input
-                      id={field}
-                      type="text"
-                      name={field}
-                      required
-                      placeholder={
-                        field === 'city'
-                          ? 'City'
-                          : field === 'state'
-                            ? 'State / Province'
-                            : 'ZIP / Postal code'
-                      }
-                      value={formData[field as keyof FormData] as string}
-                      onChange={handleInputChange}
-                      className={inputClass(field)}
-                    />
-                    {formErrors[field] && (
-                      <Caption className="text-red-500 text-xs mt-1">
-                        {formErrors[field]}
-                      </Caption>
-                    )}
-                  </div>
-                ))}
+              <LocationFields
+                required
+                value={{
+                  country: formData.country,
+                  state: formData.state,
+                  city: formData.city,
+                }}
+                onChange={location =>
+                  setFormData(prev => ({ ...prev, ...location }))
+                }
+                errors={formErrors}
+                selectClassName={inputClass('location')}
+              />
+              <div>
+                <label
+                  htmlFor="zipCode"
+                  className="block text-sm font-medium mb-2 text-white/60"
+                >
+                  ZIP / Postal code *
+                </label>
+                <input
+                  id="zipCode"
+                  name="zipCode"
+                  required
+                  value={formData.zipCode}
+                  onChange={handleInputChange}
+                  className={inputClass('zipCode')}
+                />
+                {formErrors.zipCode ? (
+                  <Caption className="mt-1 text-xs text-red-500">
+                    {formErrors.zipCode}
+                  </Caption>
+                ) : null}
               </div>
             </div>
           </div>
@@ -810,12 +825,12 @@ const CheckoutForm = () => {
           <H3 className="text-xl font-bold mb-6 text-white">Order Summary</H3>
 
           <div className="space-y-4">
-            <div className="mb-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-900">
+            <div className="mb-4 rounded-xl bg-gray-900 p-3">
               <Caption className="text-sm font-medium mb-1 text-white/60">
                 Order ID
               </Caption>
               <BaseText weight="bold" className="text-white">
-                {orderId}
+                Assigned by the store when your order is saved
               </BaseText>
               <Caption className="text-xs mt-1 text-white/60">
                 Please save this reference for future inquiries
@@ -886,12 +901,10 @@ const CheckoutForm = () => {
         </div>
 
         {formErrors.submit && (
-          <div className="p-4 rounded-2xl bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800">
+          <div className="rounded-2xl border border-red-800 bg-red-900/30 p-4">
             <FlexboxLayout align="center" gap="sm">
-              <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400" />
-              <Caption className="text-red-600 dark:text-red-400">
-                {formErrors.submit}
-              </Caption>
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <Caption className="text-red-400">{formErrors.submit}</Caption>
             </FlexboxLayout>
           </div>
         )}

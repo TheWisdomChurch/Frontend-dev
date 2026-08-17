@@ -4,8 +4,7 @@ import { Suspense } from 'react';
 import PageHero from '@/features/hero/PageHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
-import PastoralCareUnit from '@/shared/ui/forms/eventsForm/PastoralCare';
+import PastoralCareForm from '@/shared/ui/forms/eventsForm/PastoralCare';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import Arrow from '@/shared/ui/icons/Arrow';
@@ -13,41 +12,6 @@ import Arrow from '@/shared/ui/icons/Arrow';
 // Metadata for this route lives in pastoral/layout.tsx — a single source
 // of truth for title/description/canonical/OG/twitter instead of two
 // partially-overlapping exports.
-
-/* ── Care services ──────────────────────────────────────── */
-
-const services = [
-  {
-    id: 'counseling',
-    title: 'Pastoral Counseling',
-    description:
-      'A guided conversation for spiritual questions, family pressure, grief, major transitions, and personal challenges. Handled with confidentiality and pastoral maturity.',
-    details: [
-      'One-on-one pastoral conversations',
-      'Biblical guidance with practical clarity',
-      'Confidential handling of personal matters',
-      'Thoughtful follow-up where needed',
-    ],
-    cta: 'Request a counseling session',
-    dark: false,
-  },
-  {
-    id: 'prayer',
-    title: 'Prayer Support',
-    description:
-      'Submit a request and receive dedicated prayer from a team that understands both urgency and discretion. You are not alone in what you are carrying.',
-    details: [
-      'Prayer for personal and family needs',
-      'Support during spiritual pressure or uncertainty',
-      'Follow-up where a response is needed',
-      'Connection to broader church care when appropriate',
-    ],
-    cta: 'Submit a prayer request',
-    dark: true,
-  },
-] as const;
-
-/* ── Page ───────────────────────────────────────────────── */
 
 export default function PastoralPage() {
   return (
@@ -63,133 +27,17 @@ export default function PastoralPage() {
       <PageHero
         eyebrow="Pastoral Care"
         title="Care is always available here."
-        subtitle="Pastoral counseling and dedicated prayer — find where to start, and we will take it from there."
+        subtitle="Prayer, confidential counseling, or booking a minister for your event — pick what you need below and we'll take it from there."
         compact
       />
 
-      {/* ── 2. Statement — dark ──────────────────────────────── */}
-      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
-        <SectionGlow />
-        <Container size="xl">
-          <ScrollFadeIn className="flex flex-col gap-8 py-16 lg:flex-row lg:items-end lg:justify-between lg:py-20">
-            <div className="max-w-xl">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Pastoral support
-              </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
-                You do not need to figure out
-                <em className="italic text-[var(--app-primary)]/80">
-                  {' '}
-                  where to start.
-                </em>
-              </h2>
-              <p className="mt-5 max-w-md font-ui text-body-sm leading-[2] text-white/70">
-                Choose a care pathway below and we will make sure your request
-                reaches the right person on our team.
-              </p>
-            </div>
-            <Link
-              href="#care-pathways"
-              className="inline-flex items-center gap-2 self-start border border-white/20 px-7 py-3.5 font-ui text-label font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
-            >
-              Request support <Arrow />
-            </Link>
-          </ScrollFadeIn>
-        </Container>
-      </section>
+      {/* ── 2. Pastoral care form — prayer, counseling & event
+             booking, all in one place, no redirects ─────────── */}
+      <Suspense fallback={null}>
+        <PastoralCareForm />
+      </Suspense>
 
-      {/* ── 3. Care services — full editorial sections ────────── */}
-      {services.map((svc, i) => (
-        <ScrollFadeIn key={svc.id}>
-          <section
-            id={i === 0 ? 'care-pathways' : undefined}
-            className={`relative border-b ${
-              svc.dark
-                ? 'border-white/8 bg-[var(--app-dark)]'
-                : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'
-            }`}
-          >
-            {svc.dark && <SectionGlow />}
-            <Container size="xl">
-              <div className="grid gap-12 py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-24 lg:py-24">
-                {/* Left — title + description */}
-                <div className="flex flex-col justify-center">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                    Pastoral care
-                  </p>
-                  <div className="mt-4 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-                  <h2
-                    className={`mt-5 font-headline text-heading-lg font-normal leading-snug lg:text-heading-lg ${
-                      svc.dark ? 'text-white' : 'text-[var(--app-ink)]'
-                    }`}
-                  >
-                    {svc.title}
-                  </h2>
-                  <p
-                    className={`mt-5 max-w-md font-ui text-body-sm leading-[2] ${
-                      svc.dark ? 'text-white/70' : 'text-[var(--app-ink)]/70'
-                    }`}
-                  >
-                    {svc.description}
-                  </p>
-                  <div className="mt-8">
-                    <Link
-                      href={
-                        svc.id === 'counseling'
-                          ? '/pastoral?intent=counseling#request-form'
-                          : '/contact?topic=prayer#contact-form'
-                      }
-                      className={[
-                        'inline-flex items-center gap-2 border px-6 py-3 font-ui text-label font-semibold transition duration-150',
-                        svc.dark
-                          ? 'border-white/18 text-white/50 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]'
-                          : 'border-[var(--app-ink)]/18 text-[var(--app-ink)]/50 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]',
-                      ].join(' ')}
-                    >
-                      {svc.cta} <Arrow />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Right — detail list */}
-                <div className="flex flex-col justify-center">
-                  <ul className="space-y-6">
-                    {svc.details.map(detail => (
-                      <li key={detail} className="flex items-start gap-5">
-                        <div
-                          className={`mt-[0.6rem] h-[1.5px] w-5 shrink-0 ${
-                            svc.dark
-                              ? 'bg-[var(--app-primary)]/40'
-                              : 'bg-[var(--app-primary)]/50'
-                          }`}
-                        />
-                        <span
-                          className={`font-ui text-body-sm leading-[1.85] ${
-                            svc.dark
-                              ? 'text-white/72'
-                              : 'text-[var(--app-ink)]/72'
-                          }`}
-                        >
-                          {detail}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </Container>
-          </section>
-        </ScrollFadeIn>
-      ))}
-
-      {/* ── 3.5 Pastoral care request form — counseling & event bookings ── */}
-      <div id="request-form">
-        <Suspense fallback={null}>
-          <PastoralCareUnit />
-        </Suspense>
-      </div>
-
-      {/* ── 4. Confidentiality — canvas-2 ────────────────────── */}
+      {/* ── 3. Confidentiality — canvas-2 ────────────────────── */}
       <ScrollFadeIn>
         <section className="overflow-hidden min-w-0 bg-[var(--app-canvas-2)] py-16 lg:py-20">
           <Container size="xl">
@@ -216,14 +64,13 @@ export default function PastoralPage() {
         </section>
       </ScrollFadeIn>
 
-      {/* ── 5. CTA — dark ────────────────────────────────────── */}
+      {/* ── 4. CTA — dark ────────────────────────────────────── */}
       <ScrollFadeIn>
         <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-28">
-          <SectionGlow />
           <Container size="lg">
             <div className="flex flex-col items-center gap-7 text-center">
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Reach out
+                Prefer to reach us directly?
               </p>
               <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
                 You do not have to carry this
@@ -231,15 +78,15 @@ export default function PastoralPage() {
               </h2>
               <div className="h-px w-10 bg-[var(--app-primary)]/40" />
               <p className="max-w-md font-ui text-body-sm leading-[2] text-white/70">
-                Choose counseling or prayer above and tell us what you need. We
-                will make sure it gets to the right person on our team.
+                If the form above doesn&apos;t fit what you need, reach our team
+                directly and we will make sure it gets to the right person.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href="#care-pathways"
+                  href="/contact"
                   className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
                 >
-                  Request support <Arrow />
+                  Contact us <Arrow />
                 </Link>
                 <Link
                   href="/events/weekly"

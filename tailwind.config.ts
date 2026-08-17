@@ -5,6 +5,16 @@ export default {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      // Tailwind's default opacity scale only covers 5% steps (0,5,10,...,100),
+      // so a bare-number color-opacity modifier like `text-white/52` or
+      // `border-white/12` silently compiles to no CSS at all when the number
+      // isn't in that scale — the element then falls back to an inherited
+      // color with no build warning. Extending the scale to every integer
+      // 0-100 makes any `/N` modifier work, matching what authors actually
+      // expect from the slash-opacity syntax.
+      opacity: Object.fromEntries(
+        Array.from({ length: 101 }, (_, i) => [i, (i / 100).toString()])
+      ),
       fontFamily: {
         sans: [
           'var(--font-bricolage)',

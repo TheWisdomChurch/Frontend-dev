@@ -125,6 +125,76 @@
   }
 }
 
+@keyframes community-ticker-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.community-ticker {
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.community-ticker__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: community-ticker-scroll 22s linear infinite;
+}
+
+.community-ticker__group {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  padding-right: clamp(1.75rem, 4vw, 3.5rem);
+}
+
+.community-ticker:hover .community-ticker__track,
+.community-ticker:focus-within .community-ticker__track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .community-ticker {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+    scrollbar-width: none;
+  }
+
+  .community-ticker::-webkit-scrollbar {
+    display: none;
+  }
+
+  .community-ticker__track {
+    animation: none;
+    transform: none;
+  }
+
+  .community-ticker__group[aria-hidden='true'] {
+    display: none;
+  }
+}
+
 /* =========================
    HARD RESET / PAGE SHELL
 ========================= */

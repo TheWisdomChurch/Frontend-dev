@@ -40,6 +40,12 @@ const YouTubePlayer = ({
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      if (
+        event.origin !== 'https://www.youtube.com' &&
+        event.origin !== 'https://www.youtube-nocookie.com'
+      ) {
+        return;
+      }
       if (event.source === iframeRef.current?.contentWindow) {
         // Handle YouTube player state changes
         if (event.data && typeof event.data === 'object') {
@@ -69,7 +75,7 @@ const YouTubePlayer = ({
           if (iframeRef.current?.contentWindow) {
             iframeRef.current.contentWindow.postMessage(
               '{"event":"command","func":"playVideo","args":""}',
-              '*'
+              'https://www.youtube-nocookie.com'
             );
           }
         },
@@ -78,7 +84,7 @@ const YouTubePlayer = ({
           if (iframeRef.current?.contentWindow) {
             iframeRef.current.contentWindow.postMessage(
               '{"event":"command","func":"pauseVideo","args":""}',
-              '*'
+              'https://www.youtube-nocookie.com'
             );
           }
         },
@@ -87,7 +93,7 @@ const YouTubePlayer = ({
           if (iframeRef.current?.contentWindow) {
             iframeRef.current.contentWindow.postMessage(
               `{"event":"command","func":"seekTo","args":[${seconds},true]}`,
-              '*'
+              'https://www.youtube-nocookie.com'
             );
           }
         },
@@ -111,7 +117,7 @@ const YouTubePlayer = ({
       controls: '1',
     });
 
-    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+    return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
   };
 
   // Handle play/pause via postMessage
@@ -120,7 +126,7 @@ const YouTubePlayer = ({
       const command = isPlaying ? 'pauseVideo' : 'playVideo';
       iframeRef.current.contentWindow.postMessage(
         `{"event":"command","func":"${command}","args":""}`,
-        '*'
+        'https://www.youtube-nocookie.com'
       );
       setIsPlaying(!isPlaying);
     }
