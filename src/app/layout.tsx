@@ -1,6 +1,5 @@
 ﻿import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 
@@ -18,13 +17,7 @@ import {
   buildHreflangAlternates,
 } from '@/lib/seo';
 import HeroHighlights from '@/features/hero/HeroHighlights';
-
-// Listens for a window CustomEvent and stays unrendered until it fires, so
-// it's kept out of the base bundle shipped to every route.
-const CommunityJoinModal = dynamic(
-  () => import('@/features/community/CommunityJoinModal'),
-  { ssr: false }
-);
+import CommunityJoinModal from '@/features/community/CommunityJoinModalLoader';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
