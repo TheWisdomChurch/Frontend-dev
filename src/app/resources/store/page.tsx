@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
+import dynamic from 'next/dynamic';
 import { gsap } from 'gsap';
 import {
   Bell,
@@ -24,7 +25,10 @@ import {
   filterProducts,
 } from '@/lib/store/slices/productSlice';
 
-import ProductModal from '@/features/store/modals/ProductModal';
+const ProductModal = dynamic(
+  () => import('@/features/store/modals/ProductModal'),
+  { ssr: false }
+);
 import {
   H2,
   H3,
