@@ -6,8 +6,6 @@ import {
   AnimatePresence,
   motion,
   useDragControls,
-  useMotionValue,
-  useTransform,
   type PanInfo,
 } from 'framer-motion';
 import { CheckCircle2, Clock, Loader2, Sparkles, X } from 'lucide-react';
@@ -165,8 +163,6 @@ function ModalPanel({
   headerIcon,
 }: ModalPanelProps) {
   const dragControls = useDragControls();
-  const y = useMotionValue(0);
-  const backdropOpacity = useTransform(y, [0, 300], [1, 0.55]);
 
   const startDrag = useCallback(
     (event: React.PointerEvent) => {
@@ -195,9 +191,9 @@ function ModalPanel({
   // for sheet-enabled modals.
   const panelVariants = dragEnabled
     ? {
-        initial: { opacity: 0, y: '100%' },
+        initial: { opacity: 0, y: '100vh' },
         animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: '100%' },
+        exit: { opacity: 0, y: '100vh' },
       }
     : {
         initial: { opacity: 0, y: 12, scale: 0.98 },
@@ -219,16 +215,11 @@ function ModalPanel({
   return (
     <motion.div
       className={cn(
-        'fixed inset-0 z-[11000] flex min-w-0 px-2 py-2 backdrop-blur-[10px] sm:px-5 sm:py-5',
+        'fixed inset-0 z-[11000] flex min-w-0 bg-[rgba(7,5,3,0.76)] px-2 py-2 backdrop-blur-[10px] sm:px-5 sm:py-5',
         isSheet
           ? 'items-end justify-center px-0 pb-0 sm:items-center sm:px-4 sm:pb-4'
           : 'items-center justify-center'
       )}
-      // eslint-disable-next-line no-restricted-syntax -- opacity tracks the drag motion value, genuinely dynamic
-      style={{
-        backgroundColor: 'rgba(7, 5, 3, 0.76)',
-        opacity: backdropOpacity,
-      }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -240,7 +231,6 @@ function ModalPanel({
       <motion.div
         ref={modalRef}
         className={modalClassName}
-        style={dragEnabled ? { y } : undefined}
         variants={panelVariants}
         initial="initial"
         animate="animate"
@@ -292,13 +282,12 @@ function ModalPanel({
 
         {title || subtitle || showCloseButton ? (
           <header
-            onPointerDown={startDrag}
             className={cn(
               'relative flex min-w-0 items-start justify-between gap-4 border-b px-5 pb-5 pt-4 sm:gap-6 sm:px-8 sm:pb-6 sm:pt-7',
               tone === 'light'
                 ? 'border-black/[0.07] bg-black/[0.012]'
                 : 'border-white/[0.08] bg-white/[0.022]',
-              dragEnabled && 'touch-none sm:touch-auto'
+              dragEnabled && 'sm:touch-auto'
             )}
           >
             <div className="flex min-w-0 flex-1 items-start gap-3.5 break-words sm:gap-4">
@@ -403,7 +392,9 @@ export const BaseModal = memo(function BaseModal({
   const modalId = useId();
   const isMobile = useMediaQuery('(max-width: 639px)');
 
-  const isSheet = forceBottomSheet;
+  // Every dialog becomes a bottom sheet on phones. `forceBottomSheet` keeps
+  // that treatment available to callers while wider viewports stay centered.
+  const isSheet = forceBottomSheet || isMobile;
   const dragEnabled = isSheet && isMobile;
   const canClose = !preventClose && !isLoading;
 
