@@ -304,14 +304,11 @@ export default function PremiumHome() {
                   quality={IMAGE_QUALITY}
                   className={`object-cover ${belief.imagePosition} transition-[transform,filter] duration-700 ease-out will-change-transform group-hover:scale-[1.06]`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/45 to-black/10 transition-opacity duration-500 group-hover:from-black/95" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-transparent" />
-
                 <div className="relative z-10 mt-auto p-6 pt-0 sm:p-7 sm:pt-0">
-                  <h3 className="break-words font-sans text-2xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-white transition-colors duration-300 group-hover:text-[var(--app-primary-light)] sm:text-[1.7rem] lg:text-2xl xl:text-[1.85rem]">
+                  <h3 className="break-words font-sans text-2xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.9)] transition-colors duration-300 group-hover:text-[var(--app-primary-light)] sm:text-[1.7rem] lg:text-2xl xl:text-[1.85rem]">
                     {belief.title}
                   </h3>
-                  <p className="mt-3 min-h-12 font-ui text-sm leading-6 text-white/65">
+                  <p className="mt-3 min-h-12 font-ui text-sm font-medium leading-6 text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.95)]">
                     {belief.body}
                   </p>
                 </div>
