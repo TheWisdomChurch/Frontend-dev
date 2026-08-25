@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
@@ -184,7 +184,7 @@ export default async function EventsPage() {
           <JsonLd key={event.id} data={buildEventSchema(event)} />
         ))}
       {/* ── 1. Hero ──────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow="Events & Programs"
         title="What's happening at Wisdom Church."
         subtitle="Weekly services, special gatherings, and everything in between."

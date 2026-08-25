@@ -1,14 +1,14 @@
 ﻿import Link from 'next/link';
 import { Compass, Home } from 'lucide-react';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { H2, BodyMD } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-[var(--app-dark)] text-white">
-      <PageHero
+      <SiteHero
         title="That page could not be found."
         subtitle="The route may have changed, the page may have moved, or the link may no longer exist."
         note="Use the links below to get back to the main church pages without guessing where to go next."

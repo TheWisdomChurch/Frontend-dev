@@ -4,7 +4,7 @@ import { Play, ArrowRight } from 'lucide-react';
 
 import { BlogSubscribeForm } from './BlogSubscribeForm';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { H2, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <main className="min-h-screen bg-[var(--app-dark)] text-white">
-      <PageHero
+      <SiteHero
         eyebrow="Blog & Devotionals"
         title="Insights, reflections, and devotionals from the church."
         subtitle="Written content to encourage, teach, and equip you between Sundays."

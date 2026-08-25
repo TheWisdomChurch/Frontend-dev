@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
@@ -44,7 +44,7 @@ export default function UpcomingPage() {
 
   return (
     <main className="min-h-screen">
-      <PageHero
+      <SiteHero
         eyebrow="Upcoming Events"
         title="What's next at Wisdom Church."
         subtitle="Special gatherings, conferences, and programs coming up — plan ahead."

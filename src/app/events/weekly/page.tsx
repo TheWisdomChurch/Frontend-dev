@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
@@ -79,7 +79,7 @@ export default function WeeklyPage() {
         <JsonLd key={i} data={schema} />
       ))}
 
-      <PageHero
+      <SiteHero
         eyebrow="Weekly Services"
         title="We gather. Every week."
         subtitle="Sunday morning worship, and Daily Prayer every weekday morning — all open to everyone."

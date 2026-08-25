@@ -43,7 +43,7 @@ import CartSidebar from '@/features/store/Store/CartSidebar';
 import type { Product } from '@/domain/store/types';
 import { Media } from '@/shared/ui/Media';
 import { storeClient } from '@/lib/api/storeClient';
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
 import { useApiQuery } from '@/hooks/useApiQuery';
 
@@ -201,7 +201,7 @@ function StorePageContent() {
 
   return (
     <div className="min-h-screen bg-[var(--app-dark)] text-white">
-      <PageHero
+      <SiteHero
         title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
         description="Discover our exclusive collection of merchandise designed to inspire and uplift. Each item carries a message of faith, hope, and wisdom for your daily journey."

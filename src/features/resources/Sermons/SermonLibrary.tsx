@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 import type { SermonDiscovery, YouTubeVideo } from '@/domain/media/types';
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { Media } from '@/shared/ui/Media';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
@@ -291,7 +291,7 @@ export default function SermonLibrary({
 
   return (
     <>
-      <PageHero
+      <SiteHero
         eyebrow="Wisdom Church Media"
         title="Truth for every season."
         subtitle="Start with what matters to you. Discover relevant teachings, continue where you left off, and grow one message at a time."

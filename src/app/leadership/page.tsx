@@ -1,4 +1,4 @@
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
@@ -78,7 +78,7 @@ export default async function LeadershipPage() {
       ))}
 
       {/* ── 1. Hero ──────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow="Leadership"
         title="The people who shepherd this church."
         subtitle="Called, committed, and accountable — meet the team that serves the Wisdom Church community."

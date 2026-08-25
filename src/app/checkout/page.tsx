@@ -7,7 +7,7 @@ import { ShoppingBag } from 'lucide-react';
 
 import { useAppSelector } from '@/shared/utils/hooks/redux';
 import CheckoutForm from '@/features/store/Store/checkoutForm';
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { H2, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import CustomButton from '@/shared/utils/buttons/CustomButton';
@@ -28,7 +28,7 @@ function CheckoutPageContent() {
   if (items.length === 0) {
     return (
       <main className="min-h-screen bg-[var(--app-dark)] text-white">
-        <PageHero
+        <SiteHero
           title="Checkout"
           subtitle="Complete your order securely."
           description="Review your items and finalize your purchase."
@@ -67,7 +67,7 @@ function CheckoutPageContent() {
 
   return (
     <main className="min-h-screen bg-[var(--app-dark)] text-white">
-      <PageHero
+      <SiteHero
         title="Checkout"
         subtitle="Complete your order securely."
         description="Review your items and finalize your purchase."

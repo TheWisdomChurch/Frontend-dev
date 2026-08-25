@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import YouTubePlayer from './YoutubePlayer';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
@@ -310,7 +310,7 @@ const SermonUtil = () => {
   return (
     <main className="min-h-screen">
       {/* ── 1. Hero ───────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow="Sermons & Teachings"
         title="Messages from the church."
         subtitle="Watch, listen, and grow — every sermon from Sunday services, conferences, and midweek gatherings."

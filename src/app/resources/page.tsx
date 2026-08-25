@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 import { Button } from '@/shared/utils/buttons';
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container, Section } from '@/shared/layout';
 import GridBackground from '@/shared/ui/GridBackground';
 import SectionGlow from '@/shared/ui/SectionGlow';
@@ -151,7 +151,7 @@ export default function ResourcesPage() {
         ])}
       />
 
-      <PageHero
+      <SiteHero
         title="Resource Center"
         subtitle="Everything you need in one place."
         note="Live streams, sermons, events, publications, store, and pastoral care — curated for your growth."

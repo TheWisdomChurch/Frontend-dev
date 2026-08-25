@@ -15,7 +15,7 @@ import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
 
 import Arrow from '@/shared/ui/icons/Arrow';
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { H2, Caption } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
@@ -187,7 +187,7 @@ function ContactPageContent() {
       />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow="Get in touch"
         title="We'd love to hear from you."
         subtitle="Plan a visit, request prayer, or send us a message — we'll get back to you quickly."

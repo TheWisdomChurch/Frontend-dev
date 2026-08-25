@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
@@ -110,7 +110,7 @@ export default function CalendarPage() {
 
   return (
     <main className="min-h-screen">
-      <PageHero
+      <SiteHero
         eyebrow="Church Calendar"
         title="Every event, every month."
         subtitle="Browse the full calendar of services, programs, and special gatherings."

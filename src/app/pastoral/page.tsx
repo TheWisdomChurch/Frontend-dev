@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import PastoralCareForm from '@/shared/ui/forms/eventsForm/PastoralCare';
@@ -24,7 +24,7 @@ export default function PastoralPage() {
       />
 
       {/* ── 1. Hero ──────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow="Pastoral Care"
         title="Care is always available here."
         subtitle="Prayer, confidential counseling, or booking a minister for your event — pick what you need below and we'll take it from there."

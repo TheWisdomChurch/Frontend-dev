@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { ArrowRight, Download, MessageCircle } from 'lucide-react';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { H2, BodySM, Eyebrow } from '@/shared/text';
 import { Container, Section } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
@@ -40,7 +40,7 @@ const available = [
 export default function PublicationPage() {
   return (
     <main className="min-h-screen bg-[var(--app-dark)] text-white">
-      <PageHero
+      <SiteHero
         eyebrow="Publications"
         title="Resources to help you grow between services."
         subtitle="Sermon notes, study guides, and devotional materials from The Wisdom Church."

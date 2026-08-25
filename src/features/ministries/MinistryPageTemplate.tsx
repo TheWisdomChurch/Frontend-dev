@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
@@ -91,7 +91,7 @@ export default function MinistryPageTemplate({
   return (
     <main className="min-h-screen">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow={hero.eyebrow}
         title={hero.title}
         subtitle={hero.subtitle}

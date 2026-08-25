@@ -1,6 +1,9 @@
 @use '../styles/index';
 
 :root {
+  /* Semantic typography aliases. Existing components can migrate without
+     creating competing font systems. */
+  --font-bricolage: var(--font-product-sans);
   --app-header-height: 72px;
   --app-radius: 18px;
 

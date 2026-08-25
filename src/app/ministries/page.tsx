@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
@@ -98,7 +98,7 @@ export default function MinistriesPage() {
         ])}
       />
 
-      <PageHero
+      <SiteHero
         eyebrow="Life together"
         title="There is a place for you in this church family."
         subtitle="Find a community where you can be known, grow in Christ, build lasting relationships, and serve with the gifts God has given you."

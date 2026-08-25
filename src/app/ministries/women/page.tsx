@@ -1,106 +1,153 @@
 import type { Metadata } from 'next';
+import { ArrowRight } from 'lucide-react';
 
-import MinistryPageTemplate, {
-  type MinistryPageConfig,
-} from '@/features/ministries/MinistryPageTemplate';
+import { WOMEN_MINISTRY_CONTENT as content } from '@/content/womenMinistry';
+import WomenConferenceGallery from '@/features/ministries/WomenConferenceGallery';
 import { buildPageMetadata } from '@/lib/seo';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialImage,
+  EditorialLink,
+  EditorialSection,
+  EditorialSplit,
+} from '@/shared/ui/editorial';
+import { ScrollFadeIn } from '@/shared/ui/motion';
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Women's Ministry",
-  description:
-    "A women's ministry built for spiritual growth, genuine community, and purpose-filled living at every stage of life. Part of The Wisdom Church, Lagos.",
+  description: content.hero.description,
   path: '/ministries/women',
 });
 
-const config: MinistryPageConfig = {
-  hero: {
-    eyebrow: "Women's Ministry",
-    title: 'Women who grow with grace. Women who lead with purpose.',
-    subtitle:
-      'A community built for women at every stage of life — rooted in scripture, prayer, and genuine sisterhood.',
-  },
-  conference: {
-    eyebrow: "Flourish · Women's Conference 2025",
-    heading: { lead: 'Rooted. Rising.', accent: ' Flourishing.' },
-    description:
-      "Flourish is the Wisdom Church Women's Conference — a gathering where women come together in worship, the Word, and honest community to celebrate what God is doing in and through their lives. This year's conference was a moment of breakthrough, renewal, and real conversation about growing as a woman of God in every season. If you missed it, watch the full session below.",
-    youtubeSrc: 'https://www.youtube.com/embed/St-kiKLelUU',
-    youtubeTitle: "Flourish — Wisdom Church Women's Conference 2025",
-    ctaLabel: 'Stay updated on next conference',
-  },
-  mission: {
-    dark: false,
-    heading: {
-      lead: 'Women flourish best where',
-      accent: ' biblical formation and genuine support',
-      tail: ' work together.',
-    },
-    body: 'This ministry creates space for women to deepen their walk with God, carry one another through real life, and grow into stronger service, leadership, and witness. Spiritual depth and community warmth are not opposites here — they belong together.',
-  },
-  activities: {
-    dark: true,
-    heading: {
-      lead: 'Built for women who want to',
-      accent: ' go deeper and grow further.',
-    },
-    items: [
-      {
-        title: 'Bible Study Circles',
-        description:
-          'Focused spaces to understand scripture, ask honest questions, and apply truth with maturity — not just read it.',
-      },
-      {
-        title: 'Prayer Gatherings',
-        description:
-          'Shared prayer moments that strengthen women spiritually and deepen a genuine dependence on God together.',
-      },
-      {
-        title: 'Mentorship & Support',
-        description:
-          'Relationships that help women grow through counsel, shared wisdom, and real encouragement across seasons.',
-      },
-      {
-        title: 'Service & Leadership',
-        description:
-          'Clear pathways to contribute in church life and develop steady responsibility in ministry over time.',
-      },
-    ],
-  },
-  values: {
-    dark: false,
-    heading: {
-      lead: 'The values that define',
-      accent: ' every woman in this ministry.',
-    },
-    items: [
-      {
-        title: 'Faith',
-        body: 'A ministry rooted in the Word and sustained by prayer — not events, not performance, just genuine growth.',
-      },
-      {
-        title: 'Sisterhood',
-        body: 'Real relationships that carry women through every season honestly — not surface-level, but truly present.',
-      },
-      {
-        title: 'Purpose',
-        body: 'Growing into who God created you to be — in your home, your work, your service, and your community.',
-      },
-    ],
-  },
-  cta: {
-    dark: true,
-    heading: {
-      lead: 'Step into a sisterhood',
-      accent: ' that walks with you.',
-    },
-    body: 'Reach out and we will help you find the right starting point — whether that is fellowship, prayer, Bible study, or service.',
-    primaryLabel: 'Join the sisterhood',
-    primaryHref: '/contact',
-    secondaryLabel: 'See service times',
-    secondaryHref: '/events/weekly',
-  },
-};
-
 export default function WomenMinistryPage() {
-  return <MinistryPageTemplate config={config} />;
+  return (
+    <main className="min-h-screen bg-[var(--app-surface)]">
+      <EditorialSection
+        tone="canvas"
+        className="pt-[calc(var(--app-header-height)+var(--section-xs))]"
+      >
+        <EditorialContainer>
+          <EditorialSplit reverse>
+            <EditorialImage
+              src={content.hero.image}
+              alt="Women in conversation at The Wisdom Church"
+              fill
+              priority
+              sizes="(max-width: 1023px) 100vw, 50vw"
+              className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5]"
+              imageClassName="object-center"
+            />
+            <ScrollFadeIn>
+              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
+                {content.hero.eyebrow}
+              </p>
+              <h1 className="mt-5 text-balance font-headline text-display-md font-semibold leading-none tracking-tight sm:text-display-lg">
+                {content.hero.title}
+              </h1>
+              <p className="mt-7 max-w-xl font-ui text-lead leading-relaxed text-[var(--app-ink)]/70">
+                {content.hero.description}
+              </p>
+              <EditorialLink href="/contact" variant="dark" className="mt-9">
+                Join the community <ArrowRight className="ml-2 h-4 w-4" />
+              </EditorialLink>
+            </ScrollFadeIn>
+          </EditorialSplit>
+        </EditorialContainer>
+      </EditorialSection>
+
+      <EditorialSection>
+        <EditorialContainer>
+          <EditorialHeader
+            eyebrow={content.introduction.label}
+            title={content.introduction.title}
+            description={content.introduction.body}
+            className="max-w-5xl"
+          />
+        </EditorialContainer>
+      </EditorialSection>
+
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <div className="grid gap-px overflow-hidden rounded-card bg-white/15 lg:grid-cols-2">
+            {[content.vision, content.mission].map((item, index) => (
+              <ScrollFadeIn
+                key={item.label}
+                delay={index * 0.08}
+                className="bg-[var(--app-dark)] p-8 sm:p-12 lg:p-16"
+              >
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+                  {item.label}
+                </p>
+                <h2 className="mt-5 font-headline text-display-sm font-semibold leading-tight tracking-tight">
+                  {item.title}
+                </h2>
+                <p className="mt-6 max-w-xl font-ui text-body-lg leading-loose text-white/70">
+                  {item.body}
+                </p>
+              </ScrollFadeIn>
+            ))}
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
+          <EditorialHeader
+            eyebrow="The journey"
+            title="Grow. Lead. Flourish."
+          />
+          <div className="mt-12 border-y border-[var(--app-border)]">
+            {content.focus.map((item, index) => (
+              <ScrollFadeIn key={item.title} delay={index * 0.05}>
+                <article className="grid gap-4 border-b border-[var(--app-border)] py-8 last:border-b-0 sm:grid-cols-[auto_minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10">
+                  <span className="font-ui text-label font-bold text-[var(--app-primary-dark)]">
+                    {item.number}
+                  </span>
+                  <h3 className="font-headline text-heading-lg font-semibold">
+                    {item.title}
+                  </h3>
+                  <p className="max-w-xl font-ui text-body-md leading-loose text-[var(--app-ink)]/65">
+                    {item.body}
+                  </p>
+                </article>
+              </ScrollFadeIn>
+            ))}
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+
+      <EditorialSection>
+        <EditorialContainer>
+          <EditorialSplit>
+            <EditorialHeader
+              eyebrow={content.conference.eyebrow}
+              title={content.conference.title}
+              description={content.conference.description}
+            />
+            <WomenConferenceGallery images={content.conference.images} />
+          </EditorialSplit>
+        </EditorialContainer>
+      </EditorialSection>
+
+      <EditorialSection tone="brand">
+        <EditorialContainer className="text-center">
+          <EditorialHeader
+            eyebrow={content.invitation.label}
+            title={content.invitation.title}
+            description={content.invitation.body}
+            className="mx-auto max-w-4xl [&_p]:mx-auto"
+          />
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <EditorialLink href="/contact" variant="dark">
+              Join the community
+            </EditorialLink>
+            <EditorialLink href="/events" variant="outline">
+              View upcoming gatherings
+            </EditorialLink>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+    </main>
+  );
 }

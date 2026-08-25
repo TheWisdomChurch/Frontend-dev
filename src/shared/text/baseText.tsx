@@ -2,7 +2,7 @@
 
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/cn';
-import { bricolageGrotesque, playfair, worksans } from '../fonts/fonts';
+import { dmSans, playfair, worksans } from '../fonts/fonts';
 
 export type FontWeight =
   'light' | 'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
@@ -50,7 +50,7 @@ export interface BaseTextProps {
 }
 
 const fontFamilyClassMap: Record<FontFamily, string> = {
-  bricolage: bricolageGrotesque.className,
+  bricolage: dmSans.className,
   worksans: worksans.className,
   playfair: playfair.className,
 };

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import SectionGlow from '@/shared/ui/SectionGlow';
@@ -126,7 +126,7 @@ export default function TestimoniesPage() {
         />
 
         {/* ── 1. Hero ────────────────────────────────────────── */}
-        <PageHero
+        <SiteHero
           eyebrow="Testimonies"
           title="Stories of faith, healing, and change."
           subtitle="Real accounts from the Wisdom Church community — God still moves."
