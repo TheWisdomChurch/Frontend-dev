@@ -24,6 +24,7 @@ import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
+import { EditorialHeader } from '@/shared/ui/editorial';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 import {
@@ -111,14 +112,12 @@ function ResourceCarousel() {
     <div className="mt-16 border-t border-[var(--app-ink)]/8 pt-14">
       {/* Header */}
       <div className="mb-8 flex items-end justify-between gap-4">
-        <div>
-          <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Explore
-          </p>
-          <h3 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
-            You can do more
-          </h3>
-        </div>
+        <EditorialHeader
+          eyebrow="Explore"
+          title="You can do"
+          accent="more"
+          size="sm"
+        />
 
         {/* Navigation arrows */}
         <div className="flex shrink-0 items-center gap-2">
@@ -258,14 +257,13 @@ export default function ResourceSection() {
     >
       <Container size="xl" className="py-section-md">
         {/* ── Section header ───────────────────────────────── */}
-        <div className="mb-10">
-          <p className="mb-3 text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Latest Message
-          </p>
-          <h2 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
-            Hear the Word.
-          </h2>
-        </div>
+        <EditorialHeader
+          eyebrow="Latest Message"
+          title="Hear the"
+          accent="Word."
+          size="sm"
+          className="mb-10"
+        />
 
         {/* ── Layout ───────────────────────────────────────── */}
         <motion.div
@@ -361,7 +359,7 @@ export default function ResourceSection() {
           >
             <Link
               href="/resources/sermons"
-              className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              className="inline-flex h-12 items-center gap-2 rounded-button bg-[var(--app-primary)] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
             >
               All sermons <ArrowRight className="h-4 w-4" />
             </Link>

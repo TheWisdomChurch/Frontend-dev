@@ -1,7 +1,12 @@
 import Image from 'next/image';
 import { CalendarDays, MapPin, Play, Users } from 'lucide-react';
 
-import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
+import {
+  HOME_BELIEFS,
+  HOME_COMMUNITY_GALLERY,
+  HOME_COPY,
+  HOME_IMAGES,
+} from '@/features/home/content';
 import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
@@ -18,7 +23,6 @@ import {
   EditorialSplit,
   editorialActionClass,
 } from '@/shared/ui/editorial';
-import { ScrollFadeIn } from '@/shared/ui/motion';
 
 export default function PremiumHome() {
   return (
@@ -40,10 +44,11 @@ export default function PremiumHome() {
               rel="noreferrer"
               className={editorialActionClass.primary}
             >
-              <Play className="mr-2 h-4 w-4 fill-current" /> Watch live
+              <Play className="mr-2 h-4 w-4 fill-current" />{' '}
+              {HOME_COPY.actions.watchLive}
             </a>
             <PlanVisitTrigger className={editorialActionClass.outline}>
-              Plan your visit
+              {HOME_COPY.actions.planVisit}
             </PlanVisitTrigger>
           </>
         }
@@ -54,19 +59,20 @@ export default function PremiumHome() {
           <EditorialSplit>
             <div>
               <EditorialHeader
-                eyebrow="Welcome home"
-                title={`${HOME_COPY.welcome.title} ${HOME_COPY.welcome.accent}`}
+                eyebrow={HOME_COPY.welcome.eyebrow}
+                title={HOME_COPY.welcome.title}
+                accent={HOME_COPY.welcome.accent}
                 description={HOME_COPY.welcome.description}
               />
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <EditorialLink href="/about" variant="dark">
-                  Discover our story
+                  {HOME_COPY.actions.discoverStory}
                 </EditorialLink>
                 <CommunityJoinTrigger
                   icon={false}
                   className={editorialActionClass.outline}
                 >
-                  Join our community
+                  {HOME_COPY.actions.joinCommunity}
                 </CommunityJoinTrigger>
               </div>
             </div>
@@ -83,35 +89,53 @@ export default function PremiumHome() {
         </EditorialContainer>
       </EditorialSection>
 
-      <EditorialSection tone="canvas">
+      <EditorialSection tone="dark" className="bg-[#0d0b0c]">
         <EditorialContainer>
           <EditorialHeader
             eyebrow={HOME_COPY.identity.eyebrow}
-            title={`${HOME_COPY.identity.title} ${HOME_COPY.identity.accent}`}
+            title={HOME_COPY.identity.title}
+            accent={HOME_COPY.identity.accent}
             description={HOME_COPY.identity.description}
-            className="max-w-4xl"
+            tone="dark"
+            size="lg"
+            className="max-w-5xl"
           />
-          <div className="mt-12 border-y border-[var(--app-border)]">
+
+          <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-12 lg:gap-3">
             {HOME_BELIEFS.map((belief, index) => (
-              <ScrollFadeIn key={belief.title} delay={index * 0.04}>
-                <article className="grid gap-6 border-b border-[var(--app-border)] py-8 last:border-b-0 md:grid-cols-[10rem_minmax(0,0.7fr)_minmax(0,1fr)] md:items-center md:gap-10">
-                  <EditorialImage
-                    src={belief.image}
-                    alt={belief.imageAlt}
-                    fill
-                    sizes="(max-width: 767px) 100vw, 10rem"
-                    className="aspect-[4/3] md:aspect-square"
-                    imageClassName={belief.imagePosition}
-                    unoptimized={belief.image === '/Picflow/DSC06902 copy.webp'}
-                  />
-                  <h3 className="font-headline text-heading-lg font-semibold">
-                    {belief.title}
-                  </h3>
-                  <p className="max-w-xl font-ui text-body-lg leading-loose text-[var(--app-ink)]/65">
-                    {belief.body}
-                  </p>
-                </article>
-              </ScrollFadeIn>
+              <article
+                key={belief.title}
+                tabIndex={0}
+                data-gsap="reveal"
+                aria-labelledby={`belief-${index}`}
+                className={`group relative isolate min-h-[22rem] overflow-hidden rounded-image bg-white/5 outline-none ring-[var(--app-primary)] transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-offset-[#0d0b0c] sm:min-h-0 ${belief.layoutClass} lg:h-[clamp(25rem,34vw,38rem)]`}
+              >
+                <Image
+                  src={belief.image}
+                  alt={belief.imageAlt}
+                  fill
+                  unoptimized={belief.image === '/Picflow/DSC06902 copy.webp'}
+                  quality={IMAGE_QUALITY}
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 58vw"
+                  className={`object-cover ${belief.imagePosition} transition-transform duration-700 ease-out motion-reduce:transition-none md:group-hover:scale-[1.035] md:group-focus:scale-[1.035]`}
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent opacity-100 transition-opacity duration-500 motion-reduce:transition-none md:opacity-0 md:group-hover:opacity-100 md:group-focus:opacity-100" />
+
+                <div className="absolute inset-x-0 bottom-0 p-6 opacity-100 transition-all duration-500 ease-out motion-reduce:transition-none sm:p-8 md:translate-y-5 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus:translate-y-0 md:group-focus:opacity-100 lg:p-10">
+                  <div>
+                    <h3
+                      id={`belief-${index}`}
+                      className="font-headline text-heading-lg font-semibold !text-white"
+                    >
+                      {belief.title}
+                    </h3>
+                    <p className="mt-3 max-w-md font-ui text-body-md leading-relaxed text-white/72">
+                      {belief.body}
+                    </p>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
         </EditorialContainer>
@@ -135,6 +159,7 @@ export default function PremiumHome() {
               <EditorialHeader
                 eyebrow={HOME_COPY.service.eyebrow}
                 title={HOME_COPY.service.title}
+                accent={HOME_COPY.service.accent}
               />
               <div className="mt-8 space-y-5 border-y border-[var(--app-border)] py-6 font-ui text-body-md">
                 <p className="flex items-center gap-4">
@@ -155,7 +180,7 @@ export default function PremiumHome() {
                   icon={false}
                   className={editorialActionClass.outline}
                 >
-                  Plan your first visit
+                  {HOME_COPY.actions.planFirstVisit}
                 </PlanVisitTrigger>
               </div>
             </div>
@@ -178,10 +203,11 @@ export default function PremiumHome() {
               <EditorialHeader
                 eyebrow={HOME_COPY.pastor.eyebrow}
                 title={HOME_COPY.pastor.title}
+                accent={HOME_COPY.pastor.accent}
                 description={HOME_COPY.pastor.description}
               />
               <EditorialLink href="/leadership" variant="dark" className="mt-8">
-                Meet our leadership
+                {HOME_COPY.actions.meetLeadership}
               </EditorialLink>
             </div>
           </EditorialSplit>
@@ -193,29 +219,32 @@ export default function PremiumHome() {
           <EditorialSplit reverse>
             <div className="grid grid-cols-2 gap-3">
               <EditorialImage
-                src="/Picflow/DSC00054 copy.webp"
-                alt="A mother and child at The Wisdom Church"
+                src={HOME_COMMUNITY_GALLERY[0].src}
+                alt={HOME_COMMUNITY_GALLERY[0].alt}
                 fill
-                unoptimized
+                unoptimized={HOME_COMMUNITY_GALLERY[0].unoptimized}
                 sizes="(max-width: 1023px) 50vw, 25vw"
                 className="aspect-[4/5]"
-                imageClassName="object-[center_32%]"
+                imageClassName={HOME_COMMUNITY_GALLERY[0].position}
               />
               <div className="grid gap-3 pt-10">
                 <EditorialImage
-                  src="/images/worship-service-community-generated-v3.png"
-                  alt="Worshippers sharing a service"
+                  src={HOME_COMMUNITY_GALLERY[1].src}
+                  alt={HOME_COMMUNITY_GALLERY[1].alt}
                   fill
+                  unoptimized={HOME_COMMUNITY_GALLERY[1].unoptimized}
                   sizes="(max-width: 1023px) 50vw, 25vw"
                   className="aspect-square"
+                  imageClassName={HOME_COMMUNITY_GALLERY[1].position}
                 />
                 <EditorialImage
-                  src="/Picflow/DSC00268 copy.webp"
-                  alt="A volunteer serving during worship"
+                  src={HOME_COMMUNITY_GALLERY[2].src}
+                  alt={HOME_COMMUNITY_GALLERY[2].alt}
                   fill
+                  unoptimized={HOME_COMMUNITY_GALLERY[2].unoptimized}
                   sizes="(max-width: 1023px) 50vw, 25vw"
                   className="aspect-square"
-                  imageClassName="object-[52%_center]"
+                  imageClassName={HOME_COMMUNITY_GALLERY[2].position}
                 />
               </div>
             </div>
@@ -223,10 +252,11 @@ export default function PremiumHome() {
               <EditorialHeader
                 eyebrow={HOME_COPY.community.eyebrow}
                 title={HOME_COPY.community.title}
+                accent={HOME_COPY.community.accent}
                 description={HOME_COPY.community.description}
               />
               <EditorialLink href="/contact" variant="dark" className="mt-8">
-                <Users className="mr-2 h-4 w-4" /> Connect with us
+                <Users className="mr-2 h-4 w-4" /> {HOME_COPY.actions.connect}
               </EditorialLink>
             </div>
           </EditorialSplit>

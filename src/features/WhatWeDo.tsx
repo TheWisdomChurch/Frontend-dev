@@ -11,7 +11,6 @@ import { Container, Section } from '@/shared/layout';
 
 const PILLARS = whatWeDoData.slice(0, 4).map((item, index) => ({
   ...item,
-  number: String(index + 1).padStart(2, '0'),
   headline:
     [
       'Believers, not just members.',
@@ -90,15 +89,8 @@ export default function WhatWeDo() {
                   delay: reduceMotion ? 0 : index * 0.06,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="group relative flex flex-col gap-7 py-10 md:grid md:min-h-[270px] md:grid-cols-12 md:items-center md:gap-6 md:border-b md:border-white/15 md:py-9"
+                className="group relative flex flex-col gap-7 py-10 md:grid md:min-h-[270px] md:grid-cols-11 md:items-center md:gap-6 md:border-b md:border-white/15 md:py-9"
               >
-                <div className="flex items-center justify-between md:col-span-1 md:block md:self-start md:pt-2">
-                  <span className="font-ui text-xs font-semibold tracking-[0.2em] text-white/35">
-                    {pillar.number}
-                  </span>
-                  <span className="h-px w-12 bg-[var(--app-primary)]/60 md:hidden" />
-                </div>
-
                 <div className="md:col-span-4">
                   <p className="mb-3 font-ui text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]/85">
                     {pillar.title}

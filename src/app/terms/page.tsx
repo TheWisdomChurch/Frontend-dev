@@ -13,25 +13,21 @@ export const metadata: Metadata = buildPageMetadata({
 const sections = [
   {
     id: 'acceptance',
-    number: '01',
     title: 'Acceptance of Terms',
     body: 'By accessing or using any part of the Services, you confirm that you have read, understood, and agree to be bound by these Terms. If you disagree, please do not use the Services.',
   },
   {
     id: 'eligibility',
-    number: '02',
     title: 'Eligibility & Account Responsibility',
     body: 'You must be legally able to enter into these Terms. If you create an account, you are responsible for all activity under that account and for safeguarding your credentials.',
   },
   {
     id: 'content',
-    number: '03',
     title: 'Use of Content',
     body: 'All content — text, graphics, audio, video, and downloads — is owned by The Wisdom Church or our licensors. You may use it only for personal, non-commercial purposes. Do not copy, modify, distribute, or create derivative works without written permission.',
   },
   {
     id: 'conduct',
-    number: '04',
     title: 'Community Conduct',
     list: [
       'Do not post unlawful, abusive, hateful, or misleading content.',
@@ -42,26 +38,22 @@ const sections = [
   },
   {
     id: 'forms',
-    number: '05',
     title: 'Forms, Registrations & Submissions',
     body: 'Provide accurate and complete information when submitting forms or event registrations. We use this information to manage registrations, send confirmations, and provide relevant updates.',
   },
   {
     id: 'payments',
-    number: '06',
     title: 'Donations, Payments & Refunds',
     body: 'Payments are final unless required otherwise by law. Refunds, if issued, are processed to the original payment method. For questions about a specific payment, reach us via the Contact page.',
     link: { href: '/contact', label: 'Contact page' },
   },
   {
     id: 'third-party',
-    number: '07',
     title: 'Third-Party Links',
     body: 'We may link to third-party sites for convenience. We do not control and are not responsible for their content or practices. Use third-party sites at your own risk.',
   },
   {
     id: 'privacy',
-    number: '08',
     title: 'Privacy & Cookies',
     body: 'Our data practices are described in our Privacy Policy and Cookies Policy. By using the Services, you consent to our collection and use of information as described there.',
     links: [
@@ -71,62 +63,52 @@ const sections = [
   },
   {
     id: 'communications',
-    number: '09',
     title: 'Communications',
     body: 'By providing your email or phone number, you agree to receive communications related to your requests, registrations, or the Services. You may opt out of promotional emails at any time.',
   },
   {
     id: 'disclaimers',
-    number: '10',
     title: 'Disclaimers',
     body: 'The Services are provided "as is" and "as available." We do not guarantee uninterrupted, error-free, or secure operation. To the fullest extent permitted by law, we disclaim all warranties, express or implied.',
   },
   {
     id: 'liability',
-    number: '11',
     title: 'Limitation of Liability',
     body: 'To the fullest extent permitted by law, The Wisdom Church will not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Services.',
   },
   {
     id: 'termination',
-    number: '12',
     title: 'Termination',
     body: 'We may suspend or terminate access to the Services at any time for conduct that violates these Terms or is otherwise harmful to the Services or our community.',
   },
   {
     id: 'ugc',
-    number: '13',
     title: 'User-Generated Content',
     body: 'If you submit content — including testimonies, comments, or media — you grant us a non-exclusive, worldwide, royalty-free licence to use, display, and distribute that content within the Services. You confirm you have the rights to submit it and that it does not violate laws or third-party rights.',
   },
   {
     id: 'accessibility',
-    number: '14',
     title: 'Accessibility',
     body: 'We are committed to providing an accessible experience. If you encounter difficulty using the Services, please contact us so we can provide a reasonable alternative.',
   },
   {
     id: 'copyright',
-    number: '15',
     title: 'Copyright & DMCA',
     body: 'We respect intellectual property rights. If you believe content on the Services infringes your copyright, notify us via the Contact page with sufficient detail to investigate and respond.',
     link: { href: '/contact', label: 'Contact page' },
   },
   {
     id: 'law',
-    number: '16',
     title: 'Governing Law',
     body: "These Terms are governed by the laws applicable to The Wisdom Church's primary place of operation, without regard to conflict-of-law principles. Disputes will be resolved in the courts of that jurisdiction unless otherwise required by law.",
   },
   {
     id: 'changes',
-    number: '17',
     title: 'Changes to These Terms',
     body: 'We may update these Terms from time to time. Continued use of the Services after changes are posted constitutes acceptance of the revised Terms.',
   },
   {
     id: 'contact',
-    number: '18',
     title: 'Contact',
     body: 'For questions about these Terms, contact us through the Contact page.',
     link: { href: '/contact', label: 'Contact page' },
@@ -176,9 +158,6 @@ export default function TermsPage(): JSX.Element {
                       href={`#${s.id}`}
                       className="group flex items-center gap-2.5 py-1 font-ui text-label text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
                     >
-                      <span className="text-eyebrow font-bold text-[var(--app-primary)]/50 group-hover:text-[var(--app-primary)]">
-                        {s.number}
-                      </span>
                       {s.title}
                     </a>
                   </li>
@@ -217,10 +196,7 @@ export default function TermsPage(): JSX.Element {
               key={section.id}
               className={`py-10 ${index < sections.length - 1 ? 'border-b border-[var(--app-ink)]/8' : ''}`}
             >
-              <div className="flex items-start gap-5">
-                <span className="mt-1 w-8 flex-none font-ui text-caption font-bold text-[var(--app-primary)]/60">
-                  {section.number}
-                </span>
+              <div>
                 <div className="min-w-0 flex-1">
                   <h2 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                     {section.title}

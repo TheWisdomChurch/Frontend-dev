@@ -7,12 +7,8 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container, Section } from '@/shared/layout';
-import { SectionHeading, HeadingAccent } from '@/shared/ui/SectionHeading';
-import {
-  staggerContainer,
-  staggerItem,
-  staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+import { EditorialHeader } from '@/shared/ui/editorial';
+import { staggerViewport } from '@/shared/ui/motion/staggerReveal';
 
 const slides = [
   {
@@ -55,36 +51,17 @@ export default function Conversations() {
     <Section
       padding="none"
       fullHeight={false}
-      className="overflow-hidden bg-[#090909] text-white"
+      className="overflow-hidden bg-[var(--app-canvas)] text-[var(--app-ink)]"
     >
-      <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
+      <Container size="xl" className="py-section-md">
         <div className="grid items-center gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
+          <EditorialHeader
+            eyebrow="Conversations"
+            title="Real people. Real faith."
+            accent="Real stories."
+            description="Honest conversations about life, faith and becoming — shared by people walking the journey together."
             className="max-w-lg"
-          >
-            <motion.p
-              variants={staggerItem}
-              className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
-            >
-              Conversations
-            </motion.p>
-            <SectionHeading tone="light" className="mt-5">
-              Real people.
-              <HeadingAccent>Real faith.</HeadingAccent>
-              Real stories.
-            </SectionHeading>
-            <motion.p
-              variants={staggerItem}
-              className="mt-6 max-w-md font-ui text-base leading-7 text-white/58"
-            >
-              Honest conversations about life, faith and becoming — shared by
-              people walking the journey together.
-            </motion.p>
-          </motion.div>
+          />
 
           <motion.div
             initial={{ opacity: 0, y: 22 }}
@@ -97,8 +74,8 @@ export default function Conversations() {
                 to just the image) so it can't stretch to cover the nav
                 buttons below it on large screens. */}
             <div className="relative lg:pb-7 lg:pr-7">
-              <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-white/8 bg-white/[0.035] lg:block" />
-              <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-white/10 bg-[#151515] lg:block" />
+              <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-[var(--app-ink)]/8 bg-[var(--app-surface)] lg:block" />
+              <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] lg:block" />
 
               <div className="relative h-[300px] overflow-hidden bg-[#181818] sm:h-[390px] lg:h-[450px]">
                 <AnimatePresence initial={false} mode="popLayout">
@@ -131,11 +108,6 @@ export default function Conversations() {
                   </motion.div>
                 </AnimatePresence>
 
-                <span className="absolute bottom-3 right-3 z-10 rounded-full bg-black/55 px-2.5 py-1 font-ui text-xs tabular-nums text-white/85 backdrop-blur-sm">
-                  {String(active + 1).padStart(2, '0')} /{' '}
-                  {String(slides.length).padStart(2, '0')}
-                </span>
-
                 <div className="absolute bottom-0 left-0 z-10 h-1 w-full bg-white/15">
                   <motion.span
                     className="block h-full origin-left bg-[var(--app-primary)]"
@@ -151,7 +123,7 @@ export default function Conversations() {
                 type="button"
                 onClick={() => move(-1)}
                 aria-label="Previous conversation image"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/18 text-white transition duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--app-ink)]/18 text-[var(--app-ink)] transition duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)]"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>

@@ -36,7 +36,7 @@ export function SectionHeading({
     <motion.h2
       variants={staggerItem}
       className={cn(
-        'font-sans font-black uppercase leading-[0.97] tracking-[-0.03em] transition-colors duration-300',
+        'text-balance font-headline font-semibold leading-[1.02] tracking-[-0.025em] transition-colors duration-300',
         SIZE_CLASS[size],
         tone === 'light' ? 'text-white' : 'text-[var(--app-ink)]',
         className

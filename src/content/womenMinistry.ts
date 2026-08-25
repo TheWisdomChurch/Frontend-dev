@@ -23,17 +23,14 @@ export const WOMEN_MINISTRY_CONTENT = {
   },
   focus: [
     {
-      number: '01',
       title: 'Grow',
       body: 'Deepen faith and build the spiritual foundation to thrive in every season.',
     },
     {
-      number: '02',
       title: 'Lead',
       body: 'Develop wisdom, courage, and capacity to lead wherever God has placed you.',
     },
     {
-      number: '03',
       title: 'Flourish',
       body: 'Live fully in your calling with the strength of mentorship and genuine sisterhood.',
     },

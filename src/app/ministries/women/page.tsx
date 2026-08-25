@@ -3,11 +3,11 @@ import { ArrowRight } from 'lucide-react';
 
 import { WOMEN_MINISTRY_CONTENT as content } from '@/content/womenMinistry';
 import WomenConferenceGallery from '@/features/ministries/WomenConferenceGallery';
+import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
 import {
   EditorialContainer,
   EditorialHeader,
-  EditorialImage,
   EditorialLink,
   EditorialSection,
   EditorialSplit,
@@ -23,38 +23,18 @@ export const metadata: Metadata = buildPageMetadata({
 export default function WomenMinistryPage() {
   return (
     <main className="min-h-screen bg-[var(--app-surface)]">
-      <EditorialSection
-        tone="canvas"
-        className="pt-[calc(var(--app-header-height)+var(--section-xs))]"
-      >
-        <EditorialContainer>
-          <EditorialSplit reverse>
-            <EditorialImage
-              src={content.hero.image}
-              alt="Women in conversation at The Wisdom Church"
-              fill
-              priority
-              sizes="(max-width: 1023px) 100vw, 50vw"
-              className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5]"
-              imageClassName="object-center"
-            />
-            <ScrollFadeIn>
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
-                {content.hero.eyebrow}
-              </p>
-              <h1 className="mt-5 text-balance font-headline text-display-md font-semibold leading-none tracking-tight sm:text-display-lg">
-                {content.hero.title}
-              </h1>
-              <p className="mt-7 max-w-xl font-ui text-lead leading-relaxed text-[var(--app-ink)]/70">
-                {content.hero.description}
-              </p>
-              <EditorialLink href="/contact" variant="dark" className="mt-9">
-                Join the community <ArrowRight className="ml-2 h-4 w-4" />
-              </EditorialLink>
-            </ScrollFadeIn>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+      <SiteHero
+        eyebrow={content.hero.eyebrow}
+        title={content.hero.title}
+        subtitle={content.hero.description}
+        backgroundImage={content.hero.image}
+        priority
+        actions={
+          <EditorialLink href="/contact">
+            Join the community <ArrowRight className="ml-2 h-4 w-4" />
+          </EditorialLink>
+        }
+      />
 
       <EditorialSection>
         <EditorialContainer>
@@ -100,10 +80,7 @@ export default function WomenMinistryPage() {
           <div className="mt-12 border-y border-[var(--app-border)]">
             {content.focus.map((item, index) => (
               <ScrollFadeIn key={item.title} delay={index * 0.05}>
-                <article className="grid gap-4 border-b border-[var(--app-border)] py-8 last:border-b-0 sm:grid-cols-[auto_minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10">
-                  <span className="font-ui text-label font-bold text-[var(--app-primary-dark)]">
-                    {item.number}
-                  </span>
+                <article className="grid gap-4 border-b border-[var(--app-border)] py-8 last:border-b-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10">
                   <h3 className="font-headline text-heading-lg font-semibold">
                     {item.title}
                   </h3>

@@ -1,7 +1,7 @@
 // Single source of truth for contact details and social links — this exact
 // information was previously hardcoded independently across 10+ files
 // (Header, Footer, root layout's JSON-LD, Contact page, SeniorPastor,
-// ConnectPortal, resources pages, Sermons, HeroMain, lib/data.ts), with
+// ConnectPortal, resources pages, Sermons, SiteHero, lib/data.ts), with
 // inconsistent formatting (e.g. some used facebook.com, others
 // www.facebook.com — same account, different strings).
 export const CONTACT_INFO = {

@@ -38,7 +38,7 @@ export default function SiteHero({
   backgroundImage = lader,
   imagePositionClassName,
   size = 'page',
-  align = 'left',
+  align = 'center',
   priority = false,
 }: SiteHeroProps) {
   const supportingCopy = subtitle ?? description ?? note;
@@ -58,12 +58,13 @@ export default function SiteHero({
           imagePositionClassName
         )}
       />
-      <div className="absolute inset-0 -z-10 bg-black/60" />
+      <div className="absolute inset-0 -z-10 bg-black/65" />
 
       <Container size="xl">
         <div
+          data-gsap="reveal"
           className={cn(
-            'flex flex-col justify-center pt-[calc(var(--app-header-height)+var(--section-xs))]',
+            'flex w-full min-w-0 flex-col justify-center pt-[calc(var(--app-header-height)+var(--section-xs))]',
             isHome
               ? 'min-h-[88svh] pb-section-sm sm:min-h-screen'
               : 'min-h-[26rem] pb-section-xs sm:min-h-[30rem]',
@@ -79,7 +80,7 @@ export default function SiteHero({
           ) : null}
           <h1
             className={cn(
-              'mt-5 text-balance font-headline font-semibold leading-none tracking-tight',
+              'mt-5 w-full max-w-full text-balance font-headline font-semibold leading-none tracking-tight !text-white',
               isHome
                 ? 'text-display-md sm:text-display-lg lg:text-display-xl'
                 : 'text-display-sm sm:text-display-md'
@@ -88,7 +89,7 @@ export default function SiteHero({
             {title}
           </h1>
           {supportingCopy ? (
-            <p className="mt-6 max-w-2xl font-ui text-lead leading-relaxed text-white/75">
+            <p className="mt-6 w-full max-w-2xl font-ui text-lead leading-relaxed text-white/75">
               {supportingCopy}
             </p>
           ) : null}
@@ -115,7 +116,7 @@ export default function SiteHero({
             </div>
           ) : null}
           {actions ? (
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
               {actions}
             </div>
           ) : null}

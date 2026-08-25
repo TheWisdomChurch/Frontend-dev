@@ -5,6 +5,7 @@ import { apiClient } from '@/lib/api';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import { resolveAboutContent } from '@/content/about';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
+import SiteHero from '@/features/hero/SiteHero';
 import { CanvasCard, DarkCard } from '@/features/leadership/LeadershipCards';
 import type {
   LeadershipMember,
@@ -16,7 +17,6 @@ import JsonLd from '@/shared/seo/JsonLd';
 import {
   EditorialContainer,
   EditorialHeader,
-  EditorialImage,
   EditorialLink,
   EditorialSection,
   EditorialSplit,
@@ -77,61 +77,28 @@ export default async function AboutPage() {
         ])}
       />
 
-      <EditorialSection
-        tone="dark"
-        className="pt-[calc(var(--app-header-height)+var(--section-xs))]"
-      >
-        <EditorialContainer>
-          <EditorialSplit className="items-end">
-            <ScrollFadeIn>
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                {content.hero.eyebrow}
-              </p>
-              <h1 className="mt-5 max-w-3xl text-balance font-headline text-display-md font-semibold leading-none tracking-tight sm:text-display-lg">
-                {content.hero.title}
-              </h1>
-              <p className="mt-7 max-w-2xl font-ui text-lead leading-relaxed text-white/70">
-                {content.hero.description}
-              </p>
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)]">
-                  Worship with us
-                </PlanVisitTrigger>
-                <a
-                  href={SOCIAL_LINKS.youtube}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button border border-white/20 px-7 font-ui text-label font-bold uppercase tracking-widest text-white"
-                >
-                  <Play className="h-4 w-4" /> Watch a service
-                </a>
-              </div>
-            </ScrollFadeIn>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <EditorialImage
-                src={content.hero.images[0].src}
-                alt={content.hero.images[0].alt}
-                fill
-                priority
-                sizes="(max-width: 1023px) 50vw, 25vw"
-                className="aspect-[4/5]"
-              />
-              <div className="grid gap-3 pt-10 sm:gap-4 sm:pt-16">
-                {content.hero.images.slice(1).map(image => (
-                  <EditorialImage
-                    key={image.src}
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    sizes="(max-width: 1023px) 50vw, 25vw"
-                    className="aspect-[4/3]"
-                  />
-                ))}
-              </div>
-            </div>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+      <SiteHero
+        eyebrow={content.hero.eyebrow}
+        title={content.hero.title}
+        subtitle={content.hero.description}
+        backgroundImage={content.hero.images[0].src}
+        priority
+        actions={
+          <>
+            <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)]">
+              Worship with us
+            </PlanVisitTrigger>
+            <a
+              href={SOCIAL_LINKS.youtube}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button border border-white/20 px-7 font-ui text-label font-bold uppercase tracking-widest text-white"
+            >
+              <Play className="h-4 w-4" /> Watch a service
+            </a>
+          </>
+        }
+      />
 
       <EditorialSection compact tone="canvas">
         <EditorialContainer>
@@ -214,10 +181,7 @@ export default async function AboutPage() {
           <div className="mt-12 border-y border-white/15">
             {content.pillars.map((pillar, index) => (
               <ScrollFadeIn key={pillar.title} delay={index * 0.04}>
-                <article className="grid gap-4 border-b border-white/15 py-8 last:border-b-0 sm:grid-cols-[auto_minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10 lg:py-10">
-                  <span className="font-ui text-label font-bold text-[var(--app-primary)]">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
+                <article className="grid gap-4 border-b border-white/15 py-8 last:border-b-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10 lg:py-10">
                   <h3 className="font-headline text-heading-lg font-semibold">
                     {pillar.title}
                   </h3>

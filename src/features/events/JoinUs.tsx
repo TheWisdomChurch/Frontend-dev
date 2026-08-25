@@ -26,6 +26,7 @@ import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableConte
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { BodySM, Caption } from '@/shared/text';
 import SectionGlow from '@/shared/ui/SectionGlow';
+import { EditorialHeader } from '@/shared/ui/editorial';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import { isValidNationalPhone, PHONE_COUNTRIES } from '@/lib/validation/phone';
@@ -376,18 +377,14 @@ export default function JoinWisdomHouse() {
 
         <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Join the workforce
-              </p>
-              <h2 className="font-headline text-display-md font-normal text-white">
-                Serve with excellence.
-              </h2>
-              <p className="mt-3 max-w-[460px] font-ui text-body-md leading-[1.8] text-white/62">
-                Use your gifts to build the church. Every team here has a role
-                and a seat — find yours.
-              </p>
-            </div>
+            <EditorialHeader
+              eyebrow="Join the workforce"
+              title="Serve with"
+              accent="excellence."
+              description="Use your gifts to build the church. Every team here has a role and a seat — find yours."
+              tone="dark"
+              className="max-w-2xl"
+            />
 
             {submitted && (
               <div className="inline-flex items-center gap-2 font-ui text-body-sm font-semibold text-[var(--app-primary)]">
@@ -422,17 +419,13 @@ export default function JoinWisdomHouse() {
       {/* ── Department index ──────────────────────────────────── */}
       <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
         <div className="mb-8 grid gap-5 border-b border-white/10 pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
-          <div>
-            <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-              Serve at Wisdom Church
-            </p>
-            <h3 className="mt-3 max-w-2xl font-sans text-display-md font-black uppercase leading-[0.94] tracking-[-0.04em] text-white">
-              Bring your gift.
-              <span className="block text-[var(--app-primary)]">
-                Build with us.
-              </span>
-            </h3>
-          </div>
+          <EditorialHeader
+            eyebrow="Serve at Wisdom Church"
+            title="Bring your gift."
+            accent="Build with us."
+            tone="dark"
+            size="sm"
+          />
           <p className="max-w-sm font-ui text-sm leading-6 text-white/45 sm:text-right">
             Whatever your experience, there is room to grow, contribute and
             serve alongside others.
@@ -490,7 +483,7 @@ export default function JoinWisdomHouse() {
           <button
             type="button"
             onClick={openGeneric}
-            className="group inline-flex h-11 items-center gap-2 border border-white/18 bg-transparent px-6 font-ui text-label font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
+            className="group inline-flex h-11 items-center gap-2 rounded-button border border-white/18 bg-transparent px-6 font-ui text-label font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
           >
             Not sure which team? Apply anyway
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />

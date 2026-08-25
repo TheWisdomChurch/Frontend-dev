@@ -12,7 +12,6 @@ export const metadata: Metadata = buildPageMetadata({
 const sections = [
   {
     id: 'collect',
-    number: '01',
     title: 'Information we collect',
     items: [
       'Name and contact details you submit through forms — contact, prayer, pastoral care, or event registration.',
@@ -24,7 +23,6 @@ const sections = [
   },
   {
     id: 'use',
-    number: '02',
     title: 'How we use your information',
     items: [
       'To respond to your contact, prayer, or pastoral care request.',
@@ -36,7 +34,6 @@ const sections = [
   },
   {
     id: 'protect',
-    number: '03',
     title: 'Data protection',
     items: [
       'All form submissions are transmitted over HTTPS — your data is encrypted in transit.',
@@ -47,14 +44,12 @@ const sections = [
   },
   {
     id: 'cookies',
-    number: '04',
     title: 'Cookies',
     body: 'We use a minimal set of cookies — session tokens, CSRF protection, and basic preference storage. We do not use advertising cookies or social media tracking pixels. For a full breakdown, see our Cookies & Privacy page.',
     link: { href: '/cookies', label: 'Cookies & Privacy page' },
   },
   {
     id: 'rights',
-    number: '05',
     title: 'Your rights',
     items: [
       'Access — you may request a copy of the personal data we hold about you.',
@@ -66,7 +61,6 @@ const sections = [
   },
   {
     id: 'updates',
-    number: '06',
     title: 'Changes to this policy',
     body: 'We may update this Privacy Policy from time to time. When we do, the "Last updated" date at the top of this page will change. Continued use of the site after changes are posted constitutes acceptance of the revised policy.',
   },
@@ -115,9 +109,6 @@ export default function PrivacyPage() {
                       href={`#${s.id}`}
                       className="group flex items-center gap-2.5 py-1 font-ui text-label text-[var(--app-ink)]/45 transition hover:text-[var(--app-primary)]"
                     >
-                      <span className="text-eyebrow font-bold text-[var(--app-primary)]/50 group-hover:text-[var(--app-primary)]">
-                        {s.number}
-                      </span>
                       {s.title}
                     </a>
                   </li>
@@ -156,10 +147,7 @@ export default function PrivacyPage() {
               key={section.id}
               className={`py-10 ${index < sections.length - 1 ? 'border-b border-[var(--app-ink)]/8' : ''}`}
             >
-              <div className="flex items-start gap-5">
-                <span className="mt-1 w-8 flex-none font-ui text-caption font-bold text-[var(--app-primary)]/60">
-                  {section.number}
-                </span>
+              <div>
                 <div className="min-w-0 flex-1">
                   <h2 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
                     {section.title}

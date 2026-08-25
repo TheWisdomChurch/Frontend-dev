@@ -69,17 +69,14 @@ const ministries = [
 
 const pathway = [
   {
-    number: '01',
     title: 'Discover',
     body: 'Explore each ministry and find the community that fits your season of life.',
   },
   {
-    number: '02',
     title: 'Meet the team',
     body: 'Tell our welcome team where you would like to connect. A real person will help you take the next step.',
   },
   {
-    number: '03',
     title: 'Grow and serve',
     body: 'Build relationships, grow through discipleship, and use your gifts in the life of the church.',
   },
@@ -226,12 +223,9 @@ export default function MinistriesPage() {
           </ScrollFadeIn>
           <div className="mt-10 grid border-y border-[var(--app-ink)]/10 md:grid-cols-3 md:divide-x md:divide-[var(--app-ink)]/10">
             {pathway.map((step, index) => (
-              <ScrollFadeIn key={step.number} delay={index * 0.08}>
+              <ScrollFadeIn key={step.title} delay={index * 0.08}>
                 <article className="border-b border-[var(--app-ink)]/10 py-8 last:border-b-0 md:min-h-[270px] md:border-b-0 md:px-8 lg:px-10 lg:py-10">
-                  <span className="font-ui text-label font-bold tracking-[0.14em] text-[var(--app-primary)]">
-                    {step.number}
-                  </span>
-                  <h3 className="mt-8 font-headline text-heading-md font-normal text-[var(--app-ink)]">
+                  <h3 className="font-headline text-heading-md font-normal text-[var(--app-ink)]">
                     {step.title}
                   </h3>
                   <p className="mt-4 font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/68">

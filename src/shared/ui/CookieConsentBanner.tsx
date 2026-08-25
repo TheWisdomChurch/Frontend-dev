@@ -188,7 +188,7 @@ export default function CookieConsentBanner() {
         <div className="h-[2px] w-full bg-[var(--app-primary)]/40" />
 
         <div className="border-t border-white/8 bg-[rgba(7,6,10,0.97)] backdrop-blur-xl">
-          <div className="mx-auto flex max-w-screen-xl flex-col gap-5 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-6 lg:px-8 lg:py-6">
+          <div className="mx-auto flex max-w-screen-xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-6 lg:px-8 lg:py-5">
             {/* Left — icon + text */}
             <div className="flex min-w-0 items-start gap-3 sm:items-center">
               <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-[var(--app-primary)]/12 sm:mt-0">
@@ -212,11 +212,11 @@ export default function CookieConsentBanner() {
             </div>
 
             {/* Right — actions */}
-            <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
+            <div className="grid w-full grid-cols-3 items-center gap-2 sm:flex sm:w-auto sm:flex-nowrap sm:gap-3">
               <button
                 type="button"
                 onClick={() => setSettingsOpen(true)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/12 px-3.5 font-ui text-label font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
+                className="inline-flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-button border border-white/12 px-2 font-ui text-caption font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90 sm:px-3.5 sm:text-label"
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Manage
@@ -225,7 +225,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => apply({ analytics: false, marketing: false })}
-                className="inline-flex h-9 items-center rounded-lg border border-white/12 px-3.5 font-ui text-label font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90"
+                className="inline-flex h-9 min-w-0 items-center justify-center rounded-button border border-white/12 px-2 font-ui text-caption font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90 sm:px-3.5 sm:text-label"
               >
                 Essential only
               </button>
@@ -233,7 +233,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => apply({ analytics: true, marketing: true })}
-                className="inline-flex h-9 items-center rounded-lg bg-[var(--app-primary)] px-4 font-ui text-label font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)]"
+                className="inline-flex h-9 min-w-0 items-center justify-center rounded-button bg-[var(--app-primary)] px-2 font-ui text-caption font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] sm:px-4 sm:text-label"
               >
                 Accept all
               </button>

@@ -224,10 +224,6 @@ export default function ResourcesPage() {
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <Caption className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-white/38">
-                          {String(index + 1).padStart(2, '0')}
-                        </Caption>
-
                         <H3 className="text-base font-semibold leading-tight text-white">
                           {item.title}
                         </H3>

@@ -143,7 +143,7 @@ export default function Footer() {
         }}
       />
 
-      <Container size="xl" className="py-20 sm:py-24 lg:py-28">
+      <Container size="xl" className="py-section-md">
         {/* Brand + link columns share one grid so column count always
             divides evenly (1 → 3 → 4), instead of a leftover half-empty
             column at tablet widths. */}
@@ -167,10 +167,10 @@ export default function Footer() {
                 />
               </span>
               <div className="flex flex-col leading-none">
-                <span className="font-ui text-eyebrow uppercase tracking-[0.25em] text-white/45">
+                <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.25em] text-[var(--app-primary)]">
                   The
                 </span>
-                <span className="font-ui text-body-sm font-bold uppercase tracking-[0.18em] text-white">
+                <span className="font-headline text-heading-sm font-semibold leading-none text-white">
                   Wisdom Church
                 </span>
               </div>
@@ -235,7 +235,7 @@ export default function Footer() {
               </p>
               <div
                 className={cn(
-                  'flex items-center gap-1 rounded-full border bg-white/[0.04] py-1 pl-4 pr-1 transition',
+                  'flex items-center gap-1 rounded-input border bg-white/[0.04] py-1 pl-4 pr-1 transition',
                   subState === 'err'
                     ? 'border-red-400/40'
                     : 'border-[color-mix(in_srgb,white_12%,transparent)] focus-within:border-[var(--app-primary)]/50 focus-within:bg-white/[0.06]'
@@ -255,7 +255,7 @@ export default function Footer() {
                   type="submit"
                   disabled={subState === 'loading'}
                   aria-label="Subscribe"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary)] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
                 >
                   {subState === 'loading' ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
