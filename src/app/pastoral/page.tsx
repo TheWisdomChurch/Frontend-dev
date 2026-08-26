@@ -6,6 +6,7 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialLink,
   EditorialSection,
@@ -17,7 +18,7 @@ import {
 
 export default function PastoralPage() {
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -74,6 +75,6 @@ export default function PastoralPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

@@ -30,6 +30,7 @@ import {
   EditorialEmptyState,
   EditorialHeader,
   EditorialPanel,
+  EditorialPage,
   EditorialSection,
   editorialFieldClass,
 } from '@/shared/ui/editorial';
@@ -148,7 +149,7 @@ export default function ResourcesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--app-dark)] text-white">
+    <EditorialPage tone="dark">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -384,7 +385,7 @@ export default function ResourcesPage() {
             onClick={() =>
               window.open(SOCIAL_LINKS.youtube, '_blank', 'noopener,noreferrer')
             }
-            className="h-12 w-full gap-2 rounded-radius-sm bg-[#CC0000] text-sm font-bold text-white hover:scale-[1.01] hover:bg-[#AA0000]"
+            className="h-12 w-full gap-2 rounded-button bg-[var(--app-youtube)] text-sm font-bold text-white hover:scale-[1.01] hover:bg-[var(--app-youtube-hover)]"
           >
             <Video className="h-4 w-4" />
             Subscribe on YouTube
@@ -418,6 +419,6 @@ export default function ResourcesPage() {
           </Caption>
         </div>
       </BaseModal>
-    </div>
+    </EditorialPage>
   );
 }

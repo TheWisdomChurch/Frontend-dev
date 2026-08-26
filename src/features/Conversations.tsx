@@ -76,7 +76,7 @@ export default function Conversations() {
               <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-[var(--app-ink)]/8 bg-[var(--app-surface)] lg:block" />
               <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] lg:block" />
 
-              <div className="relative h-[300px] overflow-hidden bg-[#181818] sm:h-[390px] lg:h-[450px]">
+              <div className="relative h-[300px] overflow-hidden bg-[var(--app-dark-3)] sm:h-[390px] lg:h-[450px]">
                 <AnimatePresence initial={false} mode="popLayout">
                   <motion.div
                     key={slides[active].src}

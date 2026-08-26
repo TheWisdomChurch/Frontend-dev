@@ -97,10 +97,7 @@ export default function SiteHero({
           imagePositionClassName
         )}
       />
-      <div
-        data-hero-overlay
-        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(0,0,0,.58)_0%,rgba(0,0,0,.48)_38%,rgba(0,0,0,.78)_100%)]"
-      />
+      <div data-hero-overlay className="absolute inset-0 -z-10 bg-black/60" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/30 to-transparent" />
 
       <Container size="xl">

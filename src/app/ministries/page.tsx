@@ -9,6 +9,7 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialSection,
   editorialActionClass,
@@ -86,7 +87,7 @@ const pathway = [
 
 export default function MinistriesPage() {
   return (
-    <main className="min-h-screen overflow-hidden">
+    <EditorialPage className="overflow-hidden">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -255,6 +256,6 @@ export default function MinistriesPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

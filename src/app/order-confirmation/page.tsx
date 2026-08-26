@@ -23,6 +23,7 @@ import {
   EditorialContainer,
   EditorialHeader,
   EditorialPanel,
+  EditorialPage,
   EditorialSection,
   editorialActionClass,
 } from '@/shared/ui/editorial';
@@ -62,7 +63,7 @@ function SimpleConfirmation() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--app-dark)] text-white">
+    <EditorialPage tone="dark">
       <SiteHero
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
@@ -178,7 +179,7 @@ function SimpleConfirmation() {
           </EditorialPanel>
         </EditorialContainer>
       </EditorialSection>
-    </div>
+    </EditorialPage>
   );
 }
 

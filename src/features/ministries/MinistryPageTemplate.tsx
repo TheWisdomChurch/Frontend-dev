@@ -7,6 +7,7 @@ import Arrow from '@/shared/ui/icons/Arrow';
 import { cn } from '@/lib/cn';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialSection,
   editorialActionClass,
 } from '@/shared/ui/editorial';
@@ -92,7 +93,7 @@ export default function MinistryPageTemplate({
   const { hero, conference, mission, activities, extra, values, cta } = config;
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       {/* ── Hero ─────────────────────────────────────────────── */}
       <SiteHero
         eyebrow={hero.eyebrow}
@@ -322,6 +323,6 @@ export default function MinistryPageTemplate({
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

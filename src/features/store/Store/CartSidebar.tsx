@@ -144,7 +144,7 @@ const CartSidebar = () => {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveItem(item.id)}
-                      className="rounded-full text-red-500 hover:bg-red-500/10"
+                      className="rounded-full text-[var(--status-error)] hover:bg-[var(--status-error)]/10"
                       aria-label="Remove item"
                     >
                       <Trash2 className="h-4 w-4" />

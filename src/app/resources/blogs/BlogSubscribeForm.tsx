@@ -58,7 +58,7 @@ export function BlogSubscribeForm() {
         {status === 'loading' ? 'Notifying…' : 'Notify me'}
       </button>
       {status === 'error' && (
-        <p className="w-full font-ui text-label text-red-400">
+        <p className="w-full font-ui text-label text-[var(--status-error)]">
           Something went wrong. Try again or join via WhatsApp.
         </p>
       )}

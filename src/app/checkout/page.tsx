@@ -13,6 +13,7 @@ import {
   EditorialContainer,
   EditorialEmptyState,
   EditorialHeader,
+  EditorialPage,
   EditorialPanel,
   EditorialSection,
 } from '@/shared/ui/editorial';
@@ -31,7 +32,7 @@ function CheckoutPageContent() {
 
   if (items.length === 0) {
     return (
-      <main className="min-h-screen bg-[var(--app-dark)] text-white">
+      <EditorialPage tone="dark">
         <SiteHero
           title="Checkout"
           subtitle="Complete your order securely."
@@ -58,12 +59,12 @@ function CheckoutPageContent() {
             />
           </EditorialContainer>
         </EditorialSection>
-      </main>
+      </EditorialPage>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[var(--app-dark)] text-white">
+    <EditorialPage tone="dark">
       <SiteHero
         title="Checkout"
         subtitle="Complete your order securely."
@@ -89,7 +90,7 @@ function CheckoutPageContent() {
           </EditorialPanel>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }
 

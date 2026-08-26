@@ -16,6 +16,7 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialImage,
   EditorialLink,
@@ -26,7 +27,7 @@ import {
 
 export default function PremiumHome() {
   return (
-    <main className="bg-[var(--app-surface)] text-[var(--app-ink)]">
+    <EditorialPage tone="surface">
       <SiteHero
         size="home"
         align="center"
@@ -94,7 +95,7 @@ export default function PremiumHome() {
         </EditorialContainer>
       </EditorialSection>
 
-      <EditorialSection tone="dark" className="bg-[#0d0b0c]">
+      <EditorialSection tone="dark" className="bg-[var(--app-dark-2)]">
         <EditorialContainer>
           <EditorialHeader
             eyebrow={HOME_COPY.identity.eyebrow}
@@ -113,7 +114,7 @@ export default function PremiumHome() {
                 tabIndex={0}
                 data-gsap="reveal"
                 aria-labelledby={`belief-${index}`}
-                className={`group relative isolate min-h-[22rem] overflow-hidden rounded-image bg-white/5 outline-none ring-[var(--app-primary)] transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-offset-[#0d0b0c] sm:min-h-0 ${belief.layoutClass} lg:h-[clamp(25rem,34vw,38rem)]`}
+                className={`group relative isolate min-h-[22rem] overflow-hidden rounded-image bg-white/5 outline-none ring-[var(--app-primary)] transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-dark-2)] sm:min-h-0 ${belief.layoutClass} lg:h-[clamp(25rem,34vw,38rem)]`}
               >
                 <div
                   data-parallax-global={belief.parallaxDepth}
@@ -272,6 +273,6 @@ export default function PremiumHome() {
           </EditorialSplit>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

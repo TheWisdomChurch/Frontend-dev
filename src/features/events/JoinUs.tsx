@@ -228,7 +228,11 @@ const mSelect =
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return <p className="mt-1.5 font-ui text-label text-rose-300">{message}</p>;
+  return (
+    <p className="mt-1.5 font-ui text-label text-[var(--status-error)]">
+      {message}
+    </p>
+  );
 }
 
 const defaultValues: ModalValues = {
@@ -368,7 +372,6 @@ export default function JoinWorkforce() {
       <div className="relative overflow-hidden border-b border-white/8">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_25%,rgba(201,150,26,0.18),transparent_55%)]" />
         </div>
 
         <EditorialContainer className="relative py-12 sm:py-14 lg:py-[4.5rem]">
@@ -444,10 +447,10 @@ export default function JoinWorkforce() {
                 onClick={() => openFor(dept)}
                 whileTap={{ scale: 0.985 }}
                 transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                className={`group relative flex min-h-[176px] flex-col justify-between overflow-hidden bg-[#0d0d0d] p-4 text-left transition-colors duration-300 hover:bg-[#16130d] sm:min-h-[220px] sm:p-6 lg:min-h-[245px] ${departmentSpanPattern[index % departmentSpanPattern.length]}`}
+                className={`group relative flex min-h-[176px] flex-col justify-between overflow-hidden bg-[var(--app-dark-2)] p-4 text-left transition-colors duration-300 hover:bg-[var(--app-dark-3)] sm:min-h-[220px] sm:p-6 lg:min-h-[245px] ${departmentSpanPattern[index % departmentSpanPattern.length]}`}
               >
                 <span
-                  className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_35%,rgba(201,150,26,0.13))] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  className="pointer-events-none absolute inset-0 bg-[var(--app-primary-10)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   aria-hidden="true"
                 />
                 <div className="relative flex items-start justify-between gap-4">

@@ -15,6 +15,7 @@ import {
 } from '@/features/leadership/LeadershipCards';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialEmptyState,
   EditorialHeader,
   EditorialLink,
@@ -51,7 +52,7 @@ export default async function LeadershipPage() {
   const board = leaders.filter(l => BOARD_ROLES.includes(l.role));
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -193,6 +194,6 @@ export default async function LeadershipPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

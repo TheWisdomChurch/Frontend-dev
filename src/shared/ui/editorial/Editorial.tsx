@@ -10,23 +10,14 @@ import { forwardRef } from 'react';
 import { cn } from '@/lib/cn';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container } from '@/shared/layout';
-
-type Tone = 'surface' | 'canvas' | 'muted' | 'dark' | 'brand';
-type Width = 'narrow' | 'content' | 'wide';
-
-const toneClasses: Record<Tone, string> = {
-  surface: 'bg-[var(--app-surface)] text-[var(--app-ink)]',
-  canvas: 'bg-[var(--app-canvas)] text-[var(--app-ink)]',
-  muted: 'bg-[var(--app-canvas-2)] text-[var(--app-ink)]',
-  dark: 'bg-[var(--app-dark)] text-white',
-  brand: 'bg-[var(--app-primary)] text-[var(--app-ink)]',
-};
-
-const widthClasses: Record<Width, string> = {
-  narrow: 'max-w-3xl',
-  content: 'max-w-5xl',
-  wide: 'max-w-7xl',
-};
+import {
+  editorialActionClass,
+  editorialLabelClass,
+  editorialToneClass,
+  editorialWidthClass,
+  type EditorialTone,
+  type EditorialWidth,
+} from './recipes';
 
 export function EditorialPage({
   children,
@@ -34,34 +25,49 @@ export function EditorialPage({
   className,
 }: {
   children: ReactNode;
-  tone?: Tone;
+  tone?: EditorialTone;
   className?: string;
 }) {
   return (
-    <main className={cn('min-h-screen', toneClasses[tone], className)}>
+    <main className={cn('min-h-screen', editorialToneClass[tone], className)}>
       {children}
     </main>
   );
 }
 
-export const editorialActionClass = {
-  primary:
-    'inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)] transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)]',
-  dark: 'inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-dark)] px-7 font-ui text-label font-bold uppercase tracking-widest text-white transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-dark)]',
-  outline:
-    'inline-flex min-h-12 items-center justify-center rounded-button border border-current/35 bg-transparent px-7 font-ui text-label font-bold uppercase tracking-widest text-current transition hover:-translate-y-0.5 hover:border-current/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-} as const;
-
-export const editorialFieldClass =
-  'w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-subtle)] outline-none transition focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[var(--app-primary)]/15';
-
-export const editorialLabelClass =
-  'block font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-subtle)]';
+export function EditorialNotice({
+  children,
+  status = 'neutral',
+  className,
+  ...props
+}: ComponentPropsWithoutRef<'div'> & {
+  status?: 'neutral' | 'brand' | 'success' | 'error';
+}) {
+  return (
+    <div
+      className={cn(
+        'rounded-card border px-5 py-4 font-ui text-body-sm leading-relaxed',
+        status === 'neutral' &&
+          'border-[var(--app-border)] bg-[var(--app-canvas)] text-[var(--app-muted)]',
+        status === 'brand' &&
+          'border-[var(--app-primary-20)] bg-[var(--app-primary-10)] text-[var(--app-muted)]',
+        status === 'success' &&
+          'border-[color-mix(in_srgb,var(--status-success)_30%,transparent)] bg-[color-mix(in_srgb,var(--status-success)_10%,transparent)] text-[var(--app-muted)]',
+        status === 'error' &&
+          'border-[color-mix(in_srgb,var(--status-error)_30%,transparent)] bg-[color-mix(in_srgb,var(--status-error)_10%,transparent)] text-[var(--status-error)]',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
 
 export const EditorialSection = forwardRef<
   HTMLElement,
   ComponentPropsWithoutRef<'section'> & {
-    tone?: Tone;
+    tone?: EditorialTone;
     compact?: boolean;
     flush?: boolean;
   }
@@ -83,7 +89,7 @@ export const EditorialSection = forwardRef<
         'relative overflow-hidden border-b border-current/10',
         !flush &&
           (compact ? 'py-section-xs' : 'py-section-sm lg:py-section-md'),
-        toneClasses[tone],
+        editorialToneClass[tone],
         className
       )}
       {...props}
@@ -100,10 +106,10 @@ export function EditorialContainer({
 }: {
   children: ReactNode;
   className?: string;
-  width?: Width;
+  width?: EditorialWidth;
 }) {
   return (
-    <Container size="xl" className={cn(widthClasses[width], className)}>
+    <Container size="xl" className={cn(editorialWidthClass[width], className)}>
       {children}
     </Container>
   );

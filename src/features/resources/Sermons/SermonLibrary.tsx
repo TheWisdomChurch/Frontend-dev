@@ -85,7 +85,7 @@ function SermonCard({
     <article className="group min-w-0">
       <button type="button" onClick={onPlay} className="block w-full text-left">
         <div
-          className={`relative overflow-hidden bg-[#111] ${compact ? 'aspect-[16/10]' : 'aspect-video'}`}
+          className={`relative overflow-hidden bg-[var(--app-dark-3)] ${compact ? 'aspect-[16/10]' : 'aspect-video'}`}
         >
           <Media
             src={sermon.thumbnail}
@@ -371,7 +371,7 @@ export default function SermonLibrary({
                     sizes="(max-width:1024px) 100vw, 52vw"
                     className="object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-black/10 lg:to-[#09090b]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-black/10 lg:to-[var(--app-dark)]" />
                   <a
                     href={SOCIAL_LINKS.youtube}
                     target="_blank"

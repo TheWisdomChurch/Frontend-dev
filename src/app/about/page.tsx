@@ -16,6 +16,7 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialLink,
   EditorialSection,
@@ -69,7 +70,7 @@ export default async function AboutPage() {
     .slice(0, 2);
 
   return (
-    <main className="min-h-screen bg-[var(--app-surface)]">
+    <EditorialPage tone="surface">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -276,6 +277,6 @@ export default async function AboutPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

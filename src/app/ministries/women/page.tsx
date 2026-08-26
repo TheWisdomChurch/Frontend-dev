@@ -7,6 +7,7 @@ import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialImage,
   EditorialLink,
@@ -22,7 +23,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function WomenMinistryPage() {
   return (
-    <main className="min-h-screen bg-[var(--app-surface)]">
+    <EditorialPage tone="surface">
       <SiteHero
         eyebrow={content.hero.eyebrow}
         title={content.hero.title}
@@ -171,6 +172,6 @@ export default function WomenMinistryPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

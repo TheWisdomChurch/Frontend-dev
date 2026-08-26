@@ -15,6 +15,7 @@ import {
 } from '@/shared/utils/eventDate';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialEmptyState,
   EditorialHeader,
   EditorialSection,
@@ -49,7 +50,7 @@ export default function UpcomingPage() {
   }, []);
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <SiteHero
         eyebrow="Upcoming Events"
         title="What's next at Wisdom Church."
@@ -160,6 +161,6 @@ export default function UpcomingPage() {
           )}
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

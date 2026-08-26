@@ -9,6 +9,7 @@ import Arrow from '@/shared/ui/icons/Arrow';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialLink,
   EditorialSection,
@@ -77,7 +78,7 @@ const RECURRING_SCHEMAS = [
 
 export default function WeeklyPage() {
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       {RECURRING_SCHEMAS.map((schema, i) => (
         <JsonLd key={i} data={schema} />
       ))}
@@ -173,6 +174,6 @@ export default function WeeklyPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

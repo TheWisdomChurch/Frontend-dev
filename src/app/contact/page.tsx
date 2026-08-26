@@ -31,6 +31,7 @@ import {
 import type { CountryCode } from 'libphonenumber-js';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialLink,
   EditorialPanel,
@@ -183,7 +184,7 @@ function ContactPageContent() {
   };
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -488,7 +489,7 @@ function ContactPageContent() {
 
                   {submitted && (
                     <div
-                      className="border-t border-emerald-100 bg-emerald-50 px-7 py-4 font-ui text-body-sm text-emerald-700 sm:px-8"
+                      className="border-t border-[var(--status-success)]/20 bg-[var(--status-success)]/10 px-7 py-4 font-ui text-body-sm text-[var(--status-success)] sm:px-8"
                       aria-live="polite"
                     >
                       {submittedPrayerRequest
@@ -499,7 +500,7 @@ function ContactPageContent() {
 
                   {error && (
                     <div
-                      className="border-t border-rose-100 bg-rose-50 px-7 py-4 font-ui text-body-sm text-rose-700 sm:px-8"
+                      className="border-t border-[var(--status-error)]/20 bg-[var(--status-error)]/10 px-7 py-4 font-ui text-body-sm text-[var(--status-error)] sm:px-8"
                       aria-live="polite"
                     >
                       {error}
@@ -524,7 +525,7 @@ function ContactPageContent() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }
 

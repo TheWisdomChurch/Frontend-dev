@@ -48,6 +48,12 @@ const editorialFeatureFiles = new Set([
   'src/shared/ui/forms/eventsForm/PastoralCare.tsx',
 ]);
 
+const publicPresentationFiles = new Set([
+  ...editorialFeatureFiles,
+  'src/features/PremiumHome.tsx',
+  'src/app/resources/blogs/BlogSubscribeForm.tsx',
+]);
+
 for (const file of sourceFiles) {
   const source = readFileSync(file, 'utf8');
   const displayPath = relative(root, file);
@@ -69,6 +75,22 @@ for (const file of sourceFiles) {
     if (/SectionGlow|GridBackground/.test(source)) {
       violations.push(
         `${displayPath}: public-facing feature sections must not restore retired glow/grid decoration`
+      );
+    }
+  }
+
+  const isPublicPresentation =
+    displayPath.startsWith('src/app/') ||
+    displayPath.startsWith('src/features/') ||
+    displayPath.startsWith('src/shared/ui/forms/') ||
+    publicPresentationFiles.has(displayPath);
+  if (isPublicPresentation) {
+    const rawPalette =
+      /(?:bg|text|border|ring|shadow)-(?:stone|amber|rose|emerald|red|gray|zinc|neutral|slate)-\d+/;
+    const rawColor = /#[0-9a-fA-F]{3,8}|rgba?\(/;
+    if (rawPalette.test(source) || rawColor.test(source)) {
+      violations.push(
+        `${displayPath}: public presentation must use semantic design tokens instead of raw palette or color values`
       );
     }
   }
@@ -125,6 +147,20 @@ for (const file of sourceFiles) {
     }
 
     if (/\/page\.tsx$/.test(displayPath)) {
+      if (/<main\b/.test(source)) {
+        violations.push(
+          `${displayPath}: route page shells must use EditorialPage instead of handwritten main elements`
+        );
+      }
+      if (
+        /EditorialSection/.test(source) &&
+        !/EditorialPage/.test(source) &&
+        !/MinistryPageTemplate/.test(source)
+      ) {
+        violations.push(
+          `${displayPath}: routes composing editorial sections must declare an EditorialPage shell`
+        );
+      }
       if (/from\s+['"]@\/shared\/layout['"]/.test(source)) {
         violations.push(
           `${displayPath}: route pages must use the editorial page system instead of the legacy shared layout primitives`

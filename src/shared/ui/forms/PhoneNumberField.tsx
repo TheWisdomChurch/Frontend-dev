@@ -84,7 +84,10 @@ export function PhoneNumberField({
         />
       </div>
       {error ? (
-        <p id={`${id}-error`} className={cn('mt-1.5 text-xs text-rose-500')}>
+        <p
+          id={`${id}-error`}
+          className={cn('mt-1.5 text-xs text-[var(--status-error)]')}
+        >
           {error}
         </p>
       ) : null}

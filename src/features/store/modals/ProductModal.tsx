@@ -55,13 +55,13 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       forceBottomSheet
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="relative w-full aspect-square h-auto lg:aspect-auto lg:h-full rounded-2xl overflow-hidden bg-[#0d0d0d]">
+        <div className="relative w-full aspect-square h-auto lg:aspect-auto lg:h-full rounded-card overflow-hidden bg-[var(--app-dark-2)]">
           <Media
             src={product.image}
             alt={product.name}
             fit="contain"
             className="p-4 sm:p-6"
-            frameClassName="bg-[#0d0d0d]"
+            frameClassName="bg-[var(--app-dark-2)]"
             sizes="(max-width: 768px) 100vw, 50vw"
             fallback={<ShoppingBag className="h-12 w-12 text-white/35" />}
           />

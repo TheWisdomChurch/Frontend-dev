@@ -37,6 +37,7 @@ import {
   EditorialContainer,
   EditorialHeader,
   EditorialPanel,
+  EditorialPage,
   EditorialSection,
   editorialFieldClass,
 } from '@/shared/ui/editorial';
@@ -194,7 +195,7 @@ function StorePageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--app-dark)] text-white">
+    <EditorialPage tone="dark">
       <SiteHero
         title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
@@ -210,13 +211,13 @@ function StorePageContent() {
         size="icon"
         curvature="full"
         onClick={() => dispatch(toggleCart())}
-        className="fixed bottom-6 right-5 z-50 relative h-14 w-14 bg-[linear-gradient(135deg,var(--app-primary),var(--app-primary-dark))] text-black shadow-[0_20px_60px_rgba(0,0,0,0.45)] hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
+        className="fixed bottom-6 right-5 z-50 relative h-14 w-14 bg-[var(--app-primary)] text-black shadow-xl hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
         aria-label="Open cart"
       >
         <ShoppingBag className="h-6 w-6" />
 
         {itemCount > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white ring-4 ring-[#050505]">
+          <span className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-[var(--status-error)] px-1.5 text-xs font-bold text-white ring-4 ring-[var(--app-dark)]">
             {itemCount}
           </span>
         )}
@@ -351,7 +352,7 @@ function StorePageContent() {
                   onClick={() => handleCategoryClick(category.value)}
                   className={`shrink-0 px-4 py-2.5 min-h-0 h-auto text-sm font-bold ${
                     active
-                      ? 'shadow-[0_14px_35px_rgba(201,150,26,0.13)]'
+                      ? 'shadow-lg shadow-[var(--app-primary-10)]'
                       : 'border border-white/12 bg-white/[0.045] text-white/64 hover:bg-white/[0.08] hover:text-white'
                   }`}
                 >
@@ -430,14 +431,14 @@ function StorePageContent() {
                         type="button"
                         variant="ghost"
                         onClick={() => handleQuickView(product)}
-                        className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[#0d0d0d] rounded-none"
+                        className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[var(--app-dark-2)] rounded-none"
                       >
                         <Media
                           src={product.image}
                           alt={product.name}
                           fit="contain"
                           className="p-4 transition duration-500 group-hover:scale-105 sm:p-5"
-                          frameClassName="bg-[#0d0d0d]"
+                          frameClassName="bg-[var(--app-dark-2)]"
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                           fallback={
                             <ShoppingBag className="h-12 w-12 text-white/35" />
@@ -448,7 +449,7 @@ function StorePageContent() {
 
                         <div className="absolute left-4 top-4 flex flex-col gap-2">
                           {product.originalPrice && (
-                            <span className="rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
+                            <span className="rounded-full bg-[var(--status-error)] px-3 py-1 text-xs font-bold text-white shadow-lg">
                               SALE
                             </span>
                           )}
@@ -653,7 +654,7 @@ function StorePageContent() {
       />
 
       <CartSidebar />
-    </div>
+    </EditorialPage>
   );
 }
 

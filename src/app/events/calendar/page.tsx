@@ -11,6 +11,7 @@ import Arrow from '@/shared/ui/icons/Arrow';
 import { getEventTimestamp as getTimestamp } from '@/shared/utils/eventDate';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialEmptyState,
   EditorialSection,
 } from '@/shared/ui/editorial';
@@ -113,7 +114,7 @@ export default function CalendarPage() {
   );
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <SiteHero
         eyebrow="Church Calendar"
         title="Every event, every month."
@@ -319,6 +320,6 @@ export default function CalendarPage() {
           )}
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

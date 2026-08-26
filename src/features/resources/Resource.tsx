@@ -249,7 +249,6 @@ export default function ResourceSection() {
   return (
     <EditorialSection ref={sectionRef} id="resources" tone="surface" flush>
       <div className="relative overflow-hidden bg-[var(--app-dark)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(201,150,26,0.14),transparent_32%)]" />
         <EditorialContainer className="relative py-section-md">
           <div className="grid items-center gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
             <div>

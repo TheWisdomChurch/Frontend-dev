@@ -136,19 +136,19 @@ const OrderConfirmation = () => {
     transfer: {
       icon: Building,
       label: 'Bank Transfer',
-      color: '#3b82f6',
+      color: 'var(--status-info)',
       description: 'Transfer to our bank account',
     },
     online: {
       icon: CreditCard,
       label: 'Online Payment',
-      color: '#22c55e',
+      color: 'var(--status-success)',
       description: 'Paid with card/digital wallet',
     },
     delivery: {
       icon: Truck,
       label: 'Pay on Delivery',
-      color: '#eab308',
+      color: 'var(--status-warning)',
       description: 'Pay when order arrives',
     },
   };
@@ -262,7 +262,7 @@ const OrderConfirmation = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <FlexboxLayout direction="column" align="center" gap="lg">
-          <AlertCircle className="w-16 h-16 text-red-500" />
+          <AlertCircle className="w-16 h-16 text-[var(--status-error)]" />
           <H3 className="text-white">Couldn&apos;t load your order</H3>
           <Caption className="text-white/55">
             Something went wrong while fetching your order details. Please try
@@ -280,7 +280,7 @@ const OrderConfirmation = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <FlexboxLayout direction="column" align="center" gap="lg">
-          <AlertCircle className="w-16 h-16 text-red-500" />
+          <AlertCircle className="w-16 h-16 text-[var(--status-error)]" />
           <H3 className="text-white">Order Not Found</H3>
           <Caption className="text-white/55">
             The order you&apos;re looking for doesn&apos;t exist or has been
@@ -580,7 +580,7 @@ const OrderConfirmation = () => {
                           ? 'bg-green-500'
                           : orderDetails.paymentStatus === 'processing'
                             ? 'bg-yellow-500'
-                            : 'bg-gray-400'
+                            : 'bg-[var(--app-subtle)]'
                       }`}
                     />
                     <BaseText

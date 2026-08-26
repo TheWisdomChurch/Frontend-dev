@@ -18,6 +18,7 @@ import {
 } from '@/shared/utils/eventDate';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialLink,
   EditorialSection,
@@ -175,7 +176,7 @@ export default async function EventsPage() {
     .sort((a, b) => getTimestamp(a) - getTimestamp(b));
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -332,6 +333,6 @@ export default async function EventsPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

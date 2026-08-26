@@ -4,6 +4,7 @@ import { ArrowRight, Download, MessageCircle } from 'lucide-react';
 import SiteHero from '@/features/hero/SiteHero';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialLink,
   EditorialSection,
@@ -42,7 +43,7 @@ const available = [
 
 export default function PublicationPage() {
   return (
-    <main className="min-h-screen bg-[var(--app-dark)] text-white">
+    <EditorialPage tone="dark">
       <SiteHero
         eyebrow="Publications"
         title="Resources to help you grow between services."
@@ -115,6 +116,6 @@ export default function PublicationPage() {
           </div>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }

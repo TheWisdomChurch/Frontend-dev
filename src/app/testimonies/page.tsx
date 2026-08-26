@@ -15,6 +15,7 @@ import {
   EditorialContainer,
   EditorialEmptyState,
   EditorialHeader,
+  EditorialPage,
   EditorialPanel,
   EditorialSection,
   editorialActionClass,
@@ -123,7 +124,7 @@ export default function TestimoniesPage() {
 
   return (
     <>
-      <main className="min-h-screen">
+      <EditorialPage>
         <JsonLd
           data={buildBreadcrumbSchema([
             { name: 'Home', path: '/' },
@@ -282,7 +283,7 @@ export default function TestimoniesPage() {
             </div>
           </EditorialContainer>
         </EditorialSection>
-      </main>
+      </EditorialPage>
 
       <SuccessModal
         isOpen={showSuccess}

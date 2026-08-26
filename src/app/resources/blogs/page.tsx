@@ -7,6 +7,7 @@ import SiteHero from '@/features/hero/SiteHero';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import {
   EditorialContainer,
+  EditorialPage,
   EditorialHeader,
   EditorialLink,
   EditorialPanel,
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <main className="min-h-screen bg-[var(--app-dark)] text-white">
+    <EditorialPage tone="dark">
       <SiteHero
         eyebrow="Blog & Devotionals"
         title="Insights, reflections, and devotionals from the church."
@@ -96,6 +97,6 @@ export default function BlogPage() {
           </EditorialPanel>
         </EditorialContainer>
       </EditorialSection>
-    </main>
+    </EditorialPage>
   );
 }
