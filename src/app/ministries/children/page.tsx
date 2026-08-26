@@ -3,11 +3,13 @@ import type { Metadata } from 'next';
 import MinistryPageTemplate, {
   type MinistryPageConfig,
 } from '@/features/ministries/MinistryPageTemplate';
-import { Container } from '@/shared/layout';
-import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { buildPageMetadata } from '@/lib/seo';
 import ChildrenGallery from './ChildrenGallery';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Children's Ministry",
@@ -17,26 +19,19 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 const gallerySection = (
-  <section className="relative min-w-0 overflow-hidden border-b border-white/8 bg-[var(--app-dark)]">
-    <SectionGlow />
-    <Container size="xl">
-      <ScrollFadeIn className="pt-14 lg:pt-18">
-        <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-          Life in our ministry
-        </p>
-        <h2 className="mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-md">
-          A glimpse of what Sunday looks like
-          <em className="italic text-[var(--app-primary)]/80">
-            {' '}
-            for your child.
-          </em>
-        </h2>
-      </ScrollFadeIn>
+  <EditorialSection tone="dark">
+    <EditorialContainer>
+      <EditorialHeader
+        eyebrow="Life in our ministry"
+        title="A glimpse of what Sunday looks like"
+        accent="for your child."
+        tone="dark"
+      />
       <div className="pb-14 pt-8 lg:pb-18 lg:pt-10">
         <ChildrenGallery />
       </div>
-    </Container>
-  </section>
+    </EditorialContainer>
+  </EditorialSection>
 );
 
 const config: MinistryPageConfig = {

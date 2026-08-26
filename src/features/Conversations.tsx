@@ -6,8 +6,11 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
-import { Container, Section } from '@/shared/layout';
-import { EditorialHeader } from '@/shared/ui/editorial';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 import { staggerViewport } from '@/shared/ui/motion/staggerReveal';
 
 const slides = [
@@ -48,12 +51,8 @@ export default function Conversations() {
   }, [move, reduceMotion]);
 
   return (
-    <Section
-      padding="none"
-      fullHeight={false}
-      className="overflow-hidden bg-[var(--app-canvas)] text-[var(--app-ink)]"
-    >
-      <Container size="xl" className="py-section-md">
+    <EditorialSection tone="canvas" className="overflow-hidden">
+      <EditorialContainer>
         <div className="grid items-center gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
           <EditorialHeader
             eyebrow="Conversations"
@@ -138,7 +137,7 @@ export default function Conversations() {
             </div>
           </motion.div>
         </div>
-      </Container>
-    </Section>
+      </EditorialContainer>
+    </EditorialSection>
   );
 }

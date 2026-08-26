@@ -5,19 +5,44 @@ import type {
   ComponentPropsWithoutRef,
   ReactNode,
 } from 'react';
+import { forwardRef } from 'react';
 
 import { cn } from '@/lib/cn';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container } from '@/shared/layout';
 
-type Tone = 'surface' | 'canvas' | 'dark' | 'brand';
+type Tone = 'surface' | 'canvas' | 'muted' | 'dark' | 'brand';
+type Width = 'narrow' | 'content' | 'wide';
 
 const toneClasses: Record<Tone, string> = {
   surface: 'bg-[var(--app-surface)] text-[var(--app-ink)]',
   canvas: 'bg-[var(--app-canvas)] text-[var(--app-ink)]',
+  muted: 'bg-[var(--app-canvas-2)] text-[var(--app-ink)]',
   dark: 'bg-[var(--app-dark)] text-white',
   brand: 'bg-[var(--app-primary)] text-[var(--app-ink)]',
 };
+
+const widthClasses: Record<Width, string> = {
+  narrow: 'max-w-3xl',
+  content: 'max-w-5xl',
+  wide: 'max-w-7xl',
+};
+
+export function EditorialPage({
+  children,
+  tone = 'canvas',
+  className,
+}: {
+  children: ReactNode;
+  tone?: Tone;
+  className?: string;
+}) {
+  return (
+    <main className={cn('min-h-screen', toneClasses[tone], className)}>
+      {children}
+    </main>
+  );
+}
 
 export const editorialActionClass = {
   primary:
@@ -27,21 +52,37 @@ export const editorialActionClass = {
     'inline-flex min-h-12 items-center justify-center rounded-button border border-current/35 bg-transparent px-7 font-ui text-label font-bold uppercase tracking-widest text-current transition hover:-translate-y-0.5 hover:border-current/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
 } as const;
 
-export function EditorialSection({
-  tone = 'surface',
-  compact = false,
-  className,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<'section'> & {
-  tone?: Tone;
-  compact?: boolean;
-}) {
+export const editorialFieldClass =
+  'w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-subtle)] outline-none transition focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[var(--app-primary)]/15';
+
+export const editorialLabelClass =
+  'block font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-subtle)]';
+
+export const EditorialSection = forwardRef<
+  HTMLElement,
+  ComponentPropsWithoutRef<'section'> & {
+    tone?: Tone;
+    compact?: boolean;
+    flush?: boolean;
+  }
+>(function EditorialSection(
+  {
+    tone = 'surface',
+    compact = false,
+    flush = false,
+    className,
+    children,
+    ...props
+  },
+  ref
+) {
   return (
     <section
+      ref={ref}
       className={cn(
         'relative overflow-hidden border-b border-current/10',
-        compact ? 'py-section-xs' : 'py-section-sm lg:py-section-md',
+        !flush &&
+          (compact ? 'py-section-xs' : 'py-section-sm lg:py-section-md'),
         toneClasses[tone],
         className
       )}
@@ -50,19 +91,203 @@ export function EditorialSection({
       {children}
     </section>
   );
-}
+});
 
 export function EditorialContainer({
   children,
   className,
+  width = 'wide',
 }: {
   children: ReactNode;
   className?: string;
+  width?: Width;
 }) {
   return (
-    <Container size="xl" className={className}>
+    <Container size="xl" className={cn(widthClasses[width], className)}>
       {children}
     </Container>
+  );
+}
+
+export function EditorialStack({
+  children,
+  gap = 'md',
+  className,
+}: {
+  children: ReactNode;
+  gap?: 'sm' | 'md' | 'lg';
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex flex-col',
+        gap === 'sm' && 'gap-4',
+        gap === 'md' && 'gap-7',
+        gap === 'lg' && 'gap-10 lg:gap-14',
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function EditorialActions({
+  children,
+  align = 'start',
+  className,
+}: {
+  children: ReactNode;
+  align?: 'start' | 'center' | 'between';
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex flex-wrap items-center gap-3',
+        align === 'center' && 'justify-center',
+        align === 'between' && 'justify-between',
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+export type EditorialDocumentSection = {
+  id: string;
+  title: string;
+  body?: string;
+  items?: readonly string[];
+  links?: readonly { href: string; label: string }[];
+};
+
+export function EditorialDocument({
+  sections,
+  navigation,
+  navigationLabel = 'Sections',
+}: {
+  sections: readonly EditorialDocumentSection[];
+  navigation?: readonly { href: string; label: string }[];
+  navigationLabel?: string;
+}) {
+  return (
+    <EditorialSection tone="canvas">
+      <EditorialContainer width="content">
+        <div className="grid gap-12 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
+          <aside className="hidden lg:block">
+            <nav
+              className="sticky top-24"
+              aria-label={`${navigationLabel} table of contents`}
+            >
+              <p className={editorialLabelClass}>{navigationLabel}</p>
+              <ul className="mt-4 space-y-1.5">
+                {sections.map(section => (
+                  <li key={section.id}>
+                    <a
+                      className="block py-1 font-ui text-label text-[var(--app-subtle)] transition hover:text-[var(--app-primary-dark)]"
+                      href={`#${section.id}`}
+                    >
+                      {section.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {navigation?.length ? (
+                <div className="mt-8 space-y-2 border-t border-[var(--app-border)] pt-6">
+                  {navigation.map(item => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block font-ui text-label text-[var(--app-muted)] transition hover:text-[var(--app-primary-dark)]"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </nav>
+          </aside>
+          <article>
+            {sections.map((section, index) => (
+              <section
+                key={section.id}
+                id={section.id}
+                className={cn(
+                  'scroll-mt-24 py-10 first:pt-0 last:pb-0',
+                  index < sections.length - 1 &&
+                    'border-b border-[var(--app-border)]'
+                )}
+              >
+                <h2 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
+                  {section.title}
+                </h2>
+                {section.body ? (
+                  <p className="mt-4 font-ui text-body-md leading-loose text-[var(--app-muted)]">
+                    {section.body}
+                  </p>
+                ) : null}
+                {section.items?.length ? (
+                  <ul className="mt-4 space-y-3">
+                    {section.items.map(item => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-3 font-ui text-body-md leading-loose text-[var(--app-muted)]"
+                      >
+                        <span
+                          className="mt-3 h-0.5 w-3.5 flex-none bg-[var(--app-primary)]"
+                          aria-hidden="true"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+                {section.links?.length ? (
+                  <EditorialActions className="mt-5">
+                    {section.links.map(item => (
+                      <EditorialLink
+                        key={item.href}
+                        href={item.href}
+                        variant="text"
+                      >
+                        {item.label}
+                      </EditorialLink>
+                    ))}
+                  </EditorialActions>
+                ) : null}
+              </section>
+            ))}
+          </article>
+        </div>
+      </EditorialContainer>
+    </EditorialSection>
+  );
+}
+
+export function EditorialPanel({
+  children,
+  tone = 'light',
+  className,
+  ...props
+}: ComponentPropsWithoutRef<'div'> & {
+  tone?: 'light' | 'dark';
+}) {
+  return (
+    <div
+      className={cn(
+        'overflow-hidden rounded-card border',
+        tone === 'dark'
+          ? 'border-white/12 bg-white/[0.035] text-white'
+          : 'border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-ink)]',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -131,7 +356,7 @@ export function EditorialHeader({
         {accent ? (
           <>
             {' '}
-            <span className="font-headline font-normal italic text-[var(--app-primary)]">
+            <span className="font-ui font-normal text-[var(--app-primary)]">
               {accent}
             </span>
           </>
@@ -233,10 +458,18 @@ export function EditorialLink({
   children,
   ...props
 }: ComponentProps<typeof Link> & {
-  variant?: 'primary' | 'outline' | 'dark';
+  variant?: 'primary' | 'outline' | 'dark' | 'text';
 }) {
   return (
-    <Link className={cn(editorialActionClass[variant], className)} {...props}>
+    <Link
+      className={cn(
+        variant === 'text'
+          ? 'font-ui text-body-sm font-semibold text-[var(--app-primary-dark)] underline decoration-current/35 underline-offset-4 transition hover:text-[var(--app-primary)]'
+          : editorialActionClass[variant],
+        className
+      )}
+      {...props}
+    >
       {children}
     </Link>
   );

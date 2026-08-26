@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import type { JSX } from 'react';
 import { buildPageMetadata } from '@/lib/seo';
+import SiteHero from '@/features/hero/SiteHero';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Terms of Use',
@@ -118,29 +119,12 @@ const sections = [
 export default function TermsPage(): JSX.Element {
   return (
     <main className="min-h-screen bg-[var(--app-canvas)]">
-      {/* ── Dark hero ─────────────────────────────────────────── */}
-      <div className="bg-[var(--app-dark)] px-6 pb-20 pt-32">
-        <div className="mx-auto max-w-5xl">
-          <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Legal · Terms
-          </p>
-          <h1
-            className="font-headline font-normal text-white"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', lineHeight: 1.1 }}
-          >
-            Terms of Use
-          </h1>
-          <p className="mt-5 max-w-xl font-ui text-body-md leading-[1.9] text-white/62">
-            These terms govern your access to our website, livestreams, event
-            registrations, forms, and related digital services. By using the
-            site you agree to them.
-          </p>
-          <p className="mt-5 font-ui text-label text-white/45">
-            Last updated: February 2026
-          </p>
-        </div>
-      </div>
+      <SiteHero
+        eyebrow="Legal · Terms"
+        title="Terms of Use"
+        subtitle="These terms govern your access to our website, livestreams, event registrations, forms, and related digital services. By using the site you agree to them."
+        note="Last updated: February 2026"
+      />
 
       {/* ── Two-column document body ───────────────────────────── */}
       <div className="mx-auto max-w-5xl px-6 py-16 lg:grid lg:grid-cols-[15rem_1fr] lg:gap-14 lg:py-24">
@@ -198,7 +182,7 @@ export default function TermsPage(): JSX.Element {
             >
               <div>
                 <div className="min-w-0 flex-1">
-                  <h2 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
+                  <h2 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                     {section.title}
                   </h2>
 

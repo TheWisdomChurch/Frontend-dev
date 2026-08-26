@@ -10,7 +10,6 @@ import {
   Search,
   ShoppingBag,
   SlidersHorizontal,
-  Sparkles,
   Tag,
   X,
 } from 'lucide-react';
@@ -25,20 +24,8 @@ import {
 } from '@/lib/store/slices/productSlice';
 
 import ProductModal from '@/features/store/modals/ProductModal';
-import {
-  H2,
-  H3,
-  H4,
-  BodyLG,
-  BodySM,
-  SmallText,
-  Caption,
-  Eyebrow,
-} from '@/shared/text';
+import { BodyLG, BodySM, SmallText, Caption, Eyebrow } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
-import { Section, Container } from '@/shared/layout';
-import GridBackground from '@/shared/ui/GridBackground';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import CartSidebar from '@/features/store/Store/CartSidebar';
 import type { Product } from '@/domain/store/types';
 import { Media } from '@/shared/ui/Media';
@@ -46,6 +33,13 @@ import { storeClient } from '@/lib/api/storeClient';
 import SiteHero from '@/features/hero/SiteHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
 import { useApiQuery } from '@/hooks/useApiQuery';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialPanel,
+  EditorialSection,
+  editorialFieldClass,
+} from '@/shared/ui/editorial';
 
 const fetchProducts = (signal: AbortSignal) => storeClient.listProducts(signal);
 
@@ -228,41 +222,16 @@ function StorePageContent() {
         )}
       </Button>
 
-      <Section
-        padding="lg"
-        fullHeight={false}
-        className="relative bg-[var(--app-dark)]"
-      >
-        <SectionGlow />
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(201,150,26,0.10),transparent_32%),radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(201,150,26,0.06),transparent_34%)]" />
-          <GridBackground />
-        </div>
-
-        <Container size="xl" className="relative z-10 space-y-8">
+      <EditorialSection tone="dark">
+        <EditorialContainer className="space-y-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/[0.07] px-3 py-1.5 text-[var(--app-primary)]">
-                <Sparkles className="h-3.5 w-3.5" />
-                <Caption className="text-[10px] font-bold uppercase tracking-[0.24em]">
-                  Wisdom Church Store
-                </Caption>
-              </div>
-
-              <H2
-                className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
-                useThemeColor={false}
-              >
-                Shop faith-inspired essentials with a premium experience.
-              </H2>
-
-              <Caption
-                className="mt-4 block max-w-xl text-sm leading-7 text-white/62 sm:text-base"
-                useThemeColor={false}
-              >
-                Browse clothing, accessories, and ministry utilities designed to
-                carry a message of faith into everyday life.
-              </Caption>
+              <EditorialHeader
+                eyebrow="Wisdom Church Store"
+                title="Faith-inspired essentials for everyday life."
+                description="Browse clothing, accessories, and ministry utilities designed to carry a message of faith into everyday life."
+                tone="dark"
+              />
             </div>
 
             <div className="grid grid-cols-3 gap-3 sm:min-w-[360px]">
@@ -273,7 +242,7 @@ function StorePageContent() {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 text-center backdrop-blur-xl"
+                  className="border-t border-white/15 p-4 text-center"
                 >
                   <BodyLG weight="bold" className="text-[var(--app-primary)]">
                     {value}
@@ -284,7 +253,10 @@ function StorePageContent() {
             </div>
           </div>
 
-          <div className="sticky top-3 z-30 rounded-[1.75rem] border border-white/10 bg-[var(--app-dark-2)]/85 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-4">
+          <EditorialPanel
+            tone="dark"
+            className="sticky top-3 z-30 p-3 backdrop-blur-xl sm:p-4"
+          >
             <div className="grid gap-3 lg:grid-cols-[1fr_280px_auto] lg:items-center">
               <label className="relative block">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
@@ -293,7 +265,7 @@ function StorePageContent() {
                   placeholder="Search products, scripture, gifts..."
                   value={filters.searchTerm}
                   onChange={e => handleSearch(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] pl-11 pr-11 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+                  className="h-12 w-full rounded-input border border-white/12 bg-white/[0.06] pl-11 pr-11 font-ui text-body-sm text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]"
                 />
 
                 {filters.searchTerm && (
@@ -317,7 +289,7 @@ function StorePageContent() {
                   value={filters.selectedCategory}
                   onChange={e => handleCategoryClick(e.target.value)}
                   aria-label="Filter by category"
-                  className="h-12 w-full appearance-none rounded-2xl border border-white/12 bg-[#111] pl-11 pr-10 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+                  className="h-12 w-full appearance-none rounded-input border border-white/12 bg-[var(--app-dark-2)] pl-11 pr-10 font-ui text-body-sm text-white outline-none transition focus:border-[var(--app-primary)]"
                 >
                   {categories.map(category => (
                     <option key={category.value} value={category.value}>
@@ -339,7 +311,7 @@ function StorePageContent() {
             </div>
 
             {showSearchAlert && (
-              <div className="mt-3 flex items-start gap-3 rounded-2xl border border-yellow-400/20 bg-yellow-400/10 p-4">
+              <div className="mt-3 flex items-start gap-3 rounded-input border border-yellow-400/20 bg-yellow-400/10 p-4">
                 <Search className="mt-0.5 h-4 w-4 shrink-0 text-yellow-300" />
                 <div className="min-w-0 flex-1">
                   <Caption
@@ -364,7 +336,7 @@ function StorePageContent() {
                 </Button>
               </div>
             )}
-          </div>
+          </EditorialPanel>
 
           <div className="flex gap-2 overflow-x-auto pb-1">
             {categories.map(category => {
@@ -389,34 +361,19 @@ function StorePageContent() {
               );
             })}
           </div>
-        </Container>
-      </Section>
+        </EditorialContainer>
+      </EditorialSection>
 
-      <Section
-        padding="lg"
-        fullHeight={false}
-        className="relative bg-[var(--app-dark)]"
-      >
-        <SectionGlow />
-        <Container size="xl">
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
           <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <H3
-                className="text-2xl font-semibold text-white sm:text-3xl"
-                useThemeColor={false}
-              >
-                {activeCategoryName}
-              </H3>
-              <Caption
-                className="mt-2 block text-sm text-white/55"
-                useThemeColor={false}
-              >
-                {filteredProducts.length} product
-                {filteredProducts.length !== 1 ? 's' : ''} found
-              </Caption>
-            </div>
+            <EditorialHeader
+              eyebrow={`${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`}
+              title={activeCategoryName}
+              size="sm"
+            />
 
-            <Caption className="text-sm text-white/45" useThemeColor={false}>
+            <Caption className="text-sm text-[var(--app-muted)]">
               Click a product to view sizes, colors, and cart options.
             </Caption>
           </div>
@@ -427,23 +384,17 @@ function StorePageContent() {
                 {Array.from({ length: 8 }).map((_, index) => (
                   <div
                     key={index}
-                    className="h-[420px] animate-pulse rounded-[1.75rem] border border-white/10 bg-white/[0.045]"
+                    className="h-[420px] animate-pulse rounded-card border border-[var(--app-border)] bg-[var(--app-surface-2)]"
                   />
                 ))}
               </div>
             ) : filteredProducts.length === 0 ? (
-              <div className="mx-auto flex max-w-xl flex-col items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.045] p-10 text-center shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl">
-                <ShoppingBag className="h-14 w-14 text-white/35" />
-                <H4
-                  className="mt-5 text-2xl font-semibold text-white"
-                  useThemeColor={false}
-                >
+              <EditorialPanel className="mx-auto flex max-w-xl flex-col items-center justify-center p-10 text-center">
+                <ShoppingBag className="h-14 w-14 text-[var(--app-subtle)]" />
+                <h3 className="mt-5 font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                   No products found
-                </H4>
-                <Caption
-                  className="mt-2 max-w-sm text-sm leading-6 text-white/55"
-                  useThemeColor={false}
-                >
+                </h3>
+                <Caption className="mt-2 max-w-sm text-sm leading-6 text-[var(--app-muted)]">
                   Try adjusting your search terms or browse a different
                   category.
                 </Caption>
@@ -458,7 +409,7 @@ function StorePageContent() {
                 >
                   View All Products
                 </Button>
-              </div>
+              </EditorialPanel>
             ) : (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {filteredProducts.map(product => {
@@ -473,7 +424,7 @@ function StorePageContent() {
                   return (
                     <article
                       key={product.id}
-                      className="product-card group overflow-hidden rounded-[1.75rem] border border-white/[0.12] bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]"
+                      className="product-card group overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/40"
                     >
                       <Button
                         type="button"
@@ -520,7 +471,7 @@ function StorePageContent() {
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <SmallText
                             weight="bold"
-                            className="line-clamp-2 text-base leading-snug text-white"
+                            className="line-clamp-2 text-base leading-snug text-[var(--app-ink)]"
                             useThemeColor={false}
                           >
                             {product.name}
@@ -528,7 +479,7 @@ function StorePageContent() {
                         </div>
 
                         <Caption
-                          className="line-clamp-2 text-sm leading-6 text-white/58"
+                          className="line-clamp-2 text-sm leading-6 text-[var(--app-muted)]"
                           useThemeColor={false}
                         >
                           {product.description}
@@ -545,7 +496,7 @@ function StorePageContent() {
 
                           {product.originalPrice && (
                             <Caption
-                              className="pb-1 text-sm line-through text-white/38"
+                              className="pb-1 text-sm line-through text-[var(--app-subtle)]"
                               useThemeColor={false}
                             >
                               {product.originalPrice}
@@ -561,12 +512,15 @@ function StorePageContent() {
                           ].map(([value, label]) => (
                             <div
                               key={label}
-                              className="rounded-2xl border border-white/8 bg-black/25 px-2 py-2 text-center"
+                              className="rounded-input border border-[var(--app-border)] bg-[var(--app-canvas)] px-2 py-2 text-center"
                             >
-                              <BodySM weight="bold" className="text-white">
+                              <BodySM
+                                weight="bold"
+                                className="text-[var(--app-ink)]"
+                              >
                                 {value}
                               </BodySM>
-                              <Eyebrow className="mt-0.5 text-white/38">
+                              <Eyebrow className="mt-0.5 text-[var(--app-subtle)]">
                                 {label}
                               </Eyebrow>
                             </div>
@@ -600,39 +554,27 @@ function StorePageContent() {
               </div>
             )}
           </div>
-        </Container>
-      </Section>
+        </EditorialContainer>
+      </EditorialSection>
 
-      <Section
-        padding="lg"
-        fullHeight={false}
-        className="relative overflow-hidden bg-[var(--app-dark-2)]"
-      >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.10),transparent_34%)]" />
-
-        <Container size="xl" className="relative z-10">
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 text-center shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:p-8 lg:p-10">
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <EditorialPanel
+            tone="dark"
+            className="mx-auto max-w-3xl p-6 text-center sm:p-8 lg:p-10"
+          >
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
               <Tag className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
-            <H3
-              className="mt-5 text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl"
-              useThemeColor={false}
-            >
-              Never miss our offers
-            </H3>
-
-            <Caption
-              className="mx-auto mt-4 block max-w-xl text-sm leading-7 text-white/62 sm:text-base"
-              useThemeColor={false}
-            >
-              Get exclusive discounts, new arrivals, and faith-inspired deals in
-              your inbox.
-              <strong className="mt-1 block text-white">
-                Join now — get 10% off instantly.
-              </strong>
-            </Caption>
+            <EditorialHeader
+              eyebrow="Stay connected"
+              title="Never miss our offers."
+              description="Get exclusive discounts, new arrivals, and faith-inspired deals in your inbox. Join now and get 10% off instantly."
+              tone="dark"
+              size="sm"
+              className="mx-auto max-w-2xl"
+            />
 
             <div className="mt-8">
               {emailSubmitted ? (
@@ -664,7 +606,7 @@ function StorePageContent() {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="your@email.com"
                       required
-                      className="h-12 w-full rounded-2xl border border-white/[0.14] bg-white/[0.06] pl-12 pr-4 text-base text-white outline-none transition placeholder:text-white/40 focus:ring-4 focus:ring-yellow-400/10"
+                      className={`${editorialFieldClass} h-12 bg-white/[0.06] pl-12 text-white placeholder:text-white/40`}
                     />
                   </label>
 
@@ -699,9 +641,9 @@ function StorePageContent() {
                 No spam · Unsubscribe anytime · 100% private
               </Caption>
             </div>
-          </div>
-        </Container>
-      </Section>
+          </EditorialPanel>
+        </EditorialContainer>
+      </EditorialSection>
 
       <ProductModal
         key={selectedProduct?.id ?? 'none'}

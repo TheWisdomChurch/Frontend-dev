@@ -26,9 +26,9 @@ const paddingClasses: Record<ContainerPadding, string> = {
   none: 'px-0',
   xs: 'px-3 sm:px-4',
   sm: 'px-4 sm:px-5 lg:px-6',
-  md: 'px-4 sm:px-6 lg:px-8',
+  md: 'px-5 sm:px-8 lg:px-10',
   lg: 'px-5 sm:px-8 lg:px-10',
-  xl: 'px-5 sm:px-10 lg:px-12',
+  xl: 'px-5 sm:px-8 lg:px-10',
 };
 
 export default function Container({

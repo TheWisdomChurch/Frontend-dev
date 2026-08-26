@@ -6,7 +6,7 @@
 // www.facebook.com — same account, different strings).
 export const CONTACT_INFO = {
   phone: '0706 999 5333',
-  email: 'wisdomhousehq@gmail.com',
+  email: 'wisdomchurchhq@gmail.com',
 } as const;
 
 export const SOCIAL_LINKS = {
@@ -16,5 +16,5 @@ export const SOCIAL_LINKS = {
   x: 'https://x.com/wisdomhousehq',
   whatsapp: 'https://wa.me/2347069995333',
   // Twitter/X handle used for openGraph/twitter meta tags, not a profile link.
-  handle: '@wisdomhousehq',
+  handle: '@wisdomchurchhq',
 } as const;

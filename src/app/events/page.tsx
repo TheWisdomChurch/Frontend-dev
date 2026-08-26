@@ -2,9 +2,7 @@ import Link from 'next/link';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
 import SiteHero from '@/features/hero/SiteHero';
-import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { Media } from '@/shared/ui/Media';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
@@ -18,6 +16,13 @@ import {
   getEventTimestamp as getTimestamp,
   isUpcomingEvent as isUpcoming,
 } from '@/shared/utils/eventDate';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialLink,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -72,7 +77,7 @@ function EventCard({ event }: { event: EventPublic }) {
             <span className="font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               {date.month}
             </span>
-            <span className="font-headline text-display-sm font-normal leading-none text-white/90">
+            <span className="font-ui text-display-sm font-medium leading-none text-white/90">
               {date.day}
             </span>
           </div>
@@ -82,7 +87,7 @@ function EventCard({ event }: { event: EventPublic }) {
         {/* Date badge — only when there's an image */}
         {imgSrc && (
           <div className="absolute bottom-3 left-4 flex items-baseline gap-2">
-            <span className="font-headline text-heading-md font-normal leading-none text-white">
+            <span className="font-ui text-heading-md font-semibold leading-none text-white">
               {date.day}
             </span>
             <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
@@ -94,7 +99,7 @@ function EventCard({ event }: { event: EventPublic }) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-5 pt-4">
-        <h3 className="font-headline text-heading-sm font-normal leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
+        <h3 className="font-ui text-heading-sm font-semibold leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
           {event.title}
         </h3>
 
@@ -141,7 +146,7 @@ function EmptyState() {
     <ScrollFadeIn>
       <div className="flex flex-col items-center gap-6 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
         <div className="h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-        <h3 className="font-headline text-heading-md font-normal text-white">
+        <h3 className="font-ui text-heading-md font-semibold text-white">
           Events are on their way.
         </h3>
         <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/65">
@@ -192,8 +197,8 @@ export default async function EventsPage() {
       />
 
       {/* ── 1.5 Sub-nav — other ways to browse events ────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-        <Container size="xl">
+      <EditorialSection compact tone="canvas">
+        <EditorialContainer>
           <nav
             aria-label="Events sections"
             className="flex flex-wrap gap-2 py-5"
@@ -206,30 +211,23 @@ export default async function EventsPage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="inline-flex items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className={editorialActionClass.outline}
               >
                 {item.label} <Arrow />
               </Link>
             ))}
           </nav>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 2. Weekly rhythm — canvas, always present ────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-        <Container size="xl">
-          <ScrollFadeIn className="py-12 lg:py-16">
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Weekly rhythm
-            </p>
-            <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
-              We gather every week.
-              <em className="italic text-[var(--app-primary)]/75">
-                {' '}
-                Come as you are.
-              </em>
-            </h2>
-          </ScrollFadeIn>
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
+          <EditorialHeader
+            eyebrow="Weekly rhythm"
+            title="We gather every week."
+            accent="Come as you are."
+          />
 
           {/* Two service panels */}
           <div className="grid border-t border-[var(--app-ink)]/8 sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/8">
@@ -240,7 +238,7 @@ export default async function EventsPage() {
                 >
                   {/* Day + time */}
                   <div className="flex items-baseline gap-4">
-                    <p className="font-headline text-heading-lg font-normal leading-none text-[var(--app-ink)] lg:text-heading-lg">
+                    <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)] lg:text-heading-lg">
                       {svc.day}
                     </p>
                     <p className="font-ui text-body-sm font-bold text-[var(--app-primary)]">
@@ -253,7 +251,7 @@ export default async function EventsPage() {
 
                   {/* Service info */}
                   <div className="space-y-1.5">
-                    <p className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
+                    <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                       {svc.name}
                     </p>
                     <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/65">
@@ -278,20 +276,19 @@ export default async function EventsPage() {
 
           {/* Bottom padding spacer */}
           <div className="pb-12 lg:pb-16" />
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
-      <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
-        <SectionGlow />
-        <Container size="xl">
+      <EditorialSection tone="dark">
+        <EditorialContainer>
           {/* Header */}
           <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 Upcoming events
               </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
+              <h2 className="mt-3 font-ui text-heading-md font-medium leading-snug text-white sm:text-heading-lg">
                 Special gatherings &amp; programs.
               </h2>
             </div>
@@ -314,32 +311,27 @@ export default async function EventsPage() {
               ))}
             </div>
           )}
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 4. CTA strip ─────────────────────────────────────── */}
-      <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 border-t border-white/8 bg-[var(--app-dark-2)] py-10">
-          <Container size="xl">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="font-headline text-heading-sm font-normal text-white">
-                  Have a question about an event?
-                </p>
-                <p className="mt-1 font-ui text-body-sm text-white/55">
-                  Our team is happy to help — reach out any time.
-                </p>
-              </div>
-              <Link
-                href="/contact"
-                className="inline-flex shrink-0 items-center gap-2 border border-white/20 px-6 py-3 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              >
-                Contact us <Arrow />
-              </Link>
+      <EditorialSection compact tone="dark" className="bg-[var(--app-dark-2)]">
+        <EditorialContainer>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-ui text-heading-sm font-semibold text-white">
+                Have a question about an event?
+              </p>
+              <p className="mt-1 font-ui text-body-sm text-white/55">
+                Our team is happy to help — reach out any time.
+              </p>
             </div>
-          </Container>
-        </section>
-      </ScrollFadeIn>
+            <EditorialLink href="/contact" variant="outline">
+              Contact us <Arrow />
+            </EditorialLink>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
     </main>
   );
 }

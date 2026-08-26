@@ -1,6 +1,6 @@
 ﻿/**
  * lib/responsive.ts
- * Professional responsive design system for Wisdom House UI.
+ * Professional responsive design system for The Wisdom Church UI.
  */
 
 export const screenOrder = [

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
+import SiteHero from '@/features/hero/SiteHero';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Cookies & Privacy',
@@ -79,29 +80,12 @@ const notUsed = [
 export default function CookiesPage() {
   return (
     <main className="min-h-screen bg-[var(--app-canvas)]">
-      {/* ── Dark hero ─────────────────────────────────────────── */}
-      <div className="bg-[var(--app-dark)] px-6 pb-20 pt-32">
-        <div className="mx-auto max-w-4xl">
-          <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Legal · Cookies
-          </p>
-          <h1
-            className="font-headline font-normal text-white"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', lineHeight: 1.1 }}
-          >
-            Cookies &amp; Privacy
-          </h1>
-          <p className="mt-5 max-w-xl font-ui text-body-md leading-[1.9] text-white/62">
-            We use only the cookies this site needs to function — no advertising
-            trackers, no marketing pixels, no profiling. Here is exactly what we
-            store and why.
-          </p>
-          <p className="mt-5 font-ui text-label text-white/45">
-            Last updated: July 2026
-          </p>
-        </div>
-      </div>
+      <SiteHero
+        eyebrow="Legal · Cookies"
+        title="Cookies & Privacy"
+        subtitle="We use only the cookies this site needs to function—no advertising trackers, no marketing pixels, no profiling. Here is exactly what we store and why."
+        note="Last updated: July 2026"
+      />
 
       {/* ── Document body ─────────────────────────────────────── */}
       <div className="mx-auto max-w-4xl px-6 py-16 lg:py-24">
@@ -127,7 +111,7 @@ export default function CookiesPage() {
           {cookieGroups.map(group => (
             <div key={group.category}>
               <div className="mb-3 flex flex-wrap items-center gap-3">
-                <h2 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
+                <h2 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                   {group.category}
                 </h2>
                 <span

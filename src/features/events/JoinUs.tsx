@@ -20,13 +20,15 @@ import {
   Video,
 } from 'lucide-react';
 
-import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { BodySM, Caption } from '@/shared/text';
-import SectionGlow from '@/shared/ui/SectionGlow';
-import { EditorialHeader } from '@/shared/ui/editorial';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import { isValidNationalPhone, PHONE_COUNTRIES } from '@/lib/validation/phone';
@@ -245,7 +247,7 @@ const defaultValues: ModalValues = {
 
 /* ─── Component ───────────────────────────────────────────────────── */
 
-export default function JoinWisdomHouse() {
+export default function JoinWorkforce() {
   const { open } = useServiceUnavailable();
 
   // modalStep === null means closed. 'detail' shows the department
@@ -359,13 +361,7 @@ export default function JoinWisdomHouse() {
   });
 
   return (
-    <Section
-      padding="none"
-      fullHeight={false}
-      className="relative overflow-hidden bg-[var(--app-dark)]"
-    >
-      <SectionGlow />
-
+    <EditorialSection tone="dark" flush className="overflow-hidden">
       {/* ── Banner ───────────────────────────────────────────── */}
       {/* TODO: was a photo banner (Dept_1) — source image is missing from
           the repo; needs a real photo re-uploaded to shared/assets. */}
@@ -375,7 +371,7 @@ export default function JoinWisdomHouse() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_25%,rgba(201,150,26,0.18),transparent_55%)]" />
         </div>
 
-        <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
+        <EditorialContainer className="relative py-12 sm:py-14 lg:py-[4.5rem]">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <EditorialHeader
               eyebrow="Join the workforce"
@@ -413,11 +409,11 @@ export default function JoinWisdomHouse() {
               </div>
             ))}
           </div>
-        </Container>
+        </EditorialContainer>
       </div>
 
       {/* ── Department index ──────────────────────────────────── */}
-      <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
+      <EditorialContainer className="relative py-12 sm:py-14 lg:py-[4.5rem]">
         <div className="mb-8 grid gap-5 border-b border-white/10 pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
           <EditorialHeader
             eyebrow="Serve at Wisdom Church"
@@ -492,7 +488,7 @@ export default function JoinWisdomHouse() {
             No experience required — just a willing heart.
           </p>
         </div>
-      </Container>
+      </EditorialContainer>
 
       {/* ── Department detail + application modal ─────────────────── */}
       <BaseModal
@@ -729,6 +725,6 @@ export default function JoinWisdomHouse() {
           </div>
         )}
       </BaseModal>
-    </Section>
+    </EditorialSection>
   );
 }

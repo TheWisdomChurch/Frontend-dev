@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { H1, H2, H3, H4, BodySM, Caption, Eyebrow } from '@/shared/text';
-import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import apiClient, { isApiError } from '@/lib/api';
 import type {
@@ -21,6 +20,13 @@ import {
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
 import { BaseModal } from '@/shared/ui/modals/Base';
+import {
+  EditorialContainer,
+  EditorialPanel,
+  EditorialSection,
+  editorialFieldClass,
+  editorialLabelClass,
+} from '@/shared/ui/editorial';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -39,17 +45,13 @@ const MONTH_OPTIONS = [
   { value: '12', label: 'December' },
 ] as const;
 
-const fieldShellClass =
-  'rounded-2xl border border-stone-200 bg-white p-4 sm:p-5';
+const fieldShellClass = 'border-t border-[var(--app-border)] py-5';
 
-const fieldBaseClass =
-  'min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-body-md text-stone-950 outline-none transition placeholder:text-stone-400 focus:border-[var(--app-primary)]/70 focus:bg-white focus:ring-4 focus:ring-[var(--app-primary)]/10';
+const fieldBaseClass = `min-h-12 ${editorialFieldClass}`;
 
-const fieldSelectClass =
-  'min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-body-md text-stone-950 outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+const fieldSelectClass = `min-h-12 ${editorialFieldClass}`;
 
-const labelClass =
-  'block text-label font-bold uppercase tracking-[0.16em] text-stone-600';
+const labelClass = editorialLabelClass;
 
 function splitE164(
   value: string
@@ -1053,15 +1055,11 @@ export default function PublicFormPage() {
 
   return (
     <main className="min-h-screen bg-[#faf9f6] text-stone-950">
-      <Section
-        padding="none"
-        className="relative isolate overflow-hidden border-b border-stone-200 bg-white"
-      >
+      <EditorialSection compact>
         <div className="absolute inset-x-0 top-0 -z-10 h-1 bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700" />
         <div className="absolute -right-32 -top-32 -z-10 h-80 w-80 rounded-full bg-amber-100/70 blur-3xl" />
 
-        <Container
-          size="xl"
+        <EditorialContainer
           className={
             showHeroCopy
               ? 'relative z-10 py-14 sm:py-18 lg:py-20'
@@ -1083,29 +1081,29 @@ export default function PublicFormPage() {
           ) : (
             <div className="h-8" aria-hidden />
           )}
-        </Container>
-      </Section>
+        </EditorialContainer>
+      </EditorialSection>
 
-      <Section padding="none" className="relative overflow-hidden bg-[#faf9f6]">
+      <EditorialSection tone="canvas">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(217,160,31,0.07),transparent_30%)]" />
 
-        <Container size="xl" className="relative z-10">
+        <EditorialContainer className="relative z-10">
           <div className="py-8 sm:py-10 lg:py-14">
             {loading ? (
-              <div className="rounded-[1.5rem] border border-stone-200 bg-white p-6 text-sm text-stone-600 shadow-sm">
+              <div className="rounded-card border border-[var(--app-border)] bg-white p-6 text-sm text-stone-600">
                 Loading form...
               </div>
             ) : null}
 
             {!loading && error ? (
-              <div className="rounded-[1.5rem] border border-rose-400/25 bg-rose-400/10 p-6 text-sm leading-7 text-rose-100 shadow-2xl shadow-black/25">
+              <div className="rounded-card border border-rose-400/25 bg-rose-400/10 p-6 text-sm leading-7 text-rose-700">
                 {error}
               </div>
             ) : null}
 
             {!loading && form && !submitted ? (
               <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
-                <aside className="h-fit rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-sm xl:sticky xl:top-24">
+                <EditorialPanel className="h-fit p-5 xl:sticky xl:top-24">
                   {!showHeroCopy ? (
                     <div>
                       <Eyebrow className="text-[var(--app-primary)]">
@@ -1149,11 +1147,11 @@ export default function PublicFormPage() {
                       {visibleFields.length === 1 ? '' : 's'} to complete.
                     </BodySM>
                   </div>
-                </aside>
+                </EditorialPanel>
 
                 <form
                   onSubmit={handleSubmit}
-                  className="rounded-[1.5rem] border border-stone-200 bg-white p-4 shadow-xl shadow-stone-900/5 sm:p-6 lg:p-8"
+                  className="rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4 sm:p-6 lg:p-8"
                 >
                   {presentation.detailItems.length > 0 ||
                   presentation.sections.length > 0 ? (
@@ -1388,8 +1386,8 @@ export default function PublicFormPage() {
               </div>
             </BaseModal>
           </div>
-        </Container>
-      </Section>
+        </EditorialContainer>
+      </EditorialSection>
     </main>
   );
 }

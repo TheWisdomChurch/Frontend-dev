@@ -43,7 +43,7 @@ export default async function SermonsPage() {
     });
 
   return (
-    <main className="min-h-screen bg-[var(--app-dark)]">
+    <>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -56,6 +56,6 @@ export default async function SermonsPage() {
         unavailable={result.unavailable}
         source={result.source}
       />
-    </main>
+    </>
   );
 }

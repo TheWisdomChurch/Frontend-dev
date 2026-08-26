@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { FlexboxLayout } from '@/shared/layout';
 import { H2, H3, H4, BaseText, Caption } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
+import { CONTACT_INFO } from '@/shared/constants/contactInfo';
 import { storeClient } from '@/lib/api/storeClient';
 import {
   CheckCircle,
@@ -799,8 +800,8 @@ const OrderConfirmation = () => {
                     Need Help?
                   </BaseText>
                   <Caption className="text-xs text-white/55">
-                    Contact our support team at +234-XXX-XXXX or email
-                    support@wisdomhouse.com
+                    Contact our support team at {CONTACT_INFO.phone} or email{' '}
+                    {CONTACT_INFO.email}
                   </Caption>
                 </div>
               </div>

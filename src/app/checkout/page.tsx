@@ -8,10 +8,14 @@ import { ShoppingBag } from 'lucide-react';
 import { useAppSelector } from '@/shared/utils/hooks/redux';
 import CheckoutForm from '@/features/store/Store/checkoutForm';
 import SiteHero from '@/features/hero/SiteHero';
-import { H2, BodySM, Eyebrow } from '@/shared/text';
-import { Container, Section } from '@/shared/layout';
-import CustomButton from '@/shared/utils/buttons/CustomButton';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
+import {
+  EditorialContainer,
+  EditorialEmptyState,
+  EditorialHeader,
+  EditorialPanel,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 
 function CheckoutPageContent() {
   const router = useRouter();
@@ -35,32 +39,25 @@ function CheckoutPageContent() {
           compact
         />
 
-        <Section padding="xl" className="bg-[var(--app-dark)]">
-          <Container size="xl">
-            <div className="checkout-section mx-auto flex min-h-[52vh] max-w-xl flex-col items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.04] px-5 py-12 text-center shadow-2xl shadow-black/30 sm:px-8">
-              <div className="mb-5 grid h-16 w-16 place-items-center rounded-2xl border border-white/10 bg-white/[0.05]">
-                <ShoppingBag className="h-8 w-8 text-[var(--app-primary)]" />
-              </div>
-
-              <H2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                Your cart is empty
-              </H2>
-
-              <BodySM className="mt-3 max-w-md text-white/65 sm:text-base">
-                Add some resources from the store before proceeding to checkout.
-              </BodySM>
-
-              <CustomButton
-                variant="primary"
-                curvature="full"
-                onClick={() => router.push('/resources/store')}
-                className="mt-7 hover:-translate-y-0.5"
-              >
-                Back to Store
-              </CustomButton>
-            </div>
-          </Container>
-        </Section>
+        <EditorialSection tone="dark">
+          <EditorialContainer>
+            <EditorialEmptyState
+              className="checkout-section mx-auto max-w-xl"
+              title="Your cart is empty"
+              description="Add some resources from the store before proceeding to checkout."
+              tone="dark"
+              action={
+                <button
+                  type="button"
+                  onClick={() => router.push('/resources/store')}
+                  className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)]"
+                >
+                  <ShoppingBag className="mr-2 h-4 w-4" /> Back to store
+                </button>
+              }
+            />
+          </EditorialContainer>
+        </EditorialSection>
       </main>
     );
   }
@@ -74,25 +71,24 @@ function CheckoutPageContent() {
         compact
       />
 
-      <Section padding="xl" className="bg-[var(--app-dark)]">
-        <Container size="xl">
-          <div className="checkout-section mx-auto mb-8 max-w-3xl text-center">
-            <Eyebrow className="text-[var(--app-primary)]">
-              Secure checkout
-            </Eyebrow>
-            <H2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl">
-              Complete your order with confidence
-            </H2>
-            <BodySM className="mt-3 text-white/65 sm:text-base">
-              Confirm your details and complete your purchase securely.
-            </BodySM>
-          </div>
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <EditorialHeader
+            eyebrow="Secure checkout"
+            title="Complete your order with confidence."
+            description="Confirm your details and complete your purchase securely."
+            tone="dark"
+            className="checkout-section mx-auto mb-10 max-w-3xl text-center"
+          />
 
-          <div className="checkout-section rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/30 sm:rounded-[2rem] sm:p-6 lg:p-8">
+          <EditorialPanel
+            tone="dark"
+            className="checkout-section p-4 sm:p-6 lg:p-8"
+          >
             <CheckoutForm />
-          </div>
-        </Container>
-      </Section>
+          </EditorialPanel>
+        </EditorialContainer>
+      </EditorialSection>
     </main>
   );
 }

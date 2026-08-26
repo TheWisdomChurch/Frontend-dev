@@ -9,13 +9,13 @@ import {
 
 export const ABOUT_CONTENT = {
   hero: {
-    eyebrow: 'The Wisdom Church · Pillar Conference Center',
-    title: 'A Wisdom House, raising the complete believer.',
+    eyebrow: 'About The Wisdom Church',
+    title: 'The Wisdom Church, raising the complete believer.',
     description:
       'We introduce people to Jesus and the balanced doctrine of the Spirit—equipping them with the wisdom and power of God to flourish in every facet of life.',
     images: [
       {
-        src: '/Picflow/DSC06877 copy.webp',
+        src: '/Picflow/DSC00268 copy.webp',
         alt: 'Worship at The Wisdom Church',
       },
       {
@@ -23,7 +23,7 @@ export const ABOUT_CONTENT = {
         alt: 'The Word being taught at The Wisdom Church',
       },
       {
-        src: '/Picflow/DSC06902 copy.webp',
+        src: '/Picflow/DSC00019 copy.webp',
         alt: 'Community at The Wisdom Church',
       },
     ],
@@ -65,7 +65,7 @@ export const ABOUT_CONTENT = {
       body: 'Be fruitful, multiply, fill the earth, and influence every sphere for God’s glory.',
     },
   ],
-  wisdomHouse: [
+  churchIdentity: [
     {
       icon: BookOpen,
       title: 'Established by grace',
@@ -121,13 +121,18 @@ export type AboutPageContent = {
   mission: typeof ABOUT_CONTENT.mission;
   message: typeof ABOUT_CONTENT.message;
   pillars: ReadonlyArray<{ title: string; body: string }>;
-  wisdomHouse: typeof ABOUT_CONTENT.wisdomHouse;
+  churchIdentity: typeof ABOUT_CONTENT.churchIdentity;
   practices: typeof ABOUT_CONTENT.practices;
   declaration: string;
 };
 
 const nonEmpty = (value: unknown, fallback: string) =>
   typeof value === 'string' && value.trim() ? value.trim() : fallback;
+
+const normalizeChurchBrand = (value: string) =>
+  value
+    .replace(/\bA\s+Wisdom\s+House\b/gi, 'The Wisdom Church')
+    .replace(/\bWisdom\s+House\b/gi, 'Wisdom Church');
 
 /** Adapts the existing CMS response to the editorial page contract. */
 export function resolveAboutContent(
@@ -140,8 +145,8 @@ export function resolveAboutContent(
             Boolean(item) && typeof item === 'object'
         )
         .map(item => ({
-          title: nonEmpty(item.title, ''),
-          body: nonEmpty(item.body, ''),
+          title: normalizeChurchBrand(nonEmpty(item.title, '')),
+          body: normalizeChurchBrand(nonEmpty(item.body, '')),
         }))
         .filter(item => item.title && item.body)
     : [];
@@ -150,9 +155,15 @@ export function resolveAboutContent(
     ...ABOUT_CONTENT,
     hero: {
       ...ABOUT_CONTENT.hero,
-      eyebrow: nonEmpty(cms?.eyebrow, ABOUT_CONTENT.hero.eyebrow),
-      title: nonEmpty(cms?.title, ABOUT_CONTENT.hero.title),
-      description: nonEmpty(cms?.subtitle, ABOUT_CONTENT.hero.description),
+      eyebrow: normalizeChurchBrand(
+        nonEmpty(cms?.eyebrow, ABOUT_CONTENT.hero.eyebrow)
+      ),
+      title: normalizeChurchBrand(
+        nonEmpty(cms?.title, ABOUT_CONTENT.hero.title)
+      ),
+      description: normalizeChurchBrand(
+        nonEmpty(cms?.subtitle, ABOUT_CONTENT.hero.description)
+      ),
       images: [...ABOUT_CONTENT.hero.images],
     },
     pillars:

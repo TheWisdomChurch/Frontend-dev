@@ -16,9 +16,7 @@ import type { LucideIcon } from 'lucide-react';
 
 import Arrow from '@/shared/ui/icons/Arrow';
 import SiteHero from '@/features/hero/SiteHero';
-import { H2, Caption } from '@/shared/text';
-import { Container, Section } from '@/shared/layout';
-import { ScrollFadeIn } from '@/shared/ui/motion';
+import { Caption } from '@/shared/text';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import apiClient, { mapValidationErrors } from '@/lib/api';
@@ -31,6 +29,16 @@ import {
   toE164,
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialLink,
+  EditorialPanel,
+  EditorialSection,
+  editorialActionClass,
+  editorialFieldClass,
+  editorialLabelClass,
+} from '@/shared/ui/editorial';
 
 type ContactFormData = {
   firstName: string;
@@ -68,11 +76,8 @@ const initialFormData: ContactFormData = {
   isAnonymous: false,
 };
 
-const inputCls =
-  'w-full rounded-[3px] border border-[var(--app-ink)]/12 bg-white px-3.5 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-ink)]/60 outline-none transition-all duration-150 focus:border-l-[3px] focus:border-l-[var(--app-primary)] focus:border-[var(--app-primary)]/40';
-
-const labelCls =
-  'block font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/45';
+const inputCls = editorialFieldClass;
+const labelCls = editorialLabelClass;
 
 function ContactPageContent() {
   const searchParams = useSearchParams();
@@ -186,7 +191,6 @@ function ContactPageContent() {
         ])}
       />
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
       <SiteHero
         eyebrow="Get in touch"
         title="We'd love to hear from you."
@@ -194,12 +198,10 @@ function ContactPageContent() {
         compact
       />
 
-      {/* ── Main content ─────────────────────────────────────── */}
-      <Section padding="xl" className="bg-[var(--app-canvas)]">
-        <Container size="xl">
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
           <div className="grid gap-14 lg:grid-cols-[1fr_1.6fr] lg:gap-20 xl:gap-24">
-            {/* ── Left: contact info ───────────────────────── */}
-            <ScrollFadeIn>
+            <div data-gsap="reveal">
               <aside className="space-y-10 lg:sticky lg:top-28 lg:h-fit">
                 {/* Location */}
                 <div className="space-y-3">
@@ -209,7 +211,7 @@ function ContactPageContent() {
                       Visit us
                     </p>
                   </div>
-                  <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
+                  <p className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-ink)]">
                     {SERVICE_INFO.venue.name}
                   </p>
                   <div className="space-y-1 font-ui text-body-sm leading-[1.7] text-[var(--app-ink)]/70">
@@ -247,7 +249,7 @@ function ContactPageContent() {
                     href="https://wa.me/2347069995333"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 font-headline text-heading-sm font-normal text-[var(--app-ink)] transition hover:text-[var(--app-primary)]"
+                    className="group inline-flex items-center gap-2 font-ui text-heading-sm font-semibold text-[var(--app-ink)] transition hover:text-[var(--app-primary-dark)]"
                   >
                     +234 706 999 5333
                     <ArrowUpRight className="h-3.5 w-3.5 opacity-40 transition group-hover:opacity-100" />
@@ -310,22 +312,18 @@ function ContactPageContent() {
                   </div>
                 </div>
               </aside>
-            </ScrollFadeIn>
+            </div>
 
-            {/* ── Right: form ──────────────────────────────── */}
-            <ScrollFadeIn delay={0.08}>
-              <div className="border border-[var(--app-ink)]/10 bg-white">
-                {/* Dark header band */}
-                <div className="bg-[var(--app-dark)] px-7 py-6 sm:px-8 sm:py-7">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                    Message us
-                  </p>
-                  <H2 className="mt-2 font-headline text-heading-sm font-normal leading-snug text-white sm:text-heading-md">
-                    Send us a message.
-                  </H2>
-                  <p className="mt-1.5 font-ui text-label text-white/45">
-                    We respond within 24 hours on weekdays.
-                  </p>
+            <div data-gsap="reveal">
+              <EditorialPanel>
+                <div className="bg-[var(--app-dark)] px-7 py-7 sm:px-8 sm:py-8">
+                  <EditorialHeader
+                    eyebrow="Message us"
+                    title="Send us a message."
+                    description="We respond within 24 hours on weekdays."
+                    tone="dark"
+                    size="sm"
+                  />
                 </div>
 
                 <form
@@ -471,7 +469,7 @@ function ContactPageContent() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center justify-center gap-2.5 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)] disabled:opacity-50"
+                      className={editorialActionClass.dark}
                     >
                       {submitting ? 'Sending...' : 'Send message'}
                       {!submitting && <Arrow />}
@@ -508,28 +506,24 @@ function ContactPageContent() {
                     </div>
                   )}
                 </form>
-              </div>
-            </ScrollFadeIn>
+              </EditorialPanel>
+            </div>
           </div>
-        </Container>
-      </Section>
+        </EditorialContainer>
+      </EditorialSection>
 
-      {/* ── Find us strip ────────────────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]">
-        <Container size="xl">
+      <EditorialSection compact tone="surface">
+        <EditorialContainer>
           <div className="flex flex-col gap-1.5 py-7 sm:flex-row sm:items-center sm:justify-between sm:py-6">
             <p className="font-ui text-label font-semibold text-[var(--app-ink)]/60">
               {SERVICE_INFO.venue.full}
             </p>
-            <Link
-              href="/events/weekly"
-              className="inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:text-[var(--app-ink)]"
-            >
-              See service times <Arrow />
-            </Link>
+            <EditorialLink href="/events/weekly" variant="dark">
+              See service times
+            </EditorialLink>
           </div>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
     </main>
   );
 }

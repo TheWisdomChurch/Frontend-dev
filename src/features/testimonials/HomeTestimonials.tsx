@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 
-import { Container, Section } from '@/shared/layout';
 import {
+  EditorialContainer,
   EditorialEmptyState,
   EditorialHeader,
+  EditorialSection,
   editorialActionClass,
 } from '@/shared/ui/editorial';
 import {
@@ -154,8 +155,8 @@ export default function HomeTestimonials() {
   const q = quotes[current];
 
   return (
-    <Section padding="none" className="bg-[var(--app-canvas-2)]">
-      <Container size="xl" className="py-section-md">
+    <EditorialSection tone="muted">
+      <EditorialContainer>
         <div
           className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6"
           onMouseEnter={() => setIsPaused(true)}
@@ -342,7 +343,7 @@ export default function HomeTestimonials() {
             </motion.div>
           ) : null}
         </div>
-      </Container>
-    </Section>
+      </EditorialContainer>
+    </EditorialSection>
   );
 }

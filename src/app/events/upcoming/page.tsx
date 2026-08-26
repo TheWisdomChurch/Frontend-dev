@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import SiteHero from '@/features/hero/SiteHero';
-import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
@@ -14,6 +13,13 @@ import {
   formatEventDateParts as formatDate,
   getEventTimestamp as getTimestamp,
 } from '@/shared/utils/eventDate';
+import {
+  EditorialContainer,
+  EditorialEmptyState,
+  EditorialHeader,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 
 export default function UpcomingPage() {
   const [events, setEvents] = useState<EventPublic[]>([]);
@@ -51,17 +57,13 @@ export default function UpcomingPage() {
         compact
       />
 
-      <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-14 lg:py-18">
-        <Container size="xl">
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
           <ScrollFadeIn className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Coming up
-              </p>
-              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-heading-lg">
-                Upcoming events &amp; programs.
-              </h2>
-            </div>
+            <EditorialHeader
+              eyebrow="Coming up"
+              title="Upcoming events & programs."
+            />
             {!loading && events.length > 0 && (
               <span className="inline-flex self-start items-center border border-[var(--app-ink)]/12 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/45 sm:self-auto">
                 {events.length} upcoming
@@ -81,27 +83,20 @@ export default function UpcomingPage() {
           )}
 
           {!loading && events.length === 0 && (
-            <ScrollFadeIn>
-              <div className="flex flex-col items-center gap-5 border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] px-8 py-16 text-center">
-                <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
-                  Nothing scheduled yet.
-                </h3>
-                <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/50">
-                  Check back soon. In the meantime, join us every{' '}
-                  {SERVICE_INFO.sunday.day} at {SERVICE_INFO.sunday.time}, and
-                  for {SERVICE_INFO.dailyPrayer.label}{' '}
-                  {SERVICE_INFO.dailyPrayer.daysShort} at{' '}
-                  {SERVICE_INFO.dailyPrayer.time}.
-                </p>
-                <Link
-                  href="/events/weekly"
-                  className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                >
-                  See weekly services <Arrow />
-                </Link>
-              </div>
-            </ScrollFadeIn>
+            <div>
+              <EditorialEmptyState
+                title="Nothing scheduled yet."
+                description={`Check back soon. In the meantime, join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time}, and for ${SERVICE_INFO.dailyPrayer.label} ${SERVICE_INFO.dailyPrayer.daysShort} at ${SERVICE_INFO.dailyPrayer.time}.`}
+                action={
+                  <Link
+                    href="/events/weekly"
+                    className={editorialActionClass.dark}
+                  >
+                    See weekly services
+                  </Link>
+                }
+              />
+            </div>
           )}
 
           {!loading && events.length > 0 && (
@@ -117,7 +112,7 @@ export default function UpcomingPage() {
                     <div className="group grid items-start gap-6 py-8 lg:grid-cols-[120px_1fr_auto] lg:gap-10 lg:py-9">
                       {/* Date column */}
                       <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
-                        <p className="font-headline text-heading-lg font-normal leading-none text-[var(--app-ink)]">
+                        <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)]">
                           {date.day}
                         </p>
                         <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
@@ -127,7 +122,7 @@ export default function UpcomingPage() {
 
                       {/* Content */}
                       <div className="space-y-2">
-                        <h3 className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
+                        <h3 className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-ink)]">
                           {event.title}
                         </h3>
                         {event.description && (
@@ -163,8 +158,8 @@ export default function UpcomingPage() {
               })}
             </div>
           )}
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
     </main>
   );
 }

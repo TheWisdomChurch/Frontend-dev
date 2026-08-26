@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 import SiteHero from '@/features/hero/SiteHero';
 import YouTubePlayer from './YoutubePlayer';
-import { Container } from '@/shared/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { Media } from '@/shared/ui/Media';
 import { useSermonUtil } from '@/shared/utils/hooks/useSermon';
@@ -16,6 +15,13 @@ import type {
   GroupedSeriesData,
   UngroupedSeriesData,
 } from '@/domain/media/types';
+import {
+  EditorialContainer,
+  EditorialEmptyState,
+  EditorialHeader,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 
 // YouTube titles have no length limit and routinely run well past a
 // reasonable <h2>; cap the heading while keeping the full title available
@@ -195,7 +201,7 @@ function CategoryCard({
 }) {
   return (
     <article
-      className="group cursor-pointer border border-[var(--app-ink)]/10 bg-[var(--app-canvas)] transition duration-200 hover:border-[var(--app-primary)]/35"
+      className="group cursor-pointer overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--app-primary)]/40"
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -218,7 +224,7 @@ function CategoryCard({
       <div className="px-5 py-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)] line-clamp-2 transition duration-150 group-hover:text-[var(--app-primary)]">
+            <h3 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)] line-clamp-2 transition duration-150 group-hover:text-[var(--app-primary-dark)]">
               {group.name}
             </h3>
             {'description' in group && group.description && (
@@ -317,9 +323,8 @@ const SermonUtil = () => {
         compact
       />
 
-      {/* ── 2. Featured player — dark ─────────────────────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)]">
-        <Container size="xl">
+      <EditorialSection tone="dark">
+        <EditorialContainer>
           {loading && !currentVideo ? (
             <div className="grid gap-14 py-14 lg:grid-cols-[1.3fr_1fr] lg:py-18">
               <div className="space-y-4">
@@ -365,7 +370,7 @@ const SermonUtil = () => {
                       </p>
                     )}
                     <h2
-                      className="font-headline text-heading-sm font-normal leading-snug text-white sm:text-heading-md"
+                      className="font-ui text-heading-sm font-semibold leading-snug text-white sm:text-heading-md"
                       title={currentVideo.title}
                     >
                       {truncateHeading(currentVideo.title)}
@@ -389,7 +394,7 @@ const SermonUtil = () => {
                     <button
                       type="button"
                       onClick={handleWatchSeries}
-                      className="mt-5 inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                      className={`mt-5 ${editorialActionClass.outline}`}
                     >
                       View full series <Arrow />
                     </button>
@@ -467,7 +472,7 @@ const SermonUtil = () => {
             <ScrollFadeIn>
               <div className="flex flex-col items-center gap-5 py-20 text-center">
                 <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                <h2 className="font-headline text-heading-md font-normal text-white">
+                <h2 className="font-ui text-heading-md font-semibold text-white">
                   Sermons loading soon.
                 </h2>
                 <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/40">
@@ -485,21 +490,17 @@ const SermonUtil = () => {
               </div>
             </ScrollFadeIn>
           )}
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 3. Series categories — canvas ─────────────────────── */}
       {hasSeries && (
-        <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
-          <Container size="xl">
-            <ScrollFadeIn className="mb-10">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Browse by category
-              </p>
-              <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-heading-lg">
-                Explore the sermon library.
-              </h2>
-            </ScrollFadeIn>
+        <EditorialSection tone="canvas">
+          <EditorialContainer>
+            <EditorialHeader
+              eyebrow="Browse by category"
+              title="Explore the sermon library."
+            />
 
             {groupedSeries.length > 0 && (
               <div
@@ -548,21 +549,18 @@ const SermonUtil = () => {
               <button
                 type="button"
                 onClick={() => handleSeriesClick('all')}
-                className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className={editorialActionClass.dark}
               >
                 View all sermons <Arrow />
               </button>
             </ScrollFadeIn>
-          </Container>
-        </section>
+          </EditorialContainer>
+        </EditorialSection>
       )}
 
       {/* ── 4. Filter + Sermon grid — dark ────────────────────── */}
-      <section
-        id="sermons-grid"
-        className="bg-[var(--app-dark)] py-16 lg:py-20"
-      >
-        <Container size="xl">
+      <EditorialSection id="sermons-grid" tone="dark">
+        <EditorialContainer>
           {/* Filters */}
           <ScrollFadeIn className="mb-10">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_auto]">
@@ -669,23 +667,20 @@ const SermonUtil = () => {
           {/* Empty state */}
           {!loading && filteredVideos.length === 0 && (
             <ScrollFadeIn>
-              <div className="flex flex-col items-center gap-5 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
-                <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                <h3 className="font-headline text-heading-sm font-normal text-white">
-                  No sermons match your search.
-                </h3>
-                <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/40">
-                  Try adjusting your filters or searching with different
-                  keywords.
-                </p>
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className="inline-flex items-center gap-2 border border-white/18 px-5 py-2.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                >
-                  Clear all filters <Arrow />
-                </button>
-              </div>
+              <EditorialEmptyState
+                title="No sermons match your search."
+                description="Try adjusting your filters or searching with different keywords."
+                tone="dark"
+                action={
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className={editorialActionClass.outline}
+                  >
+                    Clear all filters
+                  </button>
+                }
+              />
             </ScrollFadeIn>
           )}
 
@@ -716,56 +711,43 @@ const SermonUtil = () => {
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="inline-flex items-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className={editorialActionClass.outline}
               >
                 Load more sermons
               </button>
             </ScrollFadeIn>
           )}
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
-      {/* ── 5. CTA — canvas ───────────────────────────────────── */}
-      <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-20 lg:py-24">
-          <Container size="lg">
-            <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Stay connected
-              </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
-                Never miss a message
-                <em className="italic text-[var(--app-primary)]/80">
-                  {' '}
-                  from the church.
-                </em>
-              </h2>
-              <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/50">
-                Subscribe to the Wisdom Church YouTube channel and receive new
-                sermons, conference messages, and live service alerts every
-                week.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={SOCIAL_LINKS.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-ink)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
-                >
-                  Subscribe on YouTube <Arrow />
-                </a>
-                <Link
-                  href="/events/weekly"
-                  className="inline-flex items-center justify-center gap-2 border border-[var(--app-ink)]/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                >
-                  View service times <Arrow />
-                </Link>
-              </div>
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
+          <div className="mx-auto max-w-3xl text-center">
+            <EditorialHeader
+              eyebrow="Stay connected"
+              title="Never miss a message"
+              accent="from the church."
+              description="Subscribe to the Wisdom Church YouTube channel and receive new sermons, conference messages, and live service alerts every week."
+            />
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <a
+                href={SOCIAL_LINKS.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={editorialActionClass.dark}
+              >
+                Subscribe on YouTube <Arrow />
+              </a>
+              <Link
+                href="/events/weekly"
+                className={editorialActionClass.outline}
+              >
+                View service times <Arrow />
+              </Link>
             </div>
-          </Container>
-        </section>
-      </ScrollFadeIn>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* Video modal */}
       {modalVideo && <VideoModal video={modalVideo} onClose={closeModal} />}

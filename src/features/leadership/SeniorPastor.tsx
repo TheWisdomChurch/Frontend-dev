@@ -64,7 +64,7 @@ const SOCIALS = [
   {
     label: 'Instagram',
     // Senior Pastor's personal account — intentionally not the church's
-    // shared @wisdomhousehq Instagram.
+    // shared church Instagram account.
     href: 'https://www.instagram.com/gabrielayilara?igsh=MXZpMHhnNGloMnViZw==',
     Icon: IgIcon,
   },

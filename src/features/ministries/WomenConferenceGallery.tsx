@@ -26,7 +26,7 @@ export default function WomenConferenceGallery({
         imageClassName="transition-opacity duration-300"
       />
       <div
-        className="mt-4 grid grid-cols-3 gap-3"
+        className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"
         role="tablist"
         aria-label="Conference photographs"
       >
@@ -49,7 +49,7 @@ export default function WomenConferenceGallery({
               src={image.src}
               alt=""
               fill
-              sizes="(max-width: 1023px) 33vw, 20vw"
+              sizes="(max-width: 639px) 50vw, (max-width: 1023px) 25vw, 12vw"
               className="absolute inset-0 rounded-none"
             />
           </button>

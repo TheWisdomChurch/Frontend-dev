@@ -37,6 +37,17 @@ const sourceFiles = filesBelow(join(root, 'src')).filter(file =>
   /\.(?:ts|tsx)$/.test(file)
 );
 
+const editorialFeatureFiles = new Set([
+  'src/features/Conversations.tsx',
+  'src/features/events/EventsShowcase.tsx',
+  'src/features/events/JoinUs.tsx',
+  'src/features/events/OnlineGiving.tsx',
+  'src/features/resources/Resource.tsx',
+  'src/features/resources/Sermons/SermonLibrary.tsx',
+  'src/features/testimonials/HomeTestimonials.tsx',
+  'src/shared/ui/forms/eventsForm/PastoralCare.tsx',
+]);
+
 for (const file of sourceFiles) {
   const source = readFileSync(file, 'utf8');
   const displayPath = relative(root, file);
@@ -47,6 +58,30 @@ for (const file of sourceFiles) {
 
   if (source.trim().length === 0) {
     violations.push(`${displayPath}: empty source files are not allowed`);
+  }
+
+  if (editorialFeatureFiles.has(displayPath)) {
+    if (/from\s+['"]@\/shared\/layout['"]/.test(source)) {
+      violations.push(
+        `${displayPath}: public-facing feature sections must compose the editorial system, not legacy layout primitives`
+      );
+    }
+    if (/SectionGlow|GridBackground/.test(source)) {
+      violations.push(
+        `${displayPath}: public-facing feature sections must not restore retired glow/grid decoration`
+      );
+    }
+  }
+
+  for (const match of source.matchAll(
+    /['"`](\/(?:images|Picflow)\/[^'"`?#]+)['"`]/g
+  )) {
+    const publicAsset = join(root, 'public', match[1]);
+    if (!existsSync(publicAsset)) {
+      violations.push(
+        `${displayPath}: referenced public asset does not exist: ${match[1]}`
+      );
+    }
   }
 
   if (
@@ -87,6 +122,19 @@ for (const file of sourceFiles) {
       violations.push(
         `${displayPath}: metadata exports belong in a server component or route layout`
       );
+    }
+
+    if (/\/page\.tsx$/.test(displayPath)) {
+      if (/from\s+['"]@\/shared\/layout['"]/.test(source)) {
+        violations.push(
+          `${displayPath}: route pages must use the editorial page system instead of the legacy shared layout primitives`
+        );
+      }
+      if (/SectionGlow|GridBackground/.test(source)) {
+        violations.push(
+          `${displayPath}: route pages must not restore the retired glow/grid presentation architecture`
+        );
+      }
     }
   }
 }

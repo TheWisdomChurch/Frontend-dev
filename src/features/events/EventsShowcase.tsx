@@ -5,18 +5,18 @@ import Link from 'next/link';
 import { Play } from 'lucide-react';
 
 import { EventBannerDesktop } from '@/shared/assets';
-import { Container } from '@/shared/layout';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { Media } from '@/shared/ui/Media';
 import Arrow from '@/shared/ui/icons/Arrow';
 import {
+  EditorialContainer,
   EditorialEmptyState,
   EditorialHeader,
+  EditorialSection,
   editorialActionClass,
 } from '@/shared/ui/editorial';
 import {
@@ -436,9 +436,8 @@ export default function EventsShowcase() {
   const onlyFeatured = !!featured && rest.length === 0;
 
   return (
-    <section className="relative min-w-0 overflow-hidden bg-[var(--app-surface)] py-16 lg:py-24">
-      <SectionGlow />
-      <Container size="xl">
+    <EditorialSection tone="surface" className="min-w-0 overflow-hidden">
+      <EditorialContainer>
         {/* ── Section header ──────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <EditorialHeader
@@ -561,7 +560,7 @@ export default function EventsShowcase() {
             See all events <Arrow />
           </Link>
         </div>
-      </Container>
+      </EditorialContainer>
 
       {/* Reel modal */}
       {reelModal && (
@@ -591,6 +590,6 @@ export default function EventsShowcase() {
           )}
         </BaseModal>
       )}
-    </section>
+    </EditorialSection>
   );
 }

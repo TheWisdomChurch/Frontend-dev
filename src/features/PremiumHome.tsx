@@ -33,6 +33,11 @@ export default function PremiumHome() {
         priority
         eyebrow={HOME_COPY.hero.eyebrow}
         title={`${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}${HOME_COPY.hero.titleTail}`}
+        titleLines={[
+          `${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}`.trim(),
+          HOME_COPY.hero.titleTail.trim(),
+        ]}
+        highlightSecondLine
         subtitle={HOME_COPY.hero.description}
         backgroundImage={HOME_IMAGES.hero.src}
         imagePositionClassName={HOME_IMAGES.hero.position}
@@ -110,15 +115,20 @@ export default function PremiumHome() {
                 aria-labelledby={`belief-${index}`}
                 className={`group relative isolate min-h-[22rem] overflow-hidden rounded-image bg-white/5 outline-none ring-[var(--app-primary)] transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-offset-[#0d0b0c] sm:min-h-0 ${belief.layoutClass} lg:h-[clamp(25rem,34vw,38rem)]`}
               >
-                <Image
-                  src={belief.image}
-                  alt={belief.imageAlt}
-                  fill
-                  unoptimized={belief.image === '/Picflow/DSC06902 copy.webp'}
-                  quality={IMAGE_QUALITY}
-                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 58vw"
-                  className={`object-cover ${belief.imagePosition} transition-transform duration-700 ease-out motion-reduce:transition-none md:group-hover:scale-[1.035] md:group-focus:scale-[1.035]`}
-                />
+                <div
+                  data-parallax-global={belief.parallaxDepth}
+                  className="absolute inset-x-0 -inset-y-[6%]"
+                >
+                  <Image
+                    src={belief.image}
+                    alt={belief.imageAlt}
+                    fill
+                    unoptimized={false}
+                    quality={IMAGE_QUALITY}
+                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 58vw"
+                    className={`object-cover ${belief.imagePosition} transition-transform duration-700 ease-out motion-reduce:transition-none md:group-hover:scale-[1.035] md:group-focus:scale-[1.035]`}
+                  />
+                </div>
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent opacity-100 transition-opacity duration-500 motion-reduce:transition-none md:opacity-0 md:group-hover:opacity-100 md:group-focus:opacity-100" />
 

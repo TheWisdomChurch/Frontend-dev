@@ -16,12 +16,12 @@ interface SectionProps {
 
 const paddingClasses: Record<SectionPadding, string> = {
   none: '',
-  xs: 'py-6 sm:py-8',
-  sm: 'py-8 sm:py-10 lg:py-12',
-  md: 'py-10 sm:py-12 lg:py-16',
-  lg: 'py-12 sm:py-16 lg:py-20',
-  xl: 'py-14 sm:py-20 lg:py-24',
-  '2xl': 'py-16 sm:py-24 lg:py-28',
+  xs: 'py-section-xs',
+  sm: 'py-section-xs lg:py-section-sm',
+  md: 'py-section-sm',
+  lg: 'py-section-sm lg:py-section-md',
+  xl: 'py-section-md',
+  '2xl': 'py-section-md lg:py-section-lg',
 };
 
 const Section = forwardRef<HTMLElement, SectionProps>(
@@ -44,7 +44,7 @@ const Section = forwardRef<HTMLElement, SectionProps>(
         id={id}
         suppressHydrationWarning
         className={cn(
-          'relative w-full min-w-0 overflow-hidden',
+          'relative w-full min-w-0 overflow-hidden border-b border-current/10',
           paddingClasses[padding],
           fullHeight && 'min-h-screen',
           centered && 'flex items-center',

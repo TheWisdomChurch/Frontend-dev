@@ -10,10 +10,9 @@ import {
   User,
   CheckCircle2,
 } from 'lucide-react';
-import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import SectionGlow from '@/shared/ui/SectionGlow';
+import { EditorialContainer, EditorialSection } from '@/shared/ui/editorial';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import {
@@ -74,7 +73,7 @@ const PRAYER_CATEGORIES = [
 
 const EVENT_TYPES = [
   'Wedding Ceremony',
-  'House Opening / Warming',
+  'Home Opening / Warming',
   'Book Launch',
   'Naming Ceremony',
   'Birthday Celebration',
@@ -399,12 +398,11 @@ const PastoralCareForm = () => {
   const successCopy = SUCCESS_COPY[intent];
 
   return (
-    <Section
-      padding="xl"
-      className="relative overflow-hidden border-b border-white/8 bg-[var(--app-dark)]"
+    <EditorialSection
+      tone="dark"
+      className="overflow-hidden border-b border-white/8"
     >
-      <SectionGlow variant="double" />
-      <Container size="xl">
+      <EditorialContainer>
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -845,7 +843,7 @@ const PastoralCareForm = () => {
             </form>
           )}
         </div>
-      </Container>
+      </EditorialContainer>
 
       <BaseModal
         isOpen={showSuccess}
@@ -865,7 +863,7 @@ const PastoralCareForm = () => {
           </p>
         </div>
       </BaseModal>
-    </Section>
+    </EditorialSection>
   );
 };
 

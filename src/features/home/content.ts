@@ -78,6 +78,7 @@ export const HOME_BELIEFS: {
   imageAlt: string;
   imagePosition: string;
   layoutClass: string;
+  parallaxDepth: number;
 }[] = [
   {
     title: 'The Word',
@@ -86,6 +87,7 @@ export const HOME_BELIEFS: {
     imageAlt: 'A pastor teaching from the pulpit at The Wisdom Church',
     imagePosition: 'object-[30%_center]',
     layoutClass: 'lg:col-span-7',
+    parallaxDepth: 0.1,
   },
   {
     title: 'Prayer',
@@ -94,6 +96,7 @@ export const HOME_BELIEFS: {
     imageAlt: 'A member deep in prayer at The Wisdom Church',
     imagePosition: 'object-center',
     layoutClass: 'lg:col-span-5',
+    parallaxDepth: 0.16,
   },
   {
     title: 'Worship',
@@ -102,14 +105,16 @@ export const HOME_BELIEFS: {
     imageAlt: 'Worship on stage at The Wisdom Church',
     imagePosition: 'object-[center_18%]',
     layoutClass: 'lg:col-span-5',
+    parallaxDepth: 0.13,
   },
   {
     title: 'Community',
     body: 'We grow together, serve one another, and share life.',
-    image: '/Picflow/DSC06902 copy.webp',
+    image: '/Picflow/DSC00268 copy.webp',
     imageAlt: 'Members embracing in fellowship at The Wisdom Church',
     imagePosition: 'object-center',
     layoutClass: 'lg:col-span-7',
+    parallaxDepth: 0.18,
   },
 ];
 
@@ -136,7 +141,7 @@ export const HOME_IMAGES = {
     position: 'object-bottom',
   },
   community: {
-    src: '/images/worship-service-community-wide.png',
+    src: '/images/worship-service-community-generated-v3.png',
     alt: 'Wisdom Church leaders ministering together',
     position: 'object-center',
   },

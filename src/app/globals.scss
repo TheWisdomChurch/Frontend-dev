@@ -519,6 +519,15 @@ body[data-scrolled='true'] .site-header {
   box-shadow: 0 1px 24px rgba(0, 0, 0, 0.35);
 }
 
+/* The premium landing page uses one calm sans-serif display language.
+   Editorial serif remains available for quotations and long-form content. */
+.premium-home h2,
+.premium-home h3 {
+  font-family: var(--font-product-sans), 'Inter', sans-serif;
+  font-style: normal;
+  letter-spacing: -0.035em;
+}
+
 .site-header__inner {
   display: flex;
   align-items: center;

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
+import SiteHero from '@/features/hero/SiteHero';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Privacy Policy',
@@ -69,29 +70,12 @@ const sections = [
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-[var(--app-canvas)]">
-      {/* ── Dark hero ─────────────────────────────────────────── */}
-      <div className="bg-[var(--app-dark)] px-6 pb-20 pt-32">
-        <div className="mx-auto max-w-5xl">
-          <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Legal · Privacy
-          </p>
-          <h1
-            className="font-headline font-normal text-white"
-            // eslint-disable-next-line no-restricted-syntax
-            style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', lineHeight: 1.1 }}
-          >
-            Privacy Policy
-          </h1>
-          <p className="mt-5 max-w-xl font-ui text-body-md leading-[1.9] text-white/62">
-            We handle your information with care and respect. This policy
-            explains what we collect, why we collect it, and how we protect it —
-            in plain language.
-          </p>
-          <p className="mt-5 font-ui text-label text-white/45">
-            Last updated: July 2026
-          </p>
-        </div>
-      </div>
+      <SiteHero
+        eyebrow="Legal · Privacy"
+        title="Privacy Policy"
+        subtitle="We handle your information with care and respect. This policy explains what we collect, why we collect it, and how we protect it—in plain language."
+        note="Last updated: July 2026"
+      />
 
       {/* ── Two-column document body ───────────────────────────── */}
       <div className="mx-auto max-w-5xl px-6 py-16 lg:grid lg:grid-cols-[15rem_1fr] lg:gap-14 lg:py-24">
@@ -149,7 +133,7 @@ export default function PrivacyPage() {
             >
               <div>
                 <div className="min-w-0 flex-1">
-                  <h2 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
+                  <h2 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                     {section.title}
                   </h2>
 

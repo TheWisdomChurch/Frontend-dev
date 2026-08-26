@@ -31,9 +31,9 @@ export function Providers({ children }: { children: ReactNode }) {
               <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-[var(--app-surface)] text-[var(--app-text)]">
                 <ClientHeader />
 
-                <main className="page-shell page-gsap relative min-h-[calc(100svh-1px)] w-full flex-1 overflow-x-hidden">
+                <div className="page-shell page-gsap relative min-h-[calc(100svh-1px)] w-full flex-1 overflow-x-hidden">
                   {children}
-                </main>
+                </div>
 
                 <ClientFooter />
               </div>

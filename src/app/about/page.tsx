@@ -28,7 +28,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = buildPageMetadata({
   title: 'About The Wisdom Church',
   description:
-    'Discover the vision, mission, five pillars, and Wisdom House identity of The Wisdom Church in Lagos.',
+    'Discover the vision, mission, five pillars, and identity of The Wisdom Church in Lagos.',
   path: '/about',
 });
 
@@ -150,22 +150,18 @@ export default async function AboutPage() {
       <EditorialSection tone="canvas">
         <EditorialContainer>
           <div className="grid gap-px overflow-hidden rounded-card bg-[var(--app-border)] lg:grid-cols-2">
-            {[content.vision, content.mission].map((item, index) => (
-              <ScrollFadeIn
+            {[content.vision, content.mission].map(item => (
+              <div
                 key={item.label}
-                delay={index * 0.08}
                 className="bg-[var(--app-canvas)] p-8 sm:p-12 lg:p-16"
               >
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
-                  {item.label}
-                </p>
-                <h2 className="mt-5 max-w-xl font-headline text-display-sm font-semibold leading-tight tracking-tight">
-                  {item.title}
-                </h2>
-                <p className="mt-6 max-w-xl font-ui text-body-lg leading-loose text-[var(--app-ink)]/70">
-                  {item.body}
-                </p>
-              </ScrollFadeIn>
+                <EditorialHeader
+                  eyebrow={item.label}
+                  title={item.title}
+                  description={item.body}
+                  size="sm"
+                />
+              </div>
             ))}
           </div>
         </EditorialContainer>
@@ -182,7 +178,7 @@ export default async function AboutPage() {
             {content.pillars.map((pillar, index) => (
               <ScrollFadeIn key={pillar.title} delay={index * 0.04}>
                 <article className="grid gap-4 border-b border-white/15 py-8 last:border-b-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10 lg:py-10">
-                  <h3 className="font-headline text-heading-lg font-semibold">
+                  <h3 className="font-ui text-heading-lg font-semibold !text-white">
                     {pillar.title}
                   </h3>
                   <p className="max-w-2xl font-ui text-body-md leading-loose text-white/65">
@@ -201,7 +197,7 @@ export default async function AboutPage() {
             <div>
               <EditorialHeader
                 eyebrow="What it means to belong"
-                title="This is a Wisdom House."
+                title="This is The Wisdom Church."
                 description={content.declaration}
               />
               <div className="mt-8 flex flex-wrap gap-2">
@@ -216,7 +212,7 @@ export default async function AboutPage() {
               </div>
             </div>
             <div className="grid gap-x-8 sm:grid-cols-2">
-              {content.wisdomHouse.map((item, index) => {
+              {content.churchIdentity.map((item, index) => {
                 const Icon = item.icon;
                 return (
                   <ScrollFadeIn key={item.title} delay={index * 0.04}>

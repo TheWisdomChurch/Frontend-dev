@@ -4,12 +4,25 @@ export const WOMEN_MINISTRY_CONTENT = {
     title: 'Equipped to lead. Called to bloom.',
     description:
       'A community dedicated to equipping women to grow, lead, and flourish in Christ.',
-    image: '/Picflow/Conv_2.webp',
+    image: '/Picflow/women1.webp',
   },
   introduction: {
     label: 'A sisterhood with purpose',
     title: 'Growth that reaches every space a woman occupies.',
     body: 'We are a community of women passionate about growth, faith, greatness, and leadership. We equip and empower women to thrive—from the home to the workplace—with the spiritual foundation, mentorship, and sisterhood needed to step boldly into their calling.',
+    image: {
+      src: '/Picflow/women2.webp',
+      alt: "Women sharing practical wisdom at The Wisdom Church women's conference",
+    },
+  },
+  headConvener: {
+    label: 'Head Convener',
+    title: 'Equipping women to lead with faith, wisdom, and courage.',
+    body: 'At the heart of this community is a commitment to help every woman recognise her God-given capacity, grow through meaningful mentorship, and step boldly into every space she is called to influence.',
+    image: {
+      src: '/Picflow/DSC00012 copy.webp',
+      alt: "Head Convener of The Wisdom Church Women's Ministry speaking at the conference",
+    },
   },
   vision: {
     label: 'Our vision',
@@ -42,16 +55,20 @@ export const WOMEN_MINISTRY_CONTENT = {
       'The conference created room for honest conversations, practical wisdom, and faith-filled connection. These moments capture the kind of sisterhood we are building.',
     images: [
       {
-        src: '/Picflow/Conv_2.webp',
-        alt: 'Women sharing insight during the conference',
+        src: '/Picflow/women1.webp',
+        alt: "Women gathered on stage at The Wisdom Church women's conference",
       },
       {
-        src: '/Picflow/Conv_4.webp',
-        alt: 'Conference panel conversation at The Wisdom Church',
+        src: '/Picflow/women2.webp',
+        alt: "A panel conversation at The Wisdom Church women's conference",
       },
       {
-        src: '/Picflow/Conv_3.webp',
-        alt: 'A conference conversation about leadership and growth',
+        src: '/Picflow/women3.webp',
+        alt: "A speaker sharing insight at The Wisdom Church women's conference",
+      },
+      {
+        src: '/Picflow/women4.webp',
+        alt: 'A conference speaker encouraging women at The Wisdom Church',
       },
     ],
   },
