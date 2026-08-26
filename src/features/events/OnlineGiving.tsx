@@ -2,11 +2,15 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone } from 'lucide-react';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
-import GivingModal from '@/shared/ui/modals/GivingModal';
+
+const GivingModal = dynamic(() => import('@/shared/ui/modals/GivingModal'), {
+  ssr: false,
+});
 import { handleContactCall } from '@/shared/utils/functionUtils/contactUtils';
 import apiClient from '@/lib/api';
 import type { GivingOption } from '@/lib/types';

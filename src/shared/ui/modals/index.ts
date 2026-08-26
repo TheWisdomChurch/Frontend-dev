@@ -14,5 +14,3 @@ export type {
 } from './Modal';
 
 export { default as GivingModal } from './GivingModal';
-export { default as EventAdModal } from './EventAdModal';
-export { default as ConfessionPopup } from './ConfessionPopup';
