@@ -374,7 +374,7 @@ export default function JoinWorkforce() {
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
         </div>
 
-        <EditorialContainer className="relative py-12 sm:py-14 lg:py-[4.5rem]">
+        <EditorialContainer className="relative py-section-xs">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <EditorialHeader
               eyebrow="Join the workforce"
@@ -416,7 +416,7 @@ export default function JoinWorkforce() {
       </div>
 
       {/* ── Department index ──────────────────────────────────── */}
-      <EditorialContainer className="relative py-12 sm:py-14 lg:py-[4.5rem]">
+      <EditorialContainer className="relative py-section-xs">
         <div className="mb-8 grid gap-5 border-b border-white/10 pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
           <EditorialHeader
             eyebrow="Serve at Wisdom Church"

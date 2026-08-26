@@ -201,7 +201,7 @@ function ContactPageContent() {
 
       <EditorialSection tone="canvas">
         <EditorialContainer>
-          <div className="grid gap-14 lg:grid-cols-[1fr_1.6fr] lg:gap-20 xl:gap-24">
+          <div className="grid gap-8 md:gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16 xl:gap-20">
             <div data-gsap="reveal">
               <aside className="space-y-10 lg:sticky lg:top-28 lg:h-fit">
                 {/* Location */}

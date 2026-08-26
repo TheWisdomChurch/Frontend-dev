@@ -65,7 +65,7 @@ export function CanvasCard({ leader }: { leader: LeadershipMember }) {
 export function DarkCard({ leader }: { leader: LeadershipMember }) {
   const name = `${leader.firstName} ${leader.lastName}`.trim();
   return (
-    <article className="group relative aspect-[4/5] min-h-[460px] overflow-hidden bg-[var(--app-dark)] sm:aspect-[3/4] lg:aspect-auto lg:min-h-[580px]">
+    <article className="group relative aspect-[4/5] min-h-[380px] overflow-hidden bg-[var(--app-dark)] sm:aspect-[3/4] sm:min-h-[440px] lg:aspect-auto lg:min-h-[540px]">
       <Media
         src={leader.imageUrl}
         alt={name}

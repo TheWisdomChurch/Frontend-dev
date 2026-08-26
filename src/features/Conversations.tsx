@@ -53,7 +53,7 @@ export default function Conversations() {
   return (
     <EditorialSection tone="canvas" className="overflow-hidden">
       <EditorialContainer>
-        <div className="grid items-center gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16 xl:gap-20">
           <EditorialHeader
             eyebrow="Conversations"
             title="Real people. Real faith."

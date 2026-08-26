@@ -163,7 +163,7 @@ export default function MinistriesPage() {
                   <Link
                     href={ministry.href}
                     aria-label={`Explore ${ministry.title}`}
-                    className="group relative block min-h-[470px] overflow-hidden rounded-image bg-[var(--app-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[500px] lg:min-h-[520px]"
+                    className="group relative block min-h-[380px] overflow-hidden rounded-image bg-[var(--app-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[440px] lg:min-h-[500px]"
                   >
                     <div className="absolute inset-0 overflow-hidden">
                       <Image

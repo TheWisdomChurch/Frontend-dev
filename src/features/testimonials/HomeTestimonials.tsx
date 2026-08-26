@@ -158,7 +158,7 @@ export default function HomeTestimonials() {
     <EditorialSection tone="muted">
       <EditorialContainer>
         <div
-          className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6"
+          className="grid gap-8 md:gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-6 xl:gap-x-20"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >

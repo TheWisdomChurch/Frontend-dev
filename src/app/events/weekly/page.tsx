@@ -93,11 +93,11 @@ export default function WeeklyPage() {
       {/* Service panels */}
       <EditorialSection tone="canvas">
         <EditorialContainer>
-          <div className="divide-y divide-[var(--app-ink)]/8 border-b border-[var(--app-ink)]/8 py-14 lg:py-18">
+          <div className="divide-y divide-[var(--app-ink)]/8 border-b border-[var(--app-ink)]/8">
             {services.map((svc, i) => (
               <ScrollFadeIn key={svc.day} delay={i * 0.08}>
                 <div
-                  className={`grid gap-10 py-12 lg:grid-cols-2 lg:gap-20 lg:py-14 ${i === 0 ? 'pt-0' : ''}`}
+                  className={`grid gap-8 py-section-xs md:gap-10 lg:grid-cols-2 lg:gap-16 ${i === 0 ? 'pt-0' : ''} ${i === services.length - 1 ? 'pb-0' : ''}`}
                 >
                   {/* Left — day + time */}
                   <div>

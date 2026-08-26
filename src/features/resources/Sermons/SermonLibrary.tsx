@@ -130,7 +130,7 @@ function Rail({
 }) {
   if (!sermons.length) return null;
   return (
-    <section className="border-t border-black/10 py-12 sm:py-16">
+    <section className="border-t border-black/10 py-section-xs">
       <div className="mb-7 flex items-end justify-between gap-5">
         <div>
           <h2 className="font-ui text-3xl font-medium tracking-[-0.035em] text-[var(--app-ink)] sm:text-4xl">

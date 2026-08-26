@@ -249,8 +249,8 @@ export default function ResourceSection() {
   return (
     <EditorialSection ref={sectionRef} id="resources" tone="surface" flush>
       <div className="relative overflow-hidden bg-[var(--app-dark)]">
-        <EditorialContainer className="relative py-section-md">
-          <div className="grid items-center gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
+        <EditorialContainer className="relative py-section-sm">
+          <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 xl:gap-20">
             <div>
               <EditorialHeader
                 eyebrow="Latest Message"
@@ -365,7 +365,7 @@ export default function ResourceSection() {
         </EditorialContainer>
       </div>
 
-      <EditorialContainer className="py-section-md">
+      <EditorialContainer className="py-section-sm">
         <ResourceCarousel />
       </EditorialContainer>
     </EditorialSection>

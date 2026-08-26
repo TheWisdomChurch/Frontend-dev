@@ -7,6 +7,11 @@
   --app-header-height: 72px;
   --app-radius: 18px;
 
+  /* Responsive layout rhythm. These are the only page-level gutter and
+     section-spacing sources; components consume them through layout recipes. */
+  --page-gutter: clamp(1rem, 2.7vw, 2.5rem);
+  --page-gutter-compact: clamp(0.75rem, 2vw, 1.5rem);
+
   /* Surfaces — clean white */
   --app-surface: #ffffff;
   --app-surface-2: #f5f5f5;
@@ -76,11 +81,11 @@
   --type-eyebrow: clamp(0.58rem, 0.57rem + 0.05vw, 0.64rem);
 
   /* Section spacing scale */
-  --section-xs: clamp(3rem, 6vw, 5rem);
-  --section-sm: clamp(5rem, 8vw, 7rem);
-  --section-md: clamp(6rem, 10vw, 9rem);
-  --section-lg: clamp(8rem, 14vw, 12rem);
-  --section-xl: clamp(10rem, 18vw, 16rem);
+  --section-xs: clamp(2.25rem, 4vw, 3.5rem);
+  --section-sm: clamp(3.5rem, 6vw, 5.5rem);
+  --section-md: clamp(4.5rem, 8vw, 7rem);
+  --section-lg: clamp(5.5rem, 10vw, 9rem);
+  --section-xl: clamp(7rem, 12vw, 11rem);
 
   /* Refined border radii */
   --radius-card: 0.875rem;
@@ -468,28 +473,6 @@ section[data-gsap='reveal'] {
   body {
     font-size: 15px;
     line-height: 1.55;
-  }
-
-  .px-8,
-  .px-10,
-  .px-12,
-  .px-16 {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-
-  .py-20,
-  .py-24,
-  .py-28,
-  .py-32 {
-    padding-top: 3.75rem !important;
-    padding-bottom: 3.75rem !important;
-  }
-
-  .gap-12,
-  .gap-16,
-  .gap-20 {
-    gap: 2rem !important;
   }
 }
 

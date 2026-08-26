@@ -148,7 +148,7 @@ export default function MinistryPageTemplate({
       {/* ── Mission ──────────────────────────────────────────── */}
       <EditorialSection tone={mission.dark ? 'dark' : 'canvas'}>
         <EditorialContainer>
-          <ScrollFadeIn className="py-16 lg:py-20">
+          <ScrollFadeIn>
             <Eyebrow>Our mission</Eyebrow>
             <Heading
               heading={mission.heading}
@@ -230,7 +230,7 @@ export default function MinistryPageTemplate({
           <ScrollFadeIn>
             <div
               className={cn(
-                'border-b py-12 lg:py-14',
+                'border-b pb-8 sm:pb-10',
                 values.dark ? 'border-white/8' : 'border-[var(--app-ink)]/8'
               )}
             >
@@ -255,7 +255,7 @@ export default function MinistryPageTemplate({
           >
             {values.items.map((v, i) => (
               <ScrollFadeIn key={v.title} delay={i * 0.08}>
-                <div className="flex flex-col py-10 sm:px-8 lg:px-10 lg:py-12">
+                <div className="flex flex-col py-8 sm:px-6 lg:px-8 lg:py-10">
                   <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
                   <h3
                     className={cn(

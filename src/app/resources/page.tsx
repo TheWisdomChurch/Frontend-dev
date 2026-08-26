@@ -233,8 +233,8 @@ export default function ResourcesPage() {
 
       <EditorialSection tone="canvas">
         <EditorialContainer>
-          <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-            <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
+          <div className="grid gap-6 lg:grid-cols-[minmax(16rem,19rem)_minmax(0,1fr)]">
+            <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
               <EditorialPanel className="p-5">
                 <H2 className="text-xl font-semibold leading-tight text-[var(--app-ink)]">
                   Resource library

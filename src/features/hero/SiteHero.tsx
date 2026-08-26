@@ -104,9 +104,9 @@ export default function SiteHero({
         <div
           data-hero-content
           className={cn(
-            'flex min-h-[88svh] w-full min-w-0 flex-col justify-center pb-section-sm pt-[calc(var(--app-header-height)+var(--section-xs))] sm:min-h-screen',
+            'flex min-h-[78svh] w-full min-w-0 flex-col justify-center pb-section-sm pt-[calc(var(--app-header-height)+var(--section-xs))] sm:min-h-[86svh] lg:min-h-[92svh]',
             size === 'page' &&
-              'min-h-[70svh] pb-section-xs sm:min-h-[76svh] lg:min-h-[82svh]',
+              'min-h-[62svh] pb-section-xs sm:min-h-[68svh] lg:min-h-[72svh]',
             align === 'center'
               ? 'mx-auto max-w-6xl items-center text-center'
               : 'max-w-3xl items-start text-left'
@@ -134,7 +134,7 @@ export default function SiteHero({
                 <span
                   data-hero-title-line
                   className={cn(
-                    'block whitespace-nowrap',
+                    'block whitespace-normal sm:whitespace-nowrap',
                     index === 1 && highlightSecondLine
                       ? 'font-normal text-[var(--app-primary-light)]'
                       : 'text-white'

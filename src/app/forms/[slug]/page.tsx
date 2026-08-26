@@ -1057,30 +1057,22 @@ export default function PublicFormPage() {
 
   return (
     <EditorialPage>
-      <EditorialSection compact tone="canvas">
-        <EditorialContainer
-          className={
-            showHeroCopy
-              ? 'relative z-10 py-14 sm:py-18 lg:py-20'
-              : 'relative z-10 py-6'
-          }
-        >
-          {showHeroCopy ? (
+      {showHeroCopy ? (
+        <EditorialSection compact tone="canvas">
+          <EditorialContainer className="relative z-10">
             <EditorialHeader
               eyebrow="Public form"
               title={presentation.title}
               description={presentation.subtitle}
               size="sm"
             />
-          ) : (
-            <div className="h-8" aria-hidden />
-          )}
-        </EditorialContainer>
-      </EditorialSection>
+          </EditorialContainer>
+        </EditorialSection>
+      ) : null}
 
       <EditorialSection tone="canvas">
         <EditorialContainer className="relative z-10">
-          <div className="py-8 sm:py-10 lg:py-14">
+          <div>
             {loading ? <EditorialNotice>Loading form…</EditorialNotice> : null}
 
             {!loading && error ? (
@@ -1088,8 +1080,8 @@ export default function PublicFormPage() {
             ) : null}
 
             {!loading && form && !submitted ? (
-              <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
-                <EditorialPanel className="h-fit p-5 xl:sticky xl:top-24">
+              <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]">
+                <EditorialPanel className="h-fit p-5 lg:sticky lg:top-24">
                   {!showHeroCopy ? (
                     <div>
                       <Eyebrow className="text-[var(--app-primary)]">

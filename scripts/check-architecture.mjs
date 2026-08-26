@@ -4,6 +4,39 @@ import { join, relative } from 'node:path';
 const root = process.cwd();
 const violations = [];
 
+const requiredPublicPages = [
+  'src/app/page.tsx',
+  'src/app/about/page.tsx',
+  'src/app/contact/page.tsx',
+  'src/app/cookies/page.tsx',
+  'src/app/privacy/page.tsx',
+  'src/app/terms/page.tsx',
+  'src/app/events/page.tsx',
+  'src/app/events/calendar/page.tsx',
+  'src/app/events/upcoming/page.tsx',
+  'src/app/events/weekly/page.tsx',
+  'src/app/leadership/page.tsx',
+  'src/app/ministries/page.tsx',
+  'src/app/ministries/children/page.tsx',
+  'src/app/ministries/men/page.tsx',
+  'src/app/ministries/outreach/page.tsx',
+  'src/app/ministries/women/page.tsx',
+  'src/app/ministries/youth/page.tsx',
+  'src/app/pastoral/page.tsx',
+  'src/app/resources/page.tsx',
+  'src/app/resources/blogs/page.tsx',
+  'src/app/resources/publications/page.tsx',
+  'src/app/resources/sermons/page.tsx',
+  'src/app/resources/store/page.tsx',
+  'src/app/testimonies/page.tsx',
+];
+
+for (const page of requiredPublicPages) {
+  if (!existsSync(join(root, page))) {
+    violations.push(`${page}: required public route entry is missing`);
+  }
+}
+
 const forbiddenRootFiles = [
   'ANALYTICS_CONFIGURATION.ts',
   'ANALYTICS_EXAMPLES.tsx',

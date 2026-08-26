@@ -87,8 +87,7 @@ export const EditorialSection = forwardRef<
       ref={ref}
       className={cn(
         'relative overflow-hidden border-b border-current/10',
-        !flush &&
-          (compact ? 'py-section-xs' : 'py-section-sm lg:py-section-md'),
+        !flush && (compact ? 'py-section-xs' : 'py-section-sm'),
         editorialToneClass[tone],
         className
       )}
@@ -182,7 +181,7 @@ export function EditorialDocument({
   return (
     <EditorialSection tone="canvas">
       <EditorialContainer width="content">
-        <div className="grid gap-12 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
+        <div className="grid gap-8 md:gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
           <aside className="hidden lg:block">
             <nav
               className="sticky top-24"

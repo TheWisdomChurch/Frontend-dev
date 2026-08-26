@@ -64,7 +64,7 @@ export default function OnlineGiving() {
     <>
       <EditorialSection tone="dark">
         <EditorialContainer>
-          <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6">
+          <div className="grid gap-8 md:gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-6 xl:gap-x-20">
             <div className="max-w-xl lg:sticky lg:top-28 lg:col-start-1 lg:row-start-1">
               <EditorialHeader
                 eyebrow="Give with purpose"
